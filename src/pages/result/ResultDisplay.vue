@@ -11,6 +11,9 @@
       class="layout-spinner"
       size="50"
     />
+    <model-result
+      v-else-if="isModelResult"
+    />
     <component
       v-else
       :is="layout || 'EmptyResult'"
@@ -43,13 +46,15 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
+import ModelResult from './components/ModelResult'
 import { mapState, mapGetters } from 'vuex'
 import { isEnOrEnum, intentType } from '@/utils/general'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    UnknownInfoBlock
+    UnknownInfoBlock,
+    ModelResult
   },
   data () {
     return {
@@ -78,7 +83,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('result', ['currentResultId']),
+    ...mapState('result', ['currentResultId', 'isModelResult']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'currentQuestionId', 'currentQuestionInfo', 'algoConfig']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     filterRestrictionList () {
@@ -120,6 +125,11 @@ export default {
     }
   },
   mounted () {
+    if(this.isModelResult) {
+      setTimeout(() => {
+        this.isLoading = false
+      }, 2 * 1000)
+    }
     this.fetchData()
   },
   destroyed () {
@@ -165,7 +175,8 @@ export default {
           questionId: this.currentQuestionId,
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
-          selectedColumnList: this.selectedColumnList
+          selectedColumnList: this.selectedColumnList,
+          isFilter: false
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.$store.commit('result/updateCurrentResultId', res.resultId)
@@ -219,7 +230,8 @@ export default {
               algoConfig: this.algoConfig,
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
-              selectedColumnList: this.selectedColumnList
+              selectedColumnList: this.selectedColumnList,
+              isFilter: false
             }).then(res => {
               this.$store.commit('result/updateCurrentResultId', res.resultId)
               if (res.layout === 'no_answer') {
@@ -269,7 +281,8 @@ export default {
                 this.getComponentV2(resultId)
               }, this.totalSec)
 
-              this.totalSec += this.periodSec
+              // request 間隔最多三秒
+              this.totalSec = this.totalSec + this.periodSec > 3000 ? 3000 : this.totalSec + this.periodSec
               this.periodSec = this.totalSec
               break
             case 'Complete':

@@ -168,6 +168,7 @@ export default {
             isPublishing: false,
             warningModule: {
               activate: false,
+              updateFrequency: '* * * * *',
               conditions: [] // { id: 1, relatedDashboardId: null }
             }
           },

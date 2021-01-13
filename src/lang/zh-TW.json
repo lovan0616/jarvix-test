@@ -184,6 +184,8 @@
     "localUploadDescription": "透過電腦上傳.xlsx .xls .csv<br>檔案資料並進行建置",
     "remoteConnection": "連接資料庫建置",
     "remoteConnectionDescription": "直接讀取您的資料庫資料<br>並進行資料複製和建置",
+    "runScript": "資料表演算",
+    "runScriptDescription": "使用系統的資料進行演算處理並建置出新的資料表",
     "confirmDeleteForeign": "確認刪除此關聯嗎？",
     "chooseDataSource": "請選擇資料源",
     "allDataFrames": "全部資料表",
@@ -213,6 +215,7 @@
     "columnDisplayName": "顯示名稱",
     "columnSource": "欄位來源",
     "columnSourceRemind": "透過關聯方式建置的資料表才會顯示欄位來源資料表資訊",
+    "originalName": "原始名稱",
     "alias": "別名",
     "columnTag": "標籤",
     "columnDomain": "領域",
@@ -435,7 +438,12 @@
     "chooseFile": "選擇檔案",
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔",
-    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表"
+    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
+    "scriptExecutionStep1": "上傳檔案",
+    "scriptExecutionStep2": "選擇輸入欄位",
+    "scriptExecutionStep3": "設定輸出類型",
+    "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
+    "searchDataSource": "搜尋資料源"
   },
   "algorithm": {
     "name": "演算法",
@@ -562,7 +570,17 @@
     "tableSearch": "搜尋資料表",
     "null": "Null",
     "columnSelected": "已選擇欄位數",
-    "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
+    "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位",
+    "isDistributed": "是否進行分片",
+    "distributedColumnName": "分片欄位"
+  },
+  "script": {
+    "dataFrame": "來源資料表",
+    "selectInputColumn": "設定輸入欄位",
+    "scriptColumnReminder": "欄位具有順序性，優先順序為由上至下",
+    "selectOutputColumn": "設定輸出欄位類型",
+    "columnDataType": "欄位類型",
+    "columnDataName": "欄位名稱"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
@@ -849,13 +867,8 @@
     "goToDashboard": "前往@:miniApp.dashboard",
     "link": "連結",
     "warningModuleIsInactive": "此應用程式未開啟示警模組",
-    "markAsFinished": "標示已處理",
-    "markAsUnfinished": "標示未處理",
     "hierarchicalFilter": "階層控制群",
     "createHierarchicalFilter": "新增看板階層控制項",
-    "finished": "已處理",
-    "unfinished": "未處理",
-    "state": "處理狀態",
     "chooseDataSource": "選擇資料源",
     "chooseDataFrame": "選擇資料表",
     "dataSource": "資料源",
@@ -865,11 +878,30 @@
     "notBeingSet": "未設定",
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新頻率",
-    "monitorComponent": "監控示警元件"
+    "monitorComponent": "監控示警元件",
+    "simulateComponent": "模擬元件",
+    "timeScope": "時間範圍",
+    "dashboardNoLongerExist": "關聯看板已不存在",
+    "displayChart": "顯示圖表",
+    "displayIndex": "顯示數值",
+    "displayText": "顯示文字",
+    "large": "大",
+    "middle": "中",
+    "small": "小",
+    "mini": "迷你",
+    "selectScript": "選擇模型",
+    "pleaseSelect": "請選擇",
+    "minAndMax": "最小:{min},最大:{max}",
+    "startSimulating": "進行模擬",
+    "simulator": "模擬器",
+    "notYetSimulate": "尚未模擬資料",
+    "simulating": "模擬中",
+    "optimalParameterComparison": "的最佳參數比較"
   },
   "alert": {
     "alertLogs": "示警紀錄",
     "emptyLogs": "沒有任何@:alert.alertLogs",
+    "emptyCondition": "尚未設定示警條件",
     "enableAlertModule": "使用控制",
     "alertLogCreateTime": "示警時間",
     "alertLogMessage": "示警訊息",
@@ -880,12 +912,33 @@
     "realTimeMonitorAlert": "即時監控示警",
     "monitorAlert": "監控示警",
     "alertConditionSuccessfullyCreated": "示警條件創建成功",
+    "alertMessageSuccessfullyPatched": "示警訊息設定成功",
     "chooseComparisionOperator": "選擇比較運算符",
+    "chooseMessageParam": "選擇訊息參數",
     "value": "數值",
     "sourceSetting": "來源設定",
     "conditionSetting": "條件設定",
+    "conditionMessageSetting": "示警訊息設定",
     "dataColumn": "資料欄位",
-    "selectDataColumn": "資料欄位"
+    "selectDataColumn": "資料欄位",
+    "messageExampleDescription": "範例說明",
+    "messageParamSyntaxDescription": "欄位參數語法 = ${欄位名稱}",
+    "messageTemplateSettingExample": "訊息設定：廠房:{0},出現電流異常(電流:{1}μA)。",
+    "messageTemplatePreviewExample": "訊息預覽：廠房:{0},出現電流異常(電流:{1}μA)。",
+    "param1NameExample": "${廠編}",
+    "param1ValueExample": "F00088",
+    "param2NameExample": "${電流}",
+    "param2ValueExample": "300",
+    "alertMessageContent": "訊息內容",
+    "inserColumnAsParams": "插入欄位參數",
+    "enterAlertMessage": "請輸入示警訊息",
+    "alertSettingIsSharingByAllGroupApplications": "示警條件將同步提供給其他應用程式進行使用",
+    "alertConditionDeletionWillImpactOtherApplicationConfirmMsg": "此動作將會影響到其他應用程式使用，您確認要繼續刪除？",
+    "allMessageSettingsAreEmpty": "未輸入任何示警訊息設定",
+    "editAlertMessage": "編輯內容",
+    "finished": "已處理",
+    "unfinished": "未處理",
+    "state": "處理狀態"
   },
   "clustering": {
     "cluster": "群體",
@@ -1860,7 +1913,7 @@
         ]
       },
       {
-        "name": "關聯分析",
+        "name": "關聯分析問句",
         "questionList": [
           {
             "questionText": "什麼和 Numeric 有關",
@@ -1895,7 +1948,7 @@
         ]
       },
       {
-        "name": "差異分析",
+        "name": "差異分析問句",
         "questionList": [
           {
             "questionText": "Value 和 Value 的差異",
@@ -1924,6 +1977,243 @@
               [
                 {"text": "台北", "type": "value"},
                 {"text": "和其他的差異", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "篩選問句",
+        "questionList": [
+          {
+            "questionText": "Category 值的 Numeric",
+            "questionExample": [
+              [
+                {"text": "男性", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "numeric"}
+              ],
+              [
+                {"text": "公路腳踏車", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "成本", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 大於 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "大於 1000 的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 小於 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "小於 1000 的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "時間篩選問句",
+        "questionList": [
+          {
+            "questionText": "Y 年 M 月和 M 月的 Numeric",
+            "questionExample": [
+              [
+                {"text": "2018年3月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "4月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "numeric"}
+              ],
+              [
+                {"text": "2019年5月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "6月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月和 M 月 Category 值的 Category",
+            "questionExample": [
+              [
+                {"text": "2019年10月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "11月", "type": "filter"},
+                {"text": "上海", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月的 Category",
+            "questionExample": [
+              [
+                {"text": "2019年6月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月到 Y 年 M 月的 Numeric",
+            "questionExample": [
+              [
+                {"text": "2018年1月", "type": "filter"},
+                {"text": "到", "type": ""},
+                {"text": "2018年11月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月到 Y 年 M 月的 Category",
+            "questionExample": [
+              [
+                {"text": "2019年5月", "type": "filter"},
+                {"text": "到", "type": ""},
+                {"text": "2020年11月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "category"}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "排序問句",
+        "questionList": [
+          {
+            "questionText": "平均 Numeric 前 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "平均", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "前五的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "總和 Numeric 前 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "總和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "前十的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 前 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "前五的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ],
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "前十的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "週期性分析問句",
+        "questionList": [
+          {
+            "questionText": "時間 Numeric 週期性分析",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "週期性分析", "type": ""}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "成本", "type": "numeric"},
+                {"text": "週期性分析", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "異常分析問句",
+        "questionList": [
+          {
+            "questionText": "時間 Numeric 異常分析",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "異常分析", "type": ""}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "成本", "type": "numeric"},
+                {"text": "異常分析", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "畫像分析問句",
+        "questionList": [
+          {
+            "questionText": "Category 值的畫像分析",
+            "questionExample": [
+              [
+                {"text": "產品 A ", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "畫像分析", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "分群分析問句",
+        "questionList": [
+          {
+            "questionText": "Numeric 分群分析",
+            "questionExample": [
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "分群分析", "type": ""}
+              ],
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "分群分析", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 和 Numeric 分群分析",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "分群分析", "type": ""}
               ]
             ]
           }
@@ -2132,7 +2422,7 @@
   "denotation": {
     "dataOverview": "資料概況",
     "clusteringAnalysis": "分群分析",
-    "correlationAnalysis": "關聯分析",
+    "correlationAnalysis": "關係分析",
     "predictionAnalysis": "預測分析",
     "trendAnalysis": "趨勢分析",
     "anomalyAnalysis": "異常分析",
@@ -2203,7 +2493,7 @@
     "accountViewer": "一般使用者",
     "groupOwner": "專案擁有者",
     "groupMaintainer": "專案管理者",
-    "groupViewer": "一般使用者",
+    "groupViewer": "專案成員",
     "accountRoleDesc": "角色權限說明",
     "accountOwnerDesc": "無任何使用限制",
     "accountMaintainerDesc": "擁有帳戶管理權限",

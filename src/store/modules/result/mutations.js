@@ -10,5 +10,8 @@ export default {
   },
   updateCurrentResultInfo (state, data) {
     state.currentResultInfo = data
+  },
+  updateIsModelResult (state, data) {
+    state.isModelResult = data
   }
 }

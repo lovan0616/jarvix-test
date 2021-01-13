@@ -50,7 +50,7 @@
         :cluster-infos="componentData.clusterInfos"
         :sub-components="componentData.subComponents"
         :key="componentId"
-        :show-toolbox="showToolbox"
+        :is-show-toolbox="isShowToolbox"
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
         :is-show-label-data="isShowLabelData"
@@ -102,7 +102,7 @@ export default {
       type: String,
       default: null
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -230,7 +230,7 @@ export default {
               // 判斷是否為 圖表
               if (responseData.dataset) {
                 // 如果拿到的資料為空陣列 表示這一頁已經是最後一頁了
-                if (!responseData.dataset.data || responseData.dataset.data && responseData.dataset.data.length === 0) {
+                if (responseData.dataset.data === null || responseData.dataset.data && responseData.dataset.data.length === 0) {
                   this.loading = false
                   this.hasNextPage = false
                   this.nextPageData = null
@@ -286,6 +286,7 @@ export default {
             this.hasNextPage = false
           }
         })
+        .finally(() => this.$emit('finished'))
       })
     },
     handleTaskInitData () {

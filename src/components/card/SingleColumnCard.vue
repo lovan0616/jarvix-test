@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div
-      v-if="filterInfoList.length > 1"
+      v-if="columnList.length > 1"
       :class="{ 'disabled': isProcessing || isLoading }"
       class="card__delete-icon"
       @click="removeColumn">
@@ -17,16 +17,16 @@
           :option-list="dataColumnOptionList"
           :placeholder="$t('batchLoad.chooseColumn')"
           :is-disabled="isProcessing || isLoading"
-          v-model="filterInfo.columnId"
-          :name="name"
+          v-model="columnInfo.columnId"
+          :name="columnInfo.id"
           filterable
           class="input-field__select"
           @change="$emit('updateDataColumn', $event)"
         />
         <div 
-          v-show="errors.has(name)"
+          v-show="errors.has(columnInfo.id)"
           class="error-text"
-        >{{ errors.first(name) }}</div>
+        >{{ errors.first(columnInfo.id) }}</div>
       </div>
     </div>
   </div>
@@ -36,13 +36,13 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
-  name: 'SingleFilterCard',
+  name: 'SingleColumnCard',
   inject: ['$validator'],
   components: {
     DefaultSelect,
   },
   props: {
-    filterInfoList: {
+    columnList: {
       type: Array,
       default: () => ([])
     },
@@ -50,13 +50,9 @@ export default {
       type: Array,
       default: () => ([])
     },
-    filterInfo: {
+    columnInfo: {
       type: Object,
       default: () => ({})
-    },
-    name: {
-      type: String,
-      required: true
     },
     isProcessing: {
       type: Boolean,
@@ -70,7 +66,7 @@ export default {
   methods: {
     removeColumn () {
       if (this.isProcessing || this.isLoading) return
-      this.$emit('remove', this.filterInfo.id)
+      this.$emit('remove', this.columnInfo.id)
     }
   }
 }

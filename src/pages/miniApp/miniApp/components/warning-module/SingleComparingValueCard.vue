@@ -7,7 +7,7 @@
           v-model="comparingSet.comparisonOperator"
           :option-list="comparisonOperatorOptionList"
           :placeholder="$t('alert.chooseComparisionOperator')"
-          name="comparingOperator`"
+          name="comparingOperator"
           class="input-field__select"
         />
         <div 
@@ -62,6 +62,7 @@ export default {
 
   .setting-block {
     display: flex;
+    height: 54px;
     .input-block {
       margin-left: 16px;
     }

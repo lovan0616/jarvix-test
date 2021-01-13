@@ -15,18 +15,41 @@
           <span class="question-mark">Q</span>
           {{ computedQuestion }}
         </div>
-        <div 
-          :class="{ 'active': currentComponent.type === 'chart' }" 
-          class="key-result__card card"
-          @click="switchComponentType('chart')">
-          <div class="card__header">
-            <div class="card__header-icon-box">
-              <svg-icon 
-                class="icon" 
-                icon-class="check-circle" />
-            </div>
-            <div class="card__header-text">{{ displayedHeaderText('chart') }}</div>
+        <div class="key-result__switch-wrapper">
+          <div 
+            :class="{ 'active': currentComponent.type === 'chart' }"
+            class="key-result__switch" 
+            @click="switchComponentType('chart')" >
+            <svg-icon 
+              class="icon" 
+              icon-class="check-circle" />
+            {{ $t('miniApp.displayChart') }}
           </div>
+          <div 
+            v-if="currentComponent.isIndexTypeAvailable" 
+            :class="{ 'active': currentComponent.type === 'index' }" 
+            class="key-result__switch"
+            @click="switchComponentType('index')">
+            <svg-icon 
+              class="icon" 
+              icon-class="check-circle" />
+            {{ $t('miniApp.displayIndex') }}
+          </div>
+          <div 
+            v-if="currentComponent.isTextTypeAvailable" 
+            :class="{ 'active': currentComponent.type === 'text' }" 
+            class="key-result__switch"
+            @click="switchComponentType('text')" >
+            <svg-icon 
+              class="icon" 
+              icon-class="check-circle" />
+            {{ $t('miniApp.displayText') }}
+          </div>
+        </div>
+        <div 
+          v-show="currentComponent.type === 'chart'" 
+          class="key-result__card card"
+        >
           <div class="card__content">
             <task
               :key="'chart-' + computedKeyResultId"
@@ -34,25 +57,16 @@
               :is-show-description="false"
               :is-show-coefficients="false"
               :is-show-donwnload-btn="false"
-              :show-toolbox="false"
+              :is-show-toolbox="false"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
             />
           </div>
         </div>
         <div
-          v-if="currentComponent.isIndexTypeAvailable" 
-          :class="{ 'active': currentComponent.type === 'index' }" 
+          v-show="currentComponent.type === 'index'" 
           class="key-result__card card"
-          @click="switchComponentType('index')">
-          <div class="card__header">
-            <div class="card__header-icon-box">
-              <svg-icon 
-                class="icon" 
-                icon-class="check-circle" />
-            </div>
-            <div class="card__header-text">{{ displayedHeaderText('index') }}</div>
-          </div>
+        >
           <div class="card__content">
             <div class="setting">
               <div class="setting__label">{{ $t('miniApp.index') }}</div>
@@ -86,18 +100,9 @@
         </div>
         <!--Text Type Component-->
         <div
-          v-if="currentComponent.isTextTypeAvailable" 
-          :class="{ 'active': currentComponent.type === 'text' }" 
+          v-show="currentComponent.type === 'text'" 
           class="key-result__card card"
-          @click="switchComponentType('text')">
-          <div class="card__header">
-            <div class="card__header-icon-box">
-              <svg-icon 
-                class="icon" 
-                icon-class="check-circle" />
-            </div>
-            <div class="card__header-text">{{ displayedHeaderText('text') }}</div>
-          </div>
+        >
           <div class="card__content">
             <task
               :key="'text-' + computedKeyResultId"
@@ -115,6 +120,7 @@
         :key="appQuestion"
         :result-info="resultInfo"
         :redirect-on-select="false"
+        @select-result="askResult($event)"
       />
       <div
         v-if="!isLoading && isAddable === false"
@@ -126,16 +132,6 @@
         />{{ $t('miniApp.componentNotAddable') }}
       </div>
     </template>
-    <!-- Error -->
-    <!-- <empty-result 
-      v-if="hasError"
-      :key="appQuestion"
-      :result-info="{
-        title: '語句暫不支援',
-        description: '不支援此類型概況語句',
-      }"
-      :redirect-on-select="false"
-    /> -->
   </div>
 </template>
 
@@ -173,6 +169,7 @@ export default {
   },
   data () {
     return {
+      questionInfo: null,
       resultInfo: null,
       layout: '',
       timeoutFunction: null,
@@ -184,25 +181,25 @@ export default {
       indexSizeOptionList: [
         {
           value: 'large',
-          name: '大'
+          name: this.$t('miniApp.large')
         },
         {
           value: 'middle',
-          name: '中'
+          name: this.$t('miniApp.middle')
         },
         {
           value: 'small',
-          name: '小'
+          name: this.$t('miniApp.small')
         },
         {
           value: 'mini',
-          name: '迷你'
+          name: this.$t('miniApp.mini')
         }
       ]
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
       return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
@@ -221,11 +218,15 @@ export default {
   watch: {
     appQuestion (question) {
       if (!question) return
+      this.resetComponent()
       this.askQuestion(question)
     }
   },
   mounted () {
     if (this.currentComponent.keyResultId) this.askQuestion(this.currentComponent.question)
+  },
+  destroyed () {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     checkIsTextTypeAvailable (transcript) {
@@ -238,15 +239,20 @@ export default {
       return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
     },
     askQuestion (question) {
+      this.$store.commit('result/updateCurrentResultInfo', null)
       // 關閉介紹資料集
       this.closePreviewDataSource()
       // 恢復新增元件的狀態
       this.$emit('update:isAddable', null)
       this.$emit('update:isLoading', true)
+      this.totalSec = 50
+      this.periodSec = 200
+      this.resultInfo = null
+      this.layout = ''
       this.$store.dispatch('chatBot/askQuestion', {
         question,
-        dataSourceId: this.dataSourceId,
-        dataFrameId: this.dataFrameId,
+        dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
+        dataFrameId: this.currentComponent.dataFrameId || this.dataFrameId,
         shouldCancelToken: true
       }).then(response => {
         let questionId = response.questionId
@@ -272,28 +278,20 @@ export default {
           getDateTimeColumns(this.segmentation.transcript.dataFrame.dataFrameId)
             .then(columnList => {
               this.mainDateColumn = columnList.find(column => column.isDefault)
-              // 確認是否為趨勢類型問題
-              const isTrendQuestion = this.segmentation.denotation === 'TREND'
-              return this.$store.dispatch('chatBot/askResult', {
-                questionId,
-                segmentation: this.segmentation,
-                restrictions: this.restrictions(),
-                selectedColumnList: null,
-                ...(isTrendQuestion && {
-                  sortOrders: [
-                    {
-                      dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
-                      sortType: 'DESC'
-                    }
-                  ]
-                })
-              })
+
+              // 存取問句結果讓 restriction 使用
+              this.questionInfo = {
+                dataFrameId: segmentationList[0].transcript.dataFrame.dataFrameId,
+                dataColumns: this.getDataColumnlist(segmentationList[0].transcript.subjectList)
+              }
+              return this.askResult(null, questionId)
             })
             .then(res => this.getComponentV2(res.resultId))
             .catch((error) => {})
         } else {
           // 多個結果
           this.$store.commit('dataSource/setAppQuestion', null)
+          this.$store.commit('dataSource/setCurrentQuestionId', response.questionId)
           this.layout = 'MultiResultV2'
           this.resultInfo = {...response, question: question}
           this.$emit('update:isLoading', false)
@@ -306,6 +304,30 @@ export default {
         this.$store.commit('dataSource/setCurrentQuestionInfo', null)
       })
     },
+    askResult (selectedResultSegmentationInfo, questionId) {
+      this.$emit('update:isLoading', true)
+
+      const segmentation = this.segmentation || selectedResultSegmentationInfo
+      // 確認是否為趨勢類型問題
+      const isTrendQuestion = segmentation.denotation === 'TREND'
+      return this.$store.dispatch('chatBot/askResult', {
+        questionId: questionId || this.currentQuestionId,
+        segmentation,
+        restrictions: this.restrictions(),
+        selectedColumnList: null,
+        isFilter: true,
+        ...(isTrendQuestion && {
+          sortOrders: [
+            {
+              dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+              sortType: 'DESC'
+            }
+          ]
+        })
+      })
+      .then(res => this.getComponentV2(res.resultId))
+      .catch(error => {})
+    },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
@@ -316,7 +338,6 @@ export default {
               this.timeoutFunction = window.setTimeout(() => {
                 this.getComponentV2(resultId)
               }, this.totalSec)
-
               this.totalSec += this.periodSec
               this.periodSec = this.totalSec
               break
@@ -324,21 +345,18 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
+              // 初次創建時，預設元件名稱為使用者輸入的問句
+              if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
-              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
+
+              // data columns 重新處理是因為 ask question 取得的是建議的句子切法
+              // 最終切法和辨別結果要以 get component list 為主
               this.$store.commit('result/updateCurrentResultInfo', {
                 keyResultId: componentResponse.componentIds.key_result[0],
-                dataColumns: componentResponse.segmentationPayload.transcript.subjectList
-                  .filter(item => item.dataColumn)
-                  .map(item => ({
-                    columnId: item.dataColumn.dataColumnId,
-                    columnName: item.dataColumn.dataColumnAlias,
-                    statsType: item.dataColumn.statsType,
-                    dataType: item.dataColumn.dataType
-                  })),
+                dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
                 segmentation: componentResponse.segmentationPayload,
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
                 questionId: componentResponse.questionId,
@@ -370,6 +388,29 @@ export default {
           if (error.message !== 'cancel') this.resultInfo = null
         })
     },
+    getDataColumnlist (subjectList) {
+      return subjectList
+        .filter(item => item.dataColumn || item.categoryDataColumnList || item.filterList || item.dateTime)
+        .reduce((acc, cur, index, filteredSubjectList) => {
+          // 匯集所有欄位
+          const columnList = [
+            ...(cur.categoryDataColumnList || []),
+            ...(cur.dataColumn !== null && [cur.dataColumn]),
+            ...(cur.filterList !== null && cur.filterList.map(filter => filter.dataColumn) || []),
+            ...(cur.dateTime !== null && [cur.dateTime.dataColumn])
+          ]
+          // 將不重複的欄位存起來
+          columnList.forEach(column => { if (!acc[column.dataColumnId]) acc[column.dataColumnId] = column })
+          // 最後一筆時，回傳所有不重複的欄位清單
+          return index === filteredSubjectList.length - 1 ? Object.keys(acc).map(key => acc[key]) : acc
+        }, {})
+        .map((item, index, list) => ({
+          columnId: item.dataColumnId,
+          columnName: item.dataColumnAlias,
+          statsType: item.statsType,
+          dataType: item.dataType
+        }))
+    },
     setEmptyLayout (res) {
       this.layout = 'EmptyResult'
       this.resultInfo = {
@@ -383,21 +424,24 @@ export default {
     switchComponentType (type) {
       this.currentComponent.type = type
     },
-    displayedHeaderText (type) {
-      return this.currentComponent.type === type ? this.$t('miniApp.currentlyDisplayed') : this.$t('miniApp.setForDisplay')
+    includeSameColumnPrimaryAliasFilter (filterName) {
+      return this.questionInfo.dataColumns.find(column => column.columnName === filterName)
     },
     restrictions () {
       return this.allFilterList
         .filter(filter => {
           // 相對時間有全選的情境，不需帶入限制中
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+
+          // 時間欄位要有開始和結束時間// 只處理相同 datafram 或欄位名稱相同的 filter
+          // if (this.questionInfo.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
           if (
             filter.statsType === 'NUMERIC'
             || filter.statsType === 'FLOAT'
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.dataValues.length > 0) return true
+          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {
@@ -472,6 +516,13 @@ export default {
 
       return properties
     },
+    resetComponent () {
+      this.switchComponentType('chart')
+      this.currentComponent.indexInfo = { 
+        unit: '',
+        size: 'middle'
+      }
+    }
   }
 }
 </script>
@@ -481,7 +532,7 @@ export default {
   padding: 24px;
   &__question {
     font-size: 18px;
-    margin-bottom: 40px;
+    margin-bottom: 18px;
     .question-mark {
       display: inline-block;
       width: 30px;
@@ -493,6 +544,31 @@ export default {
       text-align: center;
       line-height: 30px;
       font-weight: bold;
+    }
+  }
+
+  &__switch-wrapper {
+    display: flex;
+    margin-bottom: 16px;
+  }
+
+  &__switch {
+    background: #1C292B;
+    border-radius: 12px;
+    border: 2px solid #1C292B;
+    color: #6C7678;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 16px;
+    cursor: pointer;
+
+    &.active {
+      color: #2AD2E2;
+      border: 2px solid #2AD2E2;
+    }
+
+    &:not(:last-of-type) {
+      margin-right: 8px;
     }
   }
 
@@ -508,31 +584,6 @@ export default {
     border-radius: 12px;
     padding: 18.5px;
     cursor: pointer;
-    
-    &__header {
-      display: flex;
-      margin-bottom: 40px;
-      color: #6C7678;
-    }
-    &__header-icon-box {
-      margin-right: 6.5px;
-      height: 25px;
-      .icon {
-        font-size: 25px;
-      }
-    }
-    &__header-text {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 25px;
-    }
-
-    &.active {
-      border: 2px solid #2AD2E2;
-      .card__header {
-        color: #2AD2E2;
-      }
-    }
 
     &__content {
       display: flex;

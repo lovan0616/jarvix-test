@@ -72,16 +72,18 @@
             <spinner v-if="isProcessing"/>
             <template v-else>
               <task
-                :class="{ 'not-empty': !isEmptyData }"
+                :class="{ 'not-empty': !isEmptyData && !isComponentFailed }"
                 :custom-chart-style="indexComponentStyle"
                 :key="'index-' + keyResultId"
                 :component-id="keyResultId"
                 :converted-type="'index_info'"
                 intend="key_result"
                 @isEmpty="isEmptyData = true"
+                @failed="isComponentFailed = true"
+                @finished="isIndexTypeComponentLoading = false"
               />
               <span 
-                v-if="!isEmptyData"
+                v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
                 :class="[componentData.indexInfo.size || 'middle']" 
                 class="index-unit">{{ componentData.indexInfo.unit }}</span>
             </template>
@@ -110,7 +112,14 @@
           v-else-if="componentData.type === 'monitor-warning-list'"
           :setting="warningModuleSetting"
           :is-edit-mode="isEditMode"
-          @goToWarningLogPage="$emit('goToWarningLogPage')"
+          @warningLogTriggered="$emit('warningLogTriggered', $event)"
+        />
+        <simulator
+          v-else-if="componentData.type === 'simulator'"
+          :is-edit-mode="isEditMode"
+          :restrictions="restrictions()"
+          :script-id="componentData.scriptId"
+          :key="JSON.stringify(allFilterList)"
         />
         <div 
           v-else
@@ -123,7 +132,8 @@
             :component-id="keyResultId"
             :is-show-description="false"
             :is-show-coefficients="false"
-            :show-toolbox="false"
+            :converted-type="componentData.type === 'paramCompare' ? 'param_comparison_table' : null"
+            :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
             intend="key_result"
             @clickCell="columnTriggered($event)"
@@ -145,13 +155,15 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
+import Simulator from './Simulator'
 import moment from 'moment'
 
 export default {
   name: 'DashboardTask',
   components: {
     DecideDialog,
-    MonitorWarningList
+    MonitorWarningList,
+    Simulator
   },
   props: {
     componentData: {
@@ -188,12 +200,14 @@ export default {
   data () {
     return {
       timeoutFunction: null,
-      totalSec: 0,
-      periodSec: 0,
+      totalSec: 50,
+      periodSec: 200,
       isShowConfirmDelete: false,
       autoRefreshFunction: null,
       debouncedAskFunction: null,
       isEmptyData: false,
+      isComponentFailed: false,
+      isIndexTypeComponentLoading: true,
       textComponentStyle: {
         'font-size': '20px',
         'color': '#DDDDDD',
@@ -213,9 +227,12 @@ export default {
   },
   computed: {
     shouldComponentBeFiltered () {
-      if (this.componentData.type === 'monitor-warning-list') return false
-      // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
-      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return false
+      return true
+      // // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
+      // return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
+      //   || this.includeSameDataFrameFilter 
+      //   || this.includeRelativeDatetimeFilter
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
@@ -225,10 +242,10 @@ export default {
       return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
     },
     keyResultId () {
-      return this.tempFilteredKeyResultId || this.componentData.keyResultId
+      return this.tempFilteredKeyResultId
     },
     dataColumnAlias () {
-      if (this.componentData.type === 'monitor-warning-list') return ''
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
       const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
       return dataColumn ? dataColumn.dataColumnAlias : ''
     },
@@ -237,12 +254,12 @@ export default {
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
     },
     controllerMutatedQuestion () {
-      if (this.componentData.type === 'monitor-warning-list') return ''
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
-      if (this.componentData.type === 'monitor-warning-list') return ''
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, `
         <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
@@ -272,19 +289,11 @@ export default {
       let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return filterDataFrameIds.includes(this.componentData.dataFrameId)
     },
-    includeSameColumnPrimaryAliasFilter () {
-      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
-      const componentColumns = this.componentData.dataColumns
-      for (let i = 0; i < componentColumns.length; i++) {
-        if (filterDataColumnNames.includes(componentColumns[i].columnName)) return true
-        return false
-      }
-    },
     includeRelativeDatetimeFilter () {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     },
     customCellClassName () {
-      if (this.componentData.type === 'monitor-warning-list') return []
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return []
       const relation = this.componentData.config.columnRelations[0].columnInfo
       if (!relation) return []
       const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
@@ -340,31 +349,30 @@ export default {
       immediate: true,
       handler (isInit) {
         if (!isInit) return
+        if (this.componentData.type !== 'monitor-warning-list' && this.componentData.type !== 'simulator') {
+          this.isProcessing = true
+          this.deboucedAskQuestion()
+        }
         this.isInitializing = false
-        if (this.shouldComponentBeFiltered || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
-    allFilterList: {
+    filters: {
       deep: true,
       handler (controls) {
-        if (this.shouldComponentBeFiltered) {
-          this.deboucedAskQuestion()
-        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
-          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
-          this.tempFilteredKeyResultId = null
-        }
+        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
+      }
+    },
+    controls: {
+      deep: true,
+      handler (controls) {
+        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
       }
     },
     yAxisControls: {
       deep: true,
       handler (controls) {
-        if (this.shouldComponentYAxisBeControlled) {
-          this.deboucedAskQuestion()
-        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
-          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
-          this.tempFilteredKeyResultId = null
-        }
+        if (controls.length === 0 || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
     'componentData.config.size' ({ row: newRow }, { row: oldRow }) {
@@ -381,6 +389,7 @@ export default {
   destroyed () {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
     if (this.debouncedAskFunction) window.clearTimeout(this.debouncedAskFunction)
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     deboucedAskQuestion (question) {
@@ -392,6 +401,10 @@ export default {
     askQuestion (question = this.controllerMutatedQuestion || this.componentData.question) {
       window.clearTimeout(this.timeoutFunction)
       this.isProcessing = true
+      this.isIndexTypeComponentLoading = true
+      this.isComponentFailed = false
+      this.totalSec = 50
+      this.periodSec = 200
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
       this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
       this.isEmptyData = false
@@ -413,6 +426,7 @@ export default {
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
             selectedColumnList: null,
+            isFilter: true,
             ...(isTrendQuestion && {
               sortOrders: [
                 {
@@ -423,7 +437,7 @@ export default {
             })
           }).then(res => {
             this.getComponentV2(res.resultId)
-          }).catch(error => {})
+          }).catch(error => {this.isProcessing = false})
         }
         // TODO 無結果和多個結果
       }).catch(error => { this.isProcessing = false })
@@ -466,22 +480,19 @@ export default {
         .filter(filter => {
           // 相對時間有全選的情境，不需帶入限制中
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+          // 只處理相同 datafram 或欄位名稱相同的 filter
+          // if (this.componentData.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
+          // 時間欄位要有開始和結束時間
           if (
             filter.statsType === 'NUMERIC'
             || filter.statsType === 'FLOAT'
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.dataValues.length > 0) {
-            // 並且是同 DataFrame
-            if (this.componentData.dataFrameId === filter.dataFrameId) return true
-            // 或者含相同 columnName
-            if (this.includeSameColumnPrimaryAliasFilter) return true
-          }
+          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {
-
           let type = ''
           let data_type = ''
           switch (filter.statsType) {
@@ -531,6 +542,9 @@ export default {
             }
           }]
         })
+    },
+    includeSameColumnPrimaryAliasFilter (filterName) {
+      return this.componentData.dataColumns.find(column => column.columnName === filterName)
     },
     confirmDelete () {
       this.isShowConfirmDelete = false
@@ -616,7 +630,7 @@ export default {
 /*定義欄和列的尺寸*/
 $direction-size: ("col": 100%, "row": 100%);
 /*定義每欄和每列要切幾等分*/
-$direction-span: ("col": 8, "row": 6);
+$direction-span: ("col": 12, "row": 12);
 /*依照已定義好的尺寸和等份，製作欄和列使用的 class */
 @each $direction, $size in $direction-size {
   $span-amount: map-get($direction-span, $direction);
@@ -645,7 +659,6 @@ $direction-span: ("col": 8, "row": 6);
   padding-bottom: 16px;
   float: left;
   transition: all .2s linear;
-  overflow: hidden;
 
   &-init-spinner {
     margin: auto;
@@ -659,11 +672,11 @@ $direction-span: ("col": 8, "row": 6);
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
   }
   &-header {
     display: flex;
     justify-content: space-between;
+    height: 30px;
     align-items: center;
     margin-bottom: 16px;
     .header-left {
@@ -801,6 +814,12 @@ $direction-span: ("col": 8, "row": 6);
     .spinner-block {
       flex: 1;
     } 
+  }
+
+  /deep/ .task {
+    .task-spinner.key-result-spinner {
+      height: 100%;
+    }
   }
 }
 

@@ -11,7 +11,7 @@
           :dataset="component.dataset"
           :title="component.title"
           :question="component.question"
-          :show-toolbox="isShowToolbox"
+          :is-show-toolbox="isShowToolbox"
           :show-warning="false"
           :height="chartHeight"
         />

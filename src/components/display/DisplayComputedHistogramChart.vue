@@ -79,7 +79,7 @@ export default {
         }
       }
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -195,7 +195,8 @@ export default {
       }
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData 
-      const shortenNumberMethod = this.shortenNumber
+      const labelFormatter = this.chartLabelFormatter
+      const maxValue = Math.max(...this.dataset.data)
       chartAddon.series[0] = {
         ...histogramConfig.chartData,
         ...(this.isShowLabelData && {
@@ -204,7 +205,7 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[2], 0) }
+            formatter (value) { return labelFormatter(value.data[2], maxValue) }
           }
         })
       }
@@ -223,7 +224,7 @@ export default {
 
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
-      chartAddon.toolbox.show = this.showToolbox
+      chartAddon.toolbox.show = this.isShowToolbox
       return { ...chartAddon, ...getDrillDownTool(this.$route.name, this.title) }
     },
     chartStyle () {

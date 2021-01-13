@@ -1,17 +1,33 @@
 <template>
   <div class="warning-log">
     <nav class="warning-log__nav">
-      {{ $t('alert.alertLogs') }}
+      <div class="nav-left">
+        {{ $t('alert.alertLogs') }}
+      </div>
+      <div class="nav-right">
+        <span>自動更新</span>
+        <el-switch
+          v-model="isAutoRefresh"
+          active-color="#2AD2E2"
+          inactive-color="#324B4E"
+          @change="toggleIsAutoRefresh"
+        />
+        <span>{{ isAutoRefresh ? '開啟' : '關閉' }}</span>
+      </div>
     </nav>
+    <warning-log-filter
+      :filter-setting.sync="filterSetting"
+      :state-options="stateOptions"
+      @changed="onFilterCriteriaChanged"
+    />
     <div class="warning-log__content">
-      <spinner 
-        v-if="isLoading" 
-        :title="$t('button.download')" 
-        size="50"/>
       <el-table
-        v-else
+        v-loading="isLoading"
         :data="warningLogs"
+        :element-loading-text="$t('button.download')"
+        element-loading-background="rgba(15, 20, 20, .8)"
         class="sy-table"
+        height="100%"
         style="width: 100%">
         <div slot="empty">{{ $t('alert.emptyLogs') }}</div>
         <el-table-column
@@ -27,9 +43,13 @@
           prop="conditionName"/>
         <el-table-column
           :label="$t('alert.alertLogMessage')"
-          prop="conditionMetMessage"/>
+          prop="conditionMetMessage">
+          <template slot-scope="scope">
+            <span v-html="scope.row.conditionMetMessage"/>
+          </template>
+        </el-table-column>
         <el-table-column
-          :label="$t('miniApp.state')"
+          :label="$t('alert.state')"
           prop="active"
           width="120">
           <template slot-scope="scope">
@@ -37,14 +57,14 @@
               :data-list="stateOptions"
               :has-bullet-point="false"
               trigger="hover"
-              @select="updateLogActiveness(scope.row.conditionMetLogId, $event)"
+              @select="updateLogActiveness(scope.row, $event)"
             >
               <template #display>
                 <div 
                   :class="scope.row.active ? 'button--active' : 'button--inactive'" 
                   class="button">
                   <span class="button-label">
-                    {{ scope.row.active ? $t('miniApp.finished') : $t('miniApp.unfinished') }}
+                    {{ scope.row.active ? $t('alert.finished') : $t('alert.unfinished') }}
                   </span>
                   <svg-icon 
                     icon-class="triangle" 
@@ -80,10 +100,11 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        v-if="paginationInfo.totalPages > 1"
+        :disabled="isLoading"
         :total="paginationInfo.totalItems"
         :page-size="paginationInfo.itemPerPage"
-        :current-page="paginationInfo.currentPage + 1"
+        :current-page="paginationInfo.currentPage"
+        :hide-on-single-page="true"
         class="table-pagination"
         layout="prev, pager, next"
         @current-change="changePage"
@@ -95,12 +116,15 @@
 <script>
 import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import WarningLogFilter from './WarningLogFilter'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'WarningLog',
   components: {
-    CustomDropdownSelect
+    CustomDropdownSelect,
+    WarningLogFilter
   },
   props: {
     setting: {
@@ -111,8 +135,9 @@ export default {
   data () {
     return {
       isLoading: false,
-      warningLogs: [],
       isProcessing: false,
+      isAutoRefresh: false, // log 頁面預設不開啟自動更新，以免使用者在閱讀 log 時畫面刷新
+      warningLogs: [],
       autoRefreshFunction: null,
       paginationInfo: {
         currentPage: 0,
@@ -120,45 +145,69 @@ export default {
         totalItems: 0,
         itemPerPage: 0
       },
-    }
+      filterSetting: {
+        activenessValue: null, // active, inactive, null
+        createdTimeRangeValue: []
+      }
+    }    
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
+    stateOptions () {
+      return [
+        {
+          name: this.$t('alert.finished'),
+          value: 'active',
+          id: true,
+        },
+        {
+          name: this.$t('alert.unfinished'),
+          value: 'inactive',
+          id: false,
+        }
+      ]
+    },
     activeConditionIds () {
       if (!this.setting.conditions) return []
       return this.setting.conditions.filter(item => item.activate).map(item => item.id)
     },
-    stateOptions () {
-      return [
-        {
-          name: this.$t('miniApp.finished'),
-          id: true
-        },
-        {
-          name: this.$t('miniApp.unfinished'),
-          id: false
-        }
-      ]
+    timeFilterSelected () {
+      return this.filterSetting.createdTimeRangeValue.length === 2
     }
   },
   created () {
-    if (this.activeConditionIds.length > 0) {
-      this.getWarningLogs()
-      this.setComponentRefresh()
-    }
+    if (this.activeConditionIds.length > 0) this.getWarningLogs()
+    document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
-    window.clearInterval(this.autoRefreshFunction)
+    this.clearAutoRefreshTimer()
+    document.removeEventListener('click', this.autoHide, false)
   },
   methods: {
-    setComponentRefresh () {
-      this.autoRefreshFunction = window.setInterval(() => {
+    toggleIsAutoRefresh (isAutoRefresh) {
+      this.clearAutoRefreshTimer()
+      if (isAutoRefresh) {
         this.getWarningLogs()
-      }, this.convertRefreshFrequency(this.setting.updateFrequency))
+        this.setLogRefresh()
+      }
+    },
+    setLogRefresh () {
+      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, page, groupId: this.getCurrentGroupId }).then(response => {
+      getAlertLogs({
+        conditionIds: this.activeConditionIds,
+        page,
+        groupId: this.getCurrentGroupId,
+        ...(this.filterSetting.activenessValue !== null && {active: this.filterSetting.activenessValue === 'active'}),
+        ...(this.timeFilterSelected && {
+          // 資料庫 log 時間均為 UTC+0, 前端使用 convertTimeStamp 轉換後會變為 UTC+8
+          // 這邊送進 time filter 需再調整為 UTC+0
+          startTime: moment(new Date(this.filterSetting.createdTimeRangeValue[0])),
+          endTime: moment(new Date(this.filterSetting.createdTimeRangeValue[1]))
+        }),
+      }).then(response => {
         this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
@@ -169,15 +218,13 @@ export default {
         })
       })
         .catch(() => {})
-        .finally(() => setTimeout(() => {
-          this.isLoading = false
-        }, 1000) )
+        .finally(() => this.isLoading = false)
     },
-    updateLogActiveness (logId, isActive) {
-      this.isProcessing = true
-      patchAlertLogActiveness(logId, { "active" : isActive })
-        .then(() => this.getWarningLogs(this.activeConditionIds))
-        .finally(() => this.isProcessing = false)
+    updateLogActiveness (logData, isActive) {
+      if (logData.active === isActive) return
+      patchAlertLogActiveness(logData.conditionMetLogId, { "active" : isActive })
+        .then(() => logData.active = !logData.active) 
+        .catch(() => {})
     },
     changePage (pageNumber) {
       this.getWarningLogs(pageNumber - 1)
@@ -187,6 +234,11 @@ export default {
         relatedDashboardId,
         rowData: rowData.filter(item => item.statsType === 'CATEGORY')
       })
+    },
+    onFilterCriteriaChanged () {
+      this.clearAutoRefreshTimer()
+      this.getWarningLogs()
+      if (this.isAutoRefresh) this.setLogRefresh()
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -201,6 +253,9 @@ export default {
         default:
           return 60 * 1000
       }
+    },
+    clearAutoRefreshTimer () {
+      window.clearInterval(this.autoRefreshFunction)
     }
   }
 }
@@ -217,6 +272,15 @@ export default {
     margin-bottom: 12px;
     margin-right: 20px;
     font-size: 20px;
+    .nav-right {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      line-height: 1;
+      .el-switch {
+        margin: 0 12px;
+      }
+    }
   }
   &__content {
     flex: 1;
@@ -284,13 +348,12 @@ export default {
       font-size: 12px;
       display: inline-block;
       &--inactive {
-        background: rgba(255, 255, 255, 0.2);
-        color: #DDDDDD;
-
+        background: rgba(255, 92, 70, 0.2);
+        color: #FF5C46;
       }
       &--active {
-        background: #2FECB3;
-        color: #2E2E2E;
+        background: rgba(255, 255, 255, 0.2);
+        color: #DDDDDD;
       }
     }
   }
@@ -300,7 +363,7 @@ export default {
       overflow: unset;
     }
     &__body-wrapper {
-      overflow: unset;
+      // overflow: unset;
     }
   }
 }

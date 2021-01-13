@@ -352,15 +352,15 @@ export default {
       ]
     },
     columnSpanOption () {
-      // 最小值為 2, 最大值為 8
-      return [...Array(7).keys()].map(value => ({
+      // 最小值為 2, 最大值為 12
+      return [...Array(11).keys()].map(value => ({
         value: value + 2,
         name: this.$t('miniApp.columnSpanAmount', { number: value + 2 })
       }))
     },
     rowSpanOption () {
-      // 最小值為 2, 最大值為 6
-      return [...Array(5).keys()].map(value => ({
+      // 最小值為 2, 最大值為 12
+      return [...Array(11).keys()].map(value => ({
         value: value + 2,
         name: this.$t('miniApp.rowSpanAmount', { number: value + 2 })
       }))
@@ -405,12 +405,20 @@ export default {
         if (!valid) return
         this.$emit('create', {
           ...this.currentComponent,
+          // Demo 使用：為了展示參數最佳化比較，把元件名稱帶有特定字串的元件改 type
+          ...(this.isParameterComparisonTypeComponent(this.currentComponent.config.diaplayedName) && {
+            type: 'paramCompare'
+          }),
           init: true,
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo
         })
       })
+    },
+    isParameterComparisonTypeComponent (componentName) {
+      const regex = new RegExp(this.$t('miniApp.optimalParameterComparison'), 'g')
+      return componentName.match(regex);
     },
     saveComponent () {
       this.$validator.validateAll().then(valid => {

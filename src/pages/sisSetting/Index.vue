@@ -1,6 +1,30 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
+      <div class="setting-block__title">應用程式設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">開啟應用程式：</label>
+          <el-switch 
+            v-model="openMiniAppModule"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
+      <div class="setting-block__title">資料處理設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">開啟分片設定：</label>
+          <el-switch 
+            v-model="openDistributedSetting"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
       <div class="setting-block__title">排程模組設定</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -107,6 +131,8 @@ export default {
   name: 'PageSisSetting',
   data () {
     return {
+      isShowMiniAppModule: localStorage.getItem('isShowMiniAppModule'),
+      isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
       isShowAlgorithmBtn: localStorage.getItem('isShowAlgorithmBtn'),
       isDemoEnd: localStorage.getItem('isDemoEnd'),
@@ -118,6 +144,24 @@ export default {
     }
   },
   computed: {
+    openMiniAppModule: {
+      get () {
+        return this.isShowMiniAppModule === 'true' || this.isShowMiniAppModule
+      },
+      set (value) {
+        this.isShowMiniAppModule = value
+        localStorage.setItem('isShowMiniAppModule', value)
+      }
+    },
+    openDistributedSetting: {
+      get () {
+        return this.isShowDistributedSetting === 'true' || this.isShowDistributedSetting
+      },
+      set (value) {
+        this.isShowDistributedSetting = value
+        localStorage.setItem('isShowDistributedSetting', value)
+      }
+    },
     openScheduleModule: {
       get () {
         return this.isShowScheduleModule === 'true' || this.isShowScheduleModule

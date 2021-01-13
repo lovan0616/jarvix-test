@@ -194,7 +194,7 @@
 </template>
 
 <script>
-import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
+import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
 
 export default {
   name: 'SingleFilterBadge',
@@ -277,7 +277,10 @@ export default {
     initialFilter: {
       deep: true,
       handler (val) {
-        this.filter = JSON.parse(JSON.stringify(val))
+        this.filter = {
+          ...JSON.parse(JSON.stringify(val)),
+          dataValueOptionList: this.filter.dataValueOptionList
+        }
       }
     },
     searchInput () {
@@ -310,17 +313,26 @@ export default {
         if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
 
         // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
-        await this.searchValue()
-
+        if (this.filter.dataValues.length > 0) {
+          this.searchInput = this.filter.dataValues[0]
+          await this.searchValue()
+          if (this.filter.dataValueOptionList === 0) {
+            this.searchInput = ''
+            await this.searchValue()
+          }
+        } else {
+          await this.searchValue()
+        }
+      
         // 控制項須確保至少選定其中一個項目：如果當前沒有或之前選定的值在新取的選項中沒有，則預設為第一個選項
         const isNeedDefaultSelect = this.isSingleChoiceFilter 
           && (this.filter.dataValues.length === 0 || !this.filter.dataValueOptionList.find(option => option.isSelected))
           && this.filter.dataValueOptionList.length > 0
+          
         //  將預設選項更新出去
         if (isNeedDefaultSelect) return this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
-
         // 如果是因為階層被觸發去重新取選單資料，須把取完後的結果更新出去，並由外層委派下一個 filter 去更新
-        this.isNeedUpdate ? this.$emit('updateFilter', this.filter) : this.$emit('update:isProcessing', false)
+        this.isNeedUpdate || this.filter.dataValues.length === 0 ? this.$emit('updateFilter', this.filter) : this.$emit('update:isProcessing', false)
       } finally {
         this.isLoading = false
       }
@@ -354,7 +366,7 @@ export default {
     },
     searchValue () {
       this.isLoading = true
-      return dataValueFuzzySearch(this.filter.columnId, {
+      return dataValueSearch(this.filter.columnId, {
         page: 0,
         searchString: this.searchInput,
         size: 200,
@@ -436,7 +448,7 @@ export default {
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.dataValues.length > 0) return true
+          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {

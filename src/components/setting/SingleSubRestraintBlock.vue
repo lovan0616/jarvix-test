@@ -160,33 +160,38 @@
       v-else-if="statsType === 'CATEGORY'"
       class="single-sub-restraint__content category-block">
       <div 
-        v-if="valueList"
-        :class="{'has-error': errors.has(index + '-' + 'select')}"
-        @click="searchValue">
-        <svg-icon
-          :icon-class="isProcessing ? 'spinner' : 'search'" 
-          class="category-block__icon" />
-      </div>
-      <div 
         v-if="!valueList" 
         class="empty-message">
         {{ $t('editing.emptyKey') }}
       </div>
-      <default-select
+      <el-select
         v-validate="'required'"
         v-show="valueList"
-        :ref="index + '-select'"
-        v-model="subRestraint.properties.datavalues"
-        :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
-        :option-list="valueList"
+        :value="selectedList"
         :name="index + '-select'"
-        filterable
-        filter-method
+        :no-data-text="$t('message.noData')"
+        :no-match-text="$t('message.noMatchData')"
+        :loading="isSearching"
+        :loading-text="$t('message.dataLoading')"
+        :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
+        :remote-method="remoteMethod"
+        :popper-append-to-body="false"
+        :disable="true"
+        remote
         multiple
-        class="category-block__selector"
+        filterable
+        reserve-keyword
+        class="sy-select theme-dark category-block__selector"
         @input="updateDataValue"
-        @filter="categoryFilter"
-      />
+      >
+        <el-option
+          v-for="(item, index) in valueList"
+          :key="`${index}-${item.value}`"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+      <div class="warning-text">{{ $t('editing.onlyPrefixMatching') }}</div>
       <div 
         v-show="errors.has(index + '-' + 'select')"
         class="error-text"
@@ -196,7 +201,7 @@
 </template>
 
 <script>
-import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
+import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { mapState } from 'vuex'
 
@@ -218,16 +223,19 @@ export default {
   },
   data () {
     return {
+      isSearching: false,
       isLoading: false,
-      isProcessing: false,
       endTimePickerOptions: {
         disabledDate: this.disabledDueDate
       },
       columnId: null,
+      selectedList: [],
       valueList: [],
       tempValueList: [],
+      tempAliasList:[],
       statsType: null,
-      queryString: ''
+      queryString: '',
+      searchTimer: null
     }
   },
   computed: {
@@ -259,19 +267,30 @@ export default {
           : response[this.statsType.toLowerCase()]
 
         if(this.statsType === 'CATEGORY') {
-          /// CATEGORY 值超過 200 筆時候會回傳 null
+          this.selectedList = JSON.parse(JSON.stringify(this.subRestraint.properties.display_datavalues))
+          // CATEGORY 值超過 200 筆時候會回傳 null，因此需要由後端做 value search
           if(!this.valueList) {
-            this.isCategoryValueEmpty = true
-            this.searchValue(this.columnId, '')
+            this.isCategoryValueSearch = true
+            this.searchValue()
           } else {
-            this.valueList = this.valueList.map(element => {
+            /* 當多個 alias (display value) 對到同樣的 value
+             * 在多選的時候會有 tag 對不到剛剛選的 alias，因此先都用 alias(不會重複)
+             * (因為 element ui 會用 value 去對，對到的 alias 不一定是剛剛點選的)
+             */
+            this.tempValueList = this.valueList.map(element => {
               return {
-                value: element,
-                name: element,
-                active: this.subRestraint.properties.datavalues.includes(element)
+                value: element.columnValue,
+                name: element.displayColumnValue
               }
             })
-            this.tempValueList = JSON.parse(JSON.stringify(this.valueList))
+
+            this.valueList = this.valueList.map(element => {
+              return {
+                value: element.displayColumnValue,
+                name: element.displayColumnValue
+              }
+            })
+            this.tempAliasList = JSON.parse(JSON.stringify(this.valueList))
           }
         } else if (this.statsType === 'DATETIME') {
           // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
@@ -297,36 +316,48 @@ export default {
       this.subRestraint.properties.datavalues = [option]
       this.subRestraint.properties.display_datavalues = [option]
     },
+    remoteMethod(query) {
+      this.queryString = query
+      this.isSearching = true
+      clearTimeout(this.searchTimer)
+      this.searchTimer = setTimeout(() => {
+        this.searchValue()
+      }, 1000)
+    },
     searchValue () {
-      this.isProcessing = true
       // category value 如果一開始有值，表示資料筆數小於 200，不需用後端的 search
-      if(!this.isCategoryValueEmpty) {
-        this.valueList = this.tempValueList.filter(element => !this.queryString || element.name === this.queryString)
+      if(!this.isCategoryValueSearch) {
+        // 這裡字串比對用 startsWith 是為了和後端一致
+        this.valueList = this.tempAliasList
+          .filter(element => !this.queryString || element.name.startsWith(this.queryString))
+        this.isSearching = false
       } else {
-        dataValueFuzzySearch(this.columnId, {
-          page: 0,
-          searchString: this.queryString,
-          size: 200,
-          restrictions: null
-        })
-        .then(response => {
-          this.valueList = response.fuzzySearchResult
-          this.valueList = this.valueList.map(element => {
-            return {
-              value: element,
-              name: element,
-              active: this.subRestraint.properties.datavalues.includes(element)
-            }
+        dataValueSearch(this.columnId, { searchString: this.queryString })
+          .then(({fuzzySearchResult}) => {
+            this.valueList = fuzzySearchResult.map(element => {
+              return {
+                value: element,
+                name: element
+              }
+            })
           })
-        })
+          .finally(() => {
+            this.isSearching = false
+          })
       }
-      this.isProcessing = false
-      this.queryString = ''
-      this.$refs[`${this.index}-select`] && this.$refs[`${this.index}-select`].focusInput()
     },
     updateDataValue (value) {
+      /* 使用中文輸入法時，按 enter 剛好會也會觸發到滑鼠左鍵的點擊，讓選項誤選 
+       * 這時時候 keyPress 不會有值，keyDown 則會回傳 229
+      */
+      if (event.keyCode === 13 || event.keyCode === 229) return
+      this.selectedList = value
+      // TODO:每次都要重新取值，有點沒效率
+      this.subRestraint.properties.datavalues = []
+      this.tempValueList.forEach(item => {
+        if(value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
+      })
       this.subRestraint.properties.display_datavalues = value
-      this.$refs[`${this.index}-select`].blurInput()
     },
     deleteSubRestraint () {
       this.$emit('delete')
@@ -373,6 +404,7 @@ export default {
     font-size:14px;
     line-height: 22px;
     color: #CCC;
+    @include text-hidden;
   }
 
   &__content {
@@ -458,19 +490,11 @@ export default {
     position: relative;
     overflow: unset;
 
-    .has-error {
-      .category-block__icon {
-        top: calc(50% - 16px);
-      }
-    }
-
-    &__icon {
-      position: absolute;
-      top: calc(50% - 8px);
-      right: 9px;
-      background: #141C1D;
-      cursor: pointer;
-      z-index: 1;
+    .warning-text {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 22px;
+      color: $theme-color-warning;
     }
 
     &__selector {
@@ -478,15 +502,34 @@ export default {
       border-radius: 5px;
       background-color: #141C1D;
 
+      /* [Bug 未解] el-select selects multiple window jitter.
+       * https://github.com/ElemeFE/element/issues/8731
+       * https://github.com/ElemeFE/element/issues/13173
+       */
+
       /deep/ .el-select__tags {
         .el-tag.el-tag--info {
+          max-width: 200px;
           height: 26px;
           font-weight: 600;
           font-size: 14px;
-          line-height: 26px;
+          line-height: 22px;
           background-color: transparent;
           border-color: $theme-color-primary;
           color: $theme-color-primary;
+
+          .el-select__tags-text {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            vertical-align: middle;
+          }
+        }
+
+        .el-select__input {
+          color: #CCC;
         }
 
         .el-tag__close {
@@ -509,6 +552,9 @@ export default {
       }
 
       /deep/ .el-select-dropdown {
+        width: 100%;
+        left: 0px !important;
+
         .el-select-dropdown__item {
           padding: 0 20px 0 36px;
           font-weight: normal;
@@ -540,7 +586,8 @@ export default {
             }
           }
         }
-      }
+      } 
+      
     }
 
     .checkbox-label {

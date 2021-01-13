@@ -121,7 +121,7 @@ export default {
       type: Boolean,
       default: false
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -263,7 +263,7 @@ export default {
       if (this.dataset.index.length > 10) {
         config.dataZoom = parallelZoomIn()
       }
-      config.toolbox.show = this.showToolbox
+      config.toolbox.show = this.isShowToolbox
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
@@ -508,8 +508,9 @@ export default {
       }, 0)
     },
     composeColumn (element, colIndex) {
-      const shortenNumberMethod = this.shortenNumber
       const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
+      const labelFormatter = this.chartLabelFormatter
+      const maxValue = this.getChartMaxData(this.dataset.data)
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
@@ -522,7 +523,10 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[colIndex + 1], 0) }
+            formatter (value) { 
+              let num = value.data[colIndex + 1]
+              return labelFormatter(num, maxValue[colIndex]) 
+            }
           }
         })
       }

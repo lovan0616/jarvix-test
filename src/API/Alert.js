@@ -12,6 +12,16 @@ export function postAlertCondition (data) {
 }
 
 /**
+ * 刪除 示警條件
+ */
+export function deleteAlertCondition (conditionId) {
+  return request({
+    url: `/alert/condition/${conditionId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * 取得 所有示警條件
  */
 export function getAlertConditions (groupId) {
@@ -49,11 +59,17 @@ export function getAlertConditionMessageById (conditionId) {
  * @param {Number} page
  * @param {Number} size
  */
-export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId }) {
-  const encodeConditionIds = encodeURI(`[${conditionIds}]`)
+export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, active, startTime, endTime }) {
   return request({
-    url: `/alert/logs?conditionIds=${encodeConditionIds}&groupId=${groupId}&page=${page}&size=${size}`,
-    method: 'GET',
+    url: `/alert/logs/search?page=${page}&size=${size}`,
+    method: 'POST',
+    data: {
+      conditionIdsString: `[${conditionIds.toString()}]`,
+      groupId,
+      active,
+      startTime,
+      endTime
+    }
   })
 }
 
@@ -66,5 +82,20 @@ export function patchAlertLogActiveness(logId, stateInfo) {
     url: `/alert/log/${logId}/activeness`,
     method: 'PATCH',
     data: stateInfo
+  })
+}
+
+/**
+ * 修改示警訊息中
+ * @param {Number} id - condition id
+ * @param {Object} dataColumnIds - 參數欄位
+ * @param {Object} language - 欲修改的語言
+ * @param {Object} message - 示警訊息
+ */
+export function patchConditionMessageParams(conditionId, data) {
+  return request({
+    url: `/alert/condition/${conditionId}/message-templates`,
+    method: 'PATCH',
+    data
   })
 }

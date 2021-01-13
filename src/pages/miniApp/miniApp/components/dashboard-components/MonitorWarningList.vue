@@ -1,18 +1,18 @@
 <template>
-  <ul 
-    :class="{'is-view-mode': !isEditMode}"
-    class="list"
-    @click="goToWarningLogPage">
+  <ul class="list">
     <spinner 
       v-if="isLoading"
       class="list__spinner"
       size="50"
     />
     <template v-else-if="warningLogs.length > 0">
-      <li 
+      <li
         v-for="(log, index) in warningLogs"
         :key="index"
-        class="list__item">
+        :class="log.relatedDashboardId ? 'is-linkable' : ''"
+        class="list__item"
+        @click="log.relatedDashboardId ? warningLogTriggered(log) : null"
+      >
         <div class="list__item--left">
           <svg-icon 
             icon-class="alert" 
@@ -22,9 +22,9 @@
           <div class="list__item-title">
             {{ log.conditionName }}
           </div>
-          <div class="list__item-sub-title">
-            {{ log.conditionMetMessage }}
-          </div>
+          <div 
+            class="list__item-sub-title" 
+            v-html="log.conditionMetMessage"/>
           <div class="list__item-description">
             {{ log.createDate | convertTimeStamp }}
           </div>
@@ -78,13 +78,11 @@ export default {
   },
   methods: {
     setComponentRefresh () {
-      this.autoRefreshFunction = window.setInterval(() => {
-        this.getWarningLogs()
-      }, this.convertRefreshFrequency(this.setting.updateFrequency))
+      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs () {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId }).then(response => {
+      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId, active: false }).then(response => {
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
@@ -94,9 +92,7 @@ export default {
         })
       })
         .catch(() => {})
-        .finally(() => setTimeout(() => {
-          this.isLoading = false
-        }, 1000) )
+        .finally(() => setTimeout(() => this.isLoading = false, 800))
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -120,9 +116,14 @@ export default {
           return 30 * 7 * 24 * 60 * 1000
       }
     },
-    goToWarningLogPage () {
-      if (this.isEditMode) return
-      this.$emit('goToWarningLogPage')
+    logMonitoredData (rowData) {
+      return rowData.reduce((acc, cur) => acc.concat(`${cur.displayName}: ${cur.datum[0]}<br>`), '')
+    },
+    warningLogTriggered (log) {
+      this.$emit('warningLogTriggered', {
+        relatedDashboardId: log.relatedDashboardId,
+        rowData: log.monitoredData
+      })
     }
   }
 }
@@ -135,9 +136,6 @@ export default {
   overflow: auto;
   padding: 0;
   margin: 0;
-  &.is-view-mode {
-    cursor: pointer;
-  }
   &__item {
     width: 100%;
     min-height: 62px;
@@ -149,7 +147,9 @@ export default {
     &:not(:last-of-type) {
       margin-bottom: 8px;
     }
-
+    &.is-linkable {
+      cursor: pointer;
+    }
     &--left {
       display: flex;
       align-items: center;

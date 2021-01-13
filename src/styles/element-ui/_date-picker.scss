@@ -3,7 +3,13 @@
   &__icon-btn {
     color: #fff;
   }
-
+  &__sidebar {
+    background: transparent;
+    border-right: 1px solid #3f3f3f;
+  }
+  &__shortcut {
+    color: rgb(200, 200, 200);
+  }
   .el-input__inner,
   .el-range-input {
     padding: 0 12px !important;
