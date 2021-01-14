@@ -193,7 +193,7 @@ export default {
             display_name: selectColumn.name,
             end: null,
             start: null,
-            timeScope: 'second'
+            timeScope: 'SECOND'
           }
           break
         case 'NUMERIC':

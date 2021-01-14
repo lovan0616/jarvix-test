@@ -18,7 +18,7 @@
           </template>
           <template v-if="sub_restraint.type === 'range'">
             {{ isDateTime(sub_restraint.properties.data_type) ? customerTimeFormatter(sub_restraint.properties.start, sub_restraint.properties.timeScope) : roundNumber(sub_restraint.properties.start) }}
-            - {{ isDateTime(sub_restraint.properties.data_type) ? customerTimeFormatter(sub_restraint.properties.end, sub_restraint.properties.timeScope) : roundNumber(sub_restraint.properties.end) }}
+            - {{ isDateTime(sub_restraint.properties.data_type) ? customerTimeFormatter(sub_restraint.properties.end, sub_restraint.properties.timeScope, true) : roundNumber(sub_restraint.properties.end) }}
           </template>
         </div>
       </template>
@@ -30,7 +30,7 @@
           </template>
           <template v-if="restraint.type === 'range'">
             {{ isDateTime(restraint.properties.data_type) ? customerTimeFormatter(restraint.properties.start, restraint.properties.timeScope) : roundNumber(restraint.properties.start) }}
-            - {{ isDateTime(restraint.properties.data_type) ? customerTimeFormatter(restraint.properties.end, restraint.properties.timeScope) : roundNumber(restraint.properties.end) }}
+            - {{ isDateTime(restraint.properties.data_type) ? customerTimeFormatter(restraint.properties.end, restraint.properties.timeScope, true) : roundNumber(restraint.properties.end) }}
           </template>
         </div>
       </template>
