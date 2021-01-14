@@ -58,7 +58,7 @@
           class="file-chosen-info"
         >
           <span
-            :class="{'is-warning': isExceedRemaingDataStorageSize}"
+            :class="{'is-warning': isExceedRemainingDataStorageSize}"
             class="file-chosen-remark">
             {{ fileChosenRemark }}
           </span>
@@ -89,7 +89,7 @@
           name="additionalButton"/>
         <button 
           v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
-          :disabled="isExceedRemaingDataStorageSize"
+          :disabled="isExceedRemainingDataStorageSize"
           class="btn btn-default"
           @click="fileUpload"
         >
@@ -154,21 +154,26 @@ export default {
       }, 0)
     },
     // 檢查當前上傳資料量是否大於剩餘總數據量
-    isExceedRemaingDataStorageSize () {
+    isExceedRemainingDataStorageSize () {
+      if (this.isMaxStorageSizeUnlimited) return false
       return this.totalTransmitDataAmount > this.remainingDataStorageSize
     },
     remainingDataStorageSize () {
+      if (this.isMaxStorageSizeUnlimited) return -1
       const remaining = this.license.maxDataStorageSize - this.license.currentDataStorageSize
       return remaining > 0 ? remaining * 1024 * 1024 * 1024 : 0
     },
     fileChosenRemark () {
-      return this.isExceedRemaingDataStorageSize
+      return this.isExceedRemainingDataStorageSize
         ? this.$t('editing.uploadFilesExceedDataStorageMessage', {
           count: this.uploadFileList.length,
           remaining: this.byteToMB(this.remainingDataStorageSize),
           totalFileSize: this.byteToMB(this.totalTransmitDataAmount)
         })
         : this.$t('editing.selectedTablesWaitingToUpload', { num: this.uploadFileList.length, size: this.byteToMB(this.totalTransmitDataAmount) })
+    },
+    isMaxStorageSizeUnlimited () {
+      return this.license.maxDataStorageSize === -1
     }
   },
   watch: {
@@ -286,7 +291,7 @@ export default {
       this.$store.commit('dataManagement/updateUploadFileList', this.uploadFileList.concat(fileList))
     },
     fileUpload () {
-      if (this.isExceedRemaingDataStorageSize) return
+      if (this.isExceedRemainingDataStorageSize) return
       let fileList = this.uploadFileList.map(element => {
         element.status = uploadStatus.uploading
         return element
