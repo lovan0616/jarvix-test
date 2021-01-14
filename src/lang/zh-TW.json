@@ -439,7 +439,9 @@
     "scriptExecutionStep2": "選擇輸入欄位",
     "scriptExecutionStep3": "設定輸出類型",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
-    "searchDataSource": "搜尋資料源"
+    "searchDataSource": "搜尋資料源",
+    "isOrdinal": "有時序",
+    "isNotOrdinal": "無時序"
   },
   "algorithm": {
     "name": "演算法",

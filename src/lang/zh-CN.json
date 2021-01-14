@@ -434,7 +434,9 @@
     "valueAliasTemplate": "数据别名案例档",
     "searchDataSourceOrDataFrame": "搜寻数据源 / 数据表",
     "onlyPrefixMatching": "此搜寻只支援从字首开始匹配",
-    "searchDataSource": "搜寻资料源"
+    "searchDataSource": "搜寻资料源",
+    "isOrdinal": "有时序",
+    "isNotOrdinal": "无时序"
   },
   "algorithm": {
     "name": "演算法",
