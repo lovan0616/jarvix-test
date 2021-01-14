@@ -22,11 +22,11 @@ export default {
     isMaxStorageSizeUnlimited () {
       return this.license.maxDataStorageSize === -1
     },
-    dataStorageUsageRate () {
-      return `${Number(this.license.currentDataStorageSize / this.license.maxDataStorageSize * 100).toFixed(2)} %`
-    },
     displayedDataStorageUsageRate () {
-      return `${this.$t('accountInfo.dataStorageUsageRate')} : ${this.isMaxStorageSizeUnlimited ? this.$t('accountInfo.unlimited') : this.dataStorageUsageRate}`
+      return `${this.$t('accountInfo.dataStorageUsageRate')} : ${this.isMaxStorageSizeUnlimited
+        ? this.$t('accountInfo.unlimited')
+        : `${Number(this.license.currentDataStorageSize / this.license.maxDataStorageSize * 100).toFixed(2)} %`}
+      `
     },
     displayedMaxDataStorageSize () {
       return this.isMaxStorageSizeUnlimited ? this.$t('accountInfo.unlimited') : `${this.license.maxDataStorageSize} GB`
