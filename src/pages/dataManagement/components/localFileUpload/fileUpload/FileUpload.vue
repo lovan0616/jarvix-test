@@ -268,7 +268,7 @@ export default {
 
         // 判斷是否有檔案超過大小限制
         // file size 單位為 bytes, license 單位為 GB
-        if (this.license.maxUploadSize !== -1 && file.size > 0.01 * 1024 * 1024 * 1024) {
+        if (this.license.maxUploadSize !== -1 && file.size > this.license.maxUploadSize * 1024 * 1024 * 1024) {
           this.unableFileList.push({
             data: formData,
             status: uploadStatus.forbidden,
