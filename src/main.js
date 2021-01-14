@@ -12,6 +12,7 @@ import '@/utils/mixins'
 import '@/icons'
 import './styles/App.scss'
 import i18n from './lang/index.js'
+import moment from 'moment'
 
 import {
   Button,
@@ -260,6 +261,26 @@ Validator.extend('validLowerBound', (lowerBoundValue, [upperBoundValue]) => {
   hasTarget: true
 })
 
+Validator.extend('validDatetimeUpperBound', (upperBoundValue, [lowerBoundValue]) => {
+  const getTimestamp = (time) => {
+    let ISOTime = new Date(time).toISOString()
+    return moment(ISOTime).format('x')
+  }
+  return getTimestamp(upperBoundValue) > getTimestamp(lowerBoundValue)
+}, {
+  hasTarget: true
+})
+
+Validator.extend('validDatetimeLowerBound', (lowerBoundValue, [upperBoundValue]) => {
+  const getTimestamp = (time) => {
+    let ISOTime = new Date(time).toISOString()
+    return moment(ISOTime).format('x')
+  }
+  return getTimestamp(lowerBoundValue) < getTimestamp(upperBoundValue)
+}, {
+  hasTarget: true
+})
+
 Validator.extend('eitherOneIsRequired', (value, [otherValue]) => {
   return {
     valid: `${value}`.length > 0 || `${otherValue}`.length > 0,
@@ -310,6 +331,12 @@ Vue.use(VeeValidate, {
         },
         validLowerBound() {
           return i18n.t('message.lowerBoundShouldBeSmallerThanUpperBound')
+        },
+        validDatetimeUpperBound () {
+          return i18n.t('message.endTimeShouldBeLargerThanStartTime')
+        },
+        validDatetimeLowerBound() {
+          return i18n.t('message.StartTimeShouldBeSmallerThanEndTime')
         },
         eitherOneIsRequired(field, params) {
           return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')

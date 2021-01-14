@@ -20,7 +20,6 @@
       class="single-filter-block__action"
     >
       <div
-        :class="{'single-filter-block__action--hidden': notEditable}"
         class="single-filter-block__action--edit"
         @click.prevent="editFilter"
       >
@@ -54,8 +53,12 @@
             </template>
             <template v-else>
               {{ sub_restraint.properties.display_name }} {{ $t('resultDescription.between', {
-                start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
-                end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
+                start: isDateTime(sub_restraint.properties.data_type) 
+                  ? customerTimeFormatter(sub_restraint.properties.start, sub_restraint.properties.timeScope)
+                  : roundNumber(sub_restraint.properties.start),
+                end: isDateTime(sub_restraint.properties.data_type)
+                  ? customerTimeFormatter(sub_restraint.properties.end, sub_restraint.properties.timeScope, true)
+                  : roundNumber(sub_restraint.properties.end)
               }) }}
             </template>
           </div>
@@ -70,8 +73,12 @@
             </template>
             <template v-if="restraint.type === 'range'">
               {{ restraint.properties['display_name'] }} = {{ $t('resultDescription.between', {
-                start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
-                end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
+                start: isDateTime(restraint.properties.data_type)
+                  ? customerTimeFormatter(restraint.properties.start, restraint.properties.timeScope)
+                  : roundNumber(restraint.properties.start),
+                end: isDateTime(restraint.properties.data_type)
+                  ? customerTimeFormatter(restraint.properties.end, restraint.properties.timeScope, true)
+                  : roundNumber(restraint.properties.end)
               }) }}
             </template>
           </div>
@@ -112,9 +119,6 @@ export default {
       }, []).filter((element, index, self) => {
         return self.findIndex(item => item === element) === index
       })
-    },
-    notEditable () {
-      return this.restriction.some(element => element.type === 'range' && element.properties.data_type === "datetime")
     }
   },
   watch: {
@@ -123,6 +127,9 @@ export default {
     }
   },
   methods: {
+    isDateTime (type) {
+      return type === "datetime"
+    },
     getRestraintColumnName (restraint) {
       if (!restraint.properties) return
       return restraint.properties['display_name']
@@ -182,10 +189,6 @@ export default {
 
     &--edit {
       margin-right: 8px;
-    }
-
-    &--hidden {
-      visibility: hidden;
     }
   }
 

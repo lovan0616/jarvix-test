@@ -65,7 +65,9 @@
     "emptyValueMsg": "*空值將採用當前資料的上下限。",
     "chooseValue": "選擇資料",
     "selectDate": "選擇日期",
-    "selectTime": "選擇時間"
+    "selectTime": "選擇時間",
+    "start":"開始",
+    "end": "結束"
   },
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
@@ -149,6 +151,8 @@
     "eitherOneIsRequired": "至少需填寫一個",
     "upperBoundShouldBeLargerThanLowerBound": "上限值需大於下限值",
     "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小於上限值",
+    "endTimeShouldBeLargerThanStartTime": "結束時間需大於開始時間",
+    "StartTimeShouldBeSmallerThanEndTime": "開始時間需小於結束時間",
     "and": "和",
     "upperBound": "上限",
     "lowerBound": "下限",
@@ -1166,7 +1170,8 @@
     "allowArg": {
       "second": "{n} 秒",
       "minute": "{n} 分",
-      "hour": "{n} 時"
+      "hour": "{n} 時",
+      "week": "第 {n} 週"
     }
   },
   "comparisonOperator": {

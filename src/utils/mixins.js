@@ -161,8 +161,15 @@ Vue.mixin({
     timeToDateTimeSecondPrecision (time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
-    customerTimeFormatter(time, timeScope) {
-      if (timeScope === "WEEK") {
+    customerTimeFormatter (time, timeScope, isRangeEnd = false) {
+      // 處理季
+      if (timeScope === 'QUARTER' && isRangeEnd) {
+        // 結束時間再加三個月
+        const format = this.getDatePickerOptions(timeScope).format.replace('dd', 'DD').replace('yyyy', 'YYYY')
+        return moment.utc(time).add(2, 'month').format(format)
+      }
+
+      if(timeScope === "WEEK") {
         /* 當一年最後一週跨到下一年
          * moment js 與後端回傳的 week 不同
          * EX: 2018-12-30(日)禮拜天落在 2018年第52週，但後端會傳 2019年第一週
@@ -175,8 +182,8 @@ Vue.mixin({
       return moment.utc(time).format(format)
     },
     // 在使用 TimePicker 時，把後端的 timeScope 對印到 element-ui 的 type, format
-    getDatePickerOptions(timeScope) {
-      switch (timeScope) {
+    getDatePickerOptions (timeScope) {
+      switch(timeScope) {
         case "SECOND":
         case "MINUTE":
         case "HOUR":
