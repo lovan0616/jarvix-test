@@ -300,7 +300,7 @@ export default {
     },
     refreshData () {
       this.isRefreshing = true
-      refreshResult(this.resultId)
+      refreshResult({ askResultId: this.resultId, isFilter: false })
         .then(res => {
           let promise = new Promise(resolve => this.$emit('refresh', {resolveFunction: resolve, pinBoardId: this.pinBoardId}))
           promise.then(() => {

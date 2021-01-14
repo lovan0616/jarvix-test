@@ -136,7 +136,7 @@
                   </span>
                 </el-tooltip>
                 <input-verify
-                  v-validate="'required'"
+                  v-validate="`letterSpace|max:${max}`"
                   v-show="isEditing(column.id)"
                   v-model="tempRowInfo.primaryAlias"
                   :name="'name-' + column.id"

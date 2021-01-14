@@ -42,10 +42,11 @@ export function askSpecificType ({ resultId, type, algoConfig }, cancelFunction)
 /**
  * refresh result
  */
-export function refreshResult (resultId) {
+export function refreshResult (data) {
   return request({
-    url: `/ask/result/${resultId}/refresh`,
-    method: 'POST'
+    url: `/ask/result/refresh`,
+    method: 'POST',
+    data
   })
 }
 
