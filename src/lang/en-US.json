@@ -2296,7 +2296,8 @@
     "dataFrameAmount": "Number of Data Set",
     "pinBoardAmount": "Number of Pinboard",
     "warRoomAmount": "Number of War Room",
-    "dataStorageUsageRate": "Total Data Storage Utilization: {rate}%"
+    "dataStorageUsageRate": "Total Data Storage Utilization",
+    "unlimited": "Unlimited"
   },
   "updateLicense": {
     "newKey": "New License Key",

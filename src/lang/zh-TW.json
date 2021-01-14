@@ -2296,7 +2296,8 @@
     "dataFrameAmount": "資料集數量",
     "pinBoardAmount": "釘板數量",
     "warRoomAmount": "戰情室數量",
-    "dataStorageUsageRate": "總數據容量使用率：{rate}%"
+    "dataStorageUsageRate": "總數據容量使用率",
+    "unlimited": "無限制"
   },
   "updateLicense": {
     "licenseKey": "新產品金鑰（license）",

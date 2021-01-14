@@ -1,13 +1,13 @@
 <template>
   <div class="info-block">
     <div class="info-block__label">
-      {{ dataStorageUsageRate }}
+      {{ displayedDataStorageUsageRate }}
     </div>
     <div class="info-block__detail">
       <dt class="info-block__detail-title">{{ $t('accountInfo.currentDataUsage') }}</dt>
       <dd class="info-block__detail-content">{{ license.currentDataStorageSize }} GB</dd>
       <dt class="info-block__detail-title">{{ $t('accountInfo.dataUsageProvided') }}</dt>
-      <dd class="info-block__detail-content">{{ license.maxDataStorageSize }} GB</dd>
+      <dd class="info-block__detail-content">{{ displayedMaxDataStorageSize }}</dd>
     </div>
   </div>
 </template>
@@ -19,9 +19,17 @@ export default {
   name: 'DataStorageUsageInfo',
   computed: {
     ...mapState('userManagement', ['license']),
+    isMaxStorageSizeUnlimited () {
+      return this.license.maxDataStorageSize === -1
+    },
     dataStorageUsageRate () {
-      const rate = Number(this.license.currentDataStorageSize / this.license.maxDataStorageSize * 100).toFixed(2)
-      return this.$t('accountInfo.dataStorageUsageRate', { rate })
+      return `${Number(this.license.currentDataStorageSize / this.license.maxDataStorageSize * 100).toFixed(2)} %`
+    },
+    displayedDataStorageUsageRate () {
+      return `${this.$t('accountInfo.dataStorageUsageRate')} : ${this.isMaxStorageSizeUnlimited ? this.$t('accountInfo.unlimited') : this.dataStorageUsageRate}`
+    },
+    displayedMaxDataStorageSize () {
+      return this.isMaxStorageSizeUnlimited ? this.$t('accountInfo.unlimited') : `${this.license.maxDataStorageSize} GB`
     }
   }
 }

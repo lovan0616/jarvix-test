@@ -155,7 +155,7 @@ export default {
     },
     // 檢查當前上傳資料量是否大於剩餘總數據量
     isExceedRemaingDataStorageSize () {
-      return this.totalTransmitDataAmount >= this.remainingDataStorageSize
+      return this.totalTransmitDataAmount > this.remainingDataStorageSize
     },
     remainingDataStorageSize () {
       const remaining = this.license.maxDataStorageSize - this.license.currentDataStorageSize
