@@ -37,7 +37,8 @@
     "dataFileManagement": "Data Set",
     "dataFileList": "List",
     "schedule": "Schedule",
-    "preferences": "Settings"
+    "preferences": "Settings",
+    "updateLicense": "Update License"
   },
   "user": {
     "changePwd": "Change Password",
@@ -152,7 +153,8 @@
     "upperBound": "Upper bound value",
     "lowerBound": "Lower bound value",
     "noPeriodicResult": "No cycle found",
-    "numericShouldBeBetween": "Number should be between {min} and {max}"
+    "numericShouldBeBetween": "Number should be between {min} and {max}",
+    "updateLicenseSuccess": "Successfully saved. Help you update it immediately！"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -657,12 +659,16 @@
     "chooseOptionHint": "Please select the elements you need to form a field from below, and the elements can be dragged to replace the position.",
     "maxColumn": "Currently supports up to {number} data field combinations",
     "inputPlaceholder": "Example: Profit = Revenue - Cost",
+    "datetimeInputPlaceholder": "@:askHelper.example：@:editing.elapsedTime = @:editing.endTime - @:editing.startTime",
     "featureManagement": "Custom Field Management",
     "customFeature": "Custom Feature",
     "recommendFeature": "Recommendation Feature",
     "createFeature": "New Custom Field",
     "featureColumnName": "Custom Column Name",
-    "featureSetting": "Expression Settings"
+    "featureSetting": "Expression Settings",
+    "generalOperation": "General Caculation",
+    "datetimeOperation": "Datetime Calculation",
+    "columnUnit": "Column Unit"
   },
   "bot": {
     "welcomeMessage": "Hi, what would you like to analyze today?",
@@ -2374,6 +2380,10 @@
     "dataFrameAmount": "Number of Data Set",
     "pinBoardAmount": "Number of Pinboard",
     "warRoomAmount": "Number of War Room"
+  },
+  "updateLicense": {
+    "newKey": "New License Key",
+    "placeholder": "Please enter new license key."
   },
   "dataType": {
     "numeric": "Numeric",

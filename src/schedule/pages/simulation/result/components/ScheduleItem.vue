@@ -106,10 +106,11 @@ export default {
     }
 
     &--ordinary {
+      min-width: 1px;
       height: 25px;
       border-radius: 4px;
       background-color: #2AD2E2;
-      margin: 7px 2px 0 2px;
+      margin: 7px 2px 0 0;
       transition: background-color .2s linear;
       &.active { background-color: var(--color-warning); }
     }

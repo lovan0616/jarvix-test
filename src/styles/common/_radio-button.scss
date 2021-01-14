@@ -48,3 +48,19 @@
   padding-left: 28px;
   color: #CCCCCC;
 }
+
+.input-radio-group {
+  display: inline-block;
+
+  &:not(:last-of-type) {
+    margin-right: 40px;
+  }
+  &:last-of-type {
+    margin-right: 16px;
+  }
+  
+  .input-radio-label {
+    line-height: 40px;
+    cursor: pointer;
+  }
+}
