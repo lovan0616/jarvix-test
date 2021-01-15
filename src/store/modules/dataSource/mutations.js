@@ -35,6 +35,10 @@ export default {
   setAlgoConfig(state, data) {
     state.algoConfig = data
   },
+  resetAlgoConfig (state) {
+    state.algoConfig.clustering.clusteringCount = null
+    state.algoConfig.prediction.predictionIntervalLength = '4'
+  },
   setFilterList (state, data) {
     if (data.length === 0) return false
     // 判斷要從哪邊開始取代新的

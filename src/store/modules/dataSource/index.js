@@ -15,8 +15,28 @@ export default {
     currentQuestionId: null,
     currentQuestionDataFrameId: null,
     algoConfig: {
-      clusteringCount: null,
-      predictionIntervalLength: '4'
+      clustering: {
+        '@type': 'ClusterAlgoConfig',
+        clusteringCount: null
+      },
+      prediction: {
+        '@type': 'PredictionAlgoConfig',
+        predictionIntervalLength: '4'
+      },
+      formula: {
+        '@type': 'FormulaAlgoConfig',
+        dataColumnList: [2, 3, 4, 5],
+        formulaId: 2
+      },
+      anomaly: {
+        '@type': 'AnomalyAlgoConfig',
+        standardLineType: 'MEDIAN',
+        stddevTimes: 3
+      },
+      stability: {
+        '@type': 'StandardLineAlgoConfigDo',
+        standardLineType: 'MEDIAN'
+      }
     },
     historyQuestionList: [],
     filterList: [],
