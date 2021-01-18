@@ -192,6 +192,7 @@
       align-items: center;
       margin-right: 20px;
       margin-bottom: 8px;
+      color: #DDD;
     }
   }
 
@@ -233,6 +234,27 @@
 
     .placeholder {
       color: #aaa;
+    }
+  }
+
+  .feature-select-block {
+    display: flex;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 40px;
+    color: #DDD;
+
+    .placeholder {
+      color: #aaa;
+    }
+
+    .time-scope-select {
+      width: 100px;
+      border-bottom: 1px solid $theme-color-white;
+
+      &.has-error {
+        border-bottom: 1px solid $theme-color-danger;
+      }
     }
   }
 

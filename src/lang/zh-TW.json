@@ -37,7 +37,8 @@
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表",
     "schedule": "生產排程",
-    "preferences": "個人設定"
+    "preferences": "個人設定",
+    "updateLicense": "更新產品金鑰"
   },
   "user": {
     "changePwd": "變更密碼",
@@ -64,7 +65,9 @@
     "emptyValueMsg": "*空值將採用當前資料的上下限。",
     "chooseValue": "選擇資料",
     "selectDate": "選擇日期",
-    "selectTime": "選擇時間"
+    "selectTime": "選擇時間",
+    "start":"開始",
+    "end": "結束"
   },
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
@@ -148,11 +151,14 @@
     "eitherOneIsRequired": "至少需填寫一個",
     "upperBoundShouldBeLargerThanLowerBound": "上限值需大於下限值",
     "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小於上限值",
+    "endTimeShouldBeLargerThanStartTime": "結束時間需大於開始時間",
+    "StartTimeShouldBeSmallerThanEndTime": "開始時間需小於結束時間",
     "and": "和",
     "upperBound": "上限",
     "lowerBound": "下限",
     "noPeriodicResult": "沒有找到週期結果",
-    "numericShouldBeBetween": "數字需介在 {min} 到 {max} 之間"
+    "numericShouldBeBetween": "數字需介在 {min} 到 {max} 之間",
+    "updateLicenseSuccess": "更新成功，立即為您刷新頁面！"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -672,12 +678,16 @@
     "chooseOptionHint": "請從下方點選您所需要的元素組成欄位，元素可拖曳替換位置",
     "maxColumn": "目前最多支援{number}個資料欄位組合",
     "inputPlaceholder": "範例：利潤 = 收入 - 成本",
+    "datetimeInputPlaceholder": "@:askHelper.example：@:editing.elapsedTime = @:editing.endTime - @:editing.startTime",
     "featureManagement": "自定義欄位管理",
     "customFeature": "自訂特徵欄位",
     "recommendFeature": "系統推薦特徵",
     "createFeature": "新增自定義欄位",
     "featureColumnName": "自定義欄位名稱",
-    "featureSetting": "運算式設定"
+    "featureSetting": "運算式設定",
+    "generalOperation": "一般運算式",
+    "datetimeOperation": "日期運算式",
+    "columnUnit": "欄位單位"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -1171,7 +1181,8 @@
     "allowArg": {
       "second": "{n} 秒",
       "minute": "{n} 分",
-      "hour": "{n} 時"
+      "hour": "{n} 時",
+      "week": "第 {n} 週"
     }
   },
   "comparisonOperator": {
@@ -2530,6 +2541,11 @@
     "dataFrameAmount": "資料集數量",
     "pinBoardAmount": "釘板數量",
     "warRoomAmount": "戰情室數量"
+  },
+  "updateLicense": {
+    "licenseKey": "新產品金鑰（license）",
+    "publicKey": "新公開金鑰（public key）",
+    "placeholder": "請輸入"
   },
   "dataType": {
     "numeric": "數值",

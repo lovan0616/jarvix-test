@@ -253,7 +253,7 @@ export default {
         {
           text: 'ID',
           value: 'id',
-          width:  '45px'
+          width: '65px'
         },
         {
           text: this.$t('editing.tableName'),
@@ -263,31 +263,31 @@ export default {
         {
           text: this.$t('editing.createWay'),
           value: 'createMethodLabel',
-          width: '75px'
+          width: '90px'
         },
         {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '124px',
+          width: '135px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '124px',
+          width: '135px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '50px'
+          width: '110px'
         },
         {
           text: this.$t('editing.lastUpdateResult'),
           value: 'latestImportStatus',
-          width: '80px'
+          width: '160px'
         },
         {
           text: this.$t('editing.action'),
@@ -599,7 +599,7 @@ export default {
   }
 
   /deep/ .data-table .data-table-cell {
-    min-width: 45px;
+    min-width: 65px;
   }
 
   .dataframe-action {
