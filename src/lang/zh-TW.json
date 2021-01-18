@@ -2423,7 +2423,24 @@
     "upperBoundValue": "上限值",
     "lowerBoundValue": "下限值",
     "normalValue": "正常值",
-    "anomalousValue": "異常值"
+    "anomalousValue": "異常值",
+    "normalDistribution": "常態分佈線",
+    "feature": {
+      "max": "最大值",
+      "min": "最小值",
+      "mean": "平均值",
+      "median": "中位數",
+      "pValue": "P-Value",
+      "sigma": "標準差",
+      "aDValue": "AD 值",
+      "kurtosis": "峰態(β)",
+      "skewness": "偏態",
+      "samplesAmount": "樣本數",
+      "trendsPValue": "趨勢性 P-Value",
+      "mixturesPValue": "混合性 P-Value",
+      "clusteringPValue": "類聚性 P-Value",
+      "oscillationPValue": "振盪性 P-Value"
+    }
   },
   "denotation": {
     "dataOverview": "資料概況",

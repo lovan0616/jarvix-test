@@ -2401,7 +2401,23 @@
     "upperBoundValue": "上限值",
     "lowerBoundValue": "下限值",
     "normalValue": "正常值",
-    "anomalousValue": "异常值"
+    "anomalousValue": "异常值",
+    "feature": {
+      "max": "最大值",
+      "min": "最小值",
+      "mean": "平均值",
+      "median": "中位数",
+      "pValue": "P-Value",
+      "sigma": "标准差",
+      "aDValue": "AD 值",
+      "kurtosis": "峰态(β)",
+      "skewness": "偏态",
+      "samplesAmount": "样本数",
+      "trendsPValue": "趋势性 P-Value",
+      "mixturesPValue": "混合性 P-Value",
+      "clusteringPValue": "类聚性 P-Value",
+      "oscillationPValue": "振荡性 P-Value"
+    }
   },
   "denotation": {
     "dataOverview": "资料概况",

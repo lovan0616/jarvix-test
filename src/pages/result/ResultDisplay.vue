@@ -172,7 +172,7 @@ export default {
 
       if (this.currentQuestionInfo) {
         this.$store.dispatch('chatBot/askResult', {
-          algoConfig: this.algoConfig,
+          algoConfig: null,
           questionId: this.currentQuestionId,
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
@@ -228,7 +228,7 @@ export default {
             
             this.$store.dispatch('chatBot/askResult', {
               questionId,
-              algoConfig: this.algoConfig,
+              algoConfig: null,
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList,

@@ -2278,7 +2278,23 @@
     "upperBoundValue": "Upper bound",
     "lowerBoundValue": "Lower bound",
     "normalValue": "Normal values",
-    "anomalousValue": "Anomalous values"
+    "anomalousValue": "Anomalous values",
+    "feature": {
+      "max": "Max",
+      "min": "Min",
+      "mean": "Mean",
+      "median": "Median",
+      "pValue": "P-Value",
+      "sigma": "Standard deviation",
+      "aDValue": "AD Value",
+      "kurtosis": "Kurtosis",
+      "skewness": "Skewness",
+      "samplesAmount": "Sample size",
+      "trendsPValue": "P-Value for trends",
+      "mixturesPValue": "P-Value for mixtures",
+      "clusteringPValue": "P-Value for clustering",
+      "oscillationPValue": "P-Value for oscillation"
+    }
   },
   "denotation": {
     "dataOverview": "Overview",

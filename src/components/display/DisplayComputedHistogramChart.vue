@@ -25,9 +25,15 @@
         </div>
       </div>
     </selected-region>
+    <feature-information-block
+      v-if="featureInformation"
+      :feature-information="featureInformation"
+    />
   </div>
 </template>
 <script>
+import FeatureInformationBlock from './FeatureInformationBlock'
+import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import { monitorVisualMap, monitorMarkLine, colorOnly1, getDrillDownTool } from '@/components/display/common/addons'
 
@@ -61,14 +67,52 @@ let histogramChartConfig = {
   }
 }
 
+let mockData = {
+    data: [  10.0,
+        10.0,
+        null,
+        5.0,
+        5.0,
+        5.0,
+        null,
+        null,
+        60.0,
+        5.0 ],
+    range: [19.91144,
+          20.00994],
+    description: [
+      "檢定結果的p-value大於顯著水準0.05，此資料可能符合常態分配。",
+      "(偏態高)有少部分數據大幅拉低整體平均，造成整體往左偏移的現象。"
+    ],
+    featureInformation: {
+      max: 20.85,
+      min: 19.91144,
+      mean: 11.05660109375,
+      median: 20.00644,
+      pValue: 'Infinity',
+      sigma: 0.006039942733477381,
+      aDValue: 'Infinity',
+      kurtosis: 748070159.7791307,
+      skewness: -11.33826975219976,
+      samplesAmount: 20
+    }
+}
+
+
 export default {
   name: 'DisplayComputedHistogramChart',
+  components: {
+    FeatureInformationBlock
+  },
   props: {
     dataset: {
       type: Object,
-      default () {
-        return {}
-      }
+      default: () => ({
+        data: [],
+        range: [],
+        descriptions: [],
+        featureInformation: []
+      })
     },
     title: {
       type: Object,
@@ -94,16 +138,41 @@ export default {
   },
   data () {
     return {
-      selectedData: []
+      selectedData: [],
+      lineChartPointAmount: 130,
+      featureInformation: {
+        max: 3184.0,
+        min: 47.0,
+        mean: 38,
+        median: 231.0,
+        pValue: 'Infinity',
+        sigma: 0.006039942733477381,
+        aDValue: 'Infinity',
+        kurtosis: 220092387.62433097,
+        skewness: 76.71066182626731,
+        samplesAmount: 199594
+      }
     }
   },
   computed: {
+    lineChartAxisTick () {
+      const xAxisMin = mockData.range[0]
+      const xAxisMax = mockData.range[1]
+      const getSingleAxisTick = currentIndex => xAxisMin + currentIndex * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
+      const axisTickList = [...Array(this.lineChartPointAmount).keys()].map(getSingleAxisTick)
+      return [
+        // 依照給定要畫的點數量依序產生的 x 軸 index
+        ...axisTickList,
+        // 適時在最後補值來確保 x 軸最後一個值對齊資料最大值
+        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) && [xAxisMax])
+      ]
+    },
     chartOption () {
       let histogramConfig = JSON.parse(JSON.stringify(histogramChartConfig))
       let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
-      let min = this.dataset.range[0]
-      let max = this.dataset.range[1]
-      let dataLength = this.dataset.data.length
+      let min = mockData.range[0]
+      let max = mockData.range[1]
+      let dataLength = mockData.data.length
       let interval = this.floatSub(max, min) / dataLength
 
       // 預設 四捨五入 到小數點後第幾位
@@ -122,7 +191,7 @@ export default {
         interval = Math.round(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
       }
       
-      let chartData = this.dataset.data.map((element, index) => {
+      let chartData = mockData.data.map((element, index) => {
         return [
           // bar start
           this.displayFloat(min + interval * index),
@@ -195,9 +264,10 @@ export default {
       }
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData 
+      histogramConfig.chartData.itemStyle.color = chartVariable['chartColorList-1']
       const labelFormatter = this.chartLabelFormatter
-      const maxValue = Math.max(...this.dataset.data)
-      chartAddon.series[0] = {
+      const maxValue = Math.max(...mockData.data)
+      chartAddon.series = [{
         ...histogramConfig.chartData,
         ...(this.isShowLabelData && {
           label: {
@@ -208,8 +278,22 @@ export default {
             formatter (value) { return labelFormatter(value.data[2], maxValue) }
           }
         })
-      }
-
+      }, {
+        ...(!!mockData.featureInformation && {
+          type: 'line',
+          name: this.$t('chart.normalDistribution'),
+          smooth: true,
+          symbol: 'none',
+          data: this.lineChartAxisTick.map(tick => this.calculateProbability(mockData.featureInformation.mean, mockData.featureInformation.sigma, tick)),
+          tooltip: {
+            show: false
+          }, 
+          itemStyle: {
+            color: '#FF9559'
+          }
+        })
+      }]
+      
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
       if (upperLimit !== null || lowerLimit !== null) {
@@ -238,6 +322,8 @@ export default {
       return this.$store.state.dataSource.appQuestion
     }
   },
+  mounted () {
+  },
   methods: {
     renderItem (params, api) {
       let yValue = api.value(2)
@@ -255,6 +341,9 @@ export default {
         },
         style: style
       }
+    },
+    calculateProbability (mean, sigma, xAxisIndex) {
+      return [xAxisIndex, (1 / (Math.sqrt(2 * Math.PI) * sigma)) * Math.exp(-1 * (Math.pow((xAxisIndex - mean), 2) / (2 * Math.pow(sigma, 2))))]
     },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {

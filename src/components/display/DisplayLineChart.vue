@@ -49,6 +49,10 @@
         </div>
       </div>
     </selected-region>
+    <feature-information-block
+      v-if="pValuesFeatureInformation"
+      :feature-information="pValuesFeatureInformation"
+    />
     <insight-description-block
       v-if="isShowDescription"
       :title="$t('resultDescription.dataInsight')"
@@ -67,6 +71,7 @@
 
 <script>
 import EchartAddon from './common/addon.js'
+import FeatureInformationBlock from './FeatureInformationBlock'
 import InsightDescriptionBlock from './InsightDescriptionBlock'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/components/display/common/addons'
@@ -91,6 +96,7 @@ const echartAddon = new EchartAddon({
 export default {
   name: 'DisplayLineChart',
   components: {
+    FeatureInformationBlock,
     InsightDescriptionBlock
   },
   props: {
@@ -171,14 +177,20 @@ export default {
         'large': true
       },
       'grid:default': {},
-      'yAxis:default': {}
+      'yAxis:default': {},
     })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true
+      showPagination: true,
+      pValuesFeatureInformation: {
+        trendsPValue: 5.1867e-320,
+        mixturesPValue: 1,
+        clusteringPValue: 2e-323,
+        oscillationPValue: 1
+      }
     }
   },
   computed: {
@@ -376,7 +388,7 @@ export default {
         //   }
         // }
       }
-
+        
       if (this.isShowCoefficients && this.coefficients) {
         let lineData = []
         let expression = ''
@@ -384,13 +396,18 @@ export default {
           // ax + b
           let offset = this.coefficients[0]
           let gradient = this.coefficients[1]
+
+          offset = 600
+          gradient = 0
           // 迴歸線點
           for (let i = 1; i <= this.dataset.index.length; i++) {
             lineData.push(this.roundNumber(gradient * i + offset, 4))
           }
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
-          expression = `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
+          expression = this.dataset.coefficientLineType
+            ? `${this.$t(`chart.feature.${this.dataset.coefficientLineType.toLowerCase()}`)}: ${displayOffset}`
+            : `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
         } else {
           // ax^2 + bx + c
           let offset = this.coefficients[0]

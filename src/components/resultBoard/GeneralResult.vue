@@ -296,7 +296,7 @@ export default {
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
         type: type,
-        algoConfig: this.algoConfig
+        algoConfig: null
       })
         .then(({ resultId }) => {
           this.switchTypeList[index] = {
