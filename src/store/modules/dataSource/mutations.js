@@ -36,8 +36,8 @@ export default {
     state.algoConfig = data
   },
   resetAlgoConfig (state) {
-    state.algoConfig.clusteringCount = null
-    state.algoConfig.predictionIntervalLength = '4'
+    state.algoConfig.clustering.clusteringCount = null
+    state.algoConfig.prediction.predictionIntervalLength = '4'
   },
   setFilterList (state, data) {
     if (data.length === 0) return false
