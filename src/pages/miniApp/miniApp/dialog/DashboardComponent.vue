@@ -57,7 +57,7 @@
               :is-show-description="false"
               :is-show-coefficients="false"
               :is-show-donwnload-btn="false"
-              :show-toolbox="false"
+              :is-show-toolbox="false"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
             />
@@ -560,6 +560,7 @@ export default {
     font-weight: 600;
     font-size: 14px;
     padding: 8px 16px;
+    cursor: pointer;
 
     &.active {
       color: #2AD2E2;

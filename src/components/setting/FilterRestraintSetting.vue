@@ -109,11 +109,8 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['columnList']),
-    NoDatetimeColumn () {
-      return this.columnList.filter(column => column.statsType !== "DATETIME")
-    },
     columnOption () {
-      return this.NoDatetimeColumn.map((column, index) => {
+      return this.columnList.map((column, index) => {
         return {
           id: column.id,
           name: column.name,
@@ -145,6 +142,12 @@ export default {
       this.tempRestraintList = JSON.parse(JSON.stringify(this.restraint.restraints))
     } else {
       this.tempRestraintList = [JSON.parse(JSON.stringify(this.restraint))]
+      this.tempRestraintList.forEach(restraint => {
+        if(restraint.properties.data_type === 'datetime'){
+          restraint.properties.start = this.customerTimeFormatter(restraint.properties.start, 'SECOND')
+          restraint.properties.end = this.customerTimeFormatter(restraint.properties.end, 'SECOND')
+        }
+      })
     }
   },
   destroyed () {
@@ -189,7 +192,8 @@ export default {
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
             end: null,
-            start: null 
+            start: null,
+            timeScope: 'SECOND'
           }
           break
         case 'NUMERIC':

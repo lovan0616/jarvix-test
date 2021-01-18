@@ -17,8 +17,8 @@
             {{ sub_restraint.properties['display_datavalues'].join(', ') }}
           </template>
           <template v-if="sub_restraint.type === 'range'">
-            {{ isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start) }}
-            - {{ isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end) }}
+            {{ isDateTime(sub_restraint.properties.data_type) ? customerTimeFormatter(sub_restraint.properties.start, sub_restraint.properties.timeScope) : roundNumber(sub_restraint.properties.start) }}
+            - {{ isDateTime(sub_restraint.properties.data_type) ? customerTimeFormatter(sub_restraint.properties.end, sub_restraint.properties.timeScope, true) : roundNumber(sub_restraint.properties.end) }}
           </template>
         </div>
       </template>
@@ -29,8 +29,8 @@
             {{ restraint.properties['display_datavalues'].join(', ') }}
           </template>
           <template v-if="restraint.type === 'range'">
-            {{ isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start) }}
-            - {{ isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end) }}
+            {{ isDateTime(restraint.properties.data_type) ? customerTimeFormatter(restraint.properties.start, restraint.properties.timeScope) : roundNumber(restraint.properties.start) }}
+            - {{ isDateTime(restraint.properties.data_type) ? customerTimeFormatter(restraint.properties.end, restraint.properties.timeScope, true) : roundNumber(restraint.properties.end) }}
           </template>
         </div>
       </template>
@@ -70,6 +70,9 @@ export default {
     }
   },
   methods: {
+    isDateTime (type) {
+      return type === "datetime"
+    },
     editRestraint() {
       this.$emit('restraint-edit')
     },

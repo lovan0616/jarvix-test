@@ -122,22 +122,6 @@ export default {
       line-height: 1;
       margin-bottom: 16px;
     }
-
-		.input-radio-group {
-			display: inline-block;
-
-			&:not(:last-of-type) {
-				margin-right: 40px;
-			}
-			&:last-of-type {
-				margin-right: 16px;
-      }
-      
-      .input-radio-label {
-        cursor: pointer;
-      }
-  }
-
   }
 }
 </style>
