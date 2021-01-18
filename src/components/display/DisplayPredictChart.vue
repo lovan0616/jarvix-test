@@ -105,7 +105,7 @@ export default {
       return this.$store.state.dataSource.algoConfig
     },
     lineSymbol () {
-      return String(this.algoConfig.predictionIntervalLength) === '1' ? 'circle' : 'none'
+      return String(this.algoConfig.prediction.predictionIntervalLength) === '1' ? 'circle' : 'none'
     },
     chartStyle () {
       return {
