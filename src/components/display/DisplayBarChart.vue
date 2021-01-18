@@ -111,7 +111,7 @@ export default {
       type: Boolean,
       default: false
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -232,7 +232,7 @@ export default {
         config.dataZoom = parallelZoomIn()
         config.animation = false
       }
-      config.toolbox.show = this.showToolbox
+      config.toolbox.show = this.isShowToolbox
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false

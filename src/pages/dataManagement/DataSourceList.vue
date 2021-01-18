@@ -127,23 +127,23 @@ export default {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '80px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '80px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
-        {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '20px'},
-        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '100px'},
+        {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
+        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '160px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '130px',
+          width: '200px',
           action: [
             {
               name: this.$t('button.rename'),

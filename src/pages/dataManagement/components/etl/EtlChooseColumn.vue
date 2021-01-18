@@ -42,11 +42,11 @@
         <div class="data-frame__info">
           <dl>
             <dt>{{ $t('etl.columnCount') }}：</dt>
-            <dd>{{ formatComma(currentTableInfo.columns.length) || '-' }}</dd>
+            <dd>{{ formatComma(currentTableInfo.columns.length) }}</dd>
           </dl>
           <dl>
             <dt>{{ $t('etl.rowCount') }}：</dt>
-            <dd>{{ formatComma(currentTableInfo.rowCount || '-') }}</dd>
+            <dd>{{ formatComma(currentTableInfo.rowCount) }}</dd>
           </dl>
         </div>
         <div class="data-frame__select">

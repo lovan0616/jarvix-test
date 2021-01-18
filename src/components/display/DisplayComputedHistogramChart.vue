@@ -79,7 +79,7 @@ export default {
         }
       }
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -224,7 +224,7 @@ export default {
 
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
-      chartAddon.toolbox.show = this.showToolbox
+      chartAddon.toolbox.show = this.isShowToolbox
       return { ...chartAddon, ...getDrillDownTool(this.$route.name, this.title) }
     },
     chartStyle () {

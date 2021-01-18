@@ -21,7 +21,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope), end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true) }) }}
             </div>
           </div>
         </div>
@@ -369,14 +369,16 @@ export default {
       }
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
+        console.log(coordRange[0], coordRange[1])
         return {
           type: 'range',
           properties: {
             dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]]
+            start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
+            end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
+            timeScope: this.dataset.timeScope
           }
         }
       })

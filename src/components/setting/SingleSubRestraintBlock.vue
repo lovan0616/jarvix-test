@@ -65,48 +65,59 @@
       class="single-sub-restraint__content">
       <div class="datetime-block">
         <div 
-          :class="{'has-error': errors.has(index + '-' + 'datatimeUpperBound')}" 
-          class="datetime-block__item item">
-          <div class="item__input-block">
-            <label class="item__label"> 
-              {{ $t('message.upperBound') }}
-            </label>
-            <el-date-picker
-              v-validate="datatimeUpperBoundRules"
-              ref="datatimeUpperBound"
-              v-model="subRestraint.properties.end"
-              :format="valueList.datePattern"
-              :name="index + '-' + 'datatimeUpperBound'"
-              value-format="timestamp"
-              type="datetime"
-              class="date-picker" />
-          </div>
-          <div 
-            v-show="errors.has(index + '-' + 'datatimeUpperBound')"
-            class="error-text"
-          >{{ errors.first(index + '-' + 'datatimeUpperBound') }}</div>
-        </div>
-        <div 
-          :class="{'has-error': errors.has(index + '-' + 'datatimeLowerBound')}" 
+          :class="{'has-error': errors.has(index + '-' + 'datetimeLowerBound')}" 
           class="item">
           <div class="item__input-block">
             <label class="item__label"> 
-              {{ $t('message.lowerBound') }}
+              {{ $t('dataFrameAdvanceSetting.start') }}
             </label>
+            <!-- value-format 不要使用 timestamp, 會有時區問題
+              Datepicker saving wrong date to v-model 
+              https://github.com/ElemeFE/element/issues/3814
+            -->
             <el-date-picker
-              v-validate="datatimeLowerBoundRules"
-              ref="datatimeLowerBound"
+              v-validate="datetimeLowerBoundRules"
+              ref="datetimeLowerBound"
               v-model="subRestraint.properties.start"
-              :format="valueList.datePattern"
-              :name="index + '-' + 'datatimeLowerBound'"
-              value-format="timestamp"
-              type="datetime"
-              class="date-picker" />
+              :name="index + '-' + 'datetimeLowerBound'"
+              :type="getDatePickerOptions(subRestraint.properties.timeScope).type"
+              :format="getDatePickerOptions(subRestraint.properties.timeScope).format"
+              :value-format="subRestraint.properties.timeScope === 'WEEK' ? '' : 'yyyy-MM-dd HH:mm:ss'"
+              class="date-picker" 
+              @change="handleWeekStart"/>
           </div>
           <div 
-            v-show="errors.has(index + '-' + 'datatimeLowerBound')"
+            v-show="errors.has(index + '-' + 'datetimeLowerBound')"
             class="error-text"
-          >{{ errors.first(index + '-' + 'datatimeLowerBound') }}</div>
+          >{{ errors.first(index + '-' + 'datetimeLowerBound') }}</div>
+        </div>
+        <div 
+          :class="{'has-error': errors.has(index + '-' + 'datetimeUpperBound')}" 
+          class="datetime-block__item item">
+          <div class="item__input-block">
+            <label class="item__label"> 
+              {{ $t('dataFrameAdvanceSetting.end') }}
+            </label>
+            <!-- value-format 不要使用 timestamp, 會有時區問題
+              Datepicker saving wrong date to v-model 
+              https://github.com/ElemeFE/element/issues/3814
+            -->
+            <el-date-picker
+              v-validate="datetimeUpperBoundRules"
+              ref="datetimeUpperBound"
+              v-model="subRestraint.properties.end"
+              :name="index + '-' + 'datetimeUpperBound'"
+              :picker-options="endTimePickerOptions"
+              :type="getDatePickerOptions(subRestraint.properties.timeScope).type"
+              :format="getDatePickerOptions(subRestraint.properties.timeScope).format"
+              :value-format="subRestraint.properties.timeScope === 'WEEK' ? '' : 'yyyy-MM-dd HH:mm:ss'"
+              class="date-picker"
+              @change="handleWeekEnd"/>
+          </div>
+          <div 
+            v-show="errors.has(index + '-' + 'datetimeUpperBound')"
+            class="error-text"
+          >{{ errors.first(index + '-' + 'datetimeUpperBound') }}</div>
         </div>
       </div>
     </div>
@@ -214,6 +225,9 @@ export default {
     return {
       isSearching: false,
       isLoading: false,
+      endTimePickerOptions: {
+        disabledDate: this.disabledDueDate
+      },
       columnId: null,
       selectedList: [],
       valueList: [],
@@ -232,15 +246,11 @@ export default {
     lowerBoundRules () {
       return 'required|decimal|validLowerBound:upperBound'
     },
-    datatimeUpperBoundRules () {
-      return this.subRestraint.properties.start 
-        ? 'required|validUpperBound:datatimeLowerBound'
-        : 'required'
+    datetimeUpperBoundRules () {
+      return 'required|validDatetimeUpperBound:datetimeLowerBound'
     },
-    datatimeLowerBoundRules () {
-      return this.subRestraint.properties.end
-        ? 'required|validLowerBound:datatimeUpperBound'
-        : 'required'
+    datetimeLowerBoundRules () {
+      return 'required|validDatetimeLowerBound:datetimeUpperBound'
     }
   },
   mounted () {
@@ -252,8 +262,8 @@ export default {
       this.columnId = this.subRestraint.properties['dc_id']
       getDataColumnValue(this.columnId).then(response => {
         this.statsType = response.type
-        this.valueList = this.statsType === 'BOOLEAN' && response['bool']
-          ? ["true", "false"]
+        this.valueList = this.statsType === 'BOOLEAN'
+          ? response['bool']
           : response[this.statsType.toLowerCase()]
 
         if(this.statsType === 'CATEGORY') {
@@ -288,8 +298,8 @@ export default {
           if(this.subRestraint.properties.start && this.subRestraint.properties.end) {
             return 
           } else {
-            this.subRestraint.properties.start = this.valueList.start
-            this.subRestraint.properties.end = this.valueList.end
+            this.subRestraint.properties.start = this.customerTimeFormatter(this.valueList.start, 'SECOND')
+            this.subRestraint.properties.end = this.customerTimeFormatter(this.valueList.end, 'SECOND')
           }
         } else if (this.statsType === 'NUMERIC') {
           this.subRestraint.properties.start = this.subRestraint.properties.start || this.valueList.min
@@ -351,6 +361,20 @@ export default {
     },
     deleteSubRestraint () {
       this.$emit('delete')
+    },
+    /* timePicker 單位是 week 時，不能使用 value-format 
+     * https://github.com/ElemeFE/element/issues/8783
+    */
+    handleWeekStart (time) {
+      if(this.subRestraint.properties.timeScope !== 'WEEK') return
+      this.subRestraint.properties.start = time.getTime()
+    },
+    handleWeekEnd (time) {
+      if(this.subRestraint.properties.timeScope !== 'WEEK') return
+      this.subRestraint.properties.end = time.getTime()
+    },
+    disabledDueDate (time) {
+      return time.getTime() < new Date(this.subRestraint.properties.start).getTime()
     }
   },
 

@@ -10,7 +10,7 @@
       <task
         :key="componentId"
         :component-id="componentId"
-        :show-toolbox="false"
+        :is-show-toolbox="false"
         :custom-chart-style="{ width: '100%', height: '240px' }"
         :arrow-btn-right="20"
         intend="recommended_insight"

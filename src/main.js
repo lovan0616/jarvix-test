@@ -12,6 +12,7 @@ import '@/utils/mixins'
 import '@/icons'
 import './styles/App.scss'
 import i18n from './lang/index.js'
+import moment from 'moment'
 
 import {
   Button,
@@ -244,8 +245,8 @@ Validator.extend('requireOneNumeric', function (value) {
 })
 
 Validator.extend('letterSpace', function (value) {
-  // 含簡繁體、英文、空格
-  return /^[\u4e00-\u9fa5_a-zA-Z0-9\s]*$/i.test(value) && !Number(value)
+  // 含簡繁體、英文、注音符號、四聲、空格
+  return /^[\u4e00-\u9fa5_a-zA-Z0-9\u3105-\u3129\u02CA\u02C7\u02CB\u02D9\s]*$/i.test(value) && !Number(value)
 })
 
 Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
@@ -256,6 +257,26 @@ Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
 
 Validator.extend('validLowerBound', (lowerBoundValue, [upperBoundValue]) => {
   return Number(lowerBoundValue) < Number(upperBoundValue)
+}, {
+  hasTarget: true
+})
+
+Validator.extend('validDatetimeUpperBound', (upperBoundValue, [lowerBoundValue]) => {
+  const getTimestamp = (time) => {
+    let ISOTime = new Date(time).toISOString()
+    return moment(ISOTime).format('x')
+  }
+  return getTimestamp(upperBoundValue) > getTimestamp(lowerBoundValue)
+}, {
+  hasTarget: true
+})
+
+Validator.extend('validDatetimeLowerBound', (lowerBoundValue, [upperBoundValue]) => {
+  const getTimestamp = (time) => {
+    let ISOTime = new Date(time).toISOString()
+    return moment(ISOTime).format('x')
+  }
+  return getTimestamp(lowerBoundValue) < getTimestamp(upperBoundValue)
 }, {
   hasTarget: true
 })
@@ -310,6 +331,12 @@ Vue.use(VeeValidate, {
         },
         validLowerBound() {
           return i18n.t('message.lowerBoundShouldBeSmallerThanUpperBound')
+        },
+        validDatetimeUpperBound () {
+          return i18n.t('message.endTimeShouldBeLargerThanStartTime')
+        },
+        validDatetimeLowerBound() {
+          return i18n.t('message.StartTimeShouldBeSmallerThanEndTime')
         },
         eitherOneIsRequired(field, params) {
           return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')

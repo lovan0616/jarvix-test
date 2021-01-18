@@ -50,7 +50,7 @@
         :cluster-infos="componentData.clusterInfos"
         :sub-components="componentData.subComponents"
         :key="componentId"
-        :show-toolbox="showToolbox"
+        :is-show-toolbox="isShowToolbox"
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
         :is-show-label-data="isShowLabelData"
@@ -102,7 +102,7 @@ export default {
       type: String,
       default: null
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -346,7 +346,7 @@ export default {
         }
 
         /**
-         * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆依樣時間的話
+         * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆一樣時間的話
          **/
         if (this.componentData.dataset.index[this.componentData.dataset.index.length - 1] === taskData.dataset.index[0]) {
           /**
@@ -388,7 +388,9 @@ export default {
           if (taskData.dataset.index.length !== 1) {
             // index 更新
             taskData.dataset.index.shift()
+            taskData.dataset.timeStampList.shift()
             this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+            this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
             if (taskData.dataset.display_index) {
               taskData.dataset.display_index.shift()
               this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
@@ -418,6 +420,7 @@ export default {
 
           // index 更新
           this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+          this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
           if (taskData.dataset.display_index) {
             this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
           }
@@ -425,6 +428,7 @@ export default {
       } else {
         this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
         this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+        this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
         if (this.componentData.dataset.display_index) {
           this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
         }

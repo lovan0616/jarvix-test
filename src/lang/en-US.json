@@ -37,7 +37,8 @@
     "dataFileManagement": "Data Set",
     "dataFileList": "List",
     "schedule": "Schedule",
-    "preferences": "Settings"
+    "preferences": "Settings",
+    "updateLicense": "Update License"
   },
   "user": {
     "changePwd": "Change Password",
@@ -64,7 +65,9 @@
     "emptyValueMsg": "*If no value is entered, the upper and lower limits of the current data will be used.",
     "chooseValue": "Select Data",
     "selectDate": "Select Date",
-    "selectTime": "Select Time"
+    "selectTime": "Select Time",
+    "start": "Start",
+    "end": "End"
   },
   "message": {
     "joinTableBuilding": "Data Set will be available for analysis once it is processed.",
@@ -148,11 +151,14 @@
     "eitherBoundIsRequired": "At least one of the upper and lower bound should be set.",
     "upperBoundShouldBeLargerThanLowerBound": "Upper bound value should be larger than lower bound value",
     "lowerBoundShouldBeSmallerThanUpperBound": "Lower bound value should be smaller than upper bound value",
+    "endTimeShouldBeLargerThanStartTime": "End time should be larger than start Time",
+    "StartTimeShouldBeSmallerThanEndTime": "Start time should be smaller than end Time",
     "and": "and",
     "upperBound": "Upper bound value",
     "lowerBound": "Lower bound value",
     "noPeriodicResult": "No cycle found",
-    "numericShouldBeBetween": "Number should be between {min} and {max}"
+    "numericShouldBeBetween": "Number should be between {min} and {max}",
+    "updateLicenseSuccess": "Successfully saved. Help you update it immediately！"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -657,12 +663,16 @@
     "chooseOptionHint": "Please select the elements you need to form a field from below, and the elements can be dragged to replace the position.",
     "maxColumn": "Currently supports up to {number} data field combinations",
     "inputPlaceholder": "Example: Profit = Revenue - Cost",
+    "datetimeInputPlaceholder": "@:askHelper.example：@:editing.elapsedTime = @:editing.endTime - @:editing.startTime",
     "featureManagement": "Custom Field Management",
     "customFeature": "Custom Feature",
     "recommendFeature": "Recommendation Feature",
     "createFeature": "New Custom Field",
     "featureColumnName": "Custom Column Name",
-    "featureSetting": "Expression Settings"
+    "featureSetting": "Expression Settings",
+    "generalOperation": "General Caculation",
+    "datetimeOperation": "Datetime Calculation",
+    "columnUnit": "Column Unit"
   },
   "bot": {
     "welcomeMessage": "Hi, what would you like to analyze today?",
@@ -1023,7 +1033,8 @@
     "allowArg": {
       "second": "0 sec | 1 sec | {n} secs",
       "minute": "0 min | 1 min | {n} mins",
-      "hour": "0 hr | 1 hr | {n} hrs"
+      "hour": "0 hr | 1 hr | {n} hrs",
+      "week": "W{n}"
     }
   },
   "aggregation": {
@@ -2374,6 +2385,10 @@
     "dataFrameAmount": "Number of Data Set",
     "pinBoardAmount": "Number of Pinboard",
     "warRoomAmount": "Number of War Room"
+  },
+  "updateLicense": {
+    "newKey": "New License Key",
+    "placeholder": "Please enter new license key."
   },
   "dataType": {
     "numeric": "Numeric",
