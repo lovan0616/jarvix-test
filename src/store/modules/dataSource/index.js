@@ -23,11 +23,6 @@ export default {
         '@type': 'PredictionAlgoConfig',
         predictionIntervalLength: '4'
       },
-      formula: {
-        '@type': 'FormulaAlgoConfig',
-        dataColumnList: [2, 3, 4, 5],
-        formulaId: 2
-      },
       anomaly: {
         '@type': 'AnomalyAlgoConfig',
         standardLineType: 'MEDIAN',
