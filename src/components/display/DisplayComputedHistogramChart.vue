@@ -75,12 +75,7 @@ export default {
   props: {
     dataset: {
       type: Object,
-      default: () => ({
-        data: [],
-        range: [],
-        descriptions: [],
-        featureInformation: []
-      })
+      default: () => {}
     },
     title: {
       type: Object,
@@ -282,8 +277,6 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
-  },
-  mounted () {
   },
   methods: {
     renderItem (params, api) {

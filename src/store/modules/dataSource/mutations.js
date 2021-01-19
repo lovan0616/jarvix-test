@@ -38,6 +38,7 @@ export default {
   resetAlgoConfig (state) {
     state.algoConfig.clustering.clusteringCount = null
     state.algoConfig.prediction.predictionIntervalLength = '4'
+    state.algoConfig.standardLineType = 'MEDIAN'
   },
   setFilterList (state, data) {
     if (data.length === 0) return false

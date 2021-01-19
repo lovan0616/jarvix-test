@@ -181,7 +181,7 @@ export default {
         'large': true
       },
       'grid:default': {},
-      'yAxis:default': {},
+      'yAxis:default': {}
     })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
