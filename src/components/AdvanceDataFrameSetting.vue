@@ -405,6 +405,9 @@ export default {
 
     &.is-active {
       flex: 1 1 48px;
+      .setting__collapse-title {
+        color: #ffffff;
+      }
     }
 
     &__wrap {

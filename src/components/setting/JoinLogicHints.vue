@@ -50,7 +50,9 @@ export default {
     left: 0;
     cursor: pointer;
     fill: #555;
+    transition: fill .3s ease;
     &:hover {
+      fill: #CCC;
       & ~ .join-logic-hints__description {
         display: block;
       }
