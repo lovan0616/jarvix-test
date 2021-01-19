@@ -57,6 +57,8 @@
     "dataColumns": "Columns",
     "addFilter": "Add Filter",
     "restrictionSetting": "Filter Limits",
+    "ANDLogicHint": "the relationship of different conditions from the same limitation sets follows the logic of “AND”, which only makes the repeatedly selected data effective.",
+    "OR LogicHint": "the relationship of different conditions from the different limitation sets follows the logic of “OR”, which makes all the selected (even non repeated) data effective.",
     "addRestriction": "Add limit",
     "noRestrictionYet": "No Filter Set",
     "restraintSetting": "Limit Setting",

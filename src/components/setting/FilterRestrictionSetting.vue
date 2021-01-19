@@ -7,7 +7,13 @@
       {{ $t('dataFrameAdvanceSetting.filterCriteria') }}
     </div>
     <div class="restriction-setting__header">
-      <h1 class="restriction-setting__title">{{ $t('dataFrameAdvanceSetting.restrictionSetting') }}</h1>
+      <h1 class="restriction-setting__title">
+        {{ $t('dataFrameAdvanceSetting.restrictionSetting') }}
+        <join-logic-hints
+          :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
+          icon-class="full-join"
+        />
+      </h1>
     </div>
     <button
       type="button"
@@ -40,13 +46,15 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import SingleRestraintBlock from '@/components/setting/SingleRestraintBlock'
+import JoinLogicHints from './JoinLogicHints'
 import { mapState } from 'vuex'
 
 export default {
   name: 'FilterRestrictionSetting',
   components: {
     DefaultSelect,
-    SingleRestraintBlock
+    SingleRestraintBlock,
+    JoinLogicHints
   },
   props: {
     restriction: {
@@ -127,11 +135,16 @@ export default {
   }
 
   &__title {
+    display: flex;
+    align-items: center;
     flex: 1;
     margin: 0;
     font-weight: 600;
     font-size: 16px;
     line-height: 22px;
+    .join-logic-hints__block {
+      margin-left: 8px;
+    }
   }
 
   .add-restriction-btn {

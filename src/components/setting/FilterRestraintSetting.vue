@@ -7,7 +7,13 @@
       {{ $t('dataFrameAdvanceSetting.restrictionSetting') }}
     </div>
     <div class="restraint-setting__header">
-      <h1 class="restraint-setting__title">{{ $t('dataFrameAdvanceSetting.restraintSetting') }}</h1>
+      <h1 class="restraint-setting__title">
+        {{ $t('dataFrameAdvanceSetting.restraintSetting') }}
+        <join-logic-hints
+          :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
+          icon-class="inner-join"
+        />
+      </h1>
       <button
         :class="{'add-restraint-btn--active': isShowSeletor}"
         type="button"
@@ -83,6 +89,7 @@
 import SearchBlock from '@/components/SearchBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import SingleSubRestraintBlock from '@/components/setting/SingleSubRestraintBlock'
+import JoinLogicHints from './JoinLogicHints'
 import { mapState } from 'vuex'
 
 export default {
@@ -91,7 +98,8 @@ export default {
   components: {
     SearchBlock,
     DefaultSelect,
-    SingleSubRestraintBlock
+    SingleSubRestraintBlock,
+    JoinLogicHints
   },
   props: {
     restraint: {
@@ -264,11 +272,15 @@ export default {
   }
 
   &__title {
+    display: flex;
     flex: 1;
     margin: 0;
     font-weight: 600;
     font-size: 16px;
     line-height: 22px;
+    .join-logic-hints__block {
+      margin-left: 8px;
+    }
   }
 
   .add-restraint-btn {
