@@ -130,14 +130,14 @@ export default {
     isAnomalyTwoNumericDependence () {
       return !this.dataset.predictDataList && !!this.dataset.midlineValue
     },
-    centerSolidLineData () {
+    mediumLine () {
       const dataAmount = this.dataset.data.length
       return this.isAnomalyTwoNumericDependence 
         ? Array(dataAmount).fill(this.dataset.midlineValue)
         : this.dataset.predictDataList
     },
     lowerBoundList () {
-      return this.centerSolidLineData.map(item => item - this.zValue * this.dataset.sigma)
+      return this.mediumLine.map(item => item - this.zValue * this.dataset.sigma)
     },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
@@ -147,7 +147,7 @@ export default {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     toUpperBoundIntervalList () {
-      return this.centerSolidLineData.map(item => 2 * this.zValue * this.dataset.sigma)
+      return this.mediumLine.map(item => 2 * this.zValue * this.dataset.sigma)
     },
     actualDataList () {
       const actualDataList = {
@@ -169,7 +169,7 @@ export default {
       this.dataset.index.forEach((value, index) => {
         source.push([
           value, 
-          this.adjustValueWithOffsetValue(this.centerSolidLineData[index]),
+          this.adjustValueWithOffsetValue(this.mediumLine[index]),
           this.adjustValueWithOffsetValue(this.lowerBoundList[index]), 
           this.toUpperBoundIntervalList[index],
           //this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
@@ -318,6 +318,7 @@ export default {
           // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
           displayValue += this.yAxisOffsetValue
           let marker = params[i].marker ? params[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color.colorStops[0].color};"></span>`
+          // 有異常分析的時候，不顯示正常值
           if(i !== 3 || !hasAnomalyData) res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
         }
         return res
@@ -371,11 +372,6 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
-  },
-  mounted () {
-    this.dataset.midlineValue = 500
-    this.dataset.midlineType = 'MEDIAN'
-    this.dataset.predictDataList = null
   },
   methods: {
     // 處理堆疊圖目前無法處理橫跨正負的計算：正值只能加正值的區間值，負值只能加負值的區間值
