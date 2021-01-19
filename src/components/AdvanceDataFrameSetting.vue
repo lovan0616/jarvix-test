@@ -42,7 +42,9 @@
             {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + filterListStatus + ')' }}
             <join-logic-hints
               :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
+              :hint-position="activeCollapseName === 'filter' ? null : 'top'"
               icon-class="inner-join"
+              @click.native.stop
             />
           </div>
         </template>
@@ -309,6 +311,10 @@ export default {
       font-weight: 600;
       display: flex;
       align-items: center;
+      color: rgba(255, 255, 255, .5);
+      &:hover {
+        color: rgba(255, 255, 255, .7);
+      }
       .join-logic-hints__block {
         margin-left: 8px;
       }
@@ -410,15 +416,10 @@ export default {
     }
 
     &__header {
-      opacity: .5;
       cursor: pointer;
       border-radius: 0;
       border-bottom: none;
       background: rgba(0, 0, 0, .55);
-
-      &:hover {
-        opacity: .7;
-      }
 
       &.is-active {
         opacity: 1;

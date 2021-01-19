@@ -4,7 +4,10 @@
       :icon-class="iconClass"
       class="join-logic-hints__icon"
     />
-    <div class="join-logic-hints__description">
+    <div
+      :class="`join-logic-hints__description--${hintPosition}`"
+      class="join-logic-hints__description"
+    >
       {{ hint }}
     </div>
   </div>
@@ -19,6 +22,10 @@ export default {
       default: ''
     },
     hint: {
+      type: String,
+      default: ''
+    },
+    hintPosition: {
       type: String,
       default: ''
     }
@@ -61,7 +68,7 @@ export default {
     font-size: 14px;
     font-weight: normal;
     line-height: 1.5;
-    z-index: 3;
+    z-index: 4;
     &:before {
       content: '';
       display: block;
@@ -73,6 +80,19 @@ export default {
       border-width: 0px 10px 10px 10px;
       height: 0px;
       width: 0px;
+      transition: all .3s ease;
+    }
+    &--top {
+      top: unset;
+      bottom: 24px;
+      left: -18px;
+      &:before {
+        top: unset;
+        bottom: -8px;
+        left: 16px;
+        border-color: #233131 transparent transparent transparent;
+        border-width: 10px 10px 0px 10px;
+      }
     }
   }
 }
