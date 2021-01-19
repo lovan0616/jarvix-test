@@ -2449,7 +2449,9 @@
     "predictionAnalysis": "預測分析",
     "trendAnalysis": "趨勢分析",
     "anomalyAnalysis": "異常分析",
-    "periodicityAnalysis": "週期性分析"
+    "periodicityAnalysis": "週期性分析",
+    "stabilityAnalysis": "穩定度分析",
+    "normalityTest": "常態檢定"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

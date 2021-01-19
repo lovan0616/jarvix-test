@@ -29,7 +29,7 @@ export default {
         stddevTimes: 3
       },
       stability: {
-        '@type': 'StandardLineAlgoConfigDo',
+        '@type': 'StandardLineAlgoConfig',
         standardLineType: 'MEDIAN'
       }
     },

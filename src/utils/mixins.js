@@ -364,6 +364,10 @@ Vue.mixin({
           return { name: i18n.t('denotation.anomalyAnalysis'), icon: 'anomaly-analysis' }
         case 'SEASONALITY':
           return { name: i18n.t('denotation.periodicityAnalysis'), icon: 'cycle' }
+        case 'NORMALITY_TEST':
+          return { name: i18n.t('denotation.normalityTest'), icon: 'normality-analysis' }
+        case 'STABILITY':
+          return { name: i18n.t('denotation.stabilityAnalysis'), icon: 'stability-analysis' }
       }
     },
     // 整個結果頁的 layout

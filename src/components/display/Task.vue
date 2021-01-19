@@ -39,6 +39,7 @@
         :confidence="componentData.confidence"
         :formula="componentData.displayCoefficients"
         :coefficients="componentData.coeffs"
+        :coefficient-line-type="componentData.coefficientLineType"
         :text="componentData.text"
         :chart-data="componentData.chart_data"
         :notes="componentData.notes"

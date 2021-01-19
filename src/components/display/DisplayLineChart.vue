@@ -50,8 +50,8 @@
       </div>
     </selected-region>
     <feature-information-block
-      v-if="pValuesFeatureInformation"
-      :feature-information="pValuesFeatureInformation"
+      v-if="dataset.pValuesFeatureInformation"
+      :feature-information="dataset.pValuesFeatureInformation"
     />
     <insight-description-block
       v-if="isShowDescription"
@@ -166,6 +166,10 @@ export default {
       type: Array,
       default: null
     },
+    coefficientLineType: {
+      type: String,
+      default: 'MEDIAN'
+    },
     formula: {
       type: Array,
       default: null
@@ -184,13 +188,7 @@ export default {
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true,
-      pValuesFeatureInformation: {
-        trendsPValue: 5.1867e-320,
-        mixturesPValue: 1,
-        clusteringPValue: 2e-323,
-        oscillationPValue: 1
-      }
+      showPagination: true
     }
   },
   computed: {
@@ -396,17 +394,14 @@ export default {
           // ax + b
           let offset = this.coefficients[0]
           let gradient = this.coefficients[1]
-
-          offset = 600
-          gradient = 0
           // 迴歸線點
           for (let i = 1; i <= this.dataset.index.length; i++) {
             lineData.push(this.roundNumber(gradient * i + offset, 4))
           }
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
-          expression = this.dataset.coefficientLineType
-            ? `${this.$t(`chart.feature.${this.dataset.coefficientLineType.toLowerCase()}`)}: ${displayOffset}`
+          expression = this.coefficientLineType
+            ? `${this.$t(`chart.feature.${this.coefficientLineType.toLowerCase()}`)}: ${this.formatComma(displayOffset)}`
             : `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
         } else {
           // ax^2 + bx + c
