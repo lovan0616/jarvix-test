@@ -913,7 +913,8 @@
     "selectFormula": "選擇運算式",
     "formulaPreview": "運算式預覽",
     "setting": "設定",
-    "otherSettings": "其他設定"
+    "otherSettings": "其他設定",
+    "formulaType": "公式類型"
   },
   "alert": {
     "alertLogs": "示警紀錄",

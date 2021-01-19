@@ -1,56 +1,9 @@
 <template>
   <section class="formula-setting">
-    <div class="setting setting--top">
+    <!--公式選擇-->
+    <div class="setting">
       <div class="setting__title">
-        {{ $t('miniApp.sourceOfData') }}
-      </div>
-      <div class="setting__content">
-        <div class="input-field">
-          <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
-          <div class="input-field__input-box">
-            <default-select 
-              v-validate="'required'"
-              :option-list="dataSourceOptionList"
-              :placeholder="$t('miniApp.chooseDataSource')"
-              :is-disabled="isLoading"
-              v-model="formulaSetting.dataSourceId"
-              filterable
-              class="input-field__select"
-              name="dataSourceId"
-              @change="fetchDataFrameList"
-            />
-            <div 
-              v-show="errors.has('dataSourceId')"
-              class="error-text"
-            >{{ errors.first('dataSourceId') }}</div>
-          </div>
-        </div>
-        <div class="input-field">
-          <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
-          <div class="input-field__input-box">
-            <default-select 
-              v-validate="'required'"
-              :option-list="dataFrameOptionList"
-              :placeholder="$t('miniApp.chooseDataFrame')"
-              :is-disabled="isLoading"
-              v-model="formulaSetting.dataFrameId"
-              filterable
-              class="input-field__select"
-              name="dataFrameId"
-              @change="fetchDataColumnList"
-            />
-            <div 
-              v-show="errors.has('dataFrameId')"
-              class="error-text"
-            >{{ errors.first('dataFrameId') }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--運算式設定-->
-    <div class="setting setting--middle">
-      <div class="setting__title">
-        {{ $t('miniApp.formulaSetting') }}
+        {{ $t('miniApp.formulaType') }}
       </div>
       <div class="setting__content">
         <div class="input-field">
@@ -59,7 +12,7 @@
             <default-select 
               v-validate="'required'"
               :option-list="formulaOptionList"
-              :placeholder="$t('miniApp.chooseDataSource')"
+              :placeholder="$t('miniApp.selectFormula')"
               :is-disabled="isLoading"
               v-model="formulaSetting.formulaId"
               filterable
@@ -73,43 +26,102 @@
             >{{ errors.first('formula') }}</div>
           </div>
         </div>
-        <div 
-          v-if="formulaSetting.formulaId !== null" 
-          class="input-field">
-          <label class="input-field__label">{{ $t('miniApp.formulaPreview') }}</label>
-          <div class="input-field__display">
-            {{ formulaSetting.displayedFormula }}
-          </div>
+      </div>
+    </div>
+    <template v-if="formulaSetting.formulaId">
+      <div class="setting">
+        <div class="setting__title">
+          {{ $t('miniApp.sourceOfData') }}
         </div>
-        <div
-          v-for="(input, index) in formulaSetting.inputList"
-          :key="formulaSetting.dataFrameId + '-' + formulaSetting.formulaId + '-' + index"
-          class="input-field"
-        >
-          <label class="input-field__label">{{ '$' + (index + 1) + $t('miniApp.setting') }}</label>
-          <div class="input-field__input-box">
-            <default-select 
-              v-validate="'required'"
-              :option-list="getDataColumnOptionList(input.dataType)"
-              :placeholder="$t('miniApp.chooseDataFrame')"
-              :is-disabled="isLoading"
-              :key="formulaSetting.dataFrameId + '-' + formulaSetting.formulaId + '-' + index"
-              :value="input.dcId"
-              :name="'input' + formulaSetting.formulaId + '-' + index"
-              filterable
-              class="input-field__select"
-              @change="updateFormulaInput(input.id, $event)"
-            />
-            <div 
-              v-show="errors.has('input' + formulaSetting.formulaId + '-' + index)"
-              class="error-text"
-            >{{ errors.first('input' + formulaSetting.formulaId + '-' + index) }}</div>
+        <div class="setting__content">
+          <div class="input-field">
+            <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
+            <div class="input-field__input-box">
+              <default-select 
+                v-validate="'required'"
+                :option-list="dataSourceOptionList"
+                :placeholder="$t('miniApp.chooseDataSource')"
+                :is-disabled="isLoading"
+                v-model="formulaSetting.dataSourceId"
+                filterable
+                class="input-field__select"
+                name="dataSourceId"
+                @change="handleDataSourceSelected"
+              />
+              <div 
+                v-show="errors.has('dataSourceId')"
+                class="error-text"
+              >{{ errors.first('dataSourceId') }}</div>
+            </div>
+          </div>
+          <div class="input-field">
+            <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
+            <div class="input-field__input-box">
+              <default-select 
+                v-validate="'required'"
+                :option-list="dataFrameOptionList"
+                :placeholder="$t('miniApp.chooseDataFrame')"
+                :is-disabled="isLoading"
+                v-model="formulaSetting.dataFrameId"
+                filterable
+                class="input-field__select"
+                name="dataFrameId"
+                @change="handleDataFrameSelected"
+              />
+              <div 
+                v-show="errors.has('dataFrameId')"
+                class="error-text"
+              >{{ errors.first('dataFrameId') }}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <!--運算式設定-->
+      <div 
+        v-if="formulaSetting.dataSourceId && formulaSetting.dataFrameId" 
+        class="setting">
+        <div class="setting__title">
+          {{ $t('miniApp.formulaSetting') }}
+        </div>
+        <div class="setting__content">
+          <div 
+            v-if="formulaSetting.formulaId !== null" 
+            class="formula-display">
+            <label class="formula-display__title">{{ $t('miniApp.formulaPreview') }}</label>
+            <div class="formula-display__content">
+              {{ formulaSetting.displayedFormula }}
+            </div>
+          </div>
+          <div
+            v-for="(input, index) in formulaSetting.inputList"
+            :key="formulaSetting.dataFrameId + '-' + formulaSetting.formulaId + '-' + index"
+            class="input-field"
+          >
+            <label class="input-field__label">{{ input.symbol + $t('miniApp.setting') }}</label>
+            <div class="input-field__input-box">
+              <default-select 
+                v-validate="'required'"
+                :option-list="getDataColumnOptionList(input.dataType)"
+                :placeholder="$t('miniApp.chooseColumn')"
+                :is-disabled="isLoading"
+                :key="formulaSetting.dataFrameId + '-' + formulaSetting.formulaId + '-' + index"
+                :value="input.dcId"
+                :name="'input' + formulaSetting.formulaId + '-' + index"
+                filterable
+                class="input-field__select"
+                @change="updateFormulaInput(input.id, $event)"
+              />
+              <div 
+                v-show="errors.has('input' + formulaSetting.formulaId + '-' + index)"
+                class="error-text"
+              >{{ errors.first('input' + formulaSetting.formulaId + '-' + index) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
     <!--其他設定-->
-    <div class="setting setting--bottom">
+    <div class="setting">
       <div class="setting__title">
         {{ $t('miniApp.otherSettings') }}
       </div>
@@ -125,39 +137,6 @@
             >
           </div>
         </div>
-        <div 
-          v-if="formulaSetting.formulaId !== null" 
-          class="input-field">
-          <label class="input-field__label">{{ $t('miniApp.formulaPreview') }}</label>
-          <div class="input-field__display">
-            {{ formulaSetting.displayedFormula }}
-          </div>
-        </div>
-        <div
-          v-for="(input, index) in formulaSetting.inputList"
-          :key="formulaSetting.dataFrameId + '-' + formulaSetting.formulaId + '-' + index"
-          class="input-field"
-        >
-          <label class="input-field__label">{{ '$' + (index + 1) + $t('miniApp.setting') }}</label>
-          <div class="input-field__input-box">
-            <default-select 
-              v-validate="'required'"
-              :option-list="getDataColumnOptionList(input.dataType)"
-              :placeholder="$t('miniApp.chooseDataFrame')"
-              :is-disabled="isLoading"
-              :key="formulaSetting.dataFrameId + '-' + formulaSetting.formulaId + '-' + index"
-              :value="input.dcId"
-              :name="'input' + formulaSetting.formulaId + '-' + index"
-              filterable
-              class="input-field__select"
-              @change="updateFormulaInput(input.id, $event)"
-            />
-            <div 
-              v-show="errors.has('input' + formulaSetting.formulaId + '-' + index)"
-              class="error-text"
-            >{{ errors.first('input' + formulaSetting.formulaId + '-' + index) }}</div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -165,33 +144,12 @@
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { getFormulaList } from '@/API/NewAsk'
 import { 
   getDataFrameById, 
   getDataFrameColumnInfoById
 } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
-
-const dummyFormulaData = [
-  {
-    id: 1,
-    name: 'this is the name of the formula',
-    formula: 'avg($1-1) + avg($1-2)',
-    inputList: [
-      { id: 1, dataType: 'NUMERIC' },
-      { id: 2, dataType: 'NUMERIC' },
-      { id: 3, dataType: 'NUMERIC' }
-    ]
-  },
-  {
-    id: 2,
-    name: 'this is the name of the formula',
-    formula: 'avg($1-1) + avg($1-2)',
-    inputList: [
-      { id: 1, dataType: 'NUMERIC' },
-      { id: 3, dataType: 'NUMERIC' }
-    ]
-  }
-]
 
 export default {
   inject: ['$validator'],
@@ -228,11 +186,12 @@ export default {
     ...mapGetters('dataSource', ['dataSourceList']),
   },
   mounted () {
-    this.fetchDataSourceList()
     this.getFormulaData()
+    this.fetchDataSourceList()
   },
   methods: {
     fetchDataSourceList () {
+      this.isLoading = true
       this.dataSourceOptionList = this.dataSourceList.reduce((acc, cur) => {
         if (cur.state !== 'ENABLE' || cur.enableDataFrameCount < 1) return acc
         acc.push({
@@ -241,16 +200,20 @@ export default {
         })
         return acc
       }, [])
+      // 如果是在編輯模式，自動去取得資料表清單
+      this.formulaSetting.dataSourceId && this.fetchDataFrameList(this.formulaSetting.dataSourceId)
+      this.isLoading = false
     },
-    fetchDataFrameList (dataSourceId) {
+    handleDataSourceSelected (dataSourceId) {
       this.isLoading = true
       // 清空原資料
       this.dataFrameOptionList = []
+      this.resetInputList()
       this.formulaSetting.dataFrameId = null
-      this.formulaSetting.formulaId = null
-      this.formulaSetting.inputList = []
-      this.displayedFormula = null
-
+      this.fetchDataFrameList(dataSourceId)
+    },
+    fetchDataFrameList (dataSourceId) {
+      this.isLoading = true
       const isGetAllStatesDataframe = false
       getDataFrameById(this.formulaSetting.dataSourceId, isGetAllStatesDataframe)
         .then(response => {
@@ -258,19 +221,20 @@ export default {
             name: dataFrame.primaryAlias,
             value: dataFrame.id
           }))
+          // 如果是在編輯模式，自動去取得資料欄位清單
+          this.formulaSetting.dataFrameId && this.fetchDataColumnList(this.formulaSetting.dataFrameId)
         })
         .finally(() => this.isLoading = false)
     },
-    fetchDataColumnList (dataFrameId) {
-      this.isLoading = true
+    handleDataFrameSelected (dataFrameId) {
       // 清空原資料
       this.dataColumnOptionList = []
-      this.formulaSetting.formulaId = null
-      this.formulaSetting.inputList = []
-      this.displayedFormula = null
-
+      this.resetInputList()
+      this.fetchDataColumnList(dataFrameId)
+    },
+    fetchDataColumnList (dataFrameId) {
+      this.isLoading = true
       const hasFeatureColumn = true
-      
       // 過濾掉分群欄位
       const hasBlockClustering = false
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
@@ -286,20 +250,28 @@ export default {
       // 預先新增一個欄位選擇器
     },
     getFormulaData () {
-      this.formulaOptionList = dummyFormulaData.map(formula => ({
-        ...formula,
-        name: formula.name,
-        value: formula.id
-      }))
+      getFormulaList()
+        .then(formulaList => {
+          this.formulaOptionList = formulaList.map(formula => ({
+            ...formula,
+            value: formula.id
+          }))
+          this.isLoading = false
+        })
     },
     updateFormulaSetting (selectedId) {
+      // 清空原資料
+      this.formulaSetting.inputList = []
+      this.displayedFormula = null
+
       const selectedFormula = this.formulaOptionList.find(formula => formula.id === selectedId)
-      this.formulaSetting.displayedFormula = selectedFormula.name
+      this.formulaSetting.displayedFormula = selectedFormula.formula
       this.formulaSetting.formulaId = selectedFormula.id
-      this.formulaSetting.inputList = selectedFormula.inputList.map(input => ({ 
+      this.formulaSetting.inputList = selectedFormula.formulaInfo.map(input => ({ 
         id: input.id, 
         dataType: 'NUMERIC',
-        dcId: null
+        dcId: null,
+        symbol: input.symbol
       }))
     },
     getDataColumnOptionList (dataType) {
@@ -308,6 +280,12 @@ export default {
     updateFormulaInput(inputId, columnId) {
       const selectedInput = this.formulaSetting.inputList.find(input => input.id === inputId)
       selectedInput.dcId = columnId
+    },
+    resetInputList () {
+      this.formulaSetting.inputList = this.formulaSetting.inputList.map(input => ({
+        ...input,
+        dcId: null
+      }))
     }
   }
 }
@@ -333,9 +311,22 @@ export default {
       background: #1C292B;
       border-radius: 12px;
       padding: 25px 17px;
+      display: flex;
+      flex-wrap: wrap;
     }
 
-    /deep/ .input-field {
+    .formula-display {
+      width: 100%;
+      display: flex;
+      margin-bottom: 17px;
+      font-size: 14px;
+      &__title {
+        color: #AAAAAA;
+        width: 90px;
+      }
+    }
+
+    .input-field {
       display: flex;
       align-items: center;
 
@@ -391,21 +382,6 @@ export default {
           .el-input__inner {
             background-color: transparent;
           }
-        }
-      }
-    }
-
-    &--top {
-      .setting__content {
-        display: flex;
-      }
-    }
-
-    &--middle
-    &--bottom {
-      .input-field {
-        &:not(:last-of-type) {
-          margin-bottom: 25px;
         }
       }
     }

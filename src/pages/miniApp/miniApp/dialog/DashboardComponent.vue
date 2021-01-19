@@ -172,7 +172,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId', 'algoConfig']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
       return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
@@ -285,6 +285,7 @@ export default {
       const isTrendQuestion = segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
         questionId: questionId || this.currentQuestionId,
+        algoConfig: this.algoConfig[this.segmentation.denotation.toLowerCase()] || null,
         segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
