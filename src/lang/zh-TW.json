@@ -445,7 +445,9 @@
     "scriptExecutionStep2": "選擇輸入欄位",
     "scriptExecutionStep3": "設定輸出類型",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
-    "searchDataSource": "搜尋資料源"
+    "searchDataSource": "搜尋資料源",
+    "isOrdinal": "有時序",
+    "isNotOrdinal": "無時序"
   },
   "algorithm": {
     "name": "演算法",
@@ -864,6 +866,7 @@
     "columnSpanAmount": "{number} 行",
     "clickColumnToSeeMore": "點擊\"{columnName}\"欄位可看到更詳細內容",
     "chartSetting": "圖表設定",
+    "componentName": "元件名稱",
     "chartName": "圖表名稱",
     "triggerColumn": "觸發欄位",
     "activate": "啟用",
@@ -886,6 +889,7 @@
     "monitorUpdateFrequency": "示警更新頻率",
     "monitorComponent": "監控示警元件",
     "simulateComponent": "模擬元件",
+    "specialIndexTypeComponent": "特殊數值元件",
     "timeScope": "時間範圍",
     "dashboardNoLongerExist": "關聯看板已不存在",
     "displayChart": "顯示圖表",
@@ -902,7 +906,15 @@
     "simulator": "模擬器",
     "notYetSimulate": "尚未模擬資料",
     "simulating": "模擬中",
-    "optimalParameterComparison": "的最佳參數比較"
+    "optimalParameterComparison": "的最佳參數比較",
+    "fontSizeSetting": "文字大小設定",
+    "sourceOfData": "資料來源",
+    "formulaSetting": "運算式設定",
+    "selectFormula": "選擇運算式",
+    "formulaPreview": "運算式預覽",
+    "setting": "設定",
+    "otherSettings": "其他設定",
+    "formulaType": "公式類型"
   },
   "alert": {
     "alertLogs": "示警紀錄",

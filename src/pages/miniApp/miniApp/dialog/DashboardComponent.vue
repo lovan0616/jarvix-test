@@ -87,15 +87,6 @@
                 class="input setting__input"
               >
             </div>
-            <div class="setting">
-              <div class="setting__label">顯示大小</div>
-              <default-select 
-                v-model="currentComponent.indexInfo.size"
-                :option-list="indexSizeOptionList"
-                :placeholder="$t('miniApp.chooseColumnSize')"
-                class="input setting__input"
-              />
-            </div>
           </div>
         </div>
         <!--Text Type Component-->
@@ -178,28 +169,10 @@ export default {
       question: '',
       segmentation: null,
       mainDateColumn: null,
-      indexSizeOptionList: [
-        {
-          value: 'large',
-          name: this.$t('miniApp.large')
-        },
-        {
-          value: 'middle',
-          name: this.$t('miniApp.middle')
-        },
-        {
-          value: 'small',
-          name: this.$t('miniApp.small')
-        },
-        {
-          value: 'mini',
-          name: this.$t('miniApp.mini')
-        }
-      ]
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId', 'algoConfig']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
       return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
@@ -312,6 +285,7 @@ export default {
       const isTrendQuestion = segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
         questionId: questionId || this.currentQuestionId,
+        algoConfig: this.algoConfig[this.segmentation.denotation.toLowerCase()] || null,
         segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
@@ -519,9 +493,9 @@ export default {
     resetComponent () {
       this.switchComponentType('chart')
       this.currentComponent.indexInfo = { 
-        unit: '',
-        size: 'middle'
+        unit: ''
       }
+      this.currentComponent.config.fontSize = 'middle'
     }
   }
 }

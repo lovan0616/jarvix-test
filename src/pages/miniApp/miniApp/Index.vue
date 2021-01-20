@@ -386,7 +386,7 @@
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      :initial-current-component="currentComponent || componentTemplateFactory()"
+      :initial-current-component="currentComponent || initComponent"
       :dashboard-list="dashboardList"
       :filters="filterColumnValueInfoList"
       :controls="controlColumnValueInfoList"
@@ -560,7 +560,8 @@ export default {
       simulatorScriptInfo: {
         id: null,
         name: null
-      }
+      },
+      initComponent: null
     }
   },
   computed: {
@@ -659,6 +660,10 @@ export default {
         {
           name: this.$t('miniApp.simulateComponent'),
           id: 'Simulator'
+        },
+        {
+          name: this.$t('miniApp.specialIndexTypeComponent'),
+          id: 'Formula'
         }
       ]
     },
@@ -824,7 +829,7 @@ export default {
           board.components.push(newComponentInfo)
         }
       })
-      this.isShowCreateComponentDialog = false
+      this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => {
@@ -843,7 +848,7 @@ export default {
           })
         }
       })
-      this.isShowCreateComponentDialog = false
+      this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .catch(() => {})
@@ -938,6 +943,7 @@ export default {
     },
     closeCreateComponentDialog () {
       this.currentComponentId = null
+      this.initComponent = null
       this.isShowCreateComponentDialog = false
     },
     copyLink () {
@@ -1218,7 +1224,7 @@ export default {
           board.components.push(this.componentTemplateFactory('monitor-warning-list'))
         }
       })
-      this.isShowCreateComponentDialog = false
+      this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
@@ -1266,6 +1272,11 @@ export default {
       })
     },
     createGeneralComponent () {
+      this.initComponent = this.componentTemplateFactory()
+      this.isShowCreateComponentDialog = true
+    },
+    createFormulaComponent () {
+      this.initComponent = this.componentTemplateFactory('formula')
       this.isShowCreateComponentDialog = true
     },
     createTimeFilter () {
@@ -1356,12 +1367,12 @@ export default {
         init: false,
         id: uuidv4(),
         type,
+        isCreatedViaAsking: true,
         resultId: null,
         orderSequence: null,
         diagram: type,
         indexInfo: { 
-          unit: '',
-          size: 'middle'
+          unit: ''
         },
         relatedDashboard: { id: null, name: null },
         config: {
@@ -1370,11 +1381,13 @@ export default {
           isAutoRefresh: false,
           refreshFrequency: null,
           hasColumnRelatedDashboard: false, // 目前只給 table 元件使用
-          columnRelations: [{ relatedDashboardId: null, columnInfo: null }]
+          columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
+          fontSize: 'middle'
         },
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
           init: true,
+          isCreatedViaAsking: false,
           config: {
             ...generalConfig,
             diaplayedName: this.$t('alert.realTimeMonitorAlert'),
@@ -1383,6 +1396,7 @@ export default {
         // 模擬器元件
         ...(type === 'simulator' && {
           init: true,
+          isCreatedViaAsking: false,
           scriptId: this.simulatorScriptInfo.id,
           config: {
             ...generalConfig,
@@ -1390,7 +1404,18 @@ export default {
             size: { row: 12, column: 12 },
             diaplayedName: `${this.$t('miniApp.simulator')} (${this.simulatorScriptInfo.name})`
           },
-        })
+        }),
+        // 特殊數值行元件
+        ...(type === 'formula' && {
+          isCreatedViaAsking: false,
+          formulaSetting: {
+            dataSourceId: null,
+            dataFrameId: null,
+            formulaId: null,
+            displayedFormula: null,
+            inputList: []
+          }
+        }),
       }
     },
     logDraggingMovement (e) {
