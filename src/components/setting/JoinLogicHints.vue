@@ -2,7 +2,7 @@
   <el-popover
     :content="hint"
     popper-class="el-popover--join-logic-hints"
-    placement="top-start"
+    placement="bottom-start"
     title="Title"
     width="200"
     trigger="hover">
@@ -29,3 +29,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.join-logic-hints__icon {
+  fill: #333;
+  cursor: pointer;
+}
+</style>

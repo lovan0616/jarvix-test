@@ -254,6 +254,8 @@
     border-color: #233131;
     word-break: break-word;
     text-align: left;
+    padding: 8px 12px;
+    line-height: 1.5;
     &[x-placement^="bottom"] .popper__arrow[x-arrow] {
       border-bottom-color: #233131;
       &::after {
