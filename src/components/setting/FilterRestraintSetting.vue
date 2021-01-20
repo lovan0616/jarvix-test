@@ -278,7 +278,7 @@ export default {
     font-weight: 600;
     font-size: 16px;
     line-height: 22px;
-    .join-logic-hints__block {
+    /deep/ .join-logic-hints__icon {
       margin-left: 8px;
     }
   }

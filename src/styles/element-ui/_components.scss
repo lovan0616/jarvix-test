@@ -150,7 +150,7 @@
   }
 }
 
-.el-popover.el-popper.el-popover {
+.el-popper.el-popover {
   margin-top: 0;
   background: #233131;
   border-color: $theme-color-primary;
@@ -248,6 +248,26 @@
       .link ~ .link {
         margin-left: 12px;
       }
+    }
+  }
+  &--join-logic-hints {
+    border-color: #233131;
+    word-break: break-word;
+    text-align: left;
+    &[x-placement^="bottom"] .popper__arrow[x-arrow] {
+      border-bottom-color: #233131;
+      &::after {
+        border-bottom-color: #233131;
+      }
+    }
+    &[x-placement^="top"] .popper__arrow[x-arrow] {
+      border-top-color: #233131;
+      &::after {
+        border-top-color: #233131;
+      }
+    }
+    .el-popover__title {
+      display: none;
     }
   }
 }
