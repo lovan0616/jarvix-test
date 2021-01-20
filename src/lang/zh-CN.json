@@ -651,7 +651,7 @@
     "createFeature": "新增自定义栏位",
     "featureColumnName": "自定义栏位名称",
     "featureSetting": "运算式设定",
-    "generalOperationOperation": "一般运算式",
+    "generalOperation": "一般运算式",
     "datetimeOperation": "日期运算式",
     "columnUnit": "栏位单位"
   },
