@@ -52,6 +52,7 @@
     <feature-information-block
       v-if="dataset.pValuesFeatureInformation"
       :feature-information="dataset.pValuesFeatureInformation"
+      class="feature-information"
     />
     <insight-description-block
       v-if="isShowDescription"

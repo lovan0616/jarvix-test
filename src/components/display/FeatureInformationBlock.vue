@@ -46,12 +46,13 @@ export default {
   padding: 8px 20px;
   background: #141C1D;
   border-radius: 8px;
-
+  overflow-y: auto;
+  
   .feature {
     display: flex;
     flex-direction: row;
-    margin: 8px 0;
-    width: 25%;
+    margin: 8px 8px 8px 0;
+    width: 22%;
     min-width: 130px;
     color: #DDDDDD;
 
@@ -61,10 +62,12 @@ export default {
       font-weight: 600;
       font-size: 14px;
       line-height: 24px;
+      @include text-hidden;
     }
 
     &__value {
       flex: 1;
+      min-width: 50px;
       font-size: 14px;
       line-height: 24px;
       color: #CCCCCC;

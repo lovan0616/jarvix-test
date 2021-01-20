@@ -28,6 +28,7 @@
     <feature-information-block
       v-if="dataset.featureInformation"
       :feature-information="dataset.featureInformation"
+      class="feature-information"
     />
   </div>
 </template>
@@ -324,3 +325,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.feature-information {
+  height: 120px;
+}
+</style>

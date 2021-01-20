@@ -261,6 +261,7 @@ import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
 import { mapState } from 'vuex'
+import { algoConfig } from '@/utils/general'
 
 export default {
   inject: ['$validator'],
@@ -301,17 +302,7 @@ export default {
         id: null,
         name: null
       },
-      algoConfig: {
-        anomaly: {
-          '@type': 'AnomalyAlgoConfig',
-          standardLineType: 'MEDIAN',
-          stddevTimes: 3
-        },
-        stability: {
-          '@type': 'StandardLineAlgoConfig',
-          standardLineType: 'MEDIAN'
-        }
-      },
+      algoConfig
     }
   },
   computed: {
@@ -483,8 +474,7 @@ export default {
       this.currentComponent.config.columnRelations[0].columnInfo = column
     },
     setAlgoConfig (intent) {
-      if(!Object.prototype.hasOwnProperty.call(this.currentComponent, 'algoConfig'))
-        this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
+      this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
     }
   },
 }

@@ -55,7 +55,7 @@
               :key="'chart-' + computedKeyResultId"
               :component-id="computedKeyResultId"
               :is-show-description="false"
-              :is-show-coefficients="segmentation.denotation === 'STABILITY'"
+              :is-show-coefficients="segmentation && segmentation.denotation === 'STABILITY'"
               :is-show-donwnload-btn="false"
               :is-show-toolbox="false"
               intend="key_result"
@@ -132,7 +132,7 @@
         />{{ $t('miniApp.componentNotAddable') }}
       </div>
       <div 
-        v-if="segmentation && (segmentation.denotation === 'STABILITY' || segmentation.denotation === 'ANOMALY')"
+        v-if="isNeededDisplaySetting && currentComponent.algoConfig"
         class="key-result__setting display-setting">
         <div class="display-setting__title">{{ $t('miniApp.displaySetting') }}</div>
         <div class="display-setting__content">
@@ -140,7 +140,7 @@
             <div class="display-setting__item item">
               <div class="item__label">{{ $t('miniApp.standardLine') }}</div>
               <default-select
-                v-model="tempAlgoConfig[segmentation.denotation.toLowerCase()].standardLineType"
+                v-model="currentComponent.algoConfig.standardLineType"
                 :option-list="standardLineTypeOptionList"
                 :placeholder="$t('miniApp.chooseStandardLine')"
                 class="input item__input"
@@ -151,7 +151,7 @@
               class="display-setting__item item">
               <div class="item__label">{{ $t('miniApp.stddevTimes') }}</div>
               <default-select
-                v-model="tempAlgoConfig[segmentation.denotation.toLowerCase()].stddevTimes"
+                v-model="currentComponent.algoConfig.stddevTimes"
                 :option-list="stddevTimesOptionList"
                 :placeholder="$t('miniApp.chooseStddevTimes')"
                 class="input item__input"
@@ -176,6 +176,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { getDateTimeColumns } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { algoConfig } from '@/utils/general'
 import moment from 'moment'
 
 export default {
@@ -233,17 +234,7 @@ export default {
           name: this.$t('miniApp.mini')
         }
       ],
-      tempAlgoConfig: {
-        anomaly: {
-          '@type': 'AnomalyAlgoConfig',
-          standardLineType: 'MEDIAN',
-          stddevTimes: 3
-        },
-        stability: {
-          '@type': 'StandardLineAlgoConfig',
-          standardLineType: 'MEDIAN'
-        }
-      },
+      algoConfig,
       standardLineTypeOptionList: [
         {
           value: 'MEDIAN',
@@ -281,6 +272,9 @@ export default {
     allFilterList () {
       // 可能會有階層，因此需要完全攤平
       return [].concat.apply([], [...this.filters, ...this.controls])
+    },
+    isNeededDisplaySetting () {
+      return this.segmentation && (this.segmentation.denotation === 'STABILITY' || this.segmentation.denotation === 'ANOMALY')
     }
   },
   watch: {
@@ -380,7 +374,7 @@ export default {
       // 確認是否為趨勢類型問題
       const isTrendQuestion = segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
-        algoConfig: this.tempAlgoConfig[segmentation.denotation.toLowerCase()] || null,
+        algoConfig: this.currentComponent.algoConfig || null,
         questionId: questionId || this.currentQuestionId,
         segmentation,
         restrictions: this.restrictions(),
@@ -417,6 +411,7 @@ export default {
               this.resultInfo = componentResponse.componentIds
               // 初次創建時，預設元件名稱為使用者輸入的問句
               if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
+              this.currentComponent.keyResultId = componentResponse.id
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
@@ -434,13 +429,22 @@ export default {
                 dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
                 dateTimeColumn: this.mainDateColumn
               })
-              
-              if (componentResponse.intent === 'STABILITY' || componentResponse.intent === 'ANOMALY') this.$emit('setAlgoConfig', componentResponse.intent)
+            
+
+              if (this.isNeededDisplaySetting) {
+                if(!this.currentComponent.algoConfig) {
+                  //this.$emit('setAlgoConfig', this.algoConfig[componentResponse.intent.toLowerCase()])
+                  this.currentComponent.algoConfig = this.algoConfig[componentResponse.intent.toLowerCase()]
+                }
+                  
+                  //this.$emit('setAlgoConfig', componentResponse.intent)
+              }
+
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
               break
             case 'Disable':
-            case 'Delete':
+            case 'Delete' :
             case 'Warn':
             case 'Fail':
               this.resultInfo = { description: componentResponse.errorMessage }

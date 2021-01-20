@@ -346,7 +346,7 @@ export default {
     dynamicComponentStyle () {
       return {
         ...this.chartComponentStyle,
-        ...(this.componentData.segmentation.denotation === 'NORMALITY_TEST' && {
+        ...((this.componentData.segmentation.denotation === 'ANOMALY' || this.componentData.segmentation.denotation === 'NORMALITY_TEST') && {
           'height': 'calc(100% - 100px)',
         }),
         ...(this.componentData.segmentation.denotation === 'STABILITY' && {
@@ -433,6 +433,7 @@ export default {
           // 確認是否為趨勢類型問題
           const isTrendQuestion = segmentationList[0].denotation === 'TREND'
           this.$store.dispatch('chatBot/askResult', {
+            algoConfig: this.componentData.algoConfig || null,
             questionId,
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),

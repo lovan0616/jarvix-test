@@ -86,6 +86,10 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -98,7 +102,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '420px'
+        height: '420px',
+        ...this.customChartStyle
       }
     },
    seriesName () {
