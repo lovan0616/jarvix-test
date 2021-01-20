@@ -233,6 +233,7 @@ export default {
         
         // 無結果
         if (segmentationList[0].denotation === 'NO_ANSWER') {
+          this.segmentation = segmentationList[0]
           this.$store.commit('result/updateCurrentResultInfo', null)
           this.layout = 'EmptyResult'
           this.resultInfo = {
