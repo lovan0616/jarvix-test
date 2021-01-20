@@ -2426,8 +2426,8 @@
     "predictionAnalysis": "预测分析",
     "trendAnalysis": "趋势分析",
     "anomalyAnalysis": "异常分析",
-    "periodicityAnalysis": "周期分析",
-    "stabilityAnalysis": "稳定度分析",
+    "periodicityAnalysis": "周期性分析",
+    "stabilityAnalysis": "稳定性分析",
     "normalityTest": "常态检定"
   },
   "errorMessage": {

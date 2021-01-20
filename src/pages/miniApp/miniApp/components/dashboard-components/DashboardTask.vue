@@ -127,11 +127,11 @@
           <spinner v-if="isProcessing"/>
           <task
             v-else
-            :custom-chart-style="chartComponentStyle"
+            :custom-chart-style="dynamicComponentStyle"
             :key="'chart' + keyResultId"
             :component-id="keyResultId"
             :is-show-description="false"
-            :is-show-coefficients="false"
+            :is-show-coefficients="componentData.segmentation.denotation === 'STABILITY'"
             :converted-type="componentData.type === 'paramCompare' ? 'param_comparison_table' : null"
             :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
@@ -341,6 +341,17 @@ export default {
       return {
         ...sizeTable[this.componentData.indexInfo.size || 'middle'],
         'color': '#2AD2E2'
+      }
+    },
+    dynamicComponentStyle () {
+      return {
+        ...this.chartComponentStyle,
+        ...(this.componentData.segmentation.denotation === 'NORMALITY_TEST' && {
+          'height': 'calc(100% - 100px)',
+        }),
+        ...(this.componentData.segmentation.denotation === 'STABILITY' && {
+          'height': 'calc(100% - 60px)',
+        })
       }
     }
   },

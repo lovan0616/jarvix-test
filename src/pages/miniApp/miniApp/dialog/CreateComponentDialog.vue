@@ -58,6 +58,7 @@
           :is-loading.sync="isLoading"
           :filters="filters"
           :controls="controls"
+          @setAlgoConfig="setAlgoConfig"
           @setDiagram="currentComponent.diagram = $event" 
         />
         <transition name="fast-fade-in">
@@ -299,7 +300,18 @@ export default {
       relatedDashboardTemplate: {
         id: null,
         name: null
-      }
+      },
+      algoConfig: {
+        anomaly: {
+          '@type': 'AnomalyAlgoConfig',
+          standardLineType: 'MEDIAN',
+          stddevTimes: 3
+        },
+        stability: {
+          '@type': 'StandardLineAlgoConfig',
+          standardLineType: 'MEDIAN'
+        }
+      },
     }
   },
   computed: {
@@ -469,6 +481,10 @@ export default {
     updateTriggerColumnInfo () {
       const column = this.categoryColumnOptions.find(item => item.dataColumnId === this.selectedTriggerColumn)
       this.currentComponent.config.columnRelations[0].columnInfo = column
+    },
+    setAlgoConfig (intent) {
+      if(!Object.prototype.hasOwnProperty.call(this.currentComponent, 'algoConfig'))
+        this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
     }
   },
 }

@@ -891,6 +891,7 @@
     "displayChart": "顯示圖表",
     "displayIndex": "顯示數值",
     "displayText": "顯示文字",
+    "displaySetting": "顯示設定",
     "large": "大",
     "middle": "中",
     "small": "小",
@@ -902,7 +903,11 @@
     "simulator": "模擬器",
     "notYetSimulate": "尚未模擬資料",
     "simulating": "模擬中",
-    "optimalParameterComparison": "的最佳參數比較"
+    "optimalParameterComparison": "的最佳參數比較",
+    "standardLine": "基準線",
+    "stddevTimes": "標準差倍數",
+    "chooseStandardLine": "請選擇基準線",
+    "chooseStddevTimes": "請選擇標準差倍數"
   },
   "alert": {
     "alertLogs": "示警紀錄",
@@ -2450,7 +2455,7 @@
     "trendAnalysis": "趨勢分析",
     "anomalyAnalysis": "異常分析",
     "periodicityAnalysis": "週期性分析",
-    "stabilityAnalysis": "穩定度分析",
+    "stabilityAnalysis": "穩定性分析",
     "normalityTest": "常態檢定"
   },
   "errorMessage": {
