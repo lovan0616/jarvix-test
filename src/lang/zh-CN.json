@@ -57,6 +57,8 @@
     "dataColumns": "数据栏位",
     "addFilter": "新增条件",
     "restrictionSetting": "条件限制",
+    "ANDLogicHint": "条件项目关系为AND逻辑，当重复筛选到同样资料范围时为有效条件，其他资料则被排除。",
+    "ORLogicHint": "限制项目关系为OR逻辑，筛选到的资料范围皆为有效条件。",
     "addRestriction": "新增限制",
     "noRestrictionYet": "尚未设定任何条件",
     "restraintSetting": "限制设定",

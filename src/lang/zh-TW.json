@@ -57,6 +57,8 @@
     "dataColumns": "資料欄位",
     "addFilter": "新增條件",
     "restrictionSetting": "條件限制",
+    "ANDLogicHint": "條件項目關係為AND邏輯，當重複篩選到同樣資料範圍時為有效條件，其他資料則被排除。",
+    "ORLogicHint": "限制項目關係為OR邏輯，篩選到的資料範圍皆為有效條件。",
     "addRestriction": "新增限制",
     "noRestrictionYet": "尚未設定任何條件",
     "restraintSetting": "限制設定",
