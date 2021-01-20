@@ -10,7 +10,7 @@
       <h1 class="restriction-setting__title">
         {{ $t('dataFrameAdvanceSetting.restrictionSetting') }}
         <join-logic-hints
-          :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
+          :hint="$t('dataFrameAdvanceSetting.ORLogicHint')"
           icon-class="full-join"
         />
       </h1>
