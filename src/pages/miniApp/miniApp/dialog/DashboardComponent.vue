@@ -17,7 +17,7 @@
         </div>
         <div class="key-result__switch-wrapper">
           <div 
-            :class="{ 'active': currentComponent.type === 'chart' }"
+            :class="{ 'active': currentComponent.type === 'chart' || currentComponent.type === 'paramCompare' }"
             class="key-result__switch" 
             @click="switchComponentType('chart')" >
             <svg-icon 
@@ -47,7 +47,7 @@
           </div>
         </div>
         <div 
-          v-show="currentComponent.type === 'chart'" 
+          v-show="currentComponent.type === 'chart' || currentComponent.type === 'paramCompare'" 
           class="key-result__card card"
         >
           <div class="card__content">
@@ -285,7 +285,7 @@ export default {
       const isTrendQuestion = segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
         questionId: questionId || this.currentQuestionId,
-        algoConfig: this.algoConfig[this.segmentation.denotation.toLowerCase()] || null,
+        algoConfig: this.algoConfig[segmentation.denotation.toLowerCase()] || null,
         segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
