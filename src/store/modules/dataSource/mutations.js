@@ -2,10 +2,10 @@ import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 
 export default {
-  setIsInit(state, value) {
+  setIsInit (state, value) {
     state.isInit = value || false
   },
-  setDataSourceList(state, data) {
+  setDataSourceList (state, data) {
     state.dataSourceList = data
   },
   setDataSourceId (state, id) {
