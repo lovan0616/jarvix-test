@@ -38,56 +38,61 @@
       </div>
     </nav>
     <div class="dialog__content">
-      <div class="key-result-chart">
-        <div 
-          v-if="!currentComponent.init" 
-          class="search-bar">
-          <data-frame-menu
-            :redirect-on-change="false"
-            :is-show-preview-entry="true"
-            :is-show-advance-setting-entry="false"
-          />
-          <ask-block
-            :redirect-on-ask="false"
-            :is-show-ask-helper-entry="false"
-          />
-        </div>
-        <dashboard-component
-          :current-component="currentComponent"
-          :is-addable.sync="isAddable"
-          :is-loading.sync="isLoading"
-          :filters="filters"
-          :controls="controls"
-          @setAlgoConfig="setAlgoConfig"
-          @setDiagram="currentComponent.diagram = $event" 
-        />
-        <transition name="fast-fade-in">
-          <section 
-            v-if="isShowPreviewDataSource"
-            class="preview-datasource">
-            <preview-data-source
-              :is-previewing="true"
-              mode="popup"
+      <div class="dialog__content--left">
+        <template v-if="isCreatedViaAsking">
+          <div 
+            v-if="!currentComponent.init" 
+            class="search-bar">
+            <data-frame-menu
+              :redirect-on-change="false"
+              :is-show-preview-entry="true"
+              :is-show-advance-setting-entry="false"
             />
-            <a 
-              href="javascript:void(0)" 
-              class="preview-datasource__close-btn"
-              @click="closePreviewDataSource"
-            ><svg-icon icon-class="close"/></a>
-          </section>
-        </transition>
+            <ask-block
+              :redirect-on-ask="false"
+              :is-show-ask-helper-entry="false"
+            />
+          </div>
+          <dashboard-component
+            :current-component="currentComponent"
+            :is-addable.sync="isAddable"
+            :is-loading.sync="isLoading"
+            :filters="filters"
+            :controls="controls"
+            @setDiagram="currentComponent.diagram = $event" 
+          />
+          <transition name="fast-fade-in">
+            <section 
+              v-if="isShowPreviewDataSource"
+              class="preview-datasource">
+              <preview-data-source
+                :is-previewing="true"
+                mode="popup"
+              />
+              <a 
+                href="javascript:void(0)" 
+                class="preview-datasource__close-btn"
+                @click="closePreviewDataSource"
+              ><svg-icon icon-class="close"/></a>
+            </section>
+          </transition>
+        </template>
+        <formula-setting 
+          v-else-if="currentComponent.type === 'formula'"
+          :formula-setting="currentComponent.formulaSetting"
+          :current-component="currentComponent"
+        />
       </div>
       <div
-        v-if="currentComponent.init || (currentResultInfo && currentResultInfo.keyResultId)"
-        class="key-result-setting">
+        class="dialog__content--right">
         <div class="setting__header">
           <svg-icon icon-class="filter-setting"/>
-          {{ $t('miniApp.chartSetting') }}
+          {{ $t('miniApp.componentSetting') }}
         </div>
         <!-- Title Setting -->
         <div class="setting__content">
           <div class="setting__block">
-            <div class="setting__label-block">{{ $t('miniApp.chartName') }}</div>
+            <div class="setting__label-block">{{ $t('miniApp.componentName') }}</div>
             <input-verify
               v-validate="`required|max:${max}`"
               v-model="currentComponent.config.diaplayedName"
@@ -220,6 +225,22 @@
             </div>
           </div>
         </div>
+        <!--Index type component font size setting-->
+        <div 
+          v-if="currentComponent.type === 'index' || currentComponent.type === 'formula'" 
+          class="setting__content">
+          <div class="setting__block">
+            <div class="setting__label-block">
+              {{ $t('miniApp.fontSizeSetting') }}
+            </div>
+            <default-select 
+              v-model="currentComponent.config.fontSize"
+              :option-list="indexSizeOptionList"
+              :placeholder="$t('miniApp.chooseColumnSize')"
+              class="setting__block-select"
+            />
+          </div>
+        </div>
         <!--Layout Setting-->
         <div class="setting__content">
           <div class="setting__block">
@@ -255,6 +276,7 @@
 
 <script>
 import DataFrameMenu from '@/components/select/DataFrameMenu'
+import FormulaSetting from '../components/componentSetting/FormulaSetting'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
@@ -268,6 +290,7 @@ export default {
   name: 'CreateComponentDialog',
   components: {
     DataFrameMenu,
+    FormulaSetting,
     DefaultSelect,
     AskBlock,
     ResultDisplay,
@@ -290,7 +313,7 @@ export default {
     controls: {
       type: Array,
       default: () => []
-    },
+    }
   },
   data () {
     return {
@@ -302,7 +325,25 @@ export default {
         id: null,
         name: null
       },
-      algoConfig
+      algoConfig,
+      indexSizeOptionList: [
+        {
+          value: 'large',
+          name: this.$t('miniApp.large')
+        },
+        {
+          value: 'middle',
+          name: this.$t('miniApp.middle')
+        },
+        {
+          value: 'small',
+          name: this.$t('miniApp.small')
+        },
+        {
+          value: 'mini',
+          name: this.$t('miniApp.mini')
+        }
+      ]
     }
   },
   computed: {
@@ -388,10 +429,15 @@ export default {
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
       return options
     },
+    isCreatedViaAsking () {
+      return this.currentComponent && this.currentComponent.isCreatedViaAsking
+    }
   },
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
-    
+    // 所有可以不需透過問問句就能創建的元件類型
+    const isDirectAddableComponentTypes = ['formula']
+    this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
     const columnInfo = this.currentComponent.config.columnRelations[0].columnInfo
     this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
   },
@@ -523,7 +569,7 @@ export default {
     overflow: overlay;
     display: flex;
     
-    .key-result-chart {
+    &--left {
       position: relative;
       flex: 1;
       min-width: 0;
@@ -541,7 +587,7 @@ export default {
         }
       }
     }
-    .key-result-setting {
+    &--right {
       flex: 0 0 280px;
       .setting {
         &__header {

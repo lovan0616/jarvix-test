@@ -31,7 +31,10 @@ export default {
       stability: {
         '@type': 'StandardLineAlgoConfig',
         standardLineType: 'MEDIAN'
-      }
+      },
+      formula: {
+        '@type': 'FormulaAlgoConfig'
+      },
     },
     historyQuestionList: [],
     filterList: [],

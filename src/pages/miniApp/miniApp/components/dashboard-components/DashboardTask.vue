@@ -66,7 +66,7 @@
           </div>
         </span>
         <div
-          v-if="componentData.type === 'index'" 
+          v-if="componentData.type === 'index' || componentData.type === 'formula'" 
           class="component__item-content index">
           <div class="index-data">
             <spinner v-if="isProcessing"/>
@@ -84,7 +84,7 @@
               />
               <span 
                 v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
-                :class="[componentData.indexInfo.size || 'middle']" 
+                :class="[componentData.config.fontSize || 'middle']" 
                 class="index-unit">{{ componentData.indexInfo.unit }}</span>
             </template>
           </div>
@@ -157,6 +157,8 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
 import Simulator from './Simulator'
 import moment from 'moment'
+import { mapState } from 'vuex'
+import { askFormulaResult } from '@/API/NewAsk'
 
 export default {
   name: 'DashboardTask',
@@ -222,10 +224,12 @@ export default {
       },
       isProcessing: false,
       tempFilteredKeyResultId: null,
-      isInitializing: true
+      isInitializing: true,
+      segmentation: null,
     }
   },
   computed: {
+    ...mapState('dataSource', ['algoConfig']),
     shouldComponentBeFiltered () {
       if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return false
       return true
@@ -339,7 +343,7 @@ export default {
         },
       }
       return {
-        ...sizeTable[this.componentData.indexInfo.size || 'middle'],
+        ...sizeTable[this.componentData.config.fontSize || 'middle'],
         'color': '#2AD2E2'
       }
     },
@@ -391,6 +395,13 @@ export default {
       // 需等到元件樣式被更新後才重新計算
       if (this.componentData.diagram === 'table') window.setTimeout(() => this.adjustToTableComponentStyle(), 300)
     },
+    'componentData.formulaSetting': {
+      deep: true,
+      handler (setting) {
+        if (!setting) return
+        this.deboucedAskQuestion()
+      }
+    },
   },
   mounted () {
     if (this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
@@ -416,9 +427,11 @@ export default {
       this.isComponentFailed = false
       this.totalSec = 50
       this.periodSec = 200
-      this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
-      this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
       this.isEmptyData = false
+
+      // 透過公式創建元件需使用不同方式取得 result
+      if (this.componentData.type === 'formula') return this.getFormulaResult()
+      
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.componentData.dataSourceId,
@@ -430,11 +443,13 @@ export default {
         let segmentationList = response.segmentationList
         // TODO 處理 NO_ANSWER
         if (segmentationList.length === 1) {
+          this.segmentation = segmentationList[0]
           // 確認是否為趨勢類型問題
           const isTrendQuestion = segmentationList[0].denotation === 'TREND'
           this.$store.dispatch('chatBot/askResult', {
             algoConfig: this.componentData.algoConfig || null,
             questionId,
+            algoConfig: this.algoConfig[this.segmentation.denotation.toLowerCase()] || null,
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
             selectedColumnList: null,
@@ -453,6 +468,20 @@ export default {
         }
         // TODO 無結果和多個結果
       }).catch(error => { this.isProcessing = false })
+    },
+    getFormulaResult () {
+      askFormulaResult({
+        algoConfig: {
+          ...this.algoConfig['formula'],
+          dataColumnIdList: this.componentData.formulaSetting.inputList.map(input => input.dcId),
+          formulaId: this.componentData.formulaSetting.formulaId
+        },
+        dataFrameId: this.componentData.formulaSetting.dataFrameId,
+        restrictions: this.restrictions(),
+        isFilter: true
+      })
+      .then(resultInfo => this.getComponentV2(resultInfo.resultId))
+      .catch(error => { this.isProcessing = false })
     },
     getComponentV2 (resultId) {
       this.$store.dispatch('chatBot/getComponentList', resultId)

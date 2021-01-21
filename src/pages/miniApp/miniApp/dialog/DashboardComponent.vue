@@ -17,7 +17,7 @@
         </div>
         <div class="key-result__switch-wrapper">
           <div 
-            :class="{ 'active': currentComponent.type === 'chart' }"
+            :class="{ 'active': currentComponent.type === 'chart' || currentComponent.type === 'paramCompare' }"
             class="key-result__switch" 
             @click="switchComponentType('chart')" >
             <svg-icon 
@@ -47,7 +47,7 @@
           </div>
         </div>
         <div 
-          v-show="currentComponent.type === 'chart'" 
+          v-show="currentComponent.type === 'chart' || currentComponent.type === 'paramCompare'" 
           class="key-result__card card"
         >
           <div class="card__content">
@@ -86,15 +86,6 @@
                 :placeholder="$t('miniApp.pleaseEnterUnitName')"
                 class="input setting__input"
               >
-            </div>
-            <div class="setting">
-              <div class="setting__label">顯示大小</div>
-              <default-select 
-                v-model="currentComponent.indexInfo.size"
-                :option-list="indexSizeOptionList"
-                :placeholder="$t('miniApp.chooseColumnSize')"
-                class="input setting__input"
-              />
             </div>
           </div>
         </div>
@@ -216,24 +207,6 @@ export default {
       question: '',
       segmentation: null,
       mainDateColumn: null,
-      indexSizeOptionList: [
-        {
-          value: 'large',
-          name: this.$t('miniApp.large')
-        },
-        {
-          value: 'middle',
-          name: this.$t('miniApp.middle')
-        },
-        {
-          value: 'small',
-          name: this.$t('miniApp.small')
-        },
-        {
-          value: 'mini',
-          name: this.$t('miniApp.mini')
-        }
-      ],
       algoConfig,
       standardLineTypeOptionList: [
         {
@@ -322,6 +295,7 @@ export default {
         
         // 無結果
         if (segmentationList[0].denotation === 'NO_ANSWER') {
+          this.segmentation = segmentationList[0]
           this.$store.commit('result/updateCurrentResultInfo', null)
           this.layout = 'EmptyResult'
           this.resultInfo = {
@@ -595,9 +569,9 @@ export default {
     resetComponent () {
       this.switchComponentType('chart')
       this.currentComponent.indexInfo = { 
-        unit: '',
-        size: 'middle'
+        unit: ''
       }
+      this.currentComponent.config.fontSize = 'middle'
     },
     saveChartSetting () {
       this.askResult(this.segmentation, this.questionInfo.questionId)
