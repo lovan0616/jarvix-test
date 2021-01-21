@@ -2279,6 +2279,7 @@
     "lowerBoundValue": "Lower bound",
     "normalValue": "Normal values",
     "anomalousValue": "Anomalous values",
+    "normalDistribution": "Normal Distribution",
     "feature": {
       "max": "Max",
       "min": "Min",
