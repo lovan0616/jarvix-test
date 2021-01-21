@@ -135,14 +135,14 @@ export default {
     isAnomalyTwoNumericDependence () {
       return !this.dataset.predictDataList && !!this.dataset.midlineValue
     },
-    mediumLine () {
+    standardLine () {
       const dataAmount = this.dataset.data.length
       return this.isAnomalyTwoNumericDependence 
         ? Array(dataAmount).fill(this.dataset.midlineValue)
         : this.dataset.predictDataList
     },
     lowerBoundList () {
-      return this.mediumLine.map(item => item - this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => item - this.zValue * this.dataset.sigma)
     },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
@@ -152,7 +152,7 @@ export default {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     toUpperBoundIntervalList () {
-      return this.mediumLine.map(item => 2 * this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => 2 * this.zValue * this.dataset.sigma)
     },
     actualDataList () {
       const actualDataList = {
@@ -174,7 +174,7 @@ export default {
       this.dataset.index.forEach((value, index) => {
         source.push([
           value, 
-          this.adjustValueWithOffsetValue(this.mediumLine[index]),
+          this.adjustValueWithOffsetValue(this.standardLine[index]),
           this.adjustValueWithOffsetValue(this.lowerBoundList[index]), 
           this.toUpperBoundIntervalList[index],
           //this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),

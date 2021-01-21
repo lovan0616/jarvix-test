@@ -891,7 +891,20 @@
     "startSimulating": "进行模拟",
     "simulator": "模拟器",
     "notYetSimulate": "尚未模拟资料",
-    "simulating": "模拟中"
+    "simulating": "模拟中",
+    "optimalParameterComparison": "的最佳参数比较",
+    "standardLine": "基准线",
+    "stddevTimes": "标准差倍数",
+    "chooseStandardLine": "请选择基准线",
+    "chooseStddevTimes": "请选择标准差倍数",
+    "fontSizeSetting": "文字大小设定",
+    "sourceOfData": "资料来源",
+    "formulaSetting": "运算式设定",
+    "selectFormula": "选择运算式",
+    "formulaPreview": "运算式预览",
+    "setting": "设定",
+    "otherSettings": "其他设定",
+    "formulaType": "公式类型"
   },
   "alert": {
     "alertLogs": "示警纪录",

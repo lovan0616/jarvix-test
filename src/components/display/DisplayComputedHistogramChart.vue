@@ -76,7 +76,7 @@ export default {
   props: {
     dataset: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     title: {
       type: Object,

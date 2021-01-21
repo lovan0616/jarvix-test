@@ -390,7 +390,6 @@ export default {
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
-              
               // data columns 重新處理是因為 ask question 取得的是建議的句子切法
               // 最終切法和辨別結果要以 get component list 為主
               this.$store.commit('result/updateCurrentResultInfo', {
@@ -404,21 +403,14 @@ export default {
                 dateTimeColumn: this.mainDateColumn
               })
             
-
-              if (this.isNeededDisplaySetting) {
-                if(!this.currentComponent.algoConfig) {
-                  //this.$emit('setAlgoConfig', this.algoConfig[componentResponse.intent.toLowerCase()])
-                  this.currentComponent.algoConfig = this.algoConfig[componentResponse.intent.toLowerCase()]
-                }
-                  
-                  //this.$emit('setAlgoConfig', componentResponse.intent)
+              if (this.isNeededDisplaySetting && !this.currentComponent.algoConfig) {
+                this.currentComponent.algoConfig = this.algoConfig[componentResponse.intent.toLowerCase()]
               }
-
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
               break
             case 'Disable':
-            case 'Delete' :
+            case 'Delete':
             case 'Warn':
             case 'Fail':
               this.resultInfo = { description: componentResponse.errorMessage }
