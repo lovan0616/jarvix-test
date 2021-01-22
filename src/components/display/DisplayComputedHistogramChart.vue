@@ -328,6 +328,6 @@ export default {
 
 <style lang="scss" scoped>
 .feature-information {
-  height: 120px;
+  height: 150px;
 }
 </style>
