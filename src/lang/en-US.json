@@ -892,7 +892,15 @@
     "standardLine": "Reference Line",
     "stddevTimes": "Number Of Standard Deviation",
     "chooseStandardLine": "Please choose reference line",
-    "chooseStddevTimes": "Please choose number of standard deviation"
+    "chooseStddevTimes": "Please choose number of standard deviation",
+    "fontSizeSetting": "Font Size Settings",
+    "sourceOfData": "Data Source",
+    "formulaSetting": "Calculation Formula Settings",
+    "selectFormula": "Select Calculation Formula",
+    "formulaPreview": "Calculation Formula Preview",
+    "setting": "Setting",
+    "otherSettings": "Other Settings",
+    "formulaType": "Calculation Formula Type"
   },
   "clustering": {
     "cluster": "Cluster",
