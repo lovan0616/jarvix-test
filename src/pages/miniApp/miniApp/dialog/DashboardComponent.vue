@@ -280,8 +280,13 @@ export default {
     },
     askResult (selectedResultSegmentationInfo, questionId) {
       this.$emit('update:isLoading', true)
-
       const segmentation = this.segmentation || selectedResultSegmentationInfo
+
+      // 初次創建時，預設元件名稱為使用者輸入的問句
+      if (!this.currentComponent.init) {
+        this.currentComponent.config.diaplayedName = segmentation.sentence.reduce((acc, cur) =>  acc += cur.matchedWord, '')
+      }
+      
       // 確認是否為趨勢類型問題
       const isTrendQuestion = segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
@@ -320,8 +325,6 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
-              // 初次創建時，預設元件名稱為使用者輸入的問句
-              if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
