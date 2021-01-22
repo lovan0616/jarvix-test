@@ -108,7 +108,8 @@ export default {
   },
   computed: {
     isNormalityTestChart () {
-      return this.dataset.featureInformation !== null
+      // 標準差 sigma 為零，就不畫常態分佈
+      return this.dataset.featureInformation !== null && this.dataset.featureInformation.sigma !== 0
     },
     lineChartAxisTick () {
       const xAxisMin = this.dataset.range[0]
