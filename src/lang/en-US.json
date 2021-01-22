@@ -436,7 +436,8 @@
     "valueAliasTemplate": "ValueAliasTemplate",
     "searchDataSourceOrDataFrame": "Search DataSource or DataFrame",
     "onlyPrefixMatching": "The search only supports prefix matching",
-    "searchDataSource": "Search DataSource"
+    "searchDataSource": "Search DataSource",
+    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -2326,7 +2327,9 @@
     "projectAmount": "Number of Project: {amount}",
     "dataFrameAmount": "Number of Data Set",
     "pinBoardAmount": "Number of Pinboard",
-    "warRoomAmount": "Number of War Room"
+    "warRoomAmount": "Number of War Room",
+    "dataStorageUsageRate": "Total Data Storage Utilization",
+    "unlimited": "Unlimited"
   },
   "updateLicense": {
     "newKey": "New License Key",

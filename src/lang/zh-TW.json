@@ -221,7 +221,7 @@
     "clickToSelectFiles": "點擊選擇檔案，或拖曳檔案至此",
     "uploadLimitTitle": "檔案上傳限制說明",
     "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
-    "uploadLimitSize": "檔案大小：{limitSize}",
+    "uploadLimitSize": "單檔大小限制：{limitSize}",
     "uploadLimitCount": "檔案數量：{countLimit}筆",
     "uploadLimitContent": "內容限制：不可有分頁、不可合併儲存格、標題僅限1行",
     "reachUploadSizeLimit": "資料表大小超過{limitSize}MB",
@@ -229,7 +229,7 @@
     "canUpload": "可以上傳",
     "unableUpload": "無法上傳",
     "addFile": "選取檔案",
-    "selectedTablesWaitingToUpload": "選取{num}項資料表，總和{size}，可進行上傳",
+    "selectedTablesWaitingToUpload": "選取 {num} 項資料表，總和 {size}，可進行上傳",
     "uploading": "上傳過程中請勿關閉瀏覽器視窗，以免上傳作業失敗",
     "uploadSuccess": "上傳成功",
     "uploadFailure": "上傳失敗",
@@ -436,7 +436,8 @@
     "valueAliasTemplate": "數據別名範例檔",
     "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
-    "searchDataSource": "搜尋資料源"
+    "searchDataSource": "搜尋資料源",
+    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量"
   },
   "algorithm": {
     "name": "演算法",
@@ -2326,7 +2327,9 @@
     "projectAmount": "專案數量: {amount} 個",
     "dataFrameAmount": "資料集數量",
     "pinBoardAmount": "釘板數量",
-    "warRoomAmount": "戰情室數量"
+    "warRoomAmount": "戰情室數量",
+    "dataStorageUsageRate": "總數據容量使用率",
+    "unlimited": "無限制"
   },
   "updateLicense": {
     "licenseKey": "新產品金鑰（license）",
