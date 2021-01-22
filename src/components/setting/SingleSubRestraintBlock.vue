@@ -235,7 +235,8 @@ export default {
       tempAliasList:[],
       statsType: null,
       queryString: '',
-      searchTimer: null
+      searchTimer: null,
+      isCategoryValueSearch: false
     }
   },
   computed: {
@@ -255,6 +256,16 @@ export default {
   },
   mounted () {
     this.fetchData()
+    // el-select on blur 的時候，將下拉選單還原成預設
+    // filterable el-select on blur 回調有 bug 不能用，所以靠全域聽取 click 事件觸發
+    window.addEventListener('click', () => {
+      setTimeout(() => {
+        if (this.tempAliasList.length > 0) this.valueList = this.tempAliasList
+      }, 0)
+    }, false)
+  },
+  destroyed () {
+    window.removeEventListener('click')
   },
   methods: {
     fetchData () {
@@ -340,6 +351,10 @@ export default {
                 name: element
               }
             })
+            // 將首次 remote search 拿回的 valueList 暫存起來供之後使用
+            if (!this.queryString) {
+              this.tempAliasList = JSON.parse(JSON.stringify(this.valueList))
+            }
           })
           .finally(() => {
             this.isSearching = false
@@ -566,7 +581,7 @@ export default {
           }
 
           &::after {
-            content: '\E6DA';
+            content: '';
             position: absolute;
             top: 8px;
             left: 12px;
@@ -580,6 +595,7 @@ export default {
 
           &.selected {
             &::after {
+              content: '\E6DA';
               color: #FFF;
               background-color: #1EB8C7;
               border-color: #1EB8C7;

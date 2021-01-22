@@ -401,7 +401,7 @@
       }
 
       &::after {
-        content: '\E6DA';
+        content: '';
         position: absolute;
         top: 8px;
         left: 12px;
@@ -415,6 +415,7 @@
 
       &.selected {
         &::after {
+          content: '\E6DA';
           color: #FFF;
           background-color: #1EB8C7;
           border-color: #1EB8C7;
