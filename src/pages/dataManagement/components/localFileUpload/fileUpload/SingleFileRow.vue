@@ -22,7 +22,7 @@
         class="file-status"
       >
         <svg-icon
-          v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail || singleFile.status === uploadStatus.forbidden"
+          v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail"
           :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
           :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
         />
@@ -36,7 +36,7 @@
           v-else
           class="link action-link"
           href="javascript:void(0)"
-          @click="removeFile"
+          @click="removeFile(singleFile.status)"
         >{{ $t('button.delete') }}</a>
       </div>
     </div>
@@ -117,8 +117,9 @@ export default {
     onProgress (percent) {
       this.progress = percent
     },
-    removeFile () {
-      this.$store.commit('dataManagement/removeUploadFile', this.index)
+    removeFile (fileStatus) {
+      if (fileStatus === 'wait') this.$store.commit('dataManagement/removeUploadFile', this.index)
+      if (fileStatus === 'forbidden') this.$emit('removeFile', this.index)
     },
     cancelUpload () {
       if (typeof this.askCancelFunction === 'function') {

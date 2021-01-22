@@ -13,6 +13,7 @@
         :key="index"
         :single-file="singleFile"
         :index="index"
+        @removeFile="$emit('removeFile', $event)"
       />
     </div>
   </div>
