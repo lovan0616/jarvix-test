@@ -429,7 +429,9 @@ export default {
       } else {
         this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
         this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
-        this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
+        if (this.componentData.dataset.timeStampList) {
+          this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
+        }
         if (this.componentData.dataset.display_index) {
           this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
         }

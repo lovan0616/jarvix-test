@@ -186,6 +186,8 @@
     "localUploadDescription": "透过电脑上传.xlsx .xls .csv<br>文件数据并进行创建",
     "remoteConnection": "数据库导入",
     "remoteConnectionDescription": "直接读取您的数据库数据<br>并进行数据复制和创建",
+    "runScript": "资料表演算",
+    "runScriptDescription": "使用系统的资料进行演算处理并建置出新的资料表",
     "confirmDeleteForeign": "确认删除此关联吗？",
     "chooseDataSource": "请选择数据源",
     "allDataFrames": "全部数据表",
@@ -439,6 +441,9 @@
     "columnAliasTemplate": "栏位别名案例档",
     "valueAliasTemplate": "数据别名案例档",
     "searchDataSourceOrDataFrame": "搜寻数据源 / 数据表",
+    "scriptExecutionStep1": "上传档案",
+    "scriptExecutionStep2": "选择输入栏位",
+    "scriptExecutionStep3": "设定输出类型",
     "onlyPrefixMatching": "此搜寻只支援从字首开始匹配",
     "searchDataSource": "搜寻资料源",
     "isOrdinal": "有时序",
@@ -572,6 +577,14 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位",
     "isDistributed": "是否进行分片",
     "distributedColumnName": "分片栏位"
+  },
+  "script": {
+    "dataFrame": "来源资料表",
+    "selectInputColumn": "设定输入栏位",
+    "scriptColumnReminder": "栏位具有顺序性，优先顺序为由上至下",
+    "selectOutputColumn": "设定输出栏位类型",
+    "columnDataType": "栏位类型",
+    "columnDataName": "栏位名称"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
@@ -831,7 +844,6 @@
     "displayedUnit": "显示单位",
     "pleaseEnterUnitName": "请输入单位名称",
     "currentlyDisplayed": "当前显示",
-    "setForDisplay": "设为显示",
     "generalComponent": "一般元件",
     "monitorLogUpdateTime": "处理状态更新时间",
     "generalFilter": "一般筛选条件",
@@ -853,6 +865,7 @@
     "columnSpanAmount": "{number} 行",
     "clickColumnToSeeMore": "点击\"{columnName}\"栏位可看到更详细内容",
     "chartSetting": "图表设定",
+    "componentName": "元件名称",
     "chartName": "图表名称",
     "triggerColumn": "触发栏位",
     "activate": "启用",
@@ -875,6 +888,7 @@
     "monitorUpdateFrequency": "示警更新频率",
     "monitorComponent": "监控示警元件",
     "simulateComponent": "模拟元件",
+    "specialIndexTypeComponent": "特殊数值元件",
     "timeScope": "时间范围",
     "dashboardNoLongerExist": "关联看板已不存在",
     "displayChart": "显示图表",
@@ -1175,6 +1189,14 @@
       "hour": "{n} 时",
       "week": "第 {n} 周"
     }
+  },
+  "comparisonOperator": {
+    "GREATER_THAN": "大于",
+    "GREATER_THAN_OR_EQUAL_TO": "大于等于",
+    "LESS_THAN": "小于",
+    "LESS_THAN_OR_EQUAL_TO": "小于等于",
+    "EQUAL": "等于",
+    "NOT_EQUAL": "不等于"
   },
   "aggregation": {
     "mean": "平均",
@@ -2418,6 +2440,7 @@
     "lowerBoundValue": "下限值",
     "normalValue": "正常值",
     "anomalousValue": "异常值",
+    "normalDistribution": "常态分布线",
     "feature": {
       "max": "最大值",
       "min": "最小值",
