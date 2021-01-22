@@ -163,7 +163,7 @@
             <button
               v-if="isEditMode"
               class="btn-m btn-default btn-has-icon create-btn" 
-              @click="isShowCreateDashboardDialog = true">
+              @click="createGeneralComponent">
               <svg-icon icon-class="plus"/>
               {{ $t('miniApp.createDashboard') }}
             </button>
@@ -360,7 +360,7 @@
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-default btn-has-icon create-btn" 
-                    @click="isShowCreateComponentDialog = true">
+                    @click="createGeneralComponent">
                     <svg-icon icon-class="plus"/>
                     {{ $t('miniApp.createComponent') }}
                   </button>
