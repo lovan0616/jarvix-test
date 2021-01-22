@@ -880,6 +880,7 @@
     "displayChart": "显示图表",
     "displayIndex": "显示数值",
     "displayText": "显示文字",
+    "displaySetting": "显示设定",
     "large": "大",
     "middle": "中",
     "small": "小",
@@ -890,7 +891,20 @@
     "startSimulating": "进行模拟",
     "simulator": "模拟器",
     "notYetSimulate": "尚未模拟资料",
-    "simulating": "模拟中"
+    "simulating": "模拟中",
+    "optimalParameterComparison": "的最佳参数比较",
+    "standardLine": "基准线",
+    "stddevTimes": "标准差倍数",
+    "chooseStandardLine": "请选择基准线",
+    "chooseStddevTimes": "请选择标准差倍数",
+    "fontSizeSetting": "文字大小设定",
+    "sourceOfData": "资料来源",
+    "formulaSetting": "运算式设定",
+    "selectFormula": "选择运算式",
+    "formulaPreview": "运算式预览",
+    "setting": "设定",
+    "otherSettings": "其他设定",
+    "formulaType": "公式类型"
   },
   "alert": {
     "alertLogs": "示警纪录",
@@ -2403,7 +2417,23 @@
     "upperBoundValue": "上限值",
     "lowerBoundValue": "下限值",
     "normalValue": "正常值",
-    "anomalousValue": "异常值"
+    "anomalousValue": "异常值",
+    "feature": {
+      "max": "最大值",
+      "min": "最小值",
+      "mean": "平均值",
+      "median": "中位数",
+      "pValue": "P-Value",
+      "sigma": "标准差",
+      "aDValue": "AD 值",
+      "kurtosis": "峰态(β)",
+      "skewness": "偏态",
+      "samplesAmount": "样本数",
+      "trendsPValue": "趋势性 P-Value",
+      "mixturesPValue": "混合性 P-Value",
+      "clusteringPValue": "类聚性 P-Value",
+      "oscillationPValue": "振荡性 P-Value"
+    }
   },
   "denotation": {
     "dataOverview": "资料概况",
@@ -2412,7 +2442,9 @@
     "predictionAnalysis": "预测分析",
     "trendAnalysis": "趋势分析",
     "anomalyAnalysis": "异常分析",
-    "periodicityAnalysis": "周期分析"
+    "periodicityAnalysis": "周期性分析",
+    "stabilityAnalysis": "稳定性分析",
+    "normalityTest": "常态检定"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

@@ -895,6 +895,7 @@
     "displayChart": "顯示圖表",
     "displayIndex": "顯示數值",
     "displayText": "顯示文字",
+    "displaySetting": "顯示設定",
     "large": "大",
     "middle": "中",
     "small": "小",
@@ -907,6 +908,10 @@
     "notYetSimulate": "尚未模擬資料",
     "simulating": "模擬中",
     "optimalParameterComparison": "的最佳參數比較",
+    "standardLine": "基準線",
+    "stddevTimes": "標準差倍數",
+    "chooseStandardLine": "請選擇基準線",
+    "chooseStddevTimes": "請選擇標準差倍數",
     "fontSizeSetting": "文字大小設定",
     "sourceOfData": "資料來源",
     "formulaSetting": "運算式設定",
@@ -2435,7 +2440,24 @@
     "upperBoundValue": "上限值",
     "lowerBoundValue": "下限值",
     "normalValue": "正常值",
-    "anomalousValue": "異常值"
+    "anomalousValue": "異常值",
+    "normalDistribution": "常態分佈線",
+    "feature": {
+      "max": "最大值",
+      "min": "最小值",
+      "mean": "平均值",
+      "median": "中位數",
+      "pValue": "P-Value",
+      "sigma": "標準差",
+      "aDValue": "AD 值",
+      "kurtosis": "峰態(β)",
+      "skewness": "偏態",
+      "samplesAmount": "樣本數",
+      "trendsPValue": "趨勢性 P-Value",
+      "mixturesPValue": "混合性 P-Value",
+      "clusteringPValue": "類聚性 P-Value",
+      "oscillationPValue": "振盪性 P-Value"
+    }
   },
   "denotation": {
     "dataOverview": "資料概況",
@@ -2444,7 +2466,9 @@
     "predictionAnalysis": "預測分析",
     "trendAnalysis": "趨勢分析",
     "anomalyAnalysis": "異常分析",
-    "periodicityAnalysis": "週期性分析"
+    "periodicityAnalysis": "週期性分析",
+    "stabilityAnalysis": "穩定性分析",
+    "normalityTest": "常態檢定"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

@@ -49,6 +49,11 @@
         </div>
       </div>
     </selected-region>
+    <feature-information-block
+      v-if="dataset.pValuesFeatureInformation"
+      :feature-information="dataset.pValuesFeatureInformation"
+      class="feature-information"
+    />
     <insight-description-block
       v-if="isShowDescription"
       :title="$t('resultDescription.dataInsight')"
@@ -67,6 +72,7 @@
 
 <script>
 import EchartAddon from './common/addon.js'
+import FeatureInformationBlock from './FeatureInformationBlock'
 import InsightDescriptionBlock from './InsightDescriptionBlock'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/components/display/common/addons'
@@ -91,6 +97,7 @@ const echartAddon = new EchartAddon({
 export default {
   name: 'DisplayLineChart',
   components: {
+    FeatureInformationBlock,
     InsightDescriptionBlock
   },
   props: {
@@ -159,6 +166,10 @@ export default {
     coefficients: {
       type: Array,
       default: null
+    },
+    coefficientLineType: {
+      type: String,
+      default: 'MEDIAN'
     },
     formula: {
       type: Array,
@@ -376,7 +387,7 @@ export default {
         //   }
         // }
       }
-
+        
       if (this.isShowCoefficients && this.coefficients) {
         let lineData = []
         let expression = ''
@@ -390,7 +401,9 @@ export default {
           }
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
-          expression = `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
+          expression = this.coefficientLineType
+            ? `${this.$t(`chart.feature.${this.coefficientLineType.toLowerCase()}`)}: ${this.formatComma(displayOffset.toFixed(2))}`
+            : `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
         } else {
           // ax^2 + bx + c
           let offset = this.coefficients[0]

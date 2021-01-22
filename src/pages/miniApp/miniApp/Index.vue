@@ -323,7 +323,7 @@
                 >
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
-                    :key="componentData.id"
+                    :key="`${componentData.id} - ${componentData.keyResultId}`"
                     :filters="filterColumnValueInfoList"
                     :y-axis-controls="yAxisControlColumnValueInfoList"
                     :controls="controlColumnValueInfoList"
@@ -1384,6 +1384,7 @@ export default {
           columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
           fontSize: 'middle'
         },
+        algoConfig: null,
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
           init: true,

@@ -283,6 +283,7 @@ import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
 import { mapState } from 'vuex'
+import { algoConfig } from '@/utils/general'
 
 export default {
   inject: ['$validator'],
@@ -324,6 +325,7 @@ export default {
         id: null,
         name: null
       },
+      algoConfig,
       indexSizeOptionList: [
         {
           value: 'large',
@@ -516,6 +518,9 @@ export default {
     updateTriggerColumnInfo () {
       const column = this.categoryColumnOptions.find(item => item.dataColumnId === this.selectedTriggerColumn)
       this.currentComponent.config.columnRelations[0].columnInfo = column
+    },
+    setAlgoConfig (intent) {
+      this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
     }
   },
 }
