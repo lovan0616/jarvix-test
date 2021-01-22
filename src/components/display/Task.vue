@@ -325,6 +325,7 @@ export default {
 
         // 合併 columns
         let concatColumns = [...new Set([...this.componentData.dataset.columns, ...taskData.dataset.columns])]
+
         // 檢查舊有資料需不需要補值
         if (concatColumns.length > this.componentData.dataset.columns.length) {
           let lengthDiff = concatColumns.length - this.componentData.dataset.columns.length
@@ -336,6 +337,7 @@ export default {
         }
         // 更新 columns
         this.componentData.dataset.columns = concatColumns
+
         // 處理 display_columns
         if (taskData.dataset.display_columns) {
           // 合併 columns
@@ -343,6 +345,7 @@ export default {
           // 更新 columns
           this.componentData.dataset.display_columns = concatDisplayColumns
         }
+        
         /**
          * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆一樣時間的話
          **/
