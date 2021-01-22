@@ -123,7 +123,7 @@
         />{{ $t('miniApp.componentNotAddable') }}
       </div>
       <div 
-        v-if="isNeededDisplaySetting && currentComponent.algoConfig"
+        v-if="computedKeyResultId && isNeededDisplaySetting && currentComponent.algoConfig"
         class="key-result__setting display-setting">
         <div class="display-setting__title">{{ $t('miniApp.displaySetting') }}</div>
         <div class="display-setting__content">
@@ -343,14 +343,13 @@ export default {
     },
     askResult (selectedResultSegmentationInfo, questionId) {
       this.$emit('update:isLoading', true)
-
-      const segmentation = this.segmentation || selectedResultSegmentationInfo
+      if(selectedResultSegmentationInfo) this.segmentation = selectedResultSegmentationInfo
       // 確認是否為趨勢類型問題
-      const isTrendQuestion = segmentation.denotation === 'TREND'
+      const isTrendQuestion = this.segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
         algoConfig: this.currentComponent.algoConfig || null,
         questionId: questionId || this.currentQuestionId,
-        segmentation,
+        segmentation: this.segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
         isFilter: true,
