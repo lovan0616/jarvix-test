@@ -466,6 +466,11 @@
         />
       </div>
     </writing-dialog>
+    <component-to-alert-condition-dialog
+      v-if="isShowCreateWarningCriteriaDialog"
+      @close="isShowCreateWarningCriteriaDialog = false"
+      @confirm="deleteComponent" 
+    />
   </div>
 </template>
 
@@ -494,6 +499,7 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 import FilterControlPanel from './filter/FilterControlPanel'
 import AxisControlPanel from './filter/AxisControlPanel'
 import WarningModule from './components/warning-module/WarningModule'
+import ComponentToAlertConditionDialog from './dialog/ComponentToAlertConditionDialog'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
@@ -521,7 +527,8 @@ export default {
     AxisControlPanel,
     WarningModule,
     draggable,
-    DefaultSelect
+    DefaultSelect,
+    ComponentToAlertConditionDialog
   },
   data () {
     return {
@@ -533,6 +540,7 @@ export default {
       isShowCreateComponentDialog: false,
       isShowDeleteDashboardDialog: false,
       isShowDeleteComponentDialog: false,
+      isShowCreateWarningCriteriaDialog: false,
       isShowUpdateDashboardNameDialog: false,
       isLoading: false,
       isProcessing: false,
@@ -1351,6 +1359,11 @@ export default {
           title: 'button.delete',
           icon: 'delete',
           dialogName: 'DeleteComponent'
+        },
+        {
+          title: 'button.createAlert',
+          icon: 'warning',
+          dialogName: 'CreateWarningCriteria'
         }
       ]
     },

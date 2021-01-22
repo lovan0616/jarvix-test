@@ -1168,7 +1168,8 @@
     "sendInvitation": "寄送邀請信",
     "downloadPage": "下載圖片",
     "changeDiagram": "切換圖表",
-    "columnSummaryInfo": "欄位統計資訊"
+    "columnSummaryInfo": "欄位統計資訊",
+    "createAlert": "新增示警"
   },
   "timeScopeUnit": {
     "second": "秒",
