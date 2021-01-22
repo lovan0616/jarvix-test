@@ -325,7 +325,6 @@ export default {
 
         // 合併 columns
         let concatColumns = [...new Set([...this.componentData.dataset.columns, ...taskData.dataset.columns])]
-
         // 檢查舊有資料需不需要補值
         if (concatColumns.length > this.componentData.dataset.columns.length) {
           let lengthDiff = concatColumns.length - this.componentData.dataset.columns.length
@@ -337,7 +336,6 @@ export default {
         }
         // 更新 columns
         this.componentData.dataset.columns = concatColumns
-
         // 處理 display_columns
         if (taskData.dataset.display_columns) {
           // 合併 columns
@@ -345,7 +343,6 @@ export default {
           // 更新 columns
           this.componentData.dataset.display_columns = concatDisplayColumns
         }
-
         /**
          * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆一樣時間的話
          **/
@@ -389,12 +386,15 @@ export default {
           if (taskData.dataset.index.length !== 1) {
             // index 更新
             taskData.dataset.index.shift()
-            taskData.dataset.timeStampList.shift()
             this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
-            this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
             if (taskData.dataset.display_index) {
               taskData.dataset.display_index.shift()
               this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+            }
+
+            if (taskData.dataset.timeStampList) {
+              taskData.dataset.timeStampList.shift()
+              this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
             }
           }
         } else {
@@ -421,7 +421,9 @@ export default {
 
           // index 更新
           this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
-          this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
+          if (this.componentData.dataset.timeStampList) {
+            this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
+          }
           if (taskData.dataset.display_index) {
             this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
           }

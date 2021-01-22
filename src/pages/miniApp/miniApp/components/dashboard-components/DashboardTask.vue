@@ -449,7 +449,6 @@ export default {
           this.$store.dispatch('chatBot/askResult', {
             algoConfig: this.componentData.algoConfig || null,
             questionId,
-            algoConfig: this.algoConfig[this.segmentation.denotation.toLowerCase()] || null,
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
             selectedColumnList: null,
