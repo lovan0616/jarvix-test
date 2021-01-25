@@ -420,10 +420,13 @@ export default {
       })
     },
     createMethod (value) {
-      if (value === 'file') {
-        return this.$t('editing.userUpload')
-      } else {
-        return this.$t('editing.connectDB')
+      switch (value) {
+        case 'file':
+          return this.$t('editing.userUpload')
+        case 'database':
+          return this.$t('editing.connectDB')
+        case 'script':
+          return this.$t('editing.script')
       }
     },
     checkDataSourceStatus () {

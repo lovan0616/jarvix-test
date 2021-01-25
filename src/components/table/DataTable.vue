@@ -431,16 +431,17 @@ export default {
     },
     doAction (actionName, data) {
       if (
-        !actionName 
+        !actionName
         || this.isDisabledActionButton(actionName, data)
       ) return false
       this.$emit(actionName, data)
     },
     isDisabledActionButton(actionName, data) {
       if (
-        this.isProcessing 
+        this.isProcessing
         || this.isInProcess(data) 
         || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
+        || (data.originType === 'script' && actionName !== 'delete')
       ) return true
       return false
     },
