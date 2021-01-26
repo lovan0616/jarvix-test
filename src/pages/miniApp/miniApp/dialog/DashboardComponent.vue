@@ -284,7 +284,7 @@ export default {
 
       // 初次創建時，預設元件名稱為使用者輸入的問句
       if (!this.currentComponent.init) {
-        this.currentComponent.config.diaplayedName = segmentation.sentence.reduce((acc, cur) =>  acc += cur.matchedWord, '')
+        this.currentComponent.config.diaplayedName = segmentation.sentence.reduce((acc, cur) =>  acc += ` ${cur.matchedWord}`, '')
       }
       
       // 確認是否為趨勢類型問題
@@ -336,7 +336,7 @@ export default {
                 keyResultId: componentResponse.componentIds.key_result[0],
                 dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
                 segmentation: componentResponse.segmentationPayload,
-                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
+                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => `${acc} ${cur.word}`, ''),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
                 dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
