@@ -886,7 +886,7 @@
     "notBeingSet": "未設定",
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新頻率",
-    "monitorComponent": "示警元件",
+    "monitorComponent": "監控示警元件",
     "simulateComponent": "模擬元件",
     "specialIndexTypeComponent": "特殊數值元件",
     "timeScope": "時間範圍",
