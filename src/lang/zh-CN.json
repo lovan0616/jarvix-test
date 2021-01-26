@@ -273,7 +273,6 @@
     "processStep3": "数据处理",
     "buildImmediately": "立即创建",
     "connectDB": "连接数据库",
-    "script": "由脚本产生",
     "connectStep2": "选择数据",
     "connectStep3": "数据处理",
     "dataProcessing": "数据处理中",

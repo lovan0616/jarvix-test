@@ -273,7 +273,6 @@
     "processStep3": "Data Processing",
     "buildImmediately": "Build Now",
     "connectDB": "Database",
-    "script": "Built by Script",
     "connectStep2": "Select Information",
     "connectStep3": "Data Processing",
     "dataProcessing": "Data Processing",

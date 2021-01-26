@@ -275,7 +275,6 @@
     "processStep3": "資料處理",
     "buildImmediately": "立即建置",
     "connectDB": "連接資料庫",
-    "script": "由腳本產生",
     "connectStep2": "選擇資料",
     "connectStep3": "資料處理",
     "dataProcessing": "資料處理中",

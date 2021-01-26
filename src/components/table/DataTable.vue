@@ -590,6 +590,11 @@ export default {
 
     &[disabled] {
       cursor: not-allowed;
+      &:hover {
+        .dropdown {
+          visibility: hidden;
+        }
+      }
     }
 
     &:hover {

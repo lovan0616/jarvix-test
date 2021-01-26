@@ -426,7 +426,7 @@ export default {
         case 'database':
           return this.$t('editing.connectDB')
         case 'script':
-          return this.$t('editing.script')
+          return this.$t('editing.runScript')
       }
     },
     checkDataSourceStatus () {
