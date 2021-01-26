@@ -66,7 +66,7 @@ export function executeScript(scriptId, data) {
  */
 export function searchColumnDefaultValue(scriptId, dataColumnId, data) {
   return request({
-    url: `/scripts/${scriptId}/column/${dataColumnId}/search/value`,
+    url: `/scripts/${scriptId}/input-columns/${dataColumnId}/search-default-value`,
     method: 'POST',
     data
   })
