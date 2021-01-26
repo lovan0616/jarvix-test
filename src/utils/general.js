@@ -104,6 +104,11 @@ export const intentType = {
   PREDICTION: "PREDICTION"
 }
 
+export const alertTargetType = {
+  DATA_COLUMN: 'DATA_COLUMN',
+  COMPONENT: 'COMPONENT'
+}
+
 export const algoConfig = {
   clustering: {
     '@type': 'ClusterAlgoConfig',
