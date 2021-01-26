@@ -28,48 +28,103 @@
         </div>
         <!-- Condition Target -->
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('alert.sourceSetting') }}</div>
-          <div class="input-field">
-            <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
-            <div class="input-field__input">
-              <default-select 
-                v-validate="'required'"
-                :option-list="dataSourceOptionList"
-                :placeholder="$t('miniApp.chooseDataSource')"
-                :is-disabled="isProcessing"
-                v-model="tempConditionSetting.dataSourceId"
-                class="input-field__select"
-                name="dataSourceId"
-                @change="fetchDataFrameList"
-              />
-              <div 
-                v-show="errors.has('dataSourceId')"
-                class="error-text"
-              >{{ errors.first('dataSourceId') }}</div>
-            </div>
+          <div class="setting-block__title">{{ $t('alert.originalDataSource') }}</div>
+          <div class="data-source">
+            <div class="data-source__title">{{ $t('alert.dataSource') }}</div>
+            <div class="data-source__content">{{ currentDataSource.name }}</div>
           </div>
-          <div class="input-field">
-            <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
-            <div class="input-field__input">
-              <default-select 
-                v-validate="'required'"
-                :option-list="dataFrameOptionList"
-                :placeholder="$t('miniApp.chooseDataFrame')"
-                :is-disabled="isLoadingDataFrameList"
-                v-model="newConditionSetting.dataFrameId"
-                class="input-field__select"
-                name="dataFrameId"
-                @change="fetchDataColumnList"
-              />
-              <div 
-                v-show="errors.has('dataFrameId')"
-                class="error-text"
-              >{{ errors.first('dataFrameId') }}</div>
-            </div>
+          <div class="data-source">
+            <div class="data-source__title">{{ $t('alert.dataFrame') }}</div>
+            <div class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
+          </div>
+        </div>
+        <!--示警指標-->
+        <div class="setting-block">
+          <div class="setting-block__title">{{ $t('alert.alertIndicator') }}</div>
+          <div
+            v-for="(indicator, index) in indicators"
+            :key="index"
+            class="input-radio-group"
+          >
+            <input
+              :id="indicator.text"
+              :value="indicator.text"
+              :checked="indicator.type === newConditionSetting.targetConfig.analysisValueType"
+              name="indocator"
+              class="input-radio"
+              type="radio"
+              @change="updateSelectedIndicator(indicator.type)"
+            >
+            <label
+              :for="indicator.text"
+              class="input-radio-label"
+            >
+              {{ `${ indicator.text }` }}
+            </label>
+          </div>
+        </div>
+        <!--展開條件-->
+        <div
+          v-if="componentData.controlList.length > 0"
+          class="setting-block"
+        >
+          <div class="setting-block__title">{{ $t('alert.columnValueCombination') }}</div>
+          <div class="select-group select-group--row">
+            <label
+              v-for="(control, index) in columnValueCombinationOptionList"
+              :key="control + '-' + index"
+              class="single-select"
+            >
+              <div class="checkbox-group">
+                <div class="checkbox-label">
+                  <input
+                    v-model="control.isSelected"
+                    :checked="control.isSelected"
+                    type="checkbox"
+                  >
+                  <div class="checkbox-square"/>
+                </div>
+              </div>
+              <div class="label-content">
+                <div class="label-title">{{ control.columnName }}</div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <!--資料過濾條件-->
+        <div
+          v-if="componentData.controlList.length > 0"
+          class="setting-block"
+        >
+          <div class="setting-block__title">{{ $t('alert.dataFilterCondition') }}</div>
+          <div class="select-group select-group--column">
+            <label
+              v-for="(filter, index) in filterOptionList"
+              :key="filter + '-' + index"
+              class="single-select"
+            >
+              <div class="checkbox-group">
+                <div class="checkbox-label">
+                  <input
+                    v-model="filter.isSelected"
+                    :checked="filter.isSelected"
+                    type="checkbox"
+                  >
+                  <div class="checkbox-square"/>
+                </div>
+              </div>
+              <div class="label-content">
+                <div class="label-title">{{ filter.columnName }}</div>
+                <div class="label-description">{{ filter.targetValues }}</div>
+              </div>
+            </label>
           </div>
         </div>
         <!-- Condition Comparing Values -->
-        <div class="setting-block">
+        <div
+          v-if="showConditionComapringSection"
+          class="setting-block"
+        >
           <div class="setting-block__title">{{ $t('alert.conditionSetting') }}</div>
           <single-comparing-value-card
             v-for="(comparingSet, index) in newConditionSetting.comparingValues"
@@ -111,12 +166,11 @@ import SingleComparingValueCard from '../components/warning-module/SingleCompari
 import AlertConditionMessageEditor from '../components/warning-module/AlertConditionMessageEditor'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
-import { 
-  getDataFrameById, 
-  getDataFrameColumnInfoById
-} from '@/API/DataSource'
+import { getDataFrameById } from '@/API/DataSource'
 import {
-  postAlertCondition
+  postAlertCondition,
+  getComponentIndicators,
+  convertComponentToAlertCondition
 } from '@/API/Alert'
 
 export default {
@@ -128,18 +182,20 @@ export default {
     SingleComparingValueCard,
     AlertConditionMessageEditor
   },
+  props: {
+    componentData: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
+      currentDataFrame: {},
+      indicators: [],
+      columnValueCombinationOptionList: [],
+      filterOptionList: [],
       // 後端儲存用
       newConditionSetting: {
-        name: '',
-        dataFrameId: null,
-        targetConfig: {
-          dataColumnId: null,
-          dataType: 'INT',
-          displayName: '',
-          statsType: 'NUMERIC'
-        },
         comparingValues: [
           {
             comparisonOperator: null,
@@ -147,6 +203,15 @@ export default {
             value: ''
           }
         ],
+        componentId: null,
+        dataFrameId: null,
+        name: '',
+        targetConfig: {
+          analysisValueType: null,
+          combinationColumns: [],
+          componentHashKey: null,
+          restrictions: []
+        },
         triggerEvent: 'DATA_CHANGE'
       },
       // 變更示警訊息中 要動態呈現實際值的欄位陣列
@@ -159,9 +224,8 @@ export default {
       isPatchingConditionMessage: false,
       dataFrameOptionList: [],
       dataColumnAllOptionList: [],
-      isLoadingDataFrameList: false,
-      isLoadingDataColumnList: false,
       isProcessing: false,
+      isLoading: false
     }
   },
   computed: {
@@ -169,9 +233,12 @@ export default {
     dataSourceOptionList () {
       return this.dataSourceList.reduce((acc, cur) => {
         if (cur.state !== 'ENABLE' || cur.enableDataFrameCount < 1) return acc
-        acc.push({ name: cur.name, value: cur.id })
+        acc.push({ name: cur.name, id: cur.id })
         return acc
       }, [])
+    },
+    currentDataSource () {
+      return this.dataSourceOptionList.find(dataSource => dataSource.id === this.componentData.dataSourceId)
     },
     comparisonOperatorOptionList () {
       return [
@@ -191,54 +258,62 @@ export default {
         // 這版本示警只做針對數值型欄位做監控
         return item.statsType === 'NUMERIC'
       })
+    },
+    showConditionComapringSection () {
+      return this.newConditionSetting.targetConfig.analysisValueType && this.newConditionSetting.targetConfig.analysisValueType !== 'OUTLIER_VALUE'
     }
   },
+  mounted () {false
+    this.fetchDataFrameList(this.currentDataSource.id)
+    this.getComponentIndicators(this.componentData.keyResultId)
+    this.columnValueCombinationOptionList = this.componentData.controlList.reduce((acc, cur) => {
+      acc.push(...cur.map(control => ({ ...control, isSelected: false })))
+      return acc
+    }, [])
+    this.configFilterOptionList()
+  },
   methods: {
+    configFilterOptionList() {
+      this.filterOptionList = this.componentData.filterList.reduce((acc, cur) => {
+        acc.push(...cur.map(filter => ({ 
+          ...filter,
+          isSelected: false,
+          targetValues: this.transformFilterValue(filter)
+        })))
+        return acc
+      }, [])
+    },
+    transformFilterValue (filter) {
+      switch (filter.statsType) {
+        case 'CATEGORY': 
+          return filter.dataValues.join(', ')
+        case 'BOOLEAN':
+          return filter.dataValues.join(', ')
+        case 'NUMERIC':
+          return `${filter.start} - ${filter.end}`
+        // TODO: relative datetime
+        case ('DATETIME'):
+          return `${filter.start} - ${filter.end}`
+      }
+    },
     fetchDataFrameList (dataSourceId) {
-      this.isLoadingDataFrameList = true
-
-      // 清空原資料
-      this.dataFrameOptionList = []
-      this.dataColumnAllOptionList = []
-      this.newConditionSetting.dataFrameId = null
-      this.newConditionSetting.targetConfig.dataColumnId = null
-
-      getDataFrameById(this.tempConditionSetting.dataSourceId, false)
+      this.isLoading = true
+      getDataFrameById(dataSourceId, false)
+        .then(response => this.currentDataFrame = response.find(dataFrame => dataFrame.id === this.componentData.dataFrameId))
+        .finally(() => this.isLoading = false)
+    },
+    getComponentIndicators (componentId) {
+      this.isLoading = true
+      getComponentIndicators(componentId)
         .then(response => {
-          this.dataFrameOptionList = response.map(dataFrame => ({
-            name: dataFrame.primaryAlias,
-            value: dataFrame.id
-          }))
+          this.indicators = response.types
+          // 預設為第一個值
+          this.newConditionSetting.targetConfig.analysisValueType = response.types[0]
         })
-        .finally(() => this.isLoadingDataFrameList = false)
+        .finally(() => this.isLoading = false)
     },
-    fetchDataColumnList (dataFrameId) {
-      this.isLoadingDataColumnList = true
-
-      // 清空原資料
-      this.dataColumnAllOptionList = []
-      this.newConditionSetting.targetConfig.dataColumnId = null
-
-      const hasFeatureColumn = true
-      // 過濾掉分群欄位
-      const hasBlockClustering = false
-      getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
-        this.dataColumnAllOptionList = response.reduce((acc, cur) => {
-          acc.push({
-            name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
-            value: cur.id,
-            originalName: cur.primaryAlias  || cur.name,
-            statsType: cur.statsType
-          })
-          return acc
-        }, [])
-      })
-      .finally(() => this.isLoadingDataColumnList = false)
-    },
-    onSelectDataColumn () {
-      // 補上送到後端所需的欄位名稱
-      const column = this.dataColumnAllOptionList.find(item => item.value === this.newConditionSetting.targetConfig.dataColumnId)
-      this.newConditionSetting.targetConfig.displayName = column.originalName
+    updateSelectedIndicator (type) {
+      this.newConditionSetting.targetConfig.analysisValueType = type
     },
     onAlertMessageProcessFinished () {
       this.isProcessing = false
@@ -250,8 +325,27 @@ export default {
 
         this.isProcessing = true
         try {
-          // 創造示警條件
-          this.conditionId = await postAlertCondition(this.newConditionSetting)
+          const settingData = {
+            ...this.newConditionSetting,
+            componentId: this.componentData.keyResultId,
+            dataFrameId: this.componentData.dataFrameId,
+          }
+          // 展開條件
+          settingData.targetConfig.combinationColumns = this.columnValueCombinationOptionList
+            .filter(combination => combination.isSelected)
+            .map(column => ({
+              dataColumnId: column.columnId,
+              dataType: column.dataType,
+              displayName: column.columnName,
+              statsType: column.statsType
+            }))
+
+          // 資料過濾條件
+          const selectedFilterList = this.filterOptionList.filter(option => option.isSelected)
+          settingData.targetConfig.restrictions = this.restrictions(selectedFilterList)
+
+          this.conditionId = await convertComponentToAlertCondition()
+
           Message({
             message: this.$t('alert.alertConditionSuccessfullyCreated'),
             type: 'success',
@@ -262,6 +356,73 @@ export default {
           this.$emit('close')
         }
       })
+    },
+    restrictions (filterList) {
+      if (filterList.length === 0) return []
+      return filterList
+        .filter(filter => {
+          // 相對時間有全選的情境，不需帶入限制中
+          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+          // 時間欄位要有開始和結束時間
+          if (
+            filter.statsType === 'NUMERIC'
+            || filter.statsType === 'FLOAT'
+            || filter.statsType === 'DATETIME'
+          ) return filter.start && filter.end
+          // filter 必須有值
+          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
+          return false
+        })
+        .map(filter => {
+          let type = ''
+          let data_type = ''
+          switch (filter.statsType) {
+            case ('STRING'):
+            case ('BOOLEAN'):
+            case ('CATEGORY'):
+              data_type = 'string'
+              type = 'enum'
+              break
+            case ('FLOAT'):
+            case ('NUMERIC'):
+              data_type = 'int'
+              type = 'range'
+              break
+            case ('DATETIME'):
+            case ('RELATIVEDATETIME'):
+              data_type = 'datetime'
+              type = 'range'
+              break  
+          }
+
+          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
+          if (filter.statsType === 'RELATIVEDATETIME') return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: this.componentData.dateTimeColumn.dataColumnId,
+              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+              ...this.formatRelativeDatetime(filter.dataValues[0])
+            }
+          }]
+
+          return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: filter.columnId,
+              display_name: filter.columnName,
+              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
+                datavalues: filter.dataValues,
+                display_datavalues: filter.dataValues
+              }),
+              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
+                start: filter.start,
+                end: filter.end
+              }),
+            }
+          }]
+        })
     },
   }
 }
@@ -333,6 +494,59 @@ export default {
       }
       .error-text {
         bottom: -9px;
+      }
+    }
+
+    .data-source {
+      display: flex;
+      &__title {
+        width: 100px;
+        font-size: 14px;
+        color: #FFFFFF;
+        font-weight: 600;
+      }
+      &__content {
+        font-size: 14px;
+        color: #DDDDDD;
+        font-weight: normal;
+      }
+      &:not(:last-of-type) {
+        margin-bottom: 17px;
+      }
+    }
+
+    .select-group {
+      display: flex;
+      &--row {
+        flex-direction: row;
+        .single-select {
+          &:not(:last-of-type) {
+            margin-right: 88px;
+          }
+        }
+      }
+      &--column {
+        flex-direction: column;
+        .single-select {
+          margin-bottom: 16px;
+        }
+      }
+    }
+
+    .single-select {
+      display: flex;
+      .checkbox-group {
+        margin-right: 8px;
+      }
+      .checkbox-label {
+        margin-top: 4px;
+      }
+      .label-title {
+        font-size: 14px;
+      }
+      .label-description {
+        font-size: 14px;
+        color: #AAAAAA;
       }
     }
   }

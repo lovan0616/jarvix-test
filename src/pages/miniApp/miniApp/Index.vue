@@ -341,7 +341,7 @@
                     <template slot="drowdown">
                       <dropdown-select
                         :bar-data="componentSettingOptions(componentData)"
-                        @switchDialogName="switchDialogName($event, componentData.id)"
+                        @switchDialogName="switchDialogName($event, componentData)"
                       />
                     </template>
                     <template 
@@ -468,6 +468,7 @@
     </writing-dialog>
     <component-to-alert-condition-dialog
       v-if="isShowCreateWarningCriteriaDialog"
+      :component-data="componentToWarningCriteriaData"
       @close="isShowCreateWarningCriteriaDialog = false"
       @confirm="deleteComponent" 
     />
@@ -535,6 +536,7 @@ export default {
       miniApp: {},
       currentDashboardId: null,
       currentComponentId: null,
+      componentToWarningCriteriaData: {},
       isShowWarningModule: false,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
@@ -1154,12 +1156,20 @@ export default {
         })
         .finally(() => this.isProcessing = false)
     },
-    switchDialogName (eventName, id) {
+    switchDialogName (eventName, componentData) {
       this[`isShow${eventName}Dialog`] = true
       switch(eventName) {
         case 'DeleteComponent':
         case 'CreateComponent':
-          this.currentComponentId = id
+          this.currentComponentId = componentData && componentData.id
+          break
+        case 'CreateWarningCriteria':
+          this.componentToWarningCriteriaData = {
+            ...componentData,
+            controlList: this.currentDashboard.controlList,
+            filterList: this.currentDashboard.filterList
+          }
+        break
       }
     },
     updateFilter (updatedFilterList, type) {

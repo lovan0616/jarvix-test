@@ -956,7 +956,13 @@
     "editAlertMessage": "編輯內容",
     "finished": "已處理",
     "unfinished": "未處理",
-    "state": "處理狀態"
+    "state": "處理狀態",
+    "originalDataSource": "資料來源",
+    "alertIndicator": "示警指標",
+    "columnValueCombination": "展開條件",
+    "dataFilterCondition": "資料過濾條件",
+    "dataSource": "資料源",
+    "dataFrame": "資料表"
   },
   "clustering": {
     "cluster": "群體",
