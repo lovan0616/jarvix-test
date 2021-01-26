@@ -167,6 +167,7 @@
       <el-select
         v-validate="'required'"
         v-show="valueList"
+        ref="fuzzySearchSelect"
         :value="selectedList"
         :name="index + '-select'"
         :no-data-text="$t('message.noData')"
@@ -183,6 +184,7 @@
         reserve-keyword
         class="sy-select theme-dark category-block__selector"
         @input="updateDataValue"
+        @focus="onSelectfocused"
       >
         <el-option
           v-for="(item, index) in valueList"
@@ -256,13 +258,6 @@ export default {
   },
   mounted () {
     this.fetchData()
-    // el-select on blur 的時候，將下拉選單還原成預設
-    // filterable el-select on blur 回調有 bug 不能用，所以靠全域聽取 click 事件觸發
-    window.addEventListener('click', () => {
-      setTimeout(() => {
-        if (this.tempAliasList.length > 0) this.valueList = this.tempAliasList
-      }, 0)
-    }, false)
   },
   destroyed () {
     window.removeEventListener('click')
@@ -390,7 +385,16 @@ export default {
     },
     disabledDueDate (time) {
       return time.getTime() < new Date(this.subRestraint.properties.start).getTime()
-    }
+    },
+    onSelectfocused() {
+      this.$refs.fuzzySearchSelect.$refs.input.blur = () => {
+        // 因 el-select blur 監聽回調失效，改成監聽 focus 事件
+        // 使用 setTimeout 在選單關閉之後再 assign 新值避免閃爍
+        setTimeout(() => {
+          if (this.tempAliasList.length > 0) this.valueList = this.tempAliasList
+        }, 100)
+      };
+    },
   },
 
 }
