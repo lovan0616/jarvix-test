@@ -156,6 +156,8 @@ export default {
 .parameter-comparison-table {
   .comparison-table {
     width: 100%;
+    height: 100%;
+    overflow-y: auto;
   }
 
   .table {
