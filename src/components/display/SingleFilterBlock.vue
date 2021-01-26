@@ -164,7 +164,6 @@ export default {
     align-items: center;
     cursor: pointer;
     margin-bottom: 5px;
-    padding-right: 40px;
 
     .checkbox-group {
       margin-right: 11px;
@@ -178,6 +177,7 @@ export default {
     left: 170px;
     display: flex;
     flex-direction: row;
+    background-color: #000;
 
     &--edit, &--delete {
       font-size: 14px;
