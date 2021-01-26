@@ -164,6 +164,7 @@ export default {
     align-items: center;
     cursor: pointer;
     margin-bottom: 5px;
+    padding-right: 40px;
 
     .checkbox-group {
       margin-right: 11px;

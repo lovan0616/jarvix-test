@@ -369,7 +369,6 @@ export default {
       }
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
-        console.log(coordRange[0], coordRange[1])
         return {
           type: 'range',
           properties: {
