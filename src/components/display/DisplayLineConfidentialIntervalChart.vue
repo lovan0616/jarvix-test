@@ -86,6 +86,10 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -98,13 +102,17 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '420px'
+        height: '420px',
+        ...this.customChartStyle
       }
     },
    seriesName () {
+    const middleLineName = this.isAnomalyTwoNumericDependence 
+      ? this.$t(`chart.feature.${this.dataset.midlineType.toLowerCase()}`)
+      : this.$t('chart.forecastValue')
      return [
         this.title.xAxis[0].display_name,
-        this.$t('chart.forecastValue'),
+        middleLineName,
         this.$t('chart.lowerBoundValue'),
         this.$t('chart.upperBoundValue'),
         this.$t('chart.normalValue'),
@@ -120,10 +128,21 @@ export default {
           return 1.960
         case 99: 
           return 2.576
+        case 99.7:
+          return 3
       }
     },
+    isAnomalyTwoNumericDependence () {
+      return !this.dataset.predictDataList && !!this.dataset.midlineValue
+    },
+    standardLine () {
+      const dataAmount = this.dataset.data.length
+      return this.isAnomalyTwoNumericDependence 
+        ? Array(dataAmount).fill(this.dataset.midlineValue)
+        : this.dataset.predictDataList
+    },
     lowerBoundList () {
-      return this.dataset.predictDataList.map(item => item - this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => item - this.zValue * this.dataset.sigma)
     },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
@@ -133,7 +152,7 @@ export default {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     toUpperBoundIntervalList () {
-      return this.dataset.predictDataList.map(item => 2 * this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => 2 * this.zValue * this.dataset.sigma)
     },
     actualDataList () {
       const actualDataList = {
@@ -155,10 +174,12 @@ export default {
       this.dataset.index.forEach((value, index) => {
         source.push([
           value, 
-          this.adjustValueWithOffsetValue(this.dataset.predictDataList[index]),
+          this.adjustValueWithOffsetValue(this.standardLine[index]),
           this.adjustValueWithOffsetValue(this.lowerBoundList[index]), 
           this.toUpperBoundIntervalList[index],
-          this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
+          //this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
+          // 2N 異常需要把原始資料點連起來，因此要使用原始資料
+          this.adjustValueWithOffsetValue(this.isAnomalyTwoNumericDependence ? this.dataset.data[index] : this.actualDataList.validDataList[index]),
           this.adjustValueWithOffsetValue(this.actualDataList.invalidDataList[index])
         ])
       })
@@ -238,7 +259,7 @@ export default {
             color: chartVariable['normalValueColor']
           },
           lineStyle: {
-            opacity: 0
+            opacity: Number(this.isAnomalyTwoNumericDependence) * 0.5
           },
           // 顯示所有點，不省略
           showAllSymbol: true
@@ -291,6 +312,7 @@ export default {
 
       // 準備 tooltip 內容
       config.tooltip.formatter = (params) => {
+        let hasAnomalyData = params[0].value[5] !== null
         let res = params[0].name + '<br/>'
         for (let i = 0, length = params.length; i < length; i++) {
           let componentIndex = params[i].componentIndex + 1
@@ -301,7 +323,8 @@ export default {
           // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
           displayValue += this.yAxisOffsetValue
           let marker = params[i].marker ? params[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color.colorStops[0].color};"></span>`
-          res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
+          // 有異常分析的時候，不顯示正常值
+          if(i !== 3 || !hasAnomalyData) res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
         }
         return res
       }

@@ -30,7 +30,7 @@
         <div class="params-helper">
           <default-select
             :option-list="paramOptions"
-            :placeholder="$t('alert.inserColumnAsParams')"
+            :placeholder="$t('alert.insertColumnAsParams')"
             class="params-helper__selector"
             @change="insertParam(lang, $event)"
           />

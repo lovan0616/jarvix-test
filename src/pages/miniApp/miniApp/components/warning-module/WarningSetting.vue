@@ -76,15 +76,19 @@
               <div class="datasource-info">
                 <svg-icon icon-class="data-source"/>{{ condition.dataSourceName }}
                 <svg-icon icon-class="table"/>{{ condition.dataFrameName }}
-                <svg-icon icon-class="column"/>{{ condition.targetConfig.displayName }}
+                <svg-icon :icon-class="isComponentAlerter(condition.targetType) ? 'watch-list' : 'column'"/>
+                {{ isComponentAlerter(condition.targetType) 
+                  ? $t('alert.monitoringItem', {number: condition.targetConfig.combinationCounts }) 
+                : condition.targetConfig.displayName }}
               </div>
               <div 
                 class="comparing-values" 
-                v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
+                v-html="displayedConditionMessage(condition.targetConfig.displayName || condition.targetConfig.analysisValueType, condition.comparingValues)"/>
               <div class="message-template">
                 <span class="message-template__label">{{ $t('alert.alertLogMessage') }}:</span>
                 <span class="message-template__content">{{ condition[`alertMessage${locale.split('-')[1]}`] }}</span>
                 <a
+                  v-if="!isComponentAlerter(condition.targetType)"
                   href="javascript:void(0)"
                   class="link message-template__edit-btn"
                   @click="openAlertConditionMessageDialog(condition)"
@@ -130,8 +134,9 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import CreateAlertConditionDialog from './CreateAlertConditionDialog'
 import AlertConditionDeleter from './AlertConditionDeleter'
 import AlertConditionMessageEditorDialog from './AlertConditionMessageEditorDialog'
-import { mapState, mapGetters } from 'vuex'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapState, mapGetters } from 'vuex'
+import { alertTargetType } from '@/utils/general'
 
 export default {
   name: 'WarningSetting',
@@ -159,7 +164,8 @@ export default {
       tempWarningModuleConfig: {},
       currentEditingCondition: null,
       isShowCreateConditionDialog: false,
-      isShowEditConditionMessageDialog: false
+      isShowEditConditionMessageDialog: false,
+      alertTargetType
     }
   },
   computed: {
@@ -282,6 +288,9 @@ export default {
       this[`isShow${action}Dialog`] = false
       this.fetchAlertConditions()
       if (action === 'EditConditionMessage') this.currentEditingCondition = null
+    },
+    isComponentAlerter (targetType) {
+      return targetType === this.alertTargetType['COMPONENT']
     }
   }
 }
@@ -369,6 +378,7 @@ export default {
           flex-wrap: wrap;
           white-space: nowrap;
           font-size: 12px;
+          list-style: 16px;
           color: #CCC;
           margin: 6px 0;
           .svg-icon {

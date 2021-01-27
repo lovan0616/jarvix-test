@@ -103,3 +103,28 @@ export const intentType = {
   CLUSTERING: 'CLUSTERING',
   PREDICTION: "PREDICTION"
 }
+
+export const alertTargetType = {
+  DATA_COLUMN: 'DATA_COLUMN',
+  COMPONENT: 'COMPONENT'
+}
+
+export const algoConfig = {
+  clustering: {
+    '@type': 'ClusterAlgoConfig',
+    clusteringCount: null
+  },
+  prediction: {
+    '@type': 'PredictionAlgoConfig',
+    predictionIntervalLength: '4'
+  },
+  anomaly: {
+    '@type': 'AnomalyAlgoConfig',
+    standardLineType: 'MEDIAN',
+    stddevTimes: 3
+  },
+  stability: {
+    '@type': 'StandardLineAlgoConfig',
+    standardLineType: 'MEDIAN'
+  }
+}

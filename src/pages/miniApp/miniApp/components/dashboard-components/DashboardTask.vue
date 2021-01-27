@@ -128,11 +128,11 @@
           <spinner v-if="isProcessing"/>
           <task
             v-else
-            :custom-chart-style="chartComponentStyle"
+            :custom-chart-style="dynamicComponentStyle"
             :key="'chart' + keyResultId"
             :component-id="keyResultId"
             :is-show-description="false"
-            :is-show-coefficients="false"
+            :is-show-coefficients="componentData.segmentation.denotation === 'STABILITY'"
             :converted-type="componentData.type === 'paramCompare' ? 'param_comparison_table' : null"
             :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
@@ -352,6 +352,17 @@ export default {
         ...sizeTable[this.componentData.config.fontSize || 'middle'],
         'color': '#2AD2E2'
       }
+    },
+    dynamicComponentStyle () {
+      return {
+        ...this.chartComponentStyle,
+        ...((this.componentData.segmentation.denotation === 'ANOMALY' || this.componentData.segmentation.denotation === 'NORMALITY_TEST') && {
+          'height': 'calc(100% - 100px)',
+        }),
+        ...(this.componentData.segmentation.denotation === 'STABILITY' && {
+          'height': 'calc(100% - 60px)',
+        })
+      }
     }
   },
   watch: {
@@ -442,8 +453,8 @@ export default {
           // 確認是否為趨勢類型問題
           const isTrendQuestion = segmentationList[0].denotation === 'TREND'
           this.$store.dispatch('chatBot/askResult', {
+            algoConfig: this.componentData.algoConfig || null,
             questionId,
-            algoConfig: this.algoConfig[this.segmentation.denotation.toLowerCase()] || null,
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
             selectedColumnList: null,

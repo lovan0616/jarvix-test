@@ -55,7 +55,7 @@
               :key="'chart-' + computedKeyResultId"
               :component-id="computedKeyResultId"
               :is-show-description="false"
-              :is-show-coefficients="false"
+              :is-show-coefficients="segmentation && segmentation.denotation === 'STABILITY'"
               :is-show-donwnload-btn="false"
               :is-show-toolbox="false"
               intend="key_result"
@@ -123,6 +123,43 @@
           icon-class="information-circle"
         />{{ $t('miniApp.componentNotAddable') }}
       </div>
+      <div 
+        v-if="computedKeyResultId && isNeededDisplaySetting && currentComponent.algoConfig"
+        class="key-result__setting display-setting">
+        <div class="display-setting__title">{{ $t('miniApp.displaySetting') }}</div>
+        <div class="display-setting__content">
+          <div class="display-setting__item-box">
+            <div class="display-setting__item item">
+              <div class="item__label">{{ $t('miniApp.standardLine') }}</div>
+              <default-select
+                v-model="currentComponent.algoConfig.standardLineType"
+                :option-list="standardLineTypeOptionList"
+                :placeholder="$t('miniApp.chooseStandardLine')"
+                class="input item__input"
+              />
+            </div>
+            <div 
+              v-if="segmentation.denotation === 'ANOMALY'"
+              class="display-setting__item item">
+              <div class="item__label">{{ $t('miniApp.stddevTimes') }}</div>
+              <default-select
+                v-model="currentComponent.algoConfig.stddevTimes"
+                :option-list="stddevTimesOptionList"
+                :placeholder="$t('miniApp.chooseStddevTimes')"
+                class="input item__input"
+              />
+            </div>
+          </div>
+          <div class="display-setting__button-box">
+            <button 
+              class="btn btn-default display-setting__button" 
+              @click="saveChartSetting"
+            >
+              {{ $t('button.change') }}
+            </button>
+          </div>
+        </div>
+      </div>
     </template>
   </div>
 </template>
@@ -131,6 +168,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { getDateTimeColumns } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { algoConfig } from '@/utils/general'
 import moment from 'moment'
 
 export default {
@@ -170,10 +208,31 @@ export default {
       question: '',
       segmentation: null,
       mainDateColumn: null,
+      algoConfig,
+      standardLineTypeOptionList: [
+        {
+          value: 'MEDIAN',
+          name: this.$t('chart.feature.median')
+        },
+        {
+          value: 'MEAN',
+          name: this.$t('chart.feature.mean')
+        }
+      ],
+      stddevTimesOptionList: [
+        {
+          value: '2',
+          name: 2
+        },
+        {
+          value: '3',
+          name: 3
+        }
+      ]
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId', 'algoConfig']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
       return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
@@ -188,6 +247,9 @@ export default {
       // 可能會有階層，因此需要完全攤平
       return [].concat.apply([], [...this.filters, ...this.controls])
     },
+    isNeededDisplaySetting () {
+      return this.segmentation && (this.segmentation.denotation === 'STABILITY' || this.segmentation.denotation === 'ANOMALY')
+    }
   },
   watch: {
     appQuestion (question) {
@@ -256,6 +318,7 @@ export default {
 
               // 存取問句結果讓 restriction 使用
               this.questionInfo = {
+                questionId: response.questionId,
                 dataFrameId: segmentationList[0].transcript.dataFrame.dataFrameId,
                 dataColumns: this.getDataColumnlist(segmentationList[0].transcript.subjectList)
               }
@@ -281,14 +344,19 @@ export default {
     },
     askResult (selectedResultSegmentationInfo, questionId) {
       this.$emit('update:isLoading', true)
+      if (selectedResultSegmentationInfo) this.segmentation = selectedResultSegmentationInfo
 
-      const segmentation = this.segmentation || selectedResultSegmentationInfo
+      // 初次創建時，預設元件名稱為使用者輸入的問句
+      if (!this.currentComponent.init) {
+        this.currentComponent.config.diaplayedName = this.segmentation.sentence.reduce((acc, cur) =>  acc += ` ${cur.matchedWord}`, '')
+      }
+      
       // 確認是否為趨勢類型問題
-      const isTrendQuestion = segmentation.denotation === 'TREND'
+      const isTrendQuestion = this.segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
+        algoConfig: this.currentComponent.algoConfig || null,
         questionId: questionId || this.currentQuestionId,
-        algoConfig: this.algoConfig[segmentation.denotation.toLowerCase()] || null,
-        segmentation,
+        segmentation: this.segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
         isFilter: true,
@@ -323,23 +391,27 @@ export default {
               this.resultInfo = componentResponse.componentIds
               // 初次創建時，預設元件名稱為使用者輸入的問句
               if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
+              this.currentComponent.keyResultId = componentResponse.id
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
-
               // data columns 重新處理是因為 ask question 取得的是建議的句子切法
               // 最終切法和辨別結果要以 get component list 為主
               this.$store.commit('result/updateCurrentResultInfo', {
                 keyResultId: componentResponse.componentIds.key_result[0],
                 dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
                 segmentation: componentResponse.segmentationPayload,
-                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
+                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => `${acc} ${cur.word}`, ''),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
                 dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
                 dateTimeColumn: this.mainDateColumn
               })
+            
+              if (this.isNeededDisplaySetting && !this.currentComponent.algoConfig) {
+                this.currentComponent.algoConfig = this.algoConfig[componentResponse.intent.toLowerCase()]
+              }
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
               break
@@ -498,6 +570,9 @@ export default {
         unit: ''
       }
       this.currentComponent.config.fontSize = 'middle'
+    },
+    saveChartSetting () {
+      this.askResult(this.segmentation, this.questionInfo.questionId)
     }
   }
 }
@@ -601,6 +676,65 @@ export default {
     .icon {
       font-size: 20px;
       margin-right: 5px;
+    }
+  }
+
+  .display-setting {
+
+    &__title {
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 25px;
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: row;
+      background: #1C292B;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 18.5px;
+    }
+
+    &__item-box {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    &__item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 6px 0;
+    }
+
+    .item {
+      &__label {
+        margin-right: 9px;
+        width: 80px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #CCCCCC;
+      }
+
+      &__input {
+        width: 200px;
+      }
+    }
+
+    &__button-box {
+      display: flex;
+      flex-direction: column;
+      padding: 6px 0;
+    }
+
+    &__button {
+      margin-top: auto;
+      margin-left: 16px;
+      height: 30px;
+      min-width: 50px;
     }
   }
 }

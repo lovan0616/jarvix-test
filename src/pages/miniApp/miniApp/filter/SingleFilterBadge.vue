@@ -314,7 +314,6 @@ export default {
 
         // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
         if (this.filter.dataValues.length > 0) {
-          this.searchInput = this.filter.dataValues[0]
           await this.searchValue()
           if (this.filter.dataValueOptionList === 0) {
             this.searchInput = ''

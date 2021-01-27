@@ -163,7 +163,7 @@
             <button
               v-if="isEditMode"
               class="btn-m btn-default btn-has-icon create-btn" 
-              @click="isShowCreateDashboardDialog = true">
+              @click="createGeneralComponent">
               <svg-icon icon-class="plus"/>
               {{ $t('miniApp.createDashboard') }}
             </button>
@@ -323,7 +323,7 @@
                 >
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
-                    :key="componentData.id"
+                    :key="`${componentData.id} - ${componentData.updateTime}`"
                     :filters="filterColumnValueInfoList"
                     :y-axis-controls="yAxisControlColumnValueInfoList"
                     :controls="controlColumnValueInfoList"
@@ -360,7 +360,7 @@
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-default btn-has-icon create-btn" 
-                    @click="isShowCreateComponentDialog = true">
+                    @click="createGeneralComponent">
                     <svg-icon icon-class="plus"/>
                     {{ $t('miniApp.createComponent') }}
                   </button>
@@ -854,7 +854,10 @@ export default {
         if (board.id === this.currentDashboardId) {
           board.components.forEach((component, componentIndex) => {
             if (component.id === this.currentComponentId) {
-              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = updatedComponentInfo
+              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = {
+                ...updatedComponentInfo,
+                updateTime: new Date().getTime()
+              }
             }
           })
         }
@@ -1414,6 +1417,8 @@ export default {
           fontSize: 'middle',
           enableAlert: false
         },
+        algoConfig: null,
+        updateTime: new Date().getTime(),
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
           init: true,

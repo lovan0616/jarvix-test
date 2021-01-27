@@ -160,7 +160,6 @@ export default {
   },
   watch: {
     'connectInfo.databaseType' (value) {
-      console.log(value, 'value')
       if (value) {
         this.connectInfo.instanceName = null
       }

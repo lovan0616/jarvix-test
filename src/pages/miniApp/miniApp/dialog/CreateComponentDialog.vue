@@ -285,6 +285,7 @@ import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
 import { mapState } from 'vuex'
+import { algoConfig } from '@/utils/general'
 
 export default {
   inject: ['$validator'],
@@ -326,6 +327,7 @@ export default {
         id: null,
         name: null
       },
+      algoConfig,
       indexSizeOptionList: [
         {
           value: 'large',
@@ -530,6 +532,9 @@ export default {
       this.currentComponent.chartInfo = {
         xAxis: config.xAxis
       }
+    },
+    setAlgoConfig (intent) {
+      this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
     }
   },
 }
