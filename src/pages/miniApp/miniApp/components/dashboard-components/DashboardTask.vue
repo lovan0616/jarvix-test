@@ -489,7 +489,7 @@ export default {
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
+          if (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {
