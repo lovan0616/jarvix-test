@@ -349,7 +349,7 @@ export default {
               if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
-              this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+              this.question = this.composeComponentQuestion(componentResponse.segmentationPayload.sentence),
               this.$store.commit('result/updateCurrentResultId', resultId)
 
               // data columns 重新處理是因為 ask question 取得的是建議的句子切法
@@ -358,7 +358,7 @@ export default {
                 keyResultId: componentResponse.componentIds.key_result[0],
                 dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
                 segmentation: componentResponse.segmentationPayload,
-                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
+                question: this.composeComponentQuestion(componentResponse.segmentationPayload.sentence),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
                 dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
@@ -387,6 +387,12 @@ export default {
           // this.hasError = true
           if (error.message !== 'cancel') this.resultInfo = null
         })
+    },
+    composeComponentQuestion (sentence) {
+      const regex = /^[A-Za-z0-9]/g
+      return sentence.reduce((acc, cur, index) => {
+          return (regex.test(cur.word) && index > 0) ? `${acc} ${cur.word}` : `${acc}${cur.word}`
+        }, '')
     },
     getDataColumnlist (subjectList) {
       return subjectList
