@@ -259,9 +259,6 @@ export default {
   mounted () {
     this.fetchData()
   },
-  destroyed () {
-    window.removeEventListener('click')
-  },
   methods: {
     fetchData () {
       this.isLoading = true
