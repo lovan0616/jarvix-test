@@ -81,6 +81,7 @@
                 @isEmpty="isEmptyData = true"
                 @failed="isComponentFailed = true"
                 @finished="isIndexTypeComponentLoading = false"
+                @setConfig="updateComponentConfigInfo"
               />
               <span 
                 v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
@@ -240,7 +241,12 @@ export default {
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
-      if (this.componentData.diagram === 'table') return false
+      if (
+        this.componentData.diagram === 'table'
+        || this.componentData.type === 'monitor-warning-list'
+        || this.componentData.type === 'simulator'
+        || this.componentData.type === 'formula'
+      ) return false
 
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
@@ -498,6 +504,7 @@ export default {
             case 'Complete':
               this.totalSec = 50
               this.periodSec = 200
+              this.componentData.keyResultId = componentResponse.componentIds.key_result[0]
               this.tempFilteredKeyResultId = componentResponse.componentIds.key_result[0]
               this.isProcessing = false
               // 定期更新 component 資料
@@ -661,6 +668,9 @@ export default {
       // 取當前元件中，擺放 table 空間的高度（扣除 pagination）
       const maxHeight = this.$refs.component.getBoundingClientRect().height - 135
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
+    },
+    updateComponentConfigInfo (config) {
+      this.componentData.enableAlert = config.enableAlert
     }
   }
 }

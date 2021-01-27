@@ -214,6 +214,15 @@ export default {
               // miniApp 需要將 diagram 傳給外層以顯示不同新增元件設定項
               this.$emit('setDiagram', response.diagram)
 
+              // component 設定資訊
+              this.$emit('setConfig', {
+                enableAlert: response.enableAlert,
+                // 2N 異常設定示警需要 x 軸欄位資訊
+                ...((response.enableAlert && responseData.title) && {
+                  xAxis: responseData.title.xAxis
+                })
+              })
+
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
                 this.autoRefreshFunction = window.setTimeout(() => {

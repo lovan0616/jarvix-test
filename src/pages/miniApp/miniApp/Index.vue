@@ -323,7 +323,7 @@
                 >
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
-                    :key="`${componentData.id} - ${componentData.keyResultId}`"
+                    :key="`${componentData.id} - ${componentData.updateTime}`"
                     :filters="filterColumnValueInfoList"
                     :y-axis-controls="yAxisControlColumnValueInfoList"
                     :controls="controlColumnValueInfoList"
@@ -341,7 +341,7 @@
                     <template slot="drowdown">
                       <dropdown-select
                         :bar-data="componentSettingOptions(componentData)"
-                        @switchDialogName="switchDialogName($event, componentData.id)"
+                        @switchDialogName="switchDialogName($event, componentData)"
                       />
                     </template>
                     <template 
@@ -466,6 +466,13 @@
         />
       </div>
     </writing-dialog>
+    <component-to-alert-condition-dialog
+      v-if="isShowCreateWarningCriteriaDialog"
+      :component-data="componentToWarningCriteriaData"
+      @close="closeCreateWarningCriteriaDialog"
+      @converted="closeCreateWarningCriteriaDialog"
+      @confirm="deleteComponent" 
+    />
   </div>
 </template>
 
@@ -494,6 +501,7 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 import FilterControlPanel from './filter/FilterControlPanel'
 import AxisControlPanel from './filter/AxisControlPanel'
 import WarningModule from './components/warning-module/WarningModule'
+import ComponentToAlertConditionDialog from './dialog/ComponentToAlertConditionDialog'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
@@ -521,18 +529,21 @@ export default {
     AxisControlPanel,
     WarningModule,
     draggable,
-    DefaultSelect
+    DefaultSelect,
+    ComponentToAlertConditionDialog
   },
   data () {
     return {
       miniApp: {},
       currentDashboardId: null,
       currentComponentId: null,
+      componentToWarningCriteriaData: {},
       isShowWarningModule: false,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
       isShowDeleteDashboardDialog: false,
       isShowDeleteComponentDialog: false,
+      isShowCreateWarningCriteriaDialog: false,
       isShowUpdateDashboardNameDialog: false,
       isLoading: false,
       isProcessing: false,
@@ -843,7 +854,10 @@ export default {
         if (board.id === this.currentDashboardId) {
           board.components.forEach((component, componentIndex) => {
             if (component.id === this.currentComponentId) {
-              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = updatedComponentInfo
+              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = {
+                ...updatedComponentInfo,
+                updateTime: new Date().getTime()
+              }
             }
           })
         }
@@ -1146,13 +1160,25 @@ export default {
         })
         .finally(() => this.isProcessing = false)
     },
-    switchDialogName (eventName, id) {
+    switchDialogName (eventName, componentData) {
       this[`isShow${eventName}Dialog`] = true
       switch(eventName) {
         case 'DeleteComponent':
         case 'CreateComponent':
-          this.currentComponentId = id
+          this.currentComponentId = componentData && componentData.id
+          break
+        case 'CreateWarningCriteria':
+          this.componentToWarningCriteriaData = {
+            ...componentData,
+            controlList: this.currentDashboard.controlList,
+            filterList: this.currentDashboard.filterList
+          }
+        break
       }
+    },
+    closeCreateWarningCriteriaDialog () {
+      this.componentToWarningCriteriaData = {}
+      this.isShowCreateWarningCriteriaDialog = false
     },
     updateFilter (updatedFilterList, type) {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
@@ -1341,7 +1367,7 @@ export default {
         .finally(() => this.isProcessing = false )
     },
     componentSettingOptions (component) {
-      return [
+      const options = [
         {
           title: 'miniApp.componentSetting',
           icon: 'filter-setting',
@@ -1353,6 +1379,12 @@ export default {
           dialogName: 'DeleteComponent'
         }
       ]
+      if (component.config.enableAlert) options.push({
+        title: 'button.createAlert',
+        icon: 'warning',
+        dialogName: 'CreateWarningCriteria'
+      })
+      return options
     },
     componentTemplateFactory (type = 'chart') {
 
@@ -1382,9 +1414,11 @@ export default {
           refreshFrequency: null,
           hasColumnRelatedDashboard: false, // 目前只給 table 元件使用
           columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
-          fontSize: 'middle'
+          fontSize: 'middle',
+          enableAlert: false
         },
         algoConfig: null,
+        updateTime: new Date().getTime(),
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
           init: true,

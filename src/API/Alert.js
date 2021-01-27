@@ -99,3 +99,25 @@ export function patchConditionMessageParams(conditionId, data) {
     data
   })
 }
+
+/**
+ * 取得指定元件可分析值型別選項
+ * @param {Number} id - component id
+ */
+export function getComponentIndicators(componentId) {
+  return request({
+    url: `/alert/component/${componentId}/analysisValueTypes`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 新增監控示警條件(透過Component)
+ */
+export function convertComponentToAlertCondition(data) {
+  return request({
+    url: `/alert/condition/component`,
+    method: 'POST',
+    data
+  })
+}

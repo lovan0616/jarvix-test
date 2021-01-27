@@ -147,7 +147,8 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import { getFormulaList } from '@/API/NewAsk'
 import { 
   getDataFrameById, 
-  getDataFrameColumnInfoById
+  getDataFrameColumnInfoById,
+  getDateTimeColumns
 } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
 
@@ -172,6 +173,12 @@ export default {
       type: Object,
       required: true
     },
+    formulaComponentInfo: {
+      type: Object,
+      default: () => ({
+        dateTimeColumn: null
+      })
+    }
   },
   data () {
     return {
@@ -231,6 +238,11 @@ export default {
       this.dataColumnOptionList = []
       this.resetInputList()
       this.fetchDataColumnList(dataFrameId)
+      this.setDataTimeColumns (dataFrameId)
+    },
+    setDataTimeColumns (dataFrameId) {
+      getDateTimeColumns(dataFrameId)
+        .then(columnList => this.formulaComponentInfo.dateTimeColumn = columnList.find(column => column.isDefault))
     },
     fetchDataColumnList (dataFrameId) {
       this.isLoading = true
