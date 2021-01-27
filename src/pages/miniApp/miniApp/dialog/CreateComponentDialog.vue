@@ -59,7 +59,8 @@
             :is-loading.sync="isLoading"
             :filters="filters"
             :controls="controls"
-            @setDiagram="currentComponent.diagram = $event" 
+            @setDiagram="currentComponent.diagram = $event"
+            @setConfig="setComponentConfig"
           />
           <transition name="fast-fade-in">
             <section 
@@ -80,6 +81,7 @@
         <formula-setting 
           v-else-if="currentComponent.type === 'formula'"
           :formula-setting="currentComponent.formulaSetting"
+          :formula-component-info="formulaComponentInfo"
           :current-component="currentComponent"
         />
       </div>
@@ -341,7 +343,8 @@ export default {
           value: 'mini',
           name: this.$t('miniApp.mini')
         }
-      ]
+      ],
+      formulaComponentInfo: {}
     }
   },
   computed: {
@@ -459,7 +462,9 @@ export default {
           init: true,
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
-          ...this.currentResultInfo
+          ...this.currentResultInfo,
+          // 公式元件需補上一般問問句會取得的資料
+          ...this.formulaComponentInfo
         })
       })
     },
@@ -470,7 +475,10 @@ export default {
     saveComponent () {
       this.$validator.validateAll().then(valid => {
         if (!valid) return
-        this.$emit('updateSetting', this.currentComponent)
+        this.$emit('updateSetting', {
+          ...this.currentComponent,
+          ...this.formulaComponentInfo
+        })
       })
     },
     closePreviewDataSource () {
@@ -516,6 +524,12 @@ export default {
     updateTriggerColumnInfo () {
       const column = this.categoryColumnOptions.find(item => item.dataColumnId === this.selectedTriggerColumn)
       this.currentComponent.config.columnRelations[0].columnInfo = column
+    },
+    setComponentConfig (config) {
+      this.currentComponent.config.enableAlert = !!config.enableAlert
+      this.currentComponent.chartInfo = {
+        xAxis: config.xAxis
+      }
     }
   },
 }

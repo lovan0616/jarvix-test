@@ -469,7 +469,8 @@
     <component-to-alert-condition-dialog
       v-if="isShowCreateWarningCriteriaDialog"
       :component-data="componentToWarningCriteriaData"
-      @close="isShowCreateWarningCriteriaDialog = false"
+      @close="closeCreateWarningCriteriaDialog"
+      @converted="closeCreateWarningCriteriaDialog"
       @confirm="deleteComponent" 
     />
   </div>
@@ -1172,6 +1173,10 @@ export default {
         break
       }
     },
+    closeCreateWarningCriteriaDialog () {
+      this.componentToWarningCriteriaData = {}
+      this.isShowCreateWarningCriteriaDialog = false
+    },
     updateFilter (updatedFilterList, type) {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
@@ -1359,7 +1364,7 @@ export default {
         .finally(() => this.isProcessing = false )
     },
     componentSettingOptions (component) {
-      return [
+      const options = [
         {
           title: 'miniApp.componentSetting',
           icon: 'filter-setting',
@@ -1369,13 +1374,14 @@ export default {
           title: 'button.delete',
           icon: 'delete',
           dialogName: 'DeleteComponent'
-        },
-        {
-          title: 'button.createAlert',
-          icon: 'warning',
-          dialogName: 'CreateWarningCriteria'
         }
       ]
+      if (component.config.enableAlert) options.push({
+        title: 'button.createAlert',
+        icon: 'warning',
+        dialogName: 'CreateWarningCriteria'
+      })
+      return options
     },
     componentTemplateFactory (type = 'chart') {
 
@@ -1405,7 +1411,8 @@ export default {
           refreshFrequency: null,
           hasColumnRelatedDashboard: false, // 目前只給 table 元件使用
           columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
-          fontSize: 'middle'
+          fontSize: 'middle',
+          enableAlert: false
         },
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {

@@ -60,6 +60,7 @@
               :is-show-toolbox="false"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
+              @setConfig="$emit('setConfig', $event)"
             />
           </div>
         </div>

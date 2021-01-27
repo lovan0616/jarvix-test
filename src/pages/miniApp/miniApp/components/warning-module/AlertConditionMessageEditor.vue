@@ -92,6 +92,11 @@ export default {
       // 再編輯示警訊息
       type: Boolean,
       default: false
+    },
+    isManualSetPropOptions: {
+      // 手動組參數選項（例：元件轉示警）
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -124,7 +129,7 @@ export default {
   },
   created () {
     this.initMessageTemplates()
-    if (this.isEdit) this.fetchDataColumnList()
+    if (this.isEdit && !this.isManualSetPropOptions) this.fetchDataColumnList()
   },
   methods: {
     initMessageTemplates () {
@@ -134,38 +139,37 @@ export default {
         ...(this.hasPermission('english_ui') && {'en-US': { message: this.condition ? this.condition.alertMessageUS : '' }})
       }
     },
-    insertParam (lang, columnId) {
-      const column = this.paramOptions.find(item => item.value === columnId)
-      this.messageOfAllLangs[lang].message += '${' + column.originalName + '}'
+    insertParam (lang, id) {
+      const param = this.paramOptions.find(item => item.value === id)
+      const sign = param.type === 'indicator' ? '#' : '$'
+      this.messageOfAllLangs[lang].message += sign + '{' + param.originalName + '}'
     },
     formatPatchMessageParams () {
       this.messageOfAllLangsAsArray = []
       for (let language in this.messageOfAllLangs) {
         const message = this.messageOfAllLangs[language].message
         if (message.length > 0) {
-          const regex = /\${.*?}/g
-          const hasParams = regex.test(message)
-          let paramsWithToken = []
-          let params = []
-          if (hasParams) {
-            paramsWithToken = message.match(regex)
-            params = paramsWithToken.map(item => item.substring(2, item.length - 1))
-          }
+          const columnTypeRegex = /\${.*?}/g
+          const indicatorTypeRegex = /#{.*?}/g
+          const columnTypeParamTokens = message.match(columnTypeRegex) || []
+          const indicatorTypeParamTokens = message.match(indicatorTypeRegex) || []
+          const columnTypeParams = columnTypeParamTokens.map(item => item.substring(2, item.length - 1))
           this.messageOfAllLangsAsArray.push({
             language: language.replace('-', '_'),
-            message: hasParams ? this.formatMessage(message, paramsWithToken) : message,
-            dataColumnIds: this.getColumnIdsByColumnNames(params)
+            message: columnTypeParamTokens.length > 0 || indicatorTypeParamTokens.length > 0 ? this.formatMessage(message, columnTypeParamTokens, indicatorTypeParamTokens) : message,
+            dataColumnIds: this.getColumnIdsByColumnNames(columnTypeParams)
           })
         }
       }
     },
-    formatMessage (message, paramsWithToken) {
-      paramsWithToken.forEach(match => message = message.replace(match, '${}'))
+    formatMessage (message, columnTypeParamTokens, indicatorTypeParamTokens) {
+      columnTypeParamTokens.forEach(match => message = message.replace(match, '${}'))
+      indicatorTypeParamTokens.forEach(match => message = message.replace(match, match.replace('#', '$')))
       return message
     },
     getColumnIdsByColumnNames (columnNames) {
       return columnNames.reduce((acc, cur) => {
-        const column = this.paramOptions.find(item => item.originalName === cur)
+        const column = this.paramOptions.find(item => item.type === 'column' && item.originalName === cur)
         return column ? acc.concat(column.value) : acc
       }, [])
     },
@@ -180,6 +184,7 @@ export default {
       getDataFrameColumnInfoById(this.condition.dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
         this.localParamOptions = response.reduce((acc, cur) => {
           acc.push({
+            type: 'column',
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
             originalName: cur.primaryAlias  || cur.name,

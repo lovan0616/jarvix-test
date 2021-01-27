@@ -138,7 +138,8 @@
           <div class="setting-block__title">{{ $t('alert.conditionMessageSetting') }}</div>
           <alert-condition-message-editor
             :condition-id="conditionId"
-            :prop-param-options="dataColumnAllOptionList"
+            :prop-param-options="paramsOptionList"
+            :is-manual-set-prop-options="true"
             @done="onAlertMessageProcessFinished"
           />
         </div>
@@ -168,7 +169,6 @@ import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import { getDataFrameById } from '@/API/DataSource'
 import {
-  postAlertCondition,
   getComponentIndicators,
   convertComponentToAlertCondition
 } from '@/API/Alert'
@@ -223,9 +223,10 @@ export default {
       conditionId: null,
       isPatchingConditionMessage: false,
       dataFrameOptionList: [],
-      dataColumnAllOptionList: [],
+      // paramsOptionList: [],
       isProcessing: false,
-      isLoading: false
+      isLoading: false,
+      xAxis: []
     }
   },
   computed: {
@@ -253,11 +254,40 @@ export default {
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
-    dataColumnNumericOptionList () {
-      return this.dataColumnAllOptionList.filter(item => {
-        // 這版本示警只做針對數值型欄位做監控
-        return item.statsType === 'NUMERIC'
-      })
+    paramsOptionList () {
+      // 指標
+      const selectedIndicator = this.indicators
+        .filter(indicator => indicator.type === this.newConditionSetting.targetConfig.analysisValueType)
+        .map(indicator => ({ 
+          type: 'indicator',
+          value: indicator.type,
+          name: indicator.text,
+          originalName: indicator.text
+        }))
+
+      // 展開條件
+      const selectedColumnValueCombinations = this.columnValueCombinationOptionList
+        .filter(option => option.isSelected)
+        .map(column => ({
+          type: 'column',
+          name: `${column.columnName}`,
+          value: column.columnId,
+          originalName: column.columnName
+        }))
+
+      // 如果選離群值，須將圖表 x 軸資訊加入參數列表
+      const xAxisColumns = []
+      if (this.newConditionSetting.targetConfig.analysisValueType === 'OUTLIER_VALUE') {
+        this.componentData.chartInfo.xAxis.forEach(column => {
+          xAxisColumns.push({
+            type: 'column',
+            name: `${column.display_name}`,
+            value: column.dc_id,
+            originalName: column.display_name
+          })
+        })
+      }
+      return [...selectedIndicator, ...selectedColumnValueCombinations, ...xAxisColumns]
     },
     showConditionComapringSection () {
       return this.newConditionSetting.targetConfig.analysisValueType && this.newConditionSetting.targetConfig.analysisValueType !== 'OUTLIER_VALUE'
@@ -308,7 +338,7 @@ export default {
         .then(response => {
           this.indicators = response.types
           // 預設為第一個值
-          this.newConditionSetting.targetConfig.analysisValueType = response.types[0]
+          this.newConditionSetting.targetConfig.analysisValueType = response.types[0].type
         })
         .finally(() => this.isLoading = false)
     },
@@ -317,7 +347,7 @@ export default {
     },
     onAlertMessageProcessFinished () {
       this.isProcessing = false
-      this.$emit('created')
+      this.$emit('converted')
     },
     createAlertCondition () {
       this.$validator.validateAll().then(async (isValid) => {
@@ -344,7 +374,10 @@ export default {
           const selectedFilterList = this.filterOptionList.filter(option => option.isSelected)
           settingData.targetConfig.restrictions = this.restrictions(selectedFilterList)
 
-          this.conditionId = await convertComponentToAlertCondition()
+          // 指標如果選定離群值，不帶條件設定
+          if (!this.showConditionComapringSection) settingData.comparingValues = null
+
+          this.conditionId = await convertComponentToAlertCondition(settingData)
 
           Message({
             message: this.$t('alert.alertConditionSuccessfullyCreated'),
@@ -361,8 +394,8 @@ export default {
       if (filterList.length === 0) return []
       return filterList
         .filter(filter => {
-          // 相對時間有全選的情境，不需帶入限制中
-          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+          // TODO: 相對時間有全選的情境，不需帶入限制中
+          // if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
           // 時間欄位要有開始和結束時間
           if (
             filter.statsType === 'NUMERIC'
@@ -395,16 +428,16 @@ export default {
               break  
           }
 
-          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          if (filter.statsType === 'RELATIVEDATETIME') return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: this.componentData.dateTimeColumn.dataColumnId,
-              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-              ...this.formatRelativeDatetime(filter.dataValues[0])
-            }
-          }]
+          // TODO: 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
+          // if (filter.statsType === 'RELATIVEDATETIME') return [{
+          //   type,
+          //   properties: {
+          //     data_type,
+          //     dc_id: this.componentData.dateTimeColumn.dataColumnId,
+          //     display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+          //     ...this.formatRelativeDatetime(filter.dataValues[0])
+          //   }
+          // }]
 
           return [{
             type,

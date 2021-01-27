@@ -244,6 +244,7 @@ export default {
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
         this.dataColumnAllOptionList = response.reduce((acc, cur) => {
           acc.push({
+            type: 'column',
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
             originalName: cur.primaryAlias  || cur.name,

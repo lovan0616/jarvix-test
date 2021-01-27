@@ -241,7 +241,12 @@ export default {
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
-      if (this.componentData.diagram === 'table') return false
+      if (
+        this.componentData.diagram === 'table'
+        || this.componentData.type === 'monitor-warning-list'
+        || this.componentData.type === 'simulator'
+        || this.componentData.type === 'formula'
+      ) return false
 
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)

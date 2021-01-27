@@ -215,7 +215,11 @@ export default {
 
               // component 設定資訊
               this.$emit('setConfig', {
-                enableAlert: response.enableAlert
+                enableAlert: response.enableAlert,
+                // 2N 異常設定示警需要 x 軸欄位資訊
+                ...((response.enableAlert && responseData.title) && {
+                  xAxis: responseData.title.xAxis
+                })
               })
 
               let isAutoRefresh = response.isAutoRefresh
