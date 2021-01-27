@@ -166,6 +166,10 @@ export default {
     font-size: 14px;
   }
 
+  /deep/ .el-select-dropdown {
+    width: 100%;
+  }
+  
   /deep/ .el-input__inner {
     padding-left: 0;
     border-bottom: 1px solid #FFFFFF;

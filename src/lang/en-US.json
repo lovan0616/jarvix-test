@@ -899,6 +899,8 @@
     "selectScript": "Choose Model",
     "pleaseSelect": "Please Choose",
     "minAndMax": "Minimum, And Maximum",
+    "simulatorParamSetting": "Simulation Parameter Setting",
+    "simulationResult": "Simulation Results",
     "startSimulating": "Start Simulation",
     "simulator": "Simulator",
     "notYetSimulate": "Simulation not performed",

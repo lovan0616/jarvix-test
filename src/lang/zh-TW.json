@@ -902,6 +902,8 @@
     "selectScript": "選擇模型",
     "pleaseSelect": "請選擇",
     "minAndMax": "最小:{min},最大:{max}",
+    "simulationParamSetting": "模擬參數設定",
+    "simulationResult": "模擬結果",
     "startSimulating": "進行模擬",
     "simulator": "模擬器",
     "notYetSimulate": "尚未模擬資料",
