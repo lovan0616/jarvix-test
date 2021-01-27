@@ -88,7 +88,7 @@
           <div class="setting__block">
             <div class="setting__label-block">{{ $t('miniApp.chartName') }}</div>
             <input-verify
-              v-validate="`required|max:${max}`"
+              v-validate="'required'"
               v-model="currentComponent.config.diaplayedName"
               name="componentDisplayName"
             />
