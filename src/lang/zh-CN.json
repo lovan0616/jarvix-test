@@ -888,6 +888,8 @@
     "selectScript": "选择模型",
     "pleaseSelect": "请选择",
     "minAndMax": "最小:{min},最大:{max}",
+    "simulationParamSetting": "模拟参数设定",
+    "simulationResult": "模拟结果",
     "startSimulating": "进行模拟",
     "simulator": "模拟器",
     "notYetSimulate": "尚未模拟资料",
