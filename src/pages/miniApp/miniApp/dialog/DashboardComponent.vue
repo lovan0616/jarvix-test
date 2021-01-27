@@ -249,6 +249,7 @@ export default {
       this.periodSec = 200
       this.resultInfo = null
       this.layout = ''
+      console.log(question)
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
@@ -349,7 +350,7 @@ export default {
               if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
-              this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+              this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => `${acc} ${cur.word}`, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
 
               // data columns 重新處理是因為 ask question 取得的是建議的句子切法
@@ -358,7 +359,7 @@ export default {
                 keyResultId: componentResponse.componentIds.key_result[0],
                 dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
                 segmentation: componentResponse.segmentationPayload,
-                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
+                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => `${acc} ${cur.word}`, ''),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
                 dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
