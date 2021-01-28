@@ -93,7 +93,7 @@
         </div>
         <!--資料過濾條件-->
         <div
-          v-if="componentData.filterList.length > 0"
+          v-if="filterOptionList.length > 0"
           class="setting-block"
         >
           <div class="setting-block__title">{{ $t('alert.dataFilterCondition') }}</div>
@@ -305,13 +305,31 @@ export default {
   methods: {
     configFilterOptionList() {
       this.filterOptionList = this.componentData.filterList.reduce((acc, cur) => {
-        acc.push(...cur.map(filter => ({ 
-          ...filter,
-          isSelected: false,
-          targetValues: this.transformFilterValue(filter)
-        })))
+        const validFilterList = []
+        // 確認 filter 是否有使用者的給定值
+        cur.forEach(filter => this.checkIsValidFilter(filter) && validFilterList.push(filter))
+        validFilterList.forEach(filter => {
+          acc.push({ 
+            ...filter,
+            isSelected: false,
+            targetValues: this.transformFilterValue(filter)
+          })
+        })
         return acc
       }, [])
+    },
+    checkIsValidFilter (filter) {
+      switch (filter.statsType) {
+        case 'CATEGORY': 
+          return filter.dataValues.length > 0
+        case 'BOOLEAN':
+          return filter.dataValues.length > 0
+        case 'NUMERIC':
+          return filter.start && filter.end
+        case ('DATETIME'):
+          return filter.start && filter.end
+        // TODO: relative datetime
+      }
     },
     transformFilterValue (filter) {
       switch (filter.statsType) {
@@ -321,9 +339,9 @@ export default {
           return filter.dataValues.join(', ')
         case 'NUMERIC':
           return `${filter.start} - ${filter.end}`
-        // TODO: relative datetime
         case ('DATETIME'):
           return `${filter.start} - ${filter.end}`
+        // TODO: relative datetime
       }
     },
     fetchDataFrameList (dataSourceId) {
@@ -561,7 +579,9 @@ export default {
       &--column {
         flex-direction: column;
         .single-select {
-          margin-bottom: 16px;
+          &:not(:last-of-type) {
+            margin-bottom: 16px;
+          }
         }
       }
     }
