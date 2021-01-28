@@ -93,7 +93,7 @@
         </div>
         <!--資料過濾條件-->
         <div
-          v-if="componentData.controlList.length > 0"
+          v-if="componentData.filterList.length > 0"
           class="setting-block"
         >
           <div class="setting-block__title">{{ $t('alert.dataFilterCondition') }}</div>
