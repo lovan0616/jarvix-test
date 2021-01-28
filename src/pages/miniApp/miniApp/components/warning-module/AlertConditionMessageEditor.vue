@@ -1,7 +1,10 @@
 <template>
   <div class="message-editor">
     <div class="message-editor__description">
-      <div>{{ $t('alert.messageParamSyntaxDescription') }}</div>
+      <div class="message-editor__param-examples">
+        <div class="message-editor__param-item-example">{{ $t('alert.messageColumnParamSyntaxDescription') }}</div>
+        <div class="message-editor__param-item-example">{{ $t('alert.messageIndicatorParamSyntaxDescription') }}</div>
+      </div>
       <div class="message-editor__description-example">
         <div class="title">{{ $t('alert.messageExampleDescription') }}</div>
         <i18n
@@ -242,6 +245,14 @@ export default {
       .is-highlighted {
         color: $theme-color-warning;
       }
+    }
+  }
+  &__param-examples {
+    display: flex;
+  }
+  &__param-item-example {
+    &:not(:last-of-type) {
+      margin-right: 16px;
     }
   }
   &__setting {

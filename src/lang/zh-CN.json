@@ -946,7 +946,7 @@
     "dataColumn": "资料栏位",
     "selectDataColumn": "资料栏位",
     "messageExampleDescription": "范例说明",
-    "messageParamSyntaxDescription": "栏位参数语法 = ${栏位名称}",
+    "messageColumnParamSyntaxDescription": "栏位参数语法 = ${栏位名称}",
     "messageTemplateSettingExample": "讯息设定：厂房:{0},出现电流异常(电流:{1}μA)。",
     "messageTemplatePreviewExample": "讯息预览：厂房:{0},出现电流异常(电流:{1}μA)。",
     "param1NameExample": "${厂编}",

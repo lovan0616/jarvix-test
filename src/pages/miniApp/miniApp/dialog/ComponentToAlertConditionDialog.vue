@@ -30,19 +30,32 @@
         <div class="setting-block">
           <div class="setting-block__title">{{ $t('alert.originalDataSource') }}</div>
           <div class="data-source">
-            <div class="data-source__title">{{ $t('alert.dataSource') }}</div>
+            <div class="data-source__title">{{ $t('alert.dataSource') }}</div>       
             <div class="data-source__content">{{ currentDataSource.name }}</div>
           </div>
           <div class="data-source">
             <div class="data-source__title">{{ $t('alert.dataFrame') }}</div>
-            <div class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
+            <spinner
+              v-if="isFetchingDataFrame"
+              class="setting-block__spinner"
+              size="20"
+            /> 
+            <div 
+              v-else 
+              class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
           </div>
         </div>
         <!--示警指標-->
         <div class="setting-block">
           <div class="setting-block__title">{{ $t('alert.alertIndicator') }}</div>
+          <spinner
+            v-if="isFetchingIndocators"
+            class="setting-block__spinner"
+            size="20"
+          />        
           <div
             v-for="(indicator, index) in indicators"
+            v-else
             :key="index"
             class="input-radio-group"
           >
@@ -93,7 +106,7 @@
         </div>
         <!--資料過濾條件-->
         <div
-          v-if="componentData.controlList.length > 0"
+          v-if="filterOptionList.length > 0"
           class="setting-block"
         >
           <div class="setting-block__title">{{ $t('alert.dataFilterCondition') }}</div>
@@ -150,7 +163,7 @@
             @click="$emit('close')"
           >{{ $t('button.cancel') }}</button>
           <button 
-            :disabled="isProcessing"
+            :disabled="!isSaveable"
             class="btn btn-default"
             @click="createAlertCondition"
           >{{ $t('button.save') }}</button>
@@ -223,10 +236,11 @@ export default {
       conditionId: null,
       isPatchingConditionMessage: false,
       dataFrameOptionList: [],
-      // paramsOptionList: [],
       isProcessing: false,
-      isLoading: false,
-      xAxis: []
+      isFetchingDataFrame: false,
+      isFetchingIndocators: false,
+      xAxis: [],
+      hasError: false
     }
   },
   computed: {
@@ -291,6 +305,9 @@ export default {
     },
     showConditionComapringSection () {
       return this.newConditionSetting.targetConfig.analysisValueType && this.newConditionSetting.targetConfig.analysisValueType !== 'OUTLIER_VALUE'
+    },
+    isSaveable () {
+      return !this.isProcessing && !this.isFetchingDataFrame && !this.isFetchingIndocators && !this.hasError
     }
   },
   mounted () {false
@@ -305,13 +322,31 @@ export default {
   methods: {
     configFilterOptionList() {
       this.filterOptionList = this.componentData.filterList.reduce((acc, cur) => {
-        acc.push(...cur.map(filter => ({ 
-          ...filter,
-          isSelected: false,
-          targetValues: this.transformFilterValue(filter)
-        })))
+        const validFilterList = []
+        // 確認 filter 是否有使用者的給定值
+        cur.forEach(filter => this.checkIsValidFilter(filter) && validFilterList.push(filter))
+        validFilterList.forEach(filter => {
+          acc.push({ 
+            ...filter,
+            isSelected: false,
+            targetValues: this.transformFilterValue(filter)
+          })
+        })
         return acc
       }, [])
+    },
+    checkIsValidFilter (filter) {
+      switch (filter.statsType) {
+        case 'CATEGORY': 
+          return filter.dataValues.length > 0
+        case 'BOOLEAN':
+          return filter.dataValues.length > 0
+        case 'NUMERIC':
+          return filter.start && filter.end
+        case ('DATETIME'):
+          return filter.start && filter.end
+        // TODO: relative datetime
+      }
     },
     transformFilterValue (filter) {
       switch (filter.statsType) {
@@ -321,26 +356,28 @@ export default {
           return filter.dataValues.join(', ')
         case 'NUMERIC':
           return `${filter.start} - ${filter.end}`
-        // TODO: relative datetime
         case ('DATETIME'):
           return `${filter.start} - ${filter.end}`
+        // TODO: relative datetime
       }
     },
     fetchDataFrameList (dataSourceId) {
-      this.isLoading = true
+      this.isFetchingDataFrame = true
       getDataFrameById(dataSourceId, false)
         .then(response => this.currentDataFrame = response.find(dataFrame => dataFrame.id === this.componentData.dataFrameId))
-        .finally(() => this.isLoading = false)
+        .catch(() => this.hasError = true)
+        .finally(() => this.isFetchingDataFrame = false)
     },
     getComponentIndicators (componentId) {
-      this.isLoading = true
+      this.isFetchingIndocators = true
       getComponentIndicators(componentId)
         .then(response => {
           this.indicators = response.types
           // 預設為第一個值
           this.newConditionSetting.targetConfig.analysisValueType = response.types[0].type
         })
-        .finally(() => this.isLoading = false)
+        .catch(() => this.hasError = true)
+        .finally(() => this.isFetchingIndocators = false)
     },
     updateSelectedIndicator (type) {
       this.newConditionSetting.targetConfig.analysisValueType = type
@@ -484,6 +521,11 @@ export default {
       margin-bottom: 16px;
     }
 
+    &__spinner {
+      margin: 0;
+      padding: 0;
+    }
+
     /deep/ .input-field {
 
       &:not(:last-of-type) {
@@ -561,7 +603,9 @@ export default {
       &--column {
         flex-direction: column;
         .single-select {
-          margin-bottom: 16px;
+          &:not(:last-of-type) {
+            margin-bottom: 16px;
+          }
         }
       }
     }
