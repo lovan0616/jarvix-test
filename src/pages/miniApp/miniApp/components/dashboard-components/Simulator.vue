@@ -11,7 +11,7 @@
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
       <div class="simulator__setting">
-        <div class="simulator__setting-title">模擬參數設定</div>
+        <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
         <div class="simulator__setting-content">
           <simulator-input
             v-for="(columnInfo, index) in scriptInfo"
@@ -36,7 +36,7 @@
       </div>
       <div class="simulator__result">
         <div 
-          v-if="!result" 
+          v-if="!resultList" 
           class="simulator__default-message">
           {{ $t('miniApp.notYetSimulate') }}
         </div>
@@ -49,12 +49,14 @@
           :msg="failedMessage || $t('message.systemIsError')"
         />
         <template v-else>
-          <div class="simulator__result-title">{{ result.name }}</div>
+          <div class="simulator__result-title">{{ $t('miniApp.simulationResult') }}</div>
           <div class="simulator__result-content">
-            <div class="simulator__result-value">
-              <div class="simulator__result-data">{{ result.value }}</div>
-              <!--暫時寫死，未來應該要能設定-->
-              <div class="simulator__result-unit">%</div>
+            <div 
+              v-for="(result, index) in resultList"
+              :key="index"
+              class="simulator__result-item item">
+              <div class="item__label">{{ result.name }}</div>
+              <div class="item__value">{{ result.value }}</div>
             </div>
           </div>
         </template>
@@ -96,7 +98,7 @@ export default {
       isLoading: false,
       isProcessing: false,
       scriptInfo: null,
-      result: null,
+      resultList: null,
       isFetchInputFailed: false,
       isSimulateFailed: false,
       failedMessage: null
@@ -154,11 +156,12 @@ export default {
           inputValues: this.scriptInfo.map(column => column.userInput)
         })
           .then(response => {
-            this.result = {
-              // 先固定取第一筆來顯示
-              name: response.outputPrimaryAlias[0],
-              value: response.outputValues && response.outputValues[0]
-            }
+            this.resultList = response.outputPrimaryAlias.map((element, index) => {
+              return {
+                name: element,
+                value: response.outputValues[index]
+              }
+            })
           })
           .catch(() => { this.isSimulateFailed = true })
           .finally(() => { this.isProcessing = false })        
@@ -236,31 +239,27 @@ export default {
   &__result-content {
     height: calc(100% - 36px);
     display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  &__result-item {
+    margin-bottom: 12px;
     width: 100%;
   }
 
-  &__result-value {
-    display: flex;
-    color: #2AD2E2;
-    font-weight: bold;
-    font-size: 80px;
-    align-items: baseline;
-    justify-content: center;
-    width: 100%;
-  }
+  .item {
+    &__label {
+      margin-bottom: 8px;
+      color: #AAAAAA;
+      font-weight: 600;
+      font-size: 14px;
+    }
 
-  &__result-data {
-    max-width: calc(100% - 32px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__result-unit {
-    font-weight: 600;
-    font-size: 36px;
+    &__value {
+      color: #FFFFFF;
+      font-size: 14px;
+    }
   }
 
   &__default-message {
