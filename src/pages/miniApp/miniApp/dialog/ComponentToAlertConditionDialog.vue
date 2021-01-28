@@ -30,19 +30,32 @@
         <div class="setting-block">
           <div class="setting-block__title">{{ $t('alert.originalDataSource') }}</div>
           <div class="data-source">
-            <div class="data-source__title">{{ $t('alert.dataSource') }}</div>
+            <div class="data-source__title">{{ $t('alert.dataSource') }}</div>       
             <div class="data-source__content">{{ currentDataSource.name }}</div>
           </div>
           <div class="data-source">
             <div class="data-source__title">{{ $t('alert.dataFrame') }}</div>
-            <div class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
+            <spinner
+              v-if="isFetchingDataFrame"
+              class="setting-block__spinner"
+              size="20"
+            /> 
+            <div 
+              v-else 
+              class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
           </div>
         </div>
         <!--示警指標-->
         <div class="setting-block">
           <div class="setting-block__title">{{ $t('alert.alertIndicator') }}</div>
+          <spinner
+            v-if="isFetchingIndocators"
+            class="setting-block__spinner"
+            size="20"
+          />        
           <div
             v-for="(indicator, index) in indicators"
+            v-else
             :key="index"
             class="input-radio-group"
           >
@@ -150,7 +163,7 @@
             @click="$emit('close')"
           >{{ $t('button.cancel') }}</button>
           <button 
-            :disabled="isProcessing"
+            :disabled="!isSaveable"
             class="btn btn-default"
             @click="createAlertCondition"
           >{{ $t('button.save') }}</button>
@@ -223,10 +236,11 @@ export default {
       conditionId: null,
       isPatchingConditionMessage: false,
       dataFrameOptionList: [],
-      // paramsOptionList: [],
       isProcessing: false,
-      isLoading: false,
-      xAxis: []
+      isFetchingDataFrame: false,
+      isFetchingIndocators: false,
+      xAxis: [],
+      hasError: false
     }
   },
   computed: {
@@ -291,6 +305,9 @@ export default {
     },
     showConditionComapringSection () {
       return this.newConditionSetting.targetConfig.analysisValueType && this.newConditionSetting.targetConfig.analysisValueType !== 'OUTLIER_VALUE'
+    },
+    isSaveable () {
+      return !this.isProcessing && !this.isFetchingDataFrame && !this.isFetchingIndocators && !this.hasError
     }
   },
   mounted () {false
@@ -345,20 +362,22 @@ export default {
       }
     },
     fetchDataFrameList (dataSourceId) {
-      this.isLoading = true
+      this.isFetchingDataFrame = true
       getDataFrameById(dataSourceId, false)
         .then(response => this.currentDataFrame = response.find(dataFrame => dataFrame.id === this.componentData.dataFrameId))
-        .finally(() => this.isLoading = false)
+        .catch(() => this.hasError = true)
+        .finally(() => this.isFetchingDataFrame = false)
     },
     getComponentIndicators (componentId) {
-      this.isLoading = true
+      this.isFetchingIndocators = true
       getComponentIndicators(componentId)
         .then(response => {
           this.indicators = response.types
           // 預設為第一個值
           this.newConditionSetting.targetConfig.analysisValueType = response.types[0].type
         })
-        .finally(() => this.isLoading = false)
+        .catch(() => this.hasError = true)
+        .finally(() => this.isFetchingIndocators = false)
     },
     updateSelectedIndicator (type) {
       this.newConditionSetting.targetConfig.analysisValueType = type
@@ -500,6 +519,11 @@ export default {
       font-size: 18px;
       line-height: 1;
       margin-bottom: 16px;
+    }
+
+    &__spinner {
+      margin: 0;
+      padding: 0;
     }
 
     /deep/ .input-field {
