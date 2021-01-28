@@ -313,7 +313,7 @@ export default {
       ) return []
       const relation = this.componentData.config.tableRelationInfo.columnRelations[0].columnInfo
       if (!relation) return []
-      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
+      const index = this.componentData.dataColumns.findIndex(item => item.columnId === relation.dataColumnId)
       return [{
         type: 'column',
         index: index + 1,
