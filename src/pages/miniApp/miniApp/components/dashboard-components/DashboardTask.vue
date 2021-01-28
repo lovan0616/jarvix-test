@@ -294,9 +294,10 @@ export default {
     },
     customCellClassName () {
       if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return []
+      // 目前僅能針對一個欄位去做關聯，所以只找 columnRelations 第一個
       const relation = this.componentData.config.columnRelations[0].columnInfo
       if (!relation) return []
-      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
+      const index = this.componentData.dataColumns.findIndex(item => item.columnId === relation.dataColumnId)
       return [{
         type: 'column',
         index: index + 1,
