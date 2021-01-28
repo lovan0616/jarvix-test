@@ -524,7 +524,13 @@ export default {
        */
 
       /deep/ .el-select__tags {
+        display: block;
+        .el-select__input {
+          width: 100% !important;
+        }
         .el-tag.el-tag--info {
+          display: block;
+          width: fit-content;
           max-width: 200px;
           height: 26px;
           font-weight: 600;
