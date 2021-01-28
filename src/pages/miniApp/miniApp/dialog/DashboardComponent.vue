@@ -389,7 +389,7 @@ export default {
         })
     },
     composeComponentQuestion (sentence) {
-      const regex = /^[A-Za-z0-9]/g
+      const regex = /^[A-Za-z0-9]/
       return sentence.reduce((acc, cur, index) => {
           return (regex.test(cur.word) && index > 0) ? `${acc} ${cur.word}` : `${acc}${cur.word}`
         }, '')
