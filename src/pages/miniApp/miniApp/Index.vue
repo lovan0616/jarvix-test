@@ -506,6 +506,7 @@ import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { getScriptList } from '@/API/Script'
+import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 
 export default {
   inject: ['$validator'],
@@ -738,7 +739,7 @@ export default {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
         .then(miniAppInfo => {
-          this.miniApp = miniAppInfo
+          this.miniApp = compileMiniApp(miniAppInfo)
           this.newAppEditModeName = this.appData.displayedName
 
           // 如果有 dashboard, focus 在第一個
