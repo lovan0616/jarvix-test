@@ -177,6 +177,10 @@ export default {
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
           selectedColumnList: this.selectedColumnList,
+          displayConfig: {
+            histogramBarSize: null,
+            sortOrders: []
+          },
           isFilter: false
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
@@ -232,6 +236,10 @@ export default {
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList,
+              displayConfig: {
+                histogramBarSize: null,
+                sortOrders: []
+              },
               isFilter: false
             }).then(res => {
               this.$store.commit('result/updateCurrentResultId', res.resultId)
