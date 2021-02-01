@@ -167,7 +167,12 @@ export default {
     },
     formatMessage (message, columnTypeParamTokens, indicatorTypeParamTokens) {
       columnTypeParamTokens.forEach(match => message = message.replace(match, '${}'))
-      indicatorTypeParamTokens.forEach(match => message = message.replace(match, match.replace('#', '$')))
+      indicatorTypeParamTokens.forEach(match => {
+        message = message.replace(match, match.replace('#', '$'))
+        const indicatorText = match.substring(2, match.length - 1)
+        const indicatorKey = this.propParamOptions.find(param => param.type === 'indicator' && param.name === indicatorText).value
+        message = message.replace(indicatorText, indicatorKey)
+      })
       return message
     },
     getColumnIdsByColumnNames (columnNames) {
