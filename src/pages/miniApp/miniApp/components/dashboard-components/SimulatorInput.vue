@@ -25,7 +25,7 @@
   <div 
     v-else-if="inputData.statsType === 'NUMERIC'" 
     class="input-field">
-    <label class="input-field__label">{{ inputData.columnName }}</label>
+    <label class="input-field__label">{{ getNumericTitle }}</label>
     <div class="input-field__input">
       <input-verify
         v-validate="'required'"
@@ -157,6 +157,7 @@ export default {
         this.columnInfo.userInput = defaultValue
       } else if (inputData.statsType === 'NUMERIC') {
         this.columnInfo.userInput = defaultValue
+        this.inputData.valueList = columnInfo.numeric
       } else if (inputData.statsType === 'BOOLEAN') {
         this.columnInfo.userInput = defaultValue
         if (columnInfo['bool']) {
