@@ -2,7 +2,7 @@
   <div class="local-file-upload">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="1"
+      :step="2"
       :process-text="processText"
     />
     <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>

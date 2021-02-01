@@ -24,6 +24,7 @@ export default {
     currentTableIndex: 0,
     currentColumnIndex: null,
     currentUploadScriptInfo: {
+      scriptName: null,
       scriptId: null,
       dataframeId: null,
       type: null,
