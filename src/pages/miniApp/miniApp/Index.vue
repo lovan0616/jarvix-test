@@ -1250,7 +1250,7 @@ export default {
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
      createDefaultComponent (componentType) {
-      this.Processing = true
+      this.isProcessing = true
       this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
