@@ -443,9 +443,10 @@
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔",
     "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
-    "scriptExecutionStep1": "上傳檔案",
-    "scriptExecutionStep2": "選擇輸入欄位",
-    "scriptExecutionStep3": "設定輸出類型",
+    "scriptExecutionStep1": "設定名稱",
+    "scriptExecutionStep2": "上傳檔案",
+    "scriptExecutionStep3": "選擇輸入欄位",
+    "scriptExecutionStep4": "設定輸出類型",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
     "searchDataSource": "搜尋資料源",
     "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量"
@@ -585,7 +586,8 @@
     "scriptColumnReminder": "欄位具有順序性，優先順序為由上至下",
     "selectOutputColumn": "設定輸出欄位類型",
     "columnDataType": "欄位類型",
-    "columnDataName": "欄位名稱"
+    "columnDataName": "欄位名稱",
+    "setScriptName": "請設定名稱"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",

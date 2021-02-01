@@ -2,7 +2,7 @@
   <div class="input-setting-dialog">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="2"
+      :step="3"
       :process-text="processText"
     />
     <div class="dialog-body">
