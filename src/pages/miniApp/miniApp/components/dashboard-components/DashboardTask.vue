@@ -168,6 +168,7 @@ import Simulator from './Simulator'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
+import { sizeTable } from '@/utils/general'
 
 export default {
   name: 'DashboardTask',
@@ -211,6 +212,7 @@ export default {
   },
   data () {
     return {
+      sizeTable,
       timeoutFunction: null,
       totalSec: 50,
       periodSec: 200,
@@ -344,30 +346,8 @@ export default {
       `
     },
     indexComponentStyle () {
-      const sizeTable = {
-        large: {
-          'font-size': '80px', 
-          'height': '83px', 
-          'line-height': '80px'
-        },
-        middle: {
-          'font-size': '54px', 
-          'height': '54px', 
-          'line-height': '54px'
-        },
-        small: {
-          'font-size': '36px', 
-          'height': '36px', 
-          'line-height': '36px'
-        },
-        mini: {
-          'font-size': '28px', 
-          'height': '28px', 
-          'line-height': '28px'
-        },
-      }
       return {
-        ...sizeTable[this.componentData.config.fontSize || 'middle'],
+        ...this.sizeTable[this.componentData.config.fontSize || 'middle'],
         'color': '#2AD2E2'
       }
     },

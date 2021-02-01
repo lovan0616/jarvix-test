@@ -16,6 +16,7 @@
 
 import { getAlertLogsCount } from '@/API/Alert'
 import { mapGetters } from 'vuex'
+import { sizeTable } from '@/utils/general'
 
 export default {
   name: 'AbnormalStatistics',
@@ -42,6 +43,7 @@ export default {
   },
   data () {
     return {
+      sizeTable,
       isLoading: false,
       logCount: 0   
     }
@@ -56,30 +58,8 @@ export default {
       return this.isGetHandledComponentCount ? '#2AD2E2' : '#FF5C46'
     },
     indexComponentStyle () {
-      const sizeTable = {
-        large: {
-          'font-size': '80px', 
-          'height': '83px', 
-          'line-height': '80px'
-        },
-        middle: {
-          'font-size': '54px', 
-          'height': '54px', 
-          'line-height': '54px'
-        },
-        small: {
-          'font-size': '36px', 
-          'height': '36px', 
-          'line-height': '36px'
-        },
-        mini: {
-          'font-size': '28px', 
-          'height': '28px', 
-          'line-height': '28px'
-        },
-      }
       return {
-        ...sizeTable[this.conponentConfig.fontSize || 'middle'],
+        ...this.sizeTable[this.conponentConfig.fontSize || 'middle'],
         'color': this.textColor
       }
     }
