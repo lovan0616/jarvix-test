@@ -887,6 +887,8 @@
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新频率",
     "monitorComponent": "监控示警元件",
+    "unhandledAbnormalStatisticsComponent": "未处理异常统计元件",
+    "handledAbnormalStatisticsComponent": "已处理异常统计元件",
     "simulateComponent": "模拟元件",
     "specialIndexTypeComponent": "特殊数值元件",
     "timeScope": "时间范围",
