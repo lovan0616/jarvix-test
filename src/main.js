@@ -266,7 +266,7 @@ Validator.extend('validDatetimeUpperBound', (upperBoundValue, [lowerBoundValue])
     let ISOTime = new Date(time).toISOString()
     return moment(ISOTime).format('x')
   }
-  return getTimestamp(upperBoundValue) > getTimestamp(lowerBoundValue)
+  return Number(getTimestamp(upperBoundValue)) > Number(getTimestamp(lowerBoundValue))
 }, {
   hasTarget: true
 })
@@ -276,7 +276,7 @@ Validator.extend('validDatetimeLowerBound', (lowerBoundValue, [upperBoundValue])
     let ISOTime = new Date(time).toISOString()
     return moment(ISOTime).format('x')
   }
-  return getTimestamp(lowerBoundValue) < getTimestamp(upperBoundValue)
+  return Number(getTimestamp(lowerBoundValue)) < Number(getTimestamp(upperBoundValue))
 }, {
   hasTarget: true
 })

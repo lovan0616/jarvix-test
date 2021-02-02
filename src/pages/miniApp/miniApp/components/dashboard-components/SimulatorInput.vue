@@ -1,9 +1,9 @@
 <template>
+  <!--CATEGORY or BOOLEAN-->
   <div 
-    v-if="inputData.statsType === 'CATEGORY'" 
+    v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'" 
     class="input-field">
     <label class="input-field__label">{{ inputData.columnName }}</label>
-    <!--CATEGORY-->
     <div class="input-field__input">
       <default-select 
         v-validate="'required'"
@@ -33,6 +33,22 @@
         :is-disabled="isProcessing"
         :type="'Number'"
         :name="'input' + inputData.columnName"
+      />
+    </div>
+  </div>
+  <!-- DATETIME -->
+  <div
+    v-else-if="inputData.statsType === 'DATETIME'"
+    class="input-field">
+    <label class="input-field__label">{{ inputData.columnName }}</label>
+    <div class="input-field__input">
+      <el-date-picker
+        v-model="columnInfo.userInput"
+        :format="inputData.datetimeInfo.datePattern"
+        :value-format="inputData.datetimeInfo.datePattern"
+        :clearable="false"
+        :picker-options="pickerOptions"
+        type="datetime"
       />
     </div>
   </div>
@@ -84,6 +100,14 @@ export default {
         min: Math.round(this.inputData.valueList.min * 100) / 100, 
         max: Math.round(this.inputData.valueList.max  * 100) / 100
       }) + ')'
+    },
+    pickerOptions () {
+      const vm = this
+      return {
+        disabledDate (time) {
+          return time.getTime() > vm.inputData.datetimeInfo.end || time.getTime() < vm.inputData.datetimeInfo.start
+        }
+      }
     }
   },
   watch: {
@@ -113,10 +137,6 @@ export default {
     async handleColumnValue (columnInfo, defaultValue) {
       const inputData = {}
       inputData.statsType = columnInfo.type
-      
-      inputData.valueList = inputData.statsType === 'BOOLEAN' && columnInfo['bool']
-        ? ["true", "false"]
-        : columnInfo[inputData.statsType.toLowerCase()]
 
       if(inputData.statsType === 'CATEGORY') {
         /// CATEGORY 值超過 200 筆時候會回傳 null
@@ -137,6 +157,18 @@ export default {
         this.columnInfo.userInput = defaultValue
       } else if (inputData.statsType === 'NUMERIC') {
         this.columnInfo.userInput = defaultValue
+        this.inputData.valueList = columnInfo.numeric
+      } else if (inputData.statsType === 'BOOLEAN') {
+        this.columnInfo.userInput = defaultValue
+        if (columnInfo['bool']) {
+          inputData.valueList = columnInfo['bool'].map(item => ({ value: item, name: item }))
+        }
+      } else if (inputData.statsType === 'DATETIME') {
+        this.columnInfo.userInput = defaultValue
+        inputData.datetimeInfo = {
+          ...columnInfo.datetime,
+          datePattern: 'yyyy-MM-dd hh:mm:ss' // 目前後端給的 datePattern 沒有用到，前端先暫定這種
+        }
       }
 
       this.$emit('done')
@@ -170,9 +202,15 @@ export default {
     width: 100%;
   }
   
+  .el-input {
+    width: 100%;
+  }
   /deep/ .el-input__inner {
-    padding-left: 0;
+    padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
     border-bottom: 1px solid #FFFFFF;
+    border-radius: 0;
+    background: transparent;
+    font-size: 16px;
     &::placeholder {
       color: #AAAAAA;
       font-weight: normal;

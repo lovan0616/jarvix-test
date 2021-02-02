@@ -96,7 +96,7 @@
           <div class="setting__block">
             <div class="setting__label-block">{{ $t('miniApp.componentName') }}</div>
             <input-verify
-              v-validate="`required|max:${max}`"
+              v-validate="'required'"
               v-model="currentComponent.config.diaplayedName"
               name="componentDisplayName"
             />
@@ -104,7 +104,7 @@
         </div>
         <!--Related dashboard of current component-->
         <div 
-          v-if="currentComponent.type !== 'monitor-warning-list'" 
+          v-if="isShowRelatedOption" 
           class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
@@ -225,7 +225,7 @@
         </div>
         <!--Update frequency-->
         <div 
-          v-if="currentComponent.type !== 'monitor-warning-list'" 
+          v-if="isShowUpdatedOption" 
           class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
@@ -259,7 +259,7 @@
         </div>
         <!--Index type component font size setting-->
         <div 
-          v-if="currentComponent.type === 'index' || currentComponent.type === 'formula'" 
+          v-if="isShowFontSizeOption" 
           class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
@@ -387,6 +387,15 @@ export default {
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
+    },
+    isShowRelatedOption () {
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+    },
+    isShowUpdatedOption () {
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+    },
+    isShowFontSizeOption () {
+      return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
     },
     updateFrequency () {
       return [

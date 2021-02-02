@@ -167,6 +167,7 @@
       <el-select
         v-validate="'required'"
         v-show="valueList"
+        ref="fuzzySearchSelect"
         :value="selectedList"
         :name="index + '-select'"
         :no-data-text="$t('message.noData')"
@@ -183,6 +184,7 @@
         reserve-keyword
         class="sy-select theme-dark category-block__selector"
         @input="updateDataValue"
+        @focus="onSelectfocused"
       >
         <el-option
           v-for="(item, index) in valueList"
@@ -235,7 +237,8 @@ export default {
       tempAliasList:[],
       statsType: null,
       queryString: '',
-      searchTimer: null
+      searchTimer: null,
+      isCategoryValueSearch: false
     }
   },
   computed: {
@@ -340,6 +343,10 @@ export default {
                 name: element
               }
             })
+            // 將首次 remote search 拿回的 valueList 暫存起來供之後使用
+            if (!this.queryString) {
+              this.tempAliasList = JSON.parse(JSON.stringify(this.valueList))
+            }
           })
           .finally(() => {
             this.isSearching = false
@@ -375,7 +382,16 @@ export default {
     },
     disabledDueDate (time) {
       return time.getTime() < new Date(this.subRestraint.properties.start).getTime()
-    }
+    },
+    onSelectfocused() {
+      this.$refs.fuzzySearchSelect.$refs.input.blur = () => {
+        // 因 el-select blur 監聽回調失效，改成監聽 focus 事件
+        // 使用 setTimeout 在選單關閉之後再 assign 新值避免閃爍
+        setTimeout(() => {
+          if (this.tempAliasList.length > 0) this.valueList = this.tempAliasList
+        }, 100)
+      };
+    },
   },
 
 }
@@ -508,7 +524,13 @@ export default {
        */
 
       /deep/ .el-select__tags {
+        display: block;
+        .el-select__input {
+          width: 100% !important;
+        }
         .el-tag.el-tag--info {
+          display: block;
+          width: fit-content;
           max-width: 200px;
           height: 26px;
           font-weight: 600;
@@ -566,7 +588,7 @@ export default {
           }
 
           &::after {
-            content: '\E6DA';
+            content: '';
             position: absolute;
             top: 8px;
             left: 12px;
@@ -580,6 +602,7 @@ export default {
 
           &.selected {
             &::after {
+              content: '\E6DA';
               color: #FFF;
               background-color: #1EB8C7;
               border-color: #1EB8C7;

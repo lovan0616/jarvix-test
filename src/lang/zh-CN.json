@@ -58,6 +58,8 @@
     "dataColumns": "数据栏位",
     "addFilter": "新增条件",
     "restrictionSetting": "条件限制",
+    "ANDLogicHint": "条件项目关系为AND逻辑，当重复筛选到同样资料范围时为有效条件，其他资料则被排除。",
+    "ORLogicHint": "限制项目关系为OR逻辑，筛选到的资料范围皆为有效条件。",
     "addRestriction": "新增限制",
     "noRestrictionYet": "尚未设定任何条件",
     "restraintSetting": "限制设定",
@@ -227,7 +229,7 @@
     "clickToSelectFiles": "点击选择文件，或拖曳文件至此",
     "uploadLimitTitle": "文件上传限制说明",
     "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
-    "uploadLimitSize": "文件大小：{limitSize}",
+    "uploadLimitSize": "单档大小限制：{limitSize}",
     "uploadLimitCount": "文件数量：{countLimit}笔",
     "uploadLimitContent": "内容限制：不可有分页、不可合并储存格、标题仅限1行",
     "reachUploadSizeLimit": "数据表大小超过{limitSize}MB",
@@ -235,7 +237,7 @@
     "canUpload": "可以上传",
     "unableUpload": "无法上传",
     "addFile": "选取文件",
-    "selectedTablesWaitingToUpload": "选取{num}项数据表，总和{size}，可进行上传",
+    "selectedTablesWaitingToUpload": "选取 {num} 项数据表，总和 {size}，可进行上传",
     "uploading": "上传过程中请勿关闭浏览器视窗，以免上传作业失败",
     "uploadSuccess": "上传成功",
     "uploadFailure": "上传失败",
@@ -447,7 +449,8 @@
     "onlyPrefixMatching": "此搜寻只支援从字首开始匹配",
     "searchDataSource": "搜寻资料源",
     "isOrdinal": "有时序",
-    "isNotOrdinal": "无时序"
+    "isNotOrdinal": "无时序",
+    "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量"
   },
   "algorithm": {
     "name": "演算法",
@@ -685,7 +688,7 @@
     "createFeature": "新增自定义栏位",
     "featureColumnName": "自定义栏位名称",
     "featureSetting": "运算式设定",
-    "generalOperationOperation": "一般运算式",
+    "generalOperation": "一般运算式",
     "datetimeOperation": "日期运算式",
     "columnUnit": "栏位单位"
   },
@@ -887,6 +890,8 @@
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新频率",
     "monitorComponent": "监控示警元件",
+    "unhandledAbnormalStatisticsComponent": "未处理异常统计元件",
+    "handledAbnormalStatisticsComponent": "已处理异常统计元件",
     "simulateComponent": "模拟元件",
     "specialIndexTypeComponent": "特殊数值元件",
     "timeScope": "时间范围",
@@ -2567,7 +2572,9 @@
     "projectAmount":"项目数量: {amount} 个",
     "dataFrameAmount":"数据集数量",
     "pinBoardAmount":"钉板数量",
-    "warRoomAmount":"战情室数量"
+    "warRoomAmount":"战情室数量",
+    "dataStorageUsageRate": "总容量使用率",
+    "unlimited": "无限制"
   },
   "updateLicense": {
     "licenseKey": "新产品金钥（license）",

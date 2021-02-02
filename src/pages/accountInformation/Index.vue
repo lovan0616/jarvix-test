@@ -52,7 +52,7 @@
                 {{ $t('accountInfo.dataUsageProvided') }}
               </h6>
               <p class="sub-info-desciption">
-                {{ license.showMaxDataStorageSize === -1 ? '&#8734;' : (shortenDataCapacityNumber(license.showMaxDataStorageSize) || '-') }}
+                {{ license.maxDataStorageSize === -1 ? '&#8734;' : (shortenDataCapacityNumber(license.maxDataStorageSize) || '-') }}
               </p>
             </div>
           </div>

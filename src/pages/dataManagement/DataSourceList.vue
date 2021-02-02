@@ -1,7 +1,12 @@
 <template>
   <div class="data-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
+      <h1 class="title">
+        <div class="title-left">{{ $t('nav.dataManagement') }}</div>
+        <div class="title-right">
+          <data-storage-usage-info />
+        </div>
+      </h1>
       <div class="bread-crumb">
         {{ $t('editing.dataSource') }}
       </div>
@@ -76,6 +81,7 @@ import FileUploadDialog from './components/FileUploadDialog'
 import CreateDataSource from './components/CreateDataSource'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
+import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
@@ -88,7 +94,8 @@ export default {
     FileUploadDialog,
     CreateDataSource,
     ConfirmDeleteDialog,
-    ConfirmChangeNameDialog
+    ConfirmChangeNameDialog,
+    DataStorageUsageInfo
   },
   data () {
     return {

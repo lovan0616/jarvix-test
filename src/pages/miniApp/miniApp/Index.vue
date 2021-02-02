@@ -671,6 +671,14 @@ export default {
           id: 'MonitorWarning'
         },
         {
+          name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
+          id: 'UnhandledAbnormalStatistics'
+        },
+        {
+          name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
+          id: 'HandledAbnormalStatistics'
+        },
+        {
           name: this.$t('miniApp.simulateComponent'),
           id: 'Simulator'
         },
@@ -1243,19 +1251,28 @@ export default {
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
-    createMonitorWarningComponent () {
+     createDefaultComponent (componentType) {
       this.isProcessing = true
       this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) {
-          board.components.push(this.componentTemplateFactory('monitor-warning-list'))
+          board.components.push(this.componentTemplateFactory(componentType))
         }
       })
       this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
+    },
+    createMonitorWarningComponent () {
+      this.createDefaultComponent('monitor-warning-list')
+    },
+    createUnhandledAbnormalStatisticsComponent () {
+      this.createDefaultComponent('unhandled-abnormal-statistics')
+    },
+    createHandledAbnormalStatisticsComponent () {
+      this.createDefaultComponent('handled-abnormal-statistics')
     },
     createSimulatorComponent () {
       this.isShowCreateSimulatorDialog = true
@@ -1360,7 +1377,13 @@ export default {
         filterSet.forEach(filter => {
           // 確認有無對應到欲前往的 dashboard 中的任一控制項
           const targetRestriction = restrictions.find(restriction => filter.columnId === restriction.dc_id || filter.columnName === restriction.display_name)
-          if (targetRestriction) filter.dataValues = [targetRestriction.value]
+
+          if (targetRestriction) {
+            const value = targetRestriction.value
+            // 檢查 Category 類型的 Chart 中的值是否為數字，若為數字會被加上 []，這邊需要把數字取出來
+            const regex = /^\[.+\]$/gm
+            filter.dataValues = [regex.test(value) ? value.substring(1, value.length - 1) : value]
+          }
         })
       })
     },
@@ -1444,6 +1467,18 @@ export default {
             diaplayedName: this.$t('alert.realTimeMonitorAlert'),
           },
         }),
+        // 異常統計元件
+        ...(type.includes('abnormal-statistics') && {
+          init: true,
+          type: 'abnormal-statistics',
+          isCreatedViaAsking: false,
+          config: {
+            ...generalConfig,
+            fontSize: 'middle',
+            enableAlert: false,
+            diaplayedName: this.getAbnormalStatisticsDisplayName(type),
+          },
+        }),
         // 模擬器元件
         ...(type === 'simulator' && {
           init: true,
@@ -1468,6 +1503,13 @@ export default {
           }
         }),
       }
+    },
+    getAbnormalStatisticsDisplayName (type) {
+      const stringList = type.split('-')
+      const displayName = stringList.reduce((acc, cur, index) => {
+        return acc + (index !== 0 ? cur.replace(/^./, cur[0].toUpperCase()) : cur.replace(/^./, cur[0].toLowerCase()))
+      }, '')
+      return this.$t(`miniApp.${displayName}Component`).slice(0, 7)
     },
     logDraggingMovement (e) {
       const { index, futureIndex } = e.draggedContext
@@ -1718,7 +1760,7 @@ export default {
             top: calc(100% + 10px);
             text-align: left;
             z-index: 1;
-            width: 136px;
+            width: auto;
 
             &::before {
               position: absolute;

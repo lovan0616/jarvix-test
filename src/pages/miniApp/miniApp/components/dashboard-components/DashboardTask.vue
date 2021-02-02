@@ -115,6 +115,13 @@
           :is-edit-mode="isEditMode"
           @warningLogTriggered="$emit('warningLogTriggered', $event)"
         />
+        <abnormal-statistics
+          v-else-if="componentData.type === 'abnormal-statistics'"
+          :type="componentData.diagram"
+          :filter-time="filterTime"
+          :conponent-config="componentData.config"
+          :is-edit-mode="isEditMode"
+        />
         <simulator
           v-else-if="componentData.type === 'simulator'"
           :is-edit-mode="isEditMode"
@@ -158,16 +165,19 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
+import AbnormalStatistics from './AbnormalStatistics'
 import Simulator from './Simulator'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
+import { sizeTable } from '@/utils/general'
 
 export default {
   name: 'DashboardTask',
   components: {
     DecideDialog,
     MonitorWarningList,
+    AbnormalStatistics,
     Simulator
   },
   props: {
@@ -204,6 +214,7 @@ export default {
   },
   data () {
     return {
+      sizeTable,
       timeoutFunction: null,
       totalSec: 50,
       periodSec: 200,
@@ -233,8 +244,11 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['algoConfig']),
+    isIndependentComponent () {
+      return this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'abnormal-statistics' || this.componentData.type === 'simulator'
+    },
     shouldComponentBeFiltered () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return false
+      if (this.isIndependentComponent) return false
       return true
       // // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
       // return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
@@ -257,7 +271,7 @@ export default {
       return this.tempFilteredKeyResultId
     },
     dataColumnAlias () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
+      if (this.isIndependentComponent) return ''
       const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
       return dataColumn ? dataColumn.dataColumnAlias : ''
     },
@@ -266,12 +280,12 @@ export default {
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
     },
     controllerMutatedQuestion () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
+      if (this.isIndependentComponent) return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
+      if (this.isIndependentComponent) return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, `
         <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
@@ -285,6 +299,12 @@ export default {
     allFilterList () {
       // 可能會有階層，因此需要完全攤平
       return [].concat.apply([], [...this.filters, ...this.controls])
+    },
+    filterTime () {
+      const relativeDatetime =  this.filters
+        .filter(item => item[0]['statsType'] === 'RELATIVEDATETIME')
+        .map(filter => (this.formatRelativeDatetime(filter[0].dataValues[0])))
+      return relativeDatetime[0]
     },
     selectedYAxisControls () {
       return this.yAxisControls.reduce((acc, cur) => {
@@ -311,6 +331,7 @@ export default {
         || !this.componentData.config.hasTableRelatedDashboard
         || this.componentData.config.tableRelationInfo.triggerTarget !== 'column'
       ) return []
+      if (this.isIndependentComponent) return []
       const relation = this.componentData.config.tableRelationInfo.columnRelations[0].columnInfo
       if (!relation) return []
       const index = this.componentData.dataColumns.findIndex(item => item.columnId === relation.dataColumnId)
@@ -339,30 +360,8 @@ export default {
       `
     },
     indexComponentStyle () {
-      const sizeTable = {
-        large: {
-          'font-size': '80px', 
-          'height': '83px', 
-          'line-height': '80px'
-        },
-        middle: {
-          'font-size': '54px', 
-          'height': '54px', 
-          'line-height': '54px'
-        },
-        small: {
-          'font-size': '36px', 
-          'height': '36px', 
-          'line-height': '36px'
-        },
-        mini: {
-          'font-size': '28px', 
-          'height': '28px', 
-          'line-height': '28px'
-        },
-      }
       return {
-        ...sizeTable[this.componentData.config.fontSize || 'middle'],
+        ...this.sizeTable[this.componentData.config.fontSize || 'middle'],
         'color': '#2AD2E2'
       }
     },
@@ -383,7 +382,7 @@ export default {
       immediate: true,
       handler (isInit) {
         if (!isInit) return
-        if (this.componentData.type !== 'monitor-warning-list' && this.componentData.type !== 'simulator') {
+        if (!this.isIndependentComponent) {
           this.isProcessing = true
           this.deboucedAskQuestion()
         }
@@ -394,18 +393,19 @@ export default {
     filters: {
       deep: true,
       handler (controls) {
-        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
+        if (this.shouldComponentBeFiltered) this.deboucedAskQuestion()
       }
     },
     controls: {
       deep: true,
       handler (controls) {
-        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
+        if (this.shouldComponentBeFiltered) this.deboucedAskQuestion()
       }
     },
     yAxisControls: {
       deep: true,
       handler (controls) {
+        if (this.isIndependentComponent) return 
         if (controls.length === 0 || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
@@ -549,7 +549,7 @@ export default {
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
+          if (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {
