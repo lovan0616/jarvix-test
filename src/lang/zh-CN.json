@@ -183,6 +183,11 @@
     "pleaseCreateOrJoinGroup": "请先加入项目或建立新项目",
     "pleaseInformManager": "请待项目管理员将您加入项目"
   },
+  "forgetPassword": {
+    "title": "忘记密码",
+    "remark": "系统会将密码变更信寄至您注册的信箱",
+    "back": "返回登入页"
+  },
   "editing": {
     "localUpload": "本机文件上传",
     "localUploadDescription": "透过电脑上传.xlsx .xls .csv<br>文件数据并进行创建",

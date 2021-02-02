@@ -1,33 +1,25 @@
 <template>
   <page-layout>
-    <div class="login-page">
-      <h1 class="page-title">{{ $t('editing.userLogin') }}</h1>
+    <div class="forget-pwd-page">
+      <h1 class="page-title">{{ $t('forgetPassword.title') }}</h1>
       <form
         @submit.prevent="submitForm"
       >
-        <div class="login-form">
-          <input-block 
+        <div class="form">
+          <input-block
             v-validate="'required'"
             :label="$t('editing.username')"
             v-model="userInfo.account"
-            class="login-input-block"
+            class="input-block"
             name="userName"
             type="email"
-          />
-          <input-block 
-            v-validate="'required'"
-            :label="$t('editing.password')"
-            v-model="userInfo.password"
-            class="login-input-block"
-            name="userPassword"
-            type="password"
           />
         </div>
         <button 
           :disabled="isSubmit" 
           type="submit"
           class="btn btn-default btn-submit"
-        >{{ $t('button.login') }}</button>
+        >{{ $t('button.send') }}</button>
         <a 
           href="/forget-password"
           class="link">{{ $t('forgetPassword.title') }}</a>
@@ -43,7 +35,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   inject: ['$validator'],
-  name: 'PageLogin',
+  name: 'PageForgetPassword',
   components: {
     PageLayout,
     InputBlock
@@ -51,8 +43,7 @@ export default {
   data () {
     return {
       userInfo: {
-        account: null,
-        password: null
+        account: null
       },
       isSubmit: false
     }
@@ -130,7 +121,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.login-page {
+.forget-pwd-page {
   width: 360px;
   margin: 0 auto;
 
@@ -139,13 +130,13 @@ export default {
     margin-bottom: 32px;
   }
 
-  .login-form {
+  .form {
     text-align: left;
     background-color: var(--color-bg-5);
     padding: 40px;
     border-radius: 8px;
 
-    .login-input-block {
+    .input-block {
       &:not(:last-child) {
         margin-bottom: 52px;
       }

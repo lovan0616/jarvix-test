@@ -183,6 +183,11 @@
     "pleaseCreateOrJoinGroup": "請先加入專案或建立新專案",
     "pleaseInformManager": "請待專案管理員將您加入專案"
   },
+  "forgetPassword": {
+    "title": "忘記密碼",
+    "remark": "系統會將密碼變更信寄至您註冊的信箱",
+    "back": "返回登入頁"
+  },
   "editing": {
     "localUpload": "本機檔案上傳",
     "localUploadDescription": "透過電腦上傳.xlsx .xls .csv<br>檔案資料並進行建置",

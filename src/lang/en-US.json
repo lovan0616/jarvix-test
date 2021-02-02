@@ -183,6 +183,11 @@
     "pleaseCreateOrJoinGroup": "Please join a group or create a group.",
     "pleaseInformManager": "To join a project, please inform your manager."
   },
+  "forgetPassword": {
+    "title": "Forget Password",
+    "remark": "The system will send a password change letter to your registered mailbox.",
+    "back": "Back to login page"
+  },
   "editing": {
     "localUpload": "File Upload",
     "localUploadDescription": "Upload .xlsx .xls .csv file",
