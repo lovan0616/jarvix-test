@@ -885,6 +885,8 @@
     "orderUpdated": "{target} Order is updated",
     "monitorUpdateFrequency": "Monitor Update Frequency",
     "monitorComponent": "Monitor Component",
+    "unhandledAbnormalStatisticsComponent": "Unhandled Abnormal Statistics Component",
+    "handledAbnormalStatisticsComponent": "Handled Abnormal Statistics Component",
     "simulateComponent": "Simulate Component",
     "specialIndexTypeComponent": "Special Components",
     "timeScope": "Time Interval",

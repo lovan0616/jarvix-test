@@ -74,6 +74,24 @@ export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, acti
 }
 
 /**
+ * 取得 所有示警 logs 總數
+ * @param {Array} id - conditionIds
+ */
+export function getAlertLogsCount ({ conditionIdsString, groupId, active, startTime, endTime }) {
+  return request({
+    url: `/alert/logs/count`,
+    method: 'POST',
+    data: {
+      conditionIdsString,
+      groupId,
+      active,
+      startTime,
+      endTime
+    }
+  })
+}
+
+/**
  * 變更示警紀錄尚未處理狀態
  * @param {string} id - log id
  */
