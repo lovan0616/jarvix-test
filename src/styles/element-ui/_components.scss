@@ -96,8 +96,15 @@
   tr.el-table__row.hover-row > td {
     background-color: transparent;
   }
-  &.el-table--enable-row-hover .el-table__body tr:hover > td {
-    background-color: transparent;
+
+  &.el-table--enable-row-hover .el-table__body tr {
+    &:hover > td {
+      background-color: transparent;
+    }
+    &.is-hovered:hover > td {
+      background-color: #5C7578;
+      cursor: pointer;
+    }
   }
 
   thead {

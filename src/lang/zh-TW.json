@@ -920,7 +920,9 @@
     "formulaPreview": "運算式預覽",
     "setting": "設定",
     "otherSettings": "其他設定",
-    "formulaType": "公式類型"
+    "formulaType": "公式類型",
+    "singleColumnData": "單欄資料",
+    "singleRowData": "整列資料"
   },
   "alert": {
     "alertLogs": "示警紀錄",

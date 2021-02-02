@@ -137,7 +137,7 @@
             </div>
           </div>
         </div>
-        <!-- Related dashboard of component columns -->
+        <!-- Related dashboard of component columns or rows -->
         <div
           v-if="currentComponent.diagram === 'table'"
           class="setting__content"
@@ -148,18 +148,47 @@
                 {{ $t('miniApp.dataColumnRelationSetting') }}
               </span>
               <el-switch
-                v-model="currentComponent.config.hasColumnRelatedDashboard"
+                v-model="currentComponent.config.hasTableRelatedDashboard"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
-                @change="updateHasColumnRelatedDashboard"
+                @change="updateHasTableRelatedDashboard"
               />
               <span class="setting__label-block-description">
                 {{ $t('miniApp.dataColumnRelationSettingReminding') }}
               </span>
             </div>
-            <template v-if="currentComponent.config.hasColumnRelatedDashboard">
+            <template v-if="currentComponent.config.hasTableRelatedDashboard">
               <div class="setting__block-select-field">
+                <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
+                <div class="setting__block-radio-groups">
+                  <div
+                    v-for="(option, index) in triggerTargetOptions"
+                    :key="index"
+                    class="input-radio-group"
+                  >
+                    <input
+                      :id="option.value"
+                      :value="option.value"
+                      :checked="option.value === currentComponent.config.tableRelationInfo.triggerTarget"
+                      name="triggerOption"
+                      class="input-radio"
+                      type="radio"
+                      @change="updateTriggerTarget(option.value)"
+                    >
+                    <label
+                      :for="option.value"
+                      class="input-radio-label"
+                    >
+                      {{ `${ option.name }` }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="currentComponent.config.tableRelationInfo.triggerTarget === 'column'"
+                class="setting__block-select-field"
+              >
                 <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
                 <default-select 
                   v-validate="'required'"
@@ -179,11 +208,12 @@
                 <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
                 <default-select
                   v-validate="'required'"
-                  v-model="currentComponent.config.columnRelations[0].relatedDashboardId"
+                  :value="tableRelatedDashboard"
                   :option-list="dashboardOptions"
                   :placeholder="$t('miniApp.chooseDashboard')"
                   class="setting__block-select"
                   name="columnRelatedDashboard"
+                  @change="updateTableRelatedDashboard"
                 />
                 <div 
                   v-show="errors.has('columnRelatedDashboard')"
@@ -434,6 +464,23 @@ export default {
     },
     isCreatedViaAsking () {
       return this.currentComponent && this.currentComponent.isCreatedViaAsking
+    },
+    tableRelatedDashboard () {
+      if (!this.currentComponent.config.hasTableRelatedDashboard) return
+      const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
+      return triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId
+    },
+    triggerTargetOptions () {
+      return [
+        {
+          name: this.$t('miniApp.singleColumnData'),
+          value: 'column'
+        },
+        {
+          name: this.$t('miniApp.singleRowData'),
+          value: 'row'
+        }
+      ]
     }
   },
   mounted () {
@@ -441,7 +488,7 @@ export default {
     // 所有可以不需透過問問句就能創建的元件類型
     const isDirectAddableComponentTypes = ['formula']
     this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
-    const columnInfo = this.currentComponent.config.columnRelations[0].columnInfo
+    const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
     this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
   },
   destroyed () {
@@ -508,9 +555,14 @@ export default {
         this.currentComponent.config.relatedDashboard = relatedDashboard
       })
     },
-    updateHasColumnRelatedDashboard (isTurnedOn) {
+    updateHasTableRelatedDashboard (isTurnedOn) {
       if (!isTurnedOn) {
-        this.currentComponent.config.columnRelations[0] = { relatedDashboardId: null, columnInfo: null }
+        // this.$validator.detach('columnRelatedDashboard')
+        this.currentComponent.config.tableRelationInfo = {
+          triggerTarget: 'column',
+          columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
+          rowRelation: { relatedDashboardId: null }
+        }
       }
     },
     defaultOptionFactory (placholder) {
@@ -525,7 +577,7 @@ export default {
     },
     updateTriggerColumnInfo () {
       const column = this.categoryColumnOptions.find(item => item.dataColumnId === this.selectedTriggerColumn)
-      this.currentComponent.config.columnRelations[0].columnInfo = column
+      this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo = column
     },
     setComponentConfig (config) {
       this.currentComponent.config.enableAlert = !!config.enableAlert
@@ -535,7 +587,23 @@ export default {
     },
     setAlgoConfig (intent) {
       this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
-    }
+    },
+    async updateTriggerTarget (triggerTarget) {
+      this.currentComponent.config.tableRelationInfo.triggerTarget = triggerTarget
+      if (triggerTarget === 'row') {
+        // 避免資料被清空時觸發驗證導致 error
+        this.$validator.detach('triggerColumn')
+        await this.$nextTick()
+      }
+
+      this.currentComponent.config.tableRelationInfo.rowRelation = { relatedDashboardId: null }
+      this.selectedTriggerColumn = null
+      this.currentComponent.config.tableRelationInfo.columnRelations = [{ relatedDashboardId: null, columnInfo: null }]
+    },
+    updateTableRelatedDashboard (selectedDashboardId) {
+      const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
+      triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId = selectedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId = selectedDashboardId
+    },
   },
 }
 </script>
@@ -658,6 +726,15 @@ export default {
           /deep/ .el-input__inner {
             padding-left: 0;
             border-bottom: 1px solid #FFFFFF;
+          }
+        }
+        &__block-radio-groups {
+          display: flex;
+          font-size: 14px;
+          .input-radio-group {
+            &:last-of-type {
+              margin-right: 0;
+            }
           }
         }
       }

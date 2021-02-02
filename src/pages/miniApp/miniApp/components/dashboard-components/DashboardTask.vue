@@ -136,8 +136,10 @@
             :converted-type="componentData.type === 'paramCompare' ? 'param_comparison_table' : null"
             :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
+            :is-hoverable="isHoverable"
             intend="key_result"
             @clickCell="columnTriggered($event)"
+            @clickRow="rowTriggered($event)"
             @clickChart="chartriggered($event)"
           />
         </div>
@@ -303,8 +305,13 @@ export default {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     },
     customCellClassName () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return []
-      const relation = this.componentData.config.columnRelations[0].columnInfo
+      if (
+        this.componentData.type !== 'chart'
+        || this.componentData.diagram !== 'table'
+        || !this.componentData.config.hasTableRelatedDashboard
+        || this.componentData.config.tableRelationInfo.triggerTarget !== 'column'
+      ) return []
+      const relation = this.componentData.config.tableRelationInfo.columnRelations[0].columnInfo
       if (!relation) return []
       const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
       return [{
@@ -312,6 +319,12 @@ export default {
         index: index + 1,
         className: 'has-underline is-text-blue'
       }]
+    },
+    isHoverable () {
+      return this.componentData.type === 'chart'
+        && this.componentData.diagram === 'table'
+        && this.componentData.config.hasTableRelatedDashboard
+        && this.componentData.config.tableRelationInfo.triggerTarget === 'row'
     },
     displayedRelatedDashboard () {
       return `
@@ -646,13 +659,28 @@ export default {
       return properties
     },
     columnTriggered ({ row, column }) {
-      const { relatedDashboardId, columnInfo } = this.componentData.config.columnRelations[0]
-      if (column.label !== columnInfo.dataColumnAlias) return
-
+      const { relatedDashboardId, columnInfo } = this.componentData.config.tableRelationInfo.columnRelations[0]
+      const triggerTarget = this.componentData.config.tableRelationInfo.triggerTarget
+      if (triggerTarget !== 'column' || column.label !== columnInfo.dataColumnAlias) return
+      
       this.$emit('columnTriggered', {
         relatedDashboardId,
+        columnName: columnInfo.dataColumnAlias,
         columnId: columnInfo.dataColumnId,
         cellValue: row[column.index - 1]
+      })
+    },
+    rowTriggered ({ row, header }) {
+      const triggerTarget = this.componentData.config.tableRelationInfo.triggerTarget
+      if (triggerTarget !== 'row') return
+      const { relatedDashboardId } = this.componentData.config.tableRelationInfo.rowRelation
+      const rowData = this.componentData.dataColumns.map(column => ({
+        ...column,
+        cellValue: row[header.indexOf(column.columnName)]
+      }))
+      this.$emit('rowTriggered', {
+        relatedDashboardId,
+        rowData
       })
     },
     chartriggered (restrictions) {
