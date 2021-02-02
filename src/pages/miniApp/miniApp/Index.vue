@@ -163,7 +163,7 @@
             <button
               v-if="isEditMode"
               class="btn-m btn-default btn-has-icon create-btn" 
-              @click="createGeneralComponent">
+              @click="isShowCreateDashboardDialog = true">
               <svg-icon icon-class="plus"/>
               {{ $t('miniApp.createDashboard') }}
             </button>
@@ -606,7 +606,7 @@ export default {
       return this.currentDashboard ? this.dashboardList.findIndex(d => d.id === this.currentDashboardId) : -1
     },
     currentComponent () {
-      return this.currentDashboard ? this.currentDashboard.components.find(comp => comp.id === this.currentComponentId) : {}
+      return this.currentDashboard ? this.currentDashboard.components.find(comp => comp.id === this.currentComponentId) : null
     },
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
