@@ -9,9 +9,11 @@
     <el-table 
       v-bind="tableProps"
       :cell-class-name="getCellIndex"
+      :row-class-name="tableRowClassName"
       class="sy-table"
       style="width: 100%;"
       @cell-click="onClickCell"
+      @row-click="onClickRow"
     >
       <el-table-column
         :width="indexWidth"
@@ -119,6 +121,10 @@ export default {
         // }
       ]
     },
+    isHoverable: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -196,6 +202,9 @@ export default {
       const isBigData = headerList.length > this.lazyLoadInfo.columnPerScroll
       const hasReachedEnd = this.offset >= headerList.length
       return isBigData && !hasReachedEnd
+    },
+    tableRowClassName () {
+      return this.isHoverable ? 'is-hovered' : ''
     }
   },
   mounted () {
@@ -249,6 +258,13 @@ export default {
     },
     onClickCell (row, column) {
       this.$emit('clickCell', { row, column })
+    },
+    onClickRow (row, column) {
+      this.$emit('clickRow', { 
+        row, 
+        column,
+        header: this.dataset.columns
+      })
     }
   },
 }

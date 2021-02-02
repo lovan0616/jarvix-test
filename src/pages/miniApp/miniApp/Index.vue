@@ -163,7 +163,7 @@
             <button
               v-if="isEditMode"
               class="btn-m btn-default btn-has-icon create-btn" 
-              @click="createGeneralComponent">
+              @click="isShowCreateDashboardDialog = true">
               <svg-icon icon-class="plus"/>
               {{ $t('miniApp.createDashboard') }}
             </button>
@@ -334,6 +334,7 @@
                     @redirect="activeCertainDashboard($event)"
                     @deleteComponentRelation="deleteComponentRelation"
                     @columnTriggered="columnTriggered"
+                    @rowTriggered="rowTriggered"
                     @chartTriggered="chartTriggered"
                     @warningLogTriggered="warningLogTriggered($event)"
                     @goToCertainDashboard="activeCertainDashboard($event)"
@@ -506,6 +507,7 @@ import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { getScriptList } from '@/API/Script'
+import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 
 export default {
   inject: ['$validator'],
@@ -604,7 +606,7 @@ export default {
       return this.currentDashboard ? this.dashboardList.findIndex(d => d.id === this.currentDashboardId) : -1
     },
     currentComponent () {
-      return this.currentDashboard ? this.currentDashboard.components.find(comp => comp.id === this.currentComponentId) : {}
+      return this.currentDashboard ? this.currentDashboard.components.find(comp => comp.id === this.currentComponentId) : null
     },
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
@@ -746,7 +748,7 @@ export default {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
         .then(miniAppInfo => {
-          this.miniApp = miniAppInfo
+          this.miniApp = compileMiniApp(miniAppInfo)
           this.newAppEditModeName = this.appData.displayedName
 
           // 如果有 dashboard, focus 在第一個
@@ -1350,12 +1352,22 @@ export default {
         })
       })
     },
-    columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
+    columnTriggered ({ relatedDashboardId, cellValue, columnId, columnName }) {
       this.activeCertainDashboard(relatedDashboardId)
       this.controlColumnValueInfoList.forEach(filterSet => {
         filterSet.forEach(filter => {
           // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
-          if (filter.columnId === columnId) filter.dataValues = [cellValue]
+          if (filter.columnId === columnId || columnName === filter.columnName) filter.dataValues = [cellValue]
+        })
+      })
+    },
+    rowTriggered ({ relatedDashboardId, rowData }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(filter => {
+          const matchedColumn = rowData.find(column => column.columnId === filter.columnId || column.columnName === filter.columnName)
+          // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
+          if (matchedColumn) filter.dataValues = [matchedColumn.cellValue]
         })
       })
     },
@@ -1435,8 +1447,12 @@ export default {
           diaplayedName: '',
           isAutoRefresh: false,
           refreshFrequency: null,
-          hasColumnRelatedDashboard: false, // 目前只給 table 元件使用
-          columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
+          hasTableRelatedDashboard: false, // 目前只給 table 元件使用
+          tableRelationInfo: {
+            triggerTarget: 'column',
+            columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
+            rowRelation: { relatedDashboardId: null }
+          },
           fontSize: 'middle',
           enableAlert: false
         },

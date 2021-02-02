@@ -59,10 +59,12 @@
         :is-show-coefficients="isShowCoefficients"
         :is-show-donwnload-btn="isShowDonwnloadBtn"
         :custom-cell-class-name="customCellClassName"
+        :is-hoverable="isHoverable"
         class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
         @clickCell="$emit('clickCell', $event)"
+        @clickRow="$emit('clickRow', $event)"
         @clickChart="$emit('clickChart', $event)"
       />
       <div
@@ -135,6 +137,10 @@ export default {
       type: Array,
       default: () => []
     },
+    isHoverable: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
