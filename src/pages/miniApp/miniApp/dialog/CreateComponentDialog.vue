@@ -96,7 +96,7 @@
           <div class="setting__block">
             <div class="setting__label-block">{{ $t('miniApp.componentName') }}</div>
             <input-verify
-              v-validate="`required|max:${max}`"
+              v-validate="'required'"
               v-model="currentComponent.config.diaplayedName"
               name="componentDisplayName"
             />
@@ -423,11 +423,14 @@ export default {
     },
     categoryColumnOptions () {
       const origin = this.currentResultInfo || this.initialCurrentComponent
-      let options = origin.segmentation.transcript.subjectList[0].categoryDataColumnList.map(item => ({
-        ...item,
-        value: item.dataColumnId,
-        name: item.dataColumnAlias
-      }))
+      let options = origin.segmentation.transcript.subjectList.reduce((acc, cur) => {
+        return acc.concat(
+          ...cur.categoryDataColumnList.map(item => ({
+          ...item,
+          value: item.dataColumnId,
+          name: item.dataColumnAlias
+        })))
+      }, [])
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseColumn')))
       return options
     },

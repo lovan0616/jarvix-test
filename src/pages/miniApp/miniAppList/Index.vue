@@ -217,10 +217,7 @@ export default {
     fetchData () {
       this.isLoading = true
       getMiniAppList(this.groupId)
-        .then(res => {
-          res.sort((a, b) => (new Date(a.lastUpdateDate)).getTime() - (new Date(b.lastUpdateDate)).getTime())
-          this.miniAppList = res
-        })
+        .then(res => this.miniAppList = res)
         .finally(() => this.isLoading = false)
     },
     createMiniApp () {

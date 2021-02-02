@@ -1365,7 +1365,13 @@ export default {
         filterSet.forEach(filter => {
           // 確認有無對應到欲前往的 dashboard 中的任一控制項
           const targetRestriction = restrictions.find(restriction => filter.columnId === restriction.dc_id || filter.columnName === restriction.display_name)
-          if (targetRestriction) filter.dataValues = [targetRestriction.value]
+
+          if (targetRestriction) {
+            const value = targetRestriction.value
+            // 檢查 Category 類型的 Chart 中的值是否為數字，若為數字會被加上 []，這邊需要把數字取出來
+            const regex = /^\[.+\]$/gm
+            filter.dataValues = [regex.test(value) ? value.substring(1, value.length - 1) : value]
+          }
         })
       })
     },

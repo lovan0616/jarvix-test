@@ -9,7 +9,12 @@
         class="spinner-icon"/>{{ $t('editing.dataProcessing') }}
     </div>
     <div class="page-title-row">
-      <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
+      <h1 class="title">
+        <div class="title-left">{{ $t('nav.dataManagement') }}</div>
+        <div class="title-right">
+          <data-storage-usage-info />
+        </div>
+      </h1>
       <div class="bread-crumb">
         <router-link 
           :to="{ name: 'DataSourceList' }" 
@@ -24,7 +29,7 @@
             <button 
               :disabled="isProcessing || reachLimit"
               class="btn-m btn-default btn-has-icon"
-              @click="createDataSource"
+              @click="createDataFrame"
             >
               <svg-icon 
                 icon-class="file-plus" 
@@ -35,11 +40,12 @@
               class="reach-limit"
             >{{ $t('notification.uploadLimitNotification') }}</div>
           </div>
-          <search-block
+          <!-- 目前只允許十張表，暫時不需要搜尋 -->
+          <!-- <search-block
             v-model="searchedDataFileName"
             :placeholder="$t('etl.tableSearch')"
             class="search-block"
-          />
+          /> -->
         </div>
         <div class="button-block dataframe-action">
           <button 
@@ -71,7 +77,7 @@
         :is-search-result-empty="searchedDataFileName.length > 0 && filterDataList.length === 0"
         :loading="isLoading"
         :empty-message="$t('editing.clickToUploadTable')"
-        @create="createDataSource"
+        @create="createDataFrame"
         @delete="confirmDelete"
         @edit="editTableColumn"
         @dataFrameAlias="editDataFrameAlias"
@@ -169,10 +175,11 @@ import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import ViewCreatedInfoDialog from './components/ViewCreatedInfoDialog'
+import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
@@ -193,7 +200,8 @@ export default {
     EditEtlDialog,
     EditBatchLoadDialog,
     EditFileDataUpdateDialog,
-    ViewCreatedInfoDialog 
+    ViewCreatedInfoDialog,
+    DataStorageUsageInfo
   },
   data () {
     return {
@@ -232,6 +240,7 @@ export default {
   },
   computed: {
     ...mapState('userManagement', ['license']),
+    ...mapGetters('userManagement', ['hasPermission']),
     reachLicenseFileSizeLimit () {
       return this.license.currentDataStorageSize >= this.license.maxDataStorageSize && this.license.maxDataStorageSize !== -1
     },
@@ -412,10 +421,13 @@ export default {
       })
     },
     createMethod (value) {
-      if (value === 'file') {
-        return this.$t('editing.userUpload')
-      } else {
-        return this.$t('editing.connectDB')
+      switch (value) {
+        case 'file':
+          return this.$t('editing.userUpload')
+        case 'database':
+          return this.$t('editing.connectDB')
+        case 'script':
+          return this.$t('editing.runScript')
       }
     },
     checkDataSourceStatus () {
@@ -424,7 +436,8 @@ export default {
         this.dataSourceName = response.name
       })
     },
-    createDataSource () {
+    createDataFrame () {
+      if (this.reachLimit) return
       // 為了資料表上傳
       this.$store.commit('dataManagement/updateCurrentUploadInfo', {
         dataSourceId: this.currentDataSourceId,
@@ -476,10 +489,7 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     canEditJoinTable () {
-      const editableDataList = this.dataList.filter(dataFrame => dataFrame.state === 'Enable')
-      // return editableDataList.length > 0
-      // 暫時無開啟 self join 功能，因此至少需兩張 dataframe 才可編輯
-      return editableDataList.length > 1
+      return this.hasPermission('join_table')
     },
     openEditJoinTableDialog () {
       if (!this.canEditJoinTable) return

@@ -177,6 +177,7 @@ export default {
     left: 170px;
     display: flex;
     flex-direction: row;
+    background-color: #000;
 
     &--edit, &--delete {
       font-size: 14px;

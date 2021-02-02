@@ -40,6 +40,10 @@
               icon-class="filter" 
               class="setting__collapse-title-icon setting__collapse-title-icon--dark-blue" />
             {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + filterListStatus + ')' }}
+            <join-logic-hints
+              :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
+              icon-class="inner-join"
+            />
           </div>
         </template>
         <filter-info 
@@ -86,6 +90,7 @@ import ColumnSelectInfo from './display/ColumnSelectInfo'
 import FilterInfo from './display/FilterInfo'
 import FilterRestrictionSetting from './setting/FilterRestrictionSetting'
 import FilterRestraintSetting from './setting/FilterRestraintSetting'
+import JoinLogicHints from './setting/JoinLogicHints'
 
 export default {
   name: 'AdvanceDataFrameSetting',
@@ -94,7 +99,8 @@ export default {
     ColumnSelectInfo,
     Message,
     FilterRestrictionSetting,
-    FilterRestraintSetting
+    FilterRestraintSetting,
+    JoinLogicHints
   },
   data () {
     return {
@@ -301,6 +307,11 @@ export default {
     &__collapse-title {
       font-size: 16px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      /deep/ .join-logic-hints__icon {
+        margin-left: 8px;
+      }
     }
 
     &__collapse-title-icon {

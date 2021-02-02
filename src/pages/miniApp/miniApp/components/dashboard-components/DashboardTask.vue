@@ -326,7 +326,7 @@ export default {
       if (this.isIndependentComponent) return []
       const relation = this.componentData.config.columnRelations[0].columnInfo
       if (!relation) return []
-      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
+      const index = this.componentData.dataColumns.findIndex(item => item.columnId === relation.dataColumnId)
       return [{
         type: 'column',
         index: index + 1,
@@ -535,7 +535,7 @@ export default {
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
+          if (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {

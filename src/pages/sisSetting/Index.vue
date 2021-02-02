@@ -90,19 +90,6 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">檔案上傳限制</div>
-      <div class="setting-block__content">
-        <div class="input-block">
-          <label for="">單一檔案上限(MB)：</label>
-          <el-input 
-            v-model="fileUploadLimit"
-            type="number"
-            class="el-input"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="setting-block">
       <div class="setting-block__title">Join Table 限制</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -146,7 +133,6 @@ export default {
       isDemoEnd: localStorage.getItem('isDemoEnd'),
       demoDatasource: localStorage.getItem('demoDatasource'),
       demoWaitTime: localStorage.getItem('demoWaitTime'),
-      uploadLimit: localStorage.getItem('uploadLimit'),
       joinLimit: localStorage.getItem('joinLimit'),
       newParser: localStorage.getItem('newParser')
     }
@@ -222,15 +208,6 @@ export default {
       set (value) {
         this.demoWaitTime = value
         localStorage.setItem('demoWaitTime', value)
-      }
-    },
-    fileUploadLimit: {
-      get () {
-        return this.uploadLimit
-      },
-      set (value) {
-        this.uploadLimit = value
-        localStorage.setItem('uploadLimit', value)
       }
     },
     hasJoinLimit: {
