@@ -29,6 +29,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    warningModuleSetting: {
+      type: Object,
+      default: () => ({})
+    },
     filterTime: {
       type: Object,
       default: () => ({
@@ -62,6 +66,9 @@ export default {
         ...this.sizeTable[this.conponentConfig.fontSize || 'middle'],
         'color': this.textColor
       }
+    },
+    conditionIds () {
+      return this.warningModuleSetting.conditions.map(condition => condition.id)
     }
   },
   watch: {
@@ -81,7 +88,7 @@ export default {
     fetchData () {
       this.isLoading = true
       getAlertLogsCount({ 
-        conditionIdsString: null, 
+        conditionIds: this.conditionIds, 
         groupId: this.getCurrentGroupId, 
         active: this.isGetHandledComponentCount,
         startTime: this.filterTime.start,

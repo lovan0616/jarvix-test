@@ -120,6 +120,7 @@
           :type="componentData.diagram"
           :filter-time="filterTime"
           :conponent-config="componentData.config"
+          :warning-module-setting="warningModuleSetting"
           :is-edit-mode="isEditMode"
         />
         <simulator

@@ -64,7 +64,7 @@ export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, acti
     url: `/alert/logs/search?page=${page}&size=${size}`,
     method: 'POST',
     data: {
-      conditionIdsString: `[${conditionIds.toString()}]`,
+      conditionIds: conditionIds,
       groupId,
       active,
       startTime,
@@ -77,12 +77,12 @@ export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, acti
  * 取得 所有示警 logs 總數
  * @param {Array} id - conditionIds
  */
-export function getAlertLogsCount ({ conditionIdsString, groupId, active, startTime, endTime }) {
+export function getAlertLogsCount ({ conditionIds, groupId, active, startTime, endTime }) {
   return request({
     url: `/alert/logs/count`,
     method: 'POST',
     data: {
-      conditionIdsString,
+      conditionIds,
       groupId,
       active,
       startTime,
