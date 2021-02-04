@@ -23,34 +23,45 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div 
-            v-if="singleType.type === 'enum'"
-            class="filter-description"
-          >
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
+          <template v-if="isStabilityChart">
+            {{ $t('resultDescription.area') + (index + 1) }}:
+            <span
+              v-for="(singleRestraint, restraintIndex) in singleType.restraints"
+              :key="'restraint' + index + '-' + restraintIndex"
+            >
+              {{ singleRestraint.properties.display_name }} {{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
+              <span
+                v-show="restraintIndex !== singleType.restraints.length - 1"
+              >、</span>
+            </span>
+          </template>
+          <template v-else>
             <div 
-              v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
-              :key="'enum-' + propertiesIndex"
-              class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
-          </div>
-          <div 
-            v-if="singleType.type === 'range'"
-            class="region-description"
-          >
-            <div class="single-area">
-              {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
-                start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope),
-                end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true)
-              }) }}
+              v-if="singleType.type === 'enum'"
+              class="filter-description"
+            >
+              <div class="column-name">{{ singleType.properties.display_name }} =</div>
+              <div 
+                v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
+                :key="'enum-' + propertiesIndex"
+                class="single-filter"
+              >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
             </div>
-          </div>
+            <div 
+              v-if="singleType.type === 'range'"
+              class="region-description"
+            >
+              <div class="single-area">
+                {{ $t('resultDescription.area') + (index + 1) }}:
+                {{ singleType.properties.display_name }} {{ formatSelectedData(singleType) }}
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </selected-region>
     <feature-information-block
-      v-if="dataset.pValuesFeatureInformation"
+      v-if="isStabilityChart"
       :feature-information="dataset.pValuesFeatureInformation"
       class="feature-information"
     />
@@ -206,6 +217,9 @@ export default {
       } else {
         return this.dataset.columns.map((element, colIndex) => this.composeColumn(element, colIndex))
       }
+    },
+    isStabilityChart () {
+      return !!this.dataset.pValuesFeatureInformation
     },
     options () {
       let config = {
@@ -556,6 +570,13 @@ export default {
         this.$el.removeEventListener('click', this.controlPagination, false)
       }
     },
+    formatSelectedData (selectedData) {
+      const formatFunction = this.isStabilityChart ? 'roundNumber' : 'customerTimeFormatter'
+      return this.$t('resultDescription.between', {
+        start: this[formatFunction](selectedData.properties.start, selectedData.properties.timeScope), 
+        end: this[formatFunction](selectedData.properties.end, selectedData.properties.timeScope, true) 
+      })
+    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
@@ -564,6 +585,34 @@ export default {
 
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
+
+        if (this.isStabilityChart)
+          return {
+            type: 'compound',
+            restraints: [
+              {
+                type: 'range',
+                properties: {
+                  dc_id: this.title.xAxis[0].dc_id,
+                  data_type: this.title.xAxis[0].data_type,
+                  display_name: this.title.xAxis[0].display_name,
+                  start: this.dataset.index[coordRange[0][0] < 0 ? 0 : coordRange[0][0]],
+                  end: this.dataset.index[coordRange[0][1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[0][1]]
+                }
+              },
+              {
+                type: 'range',
+                properties: {
+                  dc_id: this.title.yAxis[0].dc_id,
+                  data_type: this.title.yAxis[0].data_type,
+                  display_name: this.title.yAxis[0].display_name,
+                  start: coordRange[1][0],
+                  end: coordRange[1][1]
+                }
+              }
+            ]
+          }
+
         return {
           type: 'range',
           properties: {
