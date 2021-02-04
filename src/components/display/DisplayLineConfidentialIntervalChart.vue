@@ -26,7 +26,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope), end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true) }) }}
+              {{ singleType.properties.display_name }} {{ formatSelectedData(singleType) }}
             </div>
           </div>
         </div>
@@ -386,6 +386,13 @@ export default {
       if (this.yAxisOffsetValue === 0 || value === null) return value
       return value +  Math.abs(this.yAxisOffsetValue)
     },
+    formatSelectedData (selectedData) {
+      const formatFunction = this.isAnomalyTwoNumericDependence ? 'roundNumber' : 'customerTimeFormatter'
+      return this.$t('resultDescription.between', {
+        start: this[formatFunction](selectedData.properties.start, selectedData.properties.timeScope), 
+        end: this[formatFunction](selectedData.properties.end, selectedData.properties.timeScope, true) 
+      })
+    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
@@ -399,9 +406,13 @@ export default {
             dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
-            timeScope: this.dataset.timeScope
+            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
+            ...(!this.isAnomalyTwoNumericDependence && { 
+              start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
+              timeScope: this.dataset.timeScope
+            })
           }
         }
       })
