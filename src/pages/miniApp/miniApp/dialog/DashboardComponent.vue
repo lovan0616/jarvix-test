@@ -454,7 +454,7 @@ export default {
             ...(cur.dateTime !== null && [cur.dateTime.dataColumn])
           ]
           // 將不重複的欄位存起來
-          columnList.forEach(column => { if (!acc[column.dataColumnId]) acc[column.dataColumnId] = column })
+          columnList.forEach(column => { if (!acc['dataColumnId-' + column.dataColumnId]) acc['dataColumnId-' + column.dataColumnId] = column })
           // 最後一筆時，回傳所有不重複的欄位清單
           return index === filteredSubjectList.length - 1 ? Object.keys(acc).map(key => acc[key]) : acc
         }, {})

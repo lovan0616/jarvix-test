@@ -454,7 +454,8 @@ export default {
     categoryColumnOptions () {
       const origin = this.currentResultInfo || this.initialCurrentComponent
       let options = origin.segmentation.transcript.subjectList.reduce((acc, cur) => {
-        return acc.concat(
+        const isExist = acc.findIndex(item => item.dataColumnId === cur.categoryDataColumnList[0].dataColumnId) > -1
+        return isExist ? acc : acc.concat(
           ...cur.categoryDataColumnList.map(item => ({
           ...item,
           value: item.dataColumnId,
