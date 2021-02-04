@@ -195,6 +195,10 @@ export default {
         // 先上傳第一筆檔案，換取 script id
         const waitingFileList = [...this.formDataList]
         const firstFormData = waitingFileList.shift().data
+        const scriptName = this.$store.state.dataManagement.currentUploadScriptName
+        if (scriptName !== null) {
+          firstFormData.append('scriptName', scriptName)
+        }
         // 上傳檔案
         const { scriptId } = await scriptUpload(firstFormData)
         this.progress = 50

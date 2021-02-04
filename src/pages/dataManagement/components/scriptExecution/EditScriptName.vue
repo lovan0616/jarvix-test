@@ -47,7 +47,7 @@ export default {
   computed: {
     scriptName: {
       get () {
-        return this.$store.state.dataManagement.currentUploadScriptInfo.scriptName
+        return this.$store.state.dataManagement.currentUploadScriptName
       },
       set (value) {
         this.$store.commit('dataManagement/updateScriptName', value)

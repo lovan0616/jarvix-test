@@ -23,8 +23,8 @@ export default {
     etlTableList: [],
     currentTableIndex: 0,
     currentColumnIndex: null,
+    currentUploadScriptName: null,
     currentUploadScriptInfo: {
-      scriptName: null,
       scriptId: null,
       dataframeId: null,
       type: null,
