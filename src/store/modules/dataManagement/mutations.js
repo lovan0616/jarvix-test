@@ -113,11 +113,10 @@ export default {
     state.currentUploadScriptInfo = data
   },
   updateScriptName (state, data) {
-    state.currentUploadScriptInfo.scriptName = data
+    state.currentUploadScriptName = data
   },
   clearCurrentUploadScriptInfo(state) {
     state.currentUploadScriptInfo = {
-      scriptName: null,
       scriptId: null,
       dataframeId: null,
       type: null,
