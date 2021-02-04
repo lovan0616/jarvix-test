@@ -53,10 +53,12 @@
             >
               <div class="single-area">
                 {{ $t('resultDescription.area') + (index + 1) }}:
-                {{ singleType.properties.display_name }} {{ formatSelectedData(singleType) }}
+                {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
+                  start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope),
+                  end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true)
+                }) }}
               </div>
-            </div>
-          </template>
+          </div></template>
         </div>
       </div>
     </selected-region>
@@ -569,13 +571,6 @@ export default {
         this.showPagination = true
         this.$el.removeEventListener('click', this.controlPagination, false)
       }
-    },
-    formatSelectedData (selectedData) {
-      const formatFunction = this.isStabilityChart ? 'roundNumber' : 'customerTimeFormatter'
-      return this.$t('resultDescription.between', {
-        start: this[formatFunction](selectedData.properties.start, selectedData.properties.timeScope), 
-        end: this[formatFunction](selectedData.properties.end, selectedData.properties.timeScope, true) 
-      })
     },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
