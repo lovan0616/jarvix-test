@@ -262,7 +262,7 @@ export default {
     },
     onAlertMessageProcessFinished () {
       this.isProcessing = false
-      this.$emit('created')
+      this.$emit('close')
     },
     createAlertCondition () {
       this.$validator.validateAll().then(async (isValid) => {
@@ -272,6 +272,7 @@ export default {
         try {
           // 創造示警條件
           this.conditionId = await postAlertCondition(this.newConditionSetting)
+          this.$emit('created', this.conditionId)
           Message({
             message: this.$t('alert.alertConditionSuccessfullyCreated'),
             type: 'success',

@@ -117,7 +117,7 @@
     <create-alert-condition-dialog
       v-if="isShowCreateConditionDialog"
       @close="isShowCreateConditionDialog = false"
-      @created="alertConditionUpdated('CreateCondition')"
+      @created="alertConditionUpdated('CreateCondition', $event)"
     />
     <alert-condition-message-editor-dialog
       v-if="isShowEditConditionMessageDialog"
@@ -220,11 +220,14 @@ export default {
       const { activate, updateFrequency } = this.setting
       this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
 
+      const isOwnConditionIdList = this.setting.conditions.map(condition => condition.id)
+
       getAlertConditions(this.getCurrentGroupId)
         .then(conditions => {      
           conditions
+            .filter(condition => isOwnConditionIdList.includes(condition.id))
             .sort((a, b) => a.id - b.id)
-            .forEach(async (condition) => {
+            .forEach(condition => {
 
               // 尋找之前是否有針對此示警條件做過設定
               const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
@@ -284,10 +287,23 @@ export default {
       }, '')
       
     },
-    alertConditionUpdated (action) {
-      this[`isShow${action}Dialog`] = false
+    createAlertCondition (conditionId) {
+      this.setting.conditions.push({
+        id: conditionId,
+        activate: true
+      })
+    },
+    alertConditionUpdated (action, conditionId) {
+      switch (action) {
+        case 'CreateCondition':
+          this.createAlertCondition(conditionId)
+          break
+        case 'EditConditionMessage':
+          this.isShowEditConditionMessageDialog = false
+          this.currentEditingCondition = null
+          break
+      }
       this.fetchAlertConditions()
-      if (action === 'EditConditionMessage') this.currentEditingCondition = null
     },
     isComponentAlerter (targetType) {
       return targetType === this.alertTargetType['COMPONENT']
