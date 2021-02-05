@@ -6,6 +6,7 @@
         @submit.prevent="submitForm"
       >
         <div class="form">
+          <div class="form-info">*{{ $t('forgetPassword.remark') }}</div>
           <input-block
             v-validate="'required'"
             :label="$t('editing.username')"
@@ -25,14 +26,14 @@
   </page-layout>
 </template>
 <script>
-import { requestResetPassword } from '@/API/User'
+import { resetPassword } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
 import { Message } from 'element-ui'
 
 export default {
   inject: ['$validator'],
-  name: 'PageForgetPassword',
+  name: 'PageResetPassword',
   components: {
     PageLayout,
     InputBlock
@@ -50,7 +51,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           this.isSubmit = true
-          requestResetPassword({
+          resetPassword({
             mail: this.userInfo.account
           })
             .then(() => {
@@ -83,6 +84,11 @@ export default {
     background-color: var(--color-bg-5);
     padding: 40px;
     border-radius: 8px;
+
+    &-info {
+      font-size: 14px;
+      margin-bottom: 36px;
+    }
 
     .input-block {
       &:not(:last-child) {

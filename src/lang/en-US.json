@@ -160,7 +160,8 @@
     "lowerBound": "Lower bound value",
     "noPeriodicResult": "No cycle found",
     "numericShouldBeBetween": "Number should be between {min} and {max}",
-    "updateLicenseSuccess": "Successfully saved. Help you update it immediately！"
+    "updateLicenseSuccess": "Successfully saved. Help you update it immediately！",
+    "sendResetPasswordEmail": "Mail Sent Successfully！"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -1119,7 +1120,8 @@
     "sendInvitation": "Send Invitation",
     "downloadPage": "Download Image",
     "changeDiagram": "Change Diagram",
-    "columnSummaryInfo": "Column Summary Info"
+    "columnSummaryInfo": "Column Summary Info",
+    "send": "Send"
   },
   "timeScopeUnit": {
     "second": "seconds",
