@@ -36,12 +36,14 @@
       :title="$t('resultDescription.dataInsight')"
       :message-list="dataset.descriptions"
       icon-name="len-with-line-chart"
+      class="description-block"
     />
     <insight-description-block
       :title="$t('resultDescription.warning')"
       :message-list="dataset.warnings"
       message-type="warning"
       icon-name="alert-circle"
+      class="description-block"
     />
   </div>
 </template>
@@ -132,6 +134,9 @@ export default {
           return 3
       }
     },
+    stddevTimes () {
+      return this.isAnomalyTwoNumericDependence ? this.dataset.stddevTimes : this.zValue
+    },
     isAnomalyTwoNumericDependence () {
       return !this.dataset.predictDataList && !!this.dataset.midlineValue
     },
@@ -142,7 +147,7 @@ export default {
         : this.dataset.predictDataList
     },
     lowerBoundList () {
-      return this.standardLine.map(item => item - this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => item - this.stddevTimes * this.dataset.sigma)
     },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
@@ -152,7 +157,7 @@ export default {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     toUpperBoundIntervalList () {
-      return this.standardLine.map(item => 2 * this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => 2 * this.stddevTimes * this.dataset.sigma)
     },
     actualDataList () {
       const actualDataList = {
@@ -423,3 +428,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.description-block {
+  height: 150px;
+  overflow-y: auto;
+}
+</style>
