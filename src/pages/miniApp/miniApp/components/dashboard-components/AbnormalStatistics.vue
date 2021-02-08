@@ -68,7 +68,9 @@ export default {
       }
     },
     conditionIds () {
-      return this.warningModuleSetting.conditions.map(condition => condition.id)
+      return this.warningModuleSetting.conditions
+        .filter(condition => condition.activate)
+        .map(condition => condition.id)
     }
   },
   watch: {
