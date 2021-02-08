@@ -587,7 +587,13 @@
     "selectOutputColumn": "設定輸出欄位類型",
     "columnDataType": "欄位類型",
     "columnDataName": "欄位名稱",
-    "setScriptName": "請設定名稱"
+    "setScriptName": "請設定名稱",
+    "lackOfMainScript": "未包含 {mainScriptName}",
+    "scriptLimit": {
+      "0": "主要腳本名稱須為 {mainScriptName}",
+      "1": "腳本裡面需有 run() 的函數",
+      "2": "函數傳入與回傳都必須為 pandas 的 DataFrame 類型"
+    }
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
