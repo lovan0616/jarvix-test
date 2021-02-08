@@ -506,3 +506,13 @@ export function checkClusteringColumnStatus (taskId) {
     method: 'GET'
   })
 }
+
+/**
+ * 重新計算 meta
+ */
+export function reCalculateMetaData (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/calculated-mata`,
+    method: 'POST'
+  })
+}

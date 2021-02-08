@@ -437,7 +437,8 @@
     "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
     "searchDataSource": "搜尋資料源",
-    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量"
+    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量",
+    "reCalculateMeta": "重算 Meta"
   },
   "algorithm": {
     "name": "演算法",
