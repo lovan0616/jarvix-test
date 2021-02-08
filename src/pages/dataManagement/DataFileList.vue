@@ -87,6 +87,7 @@
         @etlSetting="editEtlSetting"
         @batchLoad="editBatchLoadSetting"
         @createdInfo="viewCreatedInfo"
+        @fetch="fetchData"
       />
     </div>
     <file-upload-dialog
