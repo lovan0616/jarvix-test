@@ -369,10 +369,10 @@ export default {
       return {
         ...this.chartComponentStyle,
         ...((this.componentData.segmentation.denotation === 'ANOMALY' || this.componentData.segmentation.denotation === 'NORMALITY_TEST') && {
-          'height': 'calc(100% - 100px)',
+          'height': 'calc(100% - 150px)',
         }),
         ...(this.componentData.segmentation.denotation === 'STABILITY' && {
-          'height': 'calc(100% - 60px)',
+          'height': 'calc(100% - 80px)',
         })
       }
     }
