@@ -21,11 +21,14 @@
         @dragenter.native="toggleDragEnter(true)"
         @dragleave.native="toggleDragEnter(false)"
       >
-        <div slot="uploadLimit">
+        <div 
+          slot="uploadLimit" 
+          class="upload-remark">
+          <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
           <div
-            v-for="(msg, index) in $t('script.scriptLimit', {mainScriptName})"
+            v-for="(msg, index) in $t('script.scriptLimit')"
             :key="index"
-          >{{ msg }}</div>
+          >{{ Number(index) + 1 }}. {{ $t(`script.scriptLimit.${index}`, {mainScriptName}) }}</div>
         </div>
       </upload-block>
       <div 
