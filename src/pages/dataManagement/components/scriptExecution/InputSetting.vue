@@ -160,7 +160,9 @@ export default {
             name: `${column.primaryAlias || column.name}（${column.statsType}）`,
             value: column.id,
             originalName: column.primaryAlias  || column.name
-          }))
+          })).filter(df => {
+            return !df.isPrimaryKey
+          })
         })
         .finally(() => this.isLoading = false)
       // 預先新增一個欄位選擇器
