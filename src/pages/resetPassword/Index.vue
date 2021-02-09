@@ -41,19 +41,24 @@ export default {
   data () {
     return {
       userInfo: {
-        account: null
+        newPassword: null,
+        emailToken: null
       },
       isSubmit: false
     }
   },
+  mounted () {
+    this.checkToken()
+  },
   methods: {
+    checkToken () {
+      const routeToken = this.$route.query.token
+    },
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (result) {
           this.isSubmit = true
-          resetPassword({
-            mail: this.userInfo.account
-          })
+          resetPassword(this.userInfo)
             .then(() => {
               Message({
                 message: this.$t('message.sendResetPasswordEmail'),

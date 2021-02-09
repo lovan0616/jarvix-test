@@ -51,7 +51,7 @@ export default {
         if (result) {
           this.isSubmit = true
           requestResetPassword({
-            mail: this.userInfo.account
+            email: this.userInfo.account
           })
             .then(() => {
               Message({
@@ -60,6 +60,7 @@ export default {
                 duration: 3 * 1000,
                 showClose: true
               })
+              this.$router.push('/login')
             })
             .finally(() => this.isSubmit = false)
         }
