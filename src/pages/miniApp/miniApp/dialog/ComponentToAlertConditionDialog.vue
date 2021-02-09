@@ -415,6 +415,7 @@ export default {
           if (!this.showConditionComapringSection) settingData.comparingValues = null
 
           this.conditionId = await convertComponentToAlertCondition(settingData)
+          this.$emit('update', this.conditionId)
 
           Message({
             message: this.$t('alert.alertConditionSuccessfullyCreated'),
