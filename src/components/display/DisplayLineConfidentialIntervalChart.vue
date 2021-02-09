@@ -151,7 +151,8 @@ export default {
     },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
-      return Math.floor(this.adjustValueWithOffsetValue(Math.min(...this.lowerBoundList, ...invalidDataList)))*0.9
+      const minDataValue = Math.floor(this.adjustValueWithOffsetValue(Math.min(...this.lowerBoundList, ...invalidDataList)))
+      return minDataValue > 0 ? minDataValue * 0.9 : minDataValue * 1.1
     },
     yAxisOffsetValue () {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
