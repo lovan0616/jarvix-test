@@ -470,6 +470,7 @@
     <component-to-alert-condition-dialog
       v-if="isShowCreateWarningCriteriaDialog"
       :component-data="componentToWarningCriteriaData"
+      @update="addComponentAlertToWarningModuleSetting"
       @close="closeCreateWarningCriteriaDialog"
       @converted="closeCreateWarningCriteriaDialog"
       @confirm="deleteComponent" 
@@ -1189,6 +1190,16 @@ export default {
     closeCreateWarningCriteriaDialog () {
       this.componentToWarningCriteriaData = {}
       this.isShowCreateWarningCriteriaDialog = false
+    },
+    addComponentAlertToWarningModuleSetting (conditionId) {
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.warningModule.conditions.push({
+        id: conditionId,
+        activate: true
+      })
+      this.updateAppSetting(editedMiniApp)
+        .then(() => this.miniApp = editedMiniApp)
+        .catch(() => {})
     },
     updateFilter (updatedFilterList, type) {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
