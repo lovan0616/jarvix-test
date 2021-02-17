@@ -1,19 +1,30 @@
 <template>
   <page-layout>
     <div class="forget-pwd-page">
-      <h1 class="page-title">{{ $t('forgetPassword.title') }}</h1>
+      <h1 class="page-title">{{ $t('resetPassword.title') }}</h1>
       <form
         @submit.prevent="submitForm"
       >
+
         <div class="form">
-          <div class="form-info">*{{ $t('forgetPassword.remark') }}</div>
           <input-block
-            v-validate="'required'"
-            :label="$t('editing.username')"
-            v-model="userInfo.account"
+            v-validate="'required|min:8|requireOneNumeric'"
+            ref="confirmPassword"
+            :label="$t('resetPassword.newPassword')"
+            :disabled="isSubmit"
+            v-model="userInfo.newPassword"
             class="input-block"
-            name="userName"
-            type="email"
+            name="newPassword"
+            type="password"
+          />
+          <input-block
+            v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
+            :label="$t('resetPassword.confirmNewPassword')"
+            :disabled="isSubmit"
+            v-model="confirmNewPassword"
+            class="input-block"
+            name="confirmNewPassword"
+            type="password"
           />
         </div>
         <button 
@@ -21,6 +32,10 @@
           type="submit"
           class="btn btn-default btn-submit"
         >{{ $t('button.send') }}</button>
+        <router-link
+          :to="{ name: 'PageLogin' }"
+          class="link"
+        >{{ $t('resetPassword.back') }}</router-link>
       </form>
     </div>
   </page-layout>
@@ -44,6 +59,7 @@ export default {
         newPassword: null,
         emailToken: null
       },
+      confirmNewPassword: null,
       isSubmit: false
     }
   },
@@ -53,6 +69,8 @@ export default {
   methods: {
     checkToken () {
       const routeToken = this.$route.query.token
+      if (!routeToken) this.$router.push('/login')
+      this.userInfo.emailToken = routeToken
     },
     submitForm () {
       this.$validator.validateAll().then(result => {
@@ -61,11 +79,14 @@ export default {
           resetPassword(this.userInfo)
             .then(() => {
               Message({
-                message: this.$t('message.sendResetPasswordEmail'),
+                message: this.$t('message.changePasswordSuccess'),
                 type: 'success',
                 duration: 3 * 1000,
                 showClose: true
               })
+              window.setTimeout(() => {
+                this.$router.push('/login')
+              }, 500)
             })
             .finally(() => this.isSubmit = false)
         }

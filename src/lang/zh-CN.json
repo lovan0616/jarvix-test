@@ -189,6 +189,12 @@
     "remark": "系统会将密码变更信寄至您注册的信箱",
     "back": "返回登入页"
   },
+  "resetPassword": {
+    "title": "更新密码",
+    "newPassword": "新密码",
+    "confirmNewPassword": "确认新密码",
+    "back": "返回登入页"
+  },
   "editing": {
     "localUpload": "本机文件上传",
     "localUploadDescription": "透过电脑上传.xlsx .xls .csv<br>文件数据并进行创建",

@@ -189,6 +189,12 @@
     "remark": "The system will send a password change letter to your registered mailbox.",
     "back": "Back to login page"
   },
+  "resetPassword": {
+    "title": "Reset Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "back": "Back to login page"
+  },
   "editing": {
     "localUpload": "File Upload",
     "localUploadDescription": "Upload .xlsx .xls .csv file",

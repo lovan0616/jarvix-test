@@ -10,6 +10,7 @@
             v-validate="'required'"
             :label="$t('editing.username')"
             v-model="userInfo.account"
+            :disabled="isSubmit"
             class="input-block"
             name="userName"
             type="email"
@@ -20,6 +21,10 @@
           type="submit"
           class="btn btn-default btn-submit"
         >{{ $t('button.send') }}</button>
+        <router-link
+          :to="{ name: 'PageLogin' }"
+          class="link"
+        >{{ $t('resetPassword.back') }}</router-link>
       </form>
     </div>
   </page-layout>
