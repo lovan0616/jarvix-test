@@ -311,3 +311,25 @@ export function changePassword(passwordInfo) {
     data: passwordInfo
   })
 }
+
+/**
+ * 寄送變更密碼
+ */
+export function requestResetPassword (mail) {
+  return request({
+    url: '/mail/password/reset',
+    method: 'POST',
+    data: mail
+  })
+}
+
+/**
+ * 確認變更密碼
+ */
+export function resetPassword (emailInfo) {
+  return request({
+    url: '/mail/password/confirm-reset',
+    method: 'POST',
+    data: emailInfo
+  })
+}

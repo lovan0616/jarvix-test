@@ -160,7 +160,8 @@
     "lowerBound": "下限",
     "noPeriodicResult": "没有找到周期结果",
     "numericShouldBeBetween": "数字需介在 {min} 到 {max} 之间",
-    "updateLicenseSuccess": "更新成功，立即为您刷新页面！"
+    "updateLicenseSuccess": "更新成功，立即为您刷新页面！",
+    "sendResetPasswordEmail": "变更密码信寄送成功！"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -182,6 +183,17 @@
     "notBelongToGroups": "因您未隶属项目而无法使用该功能",
     "pleaseCreateOrJoinGroup": "请先加入项目或建立新项目",
     "pleaseInformManager": "请待项目管理员将您加入项目"
+  },
+  "forgetPassword": {
+    "title": "忘记密码",
+    "remark": "系统会将密码变更信寄至您注册的信箱",
+    "back": "返回登入页"
+  },
+  "resetPassword": {
+    "title": "更新密码",
+    "newPassword": "新密码",
+    "confirmNewPassword": "确认新密码",
+    "back": "返回登入页"
   },
   "editing": {
     "localUpload": "本机文件上传",
@@ -1147,7 +1159,8 @@
     "sendInvitation": "寄送邀请信",
     "downloadPage": "下载图片",
     "changeDiagram": "切换图表",
-    "columnSummaryInfo": "栏位统计信息"
+    "columnSummaryInfo": "栏位统计信息",
+    "send": "发送"
   },
   "timeScopeUnit": {
     "second": "秒",

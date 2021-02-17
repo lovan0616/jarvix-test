@@ -28,6 +28,9 @@
           type="submit"
           class="btn btn-default btn-submit"
         >{{ $t('button.login') }}</button>
+        <a 
+          href="/forget-password"
+          class="link">{{ $t('forgetPassword.title') }}</a>
       </form>
     </div>
   </page-layout>
@@ -152,8 +155,13 @@ export default {
   .btn-submit {
     width: 120px;
     margin-top: 32px;
+    margin-bottom: 24px;
     border: none;
     border-radius: 4px;
+  }
+
+  .link {
+    display: block;
   }
 }
 </style>

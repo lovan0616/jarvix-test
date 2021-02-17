@@ -160,7 +160,8 @@
     "lowerBound": "下限",
     "noPeriodicResult": "沒有找到週期結果",
     "numericShouldBeBetween": "數字需介在 {min} 到 {max} 之間",
-    "updateLicenseSuccess": "更新成功，立即為您刷新頁面！"
+    "updateLicenseSuccess": "更新成功，立即為您刷新頁面！",
+    "sendResetPasswordEmail": "變更密碼信寄送成功！"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -182,6 +183,17 @@
     "notBelongToGroups": "因您未隸屬專案而無法使用該功能",
     "pleaseCreateOrJoinGroup": "請先加入專案或建立新專案",
     "pleaseInformManager": "請待專案管理員將您加入專案"
+  },
+  "forgetPassword": {
+    "title": "忘記密碼",
+    "remark": "系統會將密碼變更信寄至您註冊的信箱",
+    "back": "返回登入頁"
+  },
+  "resetPassword": {
+    "title": "更新密碼",
+    "newPassword": "新密碼",
+    "confirmNewPassword": "確認新密碼",
+    "back": "返回登入頁"
   },
   "editing": {
     "localUpload": "本機檔案上傳",
@@ -1169,7 +1181,8 @@
     "sendInvitation": "寄送邀請信",
     "downloadPage": "下載圖片",
     "changeDiagram": "切換圖表",
-    "columnSummaryInfo": "欄位統計資訊"
+    "columnSummaryInfo": "欄位統計資訊",
+    "send": "發送"
   },
   "timeScopeUnit": {
     "second": "秒",
