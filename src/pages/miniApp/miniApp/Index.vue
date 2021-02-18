@@ -574,7 +574,8 @@ export default {
         id: null,
         name: null
       },
-      initComponent: null
+      initComponent: null,
+      isMiniAppCompiled: false
     }
   },
   computed: {
@@ -747,8 +748,20 @@ export default {
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
-        .then(miniAppInfo => {
-          this.miniApp = compileMiniApp(miniAppInfo)
+        .then(response => {
+          let miniAppInfo = response
+
+          // 處理向下兼容性
+          if (!this.isMiniAppCompiled) {
+            const { updatedAppData, isDataChanged } = compileMiniApp(miniAppInfo)
+
+            // 如果有變更，需要更新到資料庫
+            isDataChanged && this.updateAppSetting(updatedAppData)
+            miniAppInfo = updatedAppData
+            this.isMiniAppCompiled = true
+          }
+    
+          this.miniApp = miniAppInfo
           this.newAppEditModeName = this.appData.displayedName
 
           // 如果有 dashboard, focus 在第一個
