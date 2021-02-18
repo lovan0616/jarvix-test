@@ -25,21 +25,21 @@ export default {
   data () {
     return {
       featureInfoList: [],
-      isNeedOrder: false,
       PValueOrderList: [
         "clusteringPValue", "mixturesPValue", "trendsPValue", "oscillationPValue"
       ]
     }
   },
   mounted () {
+    let isNeedOrder = false
     this.featureInfoList = Object.keys(this.featureInformation).map((name) => {
-      this.isNeedOrder = this.PValueOrderList.includes(name)
+      isNeedOrder = this.PValueOrderList.includes(name)
       return {
         name: name,
         value: this.featureInformation[name]
       }
     })
-    if (this.isNeedOrder) this.featureInfoList.sort((a,b) => this.PValueOrderList.findIndex(name => name === a.name) - this.PValueOrderList.findIndex(name => name === b.name))
+    if (isNeedOrder) this.featureInfoList.sort((a,b) => this.PValueOrderList.findIndex(name => name === a.name) - this.PValueOrderList.findIndex(name => name === b.name))
   }
 }
 </script>
