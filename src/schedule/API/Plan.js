@@ -1,24 +1,31 @@
 import request from '@/schedule/utils/publicRequest.js'
 
-export function getPlanInfo () {
+export function getPlanInfo (projectId) {
   return request({
     url: '/plan/info',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }
 
-export function getPlanKPI () {
+export function getPlanKPI (projectId) {
   return request({
     url: '/plan/kpi',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }
 
-export function getOrderPlanResult (page, size, fetchAll = false) {
+export function getOrderPlanResult (projectId, page, size, fetchAll = false) {
   return request({
     url: '/plan/result/general/list',
     method: 'GET',
     params: {
+      projectId,
       page,
       size,
       fetchAll
@@ -26,11 +33,12 @@ export function getOrderPlanResult (page, size, fetchAll = false) {
   })
 }
 
-export function getMachinePlanResult (page, size, fetchAll = false) {
+export function getMachinePlanResult (projectId, page, size, fetchAll = false) {
   return request({
     url: '/plan/result/detail/list',
     method: 'GET',
     params: {
+      projectId,
       page,
       size,
       fetchAll
@@ -38,16 +46,22 @@ export function getMachinePlanResult (page, size, fetchAll = false) {
   })
 }
 
-export function getMachinePlanExcludeList () {
+export function getMachinePlanExcludeList (projectId) {
   return request({
     url: '/plan/excludeEquipment/list',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }
 
-export function getLastSolution () {
+export function getLastSolution (projectId) {
   return request({
     url: '/plan/solution/list',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }

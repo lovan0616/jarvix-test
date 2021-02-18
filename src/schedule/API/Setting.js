@@ -4,10 +4,13 @@ import request from '@/schedule/utils/publicRequest.js'
  * 取得後台設定
  * @param {Number} planId - 欲檢查的模擬方案 ID
  */
-export function getSetting () {
+export function getSetting (projectId) {
   return request({
     url: '/setting/info',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }
 
@@ -15,18 +18,24 @@ export function getSetting () {
  * 更新後台設定
  *  @param {Object} settingInfo - 設定資訊
  */
-export function setSetting (data) {
+export function setSetting (data, projectId) {
   return request({
     url: '/setting/info',
     method: 'PUT',
-    data
+    data: {
+      ...data,
+      projectId
+    }
   })
 }
 
-export function getUploadFileList () {
+export function getUploadFileList (projectId) {
   return request({
     url: '/uploadfile/list',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }
 

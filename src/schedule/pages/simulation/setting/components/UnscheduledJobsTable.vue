@@ -121,7 +121,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('simulation', ['scheduledJobs'])
+    ...mapState('simulation', ['scheduledJobs']),
+    ...mapState('scheduleSetting', ['scheduleProjectId'])
   },
   watch: {
     scheduledJobs: {
@@ -141,6 +142,7 @@ export default {
     fetchJobData (page = 0, size = 20, jobSearchNumber = null, resetPagination = false) {
       this.isProcessing = true
       getOrderList({
+        projectId: this.scheduleProjectId,
         page,
         size,
         orderNumber: jobSearchNumber,

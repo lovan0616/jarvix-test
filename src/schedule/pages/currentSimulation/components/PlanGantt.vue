@@ -105,7 +105,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['equipments']),
+    ...mapState('scheduleSetting', ['equipments', 'scheduleProjectId']),
     scaleList () {
       return [
         {
@@ -140,8 +140,8 @@ export default {
       this.isLoading = true
       this.ganttChartDataList = []
 
-      const getOperationInfo = getMachinePlanResult(0, 0, true)
-      const getExcludeInfo = getMachinePlanExcludeList()
+      const getOperationInfo = getMachinePlanResult(this.scheduleProjectId, 0, 0, true)
+      const getExcludeInfo = getMachinePlanExcludeList(this.scheduleProjectId)
       const getEquipmentInfo = this.$store.dispatch('scheduleSetting/getEquipments')
 
       Promise.all([getOperationInfo, getExcludeInfo, getEquipmentInfo])

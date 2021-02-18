@@ -1,22 +1,27 @@
 import request from '@/schedule/utils/publicRequest.js'
 
-export function dataSync () {
+export function dataSync (data) {
   return request({
     url: '/data/synchronize',
-    method: 'POST'
+    method: 'POST',
+    data
   })
 }
 
-export function checkDataSyncProgress () {
+export function checkDataSyncProgress (projectId) {
   return request({
     url: '/data/synchronize/check',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }
 
-export function cancelDataSync () {
+export function cancelDataSync (data) {
   return request({
     url: '/data/synchronize/cancel',
-    method: 'GET'
+    method: 'POST',
+    data
   })
 }

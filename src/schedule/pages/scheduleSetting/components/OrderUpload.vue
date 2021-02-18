@@ -29,6 +29,7 @@
 <script>
 import { uploadOrder } from '@/schedule/API/Setting'
 import { Message } from 'element-ui'
+import { mapState } from 'vuex'
 
 export default {
   name: 'OrderUpload',
@@ -43,12 +44,16 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapState('scheduleSetting', ['scheduleProjectId'])
+  },
   methods: {
     uploadFile (file) {
       if (!file.length) return
       this.isUploading = true
       const formData = new FormData()
       formData.append('file', file[0])
+      formData.append('projectId', this.scheduleProjectId)
       uploadOrder(formData)
         .then(() => {
           Message({

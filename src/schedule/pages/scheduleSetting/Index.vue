@@ -299,6 +299,7 @@ export default {
   },
   computed: {
     ...mapState('simulation', ['solutions', 'planId']),
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
     isShowOrderUpload () {
       return localStorage.getItem('isShowOrderUpload') === 'true'
     }
@@ -316,6 +317,9 @@ export default {
     }
 
     this.fetchFiles()
+
+    // 紀錄 projectId
+    this.settingInfo.projectId = this.scheduleProjectId
 
     const fetchSetting = this.$store.dispatch('scheduleSetting/getSetting')
     const fetchEquipments = this.$store.dispatch('scheduleSetting/getEquipments')

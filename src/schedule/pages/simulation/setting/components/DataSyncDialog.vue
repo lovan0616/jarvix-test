@@ -100,7 +100,7 @@ export default {
       this.step = 2
       this.$store.dispatch('simulation/dataSync')
         .then(() => {
-          this.step = 3
+          // this.step = 3
           this.timer = setInterval(() => {
             this.$store.dispatch('simulation/checkDataSyncProgress')
               .then((res) => {
