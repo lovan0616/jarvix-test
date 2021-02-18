@@ -171,7 +171,7 @@ export default {
         message = message.replace(match, match.replace('#', '$'))
         const indicatorText = match.substring(2, match.length - 1)
         const indicatorKey = this.propParamOptions.find(param => param.type === 'indicator' && param.name === indicatorText).value
-        message = message.replace(indicatorText, indicatorKey)
+        message = message.replace('${' + indicatorText + '}', '${' + indicatorKey + '}')
       })
       return message
     },

@@ -92,7 +92,11 @@ export default {
     customChartStyle: {
       type: Object,
       default: () => {}
-    }
+    },
+    isShowToolbox: {
+      type: Boolean,
+      default: true
+    },
   },
   data () {
     return {
@@ -315,6 +319,8 @@ export default {
 
       // 不顯示上下限和實際資料的 legend 選項
       config.legend.data = [this.seriesName[4], this.seriesName[5]]
+
+      config.toolbox.show = this.isShowToolbox
 
       // 準備 tooltip 內容
       config.tooltip.formatter = (params) => {
