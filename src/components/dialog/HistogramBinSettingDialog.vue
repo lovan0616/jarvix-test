@@ -10,7 +10,7 @@
         </div>
         <div class="input-block">
           <input-block
-            v-validate="'required|numeric'"
+            v-validate="'required|decimal|min_value:0'"
             :placeholder="$t('editing.numericOnly')"
             v-model="binSize"
             name="histogramBinSize"

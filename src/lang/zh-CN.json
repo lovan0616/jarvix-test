@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "请填字串(含空格)",
     "formCharacterOverMax": "最多{max}个字元",
     "formCharacterOverMin": "最少{min}个字元",
+    "formValueOverMin": "数字需大於{min}",
     "formNumericeOverOne": "最少包含1个数字",
     "formDecimal": "请输入数字(可含小数位)",
     "formDecimalWithMaxDecimalPointNumbers": "请输入数字(至多为小数 {max} 位)",

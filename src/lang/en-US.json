@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "Please input text (including spaces).",
     "formCharacterOverMax": "Maximum {max} characters.",
     "formCharacterOverMin": "At least {min} characters.",
+    "formValueOverMin": "The field field must be {min} or more",
     "formNumericeOverOne": "Contain at least 1 number.",
     "formDecimal": "Please enter a number(May contain decimal points)",
     "formDecimalWithMaxDecimalPointNumbers": "Please enter a number(May contains {max} digits after the decimal place)",

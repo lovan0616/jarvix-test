@@ -317,6 +317,9 @@ Vue.use(VeeValidate, {
         min (field, length) {
           return i18n.t('message.formCharacterOverMin', { min: length })
         },
+        min_value (field, value) {
+          return i18n.t('message.formValueOverMin', { min: value })
+        },
         requireOneNumeric (field) {
           return i18n.t('message.formNumericeOverOne')
         },
