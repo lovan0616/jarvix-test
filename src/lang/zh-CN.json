@@ -195,6 +195,14 @@
     "confirmNewPassword": "确认新密码",
     "back": "返回登入页"
   },
+  "admin": {
+    "title": "使用者后台",
+    "userList": "使用者列表",
+    "userName": "使用者名称",
+    "action": "操作",
+    "changePassword": "密码变更",
+    "accountName": "帐户名称"
+  },
   "editing": {
     "localUpload": "本机文件上传",
     "localUploadDescription": "透过电脑上传.xlsx .xls .csv<br>文件数据并进行创建",

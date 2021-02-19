@@ -55,7 +55,8 @@ export default {
           ...accountPermissionList,
           ...groupPermissionList,
           ...licensePermissionList
-        ]
+        ],
+        isAdmin: userInfo.userData.isAdmin
       })
 
       // get locale info

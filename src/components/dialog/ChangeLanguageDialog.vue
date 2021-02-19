@@ -40,7 +40,7 @@ export default {
     ...mapState('setting', ['locale', 'languages']),
     ...mapState('userManagement', ['userId']),
     beforeLoginPage () {
-      return this.$route.name === 'PageLogin' || this.$route.name === 'PageForgetPassword' || this.$route.name === 'PageResetPassword'
+      return this.$route.name === 'PageLogin' || this.$route.name === 'PageForgetPassword' || this.$route.name === 'PageResetPassword' || this.$route.name === 'PageAdmin'
     },
     selectItems () {
       return Object.keys(this.languages).map(key => ({

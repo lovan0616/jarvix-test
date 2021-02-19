@@ -195,6 +195,14 @@
     "confirmNewPassword": "Confirm New Password",
     "back": "Back to login page"
   },
+  "admin": {
+    "title": "Management System",
+    "userList": "User List",
+    "userName": "User Name",
+    "action": "Actions",
+    "changePassword": "Change Password",
+    "accountName": "Account Name"
+  },
   "editing": {
     "localUpload": "File Upload",
     "localUploadDescription": "Upload .xlsx .xls .csv file",

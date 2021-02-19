@@ -39,7 +39,7 @@
 import { login } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   inject: ['$validator'],
@@ -59,6 +59,7 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapState('userManagement', ['isAdmin'])
   },
   mounted () {
     this.$store.commit('chatBot/clearConversation')
@@ -82,6 +83,12 @@ export default {
               return this.getUserInfo()
             })
             .then(() => {
+              // 判斷是否為 Admin
+              console.log(this.isAdmin)
+              if (this.isAdmin) {
+                return this.$router.push({name: 'PageAdmin'})
+              }
+
               // 取得前一次停留或拜訪的資訊
               const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId

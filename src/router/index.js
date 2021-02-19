@@ -356,6 +356,11 @@ const router = new Router({
       component: () => import('@/pages/resetPassword/Index')
     },
     {
+      path: '/admin',
+      name: 'PageAdmin',
+      component: () => import('@/pages/admin/Index')
+    },
+    {
       path: '/signup',
       name: 'PageSignup',
       component: () => import('@/pages/signup/Index')
