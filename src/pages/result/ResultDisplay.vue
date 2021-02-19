@@ -25,6 +25,7 @@
       :transcript="transcript"
       :intent="intent"
       :is-war-room-addable="isWarRoomAddable"
+      :is-histogram-interval-setting="isHistogramBinSetting"
       mode="display"
       @fetch-new-components-list="getComponentV2"
     />
@@ -75,6 +76,7 @@ export default {
       transcript: null,
       // 目前兩版 transcript 過渡期先放這
       isWarRoomAddable: false,
+      isHistogramBinSetting: false,
       currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200,
@@ -158,6 +160,7 @@ export default {
       this.currentQuestionDataFrameId = null
       this.transcript = null
       this.isWarRoomAddable = false
+      this.isHistogramBinSetting = false
       this.intent = null
       this.$store.commit('dataSource/resetAlgoConfig')
       this.closeUnknowInfoBlock()
@@ -178,7 +181,7 @@ export default {
           restrictions: this.filterRestrictionList,
           selectedColumnList: this.selectedColumnList,
           displayConfig: {
-            histogramBarSize: null,
+            histogramBinSize: null,
             sortOrders: []
           },
           isFilter: false
@@ -237,7 +240,7 @@ export default {
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList,
               displayConfig: {
-                histogramBarSize: null,
+                histogramBinSize: null,
                 sortOrders: []
               },
               isFilter: false
@@ -307,6 +310,7 @@ export default {
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
               this.transcript = componentResponse.transcript
               this.isWarRoomAddable = componentResponse.isWarRoomAddable
+              this.isHistogramBinSetting = componentResponse.isHistogramBinSetting
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false
