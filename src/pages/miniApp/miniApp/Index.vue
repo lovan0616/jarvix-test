@@ -338,13 +338,8 @@
                     @chartTriggered="chartTriggered"
                     @warningLogTriggered="warningLogTriggered($event)"
                     @goToCertainDashboard="activeCertainDashboard($event)"
+                    @switchDialogName="switchDialogName($event, componentData)"
                   >
-                    <template slot="drowdown">
-                      <dropdown-select
-                        :bar-data="componentSettingOptions(componentData)"
-                        @switchDialogName="switchDialogName($event, componentData)"
-                      />
-                    </template>
                     <template 
                       v-if="componentData.type === 'monitor-warning-list'" 
                       slot="icon">
@@ -1425,26 +1420,6 @@ export default {
         .catch(() => {})
         .finally(() => this.isProcessing = false )
     },
-    componentSettingOptions (component) {
-      const options = [
-        {
-          title: 'miniApp.componentSetting',
-          icon: 'filter-setting',
-          dialogName: 'CreateComponent'
-        },
-        {
-          title: 'button.delete',
-          icon: 'delete',
-          dialogName: 'DeleteComponent'
-        }
-      ]
-      if (component.config.enableAlert) options.push({
-        title: 'button.createAlert',
-        icon: 'warning',
-        dialogName: 'CreateWarningCriteria'
-      })
-      return options
-    },
     componentTemplateFactory (type = 'chart') {
 
       const generalConfig = {
@@ -1478,7 +1453,6 @@ export default {
             rowRelation: { relatedDashboardId: null }
           },
           fontSize: 'middle',
-          enableAlert: false
         },
         algoConfig: null,
         updateTime: new Date().getTime(),
@@ -1499,7 +1473,6 @@ export default {
           config: {
             ...generalConfig,
             fontSize: 'middle',
-            enableAlert: false,
             diaplayedName: this.getAbnormalStatisticsDisplayName(type),
           },
         }),
