@@ -330,12 +330,12 @@ const router = new Router({
                           }
                         }
                       ]
-                    }
+                    },
+                    ...ScheduleRouter.options.routes
                   ]
                 },
               ]
-            },
-            ...ScheduleRouter.options.routes
+            }
           ]
         }
       ]

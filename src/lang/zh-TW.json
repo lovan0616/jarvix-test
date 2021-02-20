@@ -17,7 +17,8 @@
     "algorithm": "演算法",
     "helper": "幫助",
     "warRoom": "戰情室",
-    "application": "應用程式"
+    "application": "應用程式",
+    "schedule": "生產排程"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -36,7 +37,6 @@
     "dataSourceList": "資料源列表",
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表",
-    "schedule": "生產排程",
     "preferences": "個人設定",
     "updateLicense": "更新產品金鑰"
   },
@@ -302,6 +302,7 @@
     "tableName": "資料表名稱",
     "createDate": "建立日期",
     "updateDate": "修改日期",
+    "creator": "建立者",
     "confirmDeleteDataSourceOrNot": "您確認要刪除此資料源嗎?",
     "sourceOfData": "資料來源",
     "uploadUser": "上傳者",

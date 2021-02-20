@@ -29,6 +29,18 @@
       "open": "開啟內容",
       "close": "收起內容"
     },
+    "project": {
+      "project": "子專案",
+      "projectManagement": "子專案管理",
+      "createProject": "新增子專案",
+      "projectName": "子專案名稱",
+      "pleaseEnterProjectName": "請輸入子專案名稱",
+      "bindDataSource": "綁定資料源",
+      "existingDataSource": "現有資料源",
+      "createDataSource": "新增資料源",
+      "pleaseEnterDataSourceName": "請輸入資料源名稱",
+      "relationManagement": "關聯管理"
+    },
     "setting": {
       "title": "基本設定",
       "init": "排程初始設定",

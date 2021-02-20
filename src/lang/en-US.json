@@ -17,7 +17,8 @@
     "algorithm": "Algorithm",
     "helper": "Help",
     "warRoom": "War Room",
-    "application": "Application"
+    "application": "Application",
+    "schedule": "Schedule"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -36,7 +37,6 @@
     "dataSourceList": "List",
     "dataFileManagement": "Data Set",
     "dataFileList": "List",
-    "schedule": "Schedule",
     "preferences": "Settings",
     "updateLicense": "Update License"
   },
@@ -300,6 +300,7 @@
     "tableName": "Table Name",
     "createDate": "Create Date",
     "updateDate": "Modified Date",
+    "creator": "Creator",
     "confirmDeleteDataSourceOrNot": "Are you sure you want to delete this Data Source?",
     "sourceOfData": "Data Source",
     "uploadUser": "Uploader",

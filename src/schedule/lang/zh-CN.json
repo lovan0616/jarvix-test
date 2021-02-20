@@ -29,6 +29,18 @@
       "open": "开启内容",
       "close": "收起内容"
     },
+    "project": {
+      "project": "子专案",
+      "projectManagement": "子专案管理",
+      "createProject": "新增子专案",
+      "projectName": "子专案名称",
+      "pleaseEnterProjectName": "请输入子专案名称",
+      "bindDataSource": "绑定资料源",
+      "existingDataSource": "现有资料源",
+      "createDataSource": "新增资料源",
+      "pleaseEnterDataSourceName": "请输入资料源名称",
+      "relationManagement": "关联管理"
+    },
     "setting": {
       "title": "基本设定",
       "init": "排程初始设定",

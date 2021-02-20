@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-header">
     <section 
-      v-if="$route.params.group_id"
+      v-if="$route.params.group_id && !$route.meta.isModule"
       class="nav-left"
     >
       <div
@@ -75,6 +75,10 @@
           v-if="isShowMiniAppModule"
           :to="{name: 'MiniAppList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
           class="nav-item">{{ $t('nav.application') }}</router-link>
+        <router-link
+          v-if="isShowSchedule"
+          :to="{ name: 'ScheduleProjectList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
+          class="nav-item">{{ $t('nav.schedule') }}</router-link>
       </template>
     </section>
     <section
@@ -147,6 +151,9 @@ export default {
     },
     isShowMiniAppModule () {
       return localStorage.getItem('isShowMiniAppModule') === 'true'
+    },
+    isShowSchedule () {
+      return localStorage.getItem('isShowScheduleModule') === 'true' || (this.getCurrentAccountId === 11 && window.location.hostname === 'jarvix.sis.ai')
     },
     // isShowFunctionDescription () {
     //   return this.$store.state.setting.locale.includes('zh')

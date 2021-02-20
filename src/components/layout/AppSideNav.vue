@@ -99,28 +99,6 @@
             </router-link>
           </li>
         </el-tooltip>
-        <el-tooltip
-          v-if="showSchedule"
-          slot="label"
-          :content="$t('sideNav.schedule')"
-          :disabled="isShowFullSideNav"
-          :enterable="false"
-          transition=""
-          placement="right">
-          <li class="list__item">
-            <router-link
-              :to="{ name: 'CurrentSimulation'}"
-              class="list__link"
-            >
-              <svg-icon 
-                icon-class="schedule" 
-                class="list__icon" />
-              <span class="list__text">
-                {{ $t('sideNav.schedule') }}
-              </span>
-            </router-link>
-          </li>
-        </el-tooltip>
       </ul>
       <ul class="sidenav__list--bottom list">
         <el-tooltip
@@ -243,9 +221,6 @@ export default {
         {icon: 'language', title: 'editing.languageSetting', dialogDisplayHandler: 'isShowLanguage'},
         {icon: 'logout', title: 'button.logout', dialogDisplayHandler: 'isShowLogout'}
       ]
-    },
-    showSchedule () {
-      return localStorage.getItem('isShowScheduleModule') === 'true' || (this.getCurrentAccountId === 11 && window.location.hostname === 'jarvix.sis.ai')
     }
   },
   mounted () {
