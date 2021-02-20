@@ -35,13 +35,6 @@
           />
         </section>
       </div>
-      <div class="warning-setting__reminding">
-        <span class="column-lamp">
-          <svg-icon icon-class="lamp"/>
-          {{ $t('askHelper.description') }}:
-        </span>
-        {{ $t('alert.alertSettingIsSharingByAllGroupApplications') }}
-      </div>
       <div class="warning-setting__content-condition">
         <spinner 
           v-if="isLoading || isProcessing" 

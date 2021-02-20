@@ -9,7 +9,7 @@
       class="single-feature feature"
     >
       <div class="feature__title">{{ $t(`chart.feature.${feature.name}`) }}</div>
-      <div class="feature__value">{{ feature.value === 'Infinity' ? '&#8734;' : formatComma(roundNumber(feature.value, 4)) }}</div>
+      <div class="feature__value">{{ formatFeatureValue(feature.value) }}</div>
     </div>
   </div>
 </template>
@@ -40,6 +40,12 @@ export default {
       }
     })
     if (isNeedOrder) this.featureInfoList.sort((a,b) => this.PValueOrderList.findIndex(name => name === a.name) - this.PValueOrderList.findIndex(name => name === b.name))
+  },
+  methods: {
+    formatFeatureValue (val) {
+      if (val === null || typeof val === 'string') return `${val}`
+      return this.formatComma(this.roundNumber(val, 4))
+    }
   }
 }
 </script>

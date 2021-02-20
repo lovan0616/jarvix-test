@@ -964,7 +964,6 @@
     "alertMessageContent": "訊息內容",
     "insertColumnAsParams": "插入欄位參數",
     "enterAlertMessage": "請輸入示警訊息",
-    "alertSettingIsSharingByAllGroupApplications": "示警條件將同步提供給其他應用程式進行使用",
     "alertConditionDeletionWillImpactOtherApplicationConfirmMsg": "此動作將會影響到其他應用程式使用，您確認要繼續刪除？",
     "allMessageSettingsAreEmpty": "未輸入任何示警訊息設定",
     "monitoringItem": "監控項目({number})",

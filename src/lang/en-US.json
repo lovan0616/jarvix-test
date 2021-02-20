@@ -958,7 +958,6 @@
     "alertMessageContent": "Message Content",
     "inserColumnAsParams": "Insert Column Parameter",
     "enterAlertMessage": "Please enter alerting messsage",
-    "alertSettingIsSharingByAllGroupApplications": "The alert conditions will be synced with and applied to other applications ",
     "alertConditionDeletionWillImpactOtherApplicationConfirmMsg": "This action will affect other applications. Are you sure you want to proceed with the delete action?",
     "allMessageSettingsAreEmpty": "No alert message entered",
     "editAlertMessage": "Edit Message",

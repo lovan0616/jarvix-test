@@ -961,7 +961,6 @@
     "alertMessageContent": "讯息内容",
     "insertColumnAsParams": "插入栏位参数",
     "enterAlertMessage": "请输入示警讯息",
-    "alertSettingIsSharingByAllGroupApplications": "示警条件将同步提供给其他应用程式进行使用",
     "alertConditionDeletionWillImpactOtherApplicationConfirmMsg": "此动作将会影响到其他应用程式使用，您确认要继续删除？",
     "allMessageSettingsAreEmpty": "未输入任何示警讯息设定",
     "editAlertMessage": "编辑内容",
