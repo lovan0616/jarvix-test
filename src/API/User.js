@@ -63,8 +63,8 @@ export function logout () {
 /**
  * 取得帳戶下所有使用者
  */
-export function getAccountUsers () {
-  const accountId = store.getters['userManagement/getCurrentAccountId']
+export function getAccountUsers (id) {
+  const accountId = id || store.getters['userManagement/getCurrentAccountId']
   return request({
     url: `/account/${accountId}/user`,
     method: 'GET'

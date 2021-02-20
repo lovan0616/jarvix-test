@@ -5,7 +5,7 @@ import request from '@/utils/publicRequest'
  */
 export function getAccountList () {
   return request({
-    url: `/admin/accountList`,
+    url: `/admin/accounts`,
     method: 'GET'
   })
 }
