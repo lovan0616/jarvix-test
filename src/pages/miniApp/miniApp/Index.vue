@@ -1362,14 +1362,30 @@ export default {
     },
     warningLogTriggered ({ relatedDashboardId, rowData }) {
       this.activeCertainDashboard(relatedDashboardId)
-      this.controlColumnValueInfoList.forEach(filterSet => {
-        filterSet.forEach(filter => {
-          // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
-          // 判斷條件：同 columnId 或同 columnName
-          const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === filter.columnId || rowDataColumn.displayName === filter.columnName)
-          if (sameColumnRow) filter.dataValues = [sameColumnRow.datum[0]]
+      
+      // 控制項
+      if (rowData.controlList.length > 0 && this.controlColumnValueInfoList.length > 0) {
+        this.controlColumnValueInfoList.forEach(controlSet => {
+          controlSet.forEach(control => {
+            // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
+            // 判斷條件：同 columnId 或同 columnName
+            const sameColumnRow = rowData.controlList.find(column => column.dataColumnId === control.columnId || column.displayName === control.columnName)
+            if (sameColumnRow) control.dataValues = [sameColumnRow.datum[0]]
+          })
         })
-      })
+      }
+
+      // 篩選器
+      if (rowData.filterList.length > 0 && this.filterColumnValueInfoList.length > 0) {
+        this.filterColumnValueInfoList.forEach(filterSet => {
+          filterSet.forEach(filter => {
+            // 如果 log rowData 有欄位同 filter 欄位，就將預設值設定為該筆 rowData 該 column 的值
+            // 判斷條件：同 columnId 或同 columnName
+            const sameColumnRow = rowData.filterList.find(column => column.dataColumnId === filter.columnId || column.displayName === filter.columnName)
+            if (sameColumnRow) filter.dataValues = [sameColumnRow.datum[0]]
+          })
+        })
+      }
     },
     columnTriggered ({ relatedDashboardId, cellValue, columnId, columnName }) {
       this.activeCertainDashboard(relatedDashboardId)
