@@ -1,23 +1,31 @@
 <template>
-  <el-select
-    v-model="selectedValue"
-    :placeholder="$t('schedule.base.pleaseSelect')"
-    :filterable="filterable"
-    class="default-select"
-    popper-class="ss-select"
-  >
-    <el-option
-      v-for="option in options"
-      :key="option.value"
-      :label="option.label"
-      :value="option.value"
-    />
-  </el-select>
+  <div class="default-select">
+    <el-select
+      v-model="selectedValue"
+      :placeholder="$t('schedule.base.pleaseSelect')"
+      :filterable="filterable"
+      popper-class="ss-select"
+    >
+      <el-option
+        v-for="option in options"
+        :key="option.value"
+        :label="option.label"
+        :value="option.value"
+      />
+    </el-select>
+    <div
+      v-show="errors.has(name)"
+      class="input-error error-text"
+    >
+      {{ errors.first(name) }}
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'DefaultSelect',
+  inject: ['$validator'],
   props: {
     options: {
       type: Array,
@@ -30,6 +38,10 @@ export default {
     filterable: {
       type: Boolean,
       default: false
+    },
+    name: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -70,6 +82,15 @@ export default {
   &.el-select .el-input__inner:focus,
   &.el-select .el-input.is-focus .el-input__inner {
     border-color: #ffffff;
+  }
+}
+.default-select {
+  padding-bottom: 20px;
+  position: relative;
+  .input-error {
+    position: absolute;
+    left: 0;
+    bottom: 0;
   }
 }
 </style>

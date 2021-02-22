@@ -32,7 +32,7 @@
           prop="name">
           <template slot-scope="scope">
             <a
-              v-if="isLinkedWithDataSource(scope.row.datasourceId)" 
+              v-if="scope.row.datasourceStatus === 'Bound'"
               href="javascript:void(0);"
               class="link"
               @click="$router.push({ name: 'ScheduleProject', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId, 'schedule_project_id': scope.row.id }})"
@@ -42,16 +42,16 @@
         </el-table-column>
         <el-table-column
           :label="$t('editing.dataSourceName')"
-          prop="datasourceName">
+          prop="datasourceStatus"
+        >
           <template slot-scope="scope">
             <a
-              v-if="isLinkedWithDataSource(scope.row.datasourceId)" 
+              v-if="scope.row.datasourceStatus === 'Bound'"
               href="javascript:void(0);"
               class="link"
-              target="blank"
               @click="openDataSourcePage(scope.row.datasourceId)"
             >{{ scope.row.datasourceName }}</a>
-            <span v-else>{{ scope.row.datasourceName }}</span>
+            <span v-else>{{ $t('schedule.project.notYetBindingWithDataSource') }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -79,49 +79,102 @@
           :label="$t('editing.action')"
           width="220">
           <template slot-scope="scope">
+            <a
+              href="javascript:void(0);"
+              class="action-link link"
+              @click="openDialog('Relation', { id: scope.row.id, name: scope.row.name })">
+              {{ scope.row.datasourceStatus === 'Bound'
+                ? $t('schedule.project.dataManagement')
+                : $t('schedule.project.relationManagement')
+              }}
+            </a>
             <a 
               href="javascript:void(0);"
-              class="action-link link">{{ $t('schedule.project.relationManagement') }}</a>
+              class="action-link link"
+              @click="openDialog('Rename', { id: scope.row.id, name: scope.row.name })">
+              {{ $t('button.rename') }}
+            </a>
             <a 
               href="javascript:void(0);"
-              class="action-link link">{{ $t('button.rename') }}</a>
-            <a 
-              href="javascript:void(0);"
-              class="action-link link">{{ $t('button.delete') }}</a>
+              class="action-link link"
+              @click="openDialog('Delete', { id: scope.row.id, name: scope.row.name })">
+              {{ $t('button.delete') }}
+            </a>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <schedule-project-relation-dialog
+      v-if="isShowRelationDialog"
+      :project-info="projectInfo"
+      @close="closeDialog('Relation', $event)"
+    />
+    <schedule-project-rename-dialog
+      v-if="isShowRenameDialog"
+      :project-info="projectInfo"
+      @close="closeDialog('Rename', $event)"
+    />
+    <schedule-project-confirm-delete-dialog
+      v-if="isShowDeleteDialog"
+      :project-info="projectInfo"
+      @close="closeDialog('Delete', $event)"
+    />
   </div>
 </template>
 
 <script>
 import { fetchProjectList } from '@/schedule/API/Project'
 import { mapGetters } from 'vuex'
+import ScheduleProjectRenameDialog from './dialog/ScheduleProjectRenameDialog'
+import ScheduleProjectConfirmDeleteDialog from './dialog/ScheduleProjectConfirmDeleteDialog'
+import ScheduleProjectRelationDialog from './dialog/ScheduleProjectRelationDialog'
 
 export default {
   name: 'ScheduleProjectList',
+  components: {
+    ScheduleProjectRenameDialog,
+    ScheduleProjectConfirmDeleteDialog,
+    ScheduleProjectRelationDialog
+  },
   data: () => {
     return {
       isLoading: false,
-      projectList: []
+      projectList: [],
+      isShowRenameDialog: false,
+      isShowDeleteDialog: false,
+      isShowRelationDialog: false,
+      projectInfo: { id: null, name: null }
     }
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
   },
   created () {
-    this.isLoading = true
-    fetchProjectList(this.getCurrentGroupId)
-      .then(list => this.projectList = list)
-      .finally(() => this.isLoading = false)
+    this.fetchData()
   },
   methods: {
-    isLinkedWithDataSource (data) {
-      return data !== 0
+    fetchData () {
+      this.isLoading = true
+      fetchProjectList(this.getCurrentGroupId)
+        .then(list => {
+          list.forEach(item => {
+            if (!item.datasourceName) item.datasourceName = '-*-*-*-'
+          })
+          this.projectList = list
+        })
+        .finally(() => this.isLoading = false)
     },
     openDataSourcePage (dataSourceId) {
       window.open(`/account/${this.getCurrentAccountId}/group/${this.getCurrentGroupId}/datasource/${dataSourceId}/`, '_blank')
+    },
+    openDialog (action, projectInfo) {
+      this[`isShow${action}Dialog`] = true
+      this.projectInfo = projectInfo
+    },
+    closeDialog (action, reload = true) {
+      this[`isShow${action}Dialog`] = false
+      this.projectInfo = null
+      if (reload) this.fetchData()
     }
   }
 }

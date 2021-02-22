@@ -39,7 +39,13 @@
       "existingDataSource": "现有资料源",
       "createDataSource": "新增资料源",
       "pleaseEnterDataSourceName": "请输入资料源名称",
-      "relationManagement": "关联管理"
+      "relationManagement": "关联管理",
+      "dataManagement": "资料管理",
+      "renameProject": "重新命名子专案",
+      "successfullyRenamed": "成功重新命名子专案",
+      "successfullyCreateDataSource": "成功新增子专案",
+      "notYetBindingWithDataSource": "目前无绑定资料源",
+      "confirmDeleteProject": "确定删除排程专案「{name}」？ "
     },
     "setting": {
       "title": "基本设定",
