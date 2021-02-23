@@ -24,7 +24,6 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import { createChangePasswordLink } from '@/API/Admin'
 import { Message } from 'element-ui'
 import { copyToClickBoard } from '@/utils/general'
-import Spinner from '@/components/Spinner.vue'
 
 export default {
   name: 'ResetPasswordInfoDialog',
@@ -39,7 +38,7 @@ export default {
   },
   data () {
     return {
-      resetPasswordLink: 'https://beta.link.sis.ai?token=123123124jhklhklhkhlghjghjkghjgjgjgjgjkhgjhgjhgjhkgjkhg',
+      resetPasswordLink: null,
       isLoading: false
     }
   },
@@ -67,7 +66,7 @@ export default {
     },
     langOnSelected (item) {
       this.selectedLanguage = item
-    },
+    }
   }
 }
 </script>

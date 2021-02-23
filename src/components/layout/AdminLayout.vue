@@ -7,7 +7,11 @@
         class="page-logo-img">
       <a 
         href="/login" 
-        class="link">{{ $t('link.backToLogin') }}</a>
+        class="link">
+        <svg-icon 
+          icon-class="arrow-left" 
+          class="icon" />{{ $t('link.backToLogin') }}
+      </a>
     </header>
     <div class="wrapper">
       
@@ -64,9 +68,14 @@ export default {
     display: flex;
     align-items: center;
     padding: 8px;
+
+    .icon {
+      margin-right: 4px;
+    }
   }
   .page-logo-img {
     height: 32px;
+    margin-right: 16px;
   }
   .wrapper {
     display: flex;
