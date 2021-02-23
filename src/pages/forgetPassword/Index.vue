@@ -24,7 +24,7 @@
         <router-link
           :to="{ name: 'PageLogin' }"
           class="link"
-        >{{ $t('resetPassword.back') }}</router-link>
+        >{{ $t('link.backToLogin') }}</router-link>
       </form>
     </div>
   </page-layout>
