@@ -33,7 +33,6 @@
         :data-list.sync="userData"
         :loading="isLoading"
         :empty-message="$t('editing.notYetCreateGroup')"
-        @changePassword="showPasswordChange"
         @changeRole="showChangeRole"
         @deleteUserFromAccount="showDeleteAccount"
       >
@@ -41,10 +40,6 @@
           <role-desc-pop />
         </template>
         <template v-slot:action="{ data }">
-          <a
-            :disabled="isNotAllowChangePsd(data)"
-            class="link action-link"
-            @click="showPasswordChange(data, !isNotAllowChangePsd(data))">{{ $t('editing.changePassword') }}</a>
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
@@ -56,35 +51,6 @@
         </template>
       </crud-table>
     </div>
-
-    <writing-dialog
-      v-if="isShowPasswordChange"
-      :title="$t('editing.changePassword')"
-      :button="$t('button.change')"
-      :is-loading="isProcessing"
-      :show-both="true"
-      @closeDialog="closePasswordChange"
-      @confirmBtn="changePassword"
-    >
-      <div class="dialog-select-input-box">
-        <input-verify
-          v-validate="'required|min:8|requireOneNumeric'"
-          ref="confirmPassword"
-          v-model="currentUser.password"
-          :placeholder="$t('editing.newPassword')"
-          type="password"
-          name="verifyNewPassword"
-        />
-        <input-verify
-          v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
-          v-model="currentUser.verifyPassword"
-          :placeholder="$t('editing.confirmNewPassword')"
-          type="password"
-          name="verifyPasswordCheck"
-        />
-      </div>
-    </writing-dialog>
-
     <writing-dialog
       v-if="isShowChangeRole"
       :title="$t('userManagement.updateRole')"
@@ -144,7 +110,7 @@
   </div>
 </template>
 <script>
-import { getAccountUsers, deleteUserAccount, inviteUser, batchInviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
+import { getAccountUsers, deleteUserAccount, inviteUser, batchInviteUser, getAccountRoles, updateRole, getSelfInfo } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import CreateUserDialog from './components/CreateUserDialog'
 import InviteUserDialog from './components/InviteUserDialog'
@@ -175,13 +141,7 @@ export default {
       isShowInviteUser: false,
       roleOptions: [],
       inviteeList: [],
-      userInfo: {
-        username: '',
-        email: '',
-        password: ''
-      },
       userData: [],
-      isShowPasswordChange: false,
       isShowChangeRole: false,
       isShowDeleteAccount: false,
       currentId: '',
@@ -189,9 +149,7 @@ export default {
         active: null,
         username: '',
         role: '',
-        roleId: null,
-        password: '',
-        verifyPassword: ''
+        roleId: null
       },
       selfUser: {
         roleId: null
@@ -283,9 +241,6 @@ export default {
     },
     btnDisabled (user) {
       return (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') || this.selfUser.id === user.id
-    },
-    isNotAllowChangePsd (user) {
-      return this.selfUser.role !== 'account_owner'
     },
     showInviteUser () {
       this.isShowInviteUser = true
@@ -412,35 +367,6 @@ export default {
           this.isProcessing = false
         })
     },
-    changePassword () {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          this.isProcessing = true
-          updateUser({
-            active: this.currentUser.active,
-            password: this.currentUser.password,
-            userId: this.currentId,
-            username: this.currentUser.name,
-            accountId: this.currentAccountId
-          })
-            .then(response => {
-              this.closePasswordChange()
-              this.getUserList()
-              Message({
-                message: this.$t('message.changePasswordSuccess'),
-                type: 'success',
-                duration: 3 * 1000,
-                showClose: true
-              })
-            })
-            .catch(error => {
-            })
-            .finally(() => {
-              this.isProcessing = false
-            })
-        }
-      })
-    },
     deleteAccount () {
       this.isProcessing = true
       deleteUserAccount(
@@ -461,21 +387,6 @@ export default {
         .finally(() => {
           this.isProcessing = false
         })
-    },
-    showPasswordChange (user, hasPermission) {
-      if (!hasPermission) return
-      this.currentId = user.id
-      this.currentUser.username = user.name
-      this.currentUser.active = user.active
-      this.isShowPasswordChange = true
-    },
-    closePasswordChange () {
-      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
-      this.isShowPasswordChange = false
-      this.$nextTick(() => {
-        this.currentUser.password = ''
-        this.currentUser.verifyPassword = ''
-      })
     },
     showChangeRole (user, hasPermission) {
       if (!hasPermission) return
