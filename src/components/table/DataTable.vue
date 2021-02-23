@@ -124,7 +124,6 @@
               icon-class="triangle" 
               class="icon dropdown-icon" />
           </a>
-
           <span 
             v-else-if="headInfo.value === 'state'"
             :class="{'is-processing': data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'}"
@@ -167,7 +166,7 @@
                 class="alert-icon"/>
             </el-tooltip>
           </span>
-          <span 
+          <span
             v-else-if="headInfo.value === 'joinCount'"
           >{{ data[headInfo.value] === 2 ? $t('editing.tableJoin') : $t('editing.userUpload') }}</span>
           <span v-else-if="headInfo.value === 'dataFrameStatus'">
@@ -227,6 +226,19 @@
               </span>
             </el-tooltip>
           </span>
+          <!-- 暫時放這 -->
+          <span v-else-if="headInfo.value === 'createMethodLabel'">
+            {{ data[headInfo.value] }} <a
+              v-if="data.joinCount > 1"
+              :disabled="isInProcess(data) || isPending(data) || calculateId === data.id"
+              class="link" 
+              href="javascript:void(0);"
+              @click="calculateMeta(data)"
+            ><svg-icon
+              v-show="calculateId === data.id"
+              icon-class="spinner"
+            />{{ $t('editing.reCalculateMeta') }}</a>
+          </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
       </div>
@@ -239,6 +251,7 @@ import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { mapGetters } from 'vuex'
+import { reCalculateMetaData } from '@/API/DataSource'
 
 /**
  * Data table 可傳入屬性
@@ -311,7 +324,8 @@ export default {
   },
   data () {
     return {
-      sortStatus: null
+      sortStatus: null,
+      calculateId: null
     }
   },
   computed: {
@@ -516,6 +530,15 @@ export default {
       let minute = this.$tc('timeScopeUnit.allowArg.minute', Math.floor(time % 3600 / 60)) + ' '
       let second = this.$tc('timeScopeUnit.allowArg.second', time % 60)
       return  hour + minute + second
+    },
+    calculateMeta (dataInfo) {
+      if (this.isInProcess(dataInfo) || this.isPending(dataInfo) || this.calculateId === dataInfo.id) return false
+      this.calculateId = dataInfo.id
+      // 重新計算 meta
+      reCalculateMetaData(this.calculateId).then(() => {
+        this.calculateId = null
+        this.$emit('fetch')
+      })
     }
   },
 }
