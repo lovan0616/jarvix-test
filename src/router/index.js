@@ -20,6 +20,15 @@ const router = new Router({
           beforeEnter: (to, from, next) => {
             const accountId = store.getters['userManagement/getCurrentAccountId']
             const groupId = store.getters['userManagement/getCurrentGroupId']
+            if (!accountId) {
+              Message({
+                message: i18n.t('errorMessage.lackOfPermission'),
+                type: 'error',
+                duration: 3 * 1000,
+                showClose: true
+              })
+              return next({name: 'PageLogin'})
+            }
             if (!groupId) return next({ name: 'PageGrouplessGuidance', params: { 'account_id': accountId } })
             next({ name: 'PageIndex', params: { 'account_id': accountId, 'group_id': groupId } })
           }
