@@ -5,6 +5,9 @@
         src="@/assets/images/logo-text.svg" 
         alt="logo" 
         class="page-logo-img">
+      <a 
+        href="/login" 
+        class="link">{{ $t('link.backToLogin') }}</a>
     </header>
     <div class="wrapper">
       

@@ -186,14 +186,12 @@
   },
   "forgetPassword": {
     "title": "Forget Password",
-    "remark": "The system will send a password change letter to your registered mailbox.",
-    "back": "Back to login page"
+    "remark": "The system will send a password change letter to your registered mailbox."
   },
   "resetPassword": {
     "title": "Reset Password",
     "newPassword": "New Password",
-    "confirmNewPassword": "Confirm New Password",
-    "back": "Back to login page"
+    "confirmNewPassword": "Confirm New Password"
   },
   "admin": {
     "title": "Management System",
@@ -201,7 +199,12 @@
     "userName": "User Name",
     "action": "Actions",
     "changePassword": "Change Password",
-    "accountName": "Account Name"
+    "accountName": "Account Name",
+    "resetLink": "Reset Password Link",
+    "searchUserName": "Search user name"
+  },
+  "link": {
+    "backToLogin": "Back to login page"
   },
   "editing": {
     "localUpload": "File Upload",

@@ -28,7 +28,8 @@
           type="submit"
           class="btn btn-default btn-submit"
         >{{ $t('button.login') }}</button>
-        <a 
+        <a
+          v-if="isSmtpConnected"
           href="/forget-password"
           class="link">{{ $t('forgetPassword.title') }}</a>
       </form>
@@ -59,7 +60,8 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
-    ...mapState('userManagement', ['isAdmin'])
+    ...mapState('userManagement', ['isAdmin']),
+    ...mapState('setting', ['isSmtpConnected'])
   },
   mounted () {
     this.$store.commit('chatBot/clearConversation')
@@ -84,7 +86,6 @@ export default {
             })
             .then(() => {
               // 判斷是否為 Admin
-              console.log(this.isAdmin)
               if (this.isAdmin) {
                 return this.$router.push({name: 'PageAdmin'})
               }

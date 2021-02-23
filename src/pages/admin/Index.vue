@@ -3,82 +3,76 @@
     <div class="page-admin container">
       <div class="page-title">
         {{ $t('admin.userList') }}
+      </div>
+      <div class="condition-block">
         <div class="account-select-block">
           {{ $t('admin.accountName') }}
           <default-select
             v-model="currentAccountId"
             :option-list="accountList"
             class="account-select"
+            filterable
             @change="changeAccount"
           />
         </div>
+        <input-block
+          v-model="searchUserName"
+          :placeholder="$t('admin.searchUserName')"
+        />
       </div>
-      <!-- <data-table
+      <data-table
+        ref="userList"
         :headers="tableHeaders"
-        :data-list.sync="userList"
-        :is-search-result-empty="searchUserName.length > 0 && userList.length === 0"
+        :is-search-result-empty="searchUserName.length > 0 && filterDataList.length === 0"
         :loading="isLoading"
-        :empty-message="$t('editing.clickToUploadTable')"
-      /> -->
-      <div class="data-table user-table">
-        <div class="data-table-head">
-          <div class="data-table-row table-head">
-            <div class="data-table-cell">{{ $t('admin.userName') }}</div>
-            <div class="data-table-cell">{{ $t('admin.action') }}</div>
-          </div>
-        </div>
-        <div class="data-table-body">
-          <div
-            v-for="user in userList"
-            :key="user.id"
-            class="data-table-row"
-          >
-            <div class="data-table-cell">{{ user.name }}</div>
-            <div class="data-table-cell">
-              <a
-                href="javascript:void(0)"
-                class="link"
-                @click="changePassword(user.id)">{{ $t('admin.changePassword') }}</a>
-            </div>
-          </div>
-        </div>
-      </div>
+        :empty-message="$t('message.noMember')"
+        :data-list.sync="filterDataList"
+        class="user-table"
+        @delete="showChangePasswordDialog"
+      />
     </div>
-    <!-- <decide-dialog/> -->
+    <reset-password-info-dialog
+      v-if="editUserId !== null"
+      :user-id="editUserId"
+      @close="closeChangePasswordDialog"
+    />
   </admin-layout>
 </template>
 <script>
 import AdminLayout from '@/components/layout/AdminLayout'
-import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
-import DecideDialog from '@/components/dialog/DecideDialog'
+import ResetPasswordInfoDialog from './components/ResetPasswordInfoDialog'
 import { getAccountList } from '@/API/Admin'
 import { getAccountUsers } from '@/API/User'
 import { mapState } from 'vuex'
 import DefaultSelect from '@/components/select/DefaultSelect.vue';
 import DataTable from '@/components/table/DataTable'
+import InputBlock from '@/components/InputBlock'
 
 export default {
   inject: ['$validator'],
   name: 'PageAdmin',
   components: {
     AdminLayout,
-    ChangeLanguageDialog,
     DefaultSelect,
-    DecideDialog,
-    DataTable
+    ResetPasswordInfoDialog,
+    DataTable,
+    InputBlock
   },
   data () {
     return {
       currentAccountId: null,
-      currentEditUserId: null,
+      editUserId: null,
       accountList: [],
       userList: [],
       isLoading: false,
-      searchUserName: null
+      searchUserName: ''
     }
   },
   computed: {
     ...mapState('userManagement', ['isAdmin']),
+    filterDataList () {
+      return this.userList.filter(data => data.name.toLowerCase().includes(this.searchUserName.toLowerCase()))
+    },
     tableHeaders () {
       return [
         {
@@ -89,7 +83,6 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '50%',
           action: [
             {
               name: this.$t('admin.changePassword'),
@@ -105,12 +98,18 @@ export default {
   },
   methods: {
     changeAccount () {
+      this.isLoading = true
+      this.searchUserName = ''
       this.getUserList()
     },
-    changePassword (id) {
-      
+    showChangePasswordDialog (user) {
+      this.editUserId = user.id
+    },
+    closeChangePasswordDialog () {
+      this.editUserId = null
     },
     async fetchData () {
+      this.isLoading = true
       const accountList = await getAccountList()
       this.accountList = accountList.map(option => {
         return {
@@ -123,6 +122,7 @@ export default {
     },
     async getUserList () {
       this.userList = await getAccountUsers(this.currentAccountId)
+      this.isLoading = false
     }
   }
 }
@@ -134,9 +134,16 @@ export default {
 
   .page-title {
     font-size: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
+  }
+
+  .condition-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 16px;
   }
 
   .account-select-block {
@@ -148,9 +155,14 @@ export default {
     border-radius: 5px;
   }
 
-  .user-table.data-table {
-    .data-table-body {
+  .user-table.data-table.data-source-list-table {
+    >>> .data-table-body {
+      overflow: auto;
       height: 50vh;
+    }
+
+    >>> .data-table-cell.action {
+      justify-content: center;
     }
   }
 }
