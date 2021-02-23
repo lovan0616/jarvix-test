@@ -448,8 +448,10 @@
     "scriptExecutionStep3": "設定輸出類型",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
     "searchDataSource": "搜尋資料源",
-    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量",
-    "reCalculateMeta": "重算 Meta"
+    "reCalculateMeta": "重算 Meta",
+    "isOrdinal": "有時序",
+    "isNotOrdinal": "無時序",
+    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量"
   },
   "algorithm": {
     "name": "演算法",
@@ -846,7 +848,6 @@
     "displayedUnit": "顯示單位",
     "pleaseEnterUnitName": "請輸入單位名稱",
     "currentlyDisplayed": "當前顯示",
-    "setForDisplay": "設為顯示",
     "generalComponent": "一般元件",
     "monitorLogUpdateTime": "處理狀態更新時間",
     "generalFilter": "一般篩選條件",
@@ -868,6 +869,7 @@
     "columnSpanAmount": "{number} 行",
     "clickColumnToSeeMore": "點擊\"{columnName}\"欄位可看到更詳細內容",
     "chartSetting": "圖表設定",
+    "componentName": "元件名稱",
     "chartName": "圖表名稱",
     "triggerColumn": "觸發欄位",
     "activate": "啟用",
@@ -889,12 +891,16 @@
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新頻率",
     "monitorComponent": "監控示警元件",
+    "unhandledAbnormalStatisticsComponent": "未處理異常統計元件",
+    "handledAbnormalStatisticsComponent": "已處理異常統計元件",
     "simulateComponent": "模擬元件",
+    "specialIndexTypeComponent": "特殊數值元件",
     "timeScope": "時間範圍",
     "dashboardNoLongerExist": "關聯看板已不存在",
     "displayChart": "顯示圖表",
     "displayIndex": "顯示數值",
     "displayText": "顯示文字",
+    "displaySetting": "顯示設定",
     "large": "大",
     "middle": "中",
     "small": "小",
@@ -908,7 +914,21 @@
     "simulator": "模擬器",
     "notYetSimulate": "尚未模擬資料",
     "simulating": "模擬中",
-    "optimalParameterComparison": "的最佳參數比較"
+    "optimalParameterComparison": "的最佳參數比較",
+    "standardLine": "基準線",
+    "stddevTimes": "標準差倍數",
+    "chooseStandardLine": "請選擇基準線",
+    "chooseStddevTimes": "請選擇標準差倍數",
+    "fontSizeSetting": "文字大小設定",
+    "sourceOfData": "資料來源",
+    "formulaSetting": "運算式設定",
+    "selectFormula": "選擇運算式",
+    "formulaPreview": "運算式預覽",
+    "setting": "設定",
+    "otherSettings": "其他設定",
+    "formulaType": "公式類型",
+    "singleColumnData": "單欄資料",
+    "singleRowData": "整列資料"
   },
   "alert": {
     "alertLogs": "示警紀錄",
@@ -934,7 +954,8 @@
     "dataColumn": "資料欄位",
     "selectDataColumn": "資料欄位",
     "messageExampleDescription": "範例說明",
-    "messageParamSyntaxDescription": "欄位參數語法 = ${欄位名稱}",
+    "messageColumnParamSyntaxDescription": "欄位參數語法 = ${欄位名稱}",
+    "messageIndicatorParamSyntaxDescription": "指標參數語法 = #{指摽名稱}",
     "messageTemplateSettingExample": "訊息設定：廠房:{0},出現電流異常(電流:{1}μA)。",
     "messageTemplatePreviewExample": "訊息預覽：廠房:{0},出現電流異常(電流:{1}μA)。",
     "param1NameExample": "${廠編}",
@@ -942,15 +963,21 @@
     "param2NameExample": "${電流}",
     "param2ValueExample": "300",
     "alertMessageContent": "訊息內容",
-    "inserColumnAsParams": "插入欄位參數",
+    "insertColumnAsParams": "插入欄位參數",
     "enterAlertMessage": "請輸入示警訊息",
-    "alertSettingIsSharingByAllGroupApplications": "示警條件將同步提供給其他應用程式進行使用",
     "alertConditionDeletionWillImpactOtherApplicationConfirmMsg": "此動作將會影響到其他應用程式使用，您確認要繼續刪除？",
     "allMessageSettingsAreEmpty": "未輸入任何示警訊息設定",
+    "monitoringItem": "監控項目({number})",
     "editAlertMessage": "編輯內容",
     "finished": "已處理",
     "unfinished": "未處理",
-    "state": "處理狀態"
+    "state": "處理狀態",
+    "originalDataSource": "資料來源",
+    "alertIndicator": "示警指標",
+    "columnValueCombination": "展開條件",
+    "dataFilterCondition": "資料過濾條件",
+    "dataSource": "資料源",
+    "dataFrame": "資料表"
   },
   "clustering": {
     "cluster": "群體",
@@ -1162,7 +1189,8 @@
     "sendInvitation": "寄送邀請信",
     "downloadPage": "下載圖片",
     "changeDiagram": "切換圖表",
-    "columnSummaryInfo": "欄位統計資訊"
+    "columnSummaryInfo": "欄位統計資訊",
+    "createAlert": "新增示警"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -2429,7 +2457,24 @@
     "upperBoundValue": "上限值",
     "lowerBoundValue": "下限值",
     "normalValue": "正常值",
-    "anomalousValue": "異常值"
+    "anomalousValue": "異常值",
+    "normalDistribution": "常態分佈線",
+    "feature": {
+      "max": "最大值",
+      "min": "最小值",
+      "mean": "平均值",
+      "median": "中位數",
+      "pValue": "P-Value",
+      "sigma": "標準差",
+      "aDValue": "AD 值",
+      "kurtosis": "峰態(β)",
+      "skewness": "偏態",
+      "samplesAmount": "樣本數",
+      "trendsPValue": "趨勢性 P-Value",
+      "mixturesPValue": "混合性 P-Value",
+      "clusteringPValue": "聚類性 P-Value",
+      "oscillationPValue": "振盪性 P-Value"
+    }
   },
   "denotation": {
     "dataOverview": "資料概況",
@@ -2438,7 +2483,9 @@
     "predictionAnalysis": "預測分析",
     "trendAnalysis": "趨勢分析",
     "anomalyAnalysis": "異常分析",
-    "periodicityAnalysis": "週期性分析"
+    "periodicityAnalysis": "週期性分析",
+    "stabilityAnalysis": "穩定性分析",
+    "normalityTest": "常態檢定"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

@@ -66,7 +66,7 @@ export default {
     }
   },
   mounted () {
-    this.tempAlgoConfig = JSON.parse(JSON.stringify(this.algoConfig))
+    this.tempAlgoConfig = JSON.parse(JSON.stringify(this.algoConfig.clustering))
   },
   methods: {
     ...mapMutations('dataSource', ['setAlgoConfig']),
@@ -76,9 +76,9 @@ export default {
           if (!isValid) return
           this.isProcessing = true
 
-          if (this.tempAlgoConfig.clusteringCount === this.algoConfig.clusteringCount) return this.$emit('close')
+          if (this.tempAlgoConfig.clusteringCount === this.algoConfig.clustering.clusteringCount) return this.$emit('close')
 
-          this.setAlgoConfig(this.tempAlgoConfig)
+          this.setAlgoConfig({ ...this.algoConfig, clustering: this.tempAlgoConfig })
           this.$emit('re-analyze', 'CLUSTERING')
         })
     }

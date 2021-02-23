@@ -38,55 +38,63 @@
       </div>
     </nav>
     <div class="dialog__content">
-      <div class="key-result-chart">
-        <div 
-          v-if="!currentComponent.init" 
-          class="search-bar">
-          <data-frame-menu
-            :redirect-on-change="false"
-            :is-show-preview-entry="true"
-            :is-show-advance-setting-entry="false"
-          />
-          <ask-block
-            :redirect-on-ask="false"
-            :is-show-ask-helper-entry="false"
-          />
-        </div>
-        <dashboard-component
-          :current-component="currentComponent"
-          :is-addable.sync="isAddable"
-          :is-loading.sync="isLoading"
-          :filters="filters"
-          :controls="controls"
-          @setDiagram="currentComponent.diagram = $event" 
-        />
-        <transition name="fast-fade-in">
-          <section 
-            v-if="isShowPreviewDataSource"
-            class="preview-datasource">
-            <preview-data-source
-              :is-previewing="true"
-              mode="popup"
+      <div class="dialog__content--left">
+        <template v-if="isCreatedViaAsking">
+          <div 
+            v-if="!currentComponent.init" 
+            class="search-bar">
+            <data-frame-menu
+              :redirect-on-change="false"
+              :is-show-preview-entry="true"
+              :is-show-advance-setting-entry="false"
             />
-            <a 
-              href="javascript:void(0)" 
-              class="preview-datasource__close-btn"
-              @click="closePreviewDataSource"
-            ><svg-icon icon-class="close"/></a>
-          </section>
-        </transition>
+            <ask-block
+              :redirect-on-ask="false"
+              :is-show-ask-helper-entry="false"
+            />
+          </div>
+          <dashboard-component
+            :current-component="currentComponent"
+            :is-addable.sync="isAddable"
+            :is-loading.sync="isLoading"
+            :filters="filters"
+            :controls="controls"
+            @setDiagram="currentComponent.diagram = $event"
+            @setConfig="setComponentConfig"
+          />
+          <transition name="fast-fade-in">
+            <section 
+              v-if="isShowPreviewDataSource"
+              class="preview-datasource">
+              <preview-data-source
+                :is-previewing="true"
+                mode="popup"
+              />
+              <a 
+                href="javascript:void(0)" 
+                class="preview-datasource__close-btn"
+                @click="closePreviewDataSource"
+              ><svg-icon icon-class="close"/></a>
+            </section>
+          </transition>
+        </template>
+        <formula-setting 
+          v-else-if="currentComponent.type === 'formula'"
+          :formula-setting="currentComponent.formulaSetting"
+          :formula-component-info="formulaComponentInfo"
+          :current-component="currentComponent"
+        />
       </div>
       <div
-        v-if="currentComponent.init || (currentResultInfo && currentResultInfo.keyResultId)"
-        class="key-result-setting">
+        class="dialog__content--right">
         <div class="setting__header">
           <svg-icon icon-class="filter-setting"/>
-          {{ $t('miniApp.chartSetting') }}
+          {{ $t('miniApp.componentSetting') }}
         </div>
         <!-- Title Setting -->
         <div class="setting__content">
           <div class="setting__block">
-            <div class="setting__label-block">{{ $t('miniApp.chartName') }}</div>
+            <div class="setting__label-block">{{ $t('miniApp.componentName') }}</div>
             <input-verify
               v-validate="'required'"
               v-model="currentComponent.config.diaplayedName"
@@ -96,7 +104,7 @@
         </div>
         <!--Related dashboard of current component-->
         <div 
-          v-if="currentComponent.type !== 'monitor-warning-list'" 
+          v-if="isShowRelatedOption" 
           class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
@@ -129,7 +137,7 @@
             </div>
           </div>
         </div>
-        <!-- Related dashboard of component columns -->
+        <!-- Related dashboard of component columns or rows -->
         <div
           v-if="currentComponent.diagram === 'table'"
           class="setting__content"
@@ -140,18 +148,47 @@
                 {{ $t('miniApp.dataColumnRelationSetting') }}
               </span>
               <el-switch
-                v-model="currentComponent.config.hasColumnRelatedDashboard"
+                v-model="currentComponent.config.hasTableRelatedDashboard"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
-                @change="updateHasColumnRelatedDashboard"
+                @change="updateHasTableRelatedDashboard"
               />
               <span class="setting__label-block-description">
                 {{ $t('miniApp.dataColumnRelationSettingReminding') }}
               </span>
             </div>
-            <template v-if="currentComponent.config.hasColumnRelatedDashboard">
+            <template v-if="currentComponent.config.hasTableRelatedDashboard">
               <div class="setting__block-select-field">
+                <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
+                <div class="setting__block-radio-groups">
+                  <div
+                    v-for="(option, index) in triggerTargetOptions"
+                    :key="index"
+                    class="input-radio-group"
+                  >
+                    <input
+                      :id="option.value"
+                      :value="option.value"
+                      :checked="option.value === currentComponent.config.tableRelationInfo.triggerTarget"
+                      name="triggerOption"
+                      class="input-radio"
+                      type="radio"
+                      @change="updateTriggerTarget(option.value)"
+                    >
+                    <label
+                      :for="option.value"
+                      class="input-radio-label"
+                    >
+                      {{ `${ option.name }` }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="currentComponent.config.tableRelationInfo.triggerTarget === 'column'"
+                class="setting__block-select-field"
+              >
                 <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
                 <default-select 
                   v-validate="'required'"
@@ -171,11 +208,12 @@
                 <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
                 <default-select
                   v-validate="'required'"
-                  v-model="currentComponent.config.columnRelations[0].relatedDashboardId"
+                  :value="tableRelatedDashboard"
                   :option-list="dashboardOptions"
                   :placeholder="$t('miniApp.chooseDashboard')"
                   class="setting__block-select"
                   name="columnRelatedDashboard"
+                  @change="updateTableRelatedDashboard"
                 />
                 <div 
                   v-show="errors.has('columnRelatedDashboard')"
@@ -187,7 +225,7 @@
         </div>
         <!--Update frequency-->
         <div 
-          v-if="currentComponent.type !== 'monitor-warning-list'" 
+          v-if="isShowUpdatedOption" 
           class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
@@ -217,6 +255,22 @@
                 class="error-text"
               >{{ errors.first('updateFrequency') }}</div>
             </div>
+          </div>
+        </div>
+        <!--Index type component font size setting-->
+        <div 
+          v-if="isShowFontSizeOption" 
+          class="setting__content">
+          <div class="setting__block">
+            <div class="setting__label-block">
+              {{ $t('miniApp.fontSizeSetting') }}
+            </div>
+            <default-select 
+              v-model="currentComponent.config.fontSize"
+              :option-list="indexSizeOptionList"
+              :placeholder="$t('miniApp.chooseColumnSize')"
+              class="setting__block-select"
+            />
           </div>
         </div>
         <!--Layout Setting-->
@@ -254,18 +308,21 @@
 
 <script>
 import DataFrameMenu from '@/components/select/DataFrameMenu'
+import FormulaSetting from '../components/componentSetting/FormulaSetting'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
 import { mapState } from 'vuex'
+import { algoConfig } from '@/utils/general'
 
 export default {
   inject: ['$validator'],
   name: 'CreateComponentDialog',
   components: {
     DataFrameMenu,
+    FormulaSetting,
     DefaultSelect,
     AskBlock,
     ResultDisplay,
@@ -288,7 +345,7 @@ export default {
     controls: {
       type: Array,
       default: () => []
-    },
+    }
   },
   data () {
     return {
@@ -299,7 +356,27 @@ export default {
       relatedDashboardTemplate: {
         id: null,
         name: null
-      }
+      },
+      algoConfig,
+      indexSizeOptionList: [
+        {
+          value: 'large',
+          name: this.$t('miniApp.large')
+        },
+        {
+          value: 'middle',
+          name: this.$t('miniApp.middle')
+        },
+        {
+          value: 'small',
+          name: this.$t('miniApp.small')
+        },
+        {
+          value: 'mini',
+          name: this.$t('miniApp.mini')
+        }
+      ],
+      formulaComponentInfo: {}
     }
   },
   computed: {
@@ -310,6 +387,15 @@ export default {
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
+    },
+    isShowRelatedOption () {
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+    },
+    isShowUpdatedOption () {
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+    },
+    isShowFontSizeOption () {
+      return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
     },
     updateFrequency () {
       return [
@@ -389,11 +475,33 @@ export default {
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
       return options
     },
+    isCreatedViaAsking () {
+      return this.currentComponent && this.currentComponent.isCreatedViaAsking
+    },
+    tableRelatedDashboard () {
+      if (!this.currentComponent.config.hasTableRelatedDashboard) return
+      const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
+      return triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId
+    },
+    triggerTargetOptions () {
+      return [
+        {
+          name: this.$t('miniApp.singleColumnData'),
+          value: 'column'
+        },
+        {
+          name: this.$t('miniApp.singleRowData'),
+          value: 'row'
+        }
+      ]
+    }
   },
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
-    
-    const columnInfo = this.currentComponent.config.columnRelations[0].columnInfo
+    // 所有可以不需透過問問句就能創建的元件類型
+    const isDirectAddableComponentTypes = ['formula']
+    this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
+    const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
     this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
   },
   destroyed () {
@@ -416,7 +524,9 @@ export default {
           init: true,
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
-          ...this.currentResultInfo
+          ...this.currentResultInfo,
+          // 公式元件需補上一般問問句會取得的資料
+          ...this.formulaComponentInfo
         })
       })
     },
@@ -427,7 +537,10 @@ export default {
     saveComponent () {
       this.$validator.validateAll().then(valid => {
         if (!valid) return
-        this.$emit('updateSetting', this.currentComponent)
+        this.$emit('updateSetting', {
+          ...this.currentComponent,
+          ...this.formulaComponentInfo
+        })
       })
     },
     closePreviewDataSource () {
@@ -455,9 +568,14 @@ export default {
         this.currentComponent.config.relatedDashboard = relatedDashboard
       })
     },
-    updateHasColumnRelatedDashboard (isTurnedOn) {
+    updateHasTableRelatedDashboard (isTurnedOn) {
       if (!isTurnedOn) {
-        this.currentComponent.config.columnRelations[0] = { relatedDashboardId: null, columnInfo: null }
+        // this.$validator.detach('columnRelatedDashboard')
+        this.currentComponent.config.tableRelationInfo = {
+          triggerTarget: 'column',
+          columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
+          rowRelation: { relatedDashboardId: null }
+        }
       }
     },
     defaultOptionFactory (placholder) {
@@ -472,8 +590,33 @@ export default {
     },
     updateTriggerColumnInfo () {
       const column = this.categoryColumnOptions.find(item => item.dataColumnId === this.selectedTriggerColumn)
-      this.currentComponent.config.columnRelations[0].columnInfo = column
-    }
+      this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo = column
+    },
+    setComponentConfig (config) {
+      this.currentComponent.config.enableAlert = !!config.enableAlert
+      this.currentComponent.chartInfo = {
+        xAxis: config.xAxis
+      }
+    },
+    setAlgoConfig (intent) {
+      this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
+    },
+    async updateTriggerTarget (triggerTarget) {
+      this.currentComponent.config.tableRelationInfo.triggerTarget = triggerTarget
+      if (triggerTarget === 'row') {
+        // 避免資料被清空時觸發驗證導致 error
+        this.$validator.detach('triggerColumn')
+        await this.$nextTick()
+      }
+
+      this.currentComponent.config.tableRelationInfo.rowRelation = { relatedDashboardId: null }
+      this.selectedTriggerColumn = null
+      this.currentComponent.config.tableRelationInfo.columnRelations = [{ relatedDashboardId: null, columnInfo: null }]
+    },
+    updateTableRelatedDashboard (selectedDashboardId) {
+      const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
+      triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId = selectedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId = selectedDashboardId
+    },
   },
 }
 </script>
@@ -521,7 +664,7 @@ export default {
     overflow: overlay;
     display: flex;
     
-    .key-result-chart {
+    &--left {
       position: relative;
       flex: 1;
       min-width: 0;
@@ -539,7 +682,7 @@ export default {
         }
       }
     }
-    .key-result-setting {
+    &--right {
       flex: 0 0 280px;
       .setting {
         &__header {
@@ -596,6 +739,15 @@ export default {
           /deep/ .el-input__inner {
             padding-left: 0;
             border-bottom: 1px solid #FFFFFF;
+          }
+        }
+        &__block-radio-groups {
+          display: flex;
+          font-size: 14px;
+          .input-radio-group {
+            &:last-of-type {
+              margin-right: 0;
+            }
           }
         }
       }

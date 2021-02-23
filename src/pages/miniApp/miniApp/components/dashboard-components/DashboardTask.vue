@@ -66,7 +66,7 @@
           </div>
         </span>
         <div
-          v-if="componentData.type === 'index'" 
+          v-if="componentData.type === 'index' || componentData.type === 'formula'" 
           class="component__item-content index">
           <div class="index-data">
             <spinner v-if="isProcessing"/>
@@ -81,10 +81,11 @@
                 @isEmpty="isEmptyData = true"
                 @failed="isComponentFailed = true"
                 @finished="isIndexTypeComponentLoading = false"
+                @setConfig="updateComponentConfigInfo"
               />
               <span 
                 v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
-                :class="[componentData.indexInfo.size || 'middle']" 
+                :class="[componentData.config.fontSize || 'middle']" 
                 class="index-unit">{{ componentData.indexInfo.unit }}</span>
             </template>
           </div>
@@ -114,6 +115,14 @@
           :is-edit-mode="isEditMode"
           @warningLogTriggered="$emit('warningLogTriggered', $event)"
         />
+        <abnormal-statistics
+          v-else-if="componentData.type === 'abnormal-statistics'"
+          :type="componentData.diagram"
+          :filter-time="filterTime"
+          :conponent-config="componentData.config"
+          :warning-module-setting="warningModuleSetting"
+          :is-edit-mode="isEditMode"
+        />
         <simulator
           v-else-if="componentData.type === 'simulator'"
           :is-edit-mode="isEditMode"
@@ -127,16 +136,18 @@
           <spinner v-if="isProcessing"/>
           <task
             v-else
-            :custom-chart-style="chartComponentStyle"
+            :custom-chart-style="dynamicComponentStyle"
             :key="'chart' + keyResultId"
             :component-id="keyResultId"
             :is-show-description="false"
-            :is-show-coefficients="false"
+            :is-show-coefficients="componentData.segmentation.denotation === 'STABILITY'"
             :converted-type="componentData.type === 'paramCompare' ? 'param_comparison_table' : null"
             :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
+            :is-hoverable="isHoverable"
             intend="key_result"
             @clickCell="columnTriggered($event)"
+            @clickRow="rowTriggered($event)"
             @clickChart="chartriggered($event)"
           />
         </div>
@@ -155,14 +166,19 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
+import AbnormalStatistics from './AbnormalStatistics'
 import Simulator from './Simulator'
 import moment from 'moment'
+import { mapState } from 'vuex'
+import { askFormulaResult } from '@/API/NewAsk'
+import { sizeTable } from '@/utils/general'
 
 export default {
   name: 'DashboardTask',
   components: {
     DecideDialog,
     MonitorWarningList,
+    AbnormalStatistics,
     Simulator
   },
   props: {
@@ -199,6 +215,7 @@ export default {
   },
   data () {
     return {
+      sizeTable,
       timeoutFunction: null,
       totalSec: 50,
       periodSec: 200,
@@ -222,12 +239,17 @@ export default {
       },
       isProcessing: false,
       tempFilteredKeyResultId: null,
-      isInitializing: true
+      isInitializing: true,
+      segmentation: null,
     }
   },
   computed: {
+    ...mapState('dataSource', ['algoConfig']),
+    isIndependentComponent () {
+      return this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'abnormal-statistics' || this.componentData.type === 'simulator'
+    },
     shouldComponentBeFiltered () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return false
+      if (this.isIndependentComponent) return false
       return true
       // // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
       // return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
@@ -236,7 +258,12 @@ export default {
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
-      if (this.componentData.diagram === 'table') return false
+      if (
+        this.componentData.diagram === 'table'
+        || this.componentData.type === 'monitor-warning-list'
+        || this.componentData.type === 'simulator'
+        || this.componentData.type === 'formula'
+      ) return false
 
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
@@ -245,7 +272,7 @@ export default {
       return this.tempFilteredKeyResultId
     },
     dataColumnAlias () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
+      if (this.isIndependentComponent) return ''
       const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
       return dataColumn ? dataColumn.dataColumnAlias : ''
     },
@@ -254,12 +281,12 @@ export default {
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
     },
     controllerMutatedQuestion () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
+      if (this.isIndependentComponent) return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
+      if (this.isIndependentComponent) return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, `
         <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
@@ -273,6 +300,12 @@ export default {
     allFilterList () {
       // 可能會有階層，因此需要完全攤平
       return [].concat.apply([], [...this.filters, ...this.controls])
+    },
+    filterTime () {
+      const relativeDatetime =  this.filters
+        .filter(item => item[0]['statsType'] === 'RELATIVEDATETIME')
+        .map(filter => (this.formatRelativeDatetime(filter[0].dataValues[0])))
+      return relativeDatetime[0]
     },
     selectedYAxisControls () {
       return this.yAxisControls.reduce((acc, cur) => {
@@ -293,9 +326,14 @@ export default {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     },
     customCellClassName () {
-      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return []
-      // 目前僅能針對一個欄位去做關聯，所以只找 columnRelations 第一個
-      const relation = this.componentData.config.columnRelations[0].columnInfo
+      if (
+        this.componentData.type !== 'chart'
+        || this.componentData.diagram !== 'table'
+        || !this.componentData.config.hasTableRelatedDashboard
+        || this.componentData.config.tableRelationInfo.triggerTarget !== 'column'
+      ) return []
+      if (this.isIndependentComponent) return []
+      const relation = this.componentData.config.tableRelationInfo.columnRelations[0].columnInfo
       if (!relation) return []
       const index = this.componentData.dataColumns.findIndex(item => item.columnId === relation.dataColumnId)
       return [{
@@ -303,6 +341,12 @@ export default {
         index: index + 1,
         className: 'has-underline is-text-blue'
       }]
+    },
+    isHoverable () {
+      return this.componentData.type === 'chart'
+        && this.componentData.diagram === 'table'
+        && this.componentData.config.hasTableRelatedDashboard
+        && this.componentData.config.tableRelationInfo.triggerTarget === 'row'
     },
     displayedRelatedDashboard () {
       return `
@@ -317,31 +361,20 @@ export default {
       `
     },
     indexComponentStyle () {
-      const sizeTable = {
-        large: {
-          'font-size': '80px', 
-          'height': '83px', 
-          'line-height': '80px'
-        },
-        middle: {
-          'font-size': '54px', 
-          'height': '54px', 
-          'line-height': '54px'
-        },
-        small: {
-          'font-size': '36px', 
-          'height': '36px', 
-          'line-height': '36px'
-        },
-        mini: {
-          'font-size': '28px', 
-          'height': '28px', 
-          'line-height': '28px'
-        },
-      }
       return {
-        ...sizeTable[this.componentData.indexInfo.size || 'middle'],
+        ...this.sizeTable[this.componentData.config.fontSize || 'middle'],
         'color': '#2AD2E2'
+      }
+    },
+    dynamicComponentStyle () {
+      return {
+        ...this.chartComponentStyle,
+        ...((this.componentData.segmentation.denotation === 'ANOMALY' || this.componentData.segmentation.denotation === 'NORMALITY_TEST') && {
+          'height': 'calc(100% - 150px)',
+        }),
+        ...(this.componentData.segmentation.denotation === 'STABILITY' && {
+          'height': 'calc(100% - 80px)',
+        })
       }
     }
   },
@@ -350,7 +383,7 @@ export default {
       immediate: true,
       handler (isInit) {
         if (!isInit) return
-        if (this.componentData.type !== 'monitor-warning-list' && this.componentData.type !== 'simulator') {
+        if (!this.isIndependentComponent) {
           this.isProcessing = true
           this.deboucedAskQuestion()
         }
@@ -361,18 +394,19 @@ export default {
     filters: {
       deep: true,
       handler (controls) {
-        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
+        if (this.shouldComponentBeFiltered) this.deboucedAskQuestion()
       }
     },
     controls: {
       deep: true,
       handler (controls) {
-        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
+        if (this.shouldComponentBeFiltered) this.deboucedAskQuestion()
       }
     },
     yAxisControls: {
       deep: true,
       handler (controls) {
+        if (this.isIndependentComponent) return 
         if (controls.length === 0 || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
@@ -380,6 +414,13 @@ export default {
       if (newRow === oldRow) return
       // 需等到元件樣式被更新後才重新計算
       if (this.componentData.diagram === 'table') window.setTimeout(() => this.adjustToTableComponentStyle(), 300)
+    },
+    'componentData.formulaSetting': {
+      deep: true,
+      handler (setting) {
+        if (!setting) return
+        this.deboucedAskQuestion()
+      }
     },
   },
   mounted () {
@@ -406,9 +447,11 @@ export default {
       this.isComponentFailed = false
       this.totalSec = 50
       this.periodSec = 200
-      this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
-      this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
       this.isEmptyData = false
+
+      // 透過公式創建元件需使用不同方式取得 result
+      if (this.componentData.type === 'formula') return this.getFormulaResult()
+      
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.componentData.dataSourceId,
@@ -420,9 +463,11 @@ export default {
         let segmentationList = response.segmentationList
         // TODO 處理 NO_ANSWER
         if (segmentationList.length === 1) {
+          this.segmentation = segmentationList[0]
           // 確認是否為趨勢類型問題
           const isTrendQuestion = segmentationList[0].denotation === 'TREND'
           this.$store.dispatch('chatBot/askResult', {
+            algoConfig: this.componentData.algoConfig || null,
             questionId,
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
@@ -443,6 +488,20 @@ export default {
         // TODO 無結果和多個結果
       }).catch(error => { this.isProcessing = false })
     },
+    getFormulaResult () {
+      askFormulaResult({
+        algoConfig: {
+          ...this.algoConfig['formula'],
+          dataColumnIdList: this.componentData.formulaSetting.inputList.map(input => input.dcId),
+          formulaId: this.componentData.formulaSetting.formulaId
+        },
+        dataFrameId: this.componentData.formulaSetting.dataFrameId,
+        restrictions: this.restrictions(),
+        isFilter: true
+      })
+      .then(resultInfo => this.getComponentV2(resultInfo.resultId))
+      .catch(error => { this.isProcessing = false })
+    },
     getComponentV2 (resultId) {
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
@@ -459,6 +518,7 @@ export default {
             case 'Complete':
               this.totalSec = 50
               this.periodSec = 200
+              this.componentData.keyResultId = componentResponse.componentIds.key_result[0]
               this.tempFilteredKeyResultId = componentResponse.componentIds.key_result[0]
               this.isProcessing = false
               // 定期更新 component 資料
@@ -600,13 +660,28 @@ export default {
       return properties
     },
     columnTriggered ({ row, column }) {
-      const { relatedDashboardId, columnInfo } = this.componentData.config.columnRelations[0]
-      if (column.label !== columnInfo.dataColumnAlias) return
-
+      const { relatedDashboardId, columnInfo } = this.componentData.config.tableRelationInfo.columnRelations[0]
+      const triggerTarget = this.componentData.config.tableRelationInfo.triggerTarget
+      if (triggerTarget !== 'column' || column.label !== columnInfo.dataColumnAlias) return
+      
       this.$emit('columnTriggered', {
         relatedDashboardId,
+        columnName: columnInfo.dataColumnAlias,
         columnId: columnInfo.dataColumnId,
         cellValue: row[column.index - 1]
+      })
+    },
+    rowTriggered ({ row, header }) {
+      const triggerTarget = this.componentData.config.tableRelationInfo.triggerTarget
+      if (triggerTarget !== 'row') return
+      const { relatedDashboardId } = this.componentData.config.tableRelationInfo.rowRelation
+      const rowData = this.componentData.dataColumns.map(column => ({
+        ...column,
+        cellValue: row[header.indexOf(column.columnName)]
+      }))
+      this.$emit('rowTriggered', {
+        relatedDashboardId,
+        rowData
       })
     },
     chartriggered (restrictions) {
@@ -622,6 +697,9 @@ export default {
       // 取當前元件中，擺放 table 空間的高度（扣除 pagination）
       const maxHeight = this.$refs.component.getBoundingClientRect().height - 135
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
+    },
+    updateComponentConfigInfo (config) {
+      this.componentData.enableAlert = config.enableAlert
     }
   }
 }

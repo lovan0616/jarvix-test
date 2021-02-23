@@ -414,6 +414,7 @@ export default {
         this.dataList = response.filter(element => element.state !== 'Temp').map(element => {
           return {
             ...element,
+            dataSourceId: this.$route.params.id,
             createMethod: element.joinCount > 1 ? 'tableJoin' : this.createMethod(element.originType),
             createMethodLabel: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
           }

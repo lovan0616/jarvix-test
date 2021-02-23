@@ -64,7 +64,25 @@ export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, acti
     url: `/alert/logs/search?page=${page}&size=${size}`,
     method: 'POST',
     data: {
-      conditionIdsString: `[${conditionIds.toString()}]`,
+      conditionIds: conditionIds,
+      groupId,
+      active,
+      startTime,
+      endTime
+    }
+  })
+}
+
+/**
+ * 取得 所有示警 logs 總數
+ * @param {Array} id - conditionIds
+ */
+export function getAlertLogsCount ({ conditionIds, groupId, active, startTime, endTime }) {
+  return request({
+    url: `/alert/logs/count`,
+    method: 'POST',
+    data: {
+      conditionIds,
       groupId,
       active,
       startTime,
@@ -96,6 +114,28 @@ export function patchConditionMessageParams(conditionId, data) {
   return request({
     url: `/alert/condition/${conditionId}/message-templates`,
     method: 'PATCH',
+    data
+  })
+}
+
+/**
+ * 取得指定元件可分析值型別選項
+ * @param {Number} id - component id
+ */
+export function getComponentIndicators(componentId) {
+  return request({
+    url: `/alert/component/${componentId}/analysisValueTypes`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 新增監控示警條件(透過Component)
+ */
+export function convertComponentToAlertCondition(data) {
+  return request({
+    url: `/alert/condition/component`,
+    method: 'POST',
     data
   })
 }

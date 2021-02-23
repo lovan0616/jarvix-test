@@ -517,3 +517,15 @@ export function reCalculateMetaData (dataFrameId) {
     method: 'POST'
   })
 }
+
+/**
+ * update numeric column ordinal setting
+ * @param {Object} data - 欄位設定資料
+ */
+export function updateColumnOrdinality(data) {
+  return request({
+    url: `/dataColumn/ordinality`,
+    method: 'PUT',
+    data
+  })
+}

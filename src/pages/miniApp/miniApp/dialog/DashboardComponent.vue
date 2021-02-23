@@ -17,7 +17,7 @@
         </div>
         <div class="key-result__switch-wrapper">
           <div 
-            :class="{ 'active': currentComponent.type === 'chart' }"
+            :class="{ 'active': currentComponent.type === 'chart' || currentComponent.type === 'paramCompare' }"
             class="key-result__switch" 
             @click="switchComponentType('chart')" >
             <svg-icon 
@@ -47,7 +47,7 @@
           </div>
         </div>
         <div 
-          v-show="currentComponent.type === 'chart'" 
+          v-show="currentComponent.type === 'chart' || currentComponent.type === 'paramCompare'" 
           class="key-result__card card"
         >
           <div class="card__content">
@@ -55,11 +55,12 @@
               :key="'chart-' + computedKeyResultId"
               :component-id="computedKeyResultId"
               :is-show-description="false"
-              :is-show-coefficients="false"
+              :is-show-coefficients="segmentation && segmentation.denotation === 'STABILITY'"
               :is-show-donwnload-btn="false"
               :is-show-toolbox="false"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
+              @setConfig="$emit('setConfig', $event)"
             />
           </div>
         </div>
@@ -86,15 +87,6 @@
                 :placeholder="$t('miniApp.pleaseEnterUnitName')"
                 class="input setting__input"
               >
-            </div>
-            <div class="setting">
-              <div class="setting__label">顯示大小</div>
-              <default-select 
-                v-model="currentComponent.indexInfo.size"
-                :option-list="indexSizeOptionList"
-                :placeholder="$t('miniApp.chooseColumnSize')"
-                class="input setting__input"
-              />
             </div>
           </div>
         </div>
@@ -131,6 +123,43 @@
           icon-class="information-circle"
         />{{ $t('miniApp.componentNotAddable') }}
       </div>
+      <div 
+        v-if="computedKeyResultId && isNeededDisplaySetting && currentComponent.algoConfig"
+        class="key-result__setting display-setting">
+        <div class="display-setting__title">{{ $t('miniApp.displaySetting') }}</div>
+        <div class="display-setting__content">
+          <div class="display-setting__item-box">
+            <div class="display-setting__item item">
+              <div class="item__label">{{ $t('miniApp.standardLine') }}</div>
+              <default-select
+                v-model="currentComponent.algoConfig.standardLineType"
+                :option-list="standardLineTypeOptionList"
+                :placeholder="$t('miniApp.chooseStandardLine')"
+                class="input item__input"
+              />
+            </div>
+            <div 
+              v-if="segmentation.denotation === 'ANOMALY'"
+              class="display-setting__item item">
+              <div class="item__label">{{ $t('miniApp.stddevTimes') }}</div>
+              <default-select
+                v-model="currentComponent.algoConfig.stddevTimes"
+                :option-list="stddevTimesOptionList"
+                :placeholder="$t('miniApp.chooseStddevTimes')"
+                class="input item__input"
+              />
+            </div>
+          </div>
+          <div class="display-setting__button-box">
+            <button 
+              class="btn btn-default display-setting__button" 
+              @click="saveChartSetting"
+            >
+              {{ $t('button.change') }}
+            </button>
+          </div>
+        </div>
+      </div>
     </template>
   </div>
 </template>
@@ -139,6 +168,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { getDateTimeColumns } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { algoConfig } from '@/utils/general'
 import moment from 'moment'
 
 export default {
@@ -178,22 +208,25 @@ export default {
       question: '',
       segmentation: null,
       mainDateColumn: null,
-      indexSizeOptionList: [
+      algoConfig,
+      standardLineTypeOptionList: [
         {
-          value: 'large',
-          name: this.$t('miniApp.large')
+          value: 'MEDIAN',
+          name: this.$t('chart.feature.median')
         },
         {
-          value: 'middle',
-          name: this.$t('miniApp.middle')
+          value: 'MEAN',
+          name: this.$t('chart.feature.mean')
+        }
+      ],
+      stddevTimesOptionList: [
+        {
+          value: '2',
+          name: 2
         },
         {
-          value: 'small',
-          name: this.$t('miniApp.small')
-        },
-        {
-          value: 'mini',
-          name: this.$t('miniApp.mini')
+          value: '3',
+          name: 3
         }
       ]
     }
@@ -214,6 +247,9 @@ export default {
       // 可能會有階層，因此需要完全攤平
       return [].concat.apply([], [...this.filters, ...this.controls])
     },
+    isNeededDisplaySetting () {
+      return this.segmentation && (this.segmentation.denotation === 'STABILITY' || this.segmentation.denotation === 'ANOMALY')
+    }
   },
   watch: {
     appQuestion (question) {
@@ -260,6 +296,7 @@ export default {
         
         // 無結果
         if (segmentationList[0].denotation === 'NO_ANSWER') {
+          this.segmentation = segmentationList[0]
           this.$store.commit('result/updateCurrentResultInfo', null)
           this.layout = 'EmptyResult'
           this.resultInfo = {
@@ -281,6 +318,7 @@ export default {
 
               // 存取問句結果讓 restriction 使用
               this.questionInfo = {
+                questionId: response.questionId,
                 dataFrameId: segmentationList[0].transcript.dataFrame.dataFrameId,
                 dataColumns: this.getDataColumnlist(segmentationList[0].transcript.subjectList)
               }
@@ -306,13 +344,19 @@ export default {
     },
     askResult (selectedResultSegmentationInfo, questionId) {
       this.$emit('update:isLoading', true)
+      if (selectedResultSegmentationInfo) this.segmentation = selectedResultSegmentationInfo
 
-      const segmentation = this.segmentation || selectedResultSegmentationInfo
+      // 初次創建時，預設元件名稱為使用者輸入的問句
+      if (!this.currentComponent.init) {
+        this.currentComponent.config.diaplayedName = this.segmentation.sentence.reduce((acc, cur) =>  acc += ` ${cur.matchedWord}`, '')
+      }
+      
       // 確認是否為趨勢類型問題
-      const isTrendQuestion = segmentation.denotation === 'TREND'
+      const isTrendQuestion = this.segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
+        algoConfig: this.currentComponent.algoConfig || null,
         questionId: questionId || this.currentQuestionId,
-        segmentation,
+        segmentation: this.segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
         isFilter: true,
@@ -347,11 +391,11 @@ export default {
               this.resultInfo = componentResponse.componentIds
               // 初次創建時，預設元件名稱為使用者輸入的問句
               if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
+              this.currentComponent.keyResultId = componentResponse.id
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.question = this.composeComponentQuestion(componentResponse.segmentationPayload.sentence),
               this.$store.commit('result/updateCurrentResultId', resultId)
-
               // data columns 重新處理是因為 ask question 取得的是建議的句子切法
               // 最終切法和辨別結果要以 get component list 為主
               this.$store.commit('result/updateCurrentResultInfo', {
@@ -364,6 +408,10 @@ export default {
                 dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
                 dateTimeColumn: this.mainDateColumn
               })
+            
+              if (this.isNeededDisplaySetting && !this.currentComponent.algoConfig) {
+                this.currentComponent.algoConfig = this.algoConfig[componentResponse.intent.toLowerCase()]
+              }
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
               break
@@ -525,9 +573,12 @@ export default {
     resetComponent () {
       this.switchComponentType('chart')
       this.currentComponent.indexInfo = { 
-        unit: '',
-        size: 'middle'
+        unit: ''
       }
+      this.currentComponent.config.fontSize = 'middle'
+    },
+    saveChartSetting () {
+      this.askResult(this.segmentation, this.questionInfo.questionId)
     }
   }
 }
@@ -631,6 +682,65 @@ export default {
     .icon {
       font-size: 20px;
       margin-right: 5px;
+    }
+  }
+
+  .display-setting {
+
+    &__title {
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 25px;
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: row;
+      background: #1C292B;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 18.5px;
+    }
+
+    &__item-box {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    &__item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 6px 0;
+    }
+
+    .item {
+      &__label {
+        margin-right: 9px;
+        width: 80px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #CCCCCC;
+      }
+
+      &__input {
+        width: 200px;
+      }
+    }
+
+    &__button-box {
+      display: flex;
+      flex-direction: column;
+      padding: 6px 0;
+    }
+
+    &__button {
+      margin-top: auto;
+      margin-left: 16px;
+      height: 30px;
+      min-width: 50px;
     }
   }
 }
