@@ -925,7 +925,9 @@
     "formulaPreview": "运算式预览",
     "setting": "设定",
     "otherSettings": "其他设定",
-    "formulaType": "公式类型"
+    "formulaType": "公式类型",
+    "singleColumnData": "单栏资料",
+    "singleRowData": "整列资料"
   },
   "alert": {
     "alertLogs": "示警纪录",
@@ -952,6 +954,7 @@
     "selectDataColumn": "资料栏位",
     "messageExampleDescription": "范例说明",
     "messageColumnParamSyntaxDescription": "栏位参数语法 = ${栏位名称}",
+    "messageIndicatorParamSyntaxDescription": "指标参数语法 = #{指摽名称}",
     "messageTemplateSettingExample": "讯息设定：厂房:{0},出现电流异常(电流:{1}μA)。",
     "messageTemplatePreviewExample": "讯息预览：厂房:{0},出现电流异常(电流:{1}μA)。",
     "param1NameExample": "${厂编}",
@@ -967,7 +970,13 @@
     "monitoringItem": "监控项目({number})",
     "finished": "已处理",
     "unfinished": "未处理",
-    "state": "处理状态"
+    "state": "处理状态",
+    "originalDataSource": "资料来源",
+    "alertIndicator": "示警指标",
+    "columnValueCombination": "展开条件",
+    "dataFilterCondition": "资料过滤条件",
+    "dataSource": "资料源",
+    "dataFrame": "资料表"
   },
   "clustering": {
     "cluster": "群体",
@@ -1179,7 +1188,8 @@
     "sendInvitation": "寄送邀请信",
     "downloadPage": "下载图片",
     "changeDiagram": "切换图表",
-    "columnSummaryInfo": "栏位统计信息"
+    "columnSummaryInfo": "栏位统计信息",
+    "createAlert": "新增示警"
   },
   "timeScopeUnit": {
     "second": "秒",
