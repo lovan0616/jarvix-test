@@ -2472,7 +2472,7 @@
       "samplesAmount": "樣本數",
       "trendsPValue": "趨勢性 P-Value",
       "mixturesPValue": "混合性 P-Value",
-      "clusteringPValue": "類聚性 P-Value",
+      "clusteringPValue": "聚類性 P-Value",
       "oscillationPValue": "振盪性 P-Value"
     }
   },
