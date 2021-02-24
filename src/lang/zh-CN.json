@@ -967,7 +967,8 @@
     "monitoringItem": "监控项目({number})",
     "finished": "已处理",
     "unfinished": "未处理",
-    "state": "处理状态"
+    "state": "处理状态",
+    "expression": "运算式"
   },
   "clustering": {
     "cluster": "群体",

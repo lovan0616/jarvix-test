@@ -964,7 +964,8 @@
     "monitoringItem": "monitoringItem({number})",
     "finished": "Finished",
     "unfinished": "Unfinished",
-    "state": "Process State"
+    "state": "Process State",
+    "expression": "Calculation Formula"
    },
   "clustering": {
     "cluster": "Cluster",
