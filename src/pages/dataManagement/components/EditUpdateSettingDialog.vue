@@ -147,7 +147,7 @@ export default {
           name: this.$t('updateSetting.inactive')
         },
         {
-          type: 'ENABLE',
+          type: 'MANUAL', // 當前檔案是手動更新
           name: this.$t('updateSetting.active')
         }
       ],
