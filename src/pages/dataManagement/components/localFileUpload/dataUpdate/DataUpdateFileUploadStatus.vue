@@ -1,7 +1,7 @@
 <template>
   <div class="file-upload-finished">
     <div class="dialog-title">
-      {{ $t('fileDataUpdate.dataUpdateSetting') }}
+      {{ $t('fileDataUpdate.updateData') }}
     </div>
     <upload-process-block
       :step="step"

@@ -653,7 +653,8 @@
     "checkDatarowDeletable": "检查有无数据删除"
   },
   "fileDataUpdate": {
-    "dataUpdateSetting": "数据更新设定",
+    "updateData": "更新资料",
+    "updateSetting": "更新设定",
     "processStep1": "更新模式",
     "processStep2": "选择文件",
     "processStep3": "上传文件",
@@ -665,6 +666,15 @@
     "build": "立即创建",
     "reSetting": "重新设定模式",
     "dataUpdatingReminding": "数据表更新将以背景执行方式进行，更新进度将显示在数据表状态。"
+  },
+  "updateSetting": {
+    "activationStatus": "启用状态",
+    "active": "启用",
+    "inactive": "不启用",
+    "updateCriteriaContent": "更新条件内容",
+    "updateTime": "更新时间",
+    "primaryKey": "主键（可复选）",
+    "chooseColumn": "请选择栏位"
   },
   "feature": {
     "value": "数值",
@@ -1144,7 +1154,8 @@
     "editEtlSetting": "数据处理设定",
     "reviewEtlSetting": "检视数据处理设定",
     "dateTimeColumnSetting": "日期栏位设定",
-    "batchLoadSetting": "数据更新设定",
+    "updateData": "资料更新",
+    "updateSetting": "更新设定",
     "tableCreatedInfo": "数据表建立信息",
     "select": "选择",
     "download": "数据下载",
