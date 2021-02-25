@@ -319,11 +319,13 @@ export default {
       delete this.settingInfo.worktimes.weekList
       this.$store.commit('scheduleSetting/updateSetting', this.settingInfo)
     })
-    this.$store.dispatch('scheduleSetting/getEquipments').then(equipments => {
-      // 拿到設備列表
-      this.equipments = equipments.map(e => ({ value: e.id, label: e.name }))
-      this.$store.commit('scheduleSetting/setEquipments', this.equipments)
-    })
+    this.$store.dispatch('scheduleSetting/getEquipments')
+      .then(equipments => {
+        // 拿到設備列表
+        this.equipments = equipments.map(e => ({ value: e.id, label: e.name }))
+        this.$store.commit('scheduleSetting/setEquipments', this.equipments)
+      })
+      .catch(() => this.isUnbound.equipments = true)
   },
   methods: {
     ...mapMutations('scheduleSetting', ['setCurrentProjectId']),
@@ -385,7 +387,9 @@ export default {
           showClose: true
         })
         this.$store.commit('scheduleSetting/updateSetting', this.settingInfo)
-      }).finally(() => {
+      })
+      .catch(() => {})
+      .finally(() => {
         this.isLoading = false
       })
     },

@@ -90,7 +90,8 @@
       "fileName": "檔案名稱",
       "uploadAllMessage": "檔案之間具有關聯性，所有檔案都需重新上傳",
       "noFileSelected": "未選擇檔案",
-      "updatedDate": "更新日期"
+      "updatedDate": "更新日期",
+      "equipmentInfoIsUnbound": "尚未綁定機台資訊"
     },
     "simulation":{
       "title": "排程計畫模擬",

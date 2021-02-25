@@ -44,6 +44,7 @@
       </el-collapse-item>
     </el-collapse>
     <default-button
+      v-if="equipments.length > 0"
       type="secondary"
       class="save-btn"
       @click="addEquipment"
@@ -51,6 +52,9 @@
       <i class="el-icon-plus" />
       {{ $t('schedule.setting.addEquipment') }}
     </default-button>
+    <div 
+      v-else 
+      class="empty-block">{{ $t('schedule.setting.equipmentInfoIsUnbound') }}</div>
   </div>
 </template>
 
@@ -112,6 +116,7 @@ export default {
       const selectedIds = this.excludedEquipment.map(item => item.equipmentId)
       const eq = this.equipments.find(item => !selectedIds.includes(item.value))
 
+      if (!eq) return
       this.excludedEquipment.push({
         equipmentId: eq.value,
         equipmentName: eq.label,
@@ -141,6 +146,14 @@ export default {
   }
   &__remove-box {
     cursor: pointer;
+  }
+  .empty-block {
+    height: 60px;
+    line-height: 60px;
+    font-size: 14px;
+    color: #CCC;
+    text-align: center;
+    background-color: rgba(100, 100, 100, .2)
   }
 }
 /deep/ .single-machine {

@@ -90,7 +90,8 @@
       "fileName": "档案名称",
       "uploadAllMessage": "档案之间具有关联性，所有档案都需重新上传",
       "noFileSelected": "未选择档案",
-      "updatedDate": "更新日期"
+      "updatedDate": "更新日期",
+      "equipmentInfoIsUnbound": "尚未绑定机台资讯"
     },
     "simulation":{
       "title": "排程计画模拟",
