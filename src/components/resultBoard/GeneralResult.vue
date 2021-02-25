@@ -33,7 +33,7 @@
                 v-if="typeInfo.isProcessing" 
                 size="16"/>
               <svg-icon 
-                v-else-if="typeInfo.isFailed"
+                v-else-if="!isHistogramBinSetting && typeInfo.isFailed"
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
               <div
@@ -400,7 +400,7 @@ export default {
       let currentType = this.switchTypeList[index].denotation
       switch (currentType) {
         case this.intentType.OVERVIEW:
-          return !this.isHistogramBinSetting
+          return this.isHistogramBinSetting
         case this.intentType.CLUSTERING:
         case this.intentType.PREDICTION:
           return this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId

@@ -25,7 +25,7 @@
       :transcript="transcript"
       :intent="intent"
       :is-war-room-addable="isWarRoomAddable"
-      :is-histogram-interval-setting="isHistogramBinSetting"
+      :is-histogram-bin-setting="isHistogramBinSetting"
       mode="display"
       @fetch-new-components-list="getComponentV2"
     />
@@ -310,7 +310,7 @@ export default {
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
               this.transcript = componentResponse.transcript
               this.isWarRoomAddable = componentResponse.isWarRoomAddable
-              this.isHistogramBinSetting = componentResponse.isHistogramBinSetting
+              this.isHistogramBinSetting = componentResponse.isHistogramIntervalSetting
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false
