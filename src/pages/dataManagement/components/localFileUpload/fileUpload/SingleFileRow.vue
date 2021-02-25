@@ -4,40 +4,66 @@
       :class="statusClass"
       class="single-file-row"
     >
-      <div class="single-file-info">
-        <div class="file-info name">{{ formDataInfo.name }}</div>
-        <div class="file-info size">{{ byteToMB(formDataInfo.size) }}</div>
-        <div 
-          v-if="singleFile.status === uploadStatus.uploading"
-          class="single-file-progress"
-        >
+      <div class="single-file">
+        <div class="single-file-info">
+          <div class="file-info name">{{ formDataInfo.name }}</div>
+          <div class="file-info size">{{ byteToMB(formDataInfo.size) }}</div>
           <div 
-            :style="{ width: progress + '%' }"
-            class="progress-bar"
+            v-if="singleFile.status === uploadStatus.uploading"
+            class="single-file-progress"
+          >
+            <div 
+              :style="{ width: progress + '%' }"
+              class="progress-bar"
+            />
+          </div>
+        </div>
+        <div 
+          :class="{finished: singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail}"
+          class="file-status"
+        >
+          <svg-icon
+            v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail"
+            :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
+            :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
           />
+          <a 
+            v-else-if="singleFile.status === uploadStatus.uploading"
+            class="link action-link cancel"
+            href="javascript:void(0)"
+            @click="cancelUpload"
+          >{{ $t('button.cancel') }}</a>
+          <a 
+            v-else
+            class="link action-link"
+            href="javascript:void(0)"
+            @click="removeFile(singleFile.status)"
+          >{{ $t('button.delete') }}</a>
         </div>
       </div>
       <div 
-        :class="{finished: singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail}"
-        class="file-status"
+        v-if="singleFile.tabDetails && singleFile.tabDetails.length > 0"
+        class="tab-list"
       >
-        <svg-icon
-          v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail"
-          :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
-          :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
-        />
-        <a 
-          v-else-if="singleFile.status === uploadStatus.uploading"
-          class="link action-link cancel"
-          href="javascript:void(0)"
-          @click="cancelUpload"
-        >{{ $t('button.cancel') }}</a>
-        <a 
-          v-else
-          class="link action-link"
-          href="javascript:void(0)"
-          @click="removeFile(singleFile.status)"
-        >{{ $t('button.delete') }}</a>
+        <div class="list-title">{{ $t('editing.chooseTab') }}</div>
+        <div
+          v-for="tabDetail in singleFile.tabDetails"
+          :key="tabDetail.tabNum"
+          class="single-tab input-radio-group"
+        >
+          <input
+            :id="`${tabDetail.tabNum}-${tabDetail.tabName}`"
+            v-model="currentTabDetail"
+            :value="tabDetail.tabNum"
+            name="tabDetail"
+            type="radio"
+            class="input-radio"
+          >
+          <label 
+            :for="`${tabDetail.tabNum}-${tabDetail.tabName}`"
+            class="input-radio-label"
+          >{{ tabDetail.tabName }}</label>
+        </div>
       </div>
     </div>
     <div 
@@ -92,6 +118,18 @@ export default {
         case this.uploadStatus.fail:
           return 'fail'
       }
+    },
+    currentTabDetail: {
+      get () {
+        return this.singleFile.tabDetail.tabNum
+      },
+      set (val) {
+        console.log(val, this.singleFile.tabDetails.filter(el => el.tabNum === val))
+        this.$store.commit('dataManagement/updateUploadFileTabDetail', {
+          index: this.index,
+          tabDetail: this.singleFile.tabDetails.filter(el => el.tabNum === val)[0]
+        })
+      }
     }
   },
   watch: {
@@ -109,7 +147,11 @@ export default {
       }))
         .then(response => {
           this.$store.commit('dataManagement/updateImportedFileList', response)
-          this.singleFile.status = uploadStatus.success
+          this.$store.commit('dataManagement/updateUploadFileStatus', {
+            index: this.index,
+            status: uploadStatus.success,
+            ...response
+          })
         }).catch(() => {
           this.singleFile.status = uploadStatus.fail
         })
@@ -148,11 +190,14 @@ export default {
 }
 
 .single-file-row {
-  display: flex;
   padding: 10px 20px;
   font-size: 14px;
   background-color: rgba(67, 76, 76, 0.95);
   border-radius: 5px;
+
+  .single-file {
+    display: flex;
+  }
 
   &.fail {
     color: #BDBDBD;
@@ -198,6 +243,21 @@ export default {
     }
     .fail {
       color: #F1616D;
+    }
+  }
+
+  .tab-list {
+    background-color: rgba(72, 84, 84, 0.95);
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 5px;
+
+    .list-title {
+      margin-bottom: 8px;
+    }
+
+    .single-tab {
+      width: 100%;      
     }
   }
 }

@@ -466,7 +466,8 @@
     "searchDataSourceOrDataFrame": "Search DataSource or DataFrame",
     "onlyPrefixMatching": "The search only supports prefix matching",
     "searchDataSource": "Search DataSource",
-    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})"
+    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})",
+    "chooseTab": "Choose a tab content"
   },
   "algorithm": {
     "name": "Algorithm",
