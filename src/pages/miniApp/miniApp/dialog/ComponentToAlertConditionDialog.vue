@@ -116,7 +116,8 @@
               :key="filter + '-' + index"
               class="single-select"
             >
-              <div class="checkbox-group">
+              <!--暫時隱藏，待後端修正-->
+              <!-- <div class="checkbox-group">
                 <div class="checkbox-label">
                   <input
                     v-model="filter.isSelected"
@@ -125,7 +126,7 @@
                   >
                   <div class="checkbox-square"/>
                 </div>
-              </div>
+              </div> -->
               <div class="label-content">
                 <div class="label-title">{{ filter.columnName }}</div>
                 <div class="label-description">{{ filter.targetValues }}</div>
