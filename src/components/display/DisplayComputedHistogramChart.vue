@@ -119,6 +119,7 @@ export default {
             element
           ]
         })
+        console.log(chartData)
       } else {
         chartData = this.dataset.data.map((element, index) => {
           return [
@@ -203,7 +204,7 @@ export default {
       chartAddon.xAxis.axisLabel.formatter = (value, index) => {
         if (dataLength > 20) {
           let labelInterval = Math.floor(dataLength / 15)
-          if (index % labelInterval === 0) return this.formatComma(value)
+          if (index % labelInterval === 0) return index === dataLength ? this.formatComma(max) : this.formatComma(value)
         } else {
           return index === dataLength ? this.formatComma(max) : this.formatComma(value)
         }
