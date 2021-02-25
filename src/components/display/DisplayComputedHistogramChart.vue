@@ -119,7 +119,6 @@ export default {
             element
           ]
         })
-        console.log(chartData)
       } else {
         chartData = this.dataset.data.map((element, index) => {
           return [
