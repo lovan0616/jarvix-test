@@ -476,10 +476,11 @@ export function triggerUpdateData (dataFrameId) {
  * 資料更新設定
  * @param {Number} dataFrameId - 欲更新的資料表 ID
  */
-export function updateDataUpdateSetting (dataFrameId) {
+export function updateDataUpdateSetting (dataFrameId, settingData) {
   return request({
     url: `/dataFrame/${dataFrameId}/crontab/config/column`,
-    method: 'PUT'
+    method: 'PUT',
+    data: settingData
   })
 }
 
