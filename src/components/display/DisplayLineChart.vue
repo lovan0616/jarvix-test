@@ -23,7 +23,7 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <template v-if="isStabilityChart">
+          <template v-if="isShowCompoundSestraints">
             {{ $t('resultDescription.area') + (index + 1) }}:
             <span
               v-for="(singleRestraint, restraintIndex) in singleType.restraints"
@@ -222,6 +222,9 @@ export default {
     },
     isStabilityChart () {
       return !!this.dataset.pValuesFeatureInformation
+    },
+    isShowCompoundSestraints () {
+      return this.isStabilityChart || !this.dataset.timeStampList
     },
     options () {
       let config = {
@@ -581,7 +584,7 @@ export default {
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
 
-        if (this.isStabilityChart)
+        if (this.isShowCompoundSestraints)
           return {
             type: 'compound',
             restraints: [
