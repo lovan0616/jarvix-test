@@ -8,13 +8,37 @@
         <label 
           class="input-label" 
           for="">{{ $t('etl.dataType') }}</label>
-        <default-select 
+        <!-- <default-select 
           v-model="editColumnInfo.statsType"
           :is-disabled="isReviewMode"
           :option-list="statsTypeOptions"
           class="data-type-select"
           @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
-        />
+        /> -->
+        <div class="setting-cascader-container">
+          <el-cascader
+            v-model="editColumnInfo.statsType"
+            :is-disabled="isReviewMode"
+            :show-all-levels="false"
+            :options="cascaderStatsTypeOptions"
+            :props="{ expandTrigger: 'hover', label: 'name', children: 'pattern' }"
+            filterable
+            popper-class="setting-cascader__popper"
+            class="sy-select theme-dark setting-cascader"
+            @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
+          >
+            <template #default="{ node, data }">
+              <svg-icon
+                v-if="statsTypeList.includes(data.value)"
+                :icon-class="getStatsTypeIcon(data.value)"
+                class="statsType__icon" />
+              <span class="statsType__label">{{ data.name }}</span>
+            </template>
+          </el-cascader>
+          <svg-icon 
+            :icon-class="getStatsTypeIcon(editColumnInfo.statsType[0])"
+            class="setting-cascader-icon" />
+        </div>
       </div>
       <div class="setting-input-block">
         <label 
@@ -137,9 +161,10 @@
   </div>
 </template>
 <script>
-import { statsTypeOptionList, booleanOptionList } from '@/utils/general'
+import { statsTypeList, statsTypeOptionList, booleanOptionList } from '@/utils/general'
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
@@ -192,15 +217,33 @@ export default {
       nullReplaceObject: null,
       stringReplaceObject: null,
       errorDefaultObject: null,
-      replaceId: 0
+      replaceId: 0,
+      statsTypeList,
+      originalStatsType: ''
     }
   },
   computed: {
+    ...mapState('dataManagement', ['datetimePatterns']),
     statsTypeOptions () {
       return statsTypeOptionList.filter((option) => {
         return this.editColumnInfo.originalStatsType === 'DATETIME'
           ? option
           : option.value !== 'DATETIME'
+      })
+    },
+    cascaderStatsTypeOptions () {
+      if (this.editColumnInfo.originalStatsType !== 'DATETIME') return this.statsTypeOptions
+      return this.statsTypeOptions.map(item => {
+        if(item.value !== 'DATETIME') return item
+        else return {
+          ...item,
+          pattern: this.datetimePatterns.map(pattern => {
+            return {
+              value: pattern.datetimePattern,
+              name: pattern.datetimePattern
+            }
+          })
+        }
       })
     },
     replaceTypeOptionList () {
@@ -253,8 +296,39 @@ export default {
         this.errorDefaultObject = element
       }
     })
+    // 因應 cascader 的資料型態, 需轉成 Array
+    this.originalStatsType = this.stateTypeConverter(this.columnInfo.statsType)
+    this.editColumnInfo.statsType = this.originalStatsType
   },
   methods: {
+    stateTypeConverter (statsType) {
+      if (statsType === 'DATETIME') statsType = ['DATETIME', this.columnInfo.datetimePatterns[0]]
+      else statsType = [statsType]
+      return statsType
+    },
+    columnInfoFormatter (cascaderColumnInfo) {
+      const tempColumnInfo = JSON.parse(JSON.stringify(cascaderColumnInfo))
+      tempColumnInfo.statsType = cascaderColumnInfo.statsType[0]
+      tempColumnInfo.datetimePatterns = cascaderColumnInfo.statsType[0] === 'DATETIME' 
+        ? [cascaderColumnInfo.statsType[1]]
+        : []
+      return tempColumnInfo
+    },
+    getStatsTypeIcon (statesType) {
+      const currentStatesType = Array.isArray(statesType) ? statesType[0] : statesType
+      switch (currentStatesType) {
+        case 'CATEGORY':
+          return 'character-a'
+        case 'NUMERIC':
+          return 'numeric'
+        case 'BOOLEAN':
+          return 'checked'
+        case 'DATETIME':
+          return 'calendar'
+        default:
+          return 'check-circle'
+      }
+    },
     addReplaceValue () {
       this.editColumnInfo.values.push({
         ...this.replaceValueObjest,
@@ -283,7 +357,7 @@ export default {
           //   el.newValue = this.summaryData.data[1].data[numTypes]
           // }
         })
-        this.$emit('updateInfo', this.editColumnInfo)
+        this.$emit('updateInfo', this.columnInfoFormatter(this.editColumnInfo))
 
         Message({
           message: this.$t('message.etlSettingTempSave'),
@@ -297,7 +371,7 @@ export default {
     },
     changeStatsType (column, targetStatsType) {
       column.statsType = targetStatsType
-      switch (targetStatsType) {
+      switch (targetStatsType[0]) {
         case 'NUMERIC':
           column.targetDataType = 'FLOAT'
           break
@@ -315,7 +389,7 @@ export default {
     },
     reset () {
       this.editColumnInfo.hasChanged = false
-      this.editColumnInfo.statsType = this.editColumnInfo.originalStatsType
+      this.editColumnInfo.statsType = this.originalStatsType
       this.editColumnInfo.targetDataType = this.editColumnInfo.originalDataType
       this.cleanReplacements()
 
@@ -345,6 +419,25 @@ export default {
     max-height: 544px;
     overflow: auto;
     margin-bottom: 12px;
+  }
+
+  .setting-cascader-container {
+    position: relative;
+    .setting-cascader-icon {
+      position: absolute;
+      top: 20%;
+      left: 6px;
+      font-size: 16px;
+    } 
+
+    .setting-cascader.el-cascader {
+      background-color: transparent;
+      border-radius: unset;
+
+      & >>> .el-input {
+        padding-left: 30px;
+      }
+    }
   }
 
   .setting-input-block {

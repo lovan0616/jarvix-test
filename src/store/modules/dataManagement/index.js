@@ -21,6 +21,7 @@ export default {
     fileCountLimit: 10,
     // 當前預處理的 list
     etlTableList: [],
+    datetimePatterns: [],
     currentTableIndex: 0,
     currentColumnIndex: null,
     currentUploadScriptName: null,

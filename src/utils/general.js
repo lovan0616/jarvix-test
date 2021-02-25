@@ -77,7 +77,7 @@ export const uploadStatus = {
   // 資料處理中
   processing: 'processing',
   // 上傳結束
-  finished: 'finished'
+finished: 'finished'
 }
 
 export const importType = {
@@ -85,6 +85,9 @@ export const importType = {
   REMOTE: 'import_database',
   SCRIPT: 'import_script'
 }
+
+export const statsTypeList = ['CATEGORY', 'NUMERIC', 'BOOLEAN', 'DATETIME']
+
 
 export const statsTypeOptionList = [
   { value: 'CATEGORY', name: 'Category' },

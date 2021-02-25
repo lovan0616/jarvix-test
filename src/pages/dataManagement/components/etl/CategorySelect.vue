@@ -1,21 +1,24 @@
 <template>
   <div class="dropdown">
-    <default-select
+    <el-cascader
       v-model="editedColumnInfo.statsType"
-      :option-list="statsTypeOptions"
       :is-disabled="isReviewMode"
-      class="dropdown__container"
-      @change="openConfirmMsg"
-    >
-      <template #option-content="{ option }">
-        <svg-icon 
-          :icon-class="getStatsTypeIcon(option.value)"
+      :show-all-levels="false" 
+      :options="cascaderStatsTypeOptions"
+      :props="{ expandTrigger: 'hover', label: 'name', children: 'pattern' }"
+      filterable
+      class="sy-select theme-dark"
+      @change="openConfirmMsg">
+      <template #default="{ node, data }">
+        <svg-icon
+          v-if="statsTypeList.includes(data.value)"
+          :icon-class="getStatsTypeIcon(data.value)"
           class="statsType__icon" />
-        <span class="statsType__label">{{ option.name }}</span>
+        <span class="statsType__label">{{ data.name }}</span>
       </template>
-    </default-select>
+    </el-cascader>
     <svg-icon 
-      :icon-class="getStatsTypeIcon(editedColumnInfo.statsType)"
+      :icon-class="getStatsTypeIcon(editedColumnInfo.statsType[0])"
       class="statsType__icon" />
     <div
       v-if="showConfirmMsg"
@@ -42,7 +45,8 @@
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { statsTypeOptionList } from '@/utils/general'
+import { statsTypeList, statsTypeOptionList } from '@/utils/general'
+import { mapState } from 'vuex'
 
 export default {
   name: 'CategorySelect',
@@ -62,25 +66,62 @@ export default {
   data () {
     return {
       editedColumnInfo: JSON.parse(JSON.stringify(this.columnInfo)),
+      originalStatsType: '',
+      statsTypeList,
       statsTypeOptionList,
       showConfirmMsg: false
     }
   },
   computed: {
+    ...mapState('dataManagement', ['datetimePatterns']),
     statsTypeOptions () {
       return statsTypeOptionList.filter((option) => {
         return this.editedColumnInfo.originalStatsType === 'DATETIME'
           ? option
           : option.value !== 'DATETIME'
       })
+    },
+    cascaderStatsTypeOptions () {
+      if (this.editedColumnInfo.originalStatsType !== 'DATETIME') return this.statsTypeOptions
+      return this.statsTypeOptions.map(item => {
+        if(item.value !== 'DATETIME') return item
+        else return {
+          ...item,
+          pattern: this.datetimePatterns.map(pattern => {
+            return {
+              value: pattern.datetimePattern,
+              name: pattern.datetimePattern
+            }
+          })
+        }
+      })
     }
   },
   watch: {
     columnInfo () {
       this.editedColumnInfo = JSON.parse(JSON.stringify(this.columnInfo))
+      this.editedColumnInfo.statsType = this.stateTypeConverter(this.editedColumnInfo.statsType)
     }
   },
+  mounted () {
+    // 因應 cascader 的資料型態, 需轉成 Array
+    this.originalStatsType = this.stateTypeConverter(this.columnInfo.statsType)
+    this.editedColumnInfo.statsType = this.originalStatsType
+  },
   methods: {
+    stateTypeConverter (statsType) {
+      if (statsType === 'DATETIME') statsType = ['DATETIME', this.columnInfo.datetimePatterns[0]]
+      else statsType = [statsType]
+      return statsType
+    },
+    columnInfoFormatter (cascaderColumnInfo) {
+      const tempColumnInfo = JSON.parse(JSON.stringify(cascaderColumnInfo))
+      tempColumnInfo.statsType = cascaderColumnInfo.statsType[0]
+      tempColumnInfo.datetimePatterns = cascaderColumnInfo.statsType[0] === 'DATETIME' 
+        ? [cascaderColumnInfo.statsType[1]]
+        : []
+      return tempColumnInfo
+    },
     openConfirmMsg () {
       this.showConfirmMsg = true
     },
@@ -88,20 +129,20 @@ export default {
       this.showConfirmMsg = false
     },
     cancelChange () {
-      this.editedColumnInfo.statsType = this.columnInfo.statsType
+      this.editedColumnInfo.statsType = this.originalStatsType
       this.closeConfirmMsg()
     },
     confirmChange () {
       this.changeStatsType()
-      this.editedColumnInfo.hasChanged = this.editedColumnInfo.statsType !== this.editedColumnInfo.originalStatsType
+      this.editedColumnInfo.hasChanged = this.editedColumnInfo.statsType[0] !== this.editedColumnInfo.originalStatsType
       this.editedColumnInfo.values = this.editedColumnInfo.values.filter(el => el.type !== 'VALUE_REPLACEMENT')
       this.editedColumnInfo.values.forEach(function (el) { el.newValue = null })
 
-      this.$emit('updateInfo', this.editedColumnInfo)
+      this.$emit('updateInfo', this.columnInfoFormatter(this.editedColumnInfo))
       this.closeConfirmMsg()
     },
     changeStatsType () {
-      switch (this.editedColumnInfo.statsType) {
+      switch (this.editedColumnInfo.statsType[0]) {
         case 'NUMERIC':
           this.editedColumnInfo.targetDataType = 'FLOAT'
           break
@@ -117,7 +158,8 @@ export default {
       }
     },
     getStatsTypeIcon (statesType) {
-      switch (statesType) {
+      const currentStatesType = Array.isArray(statesType) ? statesType[0] : statesType
+      switch (currentStatesType) {
         case 'CATEGORY':
           return 'character-a'
         case 'NUMERIC':

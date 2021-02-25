@@ -72,7 +72,7 @@ import { getDataFrameEtlSetting, dataRepreprocessor } from '@/API/DataSource'
 import EtlSetting from '@/pages/dataManagement/components/etl/EtlChooseColumn';
 import ConfirmPage from '@/pages/dataManagement/components/localFileUpload/fileUpload/ConfirmPage'
 import { Message } from 'element-ui'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'EditEtlDialog',
@@ -105,6 +105,7 @@ export default {
     }
   },
   mounted () {
+    this.getDatetimePatterns()
     getDataFrameEtlSetting(this.dataFrameInfo.id)
       .then((etlSetting) => {
         this.isReviewMode = !etlSetting.enableEdit
@@ -122,6 +123,7 @@ export default {
     this.$store.commit('dataManagement/clearEtlTableList')
   },
   methods: {
+    ...mapActions('dataManagement', ['getDatetimePatterns']),
     buildData () {
       if (!this.selectAtLeastOneColumnPerTable()) {
         Message({
