@@ -45,7 +45,14 @@
       "successfullyRenamed": "成功重新命名子專案",
       "successfullyCreateDataSource": "成功新增子專案",
       "notYetBindingWithDataSource": "目前無綁定資料源",
-      "confirmDeleteProject": "確定刪除排程專案「{name}」？"
+      "confirmDeleteProject": "確定刪除排程專案「{name}」？",
+      "dataSourceReRelation": "資料源重新關聯",
+      "chooseDataSource": "選擇資料源",
+      "dataSourceName": "資料源名稱",
+      "chooseDataFrame": "選擇資料表",
+      "dataFrameName": "資料表名稱",
+      "orderOrJobInfo": "訂單 / 工單資訊",
+      "bind": "綁定"
     },
     "setting": {
       "title": "基本設定",

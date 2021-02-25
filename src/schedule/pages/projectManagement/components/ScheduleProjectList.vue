@@ -82,7 +82,7 @@
             <a
               href="javascript:void(0);"
               class="action-link link"
-              @click="openDialog('Relation', { id: scope.row.id, name: scope.row.name })">
+              @click="openDialog('Relation', scope.row)">
               {{ scope.row.datasourceStatus === 'Bound'
                 ? $t('schedule.project.dataManagement')
                 : $t('schedule.project.relationManagement')
@@ -91,13 +91,13 @@
             <a 
               href="javascript:void(0);"
               class="action-link link"
-              @click="openDialog('Rename', { id: scope.row.id, name: scope.row.name })">
+              @click="openDialog('Rename', scope.row)">
               {{ $t('button.rename') }}
             </a>
             <a 
               href="javascript:void(0);"
               class="action-link link"
-              @click="openDialog('Delete', { id: scope.row.id, name: scope.row.name })">
+              @click="openDialog('Delete', scope.row)">
               {{ $t('button.delete') }}
             </a>
           </template>
@@ -156,12 +156,7 @@ export default {
     fetchData () {
       this.isLoading = true
       fetchProjectList(this.getCurrentGroupId)
-        .then(list => {
-          list.forEach(item => {
-            if (!item.datasourceName) item.datasourceName = '-*-*-*-'
-          })
-          this.projectList = list
-        })
+        .then(list => this.projectList = list)
         .finally(() => this.isLoading = false)
     },
     openDataSourcePage (dataSourceId) {

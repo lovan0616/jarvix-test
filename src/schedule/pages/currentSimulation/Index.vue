@@ -101,11 +101,15 @@ export default {
   mounted () {
     this.fetchData()
   },
+  created () {
+    this.setCurrentProjectId(Number(this.$route.params.schedule_project_id))
+  },
   beforeDestroy () {
     this.updateScheduledJobs([])
   },
   methods: {
     ...mapMutations('simulation', ['updateScheduledJobs']),
+    ...mapMutations('scheduleSetting', ['setCurrentProjectId']),
     async fetchData () {
       this.isLoading = true
       this.planInfo = await getPlanInfo(this.scheduleProjectId)

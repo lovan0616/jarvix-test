@@ -4,5 +4,8 @@ export default {
   },
   setEquipments (state, equipments) {
     state.equipments = equipments
+  },
+  setCurrentProjectId (state, id) {
+    state.scheduleProjectId = id
   }
 }

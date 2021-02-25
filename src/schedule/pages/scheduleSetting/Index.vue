@@ -177,7 +177,7 @@
         {{ $t('schedule.setting.save') }}
       </default-button>
     </div>
-    <!-- 共用資料設定 -->
+    <!-- 額外限制條件設定 -->
     <div
       v-if="!solutionSequence"
       class="setting setting--constraint"
@@ -203,7 +203,7 @@
         </div>
       </div>
     </div>
-    <!-- 額外限制條件設定 -->
+    <!-- 共用資料設定 -->
     <div
       v-if="!solutionSequence"
       class="setting setting--common"
@@ -212,14 +212,6 @@
         <h2 class="header__title">
           {{ $t('schedule.setting.commonDataSetting') }}
         </h2>
-        <div class="header__action">
-          <default-button
-            :is-disabled="isFetchingAdvanceSetting"
-            @click="openUploadFileDialog"
-          >
-            {{ $t('schedule.setting.updateFiles') }}
-          </default-button>
-        </div>
       </div>
       <div class="setting__body">
         <div class="file">
@@ -254,7 +246,7 @@ import SingleCommonFile from './components/commonDataSetting/SingleCommonFile'
 import ExceptionTimeSetting from '@/schedule/pages/simulation/setting/components/ExceptionTimeSetting'
 import { getUploadFileList } from '@/schedule/API/Setting'
 import { Message } from 'element-ui'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 
 export default {
@@ -304,6 +296,9 @@ export default {
       return localStorage.getItem('isShowOrderUpload') === 'true'
     }
   },
+  created () {
+    this.setCurrentProjectId(Number(this.$route.params.schedule_project_id))
+  },
   mounted () {
     const defaultSetting = this.$store.state.scheduleSetting.defaultSetting
     const equipments = this.$store.state.scheduleSetting.equipments
@@ -318,31 +313,20 @@ export default {
 
     this.fetchFiles()
 
-    // 紀錄 projectId
-    this.settingInfo.projectId = this.scheduleProjectId
-
-    const fetchSetting = this.$store.dispatch('scheduleSetting/getSetting')
-    const fetchEquipments = this.$store.dispatch('scheduleSetting/getEquipments')
-    this.isLoading = true
-
-    Promise.all([fetchSetting, fetchEquipments]).then(res => {
-      const prevSetting = res[0]
-      const equipments = res[1]
-
+    this.$store.dispatch('scheduleSetting/getSetting').then(prevSetting => {
       // 拿到先前設定
-      this.settingInfo = { ...prevSetting }
+      this.settingInfo = { ...prevSetting, projectId: this.scheduleProjectId }
       delete this.settingInfo.worktimes.weekList
-
+      this.$store.commit('scheduleSetting/updateSetting', this.settingInfo)
+    })
+    this.$store.dispatch('scheduleSetting/getEquipments').then(equipments => {
       // 拿到設備列表
       this.equipments = equipments.map(e => ({ value: e.id, label: e.name }))
-
       this.$store.commit('scheduleSetting/setEquipments', this.equipments)
-      this.$store.commit('scheduleSetting/updateSetting', this.settingInfo)
-
-      this.isLoading = false
-    }).catch(() => {})
+    })
   },
   methods: {
+    ...mapMutations('scheduleSetting', ['setCurrentProjectId']),
     fetchFiles () {
       this.isFetchingAdvanceSetting = true
       return getUploadFileList()

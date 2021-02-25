@@ -5,7 +5,7 @@ export default {
   namespaced: true,
   state: {
     scheduleProjects: [],
-    scheduleProjectId: 0,
+    scheduleProjectId: null,
     defaultSetting: null,
     equipments: null
   },

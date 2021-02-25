@@ -18,14 +18,11 @@ export function getSetting (projectId) {
  * 更新後台設定
  *  @param {Object} settingInfo - 設定資訊
  */
-export function setSetting (data, projectId) {
+export function setSetting (data) {
   return request({
     url: '/setting/info',
     method: 'PUT',
-    data: {
-      ...data,
-      projectId
-    }
+    data
   })
 }
 

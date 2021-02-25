@@ -45,7 +45,14 @@
       "successfullyRenamed": "成功重新命名子专案",
       "successfullyCreateDataSource": "成功新增子专案",
       "notYetBindingWithDataSource": "目前无绑定资料源",
-      "confirmDeleteProject": "确定删除排程专案「{name}」？ "
+      "confirmDeleteProject": "确定删除排程专案「{name}」？ ",
+      "dataSourceReRelation": "资料源重新关联",
+      "chooseDataSource": "选择资料源",
+      "dataSourceName": "资料源名称",
+      "chooseDataFrame": "选择资料表",
+      "dataFrameName": "资料表名称",
+      "orderOrJobInfo": "订单 / 工单资讯",
+      "bind": "绑定"
     },
     "setting": {
       "title": "基本设定",
