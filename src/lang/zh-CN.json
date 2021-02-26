@@ -2492,7 +2492,8 @@
     "defaultMsg": "系统发生非预期错误",
     "lackOfPermission": "权限不足，请联系管理员",
     "versionUpdate": "有新版本上线，立即帮您更新",
-    "networkError": "网路连线发生错误，请检查连线，稍后再试"
+    "networkError": "网路连线发生错误，请检查连线，稍后再试",
+    "errorMessageDownload": "错误讯息下载"
   },
   "resultNote": {
     "groupLimitNote": "此结果为原数据取前 {randomLimit} 笔得来",

@@ -2459,7 +2459,8 @@
     "defaultMsg": "Unexpected error occurred in the system",
     "lackOfPermission": "lack of permissions, please contact the administrator",
     "versionUpdate": "A new version is online, help you update it immediately",
-    "networkError": "An error occurred in the network connection, please check the connection and try again later"
+    "networkError": "An error occurred in the network connection, please check the connection and try again later",
+    "errorMessageDownload": "Download error message"
   },
   "resultNote": {
     "groupLimitNote": "The result is before the original data {randomLimit} rows",
