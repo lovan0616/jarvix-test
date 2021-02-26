@@ -68,25 +68,23 @@ export function analysisFile (fileId, fileInfo) {
 
 /**
  * append file
- * @param {Number} fileId - 欲取得的 file ID
- * @param {Number} dataFrameId - 欲取得的資料源 ID
+ * @param {Object} data - 欲更新的檔案資訊
  */
-export function appendFile (fileId, dataFrameId) {
+export function appendFile (data) {
+  const {fileId, ...fileInfo} = data
   return request({
     url: `/files/${fileId}/append`,
     method: 'POST',
-    data: {
-      dataFrameId
-    }
+    data: fileInfo
   })
 }
 
 /**
- * append file
- * @param {Number} fileId - 欲取得的 file ID
- * @param {Number} dataFrameId - 欲取得的資料源 ID
+ * reimport file
+ * @param {Object} data - 欲更新的檔案資訊
  */
-export function reimportFile (fileId, dataFrameId) {
+export function reimportFile (data) {
+  const {fileId, dataFrameId} = data
   return request({
     url: '/data/reimport',
     method: 'POST',
