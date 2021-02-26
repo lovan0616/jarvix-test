@@ -131,8 +131,6 @@ export default {
     prev () {
       // 清空上傳檔案
       this.$store.commit('dataManagement/updateUploadFileList', [])
-      // 清空 imported table list
-      this.$store.commit('dataManagement/clearImportedTableList')
       this.$emit('prev')
     }
   }

@@ -103,15 +103,11 @@ export default {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.fail
       })
-    },
-    importedFileList () {
-      return this.$store.state.dataManagement.importedFileList
     }
   },
   methods: {
     chooseFileUpload () {
       this.$store.commit('dataManagement/updateUploadFileList', [])
-			this.$store.commit('dataManagement/clearImportedTableList')
       this.$emit("prev")
     },
     cancelFileUpdate () {
