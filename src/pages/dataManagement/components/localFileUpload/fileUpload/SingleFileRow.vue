@@ -55,7 +55,7 @@
             :id="`${tabDetail.tabNum}-${tabDetail.tabName}`"
             v-model="currentTabDetail"
             :value="tabDetail.tabNum"
-            name="tabDetail"
+            :name="`tabDetail-${index}`"
             type="radio"
             class="input-radio"
           >
