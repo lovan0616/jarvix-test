@@ -145,7 +145,6 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(response => {
-          this.$store.commit('dataManagement/updateImportedFileList', response)
           this.$store.commit('dataManagement/updateUploadFileStatus', {
             index: this.index,
             status: uploadStatus.success,

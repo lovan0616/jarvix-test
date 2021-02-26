@@ -1,10 +1,6 @@
 import Vue from 'vue'
 
 export default {
-  updateImportedFileList (state, file) {
-    if (file.tabDetails.length > 0) file.tabDetail = file.tabDetails[0]
-    state.importedFileList.push(file)
-  },
   updateUploadFileList (state, data) {
     state.uploadFileList = data
   },
@@ -99,9 +95,6 @@ export default {
   updateReplaceValue (state, data) {
     let {tableIndex, columnIndex, info} = data
     Vue.set(state.etlTableList[tableIndex].columns, columnIndex, info)
-  },
-  clearImportedTableList (state) {
-    state.importedFileList = []
   },
   clearEtlTableList (state, data) {
     state.etlTableList = []
