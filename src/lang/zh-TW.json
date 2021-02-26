@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "請填字串(含空格)",
     "formCharacterOverMax": "最多{max}個字元",
     "formCharacterOverMin": "最少{min}個字元",
+    "formValueOverMin": "數字需大於{min}",
     "formNumericeOverOne": "最少包含1個數字",
     "formDecimal": "請輸入數字(可含小數位)",
     "formDecimalWithMaxDecimalPointNumbers": "請輸入數字(至多為小數 {max} 位)",
@@ -473,6 +474,8 @@
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
     "searchDataSource": "搜尋資料源",
     "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量",
+    "histogramBinSetting": "設定直方圖組距大小",
+    "histogramBinSize": "直方圖組距大小",
     "chooseTab": "選擇要使用的分頁"
   },
   "algorithm": {
