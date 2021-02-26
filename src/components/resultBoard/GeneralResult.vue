@@ -33,7 +33,7 @@
                 v-if="typeInfo.isProcessing" 
                 size="16"/>
               <svg-icon 
-                v-else-if="typeInfo.isFailed"
+                v-else-if="!isHistogramBinSetting && typeInfo.isFailed"
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
               <div
@@ -123,6 +123,11 @@
         :result-id="selectedTypeInfo.cachedResultId"
         @close="closeDialog"
       />
+      <histogram-bin-setting-dialog
+        v-if="currentResultId && isShowHistogramBinSettingDialog"
+        @re-analyze="reAnalyze"
+        @close="closeDialog"
+      />
       <clustering-number-setting-dialog
         v-if="currentResultId && isShowClusteringNumberSettingDialog"
         @re-analyze="reAnalyze"
@@ -140,6 +145,7 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
+import histogramBinSettingDialog from '@/components/dialog/histogramBinSettingDialog'
 import ClusteringNumberSettingDialog from '@/components/dialog/ClusteringNumberSettingDialog'
 import PredictionIntervalSettingDialog from '@/components/dialog/PredictionIntervalSettingDialog'
 import { Message } from 'element-ui'
@@ -153,6 +159,7 @@ export default {
     RecommendedInsight,
     DropdownSelect,
     SaveClusteringDialog,
+    histogramBinSettingDialog,
     ClusteringNumberSettingDialog,
     PredictionIntervalSettingDialog,
     NotifyInfoBlock
@@ -197,12 +204,17 @@ export default {
     pinboardAccountId: {
       type: Number,
       default: null
-    }
+    },
+    isHistogramBinSetting: {
+      type: Boolean,
+      default: false
+    },
   },
   data: () => {
     return {
       activeTab: null,
       isShowSaveClusteringDialog: false,
+      isShowHistogramBinSettingDialog: false,
       isShowClusteringNumberSettingDialog: false,
       isShowPredictionIntervalSettingDialog: false,
       intentType,
@@ -233,7 +245,14 @@ export default {
             icon: 'add-feature',
             dialogName: 'predictionIntervalSetting'
           },
-        ]
+        ],
+        OVERVIEW: [
+          {
+            title: 'editing.histogramBinSetting',
+            icon: 'add-feature',
+            dialogName: 'histogramBinSetting'
+          },
+        ],
       }
     },
     isShowInfo () {
@@ -276,7 +295,7 @@ export default {
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     },
-    fetchSpecificType (type, index) {
+    fetchSpecificType (type, index, data) {
       // 有資料正在 fetching 則擋掉
       const isFetching = this.switchTypeList.some(typeInfo => typeInfo.isProcessing)
       if (isFetching) return
@@ -296,7 +315,16 @@ export default {
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
         type: type,
-        algoConfig: this.algoConfig
+        settingConfig: {
+          ...((type === this.intentType.CLUSTERING || type === this.intentType.PREDICTION) && {
+            algoConfig: this.algoConfig,
+          }),
+          ...((type === this.intentType.OVERVIEW && data) && {
+            displayConfig: {
+              histogramBinSize: data
+            }
+          })
+        }
       })
         .then(({ resultId }) => {
           this.switchTypeList[index] = {
@@ -333,23 +361,32 @@ export default {
         case 'clusteringNumberSetting':
           this.isShowClusteringNumberSettingDialog = true
           break
+
+        case 'histogramBinSetting':
+          this.isShowHistogramBinSettingDialog = true
+          break
         
         case 'predictionIntervalSetting':
           this.isShowPredictionIntervalSettingDialog = true
       }
     },
-    reAnalyze (TYPE) {
+    reAnalyze (TYPE, data) {
       let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType[TYPE])
       this.switchTypeList[index].cachedResultId = null
-      this.fetchSpecificType(this.intentType[TYPE], index)
+      this.fetchSpecificType(this.intentType[TYPE], index, data)
       this.closeDialog()
     },
     closeDialog () {
       switch (this.activeTab) {
+        case this.intentType.OVERVIEW:
+          this.isShowHistogramBinSettingDialog = false
+          break
+
         case this.intentType.CLUSTERING:
           this.isShowSaveClusteringDialog = false
           this.isShowClusteringNumberSettingDialog = false
           break
+
         case this.intentType.PREDICTION:
           this.isShowPredictionIntervalSettingDialog = false
           break
@@ -362,6 +399,8 @@ export default {
     hasAdvancedSetting (index) {
       let currentType = this.switchTypeList[index].denotation
       switch (currentType) {
+        case this.intentType.OVERVIEW:
+          return this.isHistogramBinSetting
         case this.intentType.CLUSTERING:
         case this.intentType.PREDICTION:
           return this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId

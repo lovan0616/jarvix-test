@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "请填字串(含空格)",
     "formCharacterOverMax": "最多{max}个字元",
     "formCharacterOverMin": "最少{min}个字元",
+    "formValueOverMin": "数字需大於{min}",
     "formNumericeOverOne": "最少包含1个数字",
     "formDecimal": "请输入数字(可含小数位)",
     "formDecimalWithMaxDecimalPointNumbers": "请输入数字(至多为小数 {max} 位)",
@@ -467,6 +468,8 @@
     "onlyPrefixMatching": "此搜寻只支援从字首开始匹配",
     "searchDataSource": "搜寻资料源",
     "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量",
+    "histogramBinSetting": "设定直方图组距大小",
+    "histogramBinSize": "直方图组距大小",
     "chooseTab": "选择要使用的分页"
   },
   "algorithm": {
