@@ -469,7 +469,8 @@
     "searchDataSource": "搜寻资料源",
     "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量",
     "histogramBinSetting": "设定直方图组距大小",
-    "histogramBinSize": "直方图组距大小"
+    "histogramBinSize": "直方图组距大小",
+    "chooseTab": "选择要使用的分页"
   },
   "algorithm": {
     "name": "演算法",

@@ -469,7 +469,8 @@
     "searchDataSource": "Search DataSource",
     "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})",
     "histogramBinSetting": "Histogram Bin Range Setting",
-    "histogramBinSize": "Histogram Bin Range"
+    "histogramBinSize": "Histogram Bin Range",
+    "chooseTab": "Choose a tab content"
   },
   "algorithm": {
     "name": "Algorithm",

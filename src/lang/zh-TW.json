@@ -475,7 +475,8 @@
     "searchDataSource": "搜尋資料源",
     "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量",
     "histogramBinSetting": "設定直方圖組距大小",
-    "histogramBinSize": "直方圖組距大小"
+    "histogramBinSize": "直方圖組距大小",
+    "chooseTab": "選擇要使用的分頁"
   },
   "algorithm": {
     "name": "演算法",

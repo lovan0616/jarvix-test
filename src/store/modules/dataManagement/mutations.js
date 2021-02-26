@@ -2,10 +2,22 @@ import Vue from 'vue'
 
 export default {
   updateImportedFileList (state, file) {
+    if (file.tabDetails.length > 0) file.tabDetail = file.tabDetails[0]
     state.importedFileList.push(file)
   },
   updateUploadFileList (state, data) {
     state.uploadFileList = data
+  },
+  updateUploadFileTabDetail (state, data) {
+    // this.$set(state.uploadFileList[data.index], 'tabDetail', data.tabDetail)
+    state.uploadFileList[data.index].tabDetail = data.tabDetail
+  },
+  updateUploadFileStatus (state, data) {
+    const {index, status, ...fileInfo} = data
+    state.uploadFileList[index].status = status
+    // 預設選第一個 tab
+    if (fileInfo.tabDetails.length > 0) fileInfo.tabDetail = fileInfo.tabDetails[0]
+    state.uploadFileList[index] = {...state.uploadFileList[index], ...fileInfo}
   },
   removeUploadFile (state, data) {
     state.uploadFileList.splice(data, 1)
