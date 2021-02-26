@@ -145,7 +145,7 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
-import histogramBinSettingDialog from '@/components/dialog/histogramBinSettingDialog'
+import HistogramBinSettingDialog from '@/components/dialog/HistogramBinSettingDialog'
 import ClusteringNumberSettingDialog from '@/components/dialog/ClusteringNumberSettingDialog'
 import PredictionIntervalSettingDialog from '@/components/dialog/PredictionIntervalSettingDialog'
 import { Message } from 'element-ui'
@@ -159,7 +159,7 @@ export default {
     RecommendedInsight,
     DropdownSelect,
     SaveClusteringDialog,
-    histogramBinSettingDialog,
+    HistogramBinSettingDialog,
     ClusteringNumberSettingDialog,
     PredictionIntervalSettingDialog,
     NotifyInfoBlock
