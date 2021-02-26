@@ -301,7 +301,8 @@ export default {
     this.editColumnInfo.statsType = this.originalStatsType
   },
   methods: {
-    stateTypeConverter (statsType) {
+    stateTypeConverter (type) {
+      let statsType = JSON.parse(JSON.stringify(type))
       if (statsType === 'DATETIME') statsType = ['DATETIME', this.columnInfo.datetimePatterns[0]]
       else statsType = [statsType]
       return statsType
@@ -393,7 +394,7 @@ export default {
       this.editColumnInfo.targetDataType = this.editColumnInfo.originalDataType
       this.cleanReplacements()
 
-      this.updateSetting(this.editColumnInfo)
+      this.updateSetting(this.columnInfoFormatter(this.editColumnInfo))
     },
     cleanReplacements () {
       this.editColumnInfo.values = this.editColumnInfo.values.filter(el => el.type !== 'VALUE_REPLACEMENT')

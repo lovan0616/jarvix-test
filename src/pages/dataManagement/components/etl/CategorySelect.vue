@@ -109,7 +109,8 @@ export default {
     this.editedColumnInfo.statsType = this.originalStatsType
   },
   methods: {
-    stateTypeConverter (statsType) {
+    stateTypeConverter (type) {
+      let statsType = JSON.parse(JSON.stringify(type))
       if (statsType === 'DATETIME') statsType = ['DATETIME', this.columnInfo.datetimePatterns[0]]
       else statsType = [statsType]
       return statsType
