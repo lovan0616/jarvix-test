@@ -23,19 +23,7 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <template v-if="isShowCompoundSestraints">
-            {{ $t('resultDescription.area') + (index + 1) }}:
-            <span
-              v-for="(singleRestraint, restraintIndex) in singleType.restraints"
-              :key="'restraint' + index + '-' + restraintIndex"
-            >
-              {{ singleRestraint.properties.display_name }} {{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
-              <span
-                v-show="restraintIndex !== singleType.restraints.length - 1"
-              >、</span>
-            </span>
-          </template>
-          <template v-else>
+          <template v-if="dataset.timeStampList">
             <div 
               v-if="singleType.type === 'enum'"
               class="filter-description"
@@ -58,7 +46,15 @@
                   end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true)
                 }) }}
               </div>
-          </div></template>
+            </div>
+          </template>
+          <template v-else>
+            {{ $t('resultDescription.area') + (index + 1) }}:
+            {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
+              start: roundNumber(singleType.properties.start), 
+              end: roundNumber(singleType.properties.end) 
+            }) }}
+          </template>
         </div>
       </div>
     </selected-region>
@@ -222,9 +218,6 @@ export default {
     },
     isStabilityChart () {
       return !!this.dataset.pValuesFeatureInformation
-    },
-    isShowCompoundSestraints () {
-      return this.isStabilityChart || !this.dataset.timeStampList
     },
     options () {
       let config = {
@@ -584,44 +577,28 @@ export default {
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
 
-        if (this.isShowCompoundSestraints)
+        if (this.dataset.timeStampList)
           return {
-            type: 'compound',
-            restraints: [
-              {
-                type: 'range',
-                properties: {
-                  dc_id: this.title.xAxis[0].dc_id,
-                  data_type: this.title.xAxis[0].data_type,
-                  display_name: this.title.xAxis[0].display_name,
-                  start: this.dataset.index[coordRange[0][0] < 0 ? 0 : coordRange[0][0]],
-                  end: this.dataset.index[coordRange[0][1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[0][1]]
-                }
-              },
-              {
-                type: 'range',
-                properties: {
-                  dc_id: this.title.yAxis[0].dc_id,
-                  data_type: this.title.yAxis[0].data_type,
-                  display_name: this.title.yAxis[0].display_name,
-                  start: coordRange[1][0],
-                  end: coordRange[1][1]
-                }
-              }
-            ]
+            type: 'range',
+            properties: {
+              dc_id: this.title.xAxis[0].dc_id,
+              data_type: this.title.xAxis[0].data_type,
+              display_name: this.title.xAxis[0].display_name,
+              start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
+              timeScope: this.dataset.timeScope
+            }
           }
-
         return {
-          type: 'range',
-          properties: {
-            dc_id: this.title.xAxis[0].dc_id,
-            data_type: this.title.xAxis[0].data_type,
-            display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
-            timeScope: this.dataset.timeScope
+            type: 'range',
+            properties: {
+              dc_id: this.title.xAxis[0].dc_id,
+              data_type: this.title.xAxis[0].data_type,
+              display_name: this.title.xAxis[0].display_name,
+              start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
+            }
           }
-        }
       })
     },
     saveFilter () {
