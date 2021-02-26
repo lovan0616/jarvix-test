@@ -124,7 +124,6 @@ export default {
         return this.singleFile.tabDetail.tabNum
       },
       set (val) {
-        console.log(val, this.singleFile.tabDetails.filter(el => el.tabNum === val))
         this.$store.commit('dataManagement/updateUploadFileTabDetail', {
           index: this.index,
           tabDetail: this.singleFile.tabDetails.filter(el => el.tabNum === val)[0]
