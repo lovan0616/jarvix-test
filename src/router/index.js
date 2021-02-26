@@ -20,6 +20,15 @@ const router = new Router({
           beforeEnter: (to, from, next) => {
             const accountId = store.getters['userManagement/getCurrentAccountId']
             const groupId = store.getters['userManagement/getCurrentGroupId']
+            if (!accountId) {
+              Message({
+                message: i18n.t('errorMessage.lackOfPermission'),
+                type: 'error',
+                duration: 3 * 1000,
+                showClose: true
+              })
+              return next({name: 'PageLogin'})
+            }
             if (!groupId) return next({ name: 'PageGrouplessGuidance', params: { 'account_id': accountId } })
             next({ name: 'PageIndex', params: { 'account_id': accountId, 'group_id': groupId } })
           }
@@ -356,6 +365,11 @@ const router = new Router({
       component: () => import('@/pages/resetPassword/Index')
     },
     {
+      path: '/admin',
+      name: 'PageAdmin',
+      component: () => import('@/pages/admin/Index')
+    },
+    {
       path: '/signup',
       name: 'PageSignup',
       component: () => import('@/pages/signup/Index')
@@ -398,7 +412,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   // Declare routes without authentication
-  const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage', 'PageForgetPassword', 'PageResetPassword']
+  const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage', 'PageForgetPassword', 'PageResetPassword', 'PageAdmin']
   if (pathWithoutAuth.includes(to.name)) {
     next()
     return

@@ -187,14 +187,25 @@
   },
   "forgetPassword": {
     "title": "忘記密碼",
-    "remark": "系統會將密碼變更信寄至您註冊的信箱",
-    "back": "返回登入頁"
+    "remark": "系統會將密碼變更信寄至您註冊的信箱"
   },
   "resetPassword": {
     "title": "更新密碼",
     "newPassword": "新密碼",
-    "confirmNewPassword": "確認新密碼",
-    "back": "返回登入頁"
+    "confirmNewPassword": "確認新密碼"
+  },
+  "admin": {
+    "title": "使用者後台",
+    "userList": "使用者列表",
+    "userName": "使用者名稱",
+    "action": "操作",
+    "changePassword": "密碼變更",
+    "accountName": "帳戶名稱",
+    "resetLink": "重設密碼連結",
+    "searchUserName": "搜尋使用者名稱"
+  },
+  "link": {
+    "backToLogin": "返回登入頁"
   },
   "editing": {
     "localUpload": "本機檔案上傳",
