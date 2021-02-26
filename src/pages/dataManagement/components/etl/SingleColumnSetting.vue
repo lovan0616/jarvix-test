@@ -8,13 +8,6 @@
         <label 
           class="input-label" 
           for="">{{ $t('etl.dataType') }}</label>
-        <!-- <default-select 
-          v-model="editColumnInfo.statsType"
-          :is-disabled="isReviewMode"
-          :option-list="statsTypeOptions"
-          class="data-type-select"
-          @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
-        /> -->
         <div class="setting-cascader-container">
           <el-cascader
             v-model="editColumnInfo.statsType"
