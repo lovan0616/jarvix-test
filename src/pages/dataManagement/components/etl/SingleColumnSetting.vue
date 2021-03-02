@@ -219,13 +219,13 @@ export default {
     ...mapState('dataManagement', ['datetimePatterns']),
     statsTypeOptions () {
       return statsTypeOptionList.filter((option) => {
-        return this.editColumnInfo.originalStatsType === 'DATETIME'
-          ? option
-          : option.value !== 'DATETIME'
+        return this.editColumnInfo.originalStatsType === 'BOOLEAN'
+          ? option.value !== 'DATETIME'
+          : option
       })
     },
     cascaderStatsTypeOptions () {
-      if (this.editColumnInfo.originalStatsType !== 'DATETIME') return this.statsTypeOptions
+      if (this.editColumnInfo.originalStatsType === 'BOOLEAN') return this.statsTypeOptions
       return this.statsTypeOptions.map(item => {
         if(item.value !== 'DATETIME') return item
         else return {
@@ -293,8 +293,7 @@ export default {
     this.originalStatsType = this.stateTypeConverter(this.columnInfo.statsType)
     this.editColumnInfo.statsType = this.originalStatsType
   },
-  methods: {
-    stateTypeConverter (type) {
+  methods: {stateTypeConverter (type) {
       let statsType = JSON.parse(JSON.stringify(type))
       if (statsType === 'DATETIME') statsType = ['DATETIME', this.columnInfo.datetimePatterns[0]]
       else statsType = [statsType]
@@ -383,6 +382,7 @@ export default {
     },
     reset () {
       this.editColumnInfo.hasChanged = false
+      this.editColumnInfo.statsType = this.editColumnInfo.originalStatsType
       this.editColumnInfo.statsType = this.originalStatsType
       this.editColumnInfo.targetDataType = this.editColumnInfo.originalDataType
       this.cleanReplacements()

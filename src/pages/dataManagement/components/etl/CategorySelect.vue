@@ -74,15 +74,16 @@ export default {
   },
   computed: {
     ...mapState('dataManagement', ['datetimePatterns']),
+    // 只有 BOOLEAN 不提供 DATETIME 轉換的選項
     statsTypeOptions () {
       return statsTypeOptionList.filter((option) => {
-        return this.editedColumnInfo.originalStatsType === 'DATETIME'
-          ? option
-          : option.value !== 'DATETIME'
+        return this.editedColumnInfo.originalStatsType === 'BOOLEAN'
+          ? option.value !== 'DATETIME'
+          : option
       })
     },
     cascaderStatsTypeOptions () {
-      if (this.editedColumnInfo.originalStatsType !== 'DATETIME') return this.statsTypeOptions
+      if (this.editedColumnInfo.originalStatsType === 'BOOLEAN') return this.statsTypeOptions
       return this.statsTypeOptions.map(item => {
         if(item.value !== 'DATETIME') return item
         else return {
