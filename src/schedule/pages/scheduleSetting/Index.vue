@@ -325,7 +325,7 @@ export default {
         this.equipments = equipments.map(e => ({ value: e.id, label: e.name }))
         this.$store.commit('scheduleSetting/setEquipments', this.equipments)
       })
-      .catch(() => this.isUnbound.equipments = true)
+      .catch(() => {})
   },
   methods: {
     ...mapMutations('scheduleSetting', ['setCurrentProjectId']),
