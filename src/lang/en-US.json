@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "Please input text (including spaces).",
     "formCharacterOverMax": "Maximum {max} characters.",
     "formCharacterOverMin": "At least {min} characters.",
+    "formValueOverMin": "The field field must be {min} or more",
     "formNumericeOverOne": "Contain at least 1 number.",
     "formDecimal": "Please enter a number(May contain decimal points)",
     "formDecimalWithMaxDecimalPointNumbers": "Please enter a number(May contains {max} digits after the decimal place)",
@@ -186,14 +187,25 @@
   },
   "forgetPassword": {
     "title": "Forget Password",
-    "remark": "The system will send a password change letter to your registered mailbox.",
-    "back": "Back to login page"
+    "remark": "The system will send a password change letter to your registered mailbox."
   },
   "resetPassword": {
     "title": "Reset Password",
     "newPassword": "New Password",
-    "confirmNewPassword": "Confirm New Password",
-    "back": "Back to login page"
+    "confirmNewPassword": "Confirm New Password"
+  },
+  "admin": {
+    "title": "Management System",
+    "userList": "User List",
+    "userName": "User Name",
+    "action": "Actions",
+    "changePassword": "Change Password",
+    "accountName": "Account Name",
+    "resetLink": "Reset Password Link",
+    "searchUserName": "Search user name"
+  },
+  "link": {
+    "backToLogin": "Back to login page"
   },
   "editing": {
     "localUpload": "File Upload",
@@ -455,7 +467,10 @@
     "searchDataSourceOrDataFrame": "Search DataSource or DataFrame",
     "onlyPrefixMatching": "The search only supports prefix matching",
     "searchDataSource": "Search DataSource",
-    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})"
+    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})",
+    "histogramBinSetting": "Histogram Bin Range Setting",
+    "histogramBinSize": "Histogram Bin Range",
+    "chooseTab": "Choose a tab content"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -2444,7 +2459,8 @@
     "defaultMsg": "Unexpected error occurred in the system",
     "lackOfPermission": "lack of permissions, please contact the administrator",
     "versionUpdate": "A new version is online, help you update it immediately",
-    "networkError": "An error occurred in the network connection, please check the connection and try again later"
+    "networkError": "An error occurred in the network connection, please check the connection and try again later",
+    "errorMessageDownload": "Download error message"
   },
   "resultNote": {
     "groupLimitNote": "The result is before the original data {randomLimit} rows",

@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "请填字串(含空格)",
     "formCharacterOverMax": "最多{max}个字元",
     "formCharacterOverMin": "最少{min}个字元",
+    "formValueOverMin": "数字需大於{min}",
     "formNumericeOverOne": "最少包含1个数字",
     "formDecimal": "请输入数字(可含小数位)",
     "formDecimalWithMaxDecimalPointNumbers": "请输入数字(至多为小数 {max} 位)",
@@ -186,14 +187,25 @@
   },
   "forgetPassword": {
     "title": "忘记密码",
-    "remark": "系统会将密码变更信寄至您注册的信箱",
-    "back": "返回登入页"
+    "remark": "系统会将密码变更信寄至您注册的信箱"
   },
   "resetPassword": {
     "title": "更新密码",
     "newPassword": "新密码",
-    "confirmNewPassword": "确认新密码",
-    "back": "返回登入页"
+    "confirmNewPassword": "确认新密码"
+  },
+  "admin": {
+    "title": "使用者后台",
+    "userList": "使用者列表",
+    "userName": "使用者名称",
+    "action": "操作",
+    "changePassword": "密码变更",
+    "accountName": "帐户名称",
+    "resetLink": "重设密码连结",
+    "searchUserName": "搜寻使用者名称"
+  },
+  "link": {
+    "backToLogin": "返回登入页"
   },
   "editing": {
     "localUpload": "本机文件上传",
@@ -455,7 +467,10 @@
     "searchDataSourceOrDataFrame": "搜寻数据源 / 数据表",
     "onlyPrefixMatching": "此搜寻只支援从字首开始匹配",
     "searchDataSource": "搜寻资料源",
-    "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量"
+    "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量",
+    "histogramBinSetting": "设定直方图组距大小",
+    "histogramBinSize": "直方图组距大小",
+    "chooseTab": "选择要使用的分页"
   },
   "algorithm": {
     "name": "演算法",
@@ -2477,7 +2492,8 @@
     "defaultMsg": "系统发生非预期错误",
     "lackOfPermission": "权限不足，请联系管理员",
     "versionUpdate": "有新版本上线，立即帮您更新",
-    "networkError": "网路连线发生错误，请检查连线，稍后再试"
+    "networkError": "网路连线发生错误，请检查连线，稍后再试",
+    "errorMessageDownload": "错误讯息下载"
   },
   "resultNote": {
     "groupLimitNote": "此结果为原数据取前 {randomLimit} 笔得来",

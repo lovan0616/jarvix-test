@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "請填字串(含空格)",
     "formCharacterOverMax": "最多{max}個字元",
     "formCharacterOverMin": "最少{min}個字元",
+    "formValueOverMin": "數字需大於{min}",
     "formNumericeOverOne": "最少包含1個數字",
     "formDecimal": "請輸入數字(可含小數位)",
     "formDecimalWithMaxDecimalPointNumbers": "請輸入數字(至多為小數 {max} 位)",
@@ -186,14 +187,25 @@
   },
   "forgetPassword": {
     "title": "忘記密碼",
-    "remark": "系統會將密碼變更信寄至您註冊的信箱",
-    "back": "返回登入頁"
+    "remark": "系統會將密碼變更信寄至您註冊的信箱"
   },
   "resetPassword": {
     "title": "更新密碼",
     "newPassword": "新密碼",
-    "confirmNewPassword": "確認新密碼",
-    "back": "返回登入頁"
+    "confirmNewPassword": "確認新密碼"
+  },
+  "admin": {
+    "title": "使用者後台",
+    "userList": "使用者列表",
+    "userName": "使用者名稱",
+    "action": "操作",
+    "changePassword": "密碼變更",
+    "accountName": "帳戶名稱",
+    "resetLink": "重設密碼連結",
+    "searchUserName": "搜尋使用者名稱"
+  },
+  "link": {
+    "backToLogin": "返回登入頁"
   },
   "editing": {
     "localUpload": "本機檔案上傳",
@@ -461,7 +473,10 @@
     "scriptExecutionStep4": "設定輸出類型",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
     "searchDataSource": "搜尋資料源",
-    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量"
+    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量",
+    "histogramBinSetting": "設定直方圖組距大小",
+    "histogramBinSize": "直方圖組距大小",
+    "chooseTab": "選擇要使用的分頁"
   },
   "algorithm": {
     "name": "演算法",
@@ -2507,7 +2522,8 @@
     "defaultMsg": "系統發生非預期錯誤",
     "lackOfPermission": "權限不足，請聯繫管理員",
     "versionUpdate": "有新版本上線，立即幫您更新",
-    "networkError": "網路連線發生錯誤，請檢查連線，稍後再試"
+    "networkError": "網路連線發生錯誤，請檢查連線，稍後再試",
+    "errorMessageDownload": "錯誤訊息下載"
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",
