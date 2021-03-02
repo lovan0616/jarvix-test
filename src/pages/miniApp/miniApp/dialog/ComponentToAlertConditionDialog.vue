@@ -88,7 +88,8 @@
               :key="control + '-' + index"
               class="single-select"
             >
-              <div class="checkbox-group">
+              <!--暫時隱藏，待後端修正-->
+              <!-- <div class="checkbox-group">
                 <div class="checkbox-label">
                   <input
                     v-model="control.isSelected"
@@ -97,7 +98,7 @@
                   >
                   <div class="checkbox-square"/>
                 </div>
-              </div>
+              </div> -->
               <div class="label-content">
                 <div class="label-title">{{ control.columnName }}</div>
               </div>
@@ -348,6 +349,8 @@ export default {
           return filter.start && filter.end
         case ('RELATIVEDATETIME'): 
           return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+        default: 
+          return false
       }
     },
     transformFilterValue (filter) {
@@ -490,19 +493,7 @@ export default {
     restrictions (filterList) {
       if (filterList.length === 0) return []
       return filterList
-        .filter(filter => {
-          // TODO: 相對時間有全選的情境，不需帶入限制中
-          // if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
-          // 時間欄位要有開始和結束時間
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
-          // filter 必須有值
-          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
-          return false
-        })
+        .filter(filter => this.checkShouldApplyMiniAppFilter(filter))
         .map(filter => {
           let type = ''
           let data_type = ''
@@ -524,17 +515,6 @@ export default {
               type = 'range'
               break  
           }
-
-          // TODO: 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          // if (filter.statsType === 'RELATIVEDATETIME') return [{
-          //   type,
-          //   properties: {
-          //     data_type,
-          //     dc_id: this.componentData.dateTimeColumn.dataColumnId,
-          //     display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-          //     ...this.formatRelativeDatetime(filter.dataValues[0])
-          //   }
-          // }]
 
           return [{
             type,

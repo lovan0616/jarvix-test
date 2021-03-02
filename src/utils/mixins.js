@@ -597,6 +597,21 @@ Vue.mixin({
     },
     getAccountRoleLocaleName (accountRole) {
       return this.$t(`userManagement.${this.accountRoleToCamelCase(accountRole)}`)
-    }
+    },
+    checkShouldApplyMiniAppFilter (filter, mainDataColumn = null) {
+      switch (filter.statsType) {
+        case 'RELATIVEDATETIME':
+          // 如果當前 dataframe 無日期欄位，或相對時間選全選時，不需帶入限制中
+          return mainDataColumn & filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+        case 'NUMERIC':
+        case 'FLOAT':
+        case 'DATETIME':
+          return filter.start && filter.end
+        case 'CATEGORY':
+          return filter.dataValues.length > 0
+        default:
+          return false
+      }
+    },
   }
 })

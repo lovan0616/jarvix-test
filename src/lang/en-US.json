@@ -922,7 +922,9 @@
     "formulaPreview": "Calculation Formula Preview",
     "setting": "Setting",
     "otherSettings": "Other Settings",
-    "formulaType": "Calculation Formula Type"
+    "formulaType": "Calculation Formula Type",
+    "singleColumnData": "Single Column Data",
+    "singleRowData": "Single Row Data"
   },
   "alert": {
     "alertLogs": "Alert Record",
@@ -949,6 +951,7 @@
     "selectDataColumn": "Select Data Column",
     "messageExampleDescription": "Sample Description",
     "messageColumnParamSyntaxDescription": "Column Params Syntax = ${Column Name}",
+    "messageIndicatorParamSyntaxDescription": "Indicator Params Syntax = #{Indicator Name}",
     "messageTemplateSettingExample": "Message Template: Power Anomalies occurred in Factory:{0} ,(Current:{1}μA)。",
     "messageTemplatePreviewExample": "Message Preview: Power Anomalies occurred in Factory:{0} ,(Current:{1}μA)。",
     "param1NameExample": "${Factory Number}",
@@ -964,7 +967,13 @@
     "monitoringItem": "monitoringItem({number})",
     "finished": "Finished",
     "unfinished": "Unfinished",
-    "state": "Process State"
+    "state": "Process State",
+    "originalDataSource": "Original Data Source",
+    "alertIndicator": "Indicators",
+    "columnValueCombination": "Data Column Combination",
+    "dataFilterCondition": "Filter Conditions",
+    "dataSource": "Data Source",
+    "dataFrame": "Data Set"
    },
   "clustering": {
     "cluster": "Cluster",
@@ -1176,7 +1185,8 @@
     "sendInvitation": "Send Invitation",
     "downloadPage": "Download Image",
     "changeDiagram": "Change Diagram",
-    "columnSummaryInfo": "Column Summary Info"
+    "columnSummaryInfo": "Column Summary Info",
+    "createAlert": "Create Alert Condition"
   },
   "timeScopeUnit": {
     "second": "seconds",

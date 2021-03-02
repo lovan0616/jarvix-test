@@ -24,16 +24,22 @@ export default {
   },
   data () {
     return {
-      featureInfoList: []
+      featureInfoList: [],
+      PValueOrderList: [
+        "clusteringPValue", "mixturesPValue", "trendsPValue", "oscillationPValue"
+      ]
     }
   },
   mounted () {
+    let isNeedOrder = false
     this.featureInfoList = Object.keys(this.featureInformation).map((name) => {
+      isNeedOrder = this.PValueOrderList.includes(name)
       return {
         name: name,
         value: this.featureInformation[name]
       }
     })
+    if (isNeedOrder) this.featureInfoList.sort((a,b) => this.PValueOrderList.findIndex(name => name === a.name) - this.PValueOrderList.findIndex(name => name === b.name))
   },
   methods: {
     formatFeatureValue (val) {
