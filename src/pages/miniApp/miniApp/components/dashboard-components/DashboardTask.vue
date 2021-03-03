@@ -56,7 +56,11 @@
               <svg-icon 
                 icon-class="more"
                 class="more-icon" />
-              <slot name="drowdown"/>
+              <!-- <slot name="drowdown"/> -->
+              <dropdown-select
+                :bar-data="componentSettingOptions"
+                @switchDialogName="$emit('switchDialogName', $event)"
+              />
             </div>
             <div v-if="!isEditMode && componentData.type === 'monitor-warning-list'">
               <svg-icon 
@@ -79,9 +83,8 @@
                 :converted-type="'index_info'"
                 intend="key_result"
                 @isEmpty="isEmptyData = true"
-                @failed="isComponentFailed = true"
+                @failed="onComponentFailed"
                 @finished="isIndexTypeComponentLoading = false"
-                @setConfig="updateComponentConfigInfo"
               />
               <span 
                 v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
@@ -149,6 +152,8 @@
             @clickCell="columnTriggered($event)"
             @clickRow="rowTriggered($event)"
             @clickChart="chartriggered($event)"
+            @setConfig="updateComponentConfigInfo"
+            @failed="onComponentFailed"
           />
         </div>
       </template>
@@ -168,6 +173,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
 import AbnormalStatistics from './AbnormalStatistics'
 import Simulator from './Simulator'
+import DropdownSelect from '@/components/select/DropdownSelect'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
@@ -179,7 +185,8 @@ export default {
     DecideDialog,
     MonitorWarningList,
     AbnormalStatistics,
-    Simulator
+    Simulator,
+    DropdownSelect
   },
   props: {
     componentData: {
@@ -241,6 +248,7 @@ export default {
       tempFilteredKeyResultId: null,
       isInitializing: true,
       segmentation: null,
+      enableAlert: false
     }
   },
   computed: {
@@ -376,7 +384,29 @@ export default {
           'height': 'calc(100% - 80px)',
         })
       }
-    }
+    },
+    componentSettingOptions () {
+      const options = [
+        {
+          title: 'miniApp.componentSetting',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponent'
+        },
+        {
+          title: 'button.delete',
+          icon: 'delete',
+          dialogName: 'DeleteComponent'
+        },
+        ...(this.enableAlert && [
+          {
+            title: 'button.createAlert',
+            icon: 'warning',
+            dialogName: 'CreateWarningCriteria'
+          }
+        ])
+      ]
+      return options
+    },
   },
   watch: {
     isCurrentDashboardInit: {
@@ -445,6 +475,7 @@ export default {
       this.isProcessing = true
       this.isIndexTypeComponentLoading = true
       this.isComponentFailed = false
+      this.enableAlert = false
       this.totalSec = 50
       this.periodSec = 200
       this.isEmptyData = false
@@ -687,7 +718,11 @@ export default {
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
     },
     updateComponentConfigInfo (config) {
-      this.componentData.enableAlert = config.enableAlert
+      this.enableAlert = config.enableAlert
+    },
+    onComponentFailed () {
+      this.isComponentFailed = true
+      this.enableAlert = false
     }
   }
 }
@@ -808,6 +843,7 @@ $direction-span: ("col": 12, "row": 12);
           border-radius: 4px;
         }
         .dropdown-select {
+          visibility: hidden;
           z-index: 1;
           /deep/ .dropdown-select-box {
             box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);

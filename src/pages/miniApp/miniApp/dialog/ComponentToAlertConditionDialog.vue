@@ -347,6 +347,8 @@ export default {
           return filter.start && filter.end
         case ('DATETIME'):
           return filter.start && filter.end
+        case ('RELATIVEDATETIME'): 
+          return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
         default: 
           return false
       }
@@ -361,7 +363,8 @@ export default {
           return `${filter.start} - ${filter.end}`
         case ('DATETIME'):
           return `${filter.start} - ${filter.end}`
-        // TODO: relative datetime
+        case ('RELATIVEDATETIME'): 
+          return this.$t('miniApp.' + filter.dataValues[0])
       }
     },
     fetchDataFrameList (dataSourceId) {
@@ -410,10 +413,24 @@ export default {
               statsType: column.statsType
             }))
 
-          // 資料過濾條件
-          const selectedFilterList = this.filterOptionList.filter(option => option.isSelected)
-          settingData.targetConfig.restrictions = this.restrictions(selectedFilterList)
+          // 分類和處理資料過濾條件
+          const initialFilterLists = {
+            general: [],
+            relativeDateTime: []
+          }
+          const selectedFilterLists = this.filterOptionList.reduce((acc, cur) => {
+            if (!cur.isSelected) return acc
+            const category = cur.statsType === 'RELATIVEDATETIME' ? 'relativeDateTime' : 'general'
+            acc[category].push(cur)
+            return acc
+          }, initialFilterLists)
 
+          // 資料過濾條件: 一般 filter
+          settingData.targetConfig.restrictions = this.restrictions(selectedFilterLists.general)
+
+          // 資料過濾條件: 相對時間 filter
+          settingData.targetConfig.dateRangeColumn = this.formatRelatvieDateTimeFilter(selectedFilterLists.relativeDateTime[0])
+          
           // 指標如果選定離群值，不帶條件設定
           if (!this.showConditionComapringSection) settingData.comparingValues = null
 
@@ -430,6 +447,48 @@ export default {
           this.$emit('close')
         }
       })
+    },
+    formatRelatvieDateTimeFilter (filter) {
+      if (!filter) return null
+      const selectedValue = filter.dataValues[0]
+      const filterInfo = {
+        dataColumnId: this.componentData.dateTimeColumn.dataColumnId,
+        dataType: 'DATETIME',
+        displayName: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+        recentInterval: null,
+        recentIntervalUnit: null,
+        statsType: 'DATETIME'
+      }
+
+      // update datetime range
+      switch (true) {
+        case RegExp('^.*hour.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('hour')[0])
+          filterInfo.recentIntervalUnit = 'Hour'
+          break
+        case RegExp('^today$').test(selectedValue): 
+          filterInfo.recentInterval = 0
+          filterInfo.recentIntervalUnit = 'Day'
+          break
+        case RegExp('^.*day.*$').test(selectedValue): 
+          filterInfo.recentInterval = Number(selectedValue.split('day')[0])
+          filterInfo.recentIntervalUnit = 'Day'
+          break
+        case RegExp('^.*week.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('week')[0])
+          filterInfo.recentIntervalUnit = 'Week'
+          break
+        case RegExp('^.*month.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('month')[0])
+          filterInfo.recentIntervalUnit = 'Month'
+          break
+        case RegExp('^.*season.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('season')[0])
+          filterInfo.recentIntervalUnit = 'Season'
+          break
+      }
+
+      return filterInfo
     },
     restrictions (filterList) {
       if (filterList.length === 0) return []
