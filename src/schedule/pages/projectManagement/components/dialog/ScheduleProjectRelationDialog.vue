@@ -12,118 +12,157 @@
       <div class="relation-container">
         <!-- 管理資料源 -->
         <section class="relation-container__section">
-          <div class="section-title">Step1: {{ $t('schedule.project.chooseDataSource') }}</div>
-          <div class="section-content">
-            <span class="content-title">{{ $t('schedule.project.dataSourceName') }}</span>
-            <default-select 
-              v-validate.disable="'required'"
-              v-model="datasourceId"
-              :options="dataSourceOptions"
-              name="datasourceId"
-            />
+          <div class="relation-container__section-title">Step1: {{ $t('schedule.project.chooseDataSource') }}(必填)</div>
+          <div class="form">
+            <div class="form-fields">
+              <div class="form-field">
+                <div class="field-label">
+                  {{ $t('schedule.project.dataSourceName') }}
+                </div>
+                <default-select 
+                  v-validate.disable="'required'"
+                  v-model="datasourceId"
+                  :options="dataSourceOptions"
+                  name="datasourceId"
+                />
+              </div>
+            </div>
           </div>
         </section>
         <spinner
           v-if="isLoadingFilesInfo"
-          class="file-loading-spinner"
           title="載入檔案中"
         />
-        <div v-else>
-          <!-- 綁定訂單 -->
+        <template v-else>
+          <!-- 管理資料表 -->
           <section class="relation-container__section">
-            <div class="section-title">Step2: 綁定訂單</div>
-            <div class="section-content">
-              <span class="content-title">{{ $t('schedule.project.orderOrJobInfo') }}</span>
-              <spinner
-                v-if="isLoadingDataFrameList"
-                :title="$t('editing.dataDownloading')" 
-                class="dataframe-loading-spinner" 
-                size="10"/>
-              <default-select 
-                v-validate="'required'"
-                v-else
-                v-model="formData.order"
-                :options="dataFrameOptions"
-                name="dataFrameId-order"
-              />
-              <binding-checked-info
-                v-if="hasError(orderCheckedResult)"
-                :info="orderCheckedResult"
-              />
-            </div>
-            <div class="section-action">
-              <button
-                :disabled="isCheckOrderBtnDisabled"
-                class="btn btn-default"
-                @click="checkOrder"
-              >檢查</button>
-              <div 
-                v-if="orderCheckedResult.bindable"
-                class="bind-block">
-                <div class="reminding-info">
-                  <svg-icon icon-class="alert-circle"/>
-                  確認綁定資料表（錯誤的資料列在模擬時會被忽略）
+            <div class="relation-container__section-title">Step2: 選擇資料表</div>
+            <!-- 綁定訂單 -->
+            <div class="form">
+              <div class="form-label">
+                全域設定（必填）
+                <div class="form-action">
+                  <button
+                    v-if="checkedResultOrder.bindable"
+                    :disabled="isBindOrderBtnDisabled"
+                    class="btn btn-default"
+                    @click="bindOrder">綁定</button>
+                  <button
+                    v-else
+                    :disabled="isCheckOrderBtnDisabled"
+                    class="btn btn-default"
+                    @click="checkOrder">檢查</button>
                 </div>
-                <button
-                  :disabled="isBindOrderBtnDisabled"
-                  class="btn btn-default"
-                  @click="bindOrder">
-                  綁定
-                </button>
+              </div>
+              <div class="form-fields">
+                <div class="form-field">
+                  <span class="field-label">{{ $t('schedule.project.orderOrJobInfo') }}</span>
+                  <spinner
+                    v-if="isLoadingDataFrameList"
+                    :title="$t('editing.dataDownloading')" 
+                    class="dataframe-loading-spinner" 
+                    size="10"/>
+                  <default-select 
+                    v-validate="'required'"
+                    v-else
+                    v-model="formOrder"
+                    :options="dataFrameOptions"
+                    name="dataFrameId-order"
+                  />
+                  <binding-checked-info
+                    v-if="hasError(checkedResultOrder)"
+                    :info="checkedResultOrder"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- 綁定共同資料 -->
+            <div class="form">
+              <div class="form-label">
+                共同資料設定（必填）
+                <div class="form-action">
+                  <button
+                    v-if="isRawdataBindable"
+                    :disabled="isBindRawdataBtnDisabled"
+                    class="btn btn-default"
+                    @click="bindRawdata">綁定</button>
+                  <button
+                    v-else
+                    :disabled="isCheckRawdataBtnDisabled"
+                    class="btn btn-default"
+                    @click="checkRawdata">檢查</button>
+                </div>
+              </div>
+              <div class="form-fields">
+                <div
+                  v-for="file in files.rawdata"
+                  :key="file.id"
+                  class="form-field"
+                >
+                  <span class="field-label">{{ file.alias }}</span>
+                  <spinner 
+                    v-if="isLoadingDataFrameList" 
+                    :title="$t('editing.dataDownloading')"
+                    class="dataframe-loading-spinner" 
+                    size="10"/>
+                  <default-select
+                    v-validate="'required'"
+                    v-else
+                    v-model="formRawdata[`${file.code}DataframeId`]"
+                    :options="dataFrameOptions"
+                    :name="`dataFrameId-${file.id}`"
+                  />
+                  <binding-checked-info
+                    v-if="hasError(checkedResultRawdata, file.code)"
+                    :info="checkedResultRawdata[file.code]"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- 綁定額外限制 -->
+            <div class="form">
+              <div class="form-label">
+                額外限制條件設定
+                <div class="form-action">
+                  <button
+                    class="btn btn-default"
+                  >
+                    綁定
+                  </button>
+                  <button
+                    class="btn btn-default"
+                    @click="checkConstraints"
+                  >
+                    檢查
+                  </button>
+                </div>
+              </div>
+              <div class="form-fields">
+                <div
+                  v-for="file in files.constraint"
+                  :key="file.id"
+                  class="form-field"
+                >
+                  <span class="field-label">{{ file.alias }}</span>
+                  <spinner 
+                    v-if="isLoadingDataFrameList" 
+                    :title="$t('editing.dataDownloading')"
+                    class="dataframe-loading-spinner" 
+                    size="10"/>
+                  <default-select
+                    v-else
+                    v-model="formConstraint[file.code]"
+                    :options="dataFrameOptions"
+                  />
+                  <!-- <binding-checked-info
+                    v-if="hasError(checkedResultRawdata, file.code)"
+                    :info="checkedResultRawdata[file.code]"
+                  /> -->
+                </div>
               </div>
             </div>
           </section>
-          <!-- 綁定共同資料 -->
-          <section class="relation-container__section">
-            <div class="section-title">Step3: 綁定共同資料</div>
-            <div
-              v-for="file in files.rawdata"
-              :key="file.id"
-              class="section-content"
-            >
-              <span class="content-title">{{ file.alias }}</span>
-              <spinner 
-                v-if="isLoadingDataFrameList" 
-                :title="$t('editing.dataDownloading')"
-                class="dataframe-loading-spinner" 
-                size="10"/>
-              <default-select
-                v-validate="'required'"
-                v-else
-                v-model="formData[`${snakeToCamel(file.code)}DataframeId`]"
-                :options="dataFrameOptions"
-                :name="`dataFrameId-${file.id}`"
-              />
-              <binding-checked-info
-                v-if="hasError(rawdataCheckedResult, snakeToCamel(file.code))"
-                :info="rawdataCheckedResult[`${snakeToCamel(file.code)}`]"
-              />
-            </div>
-            <div class="section-action">
-              <button
-                :disabled="isCheckRawdataBtnDisabled"
-                class="btn btn-default"
-                @click="checkRawdata">
-                檢查
-              </button>
-              <div
-                v-if="!isBindRawdataBtnDisabled"
-                class="bind-block"
-              >
-                <div class="reminding-info">
-                  <svg-icon icon-class="alert-circle"/>
-                  確認綁定資料表（錯誤的資料列在模擬時會被忽略）
-                </div>
-                <button
-                  :disabled="isBindRawdataBtnDisabled"
-                  class="btn btn-default"
-                  @click="bindRawdata">
-                  綁定
-                </button>
-              </div>
-            </div>
-          </section>
-        </div>
+        </template>
       </div>
       <div class="dialog-footer">
         <div class="dialog-button-block">
@@ -142,7 +181,7 @@
 import { mapState } from 'vuex'
 import { getDataFrameById } from '@/API/DataSource'
 import { getUploadFileList } from '@/schedule/API/Setting'
-import { checkOrder, bindOrder, checkRawdata, bindRawdata } from '@/schedule/API/Bind'
+import { checkOrder, bindOrder, checkRawdata, bindRawdata, checkConstraints, bindConstraints } from '@/schedule/API/Bind'
 import { Message } from 'element-ui'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import BindingCheckedInfo from './BindingCheckedInfo'
@@ -163,10 +202,13 @@ export default {
   },
   data: () => {
     return {
-      formData: {
-        order: null
+      formOrder: null,
+      formRawdata: {},
+      formConstraint: {},
+      files: {
+        rawdata: [],
+        constraint: []
       },
-      files: {},
       datasourceId: null,
       dataFrameList: [],
       isLoadingFilesInfo: false,
@@ -174,10 +216,13 @@ export default {
       isProcessing: false,
       isCheckingOrder: false,
       isCheckingRawdata: false,
+      isCheckingConstraints: false,
       isBindingOrder: false,
       isBindingRawdata: false,
-      orderCheckedResult: {},
-      rawdataCheckedResult: {}
+      isBindingConstraints: false,
+      checkedResultOrder: {},
+      checkedResultRawdata: {},
+      checkedResultConstraint: {}
     }
   },
   computed: {
@@ -193,21 +238,21 @@ export default {
       return options
     },
     isCheckOrderBtnDisabled () {
-      return this.formData.order === null || this.isCheckingOrder
+      return this.formOrder === null || this.isCheckingOrder
     },
     isBindOrderBtnDisabled () {
-      return this.isCheckingOrder || this.isBindingOrder || !this.orderCheckedResult || Boolean(this.orderCheckedResult.headerErrorMessage)
+      return this.isCheckingOrder || !this.checkedResultOrder || Boolean(this.checkedResultOrder.headerErrorMessage)
+    },
+    isRawdataBindable () {
+      return Object.values(this.checkedResultRawdata).every(value => value.bindable)
     },
     isCheckRawdataBtnDisabled () {
-      return Object.keys(this.formData)
-        .filter(key => key !== 'order')
-        .some(key => this.formData[key] === null)
+      return this.isCheckingRawdata || Object.values(this.formRawdata).some(value => value === null)
     },
     isBindRawdataBtnDisabled () {
-      return Object.keys(this.rawdataCheckedResult)
-        .some(key => !this.rawdataCheckedResult[key].bindable)
+      return this.isBindingRawdata || Object.values(this.checkedResultRawdata).some(value => !value.bindable)
     },
-    defaultCheckedResult () {
+    checkedResultDefault () {
       return {
         columns: [],
         headerErrorMessage: null,
@@ -243,17 +288,23 @@ export default {
       ? this.projectInfo.datasourceId
       : null
     this.fetchFiles()
-    this.orderCheckedResult = this.defaultCheckedResult
+    this.checkedResultOrder = this.checkedResultDefault
   },
   methods: {
     fetchFiles () {
       this.isLoadingFilesInfo = true
       getUploadFileList()
-        .then(res => {
-          this.files = res
-          res.rawdata.forEach(item => {
-            this.$set(this.formData, `${this.snakeToCamel(item.code)}DataframeId`, null)
-            this.$set(this.rawdataCheckedResult, this.snakeToCamel(item.code), this.defaultCheckedResult)
+        .then(({ rawdata, constraint }) => {
+          this.files.rawdata = rawdata.map(item => ({ ...item, code: this.snakeToCamel(item.code) }))
+          this.files.constraint = constraint
+
+          this.files.rawdata.forEach(item => {
+            this.$set(this.formRawdata, `${item.code}DataframeId`, null)
+            this.$set(this.checkedResultRawdata, item.code, this.checkedResultDefault)
+          })
+          this.files.constraint.forEach(item => {
+            this.$set(this.formConstraint, item.code, null)
+            this.$set(this.checkedResultConstraint, item.code, this.checkedResultDefault)
           })
           this.isLoadingFilesInfo = false
         })
@@ -261,26 +312,27 @@ export default {
     },
     checkOrder () {
       const requestBody = {
-        dataframeId: this.formData.order,
+        dataframeId: this.formOrder,
         projectId: this.projectInfo.id
       }
 
       this.isCheckingOrder = true
       checkOrder(requestBody)
         .then(res => {
-          this.orderCheckedResult = {
-            ...this.orderCheckedResult,
+          this.checkedResultOrder = {
+            ...this.checkedResultOrder,
             ...res,
             headerErrorMessage: this.bindable(res) ? '' : res.headerErrorMessage,
             bindable: this.bindable(res)
           }
-          if (!this.hasError(this.orderCheckedResult)) {
+          if (!this.hasError(this.checkedResultOrder)) {
             Message({
-              message: '訂單資料檢查OK',
+              message: '訂單綁定資料表檢查完成，全數資料列皆符合格式',
               type: 'success',
               duration: 3 * 1000,
               showClose: true
             })
+            this.bindOrder()
           }
         })
         .catch(() => {})
@@ -288,25 +340,25 @@ export default {
     },
     checkRawdata () {
       const requestBody = {
-        ...this.formData,
+        ...this.formRawdata,
         projectId: this.projectInfo.id
       }
-      delete requestBody.order
 
+      this.isCheckingRawdata = true
       checkRawdata(requestBody)
         .then(res => {
-          Object.keys(this.rawdataCheckedResult)
+          Object.keys(this.checkedResultRawdata)
             .forEach(key => {
-              this.rawdataCheckedResult[key] = {
-                ...this.rawdataCheckedResult[key],
+              this.checkedResultRawdata[key] = {
+                ...this.checkedResultRawdata[key],
                 ...res[key],
                 headerErrorMessage: this.bindable(res[key]) ? '' : res[key].headerErrorMessage,
                 bindable: this.bindable(res[key])
               }
             })
 
-          // 整表皆檢查通過
-          const allPass = Object.keys(this.rawdataCheckedResult).every(key => this.hasError(this.rawdataCheckedResult, this.rawdataCheckedResult[key]))
+          // 全部資料表皆檢查通過
+          const allPass = Object.values(this.checkedResultRawdata).every(value => this.hasError(this.checkedResultRawdata, value))
           if (allPass) {
             Message({
               message: '共同資料檢查OK',
@@ -314,28 +366,35 @@ export default {
               duration: 3 * 1000,
               showClose: true
             })
-            this.bindRawdata(requestBody)
+            this.bindRawdata()
           }
         })
+        .catch(() => {})
+        .finally(() => this.isCheckingRawdata = false)
     },
-    hasError (info, fileCode = null) {
-      console.log(0)
-      if (fileCode) {
-        console.log(1)
-        if (!info.hasOwnProperty(fileCode)) return false
-        return info[fileCode].headerErrorMessage || info[fileCode].notApplicableRowIndexes.length > 0
-      } else {
-        console.log(2)
-        return info.headerErrorMessage || info.notApplicableRowIndexes.length > 0
+    checkConstraints () {
+      const requestBody = {
+        constraint: Object.keys(this.formConstraint)
+          .filter(key => this.formConstraint[key] !== null)
+          .map(key => ({
+            code: key,
+            dataframeId: this.formConstraint[key]
+          })),
+        projectId: this.projectInfo.id
       }
-    },
-    bindable (info) {
-      return !info.hasOwnProperty('headerErrorMessage')
+
+      this.isCheckingConstraints = true
+      checkConstraints(requestBody)
+        .then(() => {})
+        .catch(() => {})
+        .finally(() => {
+          this.isCheckingConstraints = false
+        })
     },
     bindOrder () {
       this.isBindingOrder = true
       bindOrder({
-        dataframeId: this.formData.order,
+        dataframeId: this.formOrder,
         projectId: this.projectInfo.id
       })
         .then(() => {
@@ -347,17 +406,16 @@ export default {
           })
         })
         .finally(() => {
-          // this.orderCheckedResult = this.defaultCheckedResult
+          // this.checkedResultOrder = this.checkedResultDefault
           this.isBindingOrder = false
           
         })
     },
     bindRawdata () {
       const requestBody = {
-        ...this.formData,
+        ...this.formRawdata,
         projectId: this.projectInfo.id
       }
-      delete requestBody.order
 
       this.isBindingRawdata = true
       bindRawdata(requestBody)
@@ -369,15 +427,33 @@ export default {
             showClose: true
           })
         })
+        .catch(() => {})
         .finally(() => {
-          // Object.keys(this.rawdataCheckedResult).forEach(key => this.rawdataCheckedResult[key] = this.defaultCheckedResult)
+          // Object.keys(this.checkedResultRawdata).forEach(key => this.checkedResultRawdata[key] = this.checkedResultDefault)
           this.isBindingRawdata = false
         })
     },
+    bindConstraints () {
+      bindConstraints()
+        .then(() => {})
+        .catch(() => {})
+        .finally(() => {})
+    },
+    hasError (info, fileCode = null) {
+      if (fileCode) {
+        if (!info.hasOwnProperty(fileCode)) return false
+        return info[fileCode].headerErrorMessage || info[fileCode].notApplicableRowIndexes.length > 0
+      } else {
+        return info.headerErrorMessage || info.notApplicableRowIndexes.length > 0
+      }
+    },
+    bindable (info) {
+      return !info.hasOwnProperty('headerErrorMessage')
+    },
     resetDataFrameSelectors () {
-      Object.keys(this.formData)
-        .filter(key => key !== 'datasourceId')
-        .forEach(key => this.formData[key] = null)
+      this.formOrder = null
+      Object.values(this.formRawdata).forEach(value => value = null)
+      Object.values(this.formConstraint).forEach(value => value = null)
     },
     snakeToCamel (variable) {
       if (!variable) return ''
@@ -394,22 +470,44 @@ export default {
   }
   .relation-container {
     &__section {
+      max-height: 60vh;
       padding: 24px;
       background: rgba(50, 58, 58, 0.95);
       border-radius: 5px;
       margin-bottom: 12px;
-      .section {
-        &-title {
-          font-size: 18px;
-          font-weight: bold;
-          margin-bottom: 8px;
+      overflow: auto;
+      &-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+      .form {
+        &:not(:last-child) {
+          margin-bottom: 16px;
         }
-        &-content {
+        &-label {
+          display: flex;
+          align-items: center;
+          margin-bottom: 14px;
+          &::before {
+            content: '';
+            margin-right: 8px;
+            width: 8px;
+            height: 8px;
+            background-color: $theme-color-primary;
+          }
+        }
+        &-fields {
+          padding: 8px 16px;
+          background: rgba(67, 76, 76, 0.95);
+          border-radius: 8px;
+        }
+        &-field {
           display: flex;
           align-items: flex-start;
           font-size: 14px;
           line-height: 40px;
-          .content-title {
+          .field-label {
             flex-basis: 150px;
             margin-right: 24px;
             text-align: right;
@@ -423,13 +521,7 @@ export default {
           }
         }
         &-action {
-          text-align: right;
-          .bind-block {
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-          }
+          margin-left: auto;
         }
       }
     }
@@ -437,7 +529,6 @@ export default {
 }
 
 /deep/ .spinner-block {
-  &.file-loading-spinner {}
   &.dataframe-loading-spinner {
     width: 188px;
     height: 50.5px;
@@ -454,11 +545,5 @@ export default {
       }
     }
   }
-}
-
-.reminding-info {
-  color: $theme-color-warning;
-  font-size: 14px;
-  margin-right: 8px;
 }
 </style>

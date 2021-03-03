@@ -1,7 +1,7 @@
 import request from '@/schedule/utils/publicRequest.js'
 
 /**
- * 綁定訂單檢查
+ * 檢查訂單
  *  @param {Number} data - dataframeId - 資料表 id
  *  @param {Number} data - project - 排程子專案 id
  */
@@ -14,7 +14,7 @@ export function checkOrder (data) {
 }
 
 /**
- * 綁定訂單來源
+ * 綁定訂單
  *  @param {Number} data - dataframeId - 資料表 id
  *  @param {Number} data - project - 排程子專案 id
  */
@@ -27,7 +27,7 @@ export function bindOrder (data) {
 }
 
 /**
- * 綁定共用資料檢查
+ * 檢查共用資料
  *  @param {Number} data - equipmentDataframeId - equipment 資料表 id
  *  @param {Number} data - groupDataframeId - group 資料表 id
  *  @param {Number} data - processDataframeId - process 資料表 id
@@ -44,7 +44,7 @@ export function checkRawdata (data) {
 }
 
 /**
- * 綁定共用資料來源
+ * 綁定共用資料
  *  @param {Number} data - equipmentDataframeId - equipment 資料表 id
  *  @param {Number} data - groupDataframeId - group 資料表 id
  *  @param {Number} data - processDataframeId - process 資料表 id
@@ -55,6 +55,32 @@ export function checkRawdata (data) {
 export function bindRawdata (data) {
   return request({
     url: '/dataframe/bind/rawdata',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 檢查限制
+ *  @param {Array} constraints - 限制資料表資訊
+ *  @param {Number} data - project - 排程子專案 id
+ */
+export function checkConstraints (data) {
+  return request({
+    url: '/dataframe/bind/constraint/check',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 綁定限制
+ *  @param {Array} constraints - 限制資料表資訊
+ *  @param {Number} data - project - 排程子專案 id
+ */
+export function bindConstraints (data) {
+  return request({
+    url: '/dataframe/constraint/order',
     method: 'POST',
     data
   })
