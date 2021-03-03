@@ -127,5 +127,11 @@ export default {
       type: null,
       ioArgs: {}
     }
+  },
+  updateDatetimePatterns (state, data) {
+    state.datetimePatterns = data
+  },
+  clearDatetimePatterns (state) {
+    state.datetimePatterns = []
   }
 }
