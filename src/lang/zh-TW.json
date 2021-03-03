@@ -976,7 +976,8 @@
     "columnValueCombination": "展開條件",
     "dataFilterCondition": "資料過濾條件",
     "dataSource": "資料源",
-    "dataFrame": "資料表"
+    "dataFrame": "資料表",
+    "expression": "運算式"
   },
   "clustering": {
     "cluster": "群體",

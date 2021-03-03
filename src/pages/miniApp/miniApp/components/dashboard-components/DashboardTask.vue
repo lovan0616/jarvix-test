@@ -85,6 +85,7 @@
                 @isEmpty="isEmptyData = true"
                 @failed="onComponentFailed"
                 @finished="isIndexTypeComponentLoading = false"
+                @setConfig="updateComponentConfigInfo"
               />
               <span 
                 v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
@@ -718,6 +719,10 @@ export default {
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
     },
     updateComponentConfigInfo (config) {
+      // 能用來轉示警條件的元件類型
+      const enabledComponentTypeList = ['formula', 'chart']
+      const isEnabledComponent = enabledComponentTypeList.includes(this.componentData.type)
+      if (!isEnabledComponent) return
       this.enableAlert = config.enableAlert
     },
     onComponentFailed () {

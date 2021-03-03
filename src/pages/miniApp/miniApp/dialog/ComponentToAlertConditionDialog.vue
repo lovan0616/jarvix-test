@@ -44,6 +44,20 @@
               v-else 
               class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
           </div>
+          <div
+            v-if="componentType === 'formula'"
+            class="data-source"
+          >
+            <div class="data-source__title">{{ $t('alert.expression') }}</div>
+            <spinner
+              v-if="isFetchingFormulas"
+              class="setting-block__spinner"
+              size="20"
+            /> 
+            <div 
+              v-else 
+              class="data-source__content">{{ currentFormula.name }}</div>
+          </div>
         </div>
         <!--示警指標-->
         <div class="setting-block">
@@ -187,6 +201,7 @@ import {
   getComponentIndicators,
   convertComponentToAlertCondition
 } from '@/API/Alert'
+import { getFormulaList } from '@/API/NewAsk'
 
 export default {
   name: 'ComponentToAlertConditionDialog',
@@ -206,6 +221,7 @@ export default {
   data () {
     return {
       currentDataFrame: {},
+      currentFormula: {},
       indicators: [],
       columnValueCombinationOptionList: [],
       filterOptionList: [],
@@ -241,6 +257,7 @@ export default {
       isProcessing: false,
       isFetchingDataFrame: false,
       isFetchingIndocators: false,
+      isFetchingFormulas: false,
       xAxis: [],
       hasError: false
     }
@@ -255,7 +272,11 @@ export default {
       }, [])
     },
     currentDataSource () {
-      return this.dataSourceOptionList.find(dataSource => dataSource.id === this.componentData.dataSourceId)
+      const currentDataSourceId = this.componentType === 'formula' ? this.componentData.formulaSetting.dataSourceId : this.componentData.dataSourceId
+      return this.dataSourceOptionList.find(dataSource => dataSource.id === currentDataSourceId)
+    },
+    currentDataFrameId () {
+     return this.componentType === 'formula' ? this.componentData.formulaSetting.dataFrameId : this.componentData.dataFrameId
     },
     comparisonOperatorOptionList () {
       return [
@@ -310,10 +331,14 @@ export default {
     },
     isSaveable () {
       return !this.isProcessing && !this.isFetchingDataFrame && !this.isFetchingIndocators && !this.hasError
+    },
+    componentType () {
+      return this.componentData.type
     }
   },
   mounted () {false
     this.fetchDataFrameList(this.currentDataSource.id)
+    this.componentType === 'formula' && this.fetchFormulaList()
     this.getComponentIndicators(this.componentData.keyResultId)
     this.columnValueCombinationOptionList = this.componentData.controlList.reduce((acc, cur) => {
       acc.push(...cur.map(control => ({ ...control, isSelected: false })))
@@ -370,7 +395,7 @@ export default {
     fetchDataFrameList (dataSourceId) {
       this.isFetchingDataFrame = true
       getDataFrameById(dataSourceId, false)
-        .then(response => this.currentDataFrame = response.find(dataFrame => dataFrame.id === this.componentData.dataFrameId))
+        .then(response => this.currentDataFrame = response.find(dataFrame => dataFrame.id === this.currentDataFrameId))
         .catch(() => this.hasError = true)
         .finally(() => this.isFetchingDataFrame = false)
     },
@@ -384,6 +409,13 @@ export default {
         })
         .catch(() => this.hasError = true)
         .finally(() => this.isFetchingIndocators = false)
+    },
+    fetchFormulaList () {
+      this.isFetchingFormulas = true
+      getFormulaList()
+        .then(formulaList => this.currentFormula = formulaList.find(formula => formula.id === this.componentData.formulaSetting.formulaId))
+        .catch(() => this.hasError = true)
+        .finally(() => this.isFetchingFormulas = false)
     },
     updateSelectedIndicator (type) {
       this.newConditionSetting.targetConfig.analysisValueType = type
@@ -401,7 +433,7 @@ export default {
           const settingData = {
             ...this.newConditionSetting,
             componentId: this.componentData.keyResultId,
-            dataFrameId: this.componentData.dataFrameId,
+            dataFrameId: this.currentDataFrameId,
           }
           // 展開條件
           settingData.targetConfig.combinationColumns = this.columnValueCombinationOptionList

@@ -968,6 +968,7 @@
     "finished": "Finished",
     "unfinished": "Unfinished",
     "state": "Process State",
+    "expression": "Calculation Formula",
     "originalDataSource": "Original Data Source",
     "alertIndicator": "Indicators",
     "columnValueCombination": "Data Column Combination",
