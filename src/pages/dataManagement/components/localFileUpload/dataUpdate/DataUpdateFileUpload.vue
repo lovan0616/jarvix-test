@@ -51,7 +51,6 @@ export default {
   methods: {
     reChooseMode () {
 			this.$store.commit('dataManagement/updateUploadFileList', [])
-			this.$store.commit('dataManagement/clearImportedTableList')
 			this.$emit('prev')
 		},
   }

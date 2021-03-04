@@ -14,7 +14,6 @@ export default {
       db: null
     },
     uploadFileList: [],
-    importedFileList: [],
     showCreateDataSourceDialog: false,
     // 為了讓資料清單頁面可以重新刷新資料
     fileUploadSuccess: false,
@@ -23,6 +22,7 @@ export default {
     etlTableList: [],
     currentTableIndex: 0,
     currentColumnIndex: null,
+    currentUploadScriptName: null,
     currentUploadScriptInfo: {
       scriptId: null,
       dataframeId: null,

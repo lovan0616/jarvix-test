@@ -49,6 +49,14 @@ export function mergeDeep (...objects) {
   }, {})
 }
 
+export function copyToClickBoard (element) {
+  let input = element
+  input.select()
+  /* For mobile devices */
+  input.setSelectionRange(0, 99999)
+  document.execCommand('copy')
+}
+
 export function isObject (target) {
   return typeof target === 'object' && !(target instanceof Array)
 }

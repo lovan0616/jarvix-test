@@ -474,12 +474,15 @@ export default {
             selectedColumnList: null,
             isFilter: true,
             ...(isTrendQuestion && {
-              sortOrders: [
-                {
-                  dataColumnId: segmentationList[0].transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
-                  sortType: 'DESC'
-                }
-              ]
+              displayConfig: {
+                histogramBarSize: null,
+                sortOrders: [
+                  {
+                    dataColumnId: segmentationList[0].transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                    sortType: 'DESC'
+                  }
+                ]
+              }
             })
           }).then(res => {
             this.getComponentV2(res.resultId)

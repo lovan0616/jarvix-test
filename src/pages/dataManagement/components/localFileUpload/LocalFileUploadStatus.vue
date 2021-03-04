@@ -94,9 +94,6 @@ export default {
     },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
-    },
-    importedFileList () {
-      return this.$store.state.dataManagement.importedFileList
     }
   },
   methods: {
@@ -106,8 +103,16 @@ export default {
     next () {
       this.isProcessing = true
       let promiseList = []
-      this.importedFileList.forEach((element, index) => {
-        promiseList.push(analysisFile(element.id, this.dataSourceId))
+
+      this.successList.forEach((element, index) => {
+        const {fileId, fileName, fileType, tabDetail} = element
+        let fileInfo = {
+          dataSourceId: this.dataSourceId,
+          fileName,
+          fileType,
+          tabDetail
+        }
+        promiseList.push(analysisFile(fileId, fileInfo))
       })
 
       Promise.all(promiseList)
@@ -126,8 +131,6 @@ export default {
     prev () {
       // 清空上傳檔案
       this.$store.commit('dataManagement/updateUploadFileList', [])
-      // 清空 imported table list
-      this.$store.commit('dataManagement/clearImportedTableList')
       this.$emit('prev')
     }
   }
