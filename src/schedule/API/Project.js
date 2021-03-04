@@ -75,3 +75,16 @@ export function deleteProject (projectId) {
     method: 'DELETE'
   })
 }
+
+/**
+ * 更換專案綁定的資料源
+ * @param {Number} data - id 子專案 id
+ * @param {Number} data - datasourceId 資料源 id
+ */
+export function rebindDataSource (data) {
+  return request({
+    url: '/project/rebind',
+    method: 'POST',
+    data
+  })
+}

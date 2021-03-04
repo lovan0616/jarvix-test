@@ -6,7 +6,7 @@
         <a 
           href="javascript:void(0)" 
           class="close-btn"
-          @click="$emit('close', false)"
+          @click="$emit('close', shouldRefetchProjectsThereafter)"
         ><svg-icon icon-class="close"/></a>
       </div>
       <div class="relation-container">
@@ -20,11 +20,19 @@
                   {{ $t('schedule.project.dataSourceName') }}
                 </div>
                 <default-select 
-                  v-validate.disable="'required'"
                   v-model="datasourceId"
                   :options="dataSourceOptions"
-                  name="datasourceId"
                 />
+                <button
+                  :disabled="isBindingDataSource"
+                  class="btn btn-default btn-rebind-ds"
+                  @click="rebindDataSource"
+                >
+                  <spinner 
+                    v-show="isBindingDataSource" 
+                    size="10"/>
+                  {{ $t('schedule.binding.rebind') }}
+                </button>
               </div>
             </div>
           </div>
@@ -69,16 +77,14 @@
                 <div class="form-field">
                   <span class="field-label">{{ $t('schedule.project.orderOrJobInfo') }}</span>
                   <spinner
-                    v-if="isLoadingDataFrameList"
+                    v-if="isLoadingDataFrames"
                     :title="$t('editing.dataDownloading')" 
                     class="dataframe-loading-spinner" 
                     size="10"/>
                   <default-select 
-                    v-validate="'required'"
                     v-else
                     v-model="formOrder"
                     :options="dataFrameOptions"
-                    name="dataFrameId-order"
                   />
                   <binding-checked-info
                     v-if="hasError(checkedResultOrder)"
@@ -124,16 +130,14 @@
                 >
                   <span class="field-label">{{ file.alias }}</span>
                   <spinner 
-                    v-if="isLoadingDataFrameList" 
+                    v-if="isLoadingDataFrames" 
                     :title="$t('editing.dataDownloading')"
                     class="dataframe-loading-spinner" 
                     size="10"/>
                   <default-select
-                    v-validate="'required'"
                     v-else
                     v-model="formRawdata[`${file.code}DataframeId`]"
                     :options="dataFrameOptions"
-                    :name="`dataFrameId-${file.id}`"
                   />
                   <binding-checked-info
                     v-if="hasError(checkedResultRawdata, file.code)"
@@ -170,7 +174,7 @@
                 >
                   <span class="field-label">{{ file.alias }}</span>
                   <spinner 
-                    v-if="isLoadingDataFrameList" 
+                    v-if="isLoadingDataFrames" 
                     :title="$t('editing.dataDownloading')"
                     class="dataframe-loading-spinner" 
                     size="10"/>
@@ -193,9 +197,8 @@
       <div class="dialog-footer">
         <div class="dialog-button-block">
           <button
-            :disabled="isProcessing"
             class="btn btn-outline"
-            @click="$emit('close', false)"
+            @click="$emit('close', shouldRefetchProjectsThereafter)"
           >{{ $t('button.cancel') }}</button>
         </div>
       </div>
@@ -208,12 +211,12 @@ import { mapState } from 'vuex'
 import { getDataFrameById } from '@/API/DataSource'
 import { getUploadFileList } from '@/schedule/API/Setting'
 import { checkOrder, bindOrder, checkRawdata, bindRawdata, checkConstraints, bindConstraints } from '@/schedule/API/Bind'
+import { rebindDataSource } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import BindingCheckedInfo from './BindingCheckedInfo'
 
 export default {
-  inject: ['$validator'],
   name: 'ScheduleProjectRelationDialog',
   components: {
     DecideDialog,
@@ -236,19 +239,20 @@ export default {
         constraint: []
       },
       datasourceId: null,
-      dataFrameList: [],
+      dataFrames: [],
       isLoadingFilesInfo: false,
-      isLoadingDataFrameList: false,
-      isProcessing: false,
+      isLoadingDataFrames: false,
       isCheckingOrder: false,
       isCheckingRawdata: false,
       isCheckingConstraints: false,
       isBindingOrder: false,
       isBindingRawdata: false,
       isBindingConstraints: false,
+      isBindingDataSource: false,
       checkedResultOrder: {},
       checkedResultRawdata: {},
-      checkedResultConstraint: {}
+      checkedResultConstraint: {},
+      shouldRefetchProjectsThereafter: false
     }
   },
   computed: {
@@ -259,7 +263,7 @@ export default {
       return options
     },
     dataFrameOptions () {
-      const options = this.dataFrameList.map(item => ({ value: item.id, label: item.primaryAlias }))
+      const options = this.dataFrames.map(item => ({ value: item.id, label: item.primaryAlias }))
       options.unshift({ value: null, label: this.$t('editing.defaultOption') })
       return options
     },
@@ -288,32 +292,12 @@ export default {
       }
     }
   },
-  watch: {
-    datasourceId: {
-      immediate: true,
-      handler (dataSourceId) {
-        if (dataSourceId) {
-          this.isLoadingDataFrameList = true
-          getDataFrameById(dataSourceId)
-            .then(res => {
-              this.dataFrameList = res
-              this.resetDataFrameSelectors()
-              this.isLoadingDataFrameList = false
-            })
-            .catch(() => this.isLoadingDataFrameList = false)
-        } else {
-          this.dataFrameList = []
-          this.resetDataFrameSelectors()
-          this.isLoadingDataFrameList = false
-        }
-      }
-    }
-  },
   created () {
     this.datasourceId = this.projectInfo.datasourceStatus === 'Bound'
       ? this.projectInfo.datasourceId
       : null
     this.fetchFiles()
+    this.fetchDataFrames()
     this.checkedResultOrder = this.checkedResultDefault
   },
   methods: {
@@ -335,6 +319,16 @@ export default {
           this.isLoadingFilesInfo = false
         })
         .catch(() => this.isLoadingFilesInfo = false)
+    },
+    fetchDataFrames () {
+      this.isLoadingDataFrames = true
+      getDataFrameById(this.datasourceId)
+        .then(res => {
+          this.dataFrames = res
+          this.resetDataFrameSelectors()
+          this.isLoadingDataFrames = false
+        })
+        .catch(() => this.isLoadingDataFrames = false)
     },
     checkOrder () {
       const requestBody = {
@@ -470,6 +464,27 @@ export default {
     bindable (info) {
       return !info.hasOwnProperty('headerErrorMessage')
     },
+    rebindDataSource () {
+      this.isBindingDataSource = true
+
+      rebindDataSource({
+        datasourceId: this.datasourceId,
+        id: this.projectInfo.id
+      })
+        .then(() => {
+          Message({
+            message: this.$t('schedule.binding.successfullyRebindDataSource'),
+            type: 'info',
+            duration: 10 * 1000,
+            showClose: true
+          })
+          this.fetchDataFrames()
+          this.resetDataFrameSelectors()
+          this.shouldRefetchProjectsThereafter = true
+        })
+        .catch(() => {})
+        .finally(() => this.isBindingDataSource = false)
+    },
     resetDataFrameSelectors () {
       this.formOrder = null
       Object.values(this.formRawdata).forEach(value => value = null)
@@ -551,6 +566,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  &.btn-rebind-ds {
+    margin-left: auto;
+    margin-top: 7px;
+  }
 }
 /deep/ .spinner-block {
   padding: 0;

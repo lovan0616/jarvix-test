@@ -95,6 +95,7 @@
     },
     "binding": {
       "bind": "绑定",
+      "rebind": "重新绑定",
       "globalSetting": "全域设定",
       "failedRowCount": "{count}笔资料发生错误",
       "failedRow": "资料列发生错误",
@@ -112,7 +113,8 @@
       "allConstraintsDataIsValid": "额外限制资料绑定资料表检查完成，全数资料列皆符合格式",
       "successfullyBindOrder": "订单资料已绑定",
       "successfullyBindRawdata": "共同资料已绑定",
-      "successfullyBindConstraints": "额外限制资料已绑定"
+      "successfullyBindConstraints": "额外限制资料已绑定",
+      "successfullyRebindDataSource": "已重新绑定资料源，资料表需重新绑定。"
     },
     "simulation":{
       "title": "排程计画模拟",
