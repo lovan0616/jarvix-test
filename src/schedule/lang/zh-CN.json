@@ -93,6 +93,27 @@
       "updatedDate": "更新日期",
       "equipmentInfoIsUnbound": "尚未绑定机台资讯"
     },
+    "binding": {
+      "bind": "绑定",
+      "globalSetting": "全域设定",
+      "failedRowCount": "{count}笔资料发生错误",
+      "failedRow": "资料列发生错误",
+      "bindingReminding": "以下资料列发生错误，建议修正后重新导入。若您仍然选择绑定资料表，错误的资料在进行生产排程模拟时会被忽略。",
+      "columnName": "栏位名称",
+      "failedBecauseOfEmpty": "空值错误",
+      "failedBecauseOfEmptyDesc": "未输入任何内容",
+      "failedBecauseOfRef": "参照错误",
+      "failedBecauseOfRefDesc": "资料值无相关对应",
+      "failedBecauseOfType": "参照错误",
+      "failedBecauseOfTypeDesc": "资料值无相关对应",
+      "datumIndexes": "资料列位置",
+      "allOrderDataIsValid": "订单绑定资料表检查完成，全数资料列皆符合格式",
+      "allRawdataDataIsValid": "共同资料绑定资料表检查完成，全数资料列皆符合格式",
+      "allConstraintsDataIsValid": "额外限制资料绑定资料表检查完成，全数资料列皆符合格式",
+      "successfullyBindOrder": "订单资料已绑定",
+      "successfullyBindRawdata": "共同资料已绑定",
+      "successfullyBindConstraints": "额外限制资料已绑定"
+    },
     "simulation":{
       "title": "排程计画模拟",
       "job": "工单",

@@ -12,7 +12,7 @@
       <div class="relation-container">
         <!-- 管理資料源 -->
         <section class="relation-container__section">
-          <div class="relation-container__section-title">Step1: {{ $t('schedule.project.chooseDataSource') }}(必填)</div>
+          <div class="relation-container__section-title">Step1: {{ $t('schedule.project.chooseDataSource') }}({{ $t('editing.isRequired') }})</div>
           <div class="form">
             <div class="form-fields">
               <div class="form-field">
@@ -36,22 +36,33 @@
         <template v-else>
           <!-- 管理資料表 -->
           <section class="relation-container__section">
-            <div class="relation-container__section-title">Step2: 選擇資料表</div>
+            <div class="relation-container__section-title">Step2: {{ $t('editing.chooseDataFrame') }}</div>
             <!-- 綁定訂單 -->
             <div class="form">
               <div class="form-label">
-                全域設定（必填）
+                {{ $t('schedule.binding.globalSetting') }}（{{ $t('editing.isRequired') }}）
                 <div class="form-action">
                   <button
                     v-if="checkedResultOrder.bindable"
                     :disabled="isBindOrderBtnDisabled"
                     class="btn btn-default"
-                    @click="bindOrder">綁定</button>
+                    @click="bindOrder">
+                    <spinner 
+                      v-show="isBindingOrder" 
+                      size="10"/>
+                    {{ $t('schedule.binding.bind') }}
+                  </button>
                   <button
                     v-else
                     :disabled="isCheckOrderBtnDisabled"
                     class="btn btn-default"
-                    @click="checkOrder">檢查</button>
+                    @click="checkOrder">
+                    <spinner 
+                      v-show="isCheckingOrder" 
+                      size="10"/>
+                    檢查
+                    <!-- {{ $t('schedule.binding.bind') }} -->
+                  </button>
                 </div>
               </div>
               <div class="form-fields">
@@ -72,6 +83,7 @@
                   <binding-checked-info
                     v-if="hasError(checkedResultOrder)"
                     :info="checkedResultOrder"
+                    @bind="bindOrder"
                   />
                 </div>
               </div>
@@ -79,18 +91,29 @@
             <!-- 綁定共同資料 -->
             <div class="form">
               <div class="form-label">
-                共同資料設定（必填）
+                {{ $t('schedule.setting.commonDataSetting') }}（{{ $t('editing.isRequired') }}）
                 <div class="form-action">
                   <button
                     v-if="isRawdataBindable"
                     :disabled="isBindRawdataBtnDisabled"
                     class="btn btn-default"
-                    @click="bindRawdata">綁定</button>
+                    @click="bindRawdata">
+                    <spinner 
+                      v-show="isBindingRawdata" 
+                      size="10"/>
+                    {{ $t('schedule.binding.bind') }}
+                  </button>
                   <button
                     v-else
                     :disabled="isCheckRawdataBtnDisabled"
                     class="btn btn-default"
-                    @click="checkRawdata">檢查</button>
+                    @click="checkRawdata">
+                    <spinner 
+                      v-show="isCheckingRawdata" 
+                      size="10"/>
+                    檢查
+                    <!-- {{ $t('schedule.binding.bind') }} -->
+                  </button>
                 </div>
               </div>
               <div class="form-fields">
@@ -115,6 +138,7 @@
                   <binding-checked-info
                     v-if="hasError(checkedResultRawdata, file.code)"
                     :info="checkedResultRawdata[file.code]"
+                    @bind="bindRawdata"
                   />
                 </div>
               </div>
@@ -122,18 +146,19 @@
             <!-- 綁定額外限制 -->
             <div class="form">
               <div class="form-label">
-                額外限制條件設定
+                {{ $t('schedule.setting.extraConstraintSetting') }}
                 <div class="form-action">
                   <button
                     class="btn btn-default"
                   >
-                    綁定
+                    {{ $t('schedule.binding.bind') }}
                   </button>
                   <button
                     class="btn btn-default"
                     @click="checkConstraints"
                   >
                     檢查
+                    <!-- {{ $t('schedule.binding.bind') }} -->
                   </button>
                 </div>
               </div>
@@ -157,6 +182,7 @@
                   <!-- <binding-checked-info
                     v-if="hasError(checkedResultRawdata, file.code)"
                     :info="checkedResultRawdata[file.code]"
+                    @bind="bindConstraints"
                   /> -->
                 </div>
               </div>
@@ -212,7 +238,7 @@ export default {
       datasourceId: null,
       dataFrameList: [],
       isLoadingFilesInfo: false,
-      isLoadingDataFrameList: true,
+      isLoadingDataFrameList: false,
       isProcessing: false,
       isCheckingOrder: false,
       isCheckingRawdata: false,
@@ -241,7 +267,7 @@ export default {
       return this.formOrder === null || this.isCheckingOrder
     },
     isBindOrderBtnDisabled () {
-      return this.isCheckingOrder || !this.checkedResultOrder || Boolean(this.checkedResultOrder.headerErrorMessage)
+      return this.isBindingOrder || !this.checkedResultOrder || Boolean(this.checkedResultOrder.headerErrorMessage)
     },
     isRawdataBindable () {
       return Object.values(this.checkedResultRawdata).every(value => value.bindable)
@@ -327,7 +353,7 @@ export default {
           }
           if (!this.hasError(this.checkedResultOrder)) {
             Message({
-              message: '訂單綁定資料表檢查完成，全數資料列皆符合格式',
+              message: this.$t('schedule.binding.allOrderDataIsValid'),
               type: 'success',
               duration: 3 * 1000,
               showClose: true
@@ -361,7 +387,7 @@ export default {
           const allPass = Object.values(this.checkedResultRawdata).every(value => this.hasError(this.checkedResultRawdata, value))
           if (allPass) {
             Message({
-              message: '共同資料檢查OK',
+              message: this.$t('schedule.binding.allRawdataDataIsValid'),
               type: 'success',
               duration: 3 * 1000,
               showClose: true
@@ -387,9 +413,7 @@ export default {
       checkConstraints(requestBody)
         .then(() => {})
         .catch(() => {})
-        .finally(() => {
-          this.isCheckingConstraints = false
-        })
+        .finally(() => this.isCheckingConstraints = false)
     },
     bindOrder () {
       this.isBindingOrder = true
@@ -399,14 +423,13 @@ export default {
       })
         .then(() => {
           Message({
-            message: '訂單資料已綁定',
+            message: this.$t('schedule.binding.successfullyBindOrder'),
             type: 'success',
             duration: 3 * 1000,
             showClose: true
           })
         })
         .finally(() => {
-          // this.checkedResultOrder = this.checkedResultDefault
           this.isBindingOrder = false
           
         })
@@ -421,17 +444,14 @@ export default {
       bindRawdata(requestBody)
         .then(() => {
           Message({
-            message: '共同資料已綁定',
+            message: this.$t('schedule.binding.successfullyBindRawdata'),
             type: 'success',
             duration: 3 * 1000,
             showClose: true
           })
         })
         .catch(() => {})
-        .finally(() => {
-          // Object.keys(this.checkedResultRawdata).forEach(key => this.checkedResultRawdata[key] = this.checkedResultDefault)
-          this.isBindingRawdata = false
-        })
+        .finally(() => this.isBindingRawdata = false)
     },
     bindConstraints () {
       bindConstraints()
@@ -527,8 +547,14 @@ export default {
     }
   }
 }
-
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /deep/ .spinner-block {
+  padding: 0;
+  margin-right: 10px;
   &.dataframe-loading-spinner {
     width: 188px;
     height: 50.5px;

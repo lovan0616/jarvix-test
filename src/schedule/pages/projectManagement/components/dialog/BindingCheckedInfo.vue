@@ -13,40 +13,45 @@
       class="binding-checked-info__msg"
       @click="isShowInfoDialog = true"
     >
-      {{ failedRowCount }}筆資料發生錯誤
+      {{ $t('schedule.binding.failedRowCount', { count: failedRowCount }) }}
     </span>
     <writing-dialog
       v-if="isShowInfoDialog"
-      :show-both="false"
-      button="知悉"
+      :title="`${$t('schedule.binding.failedRow')}(${failedRowCount})`"
+      :button="$t('schedule.binding.bind')"
+      show-both
       @closeDialog="isShowInfoDialog = false"
-      @confirmBtn="isShowInfoDialog = false"
+      @confirmBtn="confirmBind"
     >
+      <p class="reminder">{{ $t('schedule.binding.bindingReminding') }}</p>
       <ul class="info-list">
         <li
           v-for="column in failedColumns"
           :key="column.displayName"
           class="info-list__item"
         >
-          <div>欄位名稱:{{ column.displayName }}</div>
+          <b class="column-name">{{ $t('schedule.binding.columnName') }}：{{ column.displayName }}</b>
 
-          <div v-if="column.emptyRowIndexes.length > 0">
-            <div>Empty錯誤</div>
-            出現Empty錯誤列位置:{{ column.emptyRowIndexes.join(',') }}
+          <div
+            v-if="column.emptyRowIndexes.length > 0"
+            class="error-info"
+          >
+            <div><b>{{ $t('schedule.binding.failedBecauseOfEmpty') }}</b>（{{ $t('schedule.binding.failedBecauseOfEmptyDesc') }}）</div>
+            {{ $t('schedule.binding.datumIndexes') }}：<span class="highlight">{{ concatedValues(column.emptyRowIndexes) }}</span>
           </div>
-          <div v-if="column.typeErrorRowIndexes.length > 0">
-            <div>Type錯誤</div>
-            出現Type錯誤列位置:{{ column.typeErrorRowIndexes.join(',') }}
+          <div
+            v-if="column.refErrorRows.length > 0"
+            class="error-info"
+          >
+            <div><b>{{ $t('schedule.binding.failedBecauseOfRef') }}</b>（{{ $t('schedule.binding.failedBecauseOfRefDesc') }}）</div>
+            <span class="highlight">{{ concatedValues(flattedValue(column.refErrorRows)) }}</span>
           </div>
-          <div v-if="column.refErrorRows.length > 0">
-            <div>Reference錯誤</div>
-            出現Reference位置
-            <ul>
-              <li
-                v-for="(row, index) in column.refErrorRowIndexes"
-                :key="index"
-              >{{ row }}</li>
-            </ul>
+          <div
+            v-if="column.typeErrorRowIndexes.length > 0"
+            class="error-info"
+          >
+            <div><b>{{ $t('schedule.binding.failedBecauseOfType') }}</b>（{{ $t('schedule.binding.failedBecauseOfTypeDesc') }}）</div>
+            {{ $t('schedule.binding.datumIndexes') }}：<span class="highlight">{{ concatedValues(column.typeErrorRowIndexes) }}</span>
           </div>
         </li>
       </ul>
@@ -101,6 +106,22 @@ export default {
         ? this.info.columns.filter(column => column.emptyRowIndexes.length > 0 || column.typeErrorRowIndexes.length > 0 || column.refErrorRows.length > 0)
         : []
     }
+  },
+  methods: {
+    flattedValue (refErrorRows) {
+      return refErrorRows.reduce((acc, cur) => acc.concat(cur.value), [])
+    },
+    concatedValues (values) {
+      const maxShowAmount = 10000 // 畫面上最多顯示幾筆
+      return values.length > maxShowAmount
+        ? values.slice(0, maxShowAmount).join(', ').concat('...')
+        : values.join(', ')
+      
+    },
+    confirmBind () {
+      this.$emit('bind')
+      this.isShowInfoDialog = false
+    }
   }
 }
 </script>
@@ -111,9 +132,46 @@ export default {
   color: $theme-color-danger;
   /deep/ .dialog-box .dialog-inner-box {
     text-align: left;
+    .reminder {
+      line-height: 1.8;
+      font-size: 14px;
+    }
     .info-list {
-      max-height: 65vh;
       overflow: auto;
+      margin: 0 0 16px 0;
+      padding: 0;
+      line-height: 2;
+      &__item {
+        &:not(:last-child) {
+          margin-bottom: 24px;
+        }
+        .column-name {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          &::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #fff;
+            margin-right: 8px;
+          }
+        }
+        .error-info {
+          padding: 10px 16px;
+          background-color: rgba(0, 0, 0, 0.55);
+          border-radius: 8px;
+          max-height: 200px;
+          overflow: auto;
+          & + .error-info {
+            margin-top: 12px;
+          }
+          .highlight {
+            color: $theme-color-warning;
+          }
+        }
+      }
     }
   }
 }
