@@ -653,7 +653,8 @@
     "checkDatarowDeletable": "檢查有無資料刪除"
   },
   "fileDataUpdate": {
-    "dataUpdateSetting": "資料更新設定",
+    "updateData": "更新資料",
+    "updateSetting": "更新設定",
     "processStep1": "更新模式",
     "processStep2": "選擇檔案",
     "processStep3": "上傳檔案",
@@ -665,6 +666,15 @@
     "build": "立即建置",
     "reSetting": "重新設定模式",
     "dataUpdatingReminding": "資料表更新將以背景執行方式進行，更新進度將顯示在資料表狀態。"
+  },
+  "updateSetting": {
+    "activationStatus": "啟用狀態",
+    "active": "啟用",
+    "inactive": "不啟用",
+    "updateCriteriaContent": "更新條件內容",
+    "updateTime": "更新時間",
+    "primaryKey": "主鍵（可複選）",
+    "chooseColumn": "請選擇欄位"
   },
   "feature": {
     "value": "數值",
@@ -1154,7 +1164,8 @@
     "editEtlSetting": "資料處理設定",
     "reviewEtlSetting": "檢視資料處理設定",
     "dateTimeColumnSetting": "日期欄位設定",
-    "batchLoadSetting": "資料更新設定",
+    "updateData": "資料更新",
+    "updateSetting": "更新設定",
     "tableCreatedInfo": "資料表建立資訊",
     "select": "選擇",
     "download": "資料下載",
