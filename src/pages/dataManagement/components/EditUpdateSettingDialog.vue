@@ -31,12 +31,11 @@
           >
             <input
               :id="status.type.toLowerCase()"
-              :checked="status.type === columnInfo.status"
+              v-model="columnInfo.status"
               :value="status.type"
               name="status"
               class="input-radio"
               type="radio"
-              @change="columnInfo.status = status.type"
             >
             <label
               :for="status.type.toLowerCase()"
@@ -47,7 +46,12 @@
         <template v-if="columnInfo.status !== 'DISABLE'">
           <div class="setting-block">
             <div class="setting-block__title">{{ $t('updateSetting.updateCriteriaContent') }}</div>
-            <template v-if="dateTimeColumnList.length > 0">
+            <template v-if="isUpdateWithoutDateTimeColumn">
+              <empty-info-block
+                :msg="$t('editing.emptyDateTime')"
+              />
+            </template>
+            <template v-else>
               <div class="input-field">
                 <label class="input-field__label">{{ $t('updateSetting.updateTime') }}</label>
                 <div class="input-field__input">
@@ -72,7 +76,7 @@
                 <div class="input-field__input">
                   <default-multi-select
                     v-validate="'required'"
-                    :value="primaryKeys"
+                    v-model="primaryKeys"
                     :option-list="columnInfo.columnList"
                     :placeholder="$t('updateSetting.chooseColumn')"
                     :is-disabled="isProcessing"
@@ -80,7 +84,6 @@
                     multiple
                     class="input-field__multi-select"
                     name="primaryKeyColumn"
-                    @input="primaryKeys = $event"
                   />
                   <div 
                     v-show="errors.has('primaryKeyColumn')"
@@ -88,11 +91,6 @@
                   >{{ errors.first('primaryKeyColumn') }}</div>
                 </div>
               </div>
-            </template>
-            <template v-if="isUpdateWithoutDateTimeColumn">
-              <empty-info-block
-                :msg="$t('editing.emptyDateTime')"
-              />
             </template>
           </div>
         </template>
@@ -170,36 +168,23 @@ export default {
   methods: {
     getSetting () {
       this.isLoading = true
-      getBatchLoadSetting(this.dataFrameInfo.id)
-        .then(({ crontabConfigContent, primaryKeys }) => {
+      const hasFeatureColumn = false
+      Promise.all([
+        getBatchLoadSetting(this.dataFrameInfo.id),
+        getDataFrameColumnInfoById(this.dataFrameInfo.id, hasFeatureColumn)
+      ])
+        .then(([{ crontabConfigContent, primaryKeys }, columnList]) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
-          this.fetchDataColumnList()
-        })
-        .catch(() => {
-          this.isLoading = false
-          this.hasError = true
-        })
-    },
-    fetchDataColumnList () {
-      const hasFeatureColumn = false
-      getDataFrameColumnInfoById(this.dataFrameInfo.id, hasFeatureColumn)
-        .then(response => {
-          this.columnInfo.columnList = response.map(column => ({
+          this.columnInfo.columnList = columnList.map(column => ({
             ...column,
             name: column.primaryAlias || column.name,
             value: column.id
           }))
+          this.isLoading = false
         })
         .catch(() => this.hasError = true)
         .finally(() => this.isLoading = false)
-    },
-    formatSettingData () {
-      return {
-        primaryKeys: this.primaryKeys,
-        status: this.columnInfo.status,
-        updateDateColumnId: this.columnInfo.updateDateColumn
-      }
     },
     updateSetting () {
       this.$validator.validateAll()
@@ -208,7 +193,11 @@ export default {
           this.isProcessing = true
 
           const dataFrameId = this.dataFrameInfo.id
-          const settingData = this.formatSettingData()
+          const settingData = {
+            primaryKeys: this.primaryKeys,
+            status: this.columnInfo.status,
+            updateDateColumnId: this.columnInfo.updateDateColumn
+          }
           return updateDataUpdateSetting(dataFrameId, settingData)
             .then(() => {
               Message({
