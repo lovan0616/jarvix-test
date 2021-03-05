@@ -99,7 +99,7 @@
       "globalSetting": "全域设定",
       "failedRowCountOfDataFrame": "{count}笔资料发生错误",
       "failedRow": "资料列发生错误",
-      "bindingReminding": "以下资料列发生错误，建议修正后重新导入。若您仍然选择绑定资料表，错误的资料在进行生产排程模拟时会被忽略。",
+      "bindingReminding": "部分资料列发生错误，建议修正后重新导入。若您仍然选择绑定资料表，错误的资料在进行生产排程模拟时会被忽略。",
       "columnName": "栏位名称",
       "failedBecauseOfEmpty": "空值错误",
       "failedBecauseOfEmptyDesc": "未输入任何内容",
@@ -115,7 +115,9 @@
       "successfullyBindOrder": "订单资料已绑定",
       "successfullyBindRawdata": "共同资料已绑定",
       "successfullyBindConstraints": "额外限制资料已绑定",
-      "successfullyRebindDataSource": "已重新绑定资料源，资料表需重新绑定。"
+      "successfullyRebindDataSource": "已绑定至新资料源 {datasource}。资料表需重新绑定。",
+      "alreadyBoundToCertainDataSource": "已绑定于资料源 {datasource}",
+      "confirmToBind": "仍然绑定"
     },
     "simulation":{
       "title": "排程计画模拟",

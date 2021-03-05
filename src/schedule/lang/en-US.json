@@ -99,7 +99,7 @@
       "globalSetting": "全域設定",
       "failedRowCountOfDataFrame": "{count}筆資料發生錯誤",
       "failedRow": "資料列發生錯誤",
-      "bindingReminding": "以下資料列發生錯誤，建議修正後重新導入。若您仍然選擇綁定資料表，錯誤的資料在進行生產排程模擬時會被忽略。",
+      "bindingReminding": "部分資料列發生錯誤，建議修正後重新導入。若您仍然選擇綁定資料表，錯誤的資料在進行生產排程模擬時會被忽略。",
       "columnName": "欄位名稱",
       "failedBecauseOfEmpty": "空值錯誤",
       "failedBecauseOfEmptyDesc": "未輸入任何內容",
@@ -115,7 +115,9 @@
       "successfullyBindOrder": "訂單資料已綁定",
       "successfullyBindRawdata": "共同資料已綁定",
       "successfullyBindConstraints": "額外限制資料已綁定",
-      "successfullyRebindDataSource": "已重新綁定資料源，資料表需重新綁定。"
+      "successfullyRebindDataSource": "已綁定至新資料源 {datasource}。資料表需重新綁定。",
+      "alreadyBoundToCertainDataSource": "已綁定於資料源 {datasource}",
+      "confirmToBind": "仍然綁定"
     },
     "simulation":{
       "title": "排程計畫模擬",

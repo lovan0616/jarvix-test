@@ -465,15 +465,26 @@ export default {
       return !info.hasOwnProperty('headerErrorMessage')
     },
     rebindDataSource () {
-      this.isBindingDataSource = true
+      // 並未改變資料源
+      if (this.datasourceId === this.projectInfo.datasourceId) {
+        Message({
+          message: this.$t('schedule.binding.alreadyBoundToCertainDataSource', { datasource: this.projectInfo.datasourceName }),
+          type: 'info',
+          duration: 10 * 1000,
+          showClose: true
+        })
+        return
+      }
 
+      this.isBindingDataSource = true
       rebindDataSource({
         datasourceId: this.datasourceId,
         id: this.projectInfo.id
       })
         .then(() => {
+          const datasource = this.dataSourceOptions.find(item => item.value === this.datasourceId)
           Message({
-            message: this.$t('schedule.binding.successfullyRebindDataSource'),
+            message: this.$t('schedule.binding.successfullyRebindDataSource', { datasource: datasource.label }),
             type: 'info',
             duration: 10 * 1000,
             showClose: true

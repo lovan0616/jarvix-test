@@ -21,7 +21,7 @@
       :button="$t('schedule.binding.bind')"
       show-both
       @closeDialog="isShowInfoDialog = false"
-      @confirmBtn="confirmBind"
+      @confirmBtn="isShowConfirmDialog = true"
     >
       <p class="reminder">{{ $t('schedule.binding.bindingReminding') }}</p>
       <ul class="info-list">
@@ -46,7 +46,7 @@
             class="error-info"
           >
             <div><b>{{ $t('schedule.binding.failedBecauseOfRef') }}</b>（{{ $t('schedule.binding.failedBecauseOfRefDesc') }}）</div>
-            <span class="highlight">{{ concatedValues(flattedValue(column.refErrorRows)) }}</span>
+            <span class="highlight">{{ concatedValues(parseRefErrorRows(column.refErrorRows)) }}</span>
           </div>
           <div
             v-if="column.typeErrorRowIndexes.length > 0"
@@ -60,16 +60,26 @@
         </li>
       </ul>
     </writing-dialog>
+    <decide-dialog
+      v-show="isShowConfirmDialog"
+      :title="$t('schedule.binding.bindingReminding')"
+      type="confirm"
+      btn-text="仍然綁定"
+      @confirmBtn="confirmBind"
+      @closeDialog="isShowConfirmDialog = false"
+    />
   </div>
 </template>
 
 <script>
 import WritingDialog from '@/components/dialog/WritingDialog'
+import DecideDialog from '@/components/dialog/DecideDialog'
 
 export default {
   name: 'BindingCheckedInfo',
   components: {
-    WritingDialog
+    WritingDialog,
+    DecideDialog
   },
   props: {
     info: {
@@ -96,7 +106,8 @@ export default {
   },
   data: () => {
     return {
-      isShowInfoDialog: false
+      isShowInfoDialog: false,
+      isShowConfirmDialog: false
     }
   },
   computed: {
@@ -112,8 +123,8 @@ export default {
     }
   },
   methods: {
-    flattedValue (refErrorRows) {
-      // 使用 Set 去重複
+    parseRefErrorRows (refErrorRows) {
+      // 使用 Set 除去重複值
       const valueSet = new Set(refErrorRows.reduce((acc, cur) => acc.concat(cur.value), []))
       // 畫面上最多顯示幾筆
       const maxShowAmount = 10000
@@ -125,7 +136,6 @@ export default {
     },
     concatedValues ({ values, exceedMaxShowAmount }) {
       return exceedMaxShowAmount ? values.join(', ').concat('...') : values.join(', ')
-      
     },
     confirmBind () {
       this.$emit('bind')
