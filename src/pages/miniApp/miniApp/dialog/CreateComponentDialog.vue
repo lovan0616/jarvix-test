@@ -381,6 +381,7 @@ export default {
   },
   computed: {
     ...mapState('result', ['currentResultId', 'currentResultInfo']),
+    ...mapState('chatBot', ['parserLanguage']),
     ...mapState('dataSource', ['appQuestion']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
@@ -521,6 +522,7 @@ export default {
           ...(this.isParameterComparisonTypeComponent(this.currentComponent.config.diaplayedName) && {
             type: 'paramCompare'
           }),
+          parserLanguage: this.parserLanguage,
           init: true,
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body

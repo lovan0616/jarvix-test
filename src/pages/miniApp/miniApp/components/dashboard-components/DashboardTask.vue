@@ -457,7 +457,8 @@ export default {
         dataSourceId: this.componentData.dataSourceId,
         dataFrameId: this.componentData.dataFrameId,
         previewQuestionId: this.componentData.questionId,
-        shouldCancelToken: false
+        shouldCancelToken: false,
+        language: this.componentData.parserLanguage
       }).then(response => {
         let questionId = response.questionId
         let segmentationList = response.segmentationList
