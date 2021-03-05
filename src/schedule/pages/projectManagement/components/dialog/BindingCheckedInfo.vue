@@ -13,7 +13,7 @@
       class="binding-checked-info__msg"
       @click="isShowInfoDialog = true"
     >
-      {{ $t('schedule.binding.failedRowCount', { count: failedRowCount }) }}
+      {{ $t('schedule.binding.failedRowCountOfDataFrame', { count: failedRowCount }) }}
     </span>
     <writing-dialog
       v-if="isShowInfoDialog"
@@ -37,7 +37,9 @@
             class="error-info"
           >
             <div><b>{{ $t('schedule.binding.failedBecauseOfEmpty') }}</b>（{{ $t('schedule.binding.failedBecauseOfEmptyDesc') }}）</div>
-            {{ $t('schedule.binding.datumIndexes') }}：<span class="highlight">{{ concatedValues(column.emptyRowIndexes) }}</span>
+            <i18n path="schedule.binding.failedRowCountOfColumn">
+              <span class="highlight">{{ column.emptyRowIndexes.length }}</span>
+            </i18n>
           </div>
           <div
             v-if="column.refErrorRows.length > 0"
@@ -51,7 +53,9 @@
             class="error-info"
           >
             <div><b>{{ $t('schedule.binding.failedBecauseOfType') }}</b>（{{ $t('schedule.binding.failedBecauseOfTypeDesc') }}）</div>
-            {{ $t('schedule.binding.datumIndexes') }}：<span class="highlight">{{ concatedValues(column.typeErrorRowIndexes) }}</span>
+            <i18n path="schedule.binding.failedRowCountOfColumn">
+              <span class="highlight">{{ column.typeErrorRowIndexes.length }}</span>
+            </i18n>
           </div>
         </li>
       </ul>
@@ -109,13 +113,18 @@ export default {
   },
   methods: {
     flattedValue (refErrorRows) {
-      return refErrorRows.reduce((acc, cur) => acc.concat(cur.value), [])
+      // 使用 Set 去重複
+      const valueSet = new Set(refErrorRows.reduce((acc, cur) => acc.concat(cur.value), []))
+      // 畫面上最多顯示幾筆
+      const maxShowAmount = 10000
+      const exceedMaxShowAmount = valueSet.size > maxShowAmount
+      return {
+        values: exceedMaxShowAmount ? [ ...valueSet ].slice(0, maxShowAmount) : [ ...valueSet ],
+        exceedMaxShowAmount
+      }
     },
-    concatedValues (values) {
-      const maxShowAmount = 10000 // 畫面上最多顯示幾筆
-      return values.length > maxShowAmount
-        ? values.slice(0, maxShowAmount).join(', ').concat('...')
-        : values.join(', ')
+    concatedValues ({ values, exceedMaxShowAmount }) {
+      return exceedMaxShowAmount ? values.join(', ').concat('...') : values.join(', ')
       
     },
     confirmBind () {
