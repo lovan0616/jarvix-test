@@ -21,10 +21,11 @@ export default {
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,
-      selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
+      selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList'],
+      language: data.language || state.parserLanguage
     }
 
-    return askQuestion({...askCondition, language: state.parserLanguage}, cancelToken)
+    return askQuestion(askCondition, cancelToken)
   },
   askResult ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null

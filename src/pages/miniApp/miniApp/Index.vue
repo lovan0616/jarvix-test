@@ -1481,6 +1481,7 @@ export default {
           enableAlert: false
         },
         algoConfig: null,
+        parserLanguage: null,
         updateTime: new Date().getTime(),
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
