@@ -448,8 +448,10 @@
     "scriptExecutionStep3": "Choose Output Types",
     "onlyPrefixMatching": "The search only supports prefix matching",
     "searchDataSource": "Search DataSource",
-    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})",
-    "reCalculateMeta": "Recalculate Meta info"
+    "reCalculateMeta": "Recalculate Meta info",
+    "isOrdinal": "is ordinal",
+    "isNotOrdinal": "is not ordinal",
+    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})"
   },
   "algorithm": {
     "name": "Algorithm",
