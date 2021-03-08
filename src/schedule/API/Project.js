@@ -88,3 +88,14 @@ export function rebindDataSource (data) {
     data
   })
 }
+
+/**
+ * 取得專案的資料表綁定狀態
+ * @param {Number} project_id - 子專案 id
+ */
+export function fetchDataBoundStatus (project_id) {
+  return request({
+    url: `/project/${project_id}/dataframes`,
+    method: 'GET'
+  })
+}

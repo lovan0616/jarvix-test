@@ -63,8 +63,8 @@
     <decide-dialog
       v-show="isShowConfirmDialog"
       :title="$t('schedule.binding.bindingReminding')"
+      :btn-text="$t('schedule.binding.confirmToBind')"
       type="confirm"
-      btn-text="仍然綁定"
       @confirmBtn="confirmBind"
       @closeDialog="isShowConfirmDialog = false"
     />
@@ -139,6 +139,7 @@ export default {
     },
     confirmBind () {
       this.$emit('bind')
+      this.isShowConfirmDialog = false
       this.isShowInfoDialog = false
     }
   }

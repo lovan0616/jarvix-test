@@ -10,6 +10,7 @@
         ><svg-icon icon-class="close"/></a>
       </div>
       <div class="relation-container">
+
         <!-- 管理資料源 -->
         <section class="relation-container__section">
           <div class="relation-container__section-title">Step1: {{ $t('schedule.project.chooseDataSource') }}({{ $t('editing.isRequired') }})</div>
@@ -38,13 +39,15 @@
           </div>
         </section>
         <spinner
-          v-if="isLoadingFilesInfo"
-          title="載入檔案中"
+          v-if="isLoadingDataBoundStatusInfo"
+          :title="$t('editing.loading')"
         />
         <template v-else>
+
           <!-- 管理資料表 -->
           <section class="relation-container__section">
             <div class="relation-container__section-title">Step2: {{ $t('editing.chooseDataFrame') }}</div>
+
             <!-- 綁定訂單 -->
             <div class="form">
               <div class="form-label">
@@ -68,8 +71,7 @@
                     <spinner 
                       v-show="isCheckingOrder" 
                       size="10"/>
-                    檢查
-                    <!-- {{ $t('schedule.binding.bind') }} -->
+                    {{ $t('schedule.binding.bind') }}
                   </button>
                 </div>
               </div>
@@ -94,6 +96,7 @@
                 </div>
               </div>
             </div>
+
             <!-- 綁定共同資料 -->
             <div class="form">
               <div class="form-label">
@@ -117,18 +120,17 @@
                     <spinner 
                       v-show="isCheckingRawdata" 
                       size="10"/>
-                    檢查
-                    <!-- {{ $t('schedule.binding.bind') }} -->
+                    {{ $t('schedule.binding.bind') }}
                   </button>
                 </div>
               </div>
               <div class="form-fields">
                 <div
-                  v-for="file in files.rawdata"
+                  v-for="file in files.raw_data"
                   :key="file.id"
                   class="form-field"
                 >
-                  <span class="field-label">{{ file.alias }}</span>
+                  <span class="field-label">{{ $t(`schedule.setting.commonData${snakeToPascal(file.code)}`) }}</span>
                   <spinner 
                     v-if="isLoadingDataFrames" 
                     :title="$t('editing.dataDownloading')"
@@ -136,17 +138,18 @@
                     size="10"/>
                   <default-select
                     v-else
-                    v-model="formRawdata[`${file.code}DataframeId`]"
+                    v-model="formRawData[file.code]"
                     :options="dataFrameOptions"
                   />
                   <binding-checked-info
-                    v-if="hasError(checkedResultRawdata, file.code)"
-                    :info="checkedResultRawdata[file.code]"
+                    v-if="hasError(checkedResultRawData, file.code)"
+                    :info="checkedResultRawData[file.code]"
                     @bind="bindRawdata"
                   />
                 </div>
               </div>
             </div>
+
             <!-- 綁定額外限制 -->
             <div class="form">
               <div class="form-label">
@@ -154,15 +157,9 @@
                 <div class="form-action">
                   <button
                     class="btn btn-default"
-                  >
-                    {{ $t('schedule.binding.bind') }}
-                  </button>
-                  <button
-                    class="btn btn-default"
                     @click="checkConstraints"
                   >
-                    檢查
-                    <!-- {{ $t('schedule.binding.bind') }} -->
+                    {{ $t('schedule.binding.bind') }}
                   </button>
                 </div>
               </div>
@@ -172,7 +169,7 @@
                   :key="file.id"
                   class="form-field"
                 >
-                  <span class="field-label">{{ file.alias }}</span>
+                  <span class="field-label">{{ $t(`schedule.setting.extraConstraint${snakeToPascal(file.code)}`) }}</span>
                   <spinner 
                     v-if="isLoadingDataFrames" 
                     :title="$t('editing.dataDownloading')"
@@ -183,11 +180,11 @@
                     v-model="formConstraint[file.code]"
                     :options="dataFrameOptions"
                   />
-                  <!-- <binding-checked-info
-                    v-if="hasError(checkedResultRawdata, file.code)"
-                    :info="checkedResultRawdata[file.code]"
+                  <binding-checked-info
+                    v-if="hasError(checkedResultConstraint, file.code)"
+                    :info="checkedResultConstraint[file.code]"
                     @bind="bindConstraints"
-                  /> -->
+                  />
                 </div>
               </div>
             </div>
@@ -209,9 +206,8 @@
 <script>
 import { mapState } from 'vuex'
 import { getDataFrameById } from '@/API/DataSource'
-import { getUploadFileList } from '@/schedule/API/Setting'
 import { checkOrder, bindOrder, checkRawdata, bindRawdata, checkConstraints, bindConstraints } from '@/schedule/API/Bind'
-import { rebindDataSource } from '@/schedule/API/Project'
+import { fetchDataBoundStatus, rebindDataSource } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import BindingCheckedInfo from './BindingCheckedInfo'
@@ -232,15 +228,15 @@ export default {
   data: () => {
     return {
       formOrder: null,
-      formRawdata: {},
+      formRawData: {},
       formConstraint: {},
       files: {
-        rawdata: [],
+        raw_data: [],
         constraint: []
       },
       datasourceId: null,
       dataFrames: [],
-      isLoadingFilesInfo: false,
+      isLoadingDataBoundStatusInfo: false,
       isLoadingDataFrames: false,
       isCheckingOrder: false,
       isCheckingRawdata: false,
@@ -250,13 +246,34 @@ export default {
       isBindingConstraints: false,
       isBindingDataSource: false,
       checkedResultOrder: {},
-      checkedResultRawdata: {},
+      checkedResultRawData: {},
       checkedResultConstraint: {},
       shouldRefetchProjectsThereafter: false
     }
   },
   computed: {
     ...mapState('dataSource', ['dataSourceList']),
+    formattedRawdata () {
+      // 送進 Rawdata check/bind 的 request body
+      return Object.keys(this.formRawData).reduce((acc, cur) => {
+        acc[`${this.snakeToCamel(cur)}DataframeId`] = this.formRawData[cur]
+        return acc
+      }, {})
+    },
+    formattedConstraints () {
+      // 送進 Constraints check 的 request body
+      return Object.keys(this.formConstraint)
+        .filter(key => this.formConstraint[key] !== null)
+        .map(key => ({
+          code: key,
+          dataframeId: this.formConstraint[key]
+        }))
+    },
+    bindableConstranints () {
+      // 送進 Constraints bind 的 request body
+      return this.formattedConstraints
+        .filter(item => this.checkedResultConstraint[item.code].bindable || false)
+    },
     dataSourceOptions () {
       const options = this.dataSourceList.map(item => ({ value: item.id, label: item.name }))
       options.unshift({ value: null, label: this.$t('editing.defaultOption') })
@@ -274,13 +291,19 @@ export default {
       return this.isBindingOrder || !this.checkedResultOrder || Boolean(this.checkedResultOrder.headerErrorMessage)
     },
     isRawdataBindable () {
-      return Object.values(this.checkedResultRawdata).every(value => value.bindable)
+      return Object.values(this.checkedResultRawData).every(value => value.bindable)
     },
     isCheckRawdataBtnDisabled () {
-      return this.isCheckingRawdata || Object.values(this.formRawdata).some(value => value === null)
+      return this.isCheckingRawdata || Object.values(this.formRawData).some(value => value === null)
     },
     isBindRawdataBtnDisabled () {
-      return this.isBindingRawdata || Object.values(this.checkedResultRawdata).some(value => !value.bindable)
+      return this.isBindingRawdata || Object.values(this.checkedResultRawData).some(value => !value.bindable)
+    },
+    isCheckConstraintBtnDisabled () {
+      return false
+    },
+    isBindConstraintBtnDisabled () {
+      return this.isCheckingConstraints || this.isBindingConstraints
     },
     checkedResultDefault () {
       return {
@@ -296,29 +319,40 @@ export default {
     this.datasourceId = this.projectInfo.datasourceStatus === 'Bound'
       ? this.projectInfo.datasourceId
       : null
-    this.fetchFiles()
+    this.fetchDataBoundStatus()
     this.fetchDataFrames()
-    this.checkedResultOrder = this.checkedResultDefault
   },
   methods: {
-    fetchFiles () {
-      this.isLoadingFilesInfo = true
-      getUploadFileList()
-        .then(({ rawdata, constraint }) => {
-          this.files.rawdata = rawdata.map(item => ({ ...item, code: this.snakeToCamel(item.code) }))
-          this.files.constraint = constraint
+    fetchDataBoundStatus () {
+      this.isLoadingDataBoundStatusInfo = true
+      fetchDataBoundStatus(this.projectInfo.id)
+        .then(files => {
+          files.forEach(file => {
+            const category = file.category
 
-          this.files.rawdata.forEach(item => {
-            this.$set(this.formRawdata, `${item.code}DataframeId`, null)
-            this.$set(this.checkedResultRawdata, item.code, this.checkedResultDefault)
+            // 訂單資料
+            if (category === 'ORDER') {
+              this.formOrder = file.dataframeId
+              this.checkedResultOrder = this.checkedResultDefault
+              return
+            }
+
+            // 加入檔案列表
+            this.files[category.toLowerCase()].push(file)
+
+            // 加入表單資料
+            const pascaledCategory = this.snakeToPascal(category.toLowerCase())
+            this.$set(this[`form${pascaledCategory}`], file.code, file.dataframeId || null)
+            
+            // 加入檢查資訊
+            if (category === 'RAW_DATA') {
+              this.$set(this[`checkedResult${pascaledCategory}`], this.snakeToCamel(file.code), this.checkedResultDefault)
+            } else if (category === 'CONSTRAINT') {
+              this.$set(this[`checkedResult${pascaledCategory}`], file.code, this.checkedResultDefault)
+            }
           })
-          this.files.constraint.forEach(item => {
-            this.$set(this.formConstraint, item.code, null)
-            this.$set(this.checkedResultConstraint, item.code, this.checkedResultDefault)
-          })
-          this.isLoadingFilesInfo = false
         })
-        .catch(() => this.isLoadingFilesInfo = false)
+        .finally(() => this.isLoadingDataBoundStatusInfo = false)
     },
     fetchDataFrames () {
       this.isLoadingDataFrames = true
@@ -360,25 +394,27 @@ export default {
     },
     checkRawdata () {
       const requestBody = {
-        ...this.formRawdata,
+        ...this.formattedRawdata,
         projectId: this.projectInfo.id
       }
 
       this.isCheckingRawdata = true
       checkRawdata(requestBody)
         .then(res => {
-          Object.keys(this.checkedResultRawdata)
+          Object.keys(this.checkedResultRawData)
             .forEach(key => {
-              this.checkedResultRawdata[key] = {
-                ...this.checkedResultRawdata[key],
-                ...res[key],
-                headerErrorMessage: this.bindable(res[key]) ? '' : res[key].headerErrorMessage,
-                bindable: this.bindable(res[key])
+              const checkedInfo = res[this.camelToSnake(key)]
+              const bindable = this.bindable(checkedInfo)
+              this.checkedResultRawData[key] = {
+                ...this.checkedResultRawData[key],
+                ...checkedInfo,
+                headerErrorMessage: bindable ? '' : checkedInfo.headerErrorMessage,
+                bindable
               }
             })
 
           // 全部資料表皆檢查通過
-          const allPass = Object.values(this.checkedResultRawdata).every(value => this.hasError(this.checkedResultRawdata, value))
+          const allPass = Object.values(this.checkedResultRawData).every(value => value.bindable)
           if (allPass) {
             Message({
               message: this.$t('schedule.binding.allRawdataDataIsValid'),
@@ -394,18 +430,35 @@ export default {
     },
     checkConstraints () {
       const requestBody = {
-        constraint: Object.keys(this.formConstraint)
-          .filter(key => this.formConstraint[key] !== null)
-          .map(key => ({
-            code: key,
-            dataframeId: this.formConstraint[key]
-          })),
+        constraints: this.formattedConstraints,
         projectId: this.projectInfo.id
       }
 
       this.isCheckingConstraints = true
       checkConstraints(requestBody)
-        .then(() => {})
+        .then(dataframeCheckedResults => {
+          
+          dataframeCheckedResults.forEach(({ code, result }) => {
+            this.checkedResultConstraint[code] = {
+              ...this.checkedResultConstraint[code],
+              ...result,
+              headerErrorMessage: this.bindable(result) ? '' : result.headerErrorMessage,
+              bindable: this.bindable(result)
+            }
+          })
+
+          // const somePassed = Object.values(this.checkedResultConstraint).some(value => value.bindable)
+          const allFailed = Object.values(this.checkedResultConstraint).every(value => !value.bindable)
+          if (allFailed) {
+            return Message({
+              message: '額外限制資料檢查完成，資料格式錯誤',
+              type: 'warning',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          }
+          this.bindConstraints()
+        })
         .catch(() => {})
         .finally(() => this.isCheckingConstraints = false)
     },
@@ -430,7 +483,7 @@ export default {
     },
     bindRawdata () {
       const requestBody = {
-        ...this.formRawdata,
+        ...this.formattedRawdata,
         projectId: this.projectInfo.id
       }
 
@@ -443,15 +496,33 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
+          this.resetCheckedInfoRawdata()
         })
         .catch(() => {})
         .finally(() => this.isBindingRawdata = false)
     },
     bindConstraints () {
-      bindConstraints()
-        .then(() => {})
+      const requestBody = {
+        constraints: this.bindableConstranints,
+        projectId: this.projectInfo.id
+      }
+
+      this.isBindingConstraints = true
+      bindConstraints(requestBody)
+        .then(() => {
+          const boundConstraintsString = (this.bindableConstranints.reduce((acc, cur) => {
+            return acc.concat('"' + this.$t(`schedule.setting.extraConstraint${this.snakeToPascal(cur.code)}`) + '"')
+          }, [])).join(', ')
+          Message({
+            message: `已綁定額外資料限制資料表：${boundConstraintsString}`,
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.resetCheckedInfoConstraints()
+        })
         .catch(() => {})
-        .finally(() => {})
+        .finally(() => this.isBindingConstraints = false)
     },
     hasError (info, fileCode = null) {
       if (fileCode) {
@@ -491,6 +562,7 @@ export default {
           })
           this.fetchDataFrames()
           this.resetDataFrameSelectors()
+          this.resetCheckedInfo()
           this.shouldRefetchProjectsThereafter = true
         })
         .catch(() => {})
@@ -498,12 +570,35 @@ export default {
     },
     resetDataFrameSelectors () {
       this.formOrder = null
-      Object.values(this.formRawdata).forEach(value => value = null)
+      Object.values(this.formRawData).forEach(value => value = null)
       Object.values(this.formConstraint).forEach(value => value = null)
+    },
+    resetCheckedInfoOrder () {
+      this.checkedResultOrder = this.checkedResultDefault
+    },
+    resetCheckedInfoRawdata () {
+      Object.values(this.checkedResultRawData).forEach(value => value = this.checkedResultDefault)
+    },
+    resetCheckedInfoConstraints () {
+      Object.values(this.checkedResultConstraint).forEach(value => value = this.checkedResultDefault)
+    },
+    resetCheckedInfo () {
+      this.resetCheckedInfoRawdata()
+      this.resetCheckedInfoConstraints()
+      this.resetCheckedInfoOrder()
     },
     snakeToCamel (variable) {
       if (!variable) return ''
-      return variable.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
+      return variable.toLowerCase().replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
+    },
+    snakeToPascal (variable) {
+      if (!variable) return ''
+      let s = this.snakeToCamel(variable)
+      return `${s[0].toUpperCase()}${s.slice(1)}`
+    },
+    camelToSnake (variable) {
+      if (!variable) return ''
+      return variable.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
     }
   }
 }
