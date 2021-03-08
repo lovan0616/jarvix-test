@@ -29,7 +29,8 @@ export default {
       dataframeId: null,
       type: null,
       ioArgs: {}
-    }
+    },
+    currentModelId: null
   },
   actions,
   mutations,

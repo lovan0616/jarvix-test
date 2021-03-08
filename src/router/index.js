@@ -339,6 +339,82 @@ const router = new Router({
                           }
                         }
                       ]
+                    },
+                    {
+                      path: 'model',
+                      component: () => import('@/pages/management/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          component: () => import('@/pages/modelManagement/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'ModelList' },
+                              name: 'ModelManagement',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'algo'
+                              }
+                            },
+                            {
+                              path: '/',
+                              name: 'ModelList',
+                              component: () => import('@/pages/modelManagement/ModelList'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', '/']
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          path: ':model_id',
+                          component: () => import('@/pages/modelManagement/Index'),
+                          beforeEnter: (to, from, next) => {
+                            const modelId = to.params.model_id
+                            store.commit('dataManagement/setModelId', modelId)
+                            modelId % 2 ? next() : next(from)
+                          },
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'ModelDetail' },
+                              name: 'ModelSetting',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'filter-setting'
+                              }
+                            },
+                            {
+                              path: 'detail',
+                              name: 'ModelDetail',
+                              component: () => import('@/pages/modelManagement/ModelDetail'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id']
+                              }
+                            },
+                            {
+                              path: 're-upload',
+                              name: 'ReUploadFile',
+                              component: () => import('@/pages/modelManagement/ReUploadFile'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id']
+                              }
+                            },
+                            {
+                              path: 'config-setting',
+                              name: 'ConfigSetting',
+                              component: () => import('@/pages/modelManagement/ConfigSetting'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
+                                isLock: (vue) => {
+                                  return vue.$route.params.token
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },

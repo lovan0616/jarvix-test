@@ -133,5 +133,8 @@ export default {
   },
   clearDatetimePatterns (state) {
     state.datetimePatterns = []
+  },
+  setModelId (state, data) {
+    state.modelId = data
   }
 }

@@ -171,6 +171,8 @@ export default {
       if (this.license.maxUser !== 1) {
         settingList.push({icon: 'userManage', title: 'nav.groupUserManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/users`})
       }
+
+      settingList.push({icon: 'algo', title: 'nav.modelManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model`})
       return settingList
     }
   },

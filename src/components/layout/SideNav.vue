@@ -80,7 +80,7 @@ export default {
   .sub-nav-link {
     background-color: var(--color-bg-2);
     &.active {
-      background-color: #42A5B3;
+      background: linear-gradient(90deg, #42A5B3 0%, rgba(66, 165, 179, 0.415929) 18.75%, rgba(66, 165, 179, 0) 73.44%);
       .icon {
         visibility: visible;
       }
