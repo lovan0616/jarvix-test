@@ -52,7 +52,7 @@
           class="single-tab input-radio-group"
         >
           <input
-            :id="`${tabDetail.tabNum}-${tabDetail.tabName}`"
+            :id="`${index}-${tabDetail.tabNum}`"
             v-model="currentTabDetail"
             :value="tabDetail.tabNum"
             :name="`tabDetail-${index}`"
@@ -60,7 +60,7 @@
             class="input-radio"
           >
           <label 
-            :for="`${tabDetail.tabNum}-${tabDetail.tabName}`"
+            :for="`${index}-${tabDetail.tabNum}`"
             class="input-radio-label"
           >{{ tabDetail.tabName }}</label>
         </div>
