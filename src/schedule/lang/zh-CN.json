@@ -215,12 +215,6 @@
         "day": "日",
         "halfDay": "半日",
         "viewScale": "观看维度"
-      },
-      "dataSync": {
-        "title": "同步提醒",
-        "description": "工单同步后，所有排程工单需重新选择。",
-        "askSynchronizing": "请求同步中, 请稍候...",
-        "synchronizing": "同步中..."
       }
     },
     "schedule":{

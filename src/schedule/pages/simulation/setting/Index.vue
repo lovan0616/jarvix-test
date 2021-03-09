@@ -258,6 +258,8 @@ export default {
     padding: 25px;
     border-left: 1px solid var(--color-border);
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 
     .header__title {
       font-size: 24px;
