@@ -156,6 +156,7 @@
                 {{ $t('schedule.setting.extraConstraintSetting') }}
                 <div class="form-action">
                   <button
+                    :disabled="isBindConstraintBtnDisabled"
                     class="btn btn-default"
                     @click="checkConstraints"
                   >
@@ -253,6 +254,9 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['dataSourceList']),
+    isBoundWithDataSource () {
+      return this.projectInfo.datasourceStatus === 'Bound'
+    },
     formattedRawdata () {
       // 送進 Rawdata check/bind 的 request body
       return Object.keys(this.formRawData).reduce((acc, cur) => {
@@ -299,11 +303,8 @@ export default {
     isBindRawdataBtnDisabled () {
       return this.isBindingRawdata || Object.values(this.checkedResultRawData).some(value => !value.bindable)
     },
-    isCheckConstraintBtnDisabled () {
-      return false
-    },
     isBindConstraintBtnDisabled () {
-      return this.isCheckingConstraints || this.isBindingConstraints
+      return this.isCheckingConstraints || this.isBindingConstraints || this.formattedConstraints.length === 0
     },
     checkedResultDefault () {
       return {
@@ -316,11 +317,11 @@ export default {
     }
   },
   created () {
-    this.datasourceId = this.projectInfo.datasourceStatus === 'Bound'
-      ? this.projectInfo.datasourceId
-      : null
+    if (this.isBoundWithDataSource) {
+      this.datasourceId = this.projectInfo.datasourceId
+      this.fetchDataFrames()
+    }
     this.fetchDataBoundStatus()
-    this.fetchDataFrames()
   },
   methods: {
     fetchDataBoundStatus () {
@@ -345,11 +346,7 @@ export default {
             this.$set(this[`form${pascaledCategory}`], file.code, file.dataframeId || null)
             
             // 加入檢查資訊
-            if (category === 'RAW_DATA') {
-              this.$set(this[`checkedResult${pascaledCategory}`], this.snakeToCamel(file.code), this.checkedResultDefault)
-            } else if (category === 'CONSTRAINT') {
-              this.$set(this[`checkedResult${pascaledCategory}`], file.code, this.checkedResultDefault)
-            }
+            this.$set(this[`checkedResult${pascaledCategory}`], file.code, this.checkedResultDefault)
           })
         })
         .finally(() => this.isLoadingDataBoundStatusInfo = false)
@@ -403,7 +400,7 @@ export default {
         .then(res => {
           Object.keys(this.checkedResultRawData)
             .forEach(key => {
-              const checkedInfo = res[this.camelToSnake(key)]
+              const checkedInfo = res[this.snakeToCamel(key)]
               const bindable = this.bindable(checkedInfo)
               this.checkedResultRawData[key] = {
                 ...this.checkedResultRawData[key],
@@ -519,7 +516,6 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          this.resetCheckedInfoConstraints()
         })
         .catch(() => {})
         .finally(() => this.isBindingConstraints = false)
@@ -570,17 +566,17 @@ export default {
     },
     resetDataFrameSelectors () {
       this.formOrder = null
-      Object.values(this.formRawData).forEach(value => value = null)
-      Object.values(this.formConstraint).forEach(value => value = null)
+      for (const key in this.formRawData) this.formRawData[key] = null
+      for (const key in this.formConstraint) this.formConstraint[key] = null
     },
     resetCheckedInfoOrder () {
       this.checkedResultOrder = this.checkedResultDefault
     },
     resetCheckedInfoRawdata () {
-      Object.values(this.checkedResultRawData).forEach(value => value = this.checkedResultDefault)
+      for (const key in this.checkedResultRawData) this.checkedResultRawData[key] = this.checkedResultDefault
     },
     resetCheckedInfoConstraints () {
-      Object.values(this.checkedResultConstraint).forEach(value => value = this.checkedResultDefault)
+      for (const key in this.checkedResultConstraint) this.checkedResultConstraint[key] = this.checkedResultDefault
     },
     resetCheckedInfo () {
       this.resetCheckedInfoRawdata()
