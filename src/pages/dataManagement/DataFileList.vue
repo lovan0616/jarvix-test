@@ -180,7 +180,7 @@ import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
@@ -385,6 +385,7 @@ export default {
     this.fetchData()
     this.checkDataSourceStatus()
     this.checkIfReachFileSizeLimit()
+    this.getDatetimePatterns()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -393,8 +394,11 @@ export default {
     if (this.checkDataFrameIntervalFunction) {
       window.clearInterval(this.checkDataFrameIntervalFunction)
     }
+    this.clearDatetimePatterns()
   },
   methods: {
+    ...mapActions('dataManagement', ['getDatetimePatterns']),
+    ...mapMutations('dataManagement', ['clearDatetimePatterns']),
     checkIfReachFileSizeLimit () {
       getAccountInfo()
         .then((accountInfo) => {

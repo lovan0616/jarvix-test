@@ -94,6 +94,8 @@ export const importType = {
   SCRIPT: 'import_script'
 }
 
+export const statsTypeList = ['CATEGORY', 'NUMERIC', 'BOOLEAN', 'DATETIME']
+
 export const statsTypeOptionList = [
   { value: 'CATEGORY', name: 'Category' },
   { value: 'NUMERIC', name: 'Numeric' },

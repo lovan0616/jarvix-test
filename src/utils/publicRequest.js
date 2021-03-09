@@ -66,7 +66,7 @@ service.interceptors.response.use(
       if (stackTrace) {
         const blob = new Blob([stackTrace], { type: 'text/plain' })
         const url = window.URL.createObjectURL(blob)
-        messageString = `<p style="font-size: 14px;">${messageString}</p>
+        messageString = `<p style="font-size: 14px;">${res.error.message || i18n.t('errorMessage.defaultMsg')}</p>
           <a href="${url}" class="link" download="errors-log">${ i18n.t('errorMessage.errorMessageDownload') }</a>`
       } else {
         messageString = res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg')

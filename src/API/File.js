@@ -114,3 +114,13 @@ export function getDataFrameSummary (dataFrameId) {
     method: 'GET'
   })
 }
+
+/**
+ * get datetime patterns
+ */
+export function getDatetimePatterns () {
+  return request({
+    url: `/data/datetime-patterns`,
+    method: 'GET'
+  })
+}
