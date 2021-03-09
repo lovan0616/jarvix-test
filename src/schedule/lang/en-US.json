@@ -80,8 +80,6 @@
       "ofr": "達交率",
       "cycleTime": "生產週期",
       "utilization": "稼動率",
-      "syncUrl": "工單列表連線 URL",
-      "dataRenewal": "資料更新設定",
       "save": "儲存",
       "extraConstraintSetting": "額外限制條件設定",
       "commonDataSetting": "共用資料設定",

@@ -26,7 +26,7 @@ export function convertTimeStamp (timeStamp = new Date().getTime()) {
 }
 
 export function validateSimulationSetting (settingInfo) {
-  // 0.0 欄位未填
+  // 0 欄位未填
   for (let i = 0; i < settingInfo.excludeEquipments.length; i++) {
     // 0.1 排除機台未選
     if (!settingInfo.excludeEquipments[i].equipmentId) {
@@ -60,16 +60,7 @@ export function validateSimulationSetting (settingInfo) {
     })
     return false
   }
-  // 2. URL未填
-  if (!settingInfo.syncUrl) {
-    Message({
-      message: i18n.t('schedule.errorMessage.emptySyncURL'),
-      type: 'warning',
-      duration: 3 * 1000
-    })
-    return false
-  }
-  // 3. KPI 值重複
+  // 2. KPI 值重複
   if (Object.values(settingInfo.kpiSetting).sort().toString() !== [1, 2, 3, 4].toString()) {
     Message({
       message: i18n.t('schedule.errorMessage.duplicatedKPI'),
@@ -79,4 +70,15 @@ export function validateSimulationSetting (settingInfo) {
     return false
   }
   return true
+}
+
+export function snakeToCamel (variable) {
+  if (!variable) return ''
+  return variable.toLowerCase().replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
+}
+
+export function snakeToPascal (variable) {
+  if (!variable) return ''
+  let s = snakeToCamel(variable)
+  return `${s[0].toUpperCase()}${s.slice(1)}`
 }

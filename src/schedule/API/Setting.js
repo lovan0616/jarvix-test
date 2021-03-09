@@ -36,22 +36,6 @@ export function getUploadFileList (projectId) {
   })
 }
 
-export function uploadMultipleFiles (formData, cancelFunction) {
-  return request({
-    url: '/uploadfile/upload/rawdata/files',
-    method: 'POST',
-    data: formData,
-    cancelToken: cancelFunction
-  })
-}
-
-export function uploadSingleFile (formData) {
-  return request({
-    url: '/uploadfile/upload/constraint/file',
-    method: 'POST',
-    data: formData
-  })
-}
 
 export function downloadCurrentSetting (fileId) {
   return request({

@@ -80,8 +80,6 @@
       "ofr": "达交率",
       "cycleTime": "生产周期",
       "utilization": "稼动率",
-      "syncUrl": "工单列表连线URL",
-      "dataRenewal": "资料更新设定",
       "save": "储存",
       "extraConstraintSetting": "额外限制条件设定",
       "commonDataSetting": "共用资料设定",

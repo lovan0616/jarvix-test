@@ -209,6 +209,8 @@ import { mapState } from 'vuex'
 import { getDataFrameById } from '@/API/DataSource'
 import { checkOrder, bindOrder, checkRawdata, bindRawdata, checkConstraints, bindConstraints } from '@/schedule/API/Bind'
 import { fetchDataBoundStatus, rebindDataSource } from '@/schedule/API/Project'
+import { snakeToCamel, snakeToPascal } from '@/schedule/utils/mixins'
+
 import { Message } from 'element-ui'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import BindingCheckedInfo from './BindingCheckedInfo'
@@ -583,19 +585,8 @@ export default {
       this.resetCheckedInfoConstraints()
       this.resetCheckedInfoOrder()
     },
-    snakeToCamel (variable) {
-      if (!variable) return ''
-      return variable.toLowerCase().replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
-    },
-    snakeToPascal (variable) {
-      if (!variable) return ''
-      let s = this.snakeToCamel(variable)
-      return `${s[0].toUpperCase()}${s.slice(1)}`
-    },
-    camelToSnake (variable) {
-      if (!variable) return ''
-      return variable.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
-    }
+    snakeToCamel,
+    snakeToPascal
   }
 }
 </script>

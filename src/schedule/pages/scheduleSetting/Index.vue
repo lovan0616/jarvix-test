@@ -148,27 +148,6 @@
           </h3>
           <kpi-setting :setting="settingInfo.kpiSetting" />
         </section>
-        <section
-          v-if="!solutionSequence"
-          class="body__block body__block--url"
-        >
-          <h3 class="block__title">
-            {{ $t('schedule.setting.dataRenewal') }}
-          </h3>
-          <div class="block__form">
-            <div class="form__item">
-              <div class="form__label">
-                *{{ $t('schedule.setting.syncUrl') }}
-              </div>
-              <div class="form__content">
-                <default-input
-                  v-model="settingInfo.syncUrl"
-                  class="sync-url__input"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
       <default-button
         class="save-btn save-btn--large"
@@ -191,14 +170,11 @@
         <div class="file">
           <spinner v-if="isFetchingAdvanceSetting" />
           <div
-            v-for="file in constraintSetting"
+            v-for="file in files.constraint"
             v-else
-            :key="file.id"
+            :key="file.code"
           >
-            <single-constraint-file
-              :file-data="file"
-              @uploaded="fetchFiles"
-            />
+            <single-constraint-file :file-data="file"/>
           </div>
         </div>
       </div>
@@ -217,20 +193,14 @@
         <div class="file">
           <spinner v-if="isFetchingAdvanceSetting" />
           <div
-            v-for="file in commonDataSetting"
+            v-for="file in files.raw_data"
             v-else
-            :key="file.id"
+            :key="file.code"
           >
             <single-common-file :file-data="file" />
           </div>
         </div>
       </div>
-      <file-upload-dialog
-        v-if="isShowUploadFileDialog"
-        :file-data="commonDataSetting"
-        @uploaded="fetchFiles"
-        @close="closeUploadFileDialog"
-      />
     </div>
   </div>
 </template>
@@ -240,11 +210,10 @@ import OrderUpload from './components/OrderUpload'
 import ShiftSetting from './components/shiftSetting/ShiftSetting'
 import ExcludeSetting from './components/excludeSetting/ExcludeSetting'
 import KpiSetting from './components/kpiSetting/KpiSetting'
-import FileUploadDialog from './components/commonDataSetting/FileUploadDialog'
 import SingleConstraintFile from './components/constraintSetting/SingleConstraintFile'
 import SingleCommonFile from './components/commonDataSetting/SingleCommonFile'
 import ExceptionTimeSetting from '@/schedule/pages/simulation/setting/components/ExceptionTimeSetting'
-import { getUploadFileList } from '@/schedule/API/Setting'
+import { fetchDataBoundStatus } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
 import { mapState, mapMutations } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
@@ -257,7 +226,6 @@ export default {
     ExcludeSetting,
     KpiSetting,
     ExceptionTimeSetting,
-    FileUploadDialog,
     SingleConstraintFile,
     SingleCommonFile
   },
@@ -272,10 +240,10 @@ export default {
       isLoading: false,
       settingInfo: {},
       equipments: [],
-      isShowUploadFileDialog: false,
-      constraintSetting: [],
-      commonDataSetting: [],
-      publicPath: process.env.BASE_URL,
+      files: {
+        raw_data: [],
+        constraint: []
+      },
       isFetchingAdvanceSetting: false,
       collapseAll: {
         // 後台設定預設展開區塊，模擬頁面預設收合區塊
@@ -322,7 +290,7 @@ export default {
     this.$store.dispatch('scheduleSetting/getEquipments')
       .then(equipments => {
         // 拿到設備列表
-        this.equipments = equipments.map(e => ({ value: e.id, label: e.name }))
+        this.equipments = equipments.map(item => ({ value: item, label: item }))
         this.$store.commit('scheduleSetting/setEquipments', this.equipments)
       })
       .catch(() => {})
@@ -331,18 +299,15 @@ export default {
     ...mapMutations('scheduleSetting', ['setCurrentProjectId']),
     fetchFiles () {
       this.isFetchingAdvanceSetting = true
-      return getUploadFileList()
-        .then(res => {
-          this.constraintSetting = res.constraint
-          this.commonDataSetting = res.rawdata
+      fetchDataBoundStatus(this.scheduleProjectId)
+        .then(files => {
+          files.forEach(file => {
+            const category = file.category
+            if (file.category === 'ORDER') return
+            this.files[category.toLowerCase()].push(file)
+          })
           this.isFetchingAdvanceSetting = false
         })
-    },
-    openUploadFileDialog () {
-      this.isShowUploadFileDialog = true
-    },
-    closeUploadFileDialog () {
-      this.isShowUploadFileDialog = false
     },
     saveSetting () {
       // 表單驗證
@@ -572,6 +537,14 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          &.is-empty {
+            color: #AAA;
+          }
+        }
+        &__item-date {
+          &.is-empty {
+            color: #AAA;
+          }
         }
 
         &__item-button-block {
