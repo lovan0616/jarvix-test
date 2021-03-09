@@ -829,6 +829,7 @@ $direction-span: ("col": 12, "row": 12);
             box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
             top: 31px;
             right: 0;
+            left: unset;
             &::before {
               right: 5px;
             }
