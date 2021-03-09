@@ -18,12 +18,27 @@
           v-for="subNav in nav.subNav"
           :key="subNav.title"
           :to="subNav.path || { name: subNav.routeName }"
+          :class="{'nav-link--locked': subNav.isLocked}"
           class="nav-link sub-nav-link"
+          @click.native.capture="routerCapture(subNav.isLocked, $event)"
         >
           <svg-icon 
             icon-class="triangle" 
             class="icon"/>
-          {{ subNav.title }}
+          <el-tooltip
+            :disabled="!subNav.isLocked"
+            :content="$t('model.UsedModelCannotBeEdited')" 
+            class="model-tooltip"
+            effect="dark" 
+            placement="bottom-start">
+            <div>
+              <svg-icon
+                v-if="subNav.isLocked"
+                icon-class="lock" 
+                class="lock"/>
+              {{ subNav.title }}
+            </div>
+          </el-tooltip>
         </router-link>
       </template>
     </div>
@@ -37,6 +52,11 @@ export default {
     navItems: {
       type: Array,
       default: () => []
+    }
+  },
+  methods: {
+    routerCapture (isLocked, event) {
+      if (isLocked) event.preventDefault()
     }
   }
 }
@@ -62,6 +82,13 @@ export default {
 
     &.active {
       color: #fff;
+    }
+
+    &--locked {
+      color: #3C4545;
+      &:hover {
+        color: #3C4545;
+      }
     }
   }
 

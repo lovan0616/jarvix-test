@@ -84,8 +84,8 @@ export default {
             this.nav[selectedMainNavIndex].subNav.push({
               title: this.$t('sideNav.' + this.lowercaseFirstLetter(navItem.name)),
               routeName: navItem.name,
-              ...(navItem.meta.isLock && {
-                lock: navItem.meta.isLock(this.$store)
+              ...(navItem.meta.isLocked && {
+                isLocked: navItem.meta.isLocked(this.$store)
               })
             })
           }

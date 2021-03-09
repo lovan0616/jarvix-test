@@ -618,12 +618,12 @@
     "newModel": "新增模型",
     "id": "ID",
     "modelName": "模型名稱",
-    "creator": "建立者",
+    "creator": "建立者", 
     "createTime": "建立時間",
     "updateTime": "更新時間",
     "managementSetting": "管理設定",
-    "deleteConfirmText": "刪除模型將會導致相關應用失效，您確認要繼續刪除？"
-
+    "deleteConfirmText": "刪除模型將會導致相關應用失效，您確認要繼續刪除？",
+    "UsedModelCannotBeEdited": "模型已被流程使用，故無法進行編輯。"
   },
   "script": {
     "dataFrame": "來源資料表",
