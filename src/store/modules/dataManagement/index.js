@@ -30,7 +30,10 @@ export default {
       type: null,
       ioArgs: {}
     },
-    currentModelId: null
+    currentModelId: null,
+    currentModelInfo: {
+      isUsed: false
+    }
   },
   actions,
   mutations,

@@ -614,6 +614,18 @@
     "isDistributed": "是否進行分片",
     "distributedColumnName": "分片欄位"
   },
+  "model": {
+    "newModel": "新增模型",
+    "id": "ID",
+    "modelName": "模型名稱",
+    "creator": "建立者",
+    "createTime": "建立時間",
+    "createMethod": "建立方式",
+    "updateTime": "更新時間",
+    "managementSetting": "管理設定"
+    
+
+  },
   "script": {
     "dataFrame": "來源資料表",
     "selectInputColumn": "設定輸入欄位",

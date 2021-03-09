@@ -407,9 +407,7 @@ const router = new Router({
                               component: () => import('@/pages/modelManagement/ConfigSetting'),
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
-                                isLock: (vue) => {
-                                  return vue.$route.params.token
-                                }
+                                isLock: (store) => store.state.dataManagement.currentModelInfo.isUsed
                               }
                             }
                           ]
