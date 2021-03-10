@@ -102,8 +102,7 @@
               :key="control + '-' + index"
               class="single-select"
             >
-              <!--暫時隱藏，待後端修正-->
-              <!-- <div class="checkbox-group">
+              <div class="checkbox-group">
                 <div class="checkbox-label">
                   <input
                     v-model="control.isSelected"
@@ -112,7 +111,7 @@
                   >
                   <div class="checkbox-square"/>
                 </div>
-              </div> -->
+              </div>
               <div class="label-content">
                 <div class="label-title">{{ control.columnName }}</div>
               </div>
@@ -131,8 +130,7 @@
               :key="filter + '-' + index"
               class="single-select"
             >
-              <!--暫時隱藏，待後端修正-->
-              <!-- <div class="checkbox-group">
+              <div class="checkbox-group">
                 <div class="checkbox-label">
                   <input
                     v-model="filter.isSelected"
@@ -141,7 +139,7 @@
                   >
                   <div class="checkbox-square"/>
                 </div>
-              </div> -->
+              </div>
               <div class="label-content">
                 <div class="label-title">{{ filter.columnName }}</div>
                 <div class="label-description">{{ filter.targetValues }}</div>
