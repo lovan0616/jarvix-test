@@ -67,7 +67,7 @@
       </div>
       <div class="step step--start-simulate">
         <default-button
-          :disabled="scheduledJobs.length === 0 || solutions.length === 0 || hasInvalidSolution"
+          :disabled="scheduledJobs.length === 0 || solutions.length === 0 || hasInvalidSolution || !allowSimulation"
           :show-spinner="isSimulatingDialogOpen"
           @click="startSimulation"
         >
@@ -85,7 +85,7 @@
         class="page__spinner"
       /> -->
       <default-setting
-        v-show="editSolutionSequence"
+        v-if="editSolutionSequence"
         :key="editSolutionSequence"
         :solution-sequence="editSolutionSequence"
       />
@@ -120,6 +120,7 @@ import DefaultSetting from '../../scheduleSetting/Index'
 import PlanSimulation from './components/PlanSimulation'
 import SimulatingDialog from './components/SimulatingDialog'
 import moment from 'moment'
+import { fetchDataBoundStatus } from '@/schedule/API/Project'
 import { mapState, mapMutations } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 import { Message } from 'element-ui'
@@ -134,6 +135,7 @@ export default {
   },
   data () {
     return {
+      allowSimulation: false,
       editSolutionSequence: null,
       isShowChangeAlert: false,
       renderingSetting: false,
@@ -143,7 +145,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['defaultSetting']),
+    ...mapState('scheduleSetting', ['defaultSetting', 'scheduleProjectId']),
     ...mapState('simulation', ['solutions', 'scheduledJobs', 'planId']),
     displaySelectedJobCounter () {
       return this.scheduledJobs.length > 0
@@ -155,6 +157,7 @@ export default {
     }
   },
   mounted () {
+    this.fetchDataBoundStatus()
     this.solutions.forEach(s => {
       if (s.sequence > this.solutionSerialNumber) this.solutionSerialNumber = s.sequence
       // 返回設定or重新模擬時，先做一次表單檢查以初始化 valid 狀態
@@ -164,6 +167,23 @@ export default {
   },
   methods: {
     ...mapMutations('simulation', ['addSolution', 'removeSolution']),
+    fetchDataBoundStatus () {
+      fetchDataBoundStatus(this.scheduleProjectId)
+        .then(dataframes => {  
+          // 確定訂單、共同資料都已經綁定，不然不能進行模擬
+          this.allowSimulation = dataframes
+            .filter(item => item.category === 'ORDER' || item.category === 'RAW_DATA')
+            .every(item => item.dataframeStatus === 'BOUND')
+          if (!this.allowSimulation) {
+            Message({
+              message: this.$t('schedule.simulation.notAllowedSimulation'),
+              type: 'warning',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          }
+        })
+    },
     isSolutionFocus (id) {
       return this.editSolutionSequence === id
     },

@@ -164,6 +164,7 @@
       "count": "數量",
       "dayCount": "天數",
       "percentage": "百分比",
+      "notAllowedSimulation": "訂單或共同資料未完成綁定，尚不能進行模擬",
       "orderResult": {
         "orderId": "訂單",
         "order": "訂單編號",
