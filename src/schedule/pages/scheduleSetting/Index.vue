@@ -167,15 +167,14 @@
         </h2>
       </div>
       <div class="setting__body">
-        <div class="file">
-          <spinner v-if="isFetchingAdvanceSetting" />
-          <div
-            v-for="file in files.constraint"
-            v-else
-            :key="file.code"
-          >
-            <single-constraint-file :file-data="file"/>
-          </div>
+        <spinner v-if="isFetchingAdvanceSetting" />
+        <div
+          v-for="file in files.constraint"
+          v-else
+          :key="file.code"
+          class="file"
+        >
+          <single-constraint-file :file-data="file"/>
         </div>
       </div>
     </div>
@@ -190,15 +189,14 @@
         </h2>
       </div>
       <div class="setting__body">
-        <div class="file">
-          <spinner v-if="isFetchingAdvanceSetting" />
-          <div
-            v-for="file in files.raw_data"
-            v-else
-            :key="file.code"
-          >
-            <single-common-file :file-data="file" />
-          </div>
+        <spinner v-if="isFetchingAdvanceSetting" />
+        <div
+          v-for="file in files.raw_data"
+          v-else
+          :key="file.code"
+          class="file"
+        >
+          <single-common-file :file-data="file" />
         </div>
       </div>
     </div>
@@ -338,20 +336,19 @@ export default {
       }
 
       this.isLoading = true
-      this.settingInfo.excludeEquipments.forEach(equipment => {
-        // 補上機台名稱
-        if (!equipment.equipmentName) {
-          equipment.equipmentName = this.equipments.find(option => option.value === equipment.equipmentId).label
-        }
-      })
-      this.$store.dispatch('scheduleSetting/setSetting', this.settingInfo).then(res => {
+      const copiedSetting = { ...this.settingInfo }
+      copiedSetting.excludeEquipments = copiedSetting.excludeEquipments.map(item => ({
+        equipment: item.equipmentId,
+        reasons: item.reasons
+      }))
+      this.$store.dispatch('scheduleSetting/setSetting', copiedSetting).then(() => {
         Message({
           message: this.$t('schedule.successMessage.settingSaved'),
           type: 'success',
           duration: 3 * 1000,
           showClose: true
         })
-        this.$store.commit('scheduleSetting/updateSetting', this.settingInfo)
+        this.$store.commit('scheduleSetting/updateSetting', copiedSetting)
       })
       .catch(() => {})
       .finally(() => {
@@ -506,10 +503,12 @@ export default {
         background: rgba(0, 0, 0, 0.55);
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
         border-radius: 8px;
+        &:not(:last-child) {
+          margin-bottom: 16px;
+        }
         &__item {
           width: 100%;
           padding: 24px;
-          margin-bottom: 16px;
           border-radius: 8px;
           display: flex;
           justify-content: space-between;
@@ -532,7 +531,7 @@ export default {
         }
 
         &__item-name {
-          margin-right: 131px;
+          flex: 3;
           width: 245px;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -542,6 +541,7 @@ export default {
           }
         }
         &__item-date {
+          flex: 2;
           &.is-empty {
             color: #AAA;
           }
