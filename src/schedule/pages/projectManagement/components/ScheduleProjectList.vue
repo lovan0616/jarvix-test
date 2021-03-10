@@ -127,7 +127,7 @@ import { fetchProjectList } from '@/schedule/API/Project'
 import { mapGetters } from 'vuex'
 import ScheduleProjectRenameDialog from './dialog/ScheduleProjectRenameDialog'
 import ScheduleProjectConfirmDeleteDialog from './dialog/ScheduleProjectConfirmDeleteDialog'
-import ScheduleProjectRelationDialog from './dialog/ScheduleProjectRelationDialog'
+import ScheduleProjectRelationDialog from './dialog/relation/ScheduleProjectRelationDialog'
 
 export default {
   name: 'ScheduleProjectList',
@@ -164,11 +164,13 @@ export default {
     },
     openDialog (action, projectInfo) {
       this[`isShow${action}Dialog`] = true
+      this.$store.commit('scheduleSetting/setCurrentProjectId', projectInfo.id)
       this.projectInfo = projectInfo
     },
     closeDialog (action, reload = true) {
       this[`isShow${action}Dialog`] = false
       this.projectInfo = null
+      this.$store.commit('scheduleSetting/setCurrentProjectId', null)
       if (reload) this.fetchData()
     }
   }

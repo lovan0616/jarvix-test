@@ -84,23 +84,7 @@ export default {
   props: {
     info: {
       type: Object,
-      default: () => {
-        return {
-          available: 0,
-          columns: [
-            {
-              displayName: '',
-              emptyRowIndexes: [],
-              internalName: '',
-              refErrorRows: [],
-              typeErrorRowIndexes: []
-            }
-          ],
-          headerErrorMessage: '',
-          notApplicableRowIndexes: [],
-          rows: 0
-        }
-      },
+      default: () => {},
       required: true
     }
   },
@@ -112,12 +96,10 @@ export default {
   },
   computed: {
     failedRowCount () {
-      return this.info.hasOwnProperty('notApplicableRowIndexes')
-        ? this.info.notApplicableRowIndexes.length
-        : 0
+      return this.info.notApplicableRowCount
     },
     failedColumns () {
-      return this.info.hasOwnProperty('notApplicableRowIndexes')
+      return this.info.notApplicableRowCount > 0
         ? this.info.columns.filter(column => column.emptyRowIndexes.length > 0 || column.typeErrorRowIndexes.length > 0 || column.refErrorRows.length > 0)
         : []
     }
