@@ -32,7 +32,7 @@ export default {
     },
     currentModelId: null,
     currentModelInfo: {
-      isUsed: true
+      isUsed: false
     }
   },
   actions,

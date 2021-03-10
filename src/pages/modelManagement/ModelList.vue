@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <crud-table
+      <data-table
         :headers="tableHeaders"
         :data-list.sync="modelData"
         :loading="isLoading"
@@ -37,14 +37,14 @@
   </div>
 </template>
 <script>
-import CrudTable from '@/components/table/CrudTable'
+import DataTable from '@/components/table/DataTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
 
 export default {
   name: 'ModelList',
   components: {
-    CrudTable,
+    DataTable,
     DecideDialog
   },
   data () {
@@ -52,14 +52,16 @@ export default {
       isLoading: false,
       isShowDeleteDialog: false,
       deleteModelId: null,
-      modelData: [{
+      modelData: [
+        {
         createTime: "2021-02-26T08:03:34.961+0000",
         creator: "exist02593",
         id: 2015,
         name: "-v-",
         updateTime: "2021-03-02T06:42:53.382+0000",
         createMethodLabel: '使用者上傳'
-      }],
+      }
+      ],
       tableHeaders: [
         {
           text: this.$t('model.id'),
