@@ -215,7 +215,7 @@ export default {
 
       const isOwnConditionIdList = this.setting.conditions.map(condition => condition.id)
 
-      getAlertConditions(this.getCurrentGroupId)
+      return getAlertConditions(this.getCurrentGroupId)
         .then(conditions => {      
           conditions
             .filter(condition => isOwnConditionIdList.includes(condition.id))
@@ -286,7 +286,7 @@ export default {
         activate: true
       })
     },
-    alertConditionUpdated (action, conditionId) {
+    async alertConditionUpdated (action, conditionId) {
       switch (action) {
         case 'CreateCondition':
           this.createAlertCondition(conditionId)
@@ -296,7 +296,8 @@ export default {
           this.currentEditingCondition = null
           break
       }
-      this.fetchAlertConditions()
+      await this.fetchAlertConditions()
+      this.saveWarningModuleSetting()
     },
     isComponentAlerter (targetType) {
       return targetType === this.alertTargetType['COMPONENT']
