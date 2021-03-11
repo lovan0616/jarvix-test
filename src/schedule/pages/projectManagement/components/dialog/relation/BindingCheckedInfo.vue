@@ -17,7 +17,7 @@
     </span>
     <writing-dialog
       v-if="isShowInfoDialog"
-      :title="`${$t('schedule.binding.failedRow')}(${failedRowCount})`"
+      :title="`${$t('schedule.binding.failedRow')}(${failedRowCount})可用(${info.applicableRowCount})`"
       :button="$t('schedule.binding.bind')"
       show-both
       @closeDialog="isShowInfoDialog = false"

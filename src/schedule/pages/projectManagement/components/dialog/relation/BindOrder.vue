@@ -4,6 +4,13 @@
       {{ $t('schedule.binding.globalSetting') }}（{{ $t('editing.isRequired') }}）
       <div class="form-action">
         <button
+          :disabled="isUnbindBtnDisabled"
+          class="btn btn-default"
+          @click="unbind"
+        >
+          {{ $t('schedule.binding.unbind') }}
+        </button>
+        <button
           v-if="checkedResult.bindable"
           :disabled="isBindBtnDisabled"
           class="btn btn-default"
@@ -35,7 +42,7 @@
           size="10"/>
         <default-select 
           v-else
-          v-model="innerValue"
+          v-model="innerFormData"
           :options="dataFrameOptions"
         />
         <binding-checked-info
@@ -50,7 +57,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { checkOrder, bindOrder } from '@/schedule/API/Bind'
+import { checkOrder, bindOrder, unbindOrder } from '@/schedule/API/Bind'
 import { Message } from 'element-ui'
 import BindingCheckedInfo from './BindingCheckedInfo'
 
@@ -63,6 +70,11 @@ export default {
     formData: {
       type: Number,
       default: null
+    },
+    originalBoundStatus: {
+      // 原始綁定狀態
+      type: Boolean,
+      default: false
     },
     dataFrameOptions: {
       type: Array,
@@ -83,18 +95,17 @@ export default {
   },
   data: () => {
     return {
-      innerValue: null,
+      innerFormData: null,
       isChecking: false,
-      isBinding: false
+      isBinding: false,
+      isUnbinding: false,
+      action: '' // 記著剛剛執行過的動作，就不再重撈資料渲染畫面了，主要為了UX考量
     }
   },
   computed: {
     ...mapState('scheduleSetting', ['scheduleProjectId']),
     isCheckBtnDisabled () {
-      return this.innerValue === null || this.isChecking
-    },
-    isBindBtnDisabled () {
-      return this.isBinding || !this.checkedResult || Boolean(this.checkedResult.headerErrorMessage)
+      return this.isChecking || this.innerFormData === null
     }
   },
   created () {
@@ -102,11 +113,11 @@ export default {
   },
   methods: {
     init () {
-      this.innerValue = this.formData
+      this.innerFormData = this.formData
     },
     check () {
       const requestBody = {
-        dataframeId: this.innerValue,
+        dataframeId: this.innerFormData,
         projectId: this.scheduleProjectId
       }
 
@@ -140,7 +151,7 @@ export default {
     bind () {
       this.isBinding = true
       bindOrder({
-        dataframeId: this.innerValue,
+        dataframeId: this.innerFormData,
         projectId: this.scheduleProjectId
       })
         .then(() => {
@@ -150,8 +161,26 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
+          this.action = 'bound'
         })
+        .catch(() => {})
         .finally(() => this.isBinding = false)
+    },
+    unbind () {
+      this.isUnbinding = true
+      unbindOrder (this.scheduleProjectId)
+        .then(() => {
+          Message({
+            message: this.$t('schedule.binding.successfullyUnbindOrder'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.action = 'unbound'
+          this.innerFormData = null
+        })
+        .catch(() => {})
+        .finally(() => this.isUnbinding = false)
     }
   }
 }

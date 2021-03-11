@@ -128,9 +128,7 @@ export default {
           Object.keys(this.checkedResult)
             .forEach(key => {
               const checkedInfo = res[this.snakeToCamel(key)]
-              console.log(key, checkedInfo)
               const bindable = this.resultHandler.bindable(checkedInfo)
-              console.log(bindable)
               this.checkedResult[key].bindable = bindable
               if (checkedInfo.hasOwnProperty('headerErrorMessage')) {
                 this.checkedResult[key].headerErrorMessage = checkedInfo.headerErrorMessage

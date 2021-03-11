@@ -72,7 +72,7 @@ service.interceptors.response.use(
         case 401:
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
-          router.push({ name: 'PageLogin' })
+          router.push('/login')
           Message({
             message: i18n.t('schedule.errorMessage.authFail'),
             type: 'error',

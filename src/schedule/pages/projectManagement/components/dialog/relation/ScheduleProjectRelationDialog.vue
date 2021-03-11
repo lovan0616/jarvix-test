@@ -30,10 +30,12 @@
             <!-- 綁定訂單 -->
             <bind-order
               :form-data="formOrder"
+              :original-bound-status="files.order[0].dataframeStatus === 'BOUND'"
               :data-frame-options="dataFrameOptions"
               :checked-result="checkedResultOrder"
               :is-loading-data-frames="isLoadingDataFrames"
               :result-handler="{ hasError, bindable }"
+              @unbound="checkedResultOrder = { ...defaultCheckedResult }"
             />
 
             <!-- 綁定共同資料 -->
@@ -105,6 +107,7 @@ export default {
       formRawData: {},
       formConstraint: {},
       files: {
+        order: [],
         raw_data: [],
         constraint: []
       },
@@ -124,9 +127,7 @@ export default {
       return this.projectInfo.datasourceStatus === 'Bound'
     },
     dataFrameOptions () {
-      const options = this.dataFrames.map(item => ({ value: item.id, label: item.primaryAlias }))
-      options.unshift({ value: null, label: this.$t('editing.defaultOption') })
-      return options
+      return this.dataFrames.map(item => ({ value: item.id, label: item.primaryAlias }))
     },
     defaultCheckedResult () {
       return {
@@ -153,15 +154,15 @@ export default {
           files.forEach(file => {
             const category = file.category
 
+            // 設定個檔案資料
+            this.files[category.toLowerCase()].push(file)
+
             // 設定 訂單表單 資料
             if (category === 'ORDER') {
               this.formOrder = file.dataframeStatus === 'BOUND' ? file.dataframeId : null
               this.checkedResultOrder = this.defaultCheckedResult
               return
             }
-
-            // 設定 RawDara, Constraint 區塊資料
-            this.files[category.toLowerCase()].push(file)
 
             // 設定表單資訊
             const pascaledCategory = this.snakeToPascal(category.toLowerCase())
@@ -192,7 +193,6 @@ export default {
       }
     },
     bindable (info) {
-      console.log(info)
       return !info.hasOwnProperty('headerErrorMessage')
     },
     reboundDataSource () {
@@ -285,6 +285,9 @@ export default {
         }
         &-action {
           margin-left: auto;
+          .btn {
+            display: inline-flex;
+          }
         }
       }
     }
@@ -313,7 +316,6 @@ export default {
 }
 
 /deep/ .btn {
-  display: flex;
   align-items: center;
   justify-content: center;
 }
