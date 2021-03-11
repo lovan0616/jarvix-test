@@ -6,6 +6,7 @@ export default {
     state.accountList = data.accountList
     state.groupList = data.groupList
     state.permission = data.permission
+    state.isAdmin = data.isAdmin
   },
   setLicenseInfo (state, data) {
     state.license = data
@@ -22,6 +23,7 @@ export default {
     state.accountList = []
     state.groupList = []
     state.permission = []
+    state.isAdmin = false
   },
   updateUserGroupInfo (state, data) {
     state.groupList = data.groupList

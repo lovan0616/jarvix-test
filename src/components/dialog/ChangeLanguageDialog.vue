@@ -39,8 +39,8 @@ export default {
     ...mapGetters('userManagement', ['hasPermission']),
     ...mapState('setting', ['locale', 'languages']),
     ...mapState('userManagement', ['userId']),
-    isLoginPage () {
-      return this.$route.name === 'PageLogin'
+    beforeLoginPage () {
+      return this.$route.name === 'PageLogin' || this.$route.name === 'PageForgetPassword' || this.$route.name === 'PageResetPassword' || this.$route.name === 'PageAdmin'
     },
     selectItems () {
       return Object.keys(this.languages).map(key => ({
@@ -49,7 +49,7 @@ export default {
       }))
     },
     langOptions () {
-      return this.hasPermission('english_ui') || this.isLoginPage
+      return this.hasPermission('english_ui') || this.beforeLoginPage
         ? this.selectItems
         : this.selectItems.filter(item => item.name !== 'English')
     }

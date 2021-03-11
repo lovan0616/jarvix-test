@@ -61,8 +61,20 @@ service.interceptors.response.use(
     }
 
     if (res.error) {
+      let messageString
+      let stackTrace = res.error.stackTrace
+      if (stackTrace) {
+        const blob = new Blob([stackTrace], { type: 'text/plain' })
+        const url = window.URL.createObjectURL(blob)
+        messageString = `<p style="font-size: 14px;">${res.error.message || i18n.t('errorMessage.defaultMsg')}</p>
+          <a href="${url}" class="link" download="errors-log">${ i18n.t('errorMessage.errorMessageDownload') }</a>`
+      } else {
+        messageString = res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg')
+      }
+
       Message({
-        message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
+        dangerouslyUseHTMLString: !!stackTrace,
+        message: messageString,
         type: res.error.type,
         duration: 3 * 1000,
         showClose: true

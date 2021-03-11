@@ -25,6 +25,7 @@
       :transcript="transcript"
       :intent="intent"
       :is-war-room-addable="isWarRoomAddable"
+      :is-histogram-bin-setting="isHistogramBinSetting"
       mode="display"
       @fetch-new-components-list="getComponentV2"
     />
@@ -75,6 +76,7 @@ export default {
       transcript: null,
       // 目前兩版 transcript 過渡期先放這
       isWarRoomAddable: false,
+      isHistogramBinSetting: false,
       currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200,
@@ -158,6 +160,7 @@ export default {
       this.currentQuestionDataFrameId = null
       this.transcript = null
       this.isWarRoomAddable = false
+      this.isHistogramBinSetting = false
       this.intent = null
       this.$store.commit('dataSource/resetAlgoConfig')
       this.closeUnknowInfoBlock()
@@ -177,6 +180,10 @@ export default {
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
           selectedColumnList: this.selectedColumnList,
+          displayConfig: {
+            histogramBinSize: null,
+            sortOrders: []
+          },
           isFilter: false
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
@@ -232,6 +239,10 @@ export default {
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList,
+              displayConfig: {
+                histogramBinSize: null,
+                sortOrders: []
+              },
               isFilter: false
             }).then(res => {
               this.$store.commit('result/updateCurrentResultId', res.resultId)
@@ -299,6 +310,7 @@ export default {
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
               this.transcript = componentResponse.transcript
               this.isWarRoomAddable = componentResponse.isWarRoomAddable
+              this.isHistogramBinSetting = componentResponse.isHistogramIntervalSetting
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false

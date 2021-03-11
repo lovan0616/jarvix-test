@@ -15,7 +15,8 @@ export default {
     currentRoute: {},
     changeLangBeforeLogin: false,
     token: null,
-    tokenTimestamp: null
+    tokenTimestamp: null,
+    isSmtpConnected: false
   },
   actions,
   mutations,

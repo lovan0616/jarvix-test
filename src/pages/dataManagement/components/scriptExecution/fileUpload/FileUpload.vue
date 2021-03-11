@@ -20,7 +20,17 @@
         @dragover.native.prevent
         @dragenter.native="toggleDragEnter(true)"
         @dragleave.native="toggleDragEnter(false)"
-      />
+      >
+        <div 
+          slot="uploadLimit" 
+          class="upload-remark">
+          <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
+          <div
+            v-for="(msg, index) in $t('script.scriptLimit')"
+            :key="index"
+          >{{ Number(index) + 1 }}. {{ $t(`script.scriptLimit.${index}`, {mainScriptName}) }}</div>
+        </div>
+      </upload-block>
       <div 
         v-else
         class="file-list-container"
@@ -119,6 +129,7 @@ export default {
       ],
       dragEnter: false,
       progress: 0,
+      mainScriptName: 'main.py'
     }
   },
   computed: {
@@ -189,12 +200,35 @@ export default {
       this.$store.commit('dataManagement/updateUploadFileList', this.formDataList)
     },
     async fileUpload () {
+      // 先檢查上傳檔案內是否包含 main.py
+      const hasMainPy = this.formDataList.findIndex(element => {
+        return element.fileFullName === this.mainScriptName
+      })
+
+      if (hasMainPy === -1) {
+        Message({
+          message: this.$t('script.lackOfMainScript', {mainScriptName: this.mainScriptName}),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+        return false
+      }
+
       // 更新狀態
       this.currntUploadStatus = uploadStatus.uploading
       try {
         // 先上傳第一筆檔案，換取 script id
         const waitingFileList = [...this.formDataList]
         const firstFormData = waitingFileList.shift().data
+        const scriptName = this.$store.state.dataManagement.currentUploadScriptName
+      /**
+       * 注意！
+       * 目前後端只會拿第一筆的 scriptName 去更新
+       */
+        if (scriptName !== null) {
+          firstFormData.append('scriptName', scriptName)
+        }
         // 上傳檔案
         const { scriptId } = await scriptUpload(firstFormData)
         this.progress = 50

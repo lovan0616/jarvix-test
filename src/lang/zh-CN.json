@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "请填字串(含空格)",
     "formCharacterOverMax": "最多{max}个字元",
     "formCharacterOverMin": "最少{min}个字元",
+    "formValueOverMin": "数字需大於{min}",
     "formNumericeOverOne": "最少包含1个数字",
     "formDecimal": "请输入数字(可含小数位)",
     "formDecimalWithMaxDecimalPointNumbers": "请输入数字(至多为小数 {max} 位)",
@@ -160,7 +161,8 @@
     "lowerBound": "下限",
     "noPeriodicResult": "没有找到周期结果",
     "numericShouldBeBetween": "数字需介在 {min} 到 {max} 之间",
-    "updateLicenseSuccess": "更新成功，立即为您刷新页面！"
+    "updateLicenseSuccess": "更新成功，立即为您刷新页面！",
+    "sendResetPasswordEmail": "变更密码信寄送成功！"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -182,6 +184,28 @@
     "notBelongToGroups": "因您未隶属项目而无法使用该功能",
     "pleaseCreateOrJoinGroup": "请先加入项目或建立新项目",
     "pleaseInformManager": "请待项目管理员将您加入项目"
+  },
+  "forgetPassword": {
+    "title": "忘记密码",
+    "remark": "系统会将密码变更信寄至您注册的信箱"
+  },
+  "resetPassword": {
+    "title": "更新密码",
+    "newPassword": "新密码",
+    "confirmNewPassword": "确认新密码"
+  },
+  "admin": {
+    "title": "使用者后台",
+    "userList": "使用者列表",
+    "userName": "使用者名称",
+    "action": "操作",
+    "changePassword": "密码变更",
+    "accountName": "帐户名称",
+    "resetLink": "重设密码连结",
+    "searchUserName": "搜寻使用者名称"
+  },
+  "link": {
+    "backToLogin": "返回登入页"
   },
   "editing": {
     "localUpload": "本机文件上传",
@@ -443,15 +467,19 @@
     "columnAliasTemplate": "栏位别名案例档",
     "valueAliasTemplate": "数据别名案例档",
     "searchDataSourceOrDataFrame": "搜寻数据源 / 数据表",
-    "scriptExecutionStep1": "上传档案",
-    "scriptExecutionStep2": "选择输入栏位",
-    "scriptExecutionStep3": "设定输出类型",
+    "scriptExecutionStep1": "设定名称",
+    "scriptExecutionStep2": "上传档案",
+    "scriptExecutionStep3": "选择输入栏位",
+    "scriptExecutionStep4": "设定输出类型",
     "onlyPrefixMatching": "此搜寻只支援从字首开始匹配",
     "searchDataSource": "搜寻资料源",
     "reCalculateMeta": "重算 Meta",
     "isOrdinal": "有时序",
     "isNotOrdinal": "无时序",
-    "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量"
+    "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量",
+    "histogramBinSetting": "设定直方图组距大小",
+    "histogramBinSize": "直方图组距大小",
+    "chooseTab": "选择要使用的分页"
   },
   "algorithm": {
     "name": "演算法",
@@ -588,7 +616,14 @@
     "scriptColumnReminder": "栏位具有顺序性，优先顺序为由上至下",
     "selectOutputColumn": "设定输出栏位类型",
     "columnDataType": "栏位类型",
-    "columnDataName": "栏位名称"
+    "columnDataName": "栏位名称",
+    "setScriptName": "请设定名称",
+    "lackOfMainScript": "未包含 {mainScriptName}",
+    "scriptLimit": {
+      "0": "主要脚本名称须为 {mainScriptName}",
+      "1": "脚本里面需有 run() 的函数",
+      "2": "函数传入与回传都必须为 pandas 的 DataFrame 类型"
+    }
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
@@ -1190,7 +1225,8 @@
     "downloadPage": "下载图片",
     "changeDiagram": "切换图表",
     "columnSummaryInfo": "栏位统计信息",
-    "createAlert": "新增示警"
+    "createAlert": "新增示警",
+    "send": "发送"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -2534,7 +2570,8 @@
     "defaultMsg": "系统发生非预期错误",
     "lackOfPermission": "权限不足，请联系管理员",
     "versionUpdate": "有新版本上线，立即帮您更新",
-    "networkError": "网路连线发生错误，请检查连线，稍后再试"
+    "networkError": "网路连线发生错误，请检查连线，稍后再试",
+    "errorMessageDownload": "错误讯息下载"
   },
   "resultNote": {
     "groupLimitNote": "此结果为原数据取前 {randomLimit} 笔得来",

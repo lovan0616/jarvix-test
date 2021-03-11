@@ -28,6 +28,10 @@
           type="submit"
           class="btn btn-default btn-submit"
         >{{ $t('button.login') }}</button>
+        <a
+          v-if="isSmtpConnected"
+          href="/forget-password"
+          class="link">{{ $t('forgetPassword.title') }}</a>
       </form>
     </div>
   </page-layout>
@@ -36,7 +40,7 @@
 import { login } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   inject: ['$validator'],
@@ -56,6 +60,8 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapState('userManagement', ['isAdmin']),
+    ...mapState('setting', ['isSmtpConnected'])
   },
   mounted () {
     this.$store.commit('chatBot/clearConversation')
@@ -79,6 +85,11 @@ export default {
               return this.getUserInfo()
             })
             .then(() => {
+              // 判斷是否為 Admin
+              if (this.isAdmin) {
+                return this.$router.push({name: 'PageAdmin'})
+              }
+
               // 取得前一次停留或拜訪的資訊
               const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
@@ -152,8 +163,13 @@ export default {
   .btn-submit {
     width: 120px;
     margin-top: 32px;
+    margin-bottom: 24px;
     border: none;
     border-radius: 4px;
+  }
+
+  .link {
+    display: block;
   }
 }
 </style>
