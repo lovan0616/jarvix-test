@@ -78,7 +78,12 @@ export default {
         {
           text: this.$t('admin.userName'),
           value: 'name',
-          width: '50%'
+          width: '35%'
+        },
+        {
+          text: 'e-mail',
+          value: 'email',
+          width: '35%'
         },
         {
           text: this.$t('editing.action'),
