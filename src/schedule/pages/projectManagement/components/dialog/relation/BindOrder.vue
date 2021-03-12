@@ -4,7 +4,7 @@
       {{ $t('schedule.binding.globalSetting') }}（{{ $t('editing.isRequired') }}）
       <div class="form-action">
         <button
-          :disabled="isUnbindBtnDisabled"
+          :disabled="isUnbinding"
           class="btn btn-default"
           @click="unbind"
         >
@@ -12,7 +12,7 @@
         </button>
         <button
           v-if="checkedResult.bindable"
-          :disabled="isBindBtnDisabled"
+          :disabled="isBinding"
           class="btn btn-default"
           @click="bind">
           <spinner 
@@ -22,7 +22,7 @@
         </button>
         <button
           v-else
-          :disabled="isCheckBtnDisabled"
+          :disabled="isChecking"
           class="btn btn-default"
           @click="check">
           <spinner 
@@ -71,8 +71,8 @@ export default {
       type: Number,
       default: null
     },
+    // 當前綁定資訊
     originalBoundStatus: {
-      // 原始綁定狀態
       type: Boolean,
       default: false
     },
@@ -99,13 +99,16 @@ export default {
       isChecking: false,
       isBinding: false,
       isUnbinding: false,
-      action: '' // 記著剛剛執行過的動作，就不再重撈資料渲染畫面了，主要為了UX考量
+      currentBoundStatus: null
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['scheduleProjectId']),
-    isCheckBtnDisabled () {
-      return this.isChecking || this.innerFormData === null
+    ...mapState('scheduleSetting', ['scheduleProjectId'])
+  },
+  watch: {
+    // 例如資料源重新綁定，外層會一起清空資料表
+    formData (value) {
+      this.innerFormData = value
     }
   },
   created () {
@@ -114,8 +117,18 @@ export default {
   methods: {
     init () {
       this.innerFormData = this.formData
+      this.currentBoundStatus = this.originalBoundStatus
     },
     check () {
+      if (!this.innerFormData) {
+        return Message({
+          message: this.$t('schedule.binding.pleaseSelectOrder'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       const requestBody = {
         dataframeId: this.innerFormData,
         projectId: this.scheduleProjectId
@@ -145,7 +158,11 @@ export default {
             this.bind()
           }
         })
-        .catch(() => {})
+        .catch(error => {
+          if (error.hasOwnProperty('headerErrorMessage')) {
+            this.checkedResult.headerErrorMessage = error.headerErrorMessage
+          } 
+        })
         .finally(() => this.isChecking = false)
     },
     bind () {
@@ -161,12 +178,22 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          this.action = 'bound'
+          this.currentBoundStatus = true
+          this.$emit('resetCheckedResult')
         })
         .catch(() => {})
         .finally(() => this.isBinding = false)
     },
     unbind () {
+      if (!this.currentBoundStatus) {
+        return Message({
+          message: this.$t('schedule.binding.orderNotBeingBound'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       this.isUnbinding = true
       unbindOrder (this.scheduleProjectId)
         .then(() => {
@@ -176,8 +203,9 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          this.action = 'unbound'
+          this.currentBoundStatus = false
           this.innerFormData = null
+          this.$emit('resetCheckedResult')
         })
         .catch(() => {})
         .finally(() => this.isUnbinding = false)

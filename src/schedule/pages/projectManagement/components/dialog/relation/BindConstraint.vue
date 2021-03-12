@@ -4,10 +4,23 @@
       {{ $t('schedule.setting.extraConstraintSetting') }}
       <div class="form-action">
         <button
-          :disabled="isBindBtnDisabled"
+          :disabled="isUnbinding"
+          class="btn btn-default"
+          @click="unbind"
+        >
+          <spinner 
+            v-show="isUnbinding" 
+            size="10"/>
+          {{ $t('schedule.binding.unbind') }}
+        </button>
+        <button
+          :disabled="isBinding"
           class="btn btn-default"
           @click="check"
         >
+          <spinner 
+            v-show="isBinding" 
+            size="10"/>
           {{ $t('schedule.binding.bind') }}
         </button>
       </div>
@@ -27,7 +40,7 @@
         <default-select
           v-else
           v-model="formData[file.code]"
-          :options="dataFrameOptions"
+          :options="options"
         />
         <binding-checked-info
           v-if="resultHandler.hasError(checkedResult, file.code)"
@@ -41,7 +54,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { checkConstraints, bindConstraints } from '@/schedule/API/Bind'
+import { checkConstraints, bindConstraints, unbindConstraint } from '@/schedule/API/Bind'
 import { Message } from 'element-ui'
 import { snakeToCamel, snakeToPascal } from '@/schedule/utils/mixins'
 import BindingCheckedInfo from './BindingCheckedInfo'
@@ -81,15 +94,15 @@ export default {
     return {
       isChecking: false,
       isBinding: false,
+      isUnbinding: false
     }
   },
   computed: {
     ...mapState('scheduleSetting', ['scheduleProjectId']),
     isBindBtnDisabled () {
-      return this.isChecking || this.isBinding || this.formattedConstraints.length === 0
+      return this.isChecking || this.isBinding || this.selectedConstraints.length === 0
     },
-    formattedConstraints () {
-      // 送進 Constraints check 的 request body
+    selectedConstraints () {
       return Object.keys(this.formData)
         .filter(key => this.formData[key] !== null)
         .map(key => ({
@@ -97,16 +110,32 @@ export default {
           dataframeId: this.formData[key]
         }))
     },
+    selectedCodes () {
+      return this.selectedConstraints.reduce((acc, cur) => acc.concat(cur.code), [])
+    },
     bindableConstranints () {
-      // 送進 Constraints bind 的 request body
-      return this.formattedConstraints
+      return this.selectedConstraints
         .filter(item => this.checkedResult[item.code].bindable || false)
     },
+    options () {
+      const options = [ ...this.dataFrameOptions ]
+      options.unshift({ value: null, label: this.$t('editing.defaultOption') })
+      return options
+    }
   },
   methods: {
     check () {
+      if (this.selectedConstraints.length === 0) {
+        return Message({
+          message: this.$t('schedule.binding.pleaseSelectConstraint'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       const requestBody = {
-        constraints: this.formattedConstraints,
+        constraints: this.selectedConstraints,
         projectId: this.scheduleProjectId
       }
 
@@ -128,9 +157,10 @@ export default {
           })
 
           const allFailed = Object.values(this.checkedResult).every(value => !value.bindable)
+          // 全部資料都無法做綁定才擋下，有可以綁定的就送去綁定
           if (allFailed) {
             return Message({
-              message: '額外限制資料檢查完成，資料格式錯誤',
+              message: this.$t('schedule.binding.allConstraintsDataIsInvalid'),
               type: 'warning',
               duration: 3 * 1000,
               showClose: true
@@ -142,6 +172,15 @@ export default {
         .finally(() => this.isChecking = false)
     },
     bind () {
+      if (this.selectedConstraints.length === 0) {
+        return Message({
+          message: this.$t('schedule.binding.pleaseSelectConstraint'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       const requestBody = {
         constraints: this.bindableConstranints,
         projectId: this.scheduleProjectId
@@ -154,7 +193,7 @@ export default {
             return acc.concat('"' + this.$t(`schedule.setting.extraConstraint${this.snakeToPascal(cur.code)}`) + '"')
           }, [])).join(', ')
           Message({
-            message: `已綁定額外資料限制資料表：${boundConstraintsString}`,
+            message: `${this.$t('schedule.binding.successfullyBindConstraints')}：${boundConstraintsString}`,
             type: 'success',
             duration: 3 * 1000,
             showClose: true
@@ -162,6 +201,33 @@ export default {
         })
         .catch(() => {})
         .finally(() => this.isBinding = false)
+    },
+    unbind () {
+      if (this.selectedConstraints.length === 0) {
+        return Message({
+          message: this.$t('schedule.binding.pleaseSelectConstraint'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
+      this.isUnbinding = true
+      unbindConstraint({
+        codes: this.selectedCodes,
+        projectId: this.scheduleProjectId
+      })
+        .then(() => {
+          Message({
+            message: this.$t('schedule.binding.successfullyUnbindConstraint'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.$emit('resetFormData')
+          this.$emit('resetCheckedResult')
+        })
+        .finally(() => this.isUnbinding = false)
     },
     snakeToCamel,
     snakeToPascal

@@ -4,8 +4,15 @@
       {{ $t('schedule.setting.commonDataSetting') }}（{{ $t('editing.isRequired') }}）
       <div class="form-action">
         <button
+          :disabled="isUnbinding"
+          class="btn btn-default"
+          @click="unbind"
+        >
+          {{ $t('schedule.binding.unbind') }}
+        </button>
+        <button
           v-if="isDataBindable"
-          :disabled="isBindBtnDisabled"
+          :disabled="isBinding"
           class="btn btn-default"
           @click="bind">
           <spinner 
@@ -15,7 +22,7 @@
         </button>
         <button
           v-else
-          :disabled="isCheckBtnDisabled"
+          :disabled="isChecking"
           class="btn btn-default"
           @click="check">
           <spinner 
@@ -54,7 +61,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { checkRawdata, bindRawdata } from '@/schedule/API/Bind'
+import { checkRawdata, bindRawdata, unbindRawdata } from '@/schedule/API/Bind'
 import { Message } from 'element-ui'
 import { snakeToCamel, snakeToPascal } from '@/schedule/utils/mixins'
 import BindingCheckedInfo from './BindingCheckedInfo'
@@ -72,6 +79,11 @@ export default {
     formData: {
       type: Object,
       default: () => {}
+    },
+    // 當前綁定資訊
+    originalBoundStatus: {
+      type: Boolean,
+      default: false
     },
     dataFrameOptions: {
       type: Array,
@@ -93,7 +105,9 @@ export default {
   data: () => {
     return {
       isChecking: false,
-      isBinding: false
+      isBinding: false,
+      isUnbinding: false,
+      currentBoundStatus: null
     }
   },
   computed: {
@@ -101,11 +115,11 @@ export default {
     isDataBindable () {
       return Object.values(this.checkedResult).every(value => value.bindable)
     },
-    isCheckBtnDisabled () {
-      return this.isChecking || Object.values(this.formData).some(value => value === null)
+    isCheckDisabled () {
+      return Object.values(this.formData).some(value => value === null)
     },
     isBindBtnDisabled () {
-      return this.isBinding || Object.values(this.checkedResult).some(value => !value.bindable)
+      return Object.values(this.checkedResult).some(value => !value.bindable)
     },
     formattedData () {
       // 送進 Rawdata check/bind 的 request body
@@ -115,8 +129,23 @@ export default {
       }, {})
     }
   },
+  created () {
+    this.init()
+  },
   methods: {
+    init () {
+      this.currentBoundStatus = this.originalBoundStatus
+    },
     check () {
+      if (this.isCheckDisabled) {
+        return Message({
+          message: this.$t('schedule.binding.pleaseSelectRawdata'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       const requestBody = {
         ...this.formattedData,
         projectId: this.scheduleProjectId
@@ -170,10 +199,37 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          this.resetCheckedInfoRawdata()
+          this.currentBoundStatus = true
+          this.$emit('resetCheckedResult')
         })
         .catch(() => {})
         .finally(() => this.isBinding = false)
+    },
+    unbind () {
+      if (!this.currentBoundStatus) {
+        return Message({
+          message: this.$t('schedule.binding.rawdataNotBeingBound'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
+      this.isUnbinding = true
+      unbindRawdata(this.scheduleProjectId)
+        .then(() => {
+          Message({
+            message: this.$t('schedule.binding.successfullyUnbindRawdata'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.currentBoundStatus = false
+          this.$emit('resetCheckedResult')
+          this.$emit('resetFormData')
+        })
+        .catch(() => {})
+        .finally(() => this.isUnbinding = false)
     },
     snakeToCamel,
     snakeToPascal

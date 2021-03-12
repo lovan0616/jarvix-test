@@ -35,27 +35,33 @@
               :checked-result="checkedResultOrder"
               :is-loading-data-frames="isLoadingDataFrames"
               :result-handler="{ hasError, bindable }"
-              @unbound="checkedResultOrder = { ...defaultCheckedResult }"
+              @resetCheckedResult="resetCheckedResultOrder"
             />
 
             <!-- 綁定共同資料 -->
             <bind-raw-data
               :files="files.raw_data"
               :form-data="formRawData"
+              :original-bound-status="files.raw_data[0].dataframeStatus === 'BOUND'"
               :data-frame-options="dataFrameOptions"
               :checked-result="checkedResultRawData"
               :is-loading-data-frames="isLoadingDataFrames"
               :result-handler="{ hasError, bindable }"
+              @resetCheckedResult="resetCheckedResultRawdata"
+              @resetFormData="resetRawdataSelectors"
             />
 
             <!-- 綁定額外限制 -->
             <bind-constraint
               :files="files.constraint"
               :form-data="formConstraint"
+              :original-bound-status="files.constraint"
               :data-frame-options="dataFrameOptions"
               :checked-result="checkedResultConstraint"
               :is-loading-data-frames="isLoadingDataFrames"
               :result-handler="{ hasError, bindable }"
+              @resetCheckedResult="resetCheckedResultConstraints"
+              @resetFormData="resetConstraintSelectors"
             />
           </section>
         </template>
@@ -160,7 +166,7 @@ export default {
             // 設定 訂單表單 資料
             if (category === 'ORDER') {
               this.formOrder = file.dataframeStatus === 'BOUND' ? file.dataframeId : null
-              this.checkedResultOrder = this.defaultCheckedResult
+              this.checkedResultOrder = { ...this.defaultCheckedResult }
               return
             }
 
@@ -203,22 +209,28 @@ export default {
     },
     resetDataFrameSelectors () {
       this.formOrder = null
+      this.resetRawdataSelectors()
+      this.resetConstraintSelectors()
+    },
+    resetRawdataSelectors () {
       for (const key in this.formRawData) this.formRawData[key] = null
+    },
+    resetConstraintSelectors () {
       for (const key in this.formConstraint) this.formConstraint[key] = null
     },
-    resetCheckedInfoOrder () {
-      this.checkedResultOrder = this.defaultCheckedResult
+    resetCheckedResultOrder () {
+      this.checkedResultOrder = { ...this.defaultCheckedResult }
     },
-    resetCheckedInfoRawdata () {
-      for (const key in this.checkedResultRawData) this.checkedResultRawData[key] = this.defaultCheckedResult
+    resetCheckedResultRawdata () {
+      for (const key in this.checkedResultRawData) this.checkedResultRawData[key] = { ...this.defaultCheckedResult }
     },
-    resetCheckedInfoConstraints () {
-      for (const key in this.checkedResultConstraint) this.checkedResultConstraint[key] = this.defaultCheckedResult
+    resetCheckedResultConstraints () {
+      for (const key in this.checkedResultConstraint) this.checkedResultConstraint[key] = { ...this.defaultCheckedResult }
     },
     resetCheckedInfo () {
-      this.resetCheckedInfoRawdata()
-      this.resetCheckedInfoConstraints()
-      this.resetCheckedInfoOrder()
+      this.resetCheckedResultRawdata()
+      this.resetCheckedResultConstraints()
+      this.resetCheckedResultOrder()
     },
     snakeToCamel,
     snakeToPascal
@@ -275,12 +287,9 @@ export default {
             margin-right: 24px;
             text-align: right;
           }
-          /deep/ .default-select {
+          .default-select {
             padding-bottom: 10px;
             margin-right: 24px;
-            .el-input .el-input__inner {
-              color: #CCC;
-            }
           }
         }
         &-action {
@@ -316,6 +325,7 @@ export default {
 }
 
 /deep/ .btn {
+  display: flex;
   align-items: center;
   justify-content: center;
 }

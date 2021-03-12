@@ -112,12 +112,13 @@ export function bindConstraints (data) {
 
 /**
  * 解除綁定限制
- *  @param {Number} projectId - 排程子專案 id
+ *  @param {Array} data - codes - 欲解除的資料表
+ *  @param {Number} data - projectId - 排程子專案 id
  */
- export function unbindConstraint (projectId) {
+ export function unbindConstraint (data) {
   return request({
     url: '/dataframe/unbind/constraint',
     method: 'POST',
-    data: { projectId }
+    data
   })
 }
