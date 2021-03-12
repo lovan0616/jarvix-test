@@ -155,14 +155,17 @@ export default {
     },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
-      const minDataValue = Math.floor(this.adjustValueWithOffsetValue(Math.min(...this.lowerBoundList, ...invalidDataList)))
-      return minDataValue > 0 ? minDataValue * 0.9 : minDataValue * 1.1
+      const minDataValue = Math.min(...this.lowerBoundList, ...invalidDataList)
+      return minDataValue - this.interval * 0.4
     },
     yAxisOffsetValue () {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
+    interval () {
+      return 2 * this.stddevTimes * this.dataset.sigma
+    },
     toUpperBoundIntervalList () {
-      return this.standardLine.map(item => 2 * this.stddevTimes * this.dataset.sigma)
+      return this.standardLine.map(item => this.interval)
     },
     actualDataList () {
       const actualDataList = {
