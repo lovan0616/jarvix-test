@@ -17,12 +17,19 @@
     </span>
     <writing-dialog
       v-if="isShowInfoDialog"
-      :title="`${$t('schedule.binding.failedRow')}(${failedRowCount})可用(${info.applicableRowCount})`"
+      :title="$t('schedule.binding.failedRow')"
       :button="$t('schedule.binding.bind')"
       show-both
       @closeDialog="isShowInfoDialog = false"
       @confirmBtn="isShowConfirmDialog = true"
     >
+      <p class="summary">
+        <i18n path="schedule.binding.checkedResultSummary">
+          <span class="highlight">{{ info.totalRowCount }}</span>
+          <span class="highlight">{{ info.applicableRowCount }}</span>
+          <span class="highlight">{{ failedRowCount }}</span>
+        </i18n>
+      </p>
       <p class="reminder">{{ $t('schedule.binding.bindingReminding') }}</p>
       <ul class="info-list">
         <li
@@ -169,12 +176,12 @@ export default {
           & + .error-info {
             margin-top: 12px;
           }
-          .highlight {
-            color: $theme-color-warning;
-          }
         }
       }
     }
   }
+}
+.highlight {
+  color: $theme-color-warning;
 }
 </style>

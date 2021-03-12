@@ -52,9 +52,7 @@
       "chooseDataFrame": "选择资料表",
       "dataFrameName": "资料表名称",
       "orderOrJobInfo": "订单 / 工单资讯",
-      "bind": "绑定",
-      "pleaseSelectDataFrames": "请勾选资料表",
-      "select": "勾选"
+      "bind": "绑定"
     },
     "setting": {
       "title": "基本设定",
@@ -107,7 +105,7 @@
       "bind": "绑定",
       "rebind": "重新绑定",
       "globalSetting": "全域设定",
-      "failedRowCountOfDataFrame": "{count}笔资料发生错误",
+      "checkedResultSummary": "资料共 {0} 笔，可使用 {1} 笔，不可使用 {2} 笔",
       "failedRow": "资料列发生错误",
       "bindingReminding": "部分资料列发生错误，建议修正后重新导入。若您仍然选择绑定资料表，错误的资料在进行生产排程模拟时会被忽略。",
       "columnName": "栏位名称",
@@ -137,7 +135,9 @@
       "successfullyRebindDataSource": "已绑定至新资料源 {datasource}。资料表需重新绑定。",
       "alreadyBoundToCertainDataSource": "已绑定于资料源 {datasource}",
       "confirmToBind": "仍然绑定",
-      "unbind": "解除绑定"
+      "unbind": "解除绑定",
+      "pleaseSelectDataFrames": "请勾选资料表",
+      "select": "勾选"
     },
     "simulation":{
       "title": "排程计画模拟",

@@ -168,6 +168,7 @@ export default {
             } else {
               this.checkedResult[code].headerErrorMessage = null
               this.checkedResult[code].columns = result.columns
+              this.checkedResult[code].totalRowCount = result.rows
               this.checkedResult[code].applicableRowCount = result.available
               this.checkedResult[code].notApplicableRowCount = result.notApplicableRowIndexes.length
             }

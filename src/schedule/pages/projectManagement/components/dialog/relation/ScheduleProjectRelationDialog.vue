@@ -138,6 +138,7 @@ export default {
     defaultCheckedResult () {
       return {
         columns: [],
+        totalRowCount: 0,
         applicableRowCount: 0,
         notApplicableRowCount: [],
         headerErrorMessage: '',
