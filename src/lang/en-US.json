@@ -962,7 +962,12 @@
     "otherSettings": "Other Settings",
     "formulaType": "Calculation Formula Type",
     "singleColumnData": "Single Column Data",
-    "singleRowData": "Single Row Data"
+    "singleRowData": "Single Row Data",
+    "pleaseCheckFollowingSituations": "Please Check For The Following Situations",
+    "dataframeExistenceAndRebuild": "Whether the dataframe current column belongs to has been removed or updated, otherwise, rebuild it.",
+    "connectionStatus": "Connection status.",
+    "otherReasons": "Any other possible reason.",
+    "fetchDataFailed": "Failed Fetching Data"
   },
   "alert": {
     "alertLogs": "Alert Record",
