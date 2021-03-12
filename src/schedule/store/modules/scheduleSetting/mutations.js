@@ -7,5 +7,8 @@ export default {
   },
   setCurrentProjectId (state, id) {
     state.scheduleProjectId = id
+  },
+  setIsShowScheduleHelper (state, value) {
+    state.isShowScheduleHelper = value
   }
 }

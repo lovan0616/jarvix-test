@@ -82,3 +82,13 @@ export function snakeToPascal (variable) {
   let s = snakeToCamel(variable)
   return `${s[0].toUpperCase()}${s.slice(1)}`
 }
+
+export function pascalToCamel (variable) {
+  if (!variable) return ''
+  return `${variable[0].toLowerCase()}${variable.slice(1)}`
+}
+
+export function pascalToSnake (variable) {
+  if (!variable) return ''
+  return variable.split(/(?=[A-Z])/).join('_').toLowerCase()
+}

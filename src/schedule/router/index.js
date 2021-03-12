@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: 'schedule',
+    path: '/schedule',
     name: 'Schedule',
     component: () => import('@/schedule/components/layout/ScheduleLayout'),
     children: [

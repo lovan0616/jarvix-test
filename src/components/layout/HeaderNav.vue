@@ -82,7 +82,7 @@
       </template>
     </section>
     <section
-      v-if="$route.meta.isModule"
+      v-if="$route.meta.isModule === 'Schedule'"
       class="nav-left"
     >
       <router-link 
@@ -106,7 +106,15 @@
       </router-link>
     </section>
     <section class="nav-right">
-      <task-notifier />
+      <task-notifier v-if="!$route.meta.isModule"/>
+      <div
+        v-if="$route.meta.isModule === 'Schedule'"
+        class="nav-item nav-function"
+        @click="openScheduleHelper"
+      >
+        <svg-icon icon-class="description"/>
+        <span>{{ $t('nav.helper') }}</span>
+      </div>
       <!-- <router-link
         v-if="isShowFunctionDescription"
         :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
@@ -227,6 +235,9 @@ export default {
           name: group.groupName
         }))
         .sort((groupOne, groupTwo) => (groupOne.name.toLowerCase() > groupTwo.name.toLowerCase()) ? 1 : -1) 
+    },
+    openScheduleHelper () {
+      this.$store.commit('scheduleSetting/setIsShowScheduleHelper', true)
     }
   },
 }
@@ -253,6 +264,7 @@ export default {
     text-align: center;
     letter-spacing: 0.5px;
     color: #a7a7a7;
+    cursor: pointer;
 
     &:not(:last-child) {
       margin-right: 30px;

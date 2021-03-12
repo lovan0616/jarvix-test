@@ -89,6 +89,7 @@
       "extraConstraintHoj": "工单上下游关系",
       "extraConstraintTransferTime": "转换时间",
       "commonDataSetting": "共用资料设定",
+      "commonDataOrder": "订单资讯",
       "commonDataProcess": "制程资讯",
       "commonDataSetupTime": "产品系统对应换线时间",
       "commonDataEquipment": "机台资讯",
@@ -100,6 +101,75 @@
       "noFileSelected": "未选择档案",
       "updatedDate": "更新日期",
       "equipmentInfoIsUnbound": "尚未绑定机台资讯"
+    },
+    "helper": {
+      "fileName": "档案名称",
+      "columnName": "栏位名称",
+      "columnDescription": "栏位说明",
+      "dataType": "资料型态",
+      "order": {
+        "Job": "此工单的编号（客户填写）",
+        "Order": "订单的编号（客户填写）",
+        "Product": "需要生产的产品名称",
+        "Quantity": "这张工单/订单需要生产的产品生产数量",
+        "Priority": "这张工单订单所对应的优先级（1对应特急件/2对应急件/3对应普通件",
+        "Deadline": "这张工单/订单的交期，若无交期限制则可填入当年度最后一天"
+      },
+      "equipment": {
+        "Operation": "生产过程中的程序",
+        "Equipment": "设备的编号/名称，同一台设备无法同时出现在一个站点以上",
+        "Stage": "进行生产过程的站点",
+        "Position": "机台所在的位置，可填入厂区名称/亦或是同厂区中的楼层"
+      },
+      "process": {
+        "Equipment": "用以进行工序的机台编号/名称",
+        "Operation": "生产过程中的程序",
+        "Product": "需要生产的产品名称",
+        "Material": "需要生产的产品所需的物料",
+        "Time": "生产所需要的时间（时间单位为秒）",
+        "Lot": "一个批次生产几个产品",
+        "OPOrder": "此工序是此产品的第几道工序"
+      },
+      "group": {
+        "Group": "产品系列的编码",
+        "Product": "需要生产的产品名称"
+      },
+      "setupTime": {
+        "Stage": "进行生产过程的站点",
+        "UpperGroup": "换线进行的方式是由上轮群体换到下轮群体",
+        "LowerGroup": "换线进行的方式是由上轮群体换到下轮群体",
+        "Time": "由上轮群体换线到下轮群体需要的时间（时间单位为分钟）"
+      },
+      "capacityConstraint" : {
+        "Capacity": "产品生产数量（此为上限值）",
+        "Stage": "进行生产过程的站点 ",
+        "StartTime": "开始的时间点",
+        "EndTime": "结束的时间点"
+      },
+      "sjp": {
+        "Group": "产品系列的编码",
+        "StartTime": "开始的时间点",
+        "EndTime": "结束的时间点"
+      },
+      "jig": {
+        "Group": "产品系列的编码",
+        "Stage": "进行生产过程的站点",
+        "OPOrder": "此工序是此产品的第几道工序",
+        "Jig": "生产所需使用的治具名称/编码"
+      },
+      "jigStorage": {
+        "Jig": "生产所需使用的治具名称/编码",
+        "Count": "目前治具所闲置数量"
+      },
+      "hoj": {
+        "UpperJob": "上游工单编号",
+        "LowerJob": "下游工单编号"
+      },
+      "transferTime": {
+        "Source": "来源设备的编号/名称",
+        "Destination": "目的设备的编号/名称",
+        "TransferTime": "转移时间（时间单位为分钟）"
+      }
     },
     "binding": {
       "bind": "绑定",

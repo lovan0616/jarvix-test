@@ -4,7 +4,7 @@ import mutations from './mutations'
 export default {
   namespaced: true,
   state: {
-    scheduleProjects: [],
+    isShowScheduleHelper: false,
     scheduleProjectId: null,
     defaultSetting: null,
     equipments: null

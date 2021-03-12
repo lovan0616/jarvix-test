@@ -89,6 +89,7 @@
       "extraConstraintHoj": "工單上下游關係",
       "extraConstraintTransferTime": "轉換時間",
       "commonDataSetting": "共用資料設定",
+      "commonDataOrder": "訂單資訊",
       "commonDataProcess": "製程資訊",
       "commonDataSetupTime": "產品系統對應換線時間",
       "commonDataEquipment": "機台資訊",
@@ -101,12 +102,80 @@
       "updatedDate": "更新日期",
       "equipmentInfoIsUnbound": "尚未綁定機台資訊"
     },
+    "helper": {
+      "fileName": "檔案名稱",
+      "columnName": "欄位名稱",
+      "columnDescription": "欄位說明",
+      "dataType": "資料型態",
+      "order": {
+        "Job": "此工單的編號（客戶填寫）",
+        "Order": "訂單的編號（客戶填寫）",
+        "Product": "需要生產的產品名稱",
+        "Quantity": "這張工單/訂單需要生產的產品生產數量",
+        "Priority": "這張工單訂單所對應的優先級（1對應特急件/2對應急件/3對應普通件",
+        "Deadline": "這張工單/訂單的交期，若無交期限制則可填入當年度最後一天"
+      },
+      "equipment": {
+        "Operation": "生產過程中的程序",
+        "Equipment": "設備的編號/名稱，同一台設備無法同時出現在一個站點以上",
+        "Stage": "進行生產過程的站點",
+        "Position": "機台所在的位置，可填入廠區名稱/亦或是同廠區中的樓層"
+      },
+      "process": {
+        "Equipment": "用以進行工序的機台編號/名稱",
+        "Operation": "生產過程中的程序",
+        "Product": "需要生產的產品名稱",
+        "Material": "需要生產的產品所需的物料",
+        "Time": "生產所需要的時間（時間單位為秒）",
+        "Lot": "一個批次生產幾個產品",
+        "OPOrder": "此工序是此產品的第幾道工序"
+      },
+      "group": {
+        "Group": "產品系列的編碼",
+        "Product": "需要生產的產品名稱"
+      },
+      "setupTime": {
+        "Stage": "進行生產過程的站點",
+        "UpperGroup": "換線進行的方式是由上輪群體換到下輪群體",
+        "LowerGroup": "換線進行的方式是由上輪群體換到下輪群體",
+        "Time": "由上輪群體換線到下輪群體需要的時間（時間單位為分鐘）"
+      },
+      "capacityConstraint" : {
+        "Capacity": "產品生產數量（此為上限值）",
+        "Stage": "進行生產過程的站點 ",
+        "StartTime": "開始的時間點",
+        "EndTime": "結束的時間點"
+      },
+      "sjp": {
+        "Group": "產品系列的編碼",
+        "StartTime": "開始的時間點",
+        "EndTime": "結束的時間點"
+      },
+      "jig": {
+        "Group": "產品系列的編碼",
+        "Stage": "進行生產過程的站點",
+        "OPOrder": "此工序是此產品的第幾道工序",
+        "Jig": "生產所需使用的治具名稱/編碼"
+      },
+      "jigStorage": {
+        "Jig": "生產所需使用的治具名稱/編碼",
+        "Count": "目前治具所閒置數量"
+      },
+      "hoj": {
+        "UpperJob": "上游工單編號",
+        "LowerJob": "下游工單編號"
+      },
+      "transferTime": {
+        "Source": "來源設備的編號/名稱",
+        "Destination": "目的設備的編號/名稱",
+        "TransferTime": "轉移時間（時間單位為分鐘）"
+      }
+    },
     "binding": {
       "bind": "綁定",
       "rebind": "重新綁定",
       "globalSetting": "全域設定",
       "checkedResultSummary": "資料共 {0} 筆，可使用 {1} 筆，不可使用 {2} 筆",
-      "failedRowCountOfDataFrame": "{count}筆資料發生錯誤",
       "failedRow": "資料列發生錯誤",
       "bindingReminding": "部分資料列發生錯誤，建議修正後重新導入。若您仍然選擇綁定資料表，錯誤的資料在進行生產排程模擬時會被忽略。",
       "columnName": "欄位名稱",
