@@ -60,7 +60,7 @@
               :checked-result="checkedResultConstraint"
               :is-loading-data-frames="isLoadingDataFrames"
               :result-handler="{ hasError, bindable }"
-              @resetCheckedResult="resetCheckedResultConstraints"
+              @resetCheckedResult="resetCheckedResultConstraints($event)"
               @resetFormData="resetConstraintSelectors"
             />
           </section>
@@ -172,7 +172,14 @@ export default {
 
             // 設定表單資訊
             const pascaledCategory = this.snakeToPascal(category.toLowerCase())
-            this.$set(this[`form${pascaledCategory}`], file.code, file.dataframeStatus === 'BOUND' ? file.dataframeId : null)
+            if (category === 'CONSTRAINT') {
+              this.$set(this[`form${pascaledCategory}`], file.code, {
+                dataframeId: file.dataframeStatus === 'BOUND' ? file.dataframeId : null,
+                isSelected: false
+              })
+            } else if (category === 'RAW_DATA') {
+              this.$set(this[`form${pascaledCategory}`], file.code, file.dataframeStatus === 'BOUND' ? file.dataframeId : null)
+            }
             
             // 加入檢查資訊
             this.$set(this[`checkedResult${pascaledCategory}`], file.code, { ...this.defaultCheckedResult })
@@ -216,7 +223,10 @@ export default {
       for (const key in this.formRawData) this.formRawData[key] = null
     },
     resetConstraintSelectors () {
-      for (const key in this.formConstraint) this.formConstraint[key] = null
+      for (const key in this.formConstraint) this.formConstraint[key] = {
+        dataframeId: null,
+        isSelected: false
+      }
     },
     resetCheckedResultOrder () {
       this.checkedResultOrder = { ...this.defaultCheckedResult }
@@ -224,7 +234,13 @@ export default {
     resetCheckedResultRawdata () {
       for (const key in this.checkedResultRawData) this.checkedResultRawData[key] = { ...this.defaultCheckedResult }
     },
-    resetCheckedResultConstraints () {
+    resetCheckedResultConstraints (codes) {
+      if (codes && codes.length > 0) {
+        codes.forEach(code => {
+          this.checkedResultConstraint[code] = { ...this.defaultCheckedResult }
+        })
+        return
+      }
       for (const key in this.checkedResultConstraint) this.checkedResultConstraint[key] = { ...this.defaultCheckedResult }
     },
     resetCheckedInfo () {
@@ -276,10 +292,17 @@ export default {
           padding: 8px 16px;
           background: rgba(67, 76, 76, 0.95);
           border-radius: 8px;
+          &-description {
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0 16px 0;
+          }
         }
         &-field {
           display: flex;
           align-items: flex-start;
+          position: relative;
           font-size: 14px;
           line-height: 40px;
           .field-label {

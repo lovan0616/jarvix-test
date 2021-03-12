@@ -135,7 +135,9 @@
       "successfullyRebindDataSource": "已綁定至新資料源 {datasource}。資料表需重新綁定。",
       "alreadyBoundToCertainDataSource": "已綁定於資料源 {datasource}",
       "confirmToBind": "仍然綁定",
-      "unbind": "解除綁定"
+      "unbind": "解除綁定",
+      "pleaseSelectDataFrames": "請勾選資料表",
+      "select": "勾選"
     },
     "simulation":{
       "title": "排程計畫模擬",

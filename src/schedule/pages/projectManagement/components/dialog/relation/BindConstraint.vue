@@ -26,6 +26,10 @@
       </div>
     </div>
     <div class="form-fields">
+      <div class="form-fields-description">
+        <span>{{ $t('schedule.binding.pleaseSelectDataFrames') }}</span>
+        <span>{{ $t('schedule.binding.select') }}</span>
+      </div>
       <div
         v-for="file in files"
         :key="file.id"
@@ -39,7 +43,7 @@
           size="10"/>
         <default-select
           v-else
-          v-model="formData[file.code]"
+          v-model="formData[file.code].dataframeId"
           :options="options"
         />
         <binding-checked-info
@@ -47,6 +51,18 @@
           :info="checkedResult[file.code]"
           @bind="bind"
         />
+
+        <label 
+          :class="{'checkbox--active': formData[file.code].isSelected}"
+          class="checkbox">
+          <div class="checkbox-label">
+            <input
+              v-model="formData[file.code].isSelected"
+              type="checkbox"
+            >
+            <div class="checkbox-square"/>
+          </div>
+        </label>
       </div>
     </div>
   </div>
@@ -99,23 +115,24 @@ export default {
   },
   computed: {
     ...mapState('scheduleSetting', ['scheduleProjectId']),
-    isBindBtnDisabled () {
-      return this.isChecking || this.isBinding || this.selectedConstraints.length === 0
-    },
-    selectedConstraints () {
+    validConstraints () {
+      // 有選值、有勾選的 constraints
       return Object.keys(this.formData)
-        .filter(key => this.formData[key] !== null)
+        .filter(key => this.formData[key].dataframeId !== null && this.formData[key].isSelected)
         .map(key => ({
           code: key,
-          dataframeId: this.formData[key]
+          dataframeId: this.formData[key].dataframeId
         }))
     },
-    selectedCodes () {
-      return this.selectedConstraints.reduce((acc, cur) => acc.concat(cur.code), [])
+    validCodes () {
+      // 有選值、有勾選的 constraint codes
+      return Object.keys(this.formData)
+        .filter(key => this.formData[key].dataframeId !== null && this.formData[key].isSelected)
     },
     bindableConstranints () {
-      return this.selectedConstraints
-        .filter(item => this.checkedResult[item.code].bindable || false)
+      // 有選值、有勾選的、且檢查通過的 constraints
+      return this.validConstraints
+        .filter(item => this.checkedResult[item.code].bindable)
     },
     options () {
       const options = [ ...this.dataFrameOptions ]
@@ -125,7 +142,7 @@ export default {
   },
   methods: {
     check () {
-      if (this.selectedConstraints.length === 0) {
+      if (this.validConstraints.length === 0) {
         return Message({
           message: this.$t('schedule.binding.pleaseSelectConstraint'),
           type: 'warning',
@@ -135,7 +152,7 @@ export default {
       }
 
       const requestBody = {
-        constraints: this.selectedConstraints,
+        constraints: this.validConstraints,
         projectId: this.scheduleProjectId
       }
 
@@ -172,7 +189,7 @@ export default {
         .finally(() => this.isChecking = false)
     },
     bind () {
-      if (this.selectedConstraints.length === 0) {
+      if (this.validConstraints.length === 0) {
         return Message({
           message: this.$t('schedule.binding.pleaseSelectConstraint'),
           type: 'warning',
@@ -203,7 +220,7 @@ export default {
         .finally(() => this.isBinding = false)
     },
     unbind () {
-      if (this.selectedConstraints.length === 0) {
+      if (this.validConstraints.length === 0) {
         return Message({
           message: this.$t('schedule.binding.pleaseSelectConstraint'),
           type: 'warning',
@@ -214,7 +231,7 @@ export default {
 
       this.isUnbinding = true
       unbindConstraint({
-        codes: this.selectedCodes,
+        codes: this.validCodes,
         projectId: this.scheduleProjectId
       })
         .then(() => {
@@ -224,8 +241,14 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          this.$emit('resetFormData')
-          this.$emit('resetCheckedResult')
+          // 解除綁定後，把畫面上相關資訊清空
+          this.$emit('resetCheckedResult', this.validCodes)
+          this.validCodes.forEach(code => {
+            this.formData[code] = {
+              dataframeId: null,
+              isSelected: false
+            }
+          })
         })
         .finally(() => this.isUnbinding = false)
     },
@@ -235,4 +258,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.checkbox {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+</style>
