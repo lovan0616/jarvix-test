@@ -4,7 +4,6 @@ import AppLayout from '@/components/layout/AppLayout'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
-import ScheduleRouter from '@/schedule/router'
 
 Vue.use(Router)
 
@@ -331,7 +330,95 @@ const router = new Router({
                         }
                       ]
                     },
-                    ...ScheduleRouter.options.routes
+                    {
+                      path: 'schedule',
+                      name: 'Schedule',
+                      component: () => import('@/schedule/components/layout/ScheduleLayout'),
+                      children: [
+                        {
+                          path: 'list',
+                          name: 'ScheduleProjectList',
+                          component: () => import('@/schedule/pages/projectManagement/components/ScheduleProjectList')
+                        },
+                        {
+                          path: 'create',
+                          name: 'ScheduleProjectCreator',
+                          component: () => import('@/schedule/pages/projectManagement/components/ScheduleProjectCreator')
+                        },
+                        {
+                          path: ':schedule_project_id',
+                          name: 'ScheduleProject',
+                          component: () => import('@/schedule/pages/Index'),
+                          redirect: () => ({ name: 'CurrentSimulation' }),
+                          children: [
+                            {
+                              path: 'current-simulation',
+                              name: 'CurrentSimulation',
+                              meta: {
+                                isModule: 'Schedule'
+                              },
+                              component: () => import('@/schedule/pages/currentSimulation/Index')
+                              // redirect: 無排程 => init, 有排程 => schedule
+                            },
+                            {
+                              path: 'schedule-setting',
+                              name: 'ScheduleSetting',
+                              meta: {
+                                isModule: 'Schedule'
+                              },
+                              component: () => import('@/schedule/pages/scheduleSetting/Index')
+                            },
+                            {
+                              path: 'simulation',
+                              name: 'Simulation',
+                              redirect: () => (
+                                store.state.simulation.planId && store.state.simulation.solutions.length > 0
+                                  ? { name: 'SimulationResult' }
+                                  : { name: 'SimulationSetting' }
+                              ),
+                              component: () => import('@/schedule/pages/simulation/Index'),
+                              children: [
+                                {
+                                  path: 'setting',
+                                  name: 'SimulationSetting',
+                                  meta: {
+                                    isModule: 'Schedule'
+                                  },
+                                  component: () => import('@/schedule/pages/simulation/setting/Index')
+                                },
+                                {
+                                  path: 'result',
+                                  name: 'SimulationResult',
+                                  meta: {
+                                    isModule: 'Schedule'
+                                  },
+                                  component: () => import('@/schedule/pages/simulation/result/Index'),
+                                  beforeEnter: (to, from, next) => {
+                                    store.state.simulation.planId ? next() : next({ name: 'SimulationSetting' })
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              path: 'simulation/result',
+                              name: 'SimulateResult',
+                              meta: {
+                                isModule: 'Schedule'
+                              },
+                              component: () => import('@/schedule/pages/simulation/result/Index')
+                            },
+                            {
+                              path: 'schedule-init',
+                              name: 'ScheduleInit',
+                              meta: {
+                                isModule: 'Schedule'
+                              },
+                              component: () => import('@/schedule/pages/scheduleInit/Index')
+                            }
+                          ]
+                        }
+                      ]
+                    }
                   ]
                 },
               ]

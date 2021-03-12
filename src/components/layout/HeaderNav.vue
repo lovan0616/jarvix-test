@@ -85,6 +85,7 @@
       v-if="$route.meta.isModule === 'Schedule'"
       class="nav-left"
     >
+      <project-switcher v-if="scheduleProjects.length > 0"/>
       <router-link 
         :to="{name: 'CurrentSimulation'}"
         class="nav-item"
@@ -134,6 +135,7 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import TaskNotifier from '@/components/TaskNotifier'
+import ProjectSwitcher from '@/schedule/components/layout/ProjectSwitcher'
 import { mapGetters, mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -143,7 +145,8 @@ export default {
     DropdownSelect,
     WritingDialog,
     CustomDropdownSelect,
-    TaskNotifier
+    TaskNotifier,
+    ProjectSwitcher
   },
   data () {
     return {
@@ -154,6 +157,7 @@ export default {
     ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentGroupId']),
     ...mapState('userManagement', ['userName', 'license', 'groupList']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
+    ...mapState('scheduleSetting', ['scheduleProjects']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },

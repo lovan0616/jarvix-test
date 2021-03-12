@@ -52,7 +52,8 @@
       "chooseDataFrame": "选择资料表",
       "dataFrameName": "资料表名称",
       "orderOrJobInfo": "订单 / 工单资讯",
-      "bind": "绑定"
+      "bind": "绑定",
+      "projectNotExist": "不存在此排程专案"
     },
     "setting": {
       "title": "基本设定",

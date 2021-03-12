@@ -1,14 +1,17 @@
 import actions from './actions'
 import mutations from './mutations'
+import getters from './getters'
 
 export default {
   namespaced: true,
   state: {
-    isShowScheduleHelper: false,
+    scheduleProjects: [],
     scheduleProjectId: null,
     defaultSetting: null,
-    equipments: null
+    equipments: null,
+    isShowScheduleHelper: false
   },
   actions,
-  mutations
+  mutations,
+  getters
 }

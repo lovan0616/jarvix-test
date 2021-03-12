@@ -213,7 +213,7 @@ import SingleCommonFile from './components/commonDataSetting/SingleCommonFile'
 import ExceptionTimeSetting from '@/schedule/pages/simulation/setting/components/ExceptionTimeSetting'
 import { fetchDataBoundStatus } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 
 export default {
@@ -262,9 +262,6 @@ export default {
       return localStorage.getItem('isShowOrderUpload') === 'true'
     }
   },
-  created () {
-    this.setCurrentProjectId(Number(this.$route.params.schedule_project_id))
-  },
   mounted () {
     const defaultSetting = this.$store.state.scheduleSetting.defaultSetting
     const equipments = this.$store.state.scheduleSetting.equipments
@@ -294,7 +291,6 @@ export default {
       .catch(() => {})
   },
   methods: {
-    ...mapMutations('scheduleSetting', ['setCurrentProjectId']),
     fetchFiles () {
       this.isFetchingAdvanceSetting = true
       fetchDataBoundStatus(this.scheduleProjectId)

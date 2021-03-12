@@ -156,7 +156,10 @@ export default {
     fetchData () {
       this.isLoading = true
       fetchProjectList(this.getCurrentGroupId)
-        .then(list => this.projectList = list)
+        .then(list => {
+          this.projectList = list
+          this.$store.commit('scheduleSetting/setProjects', list)
+        })
         .finally(() => this.isLoading = false)
     },
     openDataSourcePage (dataSourceId) {

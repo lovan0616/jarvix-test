@@ -52,7 +52,8 @@
       "chooseDataFrame": "選擇資料表",
       "dataFrameName": "資料表名稱",
       "orderOrJobInfo": "訂單 / 工單資訊",
-      "bind": "綁定"
+      "bind": "綁定",
+      "projectNotExist": "不存在此排程專案"
     },
     "setting": {
       "title": "基本設定",

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
-import router from '../router'
+import router from '../../router'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 
@@ -72,7 +72,7 @@ service.interceptors.response.use(
         case 401:
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
-          router.push('/login')
+          router.push({ name: 'PageLogin' })
           Message({
             message: i18n.t('schedule.errorMessage.authFail'),
             type: 'error',
