@@ -474,10 +474,6 @@
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔",
     "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
-    "scriptExecutionStep1": "設定名稱",
-    "scriptExecutionStep2": "上傳檔案",
-    "scriptExecutionStep3": "選擇輸入欄位",
-    "scriptExecutionStep4": "設定輸出類型",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
     "searchDataSource": "搜尋資料源",
     "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量",
@@ -623,22 +619,27 @@
     "updateTime": "更新時間",
     "managementSetting": "管理設定",
     "deleteConfirmText": "刪除模型將會導致相關應用失效，您確認要繼續刪除？",
-    "UsedModelCannotBeEdited": "模型已被流程使用，故無法進行編輯。"
+    "UsedModelCannotBeEdited": "模型已被流程使用，故無法進行編輯。",
+    "clickToUploadModel": "點擊上傳您的模型"
   },
   "script": {
-    "dataFrame": "來源資料表",
-    "selectInputColumn": "設定輸入欄位",
-    "scriptColumnReminder": "欄位具有順序性，優先順序為由上至下",
-    "selectOutputColumn": "設定輸出欄位類型",
-    "columnDataType": "欄位類型",
-    "columnDataName": "欄位名稱",
+    "inputParameterSetting": "設定 Input 參數",
+    "scriptColumnReminder": "欄位具有順序性，優先順序為由上至下，可用滑鼠拖曳變更順序。",
+    "scriptParameterReminder": "參數名稱需要與 main.py 檔案格式一致，且不可以重複、不可以有反斜線。",
+    "outputParameterSetting": "設定 Output 參數",
+    "columnDataType": "參數資料類型",
+    "columnDataName": "參數名稱",
     "setScriptName": "請設定名稱",
     "lackOfMainScript": "未包含 {mainScriptName}",
     "scriptLimit": {
       "0": "主要腳本名稱須為 {mainScriptName}",
       "1": "腳本裡面需有 run() 的函數",
       "2": "函數傳入與回傳都必須為 pandas 的 DataFrame 類型"
-    }
+    },
+    "scriptExecutionStep1": "設定名稱",
+    "scriptExecutionStep2": "上傳檔案",
+    "scriptExecutionStep3": "設定 Input",
+    "scriptExecutionStep4": "設定 Output"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",

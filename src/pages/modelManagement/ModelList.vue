@@ -9,8 +9,9 @@
       <div class="board-title-row">
         <div class="board-title-row__left">
           <div class="button-block">
-            <button 
+            <button
               class="btn-m btn-default btn-has-icon"
+              @click="createModel"
             >
               <svg-icon 
                 icon-class="plus" 
@@ -23,9 +24,16 @@
         :headers="tableHeaders"
         :data-list.sync="modelData"
         :loading="isLoading"
+        :empty-message="$t('model.clickToUploadModel')"
+        @create="createModel"
         @delete="confirmDelete"
       />
     </div>
+    <upload-dialog
+      v-if="showCreateModelDialog"
+      @success="fetchData"
+      @close="closeCreateModelDialog"
+    />
     <decide-dialog
       v-if="isShowDeleteDialog"
       :content="$t('model.deleteConfirmText')"
@@ -39,28 +47,32 @@
 <script>
 import DataTable from '@/components/table/DataTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
-import { Message } from 'element-ui'
+import UploadDialog from './scriptExecution/UploadDialog'
+import ScriptExecutionFlow from './scriptExecution/ScriptExecutionFlow'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'ModelList',
   components: {
     DataTable,
-    DecideDialog
+    DecideDialog,
+    UploadDialog,
+    ScriptExecutionFlow
   },
   data () {
     return {
       isLoading: false,
       isShowDeleteDialog: false,
+      isShowCreateModelDialog: false,
       deleteModelId: null,
       modelData: [
-        {
-        createTime: "2021-02-26T08:03:34.961+0000",
-        creator: "exist02593",
-        id: 2015,
-        name: "-v-",
-        updateTime: "2021-03-02T06:42:53.382+0000",
-        createMethodLabel: '使用者上傳'
-      }
+      //   {
+      //   createTime: "2021-02-26T08:03:34.961+0000",
+      //   creator: "exist02593",
+      //   id: 2015,
+      //   name: "-v-",
+      //   updateTime: "2021-03-02T06:42:53.382+0000",
+      // }
       ],
       tableHeaders: [
         {
@@ -84,11 +96,6 @@ export default {
           value: 'createTime',
           width: '165px',
           time: 'YYYY-MM-DD HH:mm'
-        },
-        {
-          text: this.$t('editing.createdMethod'),
-          value: 'createMethodLabel',
-          width: '90px'
         },
         {
           text: this.$t('model.updateTime'),
@@ -120,10 +127,14 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapState('modelManagement', ['showCreateModelDialog'])
+  },
   mounted () {
     this.fetchData()
   },
   methods: {
+    ...mapMutations('modelManagement', ['updateShowCreateModelDialog']),
     fetchData () {
       // this.isLoading = true
       // return this.$store.dispatch('dataSource/getDataSourceList', {})
@@ -140,6 +151,12 @@ export default {
     cancelDelete () {
       this.deleteModelId = null
       this.isShowDeleteDialog = false
+    },
+    createModel () {
+      this.updateShowCreateModelDialog(true)
+    },
+    closeCreateModelDialog () {
+      this.updateShowCreateModelDialog(false)
     },
     deleteModel () {
       console.log(this.deleteModelId)

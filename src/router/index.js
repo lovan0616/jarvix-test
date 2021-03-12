@@ -373,7 +373,7 @@ const router = new Router({
                           // TODO: pretend used model
                           beforeEnter: (to, from, next) => {
                             const modelId = to.params.model_id
-                            store.commit('dataManagement/setModelId', modelId)
+                            store.commit('modelManagement/setModelId', modelId)
                             modelId % 2 ? next() : next(from)
                           },
                           children: [
@@ -408,7 +408,7 @@ const router = new Router({
                               component: () => import('@/pages/modelManagement/ConfigSetting'),
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
-                                isLocked: (store) => store.state.dataManagement.currentModelInfo.isUsed
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.isUsed
                               }
                             }
                           ]
