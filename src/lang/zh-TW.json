@@ -963,7 +963,12 @@
     "otherSettings": "其他設定",
     "formulaType": "公式類型",
     "singleColumnData": "單欄資料",
-    "singleRowData": "整列資料"
+    "singleRowData": "整列資料",
+    "pleaseCheckFollowingSituations": "請確認以下狀況",
+    "dataframeExistenceAndRebuild": "資料表是否正常 或 嘗試重建此項目",
+    "connectionStatus": "連線是否正常",
+    "otherReasons": "其他原因",
+    "fetchDataFailed": "取得資料失敗"
   },
   "alert": {
     "alertLogs": "示警紀錄",
