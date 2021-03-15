@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="schedule-index-page">
     <router-view />
     <schedule-helper v-if="isShowScheduleHelper"/>
   </div>
@@ -54,3 +54,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.schedule-index-page {
+  height: 100%;
+}
+</style>
