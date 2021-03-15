@@ -22,18 +22,7 @@ export default {
     etlTableList: [],
     datetimePatterns: [],
     currentTableIndex: 0,
-    currentColumnIndex: null,
-    currentUploadScriptName: null,
-    currentUploadScriptInfo: {
-      scriptId: null,
-      dataframeId: null,
-      type: null,
-      ioArgs: {}
-    },
-    currentModelId: null,
-    currentModelInfo: {
-      isUsed: false
-    }
+    currentColumnIndex: null
   },
   actions,
   mutations,

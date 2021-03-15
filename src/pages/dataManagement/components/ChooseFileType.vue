@@ -7,7 +7,7 @@
           <div 
             v-for="dataType in dataTypeList"
             :key="dataType.type"
-            :class="{'is-disabled': dataType.type !== 'import_script' && !hasPermission(dataType.type)}"
+            :class="{'is-disabled': !hasPermission(dataType.type)}"
             class="single-type-block"
             @click="selectDataType(dataType.type)"
           >
@@ -66,12 +66,6 @@ export default {
           icon: 'db-connection',
           title: this.$t('editing.remoteConnection'),
           description: this.$t('editing.remoteConnectionDescription')
-        },
-        {
-          type: importType.SCRIPT,
-          icon: 'script',
-          title: this.$t('editing.runScript'),
-          description: this.$t('editing.runScriptDescription')
         }
       ]
     }
@@ -81,7 +75,7 @@ export default {
       return this.$store.state.userManagement.permission.includes(type)
     },
     selectDataType (value) {
-      if (value !== 'import_script' && !this.hasPermission(value)) return
+      if (!this.hasPermission(value)) return
       this.selectedDataType = value
       this.nextStep()
     },
