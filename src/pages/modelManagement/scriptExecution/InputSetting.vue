@@ -83,18 +83,17 @@ export default {
   data () {
     return {
       statsTypeOptionList,
-      dataSourceId: parseInt(this.$route.params.id),
       columnList: []
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadScriptInfo'])
+    ...mapState('modelManagement', ['currentUploadScriptInfo'])
   },
   mounted () {
     this.fetchDataFrameList()
   },
   methods: {
-    ...mapMutations('dataManagement', ['updateCurrentUploadScriptInfo']),
+    ...mapMutations('modelManagement', ['updateCurrentUploadScriptInfo', 'updateShowCreateModelDialog']),
     fetchDataFrameList () {
       // 清空原資料
       this.columnList = []
@@ -102,22 +101,20 @@ export default {
     },
     addNewColumnCard () {
       this.columnList.push({
-        columnId: null,
-        dataType: null,
-        primaryAlias: null,
+        statsType: null,
+        modelColumnName: null,
         id: uuidv4()
       })
     },
-    updateDataColumn(columnId, selectedColumnCardId) {
+    updateDataColumn(statesType, selectedColumnCardId) {
       const columnCard = this.columnList.find(columnCard => columnCard.id === selectedColumnCardId)
-      const dataColumnInfo = this.dataColumnOptionList.find(column => column.id === columnId)
-      columnCard.dataType = dataColumnInfo.dataType
+      columnCard.statsType = statesType
     },
     removeColumnCard(cardId) {
       this.columnList = this.columnList.filter(columnCard => columnCard.id !== cardId)
     },
     cancel () {
-      this.$store.commit('modelManagement/updateShowCreateModelDialog', false)
+      this.updateShowCreateModelDialog(false)
     },
     next () {
       this.$validator.validateAll().then(isValidate => {
@@ -125,7 +122,7 @@ export default {
         this.updateCurrentUploadScriptInfo({
           ...this.currentUploadScriptInfo,
           ioArgs: {
-            input: this.columnList.map(({ columnId: dataColumnId, dataType }) => ({ dataColumnId, dataType }))
+            input: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
           }
         })
         this.$emit('next')

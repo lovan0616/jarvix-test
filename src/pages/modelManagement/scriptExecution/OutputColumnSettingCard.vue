@@ -27,15 +27,11 @@
       <label class="input-field__label">{{ $t('script.columnDataName') }}</label>
       <input-verify
         v-validate="'required'"
-        v-model.trim="columnInfo.primaryAlias"
+        v-model.trim="columnInfo.modelColumnName"
         :placeholder="$t('editing.pleaseEnterName')"
         :name="'input' + columnInfo.id"
         type="text"
       />
-      <!-- <div 
-        v-show="errors.has('input' + columnInfo.id)"
-        class="error-text"
-      >{{ errors.first('input' + columnInfo.id) }}</div> -->
     </div>
     <div
       v-if="columnList.length > 1"
@@ -135,6 +131,7 @@ export default {
   }
 
   /deep/ .input-verify .input-error {
+    position: relative;
     bottom: 0;
     top: 100%;
   }

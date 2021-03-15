@@ -67,7 +67,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import OutputColumnSettingCard from './OutputColumnSettingCard'
 import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
-import { scriptInit } from '@/API/Script'
+import { createModel } from '@/API/Model'
 import { statsTypeOptionList } from '@/utils/general'
 
 export default {
@@ -107,42 +107,39 @@ export default {
     this.addNewColumnCard()
   },
   methods: {
-    ...mapMutations('dataManagement', ['updateCurrentUploadScriptInfo']),
+    ...mapMutations('modelManagement', ['updateCurrentUploadScriptInfo', 'updateShowCreateModelDialog']),
     addNewColumnCard () {
       this.columnList.push({
-        primaryAlias: null,
-        dataColumnId: null,
-        dataType: null,
+        statsType: null,
+        modelColumnName: null,
         id: uuidv4()
       })
     },
-    updateDataColumn(columnId, selectedColumnCardId) {
+    updateDataColumn(statesType, selectedColumnCardId) {
       const columnCard = this.columnList.find(columnCard => columnCard.id === selectedColumnCardId)
-      const dataColumnInfo = this.dataColumnOptionList.find(column => column.id === columnId)
-      columnCard.dataType = dataColumnInfo.dataType
+      columnCard.statsType = statesType
     },
     removeColumnCard(cardId) {
       this.columnList = this.columnList.filter(columnCard => columnCard.id !== cardId)
     },
     cancel () {
-     this.$store.commit('modelManagement/updateShowCreateModelDialog', false)
+     this.updateShowCreateModelDialog(false)
     },
     buildData () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.isProcessing = true
-        scriptInit({
+        createModel({
           ...this.currentUploadScriptInfo,
           ioArgs: {
             ...this.currentUploadScriptInfo.ioArgs,
-            output: this.columnList
-          },
-          type: "ROW_BASED"
+            output: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
+          }
         })
         .then(() => {
           // 為了觸發重新撈取資料
           this.$store.commit('dataManagement/updateFileUploadSuccess', true)
-         this.$store.commit('modelManagement/updateShowCreateModelDialog', false)
+          this.updateShowCreateModelDialog(false)
         })
         .catch(() => { this.isProcessing = false })
       })

@@ -22,7 +22,7 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="modelData"
+        :data-list.sync="modelList"
         :loading="isLoading"
         :empty-message="$t('model.clickToUploadModel')"
         @create="createModel"
@@ -49,7 +49,9 @@ import DataTable from '@/components/table/DataTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import UploadDialog from './scriptExecution/UploadDialog'
 import ScriptExecutionFlow from './scriptExecution/ScriptExecutionFlow'
+import { getModelList, deleteModelById } from '@/API/Model'
 import { mapState, mapMutations } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ModelList',
@@ -65,15 +67,7 @@ export default {
       isShowDeleteDialog: false,
       isShowCreateModelDialog: false,
       deleteModelId: null,
-      modelData: [
-      //   {
-      //   createTime: "2021-02-26T08:03:34.961+0000",
-      //   creator: "exist02593",
-      //   id: 2015,
-      //   name: "-v-",
-      //   updateTime: "2021-03-02T06:42:53.382+0000",
-      // }
-      ],
+      modelList: [],
       tableHeaders: [
         {
           text: this.$t('model.id'),
@@ -88,18 +82,18 @@ export default {
         },
         {
           text: this.$t('model.creator'),
-          value: 'creator',
+          value: 'createdBy',
           width: '100px'
         },
         {
           text: this.$t('model.createTime'),
-          value: 'createTime',
+          value: 'createdAt',
           width: '165px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('model.updateTime'),
-          value: 'updateTime',
+          value: 'updatedAt',
           width: '165px',
           time: 'YYYY-MM-DD HH:mm'
         },
@@ -128,7 +122,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('modelManagement', ['showCreateModelDialog'])
+    ...mapState('modelManagement', ['showCreateModelDialog']),
+    groupId () {
+      return this.$route.params.group_id
+    }
   },
   mounted () {
     this.fetchData()
@@ -136,13 +133,20 @@ export default {
   methods: {
     ...mapMutations('modelManagement', ['updateShowCreateModelDialog']),
     fetchData () {
-      // this.isLoading = true
-      // return this.$store.dispatch('dataSource/getDataSourceList', {})
-      //   .then(() => {
-      //     this.isLoading = false
-      //   }).catch(() => {
-      //     this.isLoading = false
-      //   })
+      this.isLoading = true
+      return getModelList(this.groupId)
+        .then(({modelInfoDtoList}) => {
+          this.modelList = modelInfoDtoList
+          this.modelList.push({
+            createdAt: "2021-03-11T10:21:35.898Z",
+            createdBy: "CHACHA",
+            id: 123,
+            name: "HEHE",
+            updatedAt: "2021-03-11T10:21:35.898Z"
+          })
+        }).finally(() => {
+          this.isLoading = false
+        })
     },
     confirmDelete ({id}) {
       this.deleteModelId = id
@@ -159,25 +163,20 @@ export default {
       this.updateShowCreateModelDialog(false)
     },
     deleteModel () {
-      console.log(this.deleteModelId)
-      // deleteDataSourceById(this.deleteId)
-      //   .then(response => {
-      //     // 清除此資料源在建置中的資料表
-      //     this.$store.commit('dataSource/updateProcessingDataFrameListAfterDeleteDataSource', this.deleteId)
-      //     this.fetchData()
-      //       .then(() => {
-      //         Message({
-      //           message: this.$t('message.deleteSuccess'),
-      //           type: 'success',
-      //           duration: 3 * 1000,
-      //           showClose: true
-      //         })
-      //         this.cancelDelete()
-      //         resolve()
-      //       })
-      //   }).catch(() => {
-      //     resolve()
-      //   })
+      deleteModelById(this.deleteModelId)
+        .then(() => {
+          this.fetchData()
+            .then(() => {
+              Message({
+                message: this.$t('message.deleteSuccess'),
+                type: 'success',
+                duration: 3 * 1000,
+                showClose: true
+              })
+              this.cancelDelete()
+            })
+        }).catch(() => {
+        })
     }
   }
 }

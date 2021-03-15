@@ -104,7 +104,7 @@ import UploadProcessBlock from './UploadProcessBlock'
 import { uploadStatus } from '@/utils/general'
 import { Message } from 'element-ui'
 import { mapState, mapMutations } from 'vuex'
-import { scriptUpload } from '@/API/Script'
+import { modelUpload } from '@/API/Model'
 
 export default {
   name: 'FileUpload',
@@ -133,8 +133,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('modelManagement', ['currentUploadInfo', 'uploadModelList']),
-    ...mapState('userManagement', ['license']),
+    ...mapState('userManagement', ['userId']),
+    ...mapState('modelManagement', ['currentUploadScriptName', 'uploadModelList']),
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
@@ -171,11 +171,12 @@ export default {
     updateFileList (inputFileList) {
       for (let i = 0; i < inputFileList.length; i++) {
         let formData = new FormData()
-        formData.append('script', inputFileList[i])
+        formData.append('model', inputFileList[i])
+        formData.append('groupId', this.currentGroupId)
+        formData.append('userId', this.userId)
         this.formDataList.push({
           data: formData,
           size: inputFileList[i].size,
-          dataSourceId: this.currentUploadInfo.dataSourceId,
           groupId: this.currentGroupId,
           fileFullName: inputFileList[i].name,
           id: new Date().getTime() + i
@@ -206,28 +207,29 @@ export default {
         // 先上傳第一筆檔案，換取 script id
         const waitingFileList = [...this.formDataList]
         const firstFormData = waitingFileList.shift().data
-        const scriptName = this.$store.state.dataManagement.currentUploadScriptName
+        const scriptName = this.currentUploadScriptName
       /**
        * 注意！
-       * 目前後端只會拿第一筆的 scriptName 去更新
+       * 目前後端只會拿第一筆的 id, name 去更新
        */
         if (scriptName !== null) {
-          firstFormData.append('scriptName', scriptName)
+          firstFormData.append('name', scriptName)
         }
         // 上傳檔案
-        const { scriptId } = await scriptUpload(firstFormData)
+        const { scriptId } = await modelUpload(firstFormData)
         this.progress = 50
         // 上傳剩餘檔案
         if (waitingFileList.length > 0) {
           const data = Array.from(waitingFileList, formData => {
-            formData.data.append('scriptId', scriptId)
-            return scriptUpload(formData.data)
+            formData.data.append('id', scriptId)
+            formData.data.append('name', scriptName)
+            return modelUpload(formData.data)
           })
           await Promise.all(data)
           this.progress = 100
         }
         // 存取 script id，於設定 input / output 時附上
-        this.updateCurrentUploadScriptInfo({ scriptId: scriptId })
+        this.updateCurrentUploadScriptInfo({ modelId: scriptId })
         this.$nextTick(() => this.$emit('next'))
       } catch (e) {
         this.progress = 0

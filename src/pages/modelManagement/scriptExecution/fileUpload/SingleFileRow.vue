@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     removeFile () {
-      this.$store.commit('dataManagement/removeUploadFile', this.index)
+      this.$store.commit('modelManagement/removeUploadModel', this.index)
     },
     cancelUpload () {
       if (typeof this.askCancelFunction === 'function') {

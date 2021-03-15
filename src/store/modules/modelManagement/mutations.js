@@ -3,15 +3,6 @@ export default {
   updateShowCreateModelDialog (state, data) {
     state.showCreateModelDialog = data
   },
-  updateCurrentUploadInfo (state, data) {
-    state.currentUploadInfo = data
-  },
-  clearCurrentUploadInfo (state) {
-    state.currentUploadInfo.dataSourceId = null
-    state.currentUploadInfo.type = null
-    state.currentUploadInfo.name = null
-    state.currentUploadInfo.db = null
-  },
   updateUploadModelList (state, data) {
     state.uploadModelList = data
   },
@@ -37,9 +28,7 @@ export default {
   },
   clearCurrentUploadScriptInfo(state) {
     state.currentUploadScriptInfo = {
-      scriptId: null,
-      dataframeId: null,
-      type: null,
+      modelId: null,
       ioArgs: {}
     }
   },

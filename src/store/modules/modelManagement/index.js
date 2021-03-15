@@ -10,18 +10,10 @@ export default {
     currentModelInfo: {
       isUsed: false
     },
-    currentUploadInfo: {
-      dataSourceId: null,
-      type: null,
-      name: null,
-      db: null
-    },
     uploadModelList: [],
     currentUploadScriptName: null,
     currentUploadScriptInfo: {
-      scriptId: null,
-      dataframeId: null,
-      type: null,
+      modelId: null,
       ioArgs: {}
     }
   },
