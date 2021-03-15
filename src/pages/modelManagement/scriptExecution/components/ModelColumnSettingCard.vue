@@ -4,7 +4,7 @@
       icon-class="sort" 
       class="card__sort-icon"/>
     <div class="input-field">
-      <label class="input-field__label">{{ $t('script.columnDataType') }}</label>
+      <label class="input-field__label">{{ $t('model.upload.columnDataType') }}</label>
       <div class="input-field__input">
         <default-select 
           v-validate="'required'"
@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="input-field">
-      <label class="input-field__label">{{ $t('script.columnDataName') }}</label>
+      <label class="input-field__label">{{ $t('model.upload.columnDataName') }}</label>
       <input-verify
         v-validate="'required'"
         v-model.trim="columnInfo.modelColumnName"
@@ -50,7 +50,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import InputVerify from '@/components/InputVerify'
 
 export default {
-  name: 'OutputColumnSettingCard',
+  name: 'ModelColumnSettingCard',
   inject: ['$validator'],
   components: {
     DefaultSelect,
@@ -124,6 +124,10 @@ export default {
     &:not(:last-of-type) {
       margin-right: 16px;
     }
+
+    .error-text {
+      position: absolute;
+    }
   }
 
   /deep/ .input-verify .input-verify-text {
@@ -131,7 +135,7 @@ export default {
   }
 
   /deep/ .input-verify .input-error {
-    position: relative;
+    position: absolute;
     bottom: 0;
     top: 100%;
   }

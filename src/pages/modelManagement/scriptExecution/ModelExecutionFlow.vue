@@ -3,24 +3,21 @@
     <transition 
       name="fade" 
       mode="out-in">
-      <edit-script-name
+      <edit-model-name
         v-if="step === 0"
         @next="nextStep"
       />
-      <script-file-upload
+      <model-file-upload
         v-if="step === 1"
-        :process-text="processText"
         @next="nextStep"
       />
       <input-setting
         v-if="step === 2"
-        :process-text="processText"
         @next="nextStep"
         @prev="prevStep"
       />
       <output-setting
         v-if="step === 3"
-        :process-text="processText"
         @next="nextStep"
         @prev="prevStep"
       />
@@ -28,28 +25,22 @@
   </div>
 </template>
 <script>
-import EditScriptName from './EditScriptName'
-import ScriptFileUpload from './ScriptFileUpload'
+import EditModelName from './EditModelName'
+import ModelFileUpload from './ModelFileUpload'
 import InputSetting from './InputSetting'
 import OutputSetting from './OutputSetting'
 
 export default {
-  name: 'ScriptExecutionFlow',
+  name: 'ModelExecutionFlow',
   components: {
-    EditScriptName,
-    ScriptFileUpload,
+    EditModelName,
+    ModelFileUpload,
     InputSetting,
     OutputSetting
   },
   data () {
     return {
-      step: 0,
-      dataSourceId: parseInt(this.$route.params.id),
-      processText: [
-        this.$t('editing.processStep1'),
-        this.$t('editing.processStep2'),
-        this.$t('editing.processStep3')
-      ]
+      step: 0
     }
   },
   methods: {

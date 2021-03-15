@@ -28,10 +28,10 @@ export default {
   computed: {
     processText () {
       return [
-        this.$t('script.scriptExecutionStep1'),
-        this.$t('script.scriptExecutionStep2'),
-        this.$t('script.scriptExecutionStep3'),
-        this.$t('script.scriptExecutionStep4')
+        this.$t('model.upload.executionStep1'),
+        this.$t('model.upload.executionStep2'),
+        this.$t('model.upload.executionStep3'),
+        this.$t('model.upload.executionStep4')
       ]
     }
   }

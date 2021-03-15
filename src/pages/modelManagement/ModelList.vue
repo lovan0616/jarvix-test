@@ -48,7 +48,7 @@
 import DataTable from '@/components/table/DataTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import UploadDialog from './scriptExecution/UploadDialog'
-import ScriptExecutionFlow from './scriptExecution/ScriptExecutionFlow'
+import ModelExecutionFlow from './scriptExecution/ModelExecutionFlow'
 import { getModelList, deleteModelById } from '@/API/Model'
 import { mapState, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
@@ -59,7 +59,7 @@ export default {
     DataTable,
     DecideDialog,
     UploadDialog,
-    ScriptExecutionFlow
+    ModelExecutionFlow
   },
   data () {
     return {
@@ -86,13 +86,13 @@ export default {
           width: '100px'
         },
         {
-          text: this.$t('model.createTime'),
+          text: this.$t('model.createdTime'),
           value: 'createdAt',
           width: '165px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
-          text: this.$t('model.updateTime'),
+          text: this.$t('model.updatedTime'),
           value: 'updatedAt',
           width: '165px',
           time: 'YYYY-MM-DD HH:mm'
@@ -187,5 +187,4 @@ export default {
     color: #FFF;
   }
 }
-
 </style>

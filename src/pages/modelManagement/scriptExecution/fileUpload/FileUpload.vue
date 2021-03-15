@@ -26,9 +26,9 @@
           class="upload-remark">
           <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
           <div
-            v-for="(msg, index) in $t('script.scriptLimit')"
+            v-for="(msg, index) in $t('model.upload.modelLimit')"
             :key="index"
-          >{{ Number(index) + 1 }}. {{ $t(`script.scriptLimit.${index}`, {mainScriptName}) }}</div>
+          >{{ Number(index) + 1 }}. {{ $t(`model.upload.modelLimit.${index}`, {mainScriptName}) }}</div>
         </div>
       </upload-block>
       <div 
@@ -61,7 +61,7 @@
             <svg-icon 
               icon-class="file-plus" 
               class="icon"/>
-            {{ fileCountLimit > 1 ? $t('editing.addFile') : $t('fileDataUpdate.reChoose') }}
+            {{ $t('editing.addFile') }}
           </button>
         </div>
       </div>
@@ -112,12 +112,6 @@ export default {
     UploadBlock,
     FileListBlock,
     UploadProcessBlock
-  },
-  props: {
-    fileCountLimit: {
-      type: Number,
-      required: true
-    }
   },
   data () {
     return {
@@ -193,7 +187,7 @@ export default {
 
       if (hasMainPy === -1) {
         Message({
-          message: this.$t('script.lackOfMainScript', {mainScriptName: this.mainScriptName}),
+          message: this.$t('model.upload.lackOfMainScript', {mainScriptName: this.mainScriptName}),
           type: 'warning',
           duration: 3 * 1000,
           showClose: true

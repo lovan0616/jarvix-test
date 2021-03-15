@@ -4,7 +4,7 @@
       <transition 
         name="fade" 
         mode="out-in">
-        <script-execution-flow
+        <model-execution-flow
           head
         />
       </transition>
@@ -12,12 +12,12 @@
   </div>
 </template>
 <script>
-import ScriptExecutionFlow from './ScriptExecutionFlow'
+import ModelExecutionFlow from './ModelExecutionFlow'
 
 export default {
   name: 'UploadDialog',
   components: {
-    ScriptExecutionFlow
+    ModelExecutionFlow
   },
   data () {
     return {

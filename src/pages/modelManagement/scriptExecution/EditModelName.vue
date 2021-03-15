@@ -5,13 +5,13 @@
       :step="1"
     />
     <div class="dialog-body">
-      <div class="setting-block script-name-container">
+      <div class="setting-block model-name-container">
         <input-block 
           v-validate="`required|max:${max}`"
-          :label="$t('script.setScriptName')"
-          v-model="scriptName"
-          class="script-name-input"
-          name="scriptName"
+          :label="$t('model.upload.setModelName')"
+          v-model="modelName"
+          class="model-name-input"
+          name="modelName"
         />
       </div>
     </div>
@@ -35,7 +35,7 @@ import InputBlock from '@/components/InputBlock'
 
 export default {
   inject: ['$validator'],
-  name: 'EditScriptName',
+  name: 'EditModelName',
   components: {
     UploadProcessBlock,
     InputBlock
@@ -45,7 +45,7 @@ export default {
     }
   },
   computed: {
-    scriptName: {
+    modelName: {
       get () {
         return this.$store.state.modelManagement.currentUploadModelName
       },
@@ -81,14 +81,14 @@ export default {
     border-radius: 5px;
     padding: 24px;
 
-    &.script-name-container {
+    &.model-name-container {
       display: flex;
       align-items: center;
       justify-content: center;
       height: 50vh;
     }
 
-    .script-name-input {
+    .model-name-input {
       width: 35%;
     }
   }

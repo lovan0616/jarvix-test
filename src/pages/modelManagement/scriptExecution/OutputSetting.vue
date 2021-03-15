@@ -3,19 +3,18 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="4"
-      :process-text="processText"
     />
     <div class="dialog-body">
       <div class="setting-block">
         <div class="setting-block__title">
-          {{ $t('script.outputParameterSetting') }}
+          {{ $t('model.upload.outputParameterSetting') }}
           <div class="setting-block__reminder">
-            {{ "*" + $t('script.scriptColumnReminder') }}
+            {{ "*" + $t('model.upload.columnReminder') }}
           </div>
         </div>
         <draggable
           v-model="columnList">
-          <output-column-setting-card
+          <model-column-setting-card
             v-for="column in columnList"
             :column-info="column"
             :data-type-option-list="statsTypeOptionList"
@@ -64,7 +63,7 @@
 import { mapState, mapMutations } from 'vuex'
 import UploadProcessBlock from './fileUpload/UploadProcessBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import OutputColumnSettingCard from './OutputColumnSettingCard'
+import ModelColumnSettingCard from './components/ModelColumnSettingCard'
 import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
 import { createModel } from '@/API/Model'
@@ -76,14 +75,8 @@ export default {
   components: {
     UploadProcessBlock,
     DefaultSelect,
-    OutputColumnSettingCard,
+    ModelColumnSettingCard,
     draggable
-  },
-  props: {
-    processText: {
-      type: Array,
-      required: true
-    }
   },
   data () {
     return {

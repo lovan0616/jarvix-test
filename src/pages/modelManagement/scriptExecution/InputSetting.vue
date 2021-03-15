@@ -9,18 +9,18 @@
       <div 
         class="setting-block">
         <div class="setting-block__title">
-          {{ $t('script.inputParameterSetting') }}
+          {{ $t('model.upload.inputParameterSetting') }}
           <div class="setting-block__reminder">
-            {{ "*" + $t('script.scriptColumnReminder') }}
+            {{ "*" + $t('model.upload.columnReminder') }}
           </div>
         </div>
         <div class="setting-block__warning">
           <svg-icon icon-class="data-explanation" />
-          {{ $t('script.scriptParameterReminder') }}
+          {{ $t('model.upload.parameterReminder') }}
         </div>
         <draggable
           v-model="columnList">
-          <output-column-setting-card
+          <model-column-setting-card
             v-for="column in columnList"
             :column-info="column"
             :data-type-option-list="statsTypeOptionList"
@@ -60,7 +60,7 @@
 import { mapState, mapMutations } from 'vuex'
 import UploadProcessBlock from './fileUpload/UploadProcessBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import OutputColumnSettingCard from './OutputColumnSettingCard'
+import ModelColumnSettingCard from './components/ModelColumnSettingCard'
 import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
 import { statsTypeOptionList } from '@/utils/general'
@@ -71,7 +71,7 @@ export default {
   components: {
     UploadProcessBlock,
     DefaultSelect,
-    OutputColumnSettingCard,
+    ModelColumnSettingCard,
     draggable
   },
   props: {

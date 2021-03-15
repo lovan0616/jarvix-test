@@ -3,10 +3,8 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="2"
-      :process-text="processText"
     />
     <file-upload
-      :file-count-limit="fileCountLimit"
       class="file-upload-block"
       @next="$emit('next')"
       @close="cancelFileUpload"
@@ -19,25 +17,14 @@ import FileUpload from './fileUpload/FileUpload'
 import UploadProcessBlock from './fileUpload/UploadProcessBlock'
 
 export default {
-  name: 'ScriptFileUpload',
+  name: 'ModelFileUpload',
   components: {
     FileUpload,
     UploadProcessBlock
   },
-  props: {
-    processText: {
-      type: Array,
-      required: true
-    }
-  },
   data () {
     return {
       uploadStatus
-    }
-  },
-  computed: {
-    fileCountLimit () {
-      return this.$store.state.dataManagement.fileCountLimit
     }
   },
   methods: {
