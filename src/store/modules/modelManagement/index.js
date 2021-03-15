@@ -11,8 +11,8 @@ export default {
       isUsed: false
     },
     uploadModelList: [],
-    currentUploadScriptName: null,
-    currentUploadScriptInfo: {
+    currentUploadModelName: null,
+    currentUploadModelInfo: {
       modelId: null,
       ioArgs: {}
     }

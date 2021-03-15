@@ -47,10 +47,10 @@ export default {
   computed: {
     scriptName: {
       get () {
-        return this.$store.state.modelManagement.currentUploadScriptName
+        return this.$store.state.modelManagement.currentUploadModelName
       },
       set (value) {
-        this.$store.commit('modelManagement/updateScriptName', value)
+        this.$store.commit('modelManagement/updateModelName', value)
       }
     },
     max () {

@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     ...mapState('userManagement', ['userId']),
-    ...mapState('modelManagement', ['currentUploadScriptName', 'uploadModelList']),
+    ...mapState('modelManagement', ['currentUploadModelName', 'uploadModelList']),
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
@@ -144,7 +144,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('modelManagement', ['updateCurrentUploadScriptInfo']),
+    ...mapMutations('modelManagement', ['updateCurrentUploadModelInfo']),
     dropFiles (event) {
       if (!event.dataTransfer.files) return
       const files = Array.from(event.dataTransfer.files)
@@ -207,7 +207,7 @@ export default {
         // 先上傳第一筆檔案，換取 script id
         const waitingFileList = [...this.formDataList]
         const firstFormData = waitingFileList.shift().data
-        const scriptName = this.currentUploadScriptName
+        const scriptName = this.currentUploadModelName
       /**
        * 注意！
        * 目前後端只會拿第一筆的 id, name 去更新
@@ -229,7 +229,7 @@ export default {
           this.progress = 100
         }
         // 存取 script id，於設定 input / output 時附上
-        this.updateCurrentUploadScriptInfo({ modelId: scriptId })
+        this.updateCurrentUploadModelInfo({ modelId: scriptId })
         this.$nextTick(() => this.$emit('next'))
       } catch (e) {
         this.progress = 0

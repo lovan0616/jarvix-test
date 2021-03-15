@@ -20,14 +20,14 @@ export default {
   removeUploadModel (state, data) {
     state.uploadModelList.splice(data, 1)
   },
-  updateScriptName (state, data) {
-    state.currentUploadScriptName = data
+  updateModelName (state, data) {
+    state.currentUploadModelName = data
   },
-  updateCurrentUploadScriptInfo (state, data) {
-    state.currentUploadScriptInfo = data
+  updateCurrentUploadModelInfo (state, data) {
+    state.currentUploadModelInfo = data
   },
-  clearCurrentUploadScriptInfo(state) {
-    state.currentUploadScriptInfo = {
+  clearCurrentUploadModelInfo(state) {
+    state.currentUploadModelInfo = {
       modelId: null,
       ioArgs: {}
     }

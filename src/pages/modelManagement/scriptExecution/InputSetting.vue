@@ -87,13 +87,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('modelManagement', ['currentUploadScriptInfo'])
+    ...mapState('modelManagement', ['currentUploadModelInfo'])
   },
   mounted () {
     this.fetchDataFrameList()
   },
   methods: {
-    ...mapMutations('modelManagement', ['updateCurrentUploadScriptInfo', 'updateShowCreateModelDialog']),
+    ...mapMutations('modelManagement', ['updateCurrentUploadModelInfo', 'updateShowCreateModelDialog']),
     fetchDataFrameList () {
       // 清空原資料
       this.columnList = []
@@ -119,8 +119,8 @@ export default {
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        this.updateCurrentUploadScriptInfo({
-          ...this.currentUploadScriptInfo,
+        this.updateCurrentUploadModelInfo({
+          ...this.currentUploadModelInfo,
           ioArgs: {
             input: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
           }

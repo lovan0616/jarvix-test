@@ -93,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadScriptInfo']),
+    ...mapState('dataManagement', ['currentUploadModelInfo']),
     dataTypeOptionList () {
       const acceptedDataTypeList = ['FLOAT', 'STRING', 'INT', 'DATETIME', 'BOOLEAN']
       return acceptedDataTypeList.map(type => ({
@@ -107,7 +107,7 @@ export default {
     this.addNewColumnCard()
   },
   methods: {
-    ...mapMutations('modelManagement', ['updateCurrentUploadScriptInfo', 'updateShowCreateModelDialog']),
+    ...mapMutations('modelManagement', ['updateCurrentUploadModelInfo', 'updateShowCreateModelDialog']),
     addNewColumnCard () {
       this.columnList.push({
         statsType: null,
@@ -130,9 +130,9 @@ export default {
         if (!isValidate) return
         this.isProcessing = true
         createModel({
-          ...this.currentUploadScriptInfo,
+          ...this.currentUploadModelInfo,
           ioArgs: {
-            ...this.currentUploadScriptInfo.ioArgs,
+            ...this.currentUploadModelInfo.ioArgs,
             output: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
           }
         })
