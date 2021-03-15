@@ -20,14 +20,26 @@
           </div>
         </div>
       </div>
-      <data-table
-        :headers="tableHeaders"
-        :data-list.sync="modelList"
-        :loading="isLoading"
-        :empty-message="$t('model.clickToUploadModel')"
-        @create="createModel"
-        @delete="confirmDelete"
-      />
+      <template>
+        <data-table
+          :headers="tableHeaders"
+          :data-list.sync="modelList"
+          :loading="isLoading"
+          :empty-message="$t('model.clickToUploadModel')"
+          @create="createModel"
+          @delete="confirmDelete"
+        />
+        <el-pagination 
+          :total="20"
+          :page-size="2"
+          :current-page="1"
+          class="table-pagination"
+          layout="prev, pager, next"
+          @current-change="changePage"
+          @prev-click="prevPage"
+          @next-click="nextPage"
+        />
+      </template>
     </div>
     <upload-dialog
       v-if="showCreateModelDialog"
@@ -147,6 +159,15 @@ export default {
         }).finally(() => {
           this.isLoading = false
         })
+    },
+    changePage () {
+      console.log('change-page')
+    },
+    nextPage () {
+      console.log('change-page')
+    },
+    prevPage () {
+      console.log('change-page')
     },
     confirmDelete ({id}) {
       this.deleteModelId = id

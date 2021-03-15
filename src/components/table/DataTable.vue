@@ -443,7 +443,6 @@ export default {
         this.isProcessing
         || this.isInProcess(data) 
         || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
-        || (data.originType === 'script' && actionName !== 'delete')
       ) return true
       return false
     },

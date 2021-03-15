@@ -45,6 +45,17 @@ import request from '@/utils/publicRequest'
 }
 
 /**
+ * modify model info
+ */
+ export function modifyModelInfo(modelId, data) {
+  return request({
+    url: `/models/${modelId}`,
+    method: 'PATCH',
+    data
+  })
+}
+
+/**
  * delete model
  * @params {Number} modelId - model id 
  */

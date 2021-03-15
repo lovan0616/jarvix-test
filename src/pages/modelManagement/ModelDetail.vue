@@ -18,9 +18,11 @@
         <div class="info-block__title">{{ $t('model.modelNameId') }}</div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="link action-link">{{ $t('editing.editingName') }}</div>
             <div class="info__label">{{ $t('model.name') }}:</div>
             <div class="info__text">{{ modelInfo.name }}</div>
+            <div 
+              class="link action-link" 
+              @click="openRenameDialog">{{ $t('editing.editingName') }}</div>
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('model.id') }}:</div>
@@ -99,23 +101,44 @@
       @closeDialog="isShowDeleteDialog = false"
       @confirmBtn="deleteModel"
     />
+    <writing-dialog
+      v-if="isShowRenameDialog"
+      :title="$t('editing.editingName')"
+      :button="$t('button.change')"
+      :show-both="true"
+      @closeDialog="isShowRenameDialog = false"
+      @confirmBtn="rename"
+    >
+      <input-verify
+        v-validate="`required|max:${max}`"
+        v-model="editedName"
+        type="text"
+        name="tempEditedModelName"
+      />
+    </writing-dialog>
   </div>
 </template>
 <script>
+import InputVerify from '@/components/InputVerify'
 import BreadCrumb from './components/BreadCrumb.vue'
 import DecideDialog from '@/components/dialog/DecideDialog'
-import { deleteModelById } from '@/API/Model'
+import WritingDialog from '@/components/dialog/WritingDialog'
+import { deleteModelById, modifyModelInfo } from '@/API/Model'
 import { Message } from 'element-ui'
 
 export default {
   name: 'ModelDetail',
   components: {
+    InputVerify,
     BreadCrumb,
-    DecideDialog
+    DecideDialog,
+    WritingDialog
   },
   data () {
     return {
       isShowDeleteDialog: false,
+      isShowRenameDialog: false,
+      editedName: '',
       modelInfo: {
         createdAt: "2019.02.03",
         createdBy: "youtuber",
@@ -151,6 +174,17 @@ export default {
     }
   },
   methods: {
+    openRenameDialog () {
+      this.isShowRenameDialog = true
+      this.editedName = this.modelInfo.name
+    },
+    rename () {
+      modifyModelInfo(this.modelInfo.id, { 
+        ...this.modelInfo, name: this.editedName
+      }).finally(() => {
+        this.isShowRenameDialog = false
+      })
+    },
     deleteModel () {
       deleteModelById(this.modelInfo.id)
         .then(() => {
