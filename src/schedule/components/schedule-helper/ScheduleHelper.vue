@@ -41,18 +41,21 @@
       </div>
       <div class="sample__content">
         <div class="sample__content__title">
-          {{ $t('schedule.helper.fileName') }}{{ pascalToSnake(currentSample.dataFrameCode) }}.csv
+          {{ $t('schedule.helper.fileName') }}：{{ pascalToSnake(currentSample.dataFrameCode) }}.csv
         </div>
         <div
           v-for="(column, index) in currentSample.columns"
           :key="index"
           class="column__block">
           <div class="column__block__title">
-            <span>{{ $t('schedule.helper.columnName') }}{{ column.columnName }}</span>
+            <span>{{ $t('schedule.helper.columnName') }}：{{ column.columnName }}</span>
           </div>
           <div class="column__block__description">
-            <div>{{ $t('schedule.helper.dataType') }}：{{ column.columnDataType }}</div>
-            <div>{{ $t(`schedule.helper.${pascalToCamel(currentSample.dataFrameCode)}.${column.columnName}`) }}</div>
+            <div>
+              {{ $t('schedule.helper.statsType') }}：{{ statsTypeMapper(column.columnDataType) }}
+              <span v-if="statsTypeMapper(column.columnDataType) === 'Datetime'">({{ column.columnDataType }})</span>
+            </div>
+            <div>{{ $t('schedule.helper.columnDescription') }}：{{ $t(`schedule.helper.${pascalToCamel(currentSample.dataFrameCode)}.${column.columnName}`) }}</div>
           </div>
         </div>
       </div>
@@ -306,6 +309,18 @@ export default {
     }
   },
   methods: {
+    statsTypeMapper (dataType) {
+      switch (dataType) {
+        case 'string':
+          return 'Category'
+        case 'int':
+        case 'float':
+        case 'double':
+          return 'Numeric'
+        default:
+          return 'Datetime'
+      }
+    },
     closeScheduleHelper () {
       this.$store.commit('scheduleSetting/setIsShowScheduleHelper', false)
     },

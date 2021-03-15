@@ -107,7 +107,7 @@
       "fileName": "檔案名稱",
       "columnName": "欄位名稱",
       "columnDescription": "欄位說明",
-      "dataType": "資料型態",
+      "statsType": "資料型態",
       "order": {
         "Job": "此工單的編號（客戶填寫）",
         "Order": "訂單的編號（客戶填寫）",
