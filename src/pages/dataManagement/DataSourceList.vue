@@ -44,13 +44,14 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="filterDataList"
+        :data-list="filterDataList"
         :empty-message="$t('editing.clickToCreateDataSource')"
         :loading="isLoading"
         :is-search-result-empty="searchedDataSourceName.length > 0 && filterDataList.length === 0"
         @create="createDataSource"
         @rename="confirmRename"
         @delete="confirmDelete"
+        @sort="sortData"
       />
     </div>
     <create-data-source
@@ -85,6 +86,7 @@ import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import orderBy from 'lodash.orderby'
 
 export default {
   name: 'DataSourceList',
@@ -116,7 +118,7 @@ export default {
     // reachUploadLimit () {
     //   return this.dataList.length >= this.dataSourceLimitCount
     // },
-    filterDataList() {
+    filterDataList () {
       return this.dataList.filter(data => data.name.toLowerCase().includes(this.searchedDataSourceName.toLowerCase()))
     },
     tableHeaders () {
@@ -150,7 +152,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '200px',
+          width: '160px',
           action: [
             {
               name: this.$t('button.rename'),
@@ -204,6 +206,9 @@ export default {
         }).catch(() => {
           this.isLoading = false
         })
+    },
+    sortData ({name, order}) {
+      this.dataList = orderBy(this.dataList, [name], [order])
     },
     createDataSource () {
       this.showCreateDataSourceDialog = true
