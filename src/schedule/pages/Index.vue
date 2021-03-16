@@ -24,7 +24,6 @@ export default {
   },
   destroyed () {
     this.$store.commit('scheduleSetting/setCurrentProjectId', null)
-    this.$store.commit('scheduleSetting/setProjects', [])
   },
   beforeRouteEnter (to, from, next) {
     // 進入子專案前，先確保真的有這個 project id
