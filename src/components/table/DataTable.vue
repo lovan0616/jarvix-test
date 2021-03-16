@@ -247,7 +247,6 @@
 </template>
 <script>
 import UploadBlock from '@/components/UploadBlock'
-import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { mapGetters } from 'vuex'
@@ -409,7 +408,8 @@ export default {
       }
 
       let order = this.sortStatus[name] > 0 ? 'asc' : 'desc'
-      this.$emit('update:dataList', orderBy(this.dataList, [name], [order]))
+
+      this.$emit('sort', {name, order})
     },
     linkTo (link, id) {
       this.$router.push({

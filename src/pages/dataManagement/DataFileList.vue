@@ -71,7 +71,7 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="filterDataList"
+        :data-list="filterDataList"
         :selection.sync="selectList"
         :is-processing="isProcessing"
         :is-search-result-empty="searchedDataFileName.length > 0 && filterDataList.length === 0"
@@ -88,6 +88,7 @@
         @batchLoad="editBatchLoadSetting"
         @createdInfo="viewCreatedInfo"
         @fetch="fetchData"
+        @sort="sortData"
       />
     </div>
     <file-upload-dialog
@@ -182,6 +183,7 @@ import FeatureManagementDialog from './components/feature/FeatureManagementDialo
 import { getAccountInfo } from '@/API/Account'
 import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import orderBy from 'lodash.orderby'
 
 export default {
   name: 'DataFileList',
@@ -407,6 +409,9 @@ export default {
       return this.updateDataTable().finally(() => {
         this.isLoading = false
       })
+    },
+    sortData ({name, order}) {
+      this.dataList = orderBy(this.dataList, [name], [order])
     },
     updateDataTable () {
       return getDataFrameById(this.currentDataSourceId, true).then(response => {
