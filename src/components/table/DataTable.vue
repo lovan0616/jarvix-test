@@ -511,6 +511,7 @@ export default {
           // 需要擁有權限或是是自己建立的表
           hasPermission = this.hasPermission(action.checkPermission) || Number(data.createBy) === this.$store.state.userManagement.userId
         }
+        if (action.dialogName === 'batchLoad' && data.joinCount > 1) return false
         if (action.dialogName === 'etlSetting') return data.etlExists
         if (action.dialogName === 'createdInfo') return data.originType === 'database' && hasPermission
         return hasPermission
