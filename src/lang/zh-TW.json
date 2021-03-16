@@ -633,6 +633,7 @@
     "createInfo": "建立資料",
     "lastUpdatedTime": "最後上傳時間",
     "fileInfo": "檔案內容",
+    "reUploadReminder": "若 {mainScriptName} 檔案異動後，請確認模型參數與 {mainScriptName} 的 Input/Output 格式是否一致。",
     "upload": {
       "inputParameterSetting": "設定 Input 參數",
       "columnReminder": "欄位具有順序性，優先順序為由上至下，可用滑鼠拖曳變更順序。",

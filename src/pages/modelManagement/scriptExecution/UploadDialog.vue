@@ -24,8 +24,7 @@ export default {
     } 
   },
   destroyed () {
-    this.$store.commit('modelremoveUploadModelManagement/clearCurrentUploadInfo')
-    this.$store.commit('modelremoveUploadModelManagement/updateUploadModelList', [])
+    this.$store.commit('modelManagement/updateUploadModelList', [])
     this.$store.commit('modelManagement/clearCurrentUploadModelInfo')
     this.$store.commit('modelManagement/updateModelName')
   },

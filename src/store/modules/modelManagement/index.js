@@ -6,9 +6,10 @@ export default {
   namespaced: true,
   state: {
     showCreateModelDialog: false,
-    currentModelId: null,
     currentModelInfo: {
-      isUsed: false
+      modelId: null,
+      name: '',
+      inUsed: false
     },
     uploadModelList: [],
     currentUploadModelName: null,

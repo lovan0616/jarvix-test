@@ -73,7 +73,7 @@
           class="uploading-reminding">{{ $t('editing.uploading') }}</span>
         <button 
           v-if="currntUploadStatus === uploadStatus.wait || currntUploadStatus === uploadStatus.fail"
-          class="btn btn-outline"
+          class="btn btn-outline btn-cancel"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <slot 
@@ -104,7 +104,7 @@ import UploadProcessBlock from './UploadProcessBlock'
 import { uploadStatus } from '@/utils/general'
 import { Message } from 'element-ui'
 import { mapState, mapMutations } from 'vuex'
-import { modelUpload } from '@/API/Model'
+import { uploadModel, reUploadModel } from '@/API/Model'
 
 export default {
   name: 'FileUpload',
@@ -210,14 +210,14 @@ export default {
           firstFormData.append('name', scriptName)
         }
         // 上傳檔案
-        const { scriptId } = await modelUpload(firstFormData)
+        const { scriptId } = await uploadModel(firstFormData)
         this.progress = 50
         // 上傳剩餘檔案
         if (waitingFileList.length > 0) {
           const data = Array.from(waitingFileList, formData => {
             formData.data.append('id', scriptId)
             formData.data.append('name', scriptName)
-            return modelUpload(formData.data)
+            return uploadModel(formData.data)
           })
           await Promise.all(data)
           this.progress = 100

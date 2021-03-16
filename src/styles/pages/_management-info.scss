@@ -1,14 +1,21 @@
 .management-info-page {
 	.page-title-row {
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 16px;
 
 		.title {
+			margin-right: 18px;
 			font-weight: 600;
 			font-size: 24px;
 			line-height: 32px;
 		}
+
+		.warning {
+      font-size: 13px;
+      color: var(--color-warning);
+    }
 	}
 
 	.info-block {

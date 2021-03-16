@@ -110,7 +110,7 @@
       @confirmBtn="rename"
     >
       <input-verify
-        v-validate="`required|max:${max}`"
+        v-validate="`required`"
         v-model="editedName"
         type="text"
         name="tempEditedModelName"
@@ -123,7 +123,7 @@ import InputVerify from '@/components/InputVerify'
 import BreadCrumb from './components/BreadCrumb.vue'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import { deleteModelById, modifyModelInfo } from '@/API/Model'
+import { getModelInfo, deleteModelById, modifyModelInfo } from '@/API/Model'
 import { Message } from 'element-ui'
 
 export default {
@@ -173,7 +173,21 @@ export default {
       }
     }
   },
+  computed: {
+    modelId () {
+      return this.$route.params['model_id']
+    }
+  },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
+    fetchData () {
+      getModelInfo(this.modelId)
+        .then((response) => {
+          this.modelInfo = response
+        })
+    },
     openRenameDialog () {
       this.isShowRenameDialog = true
       this.editedName = this.modelInfo.name

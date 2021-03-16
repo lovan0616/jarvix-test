@@ -15,11 +15,22 @@ import request from '@/utils/publicRequest'
  * model upload
  * @param {formData} modelData - 要上傳的 model
  */
- export function modelUpload(modelData) {
+ export function uploadModel(modelData) {
   return request({
     url: '/models',
     method: 'POST',
     data: modelData
+  })
+}
+
+/**
+ * re-upload model
+ */
+ export function reUploadModel(modelId, data) {
+  return request({
+    url: `/models/${modelId}`,
+    method: 'POST',
+    data
   })
 }
 

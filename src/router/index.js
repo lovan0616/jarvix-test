@@ -370,11 +370,10 @@ const router = new Router({
                         {
                           path: ':model_id',
                           component: () => import('@/pages/modelManagement/Index'),
-                          // TODO: pretend used model
-                          beforeEnter: (to, from, next) => {
+                          beforeEnter: async (to, from, next) => {
                             const modelId = to.params.model_id
-                            store.commit('modelManagement/setModelId', modelId)
-                            modelId % 2 ? next() : next(from)
+                            await store.dispatch('modelManagement/getModelInfo', modelId)
+                            next()
                           },
                           children: [
                             {
@@ -406,9 +405,14 @@ const router = new Router({
                               path: 'config-setting',
                               name: 'ConfigSetting',
                               component: () => import('@/pages/modelManagement/ConfigSetting'),
+                              beforeEnter: (to, from, next) => {
+                                store.state.modelManagement.currentModelInfo.inUsed 
+                                  ? next(from)
+                                  : next()
+                              },
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
-                                isLocked: (store) => store.state.modelManagement.currentModelInfo.isUsed
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUsed
                               }
                             }
                           ]
