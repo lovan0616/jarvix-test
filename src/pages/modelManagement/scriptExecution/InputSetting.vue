@@ -9,14 +9,14 @@
       <div 
         class="setting-block">
         <div class="setting-block__title">
-          {{ $t('model.upload.inputParameterSetting') }}
+          {{ $t('model.upload.inputArgsSetting') }}
           <div class="setting-block__reminder">
             {{ "*" + $t('model.upload.columnReminder') }}
           </div>
         </div>
         <div class="setting-block__warning">
           <svg-icon icon-class="data-explanation" />
-          {{ $t('model.upload.parameterReminder') }}
+          {{ $t('model.upload.argsReminder', {mainScriptName}) }}
         </div>
         <draggable
           v-model="columnList">
@@ -83,7 +83,8 @@ export default {
   data () {
     return {
       statsTypeOptionList,
-      columnList: []
+      columnList: [],
+      mainScriptName: 'main.py'
     }
   },
   computed: {

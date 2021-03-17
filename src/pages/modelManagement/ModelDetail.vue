@@ -12,7 +12,11 @@
         {{ $t('model.deleteModel') }}
       </button>
     </div>
-    <section>
+    <spinner
+      v-if="isLoading" 
+      :title="$t('editing.loading')"
+    />
+    <section v-else>
       <!-- 模型名稱 / ID -->
       <div class="info-block">
         <div class="info-block__title">{{ $t('model.modelNameId') }}</div>
@@ -136,41 +140,11 @@ export default {
   },
   data () {
     return {
+      isLoading: false,
       isShowDeleteDialog: false,
       isShowRenameDialog: false,
       editedName: '',
-      modelInfo: {
-        createdAt: "2019.02.03",
-        createdBy: "youtuber",
-        id: 0,
-        ioArgsDo: {
-          input: [
-            {
-              modelColumnName: "時間",
-              statsType: "DATETIME"
-            },
-            {
-              modelColumnName: "成本",
-              statsType: "Numeric"
-            }
-          ],
-          output: [
-            {
-              modelColumnName: "成本",
-              statsType: "Numeric"
-            },
-            {
-              modelColumnName: "數量",
-              statsType: "Numeric"
-            }
-          ]
-        },
-        models: [
-          "model1", "model2"
-        ],
-        name: "modelName",
-        updatedAt: "2019.02.03"
-      }
+      modelInfo: {}
     }
   },
   computed: {
@@ -183,9 +157,45 @@ export default {
   },
   methods: {
     fetchData () {
+      this.isLoading = true
       getModelInfo(this.modelId)
         .then((response) => {
           this.modelInfo = response
+          this.modelInfo = { 
+            createdAt: "2019.02.03",
+            createdBy: "youtuber",
+            id: 0,
+            ioArgsDo: {
+              input: [
+                {
+                  modelColumnName: "時間",
+                  statsType: "DATETIME"
+                },
+                {
+                  modelColumnName: "成本",
+                  statsType: "Numeric"
+                }
+              ],
+              output: [
+                {
+                  modelColumnName: "成本",
+                  statsType: "Numeric"
+                },
+                {
+                  modelColumnName: "數量",
+                  statsType: "Numeric"
+                }
+              ]
+            },
+            models: [
+              "model1", "model2"
+            ],
+            name: "modelName",
+            updatedAt: "2019.02.03"
+          }
+        })
+        .finally(() => {
+          this.isLoading = false
         })
     },
     openRenameDialog () {
@@ -193,14 +203,14 @@ export default {
       this.editedName = this.modelInfo.name
     },
     rename () {
-      modifyModelInfo(this.modelInfo.id, { 
+      modifyModelInfo(this.modelId, { 
         ...this.modelInfo, name: this.editedName
       }).finally(() => {
         this.isShowRenameDialog = false
       })
     },
     deleteModel () {
-      deleteModelById(this.modelInfo.id)
+      deleteModelById(this.modelId)
         .then(() => {
           Message({
             message: this.$t('message.deleteSuccess'),

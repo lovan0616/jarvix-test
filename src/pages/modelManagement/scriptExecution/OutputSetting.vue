@@ -7,7 +7,7 @@
     <div class="dialog-body">
       <div class="setting-block">
         <div class="setting-block__title">
-          {{ $t('model.upload.outputParameterSetting') }}
+          {{ $t('model.upload.outputArgsSetting') }}
           <div class="setting-block__reminder">
             {{ "*" + $t('model.upload.columnReminder') }}
           </div>

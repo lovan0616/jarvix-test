@@ -1,6 +1,6 @@
 <template>
   <div class="management-info-page model-reupload">
-    <bread-crumb :name="currentModelInfo.name" />
+    <bread-crumb :name="modelInfo.name" />
     <div class="page-title-row">
       <div class="title">
         {{ $t('sideNav.reUploadFile') }}
@@ -18,7 +18,7 @@
 <script>
 import BreadCrumb from './components/BreadCrumb.vue'
 import FileUpload from './scriptExecution/fileUpload/FileUpload'
-import { mapState } from 'vuex'
+import { getModelInfo } from '@/API/Model'
 
 export default {
   name: 'ReUploadFile',
@@ -28,11 +28,25 @@ export default {
   },
   data () {
     return {
+      modelInfo: {},
       mainScriptName: 'main.py'
     }
   },
   computed: {
-    ...mapState('modelManagement', ['currentModelInfo'])
+    modelId () {
+      return this.$route.params['model_id']
+    }
+  },
+  mounted () {
+    this.fetchData()
+  },
+  methods: {
+    fetchData () {
+      getModelInfo(this.modelId)
+        .then((response) => {
+          this.modelInfo = response
+        })
+    },
   }
 }
 </script>
