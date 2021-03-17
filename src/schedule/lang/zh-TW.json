@@ -186,7 +186,7 @@
       "failedBecauseOfRefDesc": "資料值無相關對應",
       "failedBecauseOfType": "型別錯誤",
       "failedBecauseOfTypeDesc": "資料值型別錯誤",
-      "failedRowCountOfColumn": "總計 {0} 筆資料錯誤",
+      "failedRowCount": "總計 {0} 筆資料錯誤",
       "datumIndexes": "資料列位置",
       "allOrderDataIsValid": "訂單綁定資料表檢查完成，全數資料列皆符合格式，將繼續綁定",
       "allRawdataDataIsValid": "共同資料綁定資料表檢查完成，全數資料列皆符合格式，將繼續綁定",

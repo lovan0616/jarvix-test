@@ -217,5 +217,11 @@ export default {
       }
     }
   }
+
+  .button-block {
+    .btn + .btn {
+      margin-left: 8px;
+    }
+  }
 }
 </style>

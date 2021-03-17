@@ -14,12 +14,12 @@
           {{ $t('schedule.binding.unbind') }}
         </button>
         <button
-          :disabled="isBinding"
+          :disabled="isChecking || isBinding"
           class="btn btn-default"
           @click="check"
         >
           <spinner 
-            v-show="isBinding" 
+            v-show="isChecking || isBinding" 
             size="10"/>
           {{ $t('schedule.binding.bind') }}
         </button>

@@ -105,6 +105,5 @@ export default {
 <style lang="scss" scoped>
 .btn-rebind-ds {
   margin-left: auto;
-  margin-top: 7px;
 }
 </style>

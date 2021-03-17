@@ -297,8 +297,9 @@ export default {
         .then(files => {
           files.forEach(file => {
             const category = file.category
-            if (file.category === 'ORDER') return
-            this.files[category.toLowerCase()].push(file)
+            if (file.category === 'RAW_DATA' || file.category === 'CONSTRAINT') {
+              this.files[category.toLowerCase()].push(file)
+            }
           })
           this.isFetchingAdvanceSetting = false
         })

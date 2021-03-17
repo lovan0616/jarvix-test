@@ -13,7 +13,9 @@
       class="binding-checked-info__msg"
       @click="isShowInfoDialog = true"
     >
-      {{ $t('schedule.binding.failedRowCountOfDataFrame', { count: failedRowCount }) }}
+      <i18n path="schedule.binding.failedRowCount">
+        {{ failedRowCount }}
+      </i18n>
     </span>
     <writing-dialog
       v-if="isShowInfoDialog"
@@ -44,7 +46,7 @@
             class="error-info"
           >
             <div><b>{{ $t('schedule.binding.failedBecauseOfEmpty') }}</b>（{{ $t('schedule.binding.failedBecauseOfEmptyDesc') }}）</div>
-            <i18n path="schedule.binding.failedRowCountOfColumn">
+            <i18n path="schedule.binding.failedRowCount">
               <span class="highlight">{{ column.emptyRowIndexes.length }}</span>
             </i18n>
           </div>
@@ -60,7 +62,7 @@
             class="error-info"
           >
             <div><b>{{ $t('schedule.binding.failedBecauseOfType') }}</b>（{{ $t('schedule.binding.failedBecauseOfTypeDesc') }}）</div>
-            <i18n path="schedule.binding.failedRowCountOfColumn">
+            <i18n path="schedule.binding.failedRowCount">
               <span class="highlight">{{ column.typeErrorRowIndexes.length }}</span>
             </i18n>
           </div>

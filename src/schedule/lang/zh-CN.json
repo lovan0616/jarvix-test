@@ -186,7 +186,7 @@
       "failedBecauseOfRefDesc": "资料值无相关对应",
       "failedBecauseOfType": "型别错误",
       "failedBecauseOfTypeDesc": "资料值型别错误",
-      "failedRowCountOfColumn": "总计 {0} 笔资料错误",
+      "failedRowCount": "总计 {0} 笔资料错误",
       "datumIndexes": "资料列位置",
       "allOrderDataIsValid": "订单绑定资料表检查完成，全数资料列皆符合格式，将继续绑定",
       "allRawdataDataIsValid": "共同资料绑定资料表检查完成，全数资料列皆符合格式，将继续绑定",

@@ -161,6 +161,8 @@ export default {
           files.forEach(file => {
             const category = file.category
 
+            if (category !== 'ORDER' && category !== 'RAW_DATA' && category !== 'CONSTRAINT') return
+
             // 設定個檔案資料
             this.files[category.toLowerCase()].push(file)
 
@@ -302,12 +304,12 @@ export default {
         }
         &-field {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
           position: relative;
           font-size: 14px;
           line-height: 40px;
           .field-label {
-            flex-basis: 150px;
+            flex-basis: 180px;
             margin-right: 24px;
             text-align: right;
           }

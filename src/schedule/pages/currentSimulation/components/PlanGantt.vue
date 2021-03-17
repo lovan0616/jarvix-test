@@ -171,17 +171,16 @@ export default {
           const schedule = [...operateData, ...restData]
 
           schedule.forEach(item => {
-            if (!tempChartList[item.equipmentId]) {
-              tempChartList[item.equipmentId] = {}
-              tempChartList[item.equipmentId].gtArray = [{
+            if (!tempChartList[item.equipment]) {
+              tempChartList[item.equipment] = {}
+              tempChartList[item.equipment].gtArray = [{
                 ...item,
                 start: item.startTime || item.startDatetime,
                 end: item.endTime || item.endDatetime
               }]
-              tempChartList[item.equipmentId].id = item.equipmentId
-              tempChartList[item.equipmentId].name = item.equipment
+              tempChartList[item.equipment].name = item.equipment
             } else {
-              tempChartList[item.equipmentId].gtArray.push({
+              tempChartList[item.equipment].gtArray.push({
                 ...item,
                 start: item.startTime || item.startDatetime,
                 end: item.endTime || item.endDatetime
@@ -204,9 +203,8 @@ export default {
           this.startTime = startTime.format('YYYY-MM-DD HH:mm:ss')
           this.endTime = endTime.format('YYYY-MM-DD HH:mm:ss')
 
-          for (const equipmentId in tempChartList) {
-            tempChartList[equipmentId].name = this.equipments.find(item => item.id === Number(equipmentId)).name
-            this.ganttChartDataList.push(tempChartList[equipmentId])
+          for (const equipment in tempChartList) {
+            this.ganttChartDataList.push(tempChartList[equipment])
           }
 
           this.isLoading = false
@@ -277,7 +275,11 @@ export default {
     }
 
     &--input {
+      display: inline-block;
       width: 96px;
+      &.default-select {
+        padding-bottom: 0;
+      }
 
       /deep/ .el-input .el-input__inner {
         height: 30px;
