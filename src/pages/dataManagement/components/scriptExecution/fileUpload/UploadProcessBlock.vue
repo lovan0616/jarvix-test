@@ -30,7 +30,8 @@ export default {
       return [
         this.$t('editing.scriptExecutionStep1'),
         this.$t('editing.scriptExecutionStep2'),
-        this.$t('editing.scriptExecutionStep3')
+        this.$t('editing.scriptExecutionStep3'),
+        this.$t('editing.scriptExecutionStep4')
       ]
     }
   }
@@ -40,7 +41,7 @@ export default {
   .upload-process-block {
     display: flex;
     justify-content: space-between;
-    width: calc(100% - 180px);
+    width: 100%;
     margin: 0 auto 12px auto;
 
     .step-process {

@@ -14,15 +14,16 @@ export default {
       db: null
     },
     uploadFileList: [],
-    importedFileList: [],
     showCreateDataSourceDialog: false,
     // 為了讓資料清單頁面可以重新刷新資料
     fileUploadSuccess: false,
     fileCountLimit: 10,
     // 當前預處理的 list
     etlTableList: [],
+    datetimePatterns: [],
     currentTableIndex: 0,
     currentColumnIndex: null,
+    currentUploadScriptName: null,
     currentUploadScriptInfo: {
       scriptId: null,
       dataframeId: null,

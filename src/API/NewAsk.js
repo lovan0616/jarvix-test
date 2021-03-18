@@ -28,13 +28,11 @@ export function askResult (askInfo, cancelFunction) {
  * exchange result id to specific type
  * ex: overview to clustering, or clustering to overview
  */
-export function askSpecificType ({ resultId, type, algoConfig }, cancelFunction) {
+export function askSpecificType ({ resultId, type, settingConfig }, cancelFunction) {
   return request({
     url: `/ask/result/${resultId}/denotation/alteration/${type}`,
     method: 'POST',
-    data: {
-      algoConfig
-    },
+    data: settingConfig,
     cancelToken: cancelFunction
   })
 }

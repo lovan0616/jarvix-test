@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "Please input text (including spaces).",
     "formCharacterOverMax": "Maximum {max} characters.",
     "formCharacterOverMin": "At least {min} characters.",
+    "formValueOverMin": "The field field must be {min} or more",
     "formNumericeOverOne": "Contain at least 1 number.",
     "formDecimal": "Please enter a number(May contain decimal points)",
     "formDecimalWithMaxDecimalPointNumbers": "Please enter a number(May contains {max} digits after the decimal place)",
@@ -160,7 +161,8 @@
     "lowerBound": "Lower bound value",
     "noPeriodicResult": "No cycle found",
     "numericShouldBeBetween": "Number should be between {min} and {max}",
-    "updateLicenseSuccess": "Successfully saved. Help you update it immediately！"
+    "updateLicenseSuccess": "Successfully saved. Help you update it immediately！",
+    "sendResetPasswordEmail": "Mail Sent Successfully！"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -182,6 +184,28 @@
     "notBelongToGroups": "This feature cannot be used because you are not affiliated with any project.",
     "pleaseCreateOrJoinGroup": "Please join a group or create a group.",
     "pleaseInformManager": "To join a project, please inform your manager."
+  },
+  "forgetPassword": {
+    "title": "Forget Password",
+    "remark": "The system will send a password change letter to your registered mailbox."
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password"
+  },
+  "admin": {
+    "title": "Management System",
+    "userList": "User List",
+    "userName": "User Name",
+    "action": "Actions",
+    "changePassword": "Change Password",
+    "accountName": "Account Name",
+    "resetLink": "Reset Password Link",
+    "searchUserName": "Search user name"
+  },
+  "link": {
+    "backToLogin": "Back to login page"
   },
   "editing": {
     "localUpload": "File Upload",
@@ -443,15 +467,19 @@
     "columnAliasTemplate": "ColumnAliasTemplate",
     "valueAliasTemplate": "ValueAliasTemplate",
     "searchDataSourceOrDataFrame": "Search DataSource or DataFrame",
-    "scriptExecutionStep1": "Upload Models",
-    "scriptExecutionStep2": "Select Output Columns",
-    "scriptExecutionStep3": "Choose Output Types",
+    "scriptExecutionStep1": "Set Model Name",
+    "scriptExecutionStep2": "Upload Models",
+    "scriptExecutionStep3": "Select Output Columns",
+    "scriptExecutionStep4": "Choose Output Types",
     "onlyPrefixMatching": "The search only supports prefix matching",
     "searchDataSource": "Search DataSource",
+    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})",
     "reCalculateMeta": "Recalculate Meta info",
     "isOrdinal": "is ordinal",
     "isNotOrdinal": "is not ordinal",
-    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})"
+    "histogramBinSetting": "Histogram Bin Range Setting",
+    "histogramBinSize": "Histogram Bin Range",
+    "chooseTab": "Choose a tab content"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -588,7 +616,14 @@
     "scriptColumnReminder": "The column at the top takes highest priority while the column at the bottom takes the last",
     "selectOutputColumn": "Output Column Type Settings",
     "columnDataType": "Column Type",
-    "columnDataName": "Column Name"
+    "columnDataName": "Column Name",
+    "setScriptName": "Script Name",
+    "lackOfMainScript": "Lack of {mainScriptName}",
+    "scriptLimit": {
+      "0": "The main script name must be {mainScriptName}.",
+      "1": "The script needs to have a run() function.",
+      "2": "Both function input and return must be pandas DataFrame type."
+    }
    },
   "pinboard": {
     "intelligentAnalysis": "Intelligent Analysis",
@@ -1194,7 +1229,8 @@
     "downloadPage": "Download Image",
     "changeDiagram": "Change Diagram",
     "columnSummaryInfo": "Column Summary Info",
-    "createAlert": "Create Alert Condition"
+    "createAlert": "Create Alert Condition",
+    "send": "Send"
   },
   "timeScopeUnit": {
     "second": "seconds",
@@ -2538,7 +2574,8 @@
     "defaultMsg": "Unexpected error occurred in the system",
     "lackOfPermission": "lack of permissions, please contact the administrator",
     "versionUpdate": "A new version is online, help you update it immediately",
-    "networkError": "An error occurred in the network connection, please check the connection and try again later"
+    "networkError": "An error occurred in the network connection, please check the connection and try again later",
+    "errorMessageDownload": "Download error message"
   },
   "resultNote": {
     "groupLimitNote": "The result is before the original data {randomLimit} rows",
