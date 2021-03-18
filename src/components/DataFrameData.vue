@@ -199,7 +199,6 @@ export default {
       })
     },
     fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
-      console.log('fetchDataFrameData')
       if (resetPagination) {
         this.isLoading = true
         this.dataSourceTableData = null
