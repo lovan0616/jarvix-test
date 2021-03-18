@@ -4,9 +4,9 @@ import request from '@/utils/publicRequest'
  * get model list
  * @query {Number} groupId - group id 
  */
- export function getModelList(groupId) {
+ export function getModelList(groupId, page = 0, offset=20) {
   return request({
-    url: `/models?groupId=${groupId}`,
+    url: `/models?groupId=${groupId}&offset=${offset}&page=${page}`,
     method: 'GET'
   })
 }

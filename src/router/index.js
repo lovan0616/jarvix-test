@@ -397,8 +397,14 @@ const router = new Router({
                               path: 're-upload',
                               name: 'ReUploadFile',
                               component: () => import('@/pages/modelManagement/ReUploadFile'),
+                              beforeEnter: (to, from, next) => {
+                                store.state.modelManagement.currentModelInfo.inUsed 
+                                  ? next(from)
+                                  : next()
+                              },
                               meta: {
-                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id']
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUsed
                               }
                             },
                             {

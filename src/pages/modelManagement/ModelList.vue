@@ -30,14 +30,15 @@
           @delete="confirmDelete"
         />
         <el-pagination 
-          :total="20"
-          :page-size="2"
-          :current-page="1"
+          :v-if="paginationInfo.totalPages > 1"
+          :total="paginationInfo.totalItems"
+          :page-size="paginationInfo.itemPerPage"
+          :current-page="paginationInfo.currentPage + 1"
           class="table-pagination"
           layout="prev, pager, next"
           @current-change="changePage"
-          @prev-click="prevPage"
-          @next-click="nextPage"
+          @prev-click="changePage"
+          @next-click="changePage"
         />
       </template>
     </div>
@@ -80,6 +81,12 @@ export default {
       isShowCreateModelDialog: false,
       deleteModelId: null,
       modelList: [],
+      paginationInfo: {
+        currentPage: 0,
+        totalPages: 0,
+        totalItems: 0,
+        itemPerPage: 20
+      },
       tableHeaders: [
         {
           text: this.$t('model.id'),
@@ -144,30 +151,32 @@ export default {
   },
   methods: {
     ...mapMutations('modelManagement', ['updateShowCreateModelDialog']),
-    fetchData () {
+    fetchData (page = 0, offset = 20) {
+      if (this.isLoading || this.paginationInfo.currentPage - 1 === page) return 
       this.isLoading = true
-      return getModelList(this.groupId)
-        .then(({modelInfoDtoList}) => {
-          this.modelList = modelInfoDtoList
-          this.modelList.push({
+      return getModelList(this.groupId, page, offset)
+        .then(({models, pagination}) => {
+          // this.modelList = models
+          this.modelList=[{
             createdAt: "2021-03-11T10:21:35.898Z",
             createdBy: "CHACHA",
             id: 123,
             name: "HEHE",
             updatedAt: "2021-03-11T10:21:35.898Z"
-          })
+          }]
+          //this.paginationInfo = pagination
+          this.paginationInfo = {
+            currentPage: 0,
+            totalPages: 5,
+            totalItems: 100,
+            itemPerPage: 20
+          }
         }).finally(() => {
           this.isLoading = false
         })
     },
-    changePage () {
-      console.log('change-page')
-    },
-    nextPage () {
-      console.log('change-page')
-    },
-    prevPage () {
-      console.log('change-page')
+    changePage (page) {
+      this.fetchData(page - 1)
     },
     confirmDelete ({id}) {
       this.deleteModelId = id

@@ -173,12 +173,14 @@ export default {
     },
     changePage (value) {
       this.$emit('change-page', value)
+      console.log('change-page', value)
     },
     nextPage (value) {
       this.$emit('change-page', value)
     },
     prevPage (value) {
       this.$emit('change-page', value)
+      console.log('prev-page', value)
     },
     formOptions () {
       return {
