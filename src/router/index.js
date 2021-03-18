@@ -370,6 +370,10 @@ const router = new Router({
                         {
                           path: ':model_id',
                           component: () => import('@/pages/modelManagement/Index'),
+                          /*  待優化：每次進頁面都要打兩次 API, 一次在 router beforeEach，一次在頁面的組件裡
+                           *  會需要先取得 ModelInfo 的原因是，要先知道模型是否被流程使用（inUse）
+                           *  才能在 SideNav 渲染前得知，重新上傳和參數設定的頁面是否要被鎖起來
+                           */
                           beforeEnter: async (to, from, next) => {
                             const modelId = to.params.model_id
                             await store.dispatch('modelManagement/getModelInfo', modelId)
