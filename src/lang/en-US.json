@@ -934,7 +934,16 @@
     "otherSettings": "Other Settings",
     "formulaType": "Calculation Formula Type",
     "singleColumnData": "Single Column Data",
-    "singleRowData": "Single Row Data"
+    "singleRowData": "Single Row Data",
+    "anomalySetting": "Anomaly Setting",
+    "greaterThanAndEqualTo": "Greater Than And Equal To",
+    "greaterThan": "Greater Than",
+    "equalTo": "Equal To",
+    "lessThan": "Less Than",
+    "lessThanAndEqualTo": "Less Than And Equal To",
+    "datumValue": "Datum Value",
+    "emptyRules": "Empty Rules",
+    "anomalyRules": "Anomaly Rules"
   },
   "alert": {
     "alertLogs": "Alert Record",
@@ -1198,7 +1207,9 @@
     "downloadPage": "Download Image",
     "changeDiagram": "Change Diagram",
     "columnSummaryInfo": "Column Summary Info",
-    "createAlert": "Create Alert Condition"
+    "createAlert": "Create Alert Condition",
+    "createNewRule": "Create A New Rule",
+    "applyToChart": "Apply To Chart"
   },
   "timeScopeUnit": {
     "second": "seconds",
