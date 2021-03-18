@@ -203,9 +203,9 @@ export default {
                 duration: 3 * 1000,
                 showClose: true
               })
-              this.cancelDelete()
             })
-        }).catch(() => {
+        }).finally(() => {
+          this.cancelDelete()
         })
     }
   }

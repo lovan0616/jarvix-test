@@ -132,6 +132,7 @@ import { Message } from 'element-ui'
 
 export default {
   name: 'ModelDetail',
+  inject: ['$validator'],
   components: {
     InputVerify,
     BreadCrumb,
@@ -203,10 +204,14 @@ export default {
       this.editedName = this.modelInfo.name
     },
     rename () {
-      modifyModelInfo(this.modelId, { 
-        ...this.modelInfo, name: this.editedName
-      }).finally(() => {
-        this.isShowRenameDialog = false
+      this.$validator.validateAll().then(isValidated => {
+        if(!isValidated) return
+        if(this.editedName === this.modelInfo.name) return this.isShowRenameDialog = false
+        modifyModelInfo(this.modelId, { 
+          ...this.modelInfo, name: this.editedName
+        }).finally(() => {
+          this.isShowRenameDialog = false
+        })
       })
     },
     deleteModel () {
