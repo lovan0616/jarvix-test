@@ -148,18 +148,18 @@ export default {
   watch: {
     modelUploadSuccess (value) {
       if (value) {
-        this.fetchData()
+        this.fetchData(true)
         this.updateModelUploadSuccess(false)
       }
     }
   },
   mounted () {
-    this.fetchData()
+    this.fetchData(true)
   },
   methods: {
     ...mapMutations('modelManagement', ['updateShowCreateModelDialog', 'updateModelUploadSuccess']),
-    fetchData (page = 0, offset = 20) {
-      if (this.isLoading || this.paginationInfo.currentPage - 1 === page) return 
+    fetchData (init = true, page = 0, offset = 20) {
+      if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
       this.isLoading = true
       return getModelList(this.groupId, page, offset)
         .then(({models, pagination}) => {
@@ -170,7 +170,7 @@ export default {
         })
     },
     changePage (page) {
-      this.fetchData(page - 1)
+      this.fetchData(false, page - 1)
     },
     confirmDelete ({id}) {
       this.deleteModelId = id
