@@ -191,7 +191,7 @@ export default {
             models: [
               "model1", "model2"
             ],
-            name: "modelName",
+            name: "HEHE",
             updatedAt: "2019.02.03"
           }
         })

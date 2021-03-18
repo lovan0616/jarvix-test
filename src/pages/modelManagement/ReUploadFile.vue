@@ -11,6 +11,7 @@
       </div>
     </div>
     <file-upload
+      :is-re-upload="true"
       class="file-upload-block"
     />
   </div>

@@ -82,7 +82,7 @@
         <button 
           v-if="uploadModelList.length > 0 && currntUploadStatus === uploadStatus.wait"
           class="btn btn-default"
-          @click="fileUpload"
+          @click="isReUpload ? fileReUpload() : fileUpload()"
         >
           <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
           <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"/>{{ $t('button.uploading') }}</span>
@@ -113,6 +113,12 @@ export default {
     FileListBlock,
     UploadProcessBlock
   },
+  props: {
+    isReUpload: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       uploadStatus,
@@ -132,13 +138,19 @@ export default {
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
+    currentModelId () {
+      return this.$route.params['model_id']
+    },
     // 總資料傳輸量
     totalTransmitDataAmount () {
       return this.uploadModelList.reduce((acc, cur) => acc + cur.size, 0)
     }
   },
+  destroyed () {
+    this.updateUploadModelList([])
+  },
   methods: {
-    ...mapMutations('modelManagement', ['updateCurrentUploadModelInfo']),
+    ...mapMutations('modelManagement', ['updateUploadModelList', 'updateCurrentUploadModelInfo']),
     dropFiles (event) {
       if (!event.dataTransfer.files) return
       const files = Array.from(event.dataTransfer.files)
@@ -166,8 +178,10 @@ export default {
       for (let i = 0; i < inputFileList.length; i++) {
         let formData = new FormData()
         formData.append('model', inputFileList[i])
-        formData.append('groupId', this.currentGroupId)
-        formData.append('userId', this.userId)
+        if (!this.isReUpload) {
+          formData.append('groupId', this.currentGroupId)
+          formData.append('userId', this.userId)
+        }
         this.formDataList.push({
           data: formData,
           size: inputFileList[i].size,
@@ -177,10 +191,9 @@ export default {
         })
       }
       
-      this.$store.commit('modelManagement/updateUploadModelList', this.formDataList)
+      this.updateUploadModelList(this.formDataList)
     },
-    async fileUpload () {
-      // 先檢查上傳檔案內是否包含 main.py
+    hasMainPy () {
       const hasMainPy = this.formDataList.findIndex(element => {
         return element.fileFullName === this.mainScriptName
       })
@@ -194,6 +207,11 @@ export default {
         })
         return false
       }
+      return true
+    },
+    async fileUpload () {
+      // 先檢查上傳檔案內是否包含 main.py
+      if (!this.hasMainPy()) return
 
       // 更新狀態
       this.currntUploadStatus = uploadStatus.uploading
@@ -230,9 +248,30 @@ export default {
         this.currntUploadStatus = uploadStatus.fail
       }
     },
+    async fileReUpload () {
+      // 先檢查上傳檔案內是否包含 main.py
+      if (!this.hasMainPy()) return
+      
+      // 更新狀態
+      this.currntUploadStatus = uploadStatus.uploading
+      try {
+        const waitingFileList = [...this.formDataList]
+        this.progress = 50
+        if (waitingFileList.length > 0) {
+          const data = Array.from(waitingFileList, formData => {
+            return reUploadModel(this.currentModelId, formData.data)
+          })
+          await Promise.all(data)
+          this.progress = 100
+        }
+      } catch (e) {
+        this.progress = 0
+        this.currntUploadStatus = uploadStatus.fail
+      }
+    },
     prev () {
       // 清空上傳檔案
-      this.$store.commit('modelManagement/updateUploadModelList', [])
+      this.updateUploadModelList([])
       this.formDataList = []
       this.progress = 0
       this.currntUploadStatus = uploadStatus.wait
