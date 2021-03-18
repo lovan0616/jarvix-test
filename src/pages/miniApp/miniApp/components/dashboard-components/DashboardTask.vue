@@ -149,6 +149,7 @@
             :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
             :is-hoverable="isHoverable"
+            :anomaly-setting="anomalySetting"
             intend="key_result"
             @clickCell="columnTriggered($event)"
             @clickRow="rowTriggered($event)"
@@ -179,6 +180,7 @@ import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
 import { sizeTable } from '@/utils/general'
+import { formatAnomalySetting } from '@/components/display/common/addons'
 
 export default {
   name: 'DashboardTask',
@@ -358,6 +360,7 @@ export default {
         && this.componentData.config.tableRelationInfo.triggerTarget === 'row'
     },
     displayedRelatedDashboard () {
+      if (!this.componentData.config.relatedDashboard) return
       return `
         ${this.$t('miniApp.relatedDashboard')}：
         ${this.componentData.config.relatedDashboard.name}
@@ -408,6 +411,21 @@ export default {
       ]
       return options
     },
+    anomalySetting () {
+      return {
+        xAxis: {
+          upperLimit: null,
+          lowerLimit: null,
+          markLine: null
+        },
+        yAxis: {
+          upperLimit: null,
+          lowerLimit: null,
+          markLine: null,
+          ...(this.componentData.anomalySettings && this.componentData.anomalySettings.length > 0 && formatAnomalySetting(this.componentData.anomalySettings))
+        }
+      }
+    }
   },
   watch: {
     isCurrentDashboardInit: {

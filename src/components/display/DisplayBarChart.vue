@@ -240,11 +240,16 @@ export default {
       if (this.title.yAxis.length > 0) {
         let upperLimit = this.title.yAxis[0].upperLimit || null
         let lowerLimit = this.title.yAxis[0].lowerLimit || null
-        if (upperLimit !== null || lowerLimit !== null) {
+        let customMarkLine = this.title.yAxis[0].markLine || []
+
+        if (upperLimit === null && lowerLimit === null && customMarkLine.length > 0) {
+          // markline
+          config.series[0].markLine = monitorMarkLine(customMarkLine)
+        } else if (upperLimit !== null || lowerLimit !== null) {
           // 處理顏色
           config.visualMap = monitorVisualMap(upperLimit, lowerLimit)
           // markline
-          config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+          config.series[0].markLine = monitorMarkLine([upperLimit, lowerLimit, ...customMarkLine])
         }
       }
 

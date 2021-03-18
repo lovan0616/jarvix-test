@@ -255,13 +255,21 @@ export default {
       
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
-      if (upperLimit !== null || lowerLimit !== null) {
+      let customMarkLine = this.title.yAxis[0].markLine || []
+
+      if (upperLimit === null && lowerLimit === null && customMarkLine.length > 0) {
+        // markline
+        chartAddon.series.push({
+          type: 'line',
+          markLine: monitorMarkLine(customMarkLine)
+        })
+      } else if (upperLimit !== null || lowerLimit !== null) {
         // 處理顏色
         chartAddon.visualMap = monitorVisualMap(upperLimit, lowerLimit)
         // markline
         chartAddon.series.push({
           type: 'line',
-          markLine: monitorMarkLine(upperLimit, lowerLimit)
+          markLine: monitorMarkLine([upperLimit, lowerLimit, ...customMarkLine])
         })
       }
 

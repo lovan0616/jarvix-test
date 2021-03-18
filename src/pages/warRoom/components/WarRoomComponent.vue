@@ -103,6 +103,7 @@ import {
   checkPublishedComponentUpdateStatus
 } from '@/API/WarRoom'
 import moment from 'moment'
+import { formatComponentTitle } from '@/components/display/common/addons'
 
 export default {
   name: 'WarRoomComponent',
@@ -254,6 +255,12 @@ export default {
                 this.autoRefreshFunction = window.setTimeout(() => {
                   this.checkRefreshStatus()
                 }, this.convertRefreshFrequency(componentBasicInfo.config.refreshFrequency))
+              }
+
+              // 圖表異常標記設定和轉換
+              if (responseData.title) {
+                responseData.title.xAxis = formatComponentTitle(responseData.title.xAxis)
+                responseData.title.yAxis = formatComponentTitle(responseData.title.yAxis)
               }
               
               // 儲存圖表資料

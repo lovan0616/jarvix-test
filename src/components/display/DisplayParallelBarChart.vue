@@ -224,12 +224,15 @@ export default {
       // 上下限
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
+      let customMarkLine = this.title.yAxis[0].markLine || []
       if (upperLimit !== null || lowerLimit !== null) {
         config.visualMap = monitorVisualMap(upperLimit, lowerLimit, parallelColorOnly1[0])
         // 門檻線
-        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit, true)
-      } else {
-         config.visualMap = monitorVisualMap(null, 0, parallelColorOnly1[0])
+        config.series[0].markLine = monitorMarkLine([upperLimit, lowerLimit, ...customMarkLine], true)
+      } else if (upperLimit === null && lowerLimit === null && customMarkLine.length > 0) {
+        // markline
+        config.series[0].markLine = monitorMarkLine(customMarkLine)
+        config.visualMap = monitorVisualMap(null, { value: 0 }, parallelColorOnly1[0])
       }
       return config
     },

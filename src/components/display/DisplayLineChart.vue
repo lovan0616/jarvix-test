@@ -297,9 +297,14 @@ export default {
       // 圖表 threshold
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
-      if (upperLimit !== null || lowerLimit !== null) {
+      let customMarkLine = this.title.yAxis[0].markLine || []
+
+      if (upperLimit === null && lowerLimit === null && customMarkLine.length > 0) {
         // markline
-        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+        config.series[0].markLine = monitorMarkLine(customMarkLine)
+      } else if (upperLimit !== null || lowerLimit !== null) {
+        // markline
+        config.series[0].markLine = monitorMarkLine([upperLimit, lowerLimit, ...customMarkLine])
         
         // 找出 Y 的最大、最小值
         if(this.dataset.data[0].length === 1) {

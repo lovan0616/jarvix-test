@@ -1471,6 +1471,7 @@ export default {
           fontSize: 'middle',
         },
         algoConfig: null,
+        anomalySettings: [],
         updateTime: new Date().getTime(),
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
