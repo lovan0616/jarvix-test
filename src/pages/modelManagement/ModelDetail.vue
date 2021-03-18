@@ -5,7 +5,8 @@
       <div class="title">
         {{ $t('sideNav.modelDetail') }}
       </div>
-      <button 
+      <button
+        v-if="!isLoading"
         type="button" 
         class="btn-m btn-secondary"
         @click="isShowDeleteDialog = true">
@@ -44,7 +45,7 @@
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('model.fileInfo') }}:</div>
-            <div class="info__text">{{ modelInfo.models.join(', ') }}</div>
+            <div class="info__text">{{ modelInfo.modelNames.join(', ') }}</div>
           </div>
         </div>
       </div>
@@ -57,7 +58,7 @@
             <div class="info__label info__cell ">{{ $t('model.parameterDataName') }}</div>
           </div>
           <div 
-            v-for="(item, index) in modelInfo.ioArgsDo.input"
+            v-for="(item, index) in modelInfo.ioArgs.input"
             :key="index"
             class="table-row">
             <div class="info__text info__cell">{{ item.statsType }}</div>
@@ -74,7 +75,7 @@
             <div class="info__label info__cell ">{{ $t('model.parameterDataName') }}</div>
           </div>
           <div 
-            v-for="(item, index) in modelInfo.ioArgsDo.output"
+            v-for="(item, index) in modelInfo.ioArgs.output"
             :key="index"
             class="table-row">
             <div class="info__text info__cell">{{ item.statsType }}</div>
@@ -162,38 +163,6 @@ export default {
       getModelInfo(this.modelId)
         .then((response) => {
           this.modelInfo = response
-          this.modelInfo = { 
-            createdAt: "2019.02.03",
-            createdBy: "youtuber",
-            id: 0,
-            ioArgsDo: {
-              input: [
-                {
-                  modelColumnName: "時間",
-                  statsType: "DATETIME"
-                },
-                {
-                  modelColumnName: "成本",
-                  statsType: "Numeric"
-                }
-              ],
-              output: [
-                {
-                  modelColumnName: "成本",
-                  statsType: "Numeric"
-                },
-                {
-                  modelColumnName: "數量",
-                  statsType: "Numeric"
-                }
-              ]
-            },
-            models: [
-              "model1", "model2"
-            ],
-            name: "HEHE",
-            updatedAt: "2019.02.03"
-          }
         })
         .finally(() => {
           this.isLoading = false
@@ -211,6 +180,7 @@ export default {
           ...this.modelInfo, name: this.editedName
         }).finally(() => {
           this.isShowRenameDialog = false
+          this.fetchData()
         })
       })
     },

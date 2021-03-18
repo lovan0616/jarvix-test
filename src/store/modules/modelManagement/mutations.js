@@ -15,6 +15,9 @@ export default {
   updateCurrentUploadModelInfo (state, data) {
     state.currentUploadModelInfo = data
   },
+  updateModelUploadSuccess (state, data) {
+    state.modelUploadSuccess = data
+  },
   clearCurrentUploadModelInfo(state) {
     state.currentUploadModelInfo = {
       modelId: null,

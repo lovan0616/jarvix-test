@@ -9,9 +9,11 @@ export default {
     currentModelInfo: {
       modelId: null,
       name: '',
-      inUsed: false
+      inUse: false
     },
     uploadModelList: [],
+    // 新增 model 後觸發列表更新
+    modelUploadSuccess: false,
     currentUploadModelName: null,
     currentUploadModelInfo: {
       modelId: null,

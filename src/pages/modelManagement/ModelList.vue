@@ -44,7 +44,6 @@
     </div>
     <upload-dialog
       v-if="showCreateModelDialog"
-      @success="fetchData"
       @close="closeCreateModelDialog"
     />
     <decide-dialog
@@ -124,7 +123,7 @@ export default {
             {
               type: 'link',
               name: this.$t('model.managementSetting'),
-              value: 'rename',
+              value: 'manage',
               link: {
                 name: 'ModelDetail',
                 paramName: 'model_id'
@@ -141,36 +140,31 @@ export default {
     }
   },
   computed: {
-    ...mapState('modelManagement', ['showCreateModelDialog']),
+    ...mapState('modelManagement', ['modelUploadSuccess', 'showCreateModelDialog']),
     groupId () {
       return this.$route.params.group_id
+    }
+  },
+  watch: {
+    modelUploadSuccess (value) {
+      if (value) {
+        this.fetchData()
+        this.updateModelUploadSuccess(false)
+      }
     }
   },
   mounted () {
     this.fetchData()
   },
   methods: {
-    ...mapMutations('modelManagement', ['updateShowCreateModelDialog']),
+    ...mapMutations('modelManagement', ['updateShowCreateModelDialog', 'updateModelUploadSuccess']),
     fetchData (page = 0, offset = 20) {
       if (this.isLoading || this.paginationInfo.currentPage - 1 === page) return 
       this.isLoading = true
       return getModelList(this.groupId, page, offset)
         .then(({models, pagination}) => {
-          // this.modelList = models
-          this.modelList=[{
-            createdAt: "2021-03-11T10:21:35.898Z",
-            createdBy: "CHACHA",
-            id: 123,
-            name: "HEHE",
-            updatedAt: "2021-03-11T10:21:35.898Z"
-          }]
-          //this.paginationInfo = pagination
-          this.paginationInfo = {
-            currentPage: 0,
-            totalPages: 5,
-            totalItems: 100,
-            itemPerPage: 20
-          }
+          this.modelList = models
+          this.paginationInfo = pagination
         }).finally(() => {
           this.isLoading = false
         })

@@ -11,7 +11,7 @@
           :option-list="dataTypeOptionList"
           :placeholder="$t('batchLoad.chooseColumn')"
           :is-disabled="isProcessing || isLoading"
-          v-model="columnInfo.dataType"
+          v-model="columnInfo.statsType"
           :name="'select' + columnInfo.id"
           filterable
           class="input-field__select"

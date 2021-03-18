@@ -3,7 +3,6 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="3"
-      :process-text="processText"
     />
     <div class="dialog-body">
       <div 
@@ -73,12 +72,6 @@ export default {
     DefaultSelect,
     ModelColumnSettingCard,
     draggable
-  },
-  props: {
-    processText: {
-      type: Array,
-      required: true
-    }
   },
   data () {
     return {

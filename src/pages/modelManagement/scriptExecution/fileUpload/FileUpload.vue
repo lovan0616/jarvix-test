@@ -88,7 +88,7 @@
           <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"/>{{ $t('button.uploading') }}</span>
         </button>
         <button
-          v-if="currntUploadStatus === uploadStatus.fail"
+          v-if="currntUploadStatus === uploadStatus.fail || currntUploadStatus === uploadStatus.success"
           class="btn btn-outline"
           type="button"
           @click="prev"
@@ -187,6 +187,7 @@ export default {
           size: inputFileList[i].size,
           groupId: this.currentGroupId,
           fileFullName: inputFileList[i].name,
+          status: uploadStatus.wait,
           id: new Date().getTime() + i
         })
       }
@@ -219,29 +220,29 @@ export default {
         // 先上傳第一筆檔案，換取 script id
         const waitingFileList = [...this.formDataList]
         const firstFormData = waitingFileList.shift().data
-        const scriptName = this.currentUploadModelName
+        const modelName = this.currentUploadModelName
       /**
        * 注意！
        * 目前後端只會拿第一筆的 id, name 去更新
        */
-        if (scriptName !== null) {
-          firstFormData.append('name', scriptName)
+        if (modelName !== null) {
+          firstFormData.append('name', modelName)
         }
         // 上傳檔案
-        const { scriptId } = await uploadModel(firstFormData)
+        const { modelId } = await uploadModel(firstFormData)
         this.progress = 50
         // 上傳剩餘檔案
         if (waitingFileList.length > 0) {
           const data = Array.from(waitingFileList, formData => {
-            formData.data.append('id', scriptId)
-            formData.data.append('name', scriptName)
+            formData.data.append('id', modelId)
+            formData.data.append('name', modelName)
             return uploadModel(formData.data)
           })
           await Promise.all(data)
           this.progress = 100
         }
         // 存取 script id，於設定 input / output 時附上
-        this.updateCurrentUploadModelInfo({ modelId: scriptId })
+        this.updateCurrentUploadModelInfo({ modelId: modelId })
         this.$nextTick(() => this.$emit('next'))
       } catch (e) {
         this.progress = 0
@@ -263,6 +264,8 @@ export default {
           })
           await Promise.all(data)
           this.progress = 100
+          this.currntUploadStatus = uploadStatus.success
+          this.formDataList.forEach(form => form.status = uploadStatus.success)
         }
       } catch (e) {
         this.progress = 0

@@ -125,7 +125,7 @@ export default {
       return this.$route.params['model_id']
     },
     isArgsTouched () {
-      return JSON.stringify(this.tempArgs) !== JSON.stringify(this.modelInfo.ioArgsDo)
+      return JSON.stringify(this.tempArgs) !== JSON.stringify(this.modelInfo.ioArgs)
     }
   },
   mounted () {
@@ -133,53 +133,20 @@ export default {
   },
   methods: {
     fetchData () {
+      if (this.isLoading) return
       this.isLoading = true
       getModelInfo(this.modelId)
         .then((response) => {
-          
-          response = {
-            createdAt: "2019.02.03",
-            createdBy: "youtuber",
-            id: 0,
-            ioArgsDo: {
-              input: [
-                {
-                  modelColumnName: "時間",
-                  statsType: "DATETIME"
-                },
-                {
-                  modelColumnName: "成本",
-                  statsType: "Numeric"
-                }
-              ],
-              output: [
-                {
-                  modelColumnName: "成本",
-                  statsType: "Numeric"
-                },
-                {
-                  modelColumnName: "數量",
-                  statsType: "Numeric"
-                }
-              ]
-            },
-            models: [
-              "model1", "model2"
-            ],
-            name: "modelName",
-            updatedAt: "2019.02.03"
-          }
-          this.modelInfo = response
           this.modelInfo = {
             ...response,
-            ioArgsDo: {
-              input: response.ioArgsDo.input.map(item => {
+            ioArgs: response.ioArgs && {
+              input: response.ioArgs.input.map(item => {
                 return {
                   ...item,
                   id: uuidv4()
                 }
               }),
-              output: response.ioArgsDo.output.map(item => {
+              output: response.ioArgs.output.map(item => {
                 return {
                   ...item,
                   id: uuidv4()
@@ -187,7 +154,7 @@ export default {
               }),
             }
           }
-          this.tempArgs = JSON.parse(JSON.stringify(this.modelInfo.ioArgsDo))
+          this.tempArgs = JSON.parse(JSON.stringify(this.modelInfo.ioArgs))
         })
         .finally(() => {
           this.isLoading = false
@@ -213,8 +180,13 @@ export default {
         this.isProcessing = true
         modifyModelInfo(this.modelId, { 
           ...this.modelInfo,
-          ioArgsDo: this.tempArgs
-        }).finally(() => {
+          ioArgs: this.tempArgs
+        })
+        .then(() => {
+          this.modelInfo.ioArgs = this.tempArgs
+        })
+        .finally(() => {
+          this.isProcessing = false
           this.isShowRenameDialog = false
         })
       })

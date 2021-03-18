@@ -26,6 +26,7 @@
           />
         </draggable> 
         <button
+          :disabled="isProcessing"
           class="btn btn-m btn-outline"
           @click="addNewColumnCard()"
         >
@@ -86,7 +87,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadModelInfo']),
+    ...mapState('modelManagement', ['currentUploadModelInfo']),
     dataTypeOptionList () {
       const acceptedDataTypeList = ['FLOAT', 'STRING', 'INT', 'DATETIME', 'BOOLEAN']
       return acceptedDataTypeList.map(type => ({
@@ -131,7 +132,7 @@ export default {
         })
         .then(() => {
           // 為了觸發重新撈取資料
-          this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+          this.$store.commit('modelManagement/updateModelUploadSuccess', true)
           this.updateShowCreateModelDialog(false)
         })
         .catch(() => { this.isProcessing = false })

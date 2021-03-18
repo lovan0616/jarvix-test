@@ -398,13 +398,13 @@ const router = new Router({
                               name: 'ReUploadFile',
                               component: () => import('@/pages/modelManagement/ReUploadFile'),
                               beforeEnter: (to, from, next) => {
-                                store.state.modelManagement.currentModelInfo.inUsed 
+                                store.state.modelManagement.currentModelInfo.inUse 
                                   ? next(from)
                                   : next()
                               },
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
-                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUsed
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse
                               }
                             },
                             {
@@ -412,13 +412,13 @@ const router = new Router({
                               name: 'ConfigSetting',
                               component: () => import('@/pages/modelManagement/ConfigSetting'),
                               beforeEnter: (to, from, next) => {
-                                store.state.modelManagement.currentModelInfo.inUsed 
+                                store.state.modelManagement.currentModelInfo.inUse 
                                   ? next(from)
                                   : next()
                               },
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
-                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUsed
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse
                               }
                             }
                           ]
