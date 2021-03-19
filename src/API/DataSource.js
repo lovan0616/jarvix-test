@@ -521,6 +521,16 @@ export function checkClusteringColumnStatus (taskId) {
 }
 
 /**
+ * 重新計算 meta
+ */
+export function reCalculateMetaData (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/calculated-mata`,
+    method: 'POST'
+  })
+}
+
+/**
  * update numeric column ordinal setting
  * @param {Object} data - 欄位設定資料
  */

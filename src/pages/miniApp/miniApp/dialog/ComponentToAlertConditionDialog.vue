@@ -339,7 +339,8 @@ export default {
     this.componentType === 'formula' && this.fetchFormulaList()
     this.getComponentIndicators(this.componentData.keyResultId)
     this.columnValueCombinationOptionList = this.componentData.controlList.reduce((acc, cur) => {
-      acc.push(...cur.map(control => ({ ...control, isSelected: false })))
+      // 暫時預設全選，待後端修正
+      acc.push(...cur.map(control => ({ ...control, isSelected: true })))
       return acc
     }, [])
     this.configFilterOptionList()
@@ -353,7 +354,8 @@ export default {
         validFilterList.forEach(filter => {
           acc.push({ 
             ...filter,
-            isSelected: false,
+            // 暫時預設全選，待後端修正
+            isSelected: true,
             targetValues: this.transformFilterValue(filter)
           })
         })

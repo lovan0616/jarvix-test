@@ -71,7 +71,7 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="filterDataList"
+        :data-list="filterDataList"
         :selection.sync="selectList"
         :is-processing="isProcessing"
         :is-search-result-empty="searchedDataFileName.length > 0 && filterDataList.length === 0"
@@ -88,6 +88,8 @@
         @batchLoad="editBatchLoadSetting"
         @updateSetting="editUpdateSetting"
         @createdInfo="viewCreatedInfo"
+        @fetch="fetchData"
+        @sort="sortData"
       />
     </div>
     <file-upload-dialog
@@ -186,8 +188,9 @@ import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
+import orderBy from 'lodash.orderby'
 
 export default {
   name: 'DataFileList',
@@ -394,6 +397,7 @@ export default {
     this.fetchData()
     this.checkDataSourceStatus()
     this.checkIfReachFileSizeLimit()
+    this.getDatetimePatterns()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -402,8 +406,11 @@ export default {
     if (this.checkDataFrameIntervalFunction) {
       window.clearInterval(this.checkDataFrameIntervalFunction)
     }
+    this.clearDatetimePatterns()
   },
   methods: {
+    ...mapActions('dataManagement', ['getDatetimePatterns']),
+    ...mapMutations('dataManagement', ['clearDatetimePatterns']),
     checkIfReachFileSizeLimit () {
       getAccountInfo()
         .then((accountInfo) => {
@@ -416,6 +423,9 @@ export default {
       return this.updateDataTable().finally(() => {
         this.isLoading = false
       })
+    },
+    sortData ({name, order}) {
+      this.dataList = orderBy(this.dataList, [name], [order])
     },
     updateDataTable () {
       return getDataFrameById(this.currentDataSourceId, true).then(response => {

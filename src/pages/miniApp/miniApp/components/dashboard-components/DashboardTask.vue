@@ -489,7 +489,8 @@ export default {
         dataSourceId: this.componentData.dataSourceId,
         dataFrameId: this.componentData.dataFrameId,
         previewQuestionId: this.componentData.questionId,
-        shouldCancelToken: false
+        shouldCancelToken: false,
+        language: this.componentData.parserLanguage
       }).then(response => {
         let questionId = response.questionId
         let segmentationList = response.segmentationList
@@ -498,8 +499,6 @@ export default {
           this.segmentation = segmentationList[0]
           // 確認是否為趨勢類型問題
           const isTrendQuestion = segmentationList[0].denotation === 'TREND'
-          // 確認問句中是否有日期欄位
-          const hasDateTimeDataColumn = this.segmentation.transcript.subjectList.find(subject => subject.dateTime)
           this.$store.dispatch('chatBot/askResult', {
             algoConfig: this.componentData.algoConfig || null,
             questionId,
@@ -507,13 +506,16 @@ export default {
             restrictions: this.restrictions(),
             selectedColumnList: null,
             isFilter: true,
-            ...((isTrendQuestion && hasDateTimeDataColumn) && {
-              sortOrders: [
-                {
-                  dataColumnId: segmentationList[0].transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
-                  sortType: 'DESC'
-                }
-              ]
+            ...(isTrendQuestion && {
+              displayConfig: {
+                histogramBarSize: null,
+                sortOrders: [
+                  {
+                    dataColumnId: segmentationList[0].transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                    sortType: 'DESC'
+                  }
+                ]
+              }
             })
           }).then(res => {
             this.getComponentV2(res.resultId)
@@ -854,6 +856,7 @@ $direction-span: ("col": 12, "row": 12);
             box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
             top: 31px;
             right: 0;
+            left: unset;
             &::before {
               right: 5px;
             }

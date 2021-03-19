@@ -1,3 +1,5 @@
+import store from '../store'
+
 export function compileMiniApp(appData = {}) {
   const updatedAppData = JSON.parse(JSON.stringify(appData))
   let { editModeData, viewModeData } = updatedAppData.settings
@@ -37,7 +39,19 @@ function compileModeData(modeData) {
   const hasOldTableRelationSetting = updatedModeData.dashboards.some(dashboard => dashboard.components.some(hasColumnRelatedDashboardSetting))
   if (hasOldTableRelationSetting) {
     isDataChanged = true
-    updatedModeData.dashboards = updateColumnRelationDashboardSetting(updatedModeData.dashboards)
+    updatedModeData.dashboards = updateDashboardsComponentSetting(updatedModeData.dashboards, convertToColumnRelationComponent)
+  }
+
+  /*
+  * 2020.02.26 後版本
+  * [更新一] 建立元件時，將使用的 parser 語系存取起來，問問句時使用
+  */
+  const hasParserLanguage = component => component.hasOwnProperty('parserLanguage')
+  const hasParserLanguageSetting = updatedModeData.dashboards.every(dashboard => dashboard.components.every(hasParserLanguage))
+  if (!hasParserLanguageSetting) {
+    isDataChanged = true
+    const parserLanguage = store.state.chatBot.parserLanguage || null
+    updatedModeData.dashboards = updateDashboardsComponentSetting(updatedModeData.dashboards, addComponentProperties, { parserLanguage })
   }
 
   return { data: updatedModeData, isDataChanged }
@@ -57,11 +71,22 @@ function checkHasMetMinimumCriteria(modeData) {
   return true
 }
 
-function updateColumnRelationDashboardSetting(dashboards) {
+/**
+  * 更新所有 Dashboard 中所有元件內的設定
+  * @param { dashboards } - 指定模式下的所有 Dashboard 資料
+  * @param { updateFunction } - 指定更新的函示
+  * @param { settingData } - 更新函式接受的參數
+  */
+function updateDashboardsComponentSetting(dashboards, updateFunction, settingData) {
   return dashboards.map(dashboard => ({
     ...dashboard,
-    components: dashboard.components.map(component => convertToColumnRelationComponent(component))
+    components: dashboard.components.map(component => updateFunction(component, settingData))
   }))
+}
+
+// 在單一元件中新增屬性和屬性值
+function addComponentProperties(component, data) {
+  return { ...component, ...data }
 }
 
 function convertToColumnRelationComponent(component) {

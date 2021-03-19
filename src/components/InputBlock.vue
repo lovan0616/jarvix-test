@@ -9,6 +9,7 @@
       :placeholder="placeholder"
       :name="name"
       v-model.trim="inputValue"
+      :disabled="disabled"
       class="input"
     >
     <label 
@@ -44,6 +45,10 @@ export default {
     placeholder: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

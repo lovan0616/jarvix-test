@@ -504,6 +504,7 @@ import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { getScriptList } from '@/API/Script'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
+import { mapState } from 'vuex'
 
 export default {
   inject: ['$validator'],
@@ -575,6 +576,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('chatBot', ['parserLanguage']),
     mode () {
       return this.$route.query.mode
     },
@@ -1471,6 +1473,8 @@ export default {
           fontSize: 'middle',
         },
         algoConfig: null,
+        // 給定 null 值存到 DB 時，整個屬性會被拔除，所以先給定預設值
+        parserLanguage: this.parserLanguage,
         updateTime: new Date().getTime(),
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {

@@ -63,8 +63,8 @@ export function logout () {
 /**
  * 取得帳戶下所有使用者
  */
-export function getAccountUsers () {
-  const accountId = store.getters['userManagement/getCurrentAccountId']
+export function getAccountUsers (id) {
+  const accountId = id || store.getters['userManagement/getCurrentAccountId']
   return request({
     url: `/account/${accountId}/user`,
     method: 'GET'
@@ -309,5 +309,27 @@ export function changePassword(passwordInfo) {
     url: '/users/password',
     method: 'PATCH',
     data: passwordInfo
+  })
+}
+
+/**
+ * 寄送變更密碼
+ */
+export function requestResetPassword (mail) {
+  return request({
+    url: '/mail/password/reset',
+    method: 'POST',
+    data: mail
+  })
+}
+
+/**
+ * 確認變更密碼
+ */
+export function resetPassword (emailInfo) {
+  return request({
+    url: '/mail/password/confirm-reset',
+    method: 'POST',
+    data: emailInfo
   })
 }

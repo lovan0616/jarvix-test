@@ -47,6 +47,8 @@ export default {
   },
   created () {
     this.checkLocale()
+    // 檢察系統是否有寄信功能
+    this.$store.dispatch('setting/checkSystemInfo')
   },
   mounted () {
     this.init = true
