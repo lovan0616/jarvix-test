@@ -72,7 +72,7 @@
           :to="{ name: 'WarRoomList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
           class="nav-item">{{ $t('nav.warRoom') }}</router-link>
         <router-link
-          v-if="isShowMiniAppModule"
+          v-if="hasPermission('app')"
           :to="{name: 'MiniAppList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
           class="nav-item">{{ $t('nav.application') }}</router-link>
       </template>
@@ -144,9 +144,6 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
-    },
-    isShowMiniAppModule () {
-      return localStorage.getItem('isShowMiniAppModule') === 'true'
     },
     // isShowFunctionDescription () {
     //   return this.$store.state.setting.locale.includes('zh')
