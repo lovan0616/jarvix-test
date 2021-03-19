@@ -1,6 +1,6 @@
 <template>
   <div class="schedule-index-page">
-    <router-view />
+    <router-view :key="scheduleProjectId" />
     <schedule-helper v-if="isShowScheduleHelper"/>
   </div>
 </template>

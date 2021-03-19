@@ -7,7 +7,13 @@
           <div class="field-label">
             {{ $t('schedule.project.dataSourceName') }}
           </div>
+          <spinner
+            v-if="isLoadingDataSources"
+            :title="$t('editing.dataDownloading')" 
+            class="datasource-loading-spinner" 
+            size="10"/>
           <default-select 
+            v-else
             v-model="selectedDatasource"
             :options="dataSourceOptions"
           />
@@ -28,7 +34,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { getDataSourceList } from '@/API/DataSource'
 import { rebindDataSource } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
 
@@ -48,11 +54,12 @@ export default {
   },
   data: () => {
     return {
+      isLoadingDataSources: true,
       isRebinding: false,
+      dataSourceList: []
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceList']),
     selectedDatasource: {
       get () {
         return this.datasourceId
@@ -62,10 +69,14 @@ export default {
       }
     },
     dataSourceOptions () {
-      const options = this.dataSourceList.map(item => ({ value: item.id, label: item.name }))
-      options.unshift({ value: null, label: this.$t('editing.defaultOption') })
-      return options
+      return this.dataSourceList.map(item => ({ value: item.id, label: item.name }))
     }
+  },
+  mounted () {
+    getDataSourceList()
+      .then(dataSourceList => this.dataSourceList = dataSourceList)
+      .catch(() => {})
+      .finally(() => this.isLoadingDataSources = false)
   },
   methods: {
     rebindDataSource () {

@@ -332,7 +332,7 @@ export default {
 /deep/ .spinner-block {
   padding: 0;
   margin-right: 10px;
-  &.dataframe-loading-spinner {
+  &.dataframe-loading-spinner, &.datasource-loading-spinner {
     width: 188px;
     height: 50.5px;
     padding: 0;
