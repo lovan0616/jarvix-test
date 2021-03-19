@@ -154,7 +154,7 @@
           <div class="display-setting__button-box">
             <button 
               class="btn btn-default display-setting__button" 
-              @click="saveChartSetting"
+              @click="saveChartSetting(true)"
             >
               {{ $t('button.change') }}
             </button>
@@ -404,7 +404,9 @@ export default {
         question,
         dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
         dataFrameId: this.currentComponent.dataFrameId || this.dataFrameId,
-        shouldCancelToken: true
+        shouldCancelToken: true,
+        // 編輯模式下帶入當初問問句使用的 parser 語系；新創時走原本流程（拿當前 store 中的語系）
+        language: this.currentComponent.init && this.currentComponent.parserLanguage
       }).then(response => {
         let questionId = response.questionId
         let segmentationList = response.segmentationList
@@ -457,7 +459,7 @@ export default {
         this.$store.commit('dataSource/setCurrentQuestionInfo', null)
       })
     },
-    askResult (selectedResultSegmentationInfo, questionId) {
+    askResult (selectedResultSegmentationInfo, questionId, isSetAlgoConfig) {
       this.$emit('update:isLoading', true)
       if (selectedResultSegmentationInfo) this.segmentation = selectedResultSegmentationInfo
 
@@ -468,22 +470,23 @@ export default {
       
       // 確認是否為趨勢類型問題
       const isTrendQuestion = this.segmentation.denotation === 'TREND'
-      // 確認問句中是否有日期欄位
-      const hasDateTimeDataColumn = this.segmentation.transcript.subjectList.find(subject => subject.dateTime)
       return this.$store.dispatch('chatBot/askResult', {
-        algoConfig: this.currentComponent.algoConfig || null,
+        algoConfig: isSetAlgoConfig ? this.currentComponent.algoConfig || null : null,
         questionId: questionId || this.currentQuestionId,
         segmentation: this.segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
         isFilter: true,
-        ...((isTrendQuestion && hasDateTimeDataColumn) && {
-          sortOrders: [
-            {
-              dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
-              sortType: 'DESC'
-            }
-          ]
+        ...(isTrendQuestion && {
+          displayConfig: {
+            histogramBarSize: null,
+            sortOrders: [
+              {
+                dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                sortType: 'DESC'
+              }
+            ]
+          }
         })
       })
       .then(res => this.getComponentV2(res.resultId))
@@ -526,8 +529,10 @@ export default {
                 dateTimeColumn: this.mainDateColumn
               })
             
-              if (this.isNeededDisplaySetting && !this.currentComponent.algoConfig) {
-                this.currentComponent.algoConfig = this.algoConfig[componentResponse.intent.toLowerCase()]
+              if (this.isNeededDisplaySetting) {
+                this.currentComponent.algoConfig = this.currentComponent.algoConfig || this.algoConfig[componentResponse.intent.toLowerCase()]
+              } else {
+                this.currentComponent.algoConfig = null
               }
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
@@ -682,8 +687,8 @@ export default {
       }
       this.currentComponent.config.fontSize = 'middle'
     },
-    saveChartSetting () {
-      this.askResult(this.segmentation, this.questionInfo.questionId)
+    saveChartSetting (isSetAlgoConfig) {
+      this.askResult(this.segmentation, this.questionInfo.questionId, isSetAlgoConfig)
     },
     saveAnomalySetting () {
       this.$validator.validateAll()
@@ -704,7 +709,7 @@ export default {
           if (this.tempComponentAnomalySettings && this.tempComponentAnomalySettings.length > 0) {
             this.anomalySetting.yAxis = formatAnomalySetting(this.tempComponentAnomalySettings)
           }
-          this.saveChartSetting()
+          this.saveChartSetting(false)
         })
     },
     setConfig (configData) {

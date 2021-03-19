@@ -3,19 +3,23 @@
     <transition 
       name="fade" 
       mode="out-in">
-      <script-file-upload
+      <edit-script-name
         v-if="step === 0"
+        @next="nextStep"
+      />
+      <script-file-upload
+        v-if="step === 1"
         :process-text="processText"
         @next="nextStep"
       />
       <input-setting
-        v-if="step === 1"
+        v-if="step === 2"
         :process-text="processText"
         @next="nextStep"
         @prev="prevStep"
       />
       <output-setting
-        v-if="step === 2"
+        v-if="step === 3"
         :process-text="processText"
         @next="nextStep"
         @prev="prevStep"
@@ -24,6 +28,7 @@
   </div>
 </template>
 <script>
+import EditScriptName from './EditScriptName'
 import ScriptFileUpload from './ScriptFileUpload'
 import InputSetting from './InputSetting'
 import OutputSetting from './OutputSetting'
@@ -31,6 +36,7 @@ import OutputSetting from './OutputSetting'
 export default {
   name: 'ScriptExecutionFlow',
   components: {
+    EditScriptName,
     ScriptFileUpload,
     InputSetting,
     OutputSetting

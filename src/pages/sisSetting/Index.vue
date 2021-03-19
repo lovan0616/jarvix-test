@@ -102,6 +102,18 @@
       </div>
     </div>
     <div class="setting-block">
+      <div class="setting-block__title">問句相關設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">關閉自動問問句：</label>
+          <el-switch 
+            v-model="hasCloseQuickAsk"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
       <div class="setting-block__title">快捷鍵</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -127,6 +139,7 @@ export default {
     return {
       isShowMiniAppModule: localStorage.getItem('isShowMiniAppModule'),
       isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
+      closeQuickAsk: localStorage.getItem('closeQuickAsk'),
       isShowOrderUpload: localStorage.getItem('isShowOrderUpload'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
       isShowAlgorithmBtn: localStorage.getItem('isShowAlgorithmBtn'),
@@ -138,6 +151,15 @@ export default {
     }
   },
   computed: {
+    hasCloseQuickAsk: {
+      get () {
+        return this.closeQuickAsk === 'true' || this.closeQuickAsk
+      },
+      set (value) {
+        this.closeQuickAsk = value
+        localStorage.setItem('closeQuickAsk', value)
+      }
+    },
     openMiniAppModule: {
       get () {
         return this.isShowMiniAppModule === 'true' || this.isShowMiniAppModule

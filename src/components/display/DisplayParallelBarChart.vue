@@ -198,7 +198,8 @@ export default {
         return res
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
-      config.toolbox.feature.magicType.show = true
+      // 目前 echarts 4.9.0 看起來切換有問題，先隱藏
+      // config.toolbox.feature.magicType.show = true
       // 圖表是水平
       config.xAxis = yAxisDefault()
       config.xAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null

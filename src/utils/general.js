@@ -49,6 +49,14 @@ export function mergeDeep (...objects) {
   }, {})
 }
 
+export function copyToClickBoard (element) {
+  let input = element
+  input.select()
+  /* For mobile devices */
+  input.setSelectionRange(0, 99999)
+  document.execCommand('copy')
+}
+
 export function isObject (target) {
   return typeof target === 'object' && !(target instanceof Array)
 }
@@ -85,6 +93,8 @@ export const importType = {
   REMOTE: 'import_database',
   SCRIPT: 'import_script'
 }
+
+export const statsTypeList = ['CATEGORY', 'NUMERIC', 'BOOLEAN', 'DATETIME']
 
 export const statsTypeOptionList = [
   { value: 'CATEGORY', name: 'Category' },

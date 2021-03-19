@@ -93,6 +93,7 @@
     "formLetterSpaceEmpty": "請填字串(含空格)",
     "formCharacterOverMax": "最多{max}個字元",
     "formCharacterOverMin": "最少{min}個字元",
+    "formValueOverMin": "數字需大於{min}",
     "formNumericeOverOne": "最少包含1個數字",
     "formDecimal": "請輸入數字(可含小數位)",
     "formDecimalWithMaxDecimalPointNumbers": "請輸入數字(至多為小數 {max} 位)",
@@ -160,7 +161,8 @@
     "lowerBound": "下限",
     "noPeriodicResult": "沒有找到週期結果",
     "numericShouldBeBetween": "數字需介在 {min} 到 {max} 之間",
-    "updateLicenseSuccess": "更新成功，立即為您刷新頁面！"
+    "updateLicenseSuccess": "更新成功，立即為您刷新頁面！",
+    "sendResetPasswordEmail": "變更密碼信寄送成功！"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -182,6 +184,28 @@
     "notBelongToGroups": "因您未隸屬專案而無法使用該功能",
     "pleaseCreateOrJoinGroup": "請先加入專案或建立新專案",
     "pleaseInformManager": "請待專案管理員將您加入專案"
+  },
+  "forgetPassword": {
+    "title": "忘記密碼",
+    "remark": "系統會將密碼變更信寄至您註冊的信箱"
+  },
+  "resetPassword": {
+    "title": "更新密碼",
+    "newPassword": "新密碼",
+    "confirmNewPassword": "確認新密碼"
+  },
+  "admin": {
+    "title": "使用者後台",
+    "userList": "使用者列表",
+    "userName": "使用者名稱",
+    "action": "操作",
+    "changePassword": "密碼變更",
+    "accountName": "帳戶名稱",
+    "resetLink": "重設密碼連結",
+    "searchUserName": "搜尋使用者名稱"
+  },
+  "link": {
+    "backToLogin": "返回登入頁"
   },
   "editing": {
     "localUpload": "本機檔案上傳",
@@ -443,14 +467,19 @@
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔",
     "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
-    "scriptExecutionStep1": "上傳檔案",
-    "scriptExecutionStep2": "選擇輸入欄位",
-    "scriptExecutionStep3": "設定輸出類型",
+    "scriptExecutionStep1": "設定名稱",
+    "scriptExecutionStep2": "上傳檔案",
+    "scriptExecutionStep3": "選擇輸入欄位",
+    "scriptExecutionStep4": "設定輸出類型",
     "onlyPrefixMatching": "此搜尋只支援從字首開始匹配",
     "searchDataSource": "搜尋資料源",
+    "reCalculateMeta": "重算 Meta",
     "isOrdinal": "有時序",
     "isNotOrdinal": "無時序",
-    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量"
+    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量",
+    "histogramBinSetting": "設定直方圖組距大小",
+    "histogramBinSize": "直方圖組距大小",
+    "chooseTab": "選擇要使用的分頁"
   },
   "algorithm": {
     "name": "演算法",
@@ -587,7 +616,14 @@
     "scriptColumnReminder": "欄位具有順序性，優先順序為由上至下",
     "selectOutputColumn": "設定輸出欄位類型",
     "columnDataType": "欄位類型",
-    "columnDataName": "欄位名稱"
+    "columnDataName": "欄位名稱",
+    "setScriptName": "請設定名稱",
+    "lackOfMainScript": "未包含 {mainScriptName}",
+    "scriptLimit": {
+      "0": "主要腳本名稱須為 {mainScriptName}",
+      "1": "腳本裡面需有 run() 的函數",
+      "2": "函數傳入與回傳都必須為 pandas 的 DataFrame 類型"
+    }
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
@@ -946,7 +982,12 @@
     "lessThanAndEqualTo": "小於等於",
     "datumValue": "基準值",
     "emptyRules": "目前沒有任何設定",
-    "anomalyRules": "標記規則"
+    "anomalyRules": "標記規則",
+    "pleaseCheckFollowingSituations": "請確認以下狀況",
+    "dataframeExistenceAndRebuild": "資料表是否正常 或 嘗試重建此項目",
+    "connectionStatus": "連線是否正常",
+    "otherReasons": "其他原因",
+    "fetchDataFailed": "取得資料失敗"
   },
   "alert": {
     "alertLogs": "示警紀錄",
@@ -1212,7 +1253,8 @@
     "columnSummaryInfo": "欄位統計資訊",
     "createAlert": "新增示警",
     "createNewRule": "增加規則",
-    "applyToChart": "使用於圖表"
+    "applyToChart": "使用於圖表",
+    "send": "發送"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -2556,7 +2598,8 @@
     "defaultMsg": "系統發生非預期錯誤",
     "lackOfPermission": "權限不足，請聯繫管理員",
     "versionUpdate": "有新版本上線，立即幫您更新",
-    "networkError": "網路連線發生錯誤，請檢查連線，稍後再試"
+    "networkError": "網路連線發生錯誤，請檢查連線，稍後再試",
+    "errorMessageDownload": "錯誤訊息下載"
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",

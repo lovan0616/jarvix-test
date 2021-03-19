@@ -73,15 +73,20 @@ export default {
       max-width: 130px;
       font-weight: 600;
       font-size: 14px;
-      line-height: 24px;
-      @include text-hidden;
+      line-height: 16px;
+      display: inline-flex;
+      align-items: center;
+      overflow: hidden;
+      // @include text-hidden;
     }
 
     &__value {
+      display: inline-flex;
+      align-items: center;
       flex: 1;
       min-width: 50px;
       font-size: 14px;
-      line-height: 24px;
+      line-height: 16px;
       color: #CCCCCC;
     }
   }

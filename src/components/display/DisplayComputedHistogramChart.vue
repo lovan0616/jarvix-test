@@ -131,6 +131,31 @@ export default {
       let max = this.dataset.range[1]
       let dataLength = this.dataset.data.length
       let interval = this.floatSub(max, min) / dataLength
+      let chartData
+
+      if (this.dataset.indexList && this.dataset.indexList.length > 1) {
+        interval = this.dataset.indexList[1] - this.dataset.indexList[0]
+
+        chartData = this.dataset.data.map((element, index) => {
+          return [
+            // bar start
+            this.displayFloat(this.dataset.indexList[index]),
+            // bar end
+            this.displayFloat(this.dataset.indexList[index+1]),
+            element
+          ]
+        })
+      } else {
+        chartData = this.dataset.data.map((element, index) => {
+          return [
+            // bar start
+            this.displayFloat(min + interval * index),
+            // bar end
+            index === dataLength - 1 ? max : this.displayFloat(min + interval * (index + 1)),
+            element
+          ]
+        })
+      }
 
       // 預設 四捨五入 到小數點後第幾位
       const defaultDisplayDigit = 2
@@ -147,16 +172,6 @@ export default {
         }
         interval = Math.round(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
       }
-      
-      let chartData = this.dataset.data.map((element, index) => {
-        return [
-          // bar start
-          this.displayFloat(min + interval * index),
-          // bar end
-          index === dataLength - 1 ? max : this.displayFloat(min + interval * (index + 1)),
-          element
-        ]
-      })
 
       chartAddon.toolbox.feature.myShowLabel.show = true
       chartAddon.toolbox.feature.myShowLabel.onclick = () => {
@@ -214,7 +229,7 @@ export default {
       chartAddon.xAxis.axisLabel.formatter = (value, index) => {
         if (dataLength > 20) {
           let labelInterval = Math.floor(dataLength / 15)
-          if (index % labelInterval === 0) return this.formatComma(value)
+          if (index % labelInterval === 0) return index === dataLength ? this.formatComma(max) : this.formatComma(value)
         } else {
           return index === dataLength ? this.formatComma(max) : this.formatComma(value)
         }
