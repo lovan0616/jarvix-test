@@ -3,6 +3,8 @@ import request from '@/utils/publicRequest'
 /**
  * get model list
  * @query {Number} groupId - group id 
+ * @query {Number} page - pagination page
+ * @query {Number} offset - pagination item per page
  */
  export function getModelList(groupId, page = 0, offset=20) {
   return request({
@@ -25,6 +27,8 @@ import request from '@/utils/publicRequest'
 
 /**
  * re-upload model
+ * @query {Number} modelId - model id 
+ * @param {formData} modelData - 要重新上傳的 model
  */
  export function reUploadModel(modelId, data) {
   return request({
@@ -36,6 +40,7 @@ import request from '@/utils/publicRequest'
 
 /**
  * create model
+ * @param {Object} data - 建立的模型資訊
  */
  export function createModel(data) {
   return request({
@@ -47,6 +52,7 @@ import request from '@/utils/publicRequest'
 
 /**
  * get model info
+ * @query {Number} modelId - model id 
  */
  export function getModelInfo(modelId) {
   return request({
@@ -57,6 +63,8 @@ import request from '@/utils/publicRequest'
 
 /**
  * modify model info
+ * @query {Number} modelId - model id 
+ * @param {Object} data - 修改的模型資訊
  */
  export function modifyModelInfo(modelId, data) {
   return request({
