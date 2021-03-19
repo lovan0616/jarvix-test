@@ -283,13 +283,23 @@ export default {
         }
       }
     },
-    searchInput () {
-      this.searchValue()
+    searchInput (value) {
+      this.isLoading = true
+      this.searchValue(value)
+        .then(response => {
+          this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
+            value: value,
+            name: value,
+            isSelected: this.filter.dataValues.includes(value)
+          }))
+        })  
         .finally(() => this.isLoading = false)
     },
     isNeedUpdate (val) {
       if (!val) return
       if (this.isShowFilterPanel) this.toggleFilterPanel()
+      // 父層 filter 改變時，先清空此曾選擇的 data value
+      this.filter.dataValues = []
       this.fetchData()
     }
   },
@@ -312,16 +322,29 @@ export default {
         if (this.filter.statsType === 'RELATIVEDATETIME') return this.getRelativeDatetimeOption()
         if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
 
-        // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
+        const { fuzzySearchResult: tempOptionList } = await this.searchValue()
+
+        // 如果當前 filter 有已選定的值，先確認是否有在 option 清單中
         if (this.filter.dataValues.length > 0) {
-          await this.searchValue()
-          if (this.filter.dataValueOptionList === 0) {
-            this.searchInput = ''
-            await this.searchValue()
+          const defaultSearchInput = this.filter.dataValues[0]
+          const { fuzzySearchResult: checkedOptionList } = await this.searchValue(defaultSearchInput)
+          // 如果沒有結果，則把之前選定的值清空
+          if (checkedOptionList.length === 0) {
+            this.filter.dataValues = []
+          } else {
+            // 確認有沒有在無搜尋字串時，至多 200 個選項當中
+            const isInTempOptionList = tempOptionList.includes(defaultSearchInput)
+            // 如果沒有，代表選定值在 200 個選項之外，因此把它加到第 201 個選項
+            !isInTempOptionList && tempOptionList.push(defaultSearchInput)
           }
-        } else {
-          await this.searchValue()
         }
+
+        // 將值轉換成下拉選項
+        this.filter.dataValueOptionList = tempOptionList.map(value => ({
+          value: value,
+          name: value,
+          isSelected: this.filter.dataValues.includes(value)
+        }))
       
         // 控制項須確保至少選定其中一個項目：如果當前沒有或之前選定的值在新取的選項中沒有，則預設為第一個選項
         const isNeedDefaultSelect = this.isSingleChoiceFilter 
@@ -363,22 +386,13 @@ export default {
           }
         })
     },
-    searchValue () {
-      this.isLoading = true
+    searchValue (searchString = '') {
       return dataValueSearch(this.filter.columnId, {
         page: 0,
-        searchString: this.searchInput,
+        searchString,
         size: 200,
         restrictions: this.restrictions()
       })
-        .then((response, index) => {
-          this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
-            value: value,
-            name: value,
-            isSelected: this.filter.dataValues.includes(value)
-          }))
-        })
-        .finally(() => this.isLoading = false)
     },
     toggleFilterPanel () {
       if (this.isProcessing) return

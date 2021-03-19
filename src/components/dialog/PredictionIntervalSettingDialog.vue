@@ -57,7 +57,7 @@ export default {
     ...mapState('dataSource', ['algoConfig'])
   },
   mounted () {
-    this.tempAlgoConfig = JSON.parse(JSON.stringify(this.algoConfig))
+    this.tempAlgoConfig = JSON.parse(JSON.stringify(this.algoConfig.prediction))
   },
   methods: {
     ...mapMutations('dataSource', ['setAlgoConfig']),
@@ -67,9 +67,9 @@ export default {
           if (!isValid) return
           this.isProcessing = true
 
-          if (this.tempAlgoConfig.predictionIntervalLength === this.algoConfig.predictionIntervalLength) return this.$emit('close')
+          if (this.tempAlgoConfig.predictionIntervalLength === this.algoConfig.prediction.predictionIntervalLength) return this.$emit('close')
 
-          this.setAlgoConfig(this.tempAlgoConfig)
+          this.setAlgoConfig({ ...this.algoConfig, prediction: this.tempAlgoConfig })
           this.$emit('re-analyze', 'PREDICTION')
           
         })

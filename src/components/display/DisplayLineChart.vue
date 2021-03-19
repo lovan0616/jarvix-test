@@ -23,32 +23,46 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div 
-            v-if="singleType.type === 'enum'"
-            class="filter-description"
-          >
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
+          <template v-if="dataset.timeStampList">
             <div 
-              v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
-              :key="'enum-' + propertiesIndex"
-              class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
-          </div>
-          <div 
-            v-if="singleType.type === 'range'"
-            class="region-description"
-          >
-            <div class="single-area">
-              {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
-                start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope),
-                end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true)
-              }) }}
+              v-if="singleType.type === 'enum'"
+              class="filter-description"
+            >
+              <div class="column-name">{{ singleType.properties.display_name }} =</div>
+              <div 
+                v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
+                :key="'enum-' + propertiesIndex"
+                class="single-filter"
+              >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
             </div>
-          </div>
+            <div 
+              v-if="singleType.type === 'range'"
+              class="region-description"
+            >
+              <div class="single-area">
+                {{ $t('resultDescription.area') + (index + 1) }}:
+                {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
+                  start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope),
+                  end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true)
+                }) }}
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            {{ $t('resultDescription.area') + (index + 1) }}:
+            {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
+              start: roundNumber(singleType.properties.start), 
+              end: roundNumber(singleType.properties.end) 
+            }) }}
+          </template>
         </div>
       </div>
     </selected-region>
+    <feature-information-block
+      v-if="isStabilityChart"
+      :feature-information="dataset.pValuesFeatureInformation"
+      class="feature-information"
+    />
     <insight-description-block
       v-if="isShowDescription"
       :title="$t('resultDescription.dataInsight')"
@@ -67,6 +81,7 @@
 
 <script>
 import EchartAddon from './common/addon.js'
+import FeatureInformationBlock from './FeatureInformationBlock'
 import InsightDescriptionBlock from './InsightDescriptionBlock'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/components/display/common/addons'
@@ -91,6 +106,7 @@ const echartAddon = new EchartAddon({
 export default {
   name: 'DisplayLineChart',
   components: {
+    FeatureInformationBlock,
     InsightDescriptionBlock
   },
   props: {
@@ -160,6 +176,10 @@ export default {
       type: Array,
       default: null
     },
+    coefficientLineType: {
+      type: String,
+      default: 'MEDIAN'
+    },
     formula: {
       type: Array,
       default: null
@@ -195,6 +215,9 @@ export default {
       } else {
         return this.dataset.columns.map((element, colIndex) => this.composeColumn(element, colIndex))
       }
+    },
+    isStabilityChart () {
+      return !!this.dataset.pValuesFeatureInformation
     },
     options () {
       let config = {
@@ -376,7 +399,7 @@ export default {
         //   }
         // }
       }
-
+        
       if (this.isShowCoefficients && this.coefficients) {
         let lineData = []
         let expression = ''
@@ -390,7 +413,9 @@ export default {
           }
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
-          expression = `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
+          expression = this.coefficientLineType
+            ? `${this.$t(`chart.feature.${this.coefficientLineType.toLowerCase()}`)}: ${this.formatComma(displayOffset.toFixed(2))}`
+            : `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
         } else {
           // ax^2 + bx + c
           let offset = this.coefficients[0]
@@ -551,17 +576,29 @@ export default {
 
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
-        return {
-          type: 'range',
-          properties: {
-            dc_id: this.title.xAxis[0].dc_id,
-            data_type: this.title.xAxis[0].data_type,
-            display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
-            timeScope: this.dataset.timeScope
+
+        if (this.dataset.timeStampList)
+          return {
+            type: 'range',
+            properties: {
+              dc_id: this.title.xAxis[0].dc_id,
+              data_type: this.title.xAxis[0].data_type,
+              display_name: this.title.xAxis[0].display_name,
+              start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
+              timeScope: this.dataset.timeScope
+            }
           }
-        }
+        return {
+            type: 'range',
+            properties: {
+              dc_id: this.title.xAxis[0].dc_id,
+              data_type: this.title.xAxis[0].data_type,
+              display_name: this.title.xAxis[0].display_name,
+              start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
+            }
+          }
       })
     },
     saveFilter () {

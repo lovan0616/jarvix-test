@@ -317,7 +317,7 @@ export default {
         type: type,
         settingConfig: {
           ...((type === this.intentType.CLUSTERING || type === this.intentType.PREDICTION) && {
-            algoConfig: this.algoConfig,
+            algoConfig: this.algoConfig[type.toLowerCase()] || null,
           }),
           ...((type === this.intentType.OVERVIEW && data) && {
             displayConfig: {

@@ -83,15 +83,11 @@ export function appendFile (data) {
  * reimport file
  * @param {Object} data - 欲更新的檔案資訊
  */
-export function reimportFile (data) {
-  const {fileId, dataFrameId} = data
+export function reimportFile (fileInfo) {
   return request({
     url: '/data/reimport',
     method: 'POST',
-    data: {
-      dataFrameId,
-      fileId
-    }
+    data: fileInfo
   })
 }
 

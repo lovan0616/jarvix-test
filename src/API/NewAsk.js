@@ -155,3 +155,24 @@ export function getParserLanguageList() {
     method: 'GET'
   })
 }
+
+/**
+ * get formula list
+ */
+export function getFormulaList() {
+  return request({
+    url: `/ask/askFormulaList/search`,
+    method: 'GET'
+  })
+}
+
+/**
+ * ask result using existing formula
+ */
+export function askFormulaResult(askInfo) {
+  return request({
+    url: `/ask/formulaResult`,
+    method: 'POST',
+    data: askInfo
+  })
+}

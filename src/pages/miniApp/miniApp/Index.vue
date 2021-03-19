@@ -323,7 +323,7 @@
                 >
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
-                    :key="componentData.id"
+                    :key="`${componentData.id} - ${componentData.updateTime}`"
                     :filters="filterColumnValueInfoList"
                     :y-axis-controls="yAxisControlColumnValueInfoList"
                     :controls="controlColumnValueInfoList"
@@ -334,6 +334,7 @@
                     @redirect="activeCertainDashboard($event)"
                     @deleteComponentRelation="deleteComponentRelation"
                     @columnTriggered="columnTriggered"
+                    @rowTriggered="rowTriggered"
                     @chartTriggered="chartTriggered"
                     @warningLogTriggered="warningLogTriggered($event)"
                     @goToCertainDashboard="activeCertainDashboard($event)"
@@ -341,7 +342,7 @@
                     <template slot="drowdown">
                       <dropdown-select
                         :bar-data="componentSettingOptions(componentData)"
-                        @switchDialogName="switchDialogName($event, componentData.id)"
+                        @switchDialogName="switchDialogName($event, componentData)"
                       />
                     </template>
                     <template 
@@ -360,7 +361,7 @@
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-default btn-has-icon create-btn" 
-                    @click="isShowCreateComponentDialog = true">
+                    @click="createGeneralComponent">
                     <svg-icon icon-class="plus"/>
                     {{ $t('miniApp.createComponent') }}
                   </button>
@@ -386,7 +387,7 @@
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      :initial-current-component="currentComponent || componentTemplateFactory()"
+      :initial-current-component="currentComponent || initComponent"
       :dashboard-list="dashboardList"
       :filters="filterColumnValueInfoList"
       :controls="controlColumnValueInfoList"
@@ -466,6 +467,14 @@
         />
       </div>
     </writing-dialog>
+    <component-to-alert-condition-dialog
+      v-if="isShowCreateWarningCriteriaDialog"
+      :component-data="componentToWarningCriteriaData"
+      @update="addComponentAlertToWarningModuleSetting"
+      @close="closeCreateWarningCriteriaDialog"
+      @converted="closeCreateWarningCriteriaDialog"
+      @confirm="deleteComponent" 
+    />
   </div>
 </template>
 
@@ -494,10 +503,12 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 import FilterControlPanel from './filter/FilterControlPanel'
 import AxisControlPanel from './filter/AxisControlPanel'
 import WarningModule from './components/warning-module/WarningModule'
+import ComponentToAlertConditionDialog from './dialog/ComponentToAlertConditionDialog'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { getScriptList } from '@/API/Script'
+import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 
 export default {
   inject: ['$validator'],
@@ -521,18 +532,21 @@ export default {
     AxisControlPanel,
     WarningModule,
     draggable,
-    DefaultSelect
+    DefaultSelect,
+    ComponentToAlertConditionDialog
   },
   data () {
     return {
       miniApp: {},
       currentDashboardId: null,
       currentComponentId: null,
+      componentToWarningCriteriaData: {},
       isShowWarningModule: false,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
       isShowDeleteDashboardDialog: false,
       isShowDeleteComponentDialog: false,
+      isShowCreateWarningCriteriaDialog: false,
       isShowUpdateDashboardNameDialog: false,
       isLoading: false,
       isProcessing: false,
@@ -560,7 +574,9 @@ export default {
       simulatorScriptInfo: {
         id: null,
         name: null
-      }
+      },
+      initComponent: null,
+      isMiniAppCompiled: false
     }
   },
   computed: {
@@ -592,7 +608,7 @@ export default {
       return this.currentDashboard ? this.dashboardList.findIndex(d => d.id === this.currentDashboardId) : -1
     },
     currentComponent () {
-      return this.currentDashboard ? this.currentDashboard.components.find(comp => comp.id === this.currentComponentId) : {}
+      return this.currentDashboard ? this.currentDashboard.components.find(comp => comp.id === this.currentComponentId) : null
     },
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
@@ -657,8 +673,20 @@ export default {
           id: 'MonitorWarning'
         },
         {
+          name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
+          id: 'UnhandledAbnormalStatistics'
+        },
+        {
+          name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
+          id: 'HandledAbnormalStatistics'
+        },
+        {
           name: this.$t('miniApp.simulateComponent'),
           id: 'Simulator'
+        },
+        {
+          name: this.$t('miniApp.specialIndexTypeComponent'),
+          id: 'Formula'
         }
       ]
     },
@@ -721,7 +749,19 @@ export default {
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
-        .then(miniAppInfo => {
+        .then(response => {
+          let miniAppInfo = response
+
+          // 處理向下兼容性
+          if (!this.isMiniAppCompiled) {
+            const { updatedAppData, isDataChanged } = compileMiniApp(miniAppInfo)
+
+            // 如果有變更，需要更新到資料庫
+            isDataChanged && this.updateAppSetting(updatedAppData)
+            miniAppInfo = updatedAppData
+            this.isMiniAppCompiled = true
+          }
+    
           this.miniApp = miniAppInfo
           this.newAppEditModeName = this.appData.displayedName
 
@@ -824,7 +864,7 @@ export default {
           board.components.push(newComponentInfo)
         }
       })
-      this.isShowCreateComponentDialog = false
+      this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => {
@@ -838,12 +878,15 @@ export default {
         if (board.id === this.currentDashboardId) {
           board.components.forEach((component, componentIndex) => {
             if (component.id === this.currentComponentId) {
-              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = updatedComponentInfo
+              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = {
+                ...updatedComponentInfo,
+                updateTime: new Date().getTime()
+              }
             }
           })
         }
       })
-      this.isShowCreateComponentDialog = false
+      this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .catch(() => {})
@@ -938,6 +981,7 @@ export default {
     },
     closeCreateComponentDialog () {
       this.currentComponentId = null
+      this.initComponent = null
       this.isShowCreateComponentDialog = false
     },
     copyLink () {
@@ -1140,13 +1184,35 @@ export default {
         })
         .finally(() => this.isProcessing = false)
     },
-    switchDialogName (eventName, id) {
+    switchDialogName (eventName, componentData) {
       this[`isShow${eventName}Dialog`] = true
       switch(eventName) {
         case 'DeleteComponent':
         case 'CreateComponent':
-          this.currentComponentId = id
+          this.currentComponentId = componentData && componentData.id
+          break
+        case 'CreateWarningCriteria':
+          this.componentToWarningCriteriaData = {
+            ...componentData,
+            controlList: this.currentDashboard.controlList,
+            filterList: this.currentDashboard.filterList
+          }
+        break
       }
+    },
+    closeCreateWarningCriteriaDialog () {
+      this.componentToWarningCriteriaData = {}
+      this.isShowCreateWarningCriteriaDialog = false
+    },
+    addComponentAlertToWarningModuleSetting (conditionId) {
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.warningModule.conditions.push({
+        id: conditionId,
+        activate: true
+      })
+      this.updateAppSetting(editedMiniApp)
+        .then(() => this.miniApp = editedMiniApp)
+        .catch(() => {})
     },
     updateFilter (updatedFilterList, type) {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
@@ -1209,19 +1275,28 @@ export default {
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
-    createMonitorWarningComponent () {
+     createDefaultComponent (componentType) {
       this.isProcessing = true
       this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) {
-          board.components.push(this.componentTemplateFactory('monitor-warning-list'))
+          board.components.push(this.componentTemplateFactory(componentType))
         }
       })
-      this.isShowCreateComponentDialog = false
+      this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
+    },
+    createMonitorWarningComponent () {
+      this.createDefaultComponent('monitor-warning-list')
+    },
+    createUnhandledAbnormalStatisticsComponent () {
+      this.createDefaultComponent('unhandled-abnormal-statistics')
+    },
+    createHandledAbnormalStatisticsComponent () {
+      this.createDefaultComponent('handled-abnormal-statistics')
     },
     createSimulatorComponent () {
       this.isShowCreateSimulatorDialog = true
@@ -1266,6 +1341,11 @@ export default {
       })
     },
     createGeneralComponent () {
+      this.initComponent = this.componentTemplateFactory()
+      this.isShowCreateComponentDialog = true
+    },
+    createFormulaComponent () {
+      this.initComponent = this.componentTemplateFactory('formula')
       this.isShowCreateComponentDialog = true
     },
     createTimeFilter () {
@@ -1296,12 +1376,22 @@ export default {
         })
       })
     },
-    columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
+    columnTriggered ({ relatedDashboardId, cellValue, columnId, columnName }) {
       this.activeCertainDashboard(relatedDashboardId)
       this.controlColumnValueInfoList.forEach(filterSet => {
         filterSet.forEach(filter => {
           // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
-          if (filter.columnId === columnId) filter.dataValues = [cellValue]
+          if (filter.columnId === columnId || columnName === filter.columnName) filter.dataValues = [cellValue]
+        })
+      })
+    },
+    rowTriggered ({ relatedDashboardId, rowData }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(filter => {
+          const matchedColumn = rowData.find(column => column.columnId === filter.columnId || column.columnName === filter.columnName)
+          // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
+          if (matchedColumn) filter.dataValues = [matchedColumn.cellValue]
         })
       })
     },
@@ -1336,7 +1426,7 @@ export default {
         .finally(() => this.isProcessing = false )
     },
     componentSettingOptions (component) {
-      return [
+      const options = [
         {
           title: 'miniApp.componentSetting',
           icon: 'filter-setting',
@@ -1348,6 +1438,12 @@ export default {
           dialogName: 'DeleteComponent'
         }
       ]
+      if (component.config.enableAlert) options.push({
+        title: 'button.createAlert',
+        icon: 'warning',
+        dialogName: 'CreateWarningCriteria'
+      })
+      return options
     },
     componentTemplateFactory (type = 'chart') {
 
@@ -1362,12 +1458,12 @@ export default {
         init: false,
         id: uuidv4(),
         type,
+        isCreatedViaAsking: true,
         resultId: null,
         orderSequence: null,
         diagram: type,
         indexInfo: { 
-          unit: '',
-          size: 'middle'
+          unit: ''
         },
         relatedDashboard: { id: null, name: null },
         config: {
@@ -1375,20 +1471,43 @@ export default {
           diaplayedName: '',
           isAutoRefresh: false,
           refreshFrequency: null,
-          hasColumnRelatedDashboard: false, // 目前只給 table 元件使用
-          columnRelations: [{ relatedDashboardId: null, columnInfo: null }]
+          hasTableRelatedDashboard: false, // 目前只給 table 元件使用
+          tableRelationInfo: {
+            triggerTarget: 'column',
+            columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
+            rowRelation: { relatedDashboardId: null }
+          },
+          fontSize: 'middle',
+          enableAlert: false
         },
+        algoConfig: null,
+        parserLanguage: null,
+        updateTime: new Date().getTime(),
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
           init: true,
+          isCreatedViaAsking: false,
           config: {
             ...generalConfig,
             diaplayedName: this.$t('alert.realTimeMonitorAlert'),
           },
         }),
+        // 異常統計元件
+        ...(type.includes('abnormal-statistics') && {
+          init: true,
+          type: 'abnormal-statistics',
+          isCreatedViaAsking: false,
+          config: {
+            ...generalConfig,
+            fontSize: 'middle',
+            enableAlert: false,
+            diaplayedName: this.getAbnormalStatisticsDisplayName(type),
+          },
+        }),
         // 模擬器元件
         ...(type === 'simulator' && {
           init: true,
+          isCreatedViaAsking: false,
           scriptId: this.simulatorScriptInfo.id,
           config: {
             ...generalConfig,
@@ -1396,8 +1515,26 @@ export default {
             size: { row: 12, column: 12 },
             diaplayedName: `${this.$t('miniApp.simulator')} (${this.simulatorScriptInfo.name})`
           },
-        })
+        }),
+        // 特殊數值行元件
+        ...(type === 'formula' && {
+          isCreatedViaAsking: false,
+          formulaSetting: {
+            dataSourceId: null,
+            dataFrameId: null,
+            formulaId: null,
+            displayedFormula: null,
+            inputList: []
+          }
+        }),
       }
+    },
+    getAbnormalStatisticsDisplayName (type) {
+      const stringList = type.split('-')
+      const displayName = stringList.reduce((acc, cur, index) => {
+        return acc + (index !== 0 ? cur.replace(/^./, cur[0].toUpperCase()) : cur.replace(/^./, cur[0].toLowerCase()))
+      }, '')
+      return this.$t(`miniApp.${displayName}Component`).slice(0, 7)
     },
     logDraggingMovement (e) {
       const { index, futureIndex } = e.draggedContext
@@ -1648,7 +1785,7 @@ export default {
             top: calc(100% + 10px);
             text-align: left;
             z-index: 1;
-            width: 136px;
+            width: auto;
 
             &::before {
               position: absolute;
