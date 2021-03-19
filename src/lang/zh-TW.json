@@ -1028,7 +1028,9 @@
     "dataFilterCondition": "資料過濾條件",
     "dataSource": "資料源",
     "dataFrame": "資料表",
-    "expression": "運算式"
+    "expression": "運算式",
+    "operatingStatus": "運行狀態",
+    "operating": "運行中"
   },
   "clustering": {
     "cluster": "群體",
@@ -1243,7 +1245,8 @@
     "changeDiagram": "切換圖表",
     "columnSummaryInfo": "欄位統計資訊",
     "createAlert": "新增示警",
-    "send": "發送"
+    "send": "發送",
+    "runRightAway": "立即運行"
   },
   "timeScopeUnit": {
     "second": "秒",

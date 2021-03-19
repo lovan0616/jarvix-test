@@ -139,3 +139,14 @@ export function convertComponentToAlertCondition(data) {
     data
   })
 }
+
+/**
+ * 手動觸發示警
+ * @param {Number} id - condition id
+ */
+export function manualTriggerAlert(id) {
+  return request({
+    url: `alert/conditions/${id}/trigger`,
+    method: 'POST'
+  })
+}

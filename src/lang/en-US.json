@@ -1027,7 +1027,9 @@
     "columnValueCombination": "Data Column Combination",
     "dataFilterCondition": "Filter Conditions",
     "dataSource": "Data Source",
-    "dataFrame": "Data Set"
+    "dataFrame": "Data Set",
+    "operatingStatus": "Operating Status",
+    "operating": "Operating"
    },
   "clustering": {
     "cluster": "Cluster",
@@ -1242,7 +1244,8 @@
     "changeDiagram": "Change Diagram",
     "columnSummaryInfo": "Column Summary Info",
     "createAlert": "Create Alert Condition",
-    "send": "Send"
+    "send": "Send",
+    "runRightAway": "Run Right Away"
   },
   "timeScopeUnit": {
     "second": "seconds",
