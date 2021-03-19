@@ -42,7 +42,6 @@
         <file-list-block
           v-if="uploadModelList.length > 0"
           :drag-enter="dragEnter"
-          :title="$t('editing.canUpload')"
           :file-list="uploadModelList"
           :progress="progress"
           :currnt-upload-status="currntUploadStatus"
@@ -67,13 +66,25 @@
       </div>
     </div>
     <div class="dialog-footer">
+      <div
+        v-if="uploadStatusInfo"
+        class="dialog-status-block status">
+        <svg-icon 
+          :icon-class="uploadStatusInfo.icon"
+          :class="{[`status-${currntUploadStatus}`]: uploadStatusInfo}"
+          class="status-icon"
+        />
+        <div 
+          :class="{[`status-${currntUploadStatus}`]: uploadStatusInfo}" 
+          class="status-title">{{ uploadStatusInfo.title }}</div>
+      </div>
       <div class="dialog-button-block">
         <span 
           v-if="currntUploadStatus === uploadStatus.uploading" 
           class="uploading-reminding">{{ $t('editing.uploading') }}</span>
         <button 
-          v-if="currntUploadStatus === uploadStatus.wait || currntUploadStatus === uploadStatus.fail"
-          class="btn btn-outline btn-cancel"
+          v-if="!isReUpload && (currntUploadStatus === uploadStatus.wait || currntUploadStatus === uploadStatus.fail)"
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <slot 
@@ -144,6 +155,22 @@ export default {
     // 總資料傳輸量
     totalTransmitDataAmount () {
       return this.uploadModelList.reduce((acc, cur) => acc + cur.size, 0)
+    },
+    uploadStatusInfo () {
+      switch (this.currntUploadStatus) {
+        case this.uploadStatus.success:
+          return {
+            title: this.$t('model.upload.succeedUpload'),
+            icon: 'checked'
+          }
+        case this.uploadStatus.fail:
+          return {
+            title: this.$t('model.upload.failedUpload'),
+            icon: 'alert'
+          }
+        default:
+          return null
+      }
     }
   },
   destroyed () {
@@ -247,6 +274,7 @@ export default {
       } catch (e) {
         this.progress = 0
         this.currntUploadStatus = uploadStatus.fail
+        this.formDataList.forEach(form => form.status = uploadStatus.fail)
       }
     },
     async fileReUpload () {
@@ -270,6 +298,7 @@ export default {
       } catch (e) {
         this.progress = 0
         this.currntUploadStatus = uploadStatus.fail
+        this.formDataList.forEach(form => form.status = uploadStatus.fail)
       }
     },
     prev () {
@@ -349,6 +378,42 @@ export default {
     line-height: 17px;
     letter-spacing: 0.5px;
     color: $theme-color-warning;
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .dialog-button-block {
+      display: flex;
+      justify-content: flex-end;
+
+      .btn {
+        &:not(:last-child) {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .dialog-status-block {
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+      font-size: 13px;
+
+      .status-icon {
+        margin-right: 6px;
+      }
+
+      .status-fail {
+        color: #FF5C46; 
+      }
+
+      .status-success {
+        color: #2FECB3; 
+      }
+    }
   }
 }
 </style>

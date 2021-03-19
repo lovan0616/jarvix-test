@@ -70,28 +70,6 @@ export default {
         margin-top: 0;
       }
     }
-
-    >>> .dialog-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .dialog-button-block {
-        display: flex;
-        justify-content: flex-end;
-        flex: 1;
-
-        .btn {
-          &-cancel {
-            display: none;
-          }
-
-          &:not(:last-child) {
-            margin-right: 20px;
-          }
-        }
-      }
-    }
   }
 }
 </style>

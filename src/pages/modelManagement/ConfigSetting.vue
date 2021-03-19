@@ -100,6 +100,7 @@ import ModelColumnSettingCard from './scriptExecution/components/ModelColumnSett
 import draggable from 'vuedraggable'
 import { getModelInfo, modifyModelInfo } from '@/API/Model'
 import { statsTypeOptionList } from '@/utils/general'
+import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
@@ -184,6 +185,12 @@ export default {
         })
         .then(() => {
           this.modelInfo.ioArgs = this.tempArgs
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
         })
         .finally(() => {
           this.isProcessing = false
