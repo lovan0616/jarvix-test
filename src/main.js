@@ -12,6 +12,7 @@ import '@/utils/mixins'
 import '@/icons'
 import './styles/App.scss'
 import i18n from './lang/index.js'
+import moment from 'moment'
 
 import {
   Button,
@@ -37,8 +38,11 @@ import {
   Menu,
   Submenu,
   MenuItem,
-  Badge
+  Badge,
+  Cascader
 } from 'element-ui'
+// 針對 on-demand 掛載 element ui 元件情境下設定語系用
+import ElementLocale from 'element-ui/lib/locale'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
@@ -74,6 +78,7 @@ import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import DisplayScatterProbabilityDensityChart from '@/components/display/DisplayScatterProbabilityDensityChart'
+import DisplayScatterClusterChart from '@/components/display/DisplayScatterClusterChart'
 // import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
 import DisplayComputedHistogramChart from '@/components/display/DisplayComputedHistogramChart'
 // import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
@@ -96,6 +101,8 @@ import DisplayParallelBarChart from '@/components/display/DisplayParallelBarChar
 import DisplayChinaMap from '@/components/display/DisplayChinaMap'
 import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
+import DisplayLineConfidentialIntervalChart from '@/components/display/DisplayLineConfidentialIntervalChart'
+import DisplayPeriodicLineCharts from '@/components/display/DisplayPeriodicLineCharts'
 import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
 import DisplaySankeyChart from '@/components/display/DisplaySankeyChart'
 import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
@@ -115,6 +122,9 @@ import RootCauseDescription from '@/components/display/RootCauseDescription'
 import Spinner from '@/components/Spinner'
 import ArrowButton from '@/components/resultBoard/ArrowButton'
 import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
+import DisplayIndexInfo from '@/components/display/DisplayIndexInfo'
+import DisplayTextInfo from '@/components/display/DisplayTextInfo'
+import ParameterComparisonTable from '@/pages/miniApp/miniApp/components/dashboard-components/ParameterComparisonTable'
 
 // 排程
 import vGanttChart from 'v-gantt-chart'
@@ -152,6 +162,10 @@ Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(Badge)
+Vue.use(Cascader)
+// element ui 帶入 i18n 語系
+// reference: https://element.eleme.io/#/en-US/component/i18n#custom-i18n-in-on-demand-components
+ElementLocale.i18n((key, value) => i18n.t(key, value))
 
 Vue.use(vGanttChart)
 
@@ -176,6 +190,7 @@ Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
 Vue.component(DisplayScatterProbabilityDensityChart.name, DisplayScatterProbabilityDensityChart)
+Vue.component(DisplayScatterClusterChart.name, DisplayScatterClusterChart)
 Vue.component(DisplayGroupScatterChart.name, DisplayGroupScatterChart)
 // Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayComputedHistogramChart.name, DisplayComputedHistogramChart)
@@ -196,6 +211,8 @@ Vue.component(DisplayParallelBarChart.name, DisplayParallelBarChart)
 Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
+Vue.component(DisplayLineConfidentialIntervalChart.name, DisplayLineConfidentialIntervalChart)
+Vue.component(DisplayPeriodicLineCharts.name, DisplayPeriodicLineCharts)
 // Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(DisplayPivotTable.name, DisplayPivotTable)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
@@ -213,6 +230,10 @@ Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(Spinner.name, Spinner)
 Vue.component(ArrowButton.name, ArrowButton)
 Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
+Vue.component(DisplayIndexInfo.name, DisplayIndexInfo)
+Vue.component(DisplayTextInfo.name, DisplayTextInfo)
+Vue.component(ParameterComparisonTable.name, ParameterComparisonTable)
+
 
 Vue.component('DefaultButton', DefaultButton)
 Vue.component('DefaultInput', DefaultInput)
@@ -226,8 +247,8 @@ Validator.extend('requireOneNumeric', function (value) {
 })
 
 Validator.extend('letterSpace', function (value) {
-  // 含簡繁體、英文、空格
-  return /^[\u4e00-\u9fa5_a-zA-Z0-9\s]*$/i.test(value) && !Number(value)
+  // 含簡繁體、英文、注音符號、四聲、空格
+  return /^[\u4e00-\u9fa5_a-zA-Z0-9\u3105-\u3129\u02CA\u02C7\u02CB\u02D9\s]*$/i.test(value) && !Number(value)
 })
 
 Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
@@ -238,6 +259,26 @@ Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
 
 Validator.extend('validLowerBound', (lowerBoundValue, [upperBoundValue]) => {
   return Number(lowerBoundValue) < Number(upperBoundValue)
+}, {
+  hasTarget: true
+})
+
+Validator.extend('validDatetimeUpperBound', (upperBoundValue, [lowerBoundValue]) => {
+  const getTimestamp = (time) => {
+    let ISOTime = new Date(time).toISOString()
+    return moment(ISOTime).format('x')
+  }
+  return Number(getTimestamp(upperBoundValue)) > Number(getTimestamp(lowerBoundValue))
+}, {
+  hasTarget: true
+})
+
+Validator.extend('validDatetimeLowerBound', (lowerBoundValue, [upperBoundValue]) => {
+  const getTimestamp = (time) => {
+    let ISOTime = new Date(time).toISOString()
+    return moment(ISOTime).format('x')
+  }
+  return Number(getTimestamp(lowerBoundValue)) < Number(getTimestamp(upperBoundValue))
 }, {
   hasTarget: true
 })
@@ -278,6 +319,9 @@ Vue.use(VeeValidate, {
         min (field, length) {
           return i18n.t('message.formCharacterOverMin', { min: length })
         },
+        min_value (field, value) {
+          return i18n.t('message.formValueOverMin', { min: value })
+        },
         requireOneNumeric (field) {
           return i18n.t('message.formNumericeOverOne')
         },
@@ -293,12 +337,21 @@ Vue.use(VeeValidate, {
         validLowerBound() {
           return i18n.t('message.lowerBoundShouldBeSmallerThanUpperBound')
         },
+        validDatetimeUpperBound () {
+          return i18n.t('message.endTimeShouldBeLargerThanStartTime')
+        },
+        validDatetimeLowerBound() {
+          return i18n.t('message.StartTimeShouldBeSmallerThanEndTime')
+        },
         eitherOneIsRequired(field, params) {
           return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')
         },
         decimal(field, params) {
           if (params.length === 0) return i18n.t('message.formDecimal')
           return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
+        },
+        between(field, params) {
+          return i18n.t('message.numericShouldBeBetween', { min: params[0], max: params[1] })
         }
       }
     },
@@ -340,6 +393,9 @@ Vue.use(VeeValidate, {
         decimal(field, params) {
           if (params.length === 0) return i18n.t('message.formDecimal')
           return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
+        },
+        between(field, params) {
+          return i18n.t('message.numericShouldBeBetween', { min: params[0], max: params[1] })
         }
       }
     }

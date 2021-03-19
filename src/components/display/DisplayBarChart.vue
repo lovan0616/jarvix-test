@@ -6,6 +6,7 @@
       auto-resize
       @magictypechanged="magicTypeChanged"
       @brushselected="brushRegionSelected"
+      @click="chartClicked"
     />
     <arrow-button
       v-show="showPagination"
@@ -87,6 +88,10 @@ export default {
   name: 'DisplayBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -98,11 +103,15 @@ export default {
     },
     addons: { type: [Object, Array], default: () => ([]) },
     height: {type: String, default: '420px'},
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
     hasPagination: {
       type: Boolean,
       default: false
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -212,6 +221,9 @@ export default {
       }
       config.xAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       config.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
+      // 開啟點擊觸發事件
+      config.xAxis.triggerEvent = true
+      config.yAxis.triggerEvent = true
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 30) {
@@ -220,7 +232,7 @@ export default {
         config.dataZoom = parallelZoomIn()
         config.animation = false
       }
-      config.toolbox.show = this.showToolbox
+      config.toolbox.show = this.isShowToolbox
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
@@ -260,8 +272,31 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    chartClicked (params) {
+      let dataInfo = []
+      // handle click event from axis label
+      if ((params.componentType === 'xAxis' || params.componentType === 'yAxis') && params.targetType === 'axisLabel') {
+        dataInfo.push({
+          ...this.title[params.componentType][0],
+          value: params.value
+        })
+      }
+
+      // handle click event from a bar on the chart
+      if (params.componentType === 'series') {
+        params.dimensionNames.forEach((name, index) => {
+          dataInfo.push({
+            ...this.title[index === 0 ? 'xAxis' : 'yAxis'][0],
+            value: params.value[index]
+          })
+        })
+      }
+      dataInfo = dataInfo.filter(data => data.dc_id && data.stats_type)
+      if (dataInfo.length > 0) this.$emit('clickChart', dataInfo)
+    },
     composeColumn (element, colIndex) {
-      const shortenNumberMethod = this.shortenNumber
+      const labelFormatter = this.chartLabelFormatter
+      const maxValue = this.getChartMaxData(this.dataset.data)
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
@@ -274,7 +309,10 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+            formatter (value) { 
+              let num = value.data[colIndex + 1]
+              return labelFormatter(num, maxValue[colIndex]) 
+            }
           }
         })
       }
@@ -305,7 +343,7 @@ export default {
           return {
             type: 'range',
             properties: {
-              dc_name: this.title.yAxis[0].dc_name,
+              dc_id: this.title.yAxis[0].dc_id,
               data_type: this.title.yAxis[0].data_type,
               display_name: this.title.yAxis[0].display_name,
               start: this.roundNumber(coordRange[0]),
@@ -333,7 +371,7 @@ export default {
         this.selectedData = [{
           type: 'enum',
           properties: {
-            dc_name: this.title.xAxis[0].dc_name,
+            dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
             datavalues: dataValueIndexs.map(element => this.dataset.index[element]),

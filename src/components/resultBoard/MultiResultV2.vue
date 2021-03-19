@@ -10,7 +10,7 @@
       >
         <div
           class="single-question"
-          @click="askQuestion(singleQuestion)"
+          @click="askQuestion(singleQuestion, index)"
         >
           <question-name-v2
             :question-segmentation="singleQuestion"
@@ -115,6 +115,11 @@ export default {
     resultInfo: {
       type: Object,
       required: true
+    },
+    // 因應 Dashboard 問問題後不需要轉址
+    redirectOnSelect: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -163,10 +168,14 @@ export default {
     }
   },
   methods: {
-    askQuestion (questionInfo) {
-      this.$store.commit('dataSource/setAppQuestion', this.resultInfo.question)
+    askQuestion (questionInfo, selectedResultIndex) {
       this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
-      this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+      if (this.redirectOnSelect) {
+        this.$store.commit('dataSource/setAppQuestion', this.resultInfo.question)
+        this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+      } else {
+        this.$emit('select-result', this.resultInfo.segmentationList[selectedResultIndex])
+      }
     },
     isMeaningFul (value) {
       switch (value) {

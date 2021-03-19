@@ -1,5 +1,6 @@
 <template>
   <el-select
+    ref="input"
     v-model="selectedValue"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
@@ -10,6 +11,7 @@
     :multiple="multiple"
     :collapse-tags="collapseTags"
     :filterable="filterable"
+    v-bind="filterMethod ? {filterMethod: categoryFilter} : ''"
     class="sy-select theme-dark"
     style="text-align:left;"
     @change="$emit('change', $event)"
@@ -41,7 +43,8 @@ export default {
     size: { type: String, default: '' },
     multiple: {type: Boolean, default: false},
     collapseTags: {type: Boolean, default: false},
-    filterable: {type: Boolean, default: false}
+    filterable: {type: Boolean, default: false},
+    filterMethod: {type: Boolean, default: false}
   },
   computed: {
     selectedValue: {
@@ -53,6 +56,14 @@ export default {
         if (value === this.value) return
         this.$emit('input', value)
       }
+    }
+  },
+  methods: {
+    categoryFilter (query) {
+      this.$emit('filter', query)
+    },
+    focusInput () {
+      this.$refs.input.focus()
     }
   }
 }

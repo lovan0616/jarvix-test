@@ -23,34 +23,66 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div 
-            v-if="singleType.type === 'enum'"
-            class="filter-description"
-          >
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
+          <template v-if="dataset.timeStampList">
             <div 
-              v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
-              :key="'enum-' + propertiesIndex"
-              class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
-          </div>
-          <div 
-            v-if="singleType.type === 'range'"
-            class="region-description"
-          >
-            <div class="single-area">
-              {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              v-if="singleType.type === 'enum'"
+              class="filter-description"
+            >
+              <div class="column-name">{{ singleType.properties.display_name }} =</div>
+              <div 
+                v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
+                :key="'enum-' + propertiesIndex"
+                class="single-filter"
+              >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
             </div>
-          </div>
+            <div 
+              v-if="singleType.type === 'range'"
+              class="region-description"
+            >
+              <div class="single-area">
+                {{ $t('resultDescription.area') + (index + 1) }}:
+                {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
+                  start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope),
+                  end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true)
+                }) }}
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            {{ $t('resultDescription.area') + (index + 1) }}:
+            {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
+              start: roundNumber(singleType.properties.start), 
+              end: roundNumber(singleType.properties.end) 
+            }) }}
+          </template>
         </div>
       </div>
     </selected-region>
+    <feature-information-block
+      v-if="isStabilityChart"
+      :feature-information="dataset.pValuesFeatureInformation"
+      class="feature-information"
+    />
+    <insight-description-block
+      v-if="isShowDescription"
+      :title="$t('resultDescription.dataInsight')"
+      :message-list="dataset.descriptions"
+      icon-name="len-with-line-chart"
+    />
+    <insight-description-block
+      v-if="showWarning"
+      :title="$t('resultDescription.warning')"
+      :message-list="dataset.warnings"
+      message-type="warning"
+      icon-name="alert-circle"
+    />
   </div>
 </template>
 
 <script>
 import EchartAddon from './common/addon.js'
+import FeatureInformationBlock from './FeatureInformationBlock'
+import InsightDescriptionBlock from './InsightDescriptionBlock'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/components/display/common/addons'
 import {
@@ -73,8 +105,16 @@ const echartAddon = new EchartAddon({
 
 export default {
   name: 'DisplayLineChart',
+  components: {
+    FeatureInformationBlock,
+    InsightDescriptionBlock
+  },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -96,7 +136,23 @@ export default {
       type: Boolean,
       default: false
     },
-    showToolbox: {
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
+    isShowToolbox: {
+      type: Boolean,
+      default: true
+    },
+    isShowDescription: {
+      type: Boolean,
+      default: true
+    },
+    isShowCoefficients: {
+      type: Boolean,
+      default: true
+    },
+    showWarning: {
       type: Boolean,
       default: true
     },
@@ -115,7 +171,19 @@ export default {
     isShowLabelData: {
       type: Boolean,
       default: false
-    }
+    },
+    coefficients: {
+      type: Array,
+      default: null
+    },
+    coefficientLineType: {
+      type: String,
+      default: 'MEDIAN'
+    },
+    formula: {
+      type: Array,
+      default: null
+    },
   },
   data () {
     echartAddon.mapping({
@@ -147,6 +215,9 @@ export default {
       } else {
         return this.dataset.columns.map((element, colIndex) => this.composeColumn(element, colIndex))
       }
+    },
+    isStabilityChart () {
+      return !!this.dataset.pValuesFeatureInformation
     },
     options () {
       let config = {
@@ -218,7 +289,7 @@ export default {
       if (this.dataset.index.length > 10) {
         config.dataZoom = parallelZoomIn()
       }
-      config.toolbox.show = this.showToolbox
+      config.toolbox.show = this.isShowToolbox
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
@@ -328,6 +399,74 @@ export default {
         //   }
         // }
       }
+        
+      if (this.isShowCoefficients && this.coefficients) {
+        let lineData = []
+        let expression = ''
+        if (this.coefficients.length === 2) {
+          // ax + b
+          let offset = this.coefficients[0]
+          let gradient = this.coefficients[1]
+          // 迴歸線點
+          for (let i = 1; i <= this.dataset.index.length; i++) {
+            lineData.push(this.roundNumber(gradient * i + offset, 4))
+          }
+          let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
+          let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
+          expression = this.coefficientLineType
+            ? `${this.$t(`chart.feature.${this.coefficientLineType.toLowerCase()}`)}: ${this.formatComma(displayOffset.toFixed(2))}`
+            : `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
+        } else {
+          // ax^2 + bx + c
+          let offset = this.coefficients[0]
+          let firstDegree = this.coefficients[1]
+          let secondDegree = this.coefficients[2]
+          // 迴歸線點
+          for (let i = 0; i < this.dataset.index.length; i++) {
+            lineData.push(secondDegree * i * i + firstDegree * i + offset)
+          }
+          let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
+          let displayFirstDegree = this.formula ? this.formula[1] : Number((firstDegree).toFixed(4))
+          let displaySecondDegree = this.formula ? this.formula[2] : Number((secondDegree).toFixed(4))
+          expression = `y = ${this.formatComma(displayOffset)} ${displayFirstDegree > 0 ? '+' : '-'} ${this.formatComma(Math.abs(displayFirstDegree))}x ${displaySecondDegree > 0 ? '+' : '-'} ${this.formatComma(Math.abs(displaySecondDegree))}x^2`
+        }
+
+        // markLine
+        config.series.push({
+          name: '',
+          type: 'line',
+          showSymbol: false,
+          smooth: true,
+          color: '#FF9559',
+          symbol: 'none',
+          data: lineData,
+          markPoint: {
+            itemStyle: {
+              normal: {
+                color: 'transparent'
+              }
+            },
+            label: {
+              show: true,
+              position: 'left',
+              formatter: expression,
+              width: '100%',
+              lineHeight: 14,
+              padding: this.coefficients.length === 2 ? [1, 2, 1, 22] : [1, 2, 1, 50],
+              textStyle: {
+                color: '#FF9559',
+                fontSize: 14
+              },
+              backgroundColor: '#000'
+            },
+            data: [
+              {
+                coord: [lineData.length - 1, lineData[lineData.length - 1]]
+              }
+            ]
+          }
+        })
+      }
 
       return config
     },
@@ -397,8 +536,9 @@ export default {
       }, 0)
     },
     composeColumn (element, colIndex) {
-      const shortenNumberMethod = this.shortenNumber
       const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
+      const labelFormatter = this.chartLabelFormatter
+      const maxValue = this.getChartMaxData(this.dataset.data)
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
@@ -411,7 +551,10 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+            formatter (value) { 
+              let num = value.data[colIndex + 1]
+              return labelFormatter(num, maxValue[colIndex]) 
+            }
           }
         })
       }
@@ -433,16 +576,29 @@ export default {
 
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
-        return {
-          type: 'range',
-          properties: {
-            dc_name: this.title.xAxis[0].dc_name,
-            data_type: this.title.xAxis[0].data_type,
-            display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]]
+
+        if (this.dataset.timeStampList)
+          return {
+            type: 'range',
+            properties: {
+              dc_id: this.title.xAxis[0].dc_id,
+              data_type: this.title.xAxis[0].data_type,
+              display_name: this.title.xAxis[0].display_name,
+              start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
+              timeScope: this.dataset.timeScope
+            }
           }
-        }
+        return {
+            type: 'range',
+            properties: {
+              dc_id: this.title.xAxis[0].dc_id,
+              data_type: this.title.xAxis[0].data_type,
+              display_name: this.title.xAxis[0].display_name,
+              start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
+            }
+          }
       })
     },
     saveFilter () {
@@ -451,3 +607,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.display-line-chart {
+  height: 100%;
+}
+</style>

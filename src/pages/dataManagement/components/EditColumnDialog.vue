@@ -120,12 +120,23 @@
               class="data-table-row"
             >
               <div class="data-table-cell name">
-                <span
+                <el-tooltip
                   v-show="!isEditing(column.id)"
-                  :class="{'is-modified': column.name.isModified}"
-                >{{ column.name.primaryAlias }}</span>
+                  :disabled="column.originalName === column.name.primaryAlias" 
+                  placement="bottom-start">
+                  <template #content>
+                    {{ $t('editing.originalName') }}：{{ column.originalName }}
+                  </template>
+                  <span :class="{'is-modified': column.name.isModified}">
+                    {{ column.name.primaryAlias }}
+                    <svg-icon
+                      v-show="column.originalName !== column.name.primaryAlias"
+                      icon-class="information-circle"
+                      class="name-info-icon" />
+                  </span>
+                </el-tooltip>
                 <input-verify
-                  v-validate="'required'"
+                  v-validate="`letterSpace|max:${max}`"
                   v-show="isEditing(column.id)"
                   v-model="tempRowInfo.primaryAlias"
                   :name="'name-' + column.id"
@@ -181,15 +192,23 @@
                 </div>
               </div>
               <div class="data-table-cell tag">
-                <default-select 
-                  v-if="tempRowInfo.dataColumnId === column.id && !column.isClustering"
-                  v-model="tempRowInfo.columnStatsType"
-                  :option-list="typeOptionList(column.statsTypeOptionList)"
-                  class="tag-select input"
-                />
+                <template v-if="tempRowInfo.dataColumnId === column.id">
+                  <default-select
+                    v-if="!column.isClustering"
+                    v-model="tempRowInfo.columnStatsType"
+                    :option-list="typeOptionList(column.statsTypeOptionList)"
+                    class="tag-select input"
+                  />
+                  <default-select
+                    v-if="tempRowInfo.columnStatsType === 'NUMERIC'"
+                    v-model="tempRowInfo.isOrdinal"
+                    :option-list="ordinalOptionList"
+                    class="tag-select input"
+                  />
+                </template>
                 <span
                   v-else
-                >{{ column.statsType }}</span>
+                >{{ column.statsType + getColumnOrdinalState(column) }}</span>
               </div>
               <div class="data-table-cell created-method">
                 <span>{{ column.createdMethod }}</span>
@@ -262,7 +281,8 @@ import {
   getDataFrameColumnInfoById,
   updateDataFrameAlias,
   patchDataColumnPrimaryAlias,
-  deleteDataColumnById
+  deleteDataColumnById,
+  updateColumnOrdinality
 } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
@@ -299,7 +319,8 @@ export default {
         dataColumnId: null,
         aliasList: [],
         columnStatsType: null,
-        isClustering: null
+        isClustering: null,
+        isOrdinal: false
       },
       userEditInfo: {
         dataFrameId: this.tableInfo.id,
@@ -324,6 +345,13 @@ export default {
     },
     isJoinTable () {
       return this.columnList.some(element => element.parentDataFrameAlias)
+    },
+    ordinalOptionList () {
+      const isOrdinalOptions = [true, false]
+      return isOrdinalOptions.map(isOrdinal => ({
+        name: isOrdinal ? this.$t('editing.isOrdinal') : this.$t('editing.isNotOrdinal'),
+        value: isOrdinal
+      }))
     }
   },
   mounted () {
@@ -374,6 +402,7 @@ export default {
       this.tempRowInfo.aliasList = JSON.parse(JSON.stringify(columnInfo.aliasList))
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
       this.tempRowInfo.isClustering = columnInfo.isClustering
+      this.tempRowInfo.isOrdinal = columnInfo.isOrdinal
     },
     buildAlias () {
       this.isProcessing = true
@@ -397,6 +426,13 @@ export default {
       }
       if (filteredUserEditInfo.userEditedColumnInputList.length > 0){
         promises.push(updateDataFrameAlias(filteredUserEditInfo))
+
+        // Numeric 欄位設定時序
+        const numericColumnList = filteredUserEditInfo.userEditedColumnInputList.filter(column => column.columnStatsType === 'NUMERIC')
+        numericColumnList.length > 0 && promises.push(updateColumnOrdinality(numericColumnList.map(column => ({
+          id: column.dataColumnId,
+          isOrdinal: column.isOrdinal
+        }))))
       }
 
       if (modifiedPrimaryAliases.length > 0) {
@@ -440,6 +476,7 @@ export default {
         // 將 temp 資料塞回去
         this.columnList[index].aliasList = this.tempRowInfo.aliasList
         this.columnList[index].statsType = this.tempRowInfo.columnStatsType
+        this.columnList[index].isOrdinal = this.tempRowInfo.isOrdinal
 
         // 目前的 id 是否已經存在
         let hasId = false
@@ -461,7 +498,9 @@ export default {
         primaryAlias: null,
         dataColumnId: null,
         aliasList: null,
-        columnStatsType: null
+        columnStatsType: null,
+        isClustering: null,
+        isOrdinal: false
       }
       this.isProcessing = false
     },
@@ -563,6 +602,10 @@ export default {
     onCancelUploadPrimaryAliasTemplate () {
       this.isUploadPopoverVisible = false
       this.primaryAliasTemplateInput = null
+    },
+    getColumnOrdinalState (column) {
+      if (column.statsType !== 'NUMERIC') return ''
+      return `(${column.isOrdinal ? this.$t('editing.isOrdinal') : this.$t('editing.isNotOrdinal')})`
     }
   },
 }
@@ -592,7 +635,7 @@ export default {
 
     .data-table-row {
       align-items: flex-start;
-      .is-modified {
+      .is-modified, .name-info-icon {
         color: $theme-color-warning;
       }
     }
@@ -715,6 +758,10 @@ export default {
   }
   .el-input__icon {
     line-height: 24px;
+  }
+
+  &:not(:last-of-type) {
+    margin-bottom: 14px;
   }
 }
 </style>

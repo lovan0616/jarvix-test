@@ -70,10 +70,19 @@
                 <div class="connection-label">Host:</div>{{ connection.host }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Database:</div>{{ connection.database }}
+                <div class="connection-label">{{ connection.databaseType === 'ORACLE' ? 'SID' : 'Database' }}:</div>{{ connection.database }}
               </div>
-              <div class="conneciton-info">
+              <div 
+                v-if="connection.port"
+                class="conneciton-info"
+              >
                 <div class="connection-label">Port:</div>{{ connection.port }}
+              </div>
+              <div 
+                v-if="connection.instanceName !== null && connection.instanceName !== ''"
+                class="conneciton-info"
+              >
+                <div class="connection-label">Instance:</div>{{ connection.instanceName }}
               </div>
             </div>
             <a

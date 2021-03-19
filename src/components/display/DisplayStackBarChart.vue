@@ -72,6 +72,10 @@ export default {
     isParallel: {
       type: Boolean,
       default: false
+    },
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -196,7 +200,7 @@ export default {
       this.selectedData = [{
         type: 'enum',
         properties: {
-          dc_name: this.title.xAxis[0].dc_name,
+          dc_id: this.title.xAxis[0].dc_id,
           data_type: this.title.xAxis[0].data_type,
           display_name: this.title.xAxis[0].display_name,
           datavalues: params.batch[0].selected[0].dataIndex.map(element => {

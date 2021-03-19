@@ -49,8 +49,12 @@
       v-else
       class="data-table-body"
     >
+      <empty-info-block 
+        v-if="isSearchResultEmpty"
+        :msg="this.$t('message.emptyResult')"
+      />
       <upload-block
-        v-if="dataList.length === 0"
+        v-else-if="dataList.length === 0"
         :class="{'is-processing': isProcessing}"
         :bottom-message="emptyMessage"
         class="empty-status"
@@ -120,7 +124,6 @@
               icon-class="triangle" 
               class="icon dropdown-icon" />
           </a>
-
           <span 
             v-else-if="headInfo.value === 'state'"
             :class="{'is-processing': data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'}"
@@ -163,7 +166,7 @@
                 class="alert-icon"/>
             </el-tooltip>
           </span>
-          <span 
+          <span
             v-else-if="headInfo.value === 'joinCount'"
           >{{ data[headInfo.value] === 2 ? $t('editing.tableJoin') : $t('editing.userUpload') }}</span>
           <span v-else-if="headInfo.value === 'dataFrameStatus'">
@@ -199,7 +202,7 @@
             >
               <template #content>
                 <div 
-                  v-for="info in dbConnectionLogInfo"
+                  v-for="info in dbConnectionLogInfo(data[headInfo.value])"
                   :key="info.title"
                   class="db-connection-log-info info"
                 >
@@ -223,6 +226,19 @@
               </span>
             </el-tooltip>
           </span>
+          <!-- 暫時放這 -->
+          <span v-else-if="headInfo.value === 'createMethodLabel'">
+            {{ data[headInfo.value] }} <a
+              v-if="data.joinCount > 1"
+              :disabled="isInProcess(data) || isPending(data) || calculateId === data.id"
+              class="link" 
+              href="javascript:void(0);"
+              @click="calculateMeta(data)"
+            ><svg-icon
+              v-show="calculateId === data.id"
+              icon-class="spinner"
+            />{{ $t('editing.reCalculateMeta') }}</a>
+          </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
       </div>
@@ -231,8 +247,10 @@
 </template>
 <script>
 import UploadBlock from '@/components/UploadBlock'
-import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapGetters } from 'vuex'
+import { reCalculateMetaData } from '@/API/DataSource'
 
 /**
  * Data table 可傳入屬性
@@ -265,7 +283,8 @@ export default {
   name: 'DataTable',
   components: {
     UploadBlock,
-    DropdownSelect
+    DropdownSelect,
+    EmptyInfoBlock
   },
   props: {
     headers: {
@@ -296,26 +315,20 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    isSearchResultEmpty: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       sortStatus: null,
-      dbConnectionLogInfo: [{
-        title: 'dbConnectionStartTime',
-        label: this.$t('editing.startTime')
-      },
-      {
-        title: 'dbConnectionEndTime',
-        label: this.$t('editing.endTime')
-      },
-      {
-        title: 'dbConnectionElapsedTime',
-        label: this.$t('editing.elapsedTime')
-      }]
+      calculateId: null
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },
@@ -345,6 +358,25 @@ export default {
     this.setSortStatus()
   },
   methods: {
+    dbConnectionLogInfo (status) {
+      return status === 'Process'
+      ? [{
+        title: 'dbConnectionStartTime',
+        label: this.$t('editing.startTime')
+      }]
+      : [{
+        title: 'dbConnectionStartTime',
+        label: this.$t('editing.startTime')
+      },
+      {
+        title: 'dbConnectionEndTime',
+        label: this.$t('editing.endTime')
+      },
+      {
+        title: 'dbConnectionElapsedTime',
+        label: this.$t('editing.elapsedTime')
+      }]
+    },
     setSortStatus () {
       let sortObj = {}
       this.headers.forEach(element => {
@@ -376,7 +408,8 @@ export default {
       }
 
       let order = this.sortStatus[name] > 0 ? 'asc' : 'desc'
-      this.$emit('update:dataList', orderBy(this.dataList, [name], [order]))
+
+      this.$emit('sort', {name, order})
     },
     linkTo (link, id) {
       this.$router.push({
@@ -412,16 +445,17 @@ export default {
     },
     doAction (actionName, data) {
       if (
-        !actionName 
+        !actionName
         || this.isDisabledActionButton(actionName, data)
       ) return false
       this.$emit(actionName, data)
     },
     isDisabledActionButton(actionName, data) {
       if (
-        this.isProcessing 
+        this.isProcessing
         || this.isInProcess(data) 
         || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
+        || (data.originType === 'script' && actionName !== 'delete')
       ) return true
       return false
     },
@@ -472,9 +506,15 @@ export default {
     },
     showSubAction (subAction, data) {
       return subAction.filter(action => {
+        let hasPermission = true
+        if (action.checkPermission) {
+          // 需要擁有權限或是是自己建立的表
+          hasPermission = this.hasPermission(action.checkPermission) || Number(data.createBy) === this.$store.state.userManagement.userId
+        }
+        if (action.dialogName === 'batchLoad' && data.joinCount > 1) return false
         if (action.dialogName === 'etlSetting') return data.etlExists
-        if (action.dialogName === 'createdInfo') return data.originType === 'database'
-        return true
+        if (action.dialogName === 'createdInfo') return data.originType === 'database' && hasPermission
+        return hasPermission
       })
     },
     isInProcess (data) {
@@ -491,6 +531,15 @@ export default {
       let minute = this.$tc('timeScopeUnit.allowArg.minute', Math.floor(time % 3600 / 60)) + ' '
       let second = this.$tc('timeScopeUnit.allowArg.second', time % 60)
       return  hour + minute + second
+    },
+    calculateMeta (dataInfo) {
+      if (this.isInProcess(dataInfo) || this.isPending(dataInfo) || this.calculateId === dataInfo.id) return false
+      this.calculateId = dataInfo.id
+      // 重新計算 meta
+      reCalculateMetaData(this.calculateId).then(() => {
+        this.calculateId = null
+        this.$emit('fetch')
+      })
     }
   },
 }
@@ -565,6 +614,11 @@ export default {
 
     &[disabled] {
       cursor: not-allowed;
+      &:hover {
+        .dropdown {
+          visibility: hidden;
+        }
+      }
     }
 
     &:hover {

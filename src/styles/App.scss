@@ -23,6 +23,8 @@
 @import './common/layout';
 
 @import './element-ui/components';
+@import './element-ui/date-picker';
+@import './element-ui/el-pagination';
 
 // page
 @import './pages/data-management';
@@ -58,6 +60,7 @@ $--font-path: '../assets/fonts/Oswald';
 @import './components/dialog';
 @import './components/result-board';
 @import './components/tooltip';
+@import './components/cascader';
 
 /* chart */
 @import './chart/insights';

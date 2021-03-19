@@ -4,6 +4,7 @@ import router from '../router'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * 注意這邊 headers 取 token 的寫法
@@ -25,7 +26,12 @@ const service = axios.create({
       toString () {
         return localStorage.getItem('locale')
       }
-    }
+    },
+    trace_key: {
+      toString() {
+        return uuidv4()
+      }
+    },
   }
 })
 
@@ -43,6 +49,7 @@ service.interceptors.response.use(
   response => {
     // 檔案下載
     if (response.headers['content-type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') return { data: response.data }
+    if (!response.data.error && response.headers['content-type'] === 'application/octet-stream;charset=utf-8') return { data: response.data }
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
@@ -54,8 +61,20 @@ service.interceptors.response.use(
     }
 
     if (res.error) {
+      let messageString
+      let stackTrace = res.error.stackTrace
+      if (stackTrace) {
+        const blob = new Blob([stackTrace], { type: 'text/plain' })
+        const url = window.URL.createObjectURL(blob)
+        messageString = `<p style="font-size: 14px;">${res.error.message || i18n.t('errorMessage.defaultMsg')}</p>
+          <a href="${url}" class="link" download="errors-log">${ i18n.t('errorMessage.errorMessageDownload') }</a>`
+      } else {
+        messageString = res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg')
+      }
+
       Message({
-        message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
+        dangerouslyUseHTMLString: !!stackTrace,
+        message: messageString,
         type: res.error.type,
         duration: 3 * 1000,
         showClose: true

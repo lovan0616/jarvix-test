@@ -18,52 +18,35 @@
       >
         <ul class="multi-analysis__list">
           <li
-            :class="{'is-active': activeTab === intentType.OVERVIEW}"
+            v-for="(typeInfo, index) in switchTypeList"
+            :key="typeInfo.denotation"
+            :class="{ 'is-active': activeTab === typeInfo.denotation }"
             class="multi-analysis__item"
-            @click="clickTab(intentType.OVERVIEW)"
+            @click="clickTab(typeInfo.denotation, index)"
           >
             <span class="multi-analysis__item-label">
-              <svg-icon icon-class="basic-info"/>
-              {{ $t('clustering.dataOverview') }}
+              <svg-icon :icon-class="typeInfo.icon"/>
+              {{ typeInfo.name }}
             </span>
             <div class="multi-analysis__item-status">
               <spinner 
-                v-if="isProcessing[intentType.OVERVIEW]" 
+                v-if="typeInfo.isProcessing" 
                 size="16"/>
               <svg-icon 
-                v-else-if="isKeyResultTaskFailed[intentType.OVERVIEW]"
-                class="exclamation-triangle-icon"
-                icon-class="exclamation-triangle" />
-            </div>
-          </li>
-          <li
-            :class="{'is-active': activeTab === intentType.CLUSTERING}"
-            class="multi-analysis__item"
-            @click="clickTab(intentType.CLUSTERING)"
-          >
-            <span class="multi-analysis__item-label">
-              <svg-icon icon-class="clustering"/>
-              {{ $t('clustering.clusteringAnalysis') }}
-            </span>
-            <div class="multi-analysis__item-status">
-              <spinner 
-                v-if="isProcessing[intentType.CLUSTERING]" 
-                size="16"/>
-              <svg-icon 
-                v-else-if="isKeyResultTaskFailed[intentType.CLUSTERING]"
+                v-else-if="!isHistogramBinSetting && typeInfo.isFailed"
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
               <div
-                v-else-if="hasFetchedClustering"
+                v-else-if="hasAdvancedSetting(index)"
                 class="multi-analysis__item-dropdownlist"
               >
                 <svg-icon 
                   icon-class="more"
                   class="more-icon" />
                 <dropdown-select
-                  :bar-data="barData"
+                  :bar-data="barData[typeInfo.denotation]"
                   class="dropdown"
-                  @switchDialogName="switchDialogName"
+                  @switchDialogName="switchDialogName($event, typeInfo)"
                 />
               </div>
             </div>
@@ -137,8 +120,23 @@
       <save-clustering-dialog
         v-if="currentResultId && isShowSaveClusteringDialog"
         :data-frame-alias="transcript.dataFrame.dataFrameAlias"
-        :result-id="cachedResultId[intentType.CLUSTERING]"
-        @close="isShowSaveClusteringDialog = false"
+        :result-id="selectedTypeInfo.cachedResultId"
+        @close="closeDialog"
+      />
+      <histogram-bin-setting-dialog
+        v-if="currentResultId && isShowHistogramBinSettingDialog"
+        @re-analyze="reAnalyze"
+        @close="closeDialog"
+      />
+      <clustering-number-setting-dialog
+        v-if="currentResultId && isShowClusteringNumberSettingDialog"
+        @re-analyze="reAnalyze"
+        @close="closeDialog"
+      />
+      <prediction-interval-setting-dialog
+        v-if="currentResultId && isShowPredictionIntervalSettingDialog"
+        @re-analyze="reAnalyze"
+        @close="closeDialog"
       />
     </template>
   </result-board>
@@ -147,6 +145,9 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
+import HistogramBinSettingDialog from '@/components/dialog/HistogramBinSettingDialog'
+import ClusteringNumberSettingDialog from '@/components/dialog/ClusteringNumberSettingDialog'
+import PredictionIntervalSettingDialog from '@/components/dialog/PredictionIntervalSettingDialog'
 import { Message } from 'element-ui'
 import { intentType } from '@/utils/general'
 import { mapState } from 'vuex'
@@ -158,6 +159,9 @@ export default {
     RecommendedInsight,
     DropdownSelect,
     SaveClusteringDialog,
+    HistogramBinSettingDialog,
+    ClusteringNumberSettingDialog,
+    PredictionIntervalSettingDialog,
     NotifyInfoBlock
   },
   props: {
@@ -200,40 +204,56 @@ export default {
     pinboardAccountId: {
       type: Number,
       default: null
-    }
+    },
+    isHistogramBinSetting: {
+      type: Boolean,
+      default: false
+    },
   },
   data: () => {
     return {
-      isProcessing: {
-        OVERVIEW: false,
-        CLUSTERING: false
-      },
-      cachedResultId: {
-        OVERVIEW: null,
-        CLUSTERING: null
-      },
-      isKeyResultTaskFailed: {
-        OVERVIEW: false,
-        CLUSTERING: false
-      },
       activeTab: null,
       isShowSaveClusteringDialog: false,
-      intentType
+      isShowHistogramBinSettingDialog: false,
+      isShowClusteringNumberSettingDialog: false,
+      isShowPredictionIntervalSettingDialog: false,
+      intentType,
+      switchTypeList: [],
+      selectedTypeInfo: null
     }
   },
   computed: {
     ...mapState('result', ['currentResultId']),
+    ...mapState('dataSource', ['algoConfig']),
     barData () {
-      return [
-        {
-          title: 'clustering.saveClusteringResultAsColumn',
-          icon: 'feature',
-          dialogName: 'saveClustering'
-        },
-      ]
-    },
-    hasFetchedClustering () {
-      return this.intent === this.intentType.CLUSTERING || this.cachedResultId.CLUSTERING
+      return {
+        CLUSTERING: [
+          {
+            title: 'clustering.clusteringNumberSetting',
+            icon: 'filter-setting',
+            dialogName: 'clusteringNumberSetting'
+          },
+          {
+            title: 'clustering.saveClusteringResultAsColumn',
+            icon: 'feature',
+            dialogName: 'saveClustering'
+          },
+        ],
+        PREDICTION: [
+          {
+            title: 'prediction.predictionIntervalSetting',
+            icon: 'add-feature',
+            dialogName: 'predictionIntervalSetting'
+          },
+        ],
+        OVERVIEW: [
+          {
+            title: 'editing.histogramBinSetting',
+            icon: 'add-feature',
+            dialogName: 'histogramBinSetting'
+          },
+        ],
+      }
     },
     isShowInfo () {
       const intentsWithInfo = ['CLUSTERING']
@@ -256,8 +276,16 @@ export default {
   },
   mounted () {
     if (this.currentResultId) {
-      this.cachedResultId[this.intent] = this.currentResultId
       this.activeTab = this.intent
+      const OverViewIndex = this.resultInfo.canDoList.indexOf('OVERVIEW')
+      if(OverViewIndex !== -1) this.resultInfo.canDoList.splice(0, 0, this.resultInfo.canDoList.splice(OverViewIndex, 1)[0])
+      this.switchTypeList = this.resultInfo.canDoList.map(type => ({
+        denotation: type,
+        ...this.getSwitchTypeInfoList(type),
+        isProcessing: false,
+        cachedResultId: type === this.intent ? this.currentResultId : null,
+        isFailed: false
+      }))
     }
   },
   methods: {
@@ -267,57 +295,127 @@ export default {
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     },
-    fetchSpecificType (type) {
+    fetchSpecificType (type, index, data) {
       // 有資料正在 fetching 則擋掉
-      if (Object.values(this.isProcessing).some(item => item)) return
+      const isFetching = this.switchTypeList.some(typeInfo => typeInfo.isProcessing)
+      if (isFetching) return
+
+      const targetTypeInfo = this.switchTypeList[index]
+
       // 已經拿過 result id 就重複使用
-      if (this.cachedResultId[type]) {
-        this.isProcessing[type] = true
-        this.activeTab = this.intentType[type]
-        this.$store.commit('result/updateCurrentResultId', this.cachedResultId[type])
-        this.$emit('fetch-new-components-list', this.cachedResultId[type])
+      if (targetTypeInfo.cachedResultId) {
+        targetTypeInfo.isProcessing = true
+        this.activeTab = type
+        this.$store.commit('result/updateCurrentResultId', targetTypeInfo.cachedResultId)
+        this.$emit('fetch-new-components-list', targetTypeInfo.cachedResultId)
         return
       }
 
-      this.isProcessing[type] = true
+      targetTypeInfo.isProcessing = true
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
-        type: type.toLowerCase()
+        type: type,
+        settingConfig: {
+          ...((type === this.intentType.CLUSTERING || type === this.intentType.PREDICTION) && {
+            algoConfig: this.algoConfig[type.toLowerCase()] || null,
+          }),
+          ...((type === this.intentType.OVERVIEW && data) && {
+            displayConfig: {
+              histogramBinSize: data
+            }
+          })
+        }
       })
         .then(({ resultId }) => {
-          this.isProcessing[type] = false
-          this.cachedResultId[type] = resultId
-          this.activeTab = this.intentType[type]
+          this.switchTypeList[index] = {
+            ...targetTypeInfo,
+            isProcessing: false,
+            cachedResultId: resultId
+          }
+          this.activeTab = type
           this.$store.commit('result/updateCurrentResultId', resultId)
           this.$emit('fetch-new-components-list', resultId)
         })
-        .catch(() => {
-          this.clearAllProcessingStatus()
-        })
+        .catch(() => this.clearAllProcessingStatus())
     },
-    clickTab (tabName) {
-      if (this.activeTab === this.intentType[tabName]) return
-      this.fetchSpecificType(tabName)
+    clickTab (tabName, index) {
+      if (this.activeTab === tabName) return
+      this.fetchSpecificType(tabName, index)
     },
-    switchDialogName (action) {
-      if (action !== 'saveClustering') return
-      if (!this.resultInfo.canSaveResult) {
-        return Message({
-          message: this.$t('clustering.reasonsOfnotAllowedToSaveClusteringResultAsColumn'),
-          type: 'warning',
-          duration: 3 * 1000,
-          showClose: true
-        })
+    switchDialogName (action, typeInfo) {
+      this.selectedTypeInfo = typeInfo
+      switch (action) {
+        case 'saveClustering':
+          if (!this.resultInfo.canSaveResult) {
+            return Message({
+              message: this.$t('clustering.reasonsOfnotAllowedToSaveClusteringResultAsColumn'),
+              type: 'warning',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          }
+          
+          this.isShowSaveClusteringDialog = true
+          break
+
+        case 'clusteringNumberSetting':
+          this.isShowClusteringNumberSettingDialog = true
+          break
+
+        case 'histogramBinSetting':
+          this.isShowHistogramBinSettingDialog = true
+          break
+        
+        case 'predictionIntervalSetting':
+          this.isShowPredictionIntervalSettingDialog = true
       }
-      this.isShowSaveClusteringDialog = true
+    },
+    reAnalyze (TYPE, data) {
+      let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType[TYPE])
+      this.switchTypeList[index].cachedResultId = null
+      this.fetchSpecificType(this.intentType[TYPE], index, data)
+      this.closeDialog()
+    },
+    closeDialog () {
+      switch (this.activeTab) {
+        case this.intentType.OVERVIEW:
+          this.isShowHistogramBinSettingDialog = false
+          break
+
+        case this.intentType.CLUSTERING:
+          this.isShowSaveClusteringDialog = false
+          this.isShowClusteringNumberSettingDialog = false
+          break
+
+        case this.intentType.PREDICTION:
+          this.isShowPredictionIntervalSettingDialog = false
+          break
+      }
+      this.selectedTypeInfo = null
     },
     clearAllProcessingStatus () {
-      for (const key in this.isProcessing) {
-        this.isProcessing[key] = false
+      this.switchTypeList.forEach(type => type.isProcessing = false)
+    },
+    hasAdvancedSetting (index) {
+      let currentType = this.switchTypeList[index].denotation
+      switch (currentType) {
+        case this.intentType.OVERVIEW:
+          return this.isHistogramBinSetting
+        case this.intentType.CLUSTERING:
+        case this.intentType.PREDICTION:
+          return this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId
+        default:
+          return false
       }
     },
     setTaskFailed () {
-      this.isKeyResultTaskFailed[this.activeTab] = true
+      this.switchTypeList.forEach((type, index) => { 
+        if (type.denotation !== this.activeTab) return
+        this.$set(this.switchTypeList, index, {
+          ...type,
+          isFailed: true
+        })
+      })
     }
   }
 }

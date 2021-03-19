@@ -16,14 +16,37 @@
             @change="chooseTable"
           />
         </div>
+        <div 
+          v-if="isShowDistributed"
+          class="data-frame__distributed"
+        >
+          <div class="title">{{ $t('etl.isDistributed') }}：</div>
+          <el-switch 
+            v-model="isDistributed"
+            class="setting-switch"
+            @change="changeDistributedStatus"
+          />
+        </div>
+        <div 
+          v-if="isDistributed"
+          class="data-frame__distributed data-frame__select"
+        >
+          <div class="title">{{ $t('etl.distributedColumnName') }}：</div>
+          <default-select
+            key="distributedColumnSelect"
+            v-model="distributedColumnName"
+            :option-list="columnOptionList"
+            size="mini"
+          />
+        </div>
         <div class="data-frame__info">
           <dl>
             <dt>{{ $t('etl.columnCount') }}：</dt>
-            <dd>{{ formatComma(currentTableInfo.columns.length) || '-' }}</dd>
+            <dd>{{ formatComma(currentTableInfo.columns.length) }}</dd>
           </dl>
           <dl>
             <dt>{{ $t('etl.rowCount') }}：</dt>
-            <dd>{{ formatComma(currentTableInfo.rowCount || '-') }}</dd>
+            <dd>{{ formatComma(currentTableInfo.rowCount) }}</dd>
           </dl>
         </div>
         <div class="data-frame__select">
@@ -186,6 +209,18 @@ export default {
     }
   },
   computed: {
+    columnOptionList () {
+      if (!this.currentTableInfo.columns || this.currentTableInfo.columns.length === 0) return []
+      return this.currentTableInfo.columns.filter(element => element.active).map(element => {
+        return {
+          name: element.primaryAlias,
+          value: element.name
+        }
+      })
+    },
+    isShowDistributed () {
+      return localStorage.getItem('isShowDistributedSetting') === 'true'
+    },
     tableOptionList () {
       if (this.etlTableList.length === 0) return []
       return this.etlTableList.map((element, index) => {
@@ -243,6 +278,23 @@ export default {
     someColumnSelected () {
       let selected = (column) => column.active
       return this.etlTableList[this.currentTableIndex].columns.some(selected)
+    },
+    isDistributed: {
+      get () {
+        
+        return this.currentTableInfo.isDistributed
+      },
+      set (value) {
+        this.$store.commit('dataManagement/updateIsDistributed', value)
+      }
+    },
+    distributedColumnName: {
+      get () {
+        return this.currentTableInfo.distributedColumnName
+      },
+      set (value) {
+        this.$store.commit('dataManagement/updateDistributedColumnName', value)
+      }
     }
   },
   mounted () {
@@ -252,6 +304,13 @@ export default {
     window.clearInterval(this.intervalFunction)
   },
   methods: {
+    changeDistributedStatus (value) {
+      if (value) {
+        this.$store.commit('dataManagement/updateDistributedColumnName', this.columnOptionList[0].value)
+      } else {
+        this.$store.commit('dataManagement/updateDistributedColumnName', null)
+      }
+    },
     chooseTable () {
       this.isProcessing = true
       this.$store.commit('dataManagement/changeCurrentTableIndex', this.currentTableIndex)
@@ -326,6 +385,13 @@ export default {
         >>> .sy-select {
           border: 1px solid #2AD2E2;
         }
+      }
+      .data-frame__distributed {   
+        display: flex;
+        align-items: center;     
+        flex-basis: 100%;
+        margin-bottom: 8px;
+        font-size: 14px;
       }
       .data-frame__name,
       .data-frame__select {

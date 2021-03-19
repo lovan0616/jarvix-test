@@ -187,6 +187,35 @@ export function deleteDataColumnById(dataColumnId) {
 }
 
 /**
+ * fuzzy search dataColumn value by id
+ * @param {Number} dataColumnId - id
+ */
+export function dataValueSearch(dataColumnId, searchInfo) {
+  return request({
+    url: `/dataColumn/${dataColumnId}/dataValue-search`,
+    method: 'POST',
+    data: {
+      page: 0,
+      size: 200,
+      restrictions: null,
+      ...searchInfo
+    }
+  })
+}
+
+/**
+ * get dataColumn value by id
+ * @param {Number} dataColumnId - id
+ * @param {String} searchString - query
+ */
+export function getDataColumnValue(dataColumnId) {
+  return request({
+    url: `/dataColumn/${dataColumnId}/value-and-alias`,
+    method: 'GET'
+  })
+}
+
+/**
  * update dataFrame alias
  * @param {Object} userEditedInput - 欲更新的資料
  * @param {Number} userEditedInput.dataFrameId - dataFrameId
@@ -476,5 +505,27 @@ export function checkClusteringColumnStatus (taskId) {
   return request({
     url: `/dataColumn/clustering-columns/${taskId}`,
     method: 'GET'
+  })
+}
+
+/**
+ * 重新計算 meta
+ */
+export function reCalculateMetaData (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/calculated-mata`,
+    method: 'POST'
+  })
+}
+
+/**
+ * update numeric column ordinal setting
+ * @param {Object} data - 欄位設定資料
+ */
+export function updateColumnOrdinality(data) {
+  return request({
+    url: `/dataColumn/ordinality`,
+    method: 'PUT',
+    data
   })
 }

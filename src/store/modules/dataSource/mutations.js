@@ -29,8 +29,17 @@ export default {
   setCurrentQuestionId (state, data) {
     state.currentQuestionId = data
   },
-  setCurrentQuestionDataFrameId(state, data) {
+  setCurrentQuestionDataFrameId (state, data) {
     state.currentQuestionDataFrameId = data
+  },
+  setAlgoConfig (state, data) {
+    state.algoConfig = data
+  },
+  resetAlgoConfig (state) {
+    state.algoConfig.clustering.clusteringCount = null
+    state.algoConfig.prediction.predictionIntervalLength = '4'
+    state.algoConfig.standardLineType = 'MEDIAN'
+    state.algoConfig.stddevTimes = 3
   },
   setFilterList (state, data) {
     if (data.length === 0) return false
@@ -61,13 +70,13 @@ export default {
       showClose: true
     })
   },
-  setUpdatedFilterList(state, data) {
+  setUpdatedFilterList (state, data) {
     state.filterList = data
   },
-  setDataFrameList(state, data) {
+  setDataFrameList (state, data) {
     state.dataFrameList = data
   },
-  setDataFrameId(state, id) {
+  setDataFrameId (state, id) {
     state.dataFrameId = id
   },
   clearFilterList (state) {
@@ -94,7 +103,7 @@ export default {
       ? 'message.dataFrameUpdated'
       : 'message.dataFrameBuilt'
     Message({
-      message: i18n.t(messageString, {name: data.primaryAlias}),
+      message: i18n.t(messageString, { name: data.primaryAlias }),
       type: 'success',
       duration: 3 * 1000,
       showClose: true

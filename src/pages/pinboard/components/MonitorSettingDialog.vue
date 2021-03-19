@@ -136,7 +136,7 @@
   </writing-dialog>
 </template>
 <script>
-import { getMonitorSetting, newMonitorSetting, updateMonitorSetting } from '@/API/Monitor'
+import { getMonitorSetting, newMonitorSetting, updateMonitorSetting } from '@/API/PinboardMonitor'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
@@ -176,16 +176,6 @@ export default {
         { value: 'Count', name: this.$t('aggregation.count') },
         { value: 'Max', name: this.$t('aggregation.max') },
         { value: 'Min', name: this.$t('aggregation.min') }
-      ],
-      timeScopeUnitOptionList: [
-        { value: 'Second', name: this.$t('timeScopeUnit.second') },
-        { value: 'Minute', name: this.$t('timeScopeUnit.minute') },
-        { value: 'Hour', name: this.$t('timeScopeUnit.hour') },
-        { value: 'Day', name: this.$t('timeScopeUnit.day') },
-        { value: 'Week', name: this.$t('timeScopeUnit.week') },
-        { value: 'Month', name: this.$t('timeScopeUnit.month') },
-        { value: 'Season', name: this.$t('timeScopeUnit.season') },
-        { value: 'Year', name: this.$t('timeScopeUnit.year') }
       ],
       settingInfo: {
         id: null,
@@ -304,10 +294,6 @@ export default {
 
     .has-error {
       border-bottom: 1px solid #F1616D;
-    }
-
-    .error-text {
-
     }
 
     /deep/ .input-verify {

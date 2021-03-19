@@ -84,6 +84,10 @@ export default {
     isParallel: {
       type: Boolean,
       default: false
+    },
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -215,7 +219,7 @@ export default {
         return {
           type: 'range',
           properties: {
-            dc_name: this.title.xAxis[0].dc_name,
+            dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
             start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],

@@ -1,42 +1,57 @@
 <template>
   <div class="data-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
+      <h1 class="title">
+        <div class="title-left">{{ $t('nav.dataManagement') }}</div>
+        <div class="title-right">
+          <data-storage-usage-info />
+        </div>
+      </h1>
       <div class="bread-crumb">
         {{ $t('editing.dataSource') }}
       </div>
     </div>
     <div class="table-board">
       <div class="board-title-row">
-        <div class="button-block">
-          <button 
-            class="btn-m btn-default btn-has-icon"
-            @click="createDataSource"
-          >
-            <svg-icon 
-              icon-class="folder-plus" 
-              class="icon"/>{{ $t('editing.newDataSource') }}
-          </button>
-          <!-- <button class="btn-m btn-default btn-has-icon"
-            :disabled="reachUploadLimit"
-            @click="createDataSource"
-          >
-            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
-          </button> -->
-          <!-- <div class="reach-limit"
-            v-if="reachUploadLimit"
-          >{{ $t('notification.uploadLimitNotification') }}</div> -->
+        <div class="board-title-row__left">
+          <div class="button-block">
+            <button 
+              class="btn-m btn-default btn-has-icon"
+              @click="createDataSource"
+            >
+              <svg-icon 
+                icon-class="folder-plus" 
+                class="icon"/>{{ $t('editing.newDataSource') }}
+            </button>
+
+            <!-- <button class="btn-m btn-default btn-has-icon"
+              :disabled="reachUploadLimit"
+              @click="createDataSource"
+            >
+              <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
+            </button> -->
+            <!-- <div class="reach-limit"
+              v-if="reachUploadLimit"
+            >{{ $t('notification.uploadLimitNotification') }}</div> -->
+          </div>
+          <search-block
+            v-model="searchedDataSourceName"
+            :placeholder="$t('editing.searchDataSource')"
+            class="search-block"
+          />
         </div>
         <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: dataSourceLimitCount}) }}</div> -->
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="dataList"
+        :data-list="filterDataList"
         :empty-message="$t('editing.clickToCreateDataSource')"
         :loading="isLoading"
+        :is-search-result-empty="searchedDataSourceName.length > 0 && filterDataList.length === 0"
         @create="createDataSource"
         @rename="confirmRename"
         @delete="confirmDelete"
+        @sort="sortData"
       />
     </div>
     <create-data-source
@@ -61,23 +76,28 @@
   </div>
 </template>
 <script>
+import SearchBlock from '@/components/SearchBlock'
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import CreateDataSource from './components/CreateDataSource'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
+import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import orderBy from 'lodash.orderby'
 
 export default {
   name: 'DataSourceList',
   components: {
+    SearchBlock,
     DataTable,
     FileUploadDialog,
     CreateDataSource,
     ConfirmDeleteDialog,
-    ConfirmChangeNameDialog
+    ConfirmChangeNameDialog,
+    DataStorageUsageInfo
   },
   data () {
     return {
@@ -87,6 +107,7 @@ export default {
       deleteId: null,
       editDataSource: null,
       dataList: [],
+      searchedDataSourceName: '',
       // 資料處理中
       isProcessing: false,
       isLoading: false
@@ -97,6 +118,9 @@ export default {
     // reachUploadLimit () {
     //   return this.dataList.length >= this.dataSourceLimitCount
     // },
+    filterDataList () {
+      return this.dataList.filter(data => data.name.toLowerCase().includes(this.searchedDataSourceName.toLowerCase()))
+    },
     tableHeaders () {
       return [
         {
@@ -128,7 +152,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '200px',
+          width: '160px',
           action: [
             {
               name: this.$t('button.rename'),
@@ -182,6 +206,9 @@ export default {
         }).catch(() => {
           this.isLoading = false
         })
+    },
+    sortData ({name, order}) {
+      this.dataList = orderBy(this.dataList, [name], [order])
     },
     createDataSource () {
       this.showCreateDataSourceDialog = true

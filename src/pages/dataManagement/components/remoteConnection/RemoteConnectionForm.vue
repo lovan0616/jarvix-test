@@ -55,8 +55,8 @@
     <input-block 
       v-validate="'required'"
       v-model="connectInfo.database"
+      :label="connectInfo.databaseType === 'ORACLE' ? 'SID' : 'Database'"
       class="dialog-input"
-      label="Database"
       name="database"
     />
     <input-block 
@@ -74,14 +74,21 @@
         label="Host"
         name="host"
       />
-      <input-block 
-        v-validate="'required'"
+      <input-block
         v-model="connectInfo.port"
         class="dialog-input port"
         label="Port"
         name="port"
       />
     </div>
+    <input-block
+      v-validate="'max:128'"
+      v-if="connectInfo.databaseType === 'MSSQL'"
+      v-model="connectInfo.instanceName"
+      class="dialog-input"
+      label="Instance"
+      name="instanceName"
+    />
   </div>
 </template>
 <script>
@@ -115,7 +122,8 @@ export default {
           password: null,
           port: null,
           database: null,
-          schema: null
+          schema: null,
+          instanceName: null
         }
       }
     }
@@ -134,6 +142,10 @@ export default {
         {
           name: 'ORACLE',
           value: 'ORACLE'
+        },
+        {
+          name: 'MYSQL',
+          value: 'MYSQL'
         }
       ]
     }
@@ -144,6 +156,13 @@ export default {
     },
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
+    }
+  },
+  watch: {
+    'connectInfo.databaseType' (value) {
+      if (value) {
+        this.connectInfo.instanceName = null
+      }
     }
   }
 }
@@ -178,10 +197,6 @@ export default {
 .inline-input-block {
   width: 100%;
   display: flex;
-
-  .dialog-input {
-    margin-bottom: 0;
-  }
 
   .host {
     width: 74.66%;

@@ -20,6 +20,15 @@ const router = new Router({
           beforeEnter: (to, from, next) => {
             const accountId = store.getters['userManagement/getCurrentAccountId']
             const groupId = store.getters['userManagement/getCurrentGroupId']
+            if (!accountId) {
+              Message({
+                message: i18n.t('errorMessage.lackOfPermission'),
+                type: 'error',
+                duration: 3 * 1000,
+                showClose: true
+              })
+              return next({name: 'PageLogin'})
+            }
             if (!groupId) return next({ name: 'PageGrouplessGuidance', params: { 'account_id': accountId } })
             next({ name: 'PageIndex', params: { 'account_id': accountId, 'group_id': groupId } })
           }
@@ -44,6 +53,15 @@ const router = new Router({
                   meta: {
                     isMainNav: true,
                     icon: 'account-management'
+                  }
+                },
+                {
+                  path: 'update-license',
+                  component: () => import('@/pages/updateLicense/Index'),
+                  name: 'UpdateLicense',
+                  meta: {
+                    layers: ['account/:account_id', 'management'],
+                    permission: ['account_create_group']
                   }
                 },
                 {
@@ -183,6 +201,26 @@ const router = new Router({
                         }
                       ]
                     },
+                    {
+                      path: 'mini-apps',
+                      component: () => import('@/pages/miniApp/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          name: 'MiniAppList',
+                          component: () => import('@/pages/miniApp/miniAppList/Index')
+                        },
+                        {
+                          path: ':mini_app_id',
+                          name: 'MiniApp',
+                          component: () => import('@/pages/miniApp/miniApp/Index'),
+                          meta: {
+                            isHeaderHidden: true,
+                            isSideNavHidden: true
+                          }
+                        }
+                      ]
+                    },
                     // FIXME for poc/foxconn_molding
                     {
                       path: 'algorithm',
@@ -317,6 +355,21 @@ const router = new Router({
       component: () => import('@/pages/login/Index')
     },
     {
+      path: '/forget-password',
+      name: 'PageForgetPassword',
+      component: () => import('@/pages/forgetPassword/Index')
+    },
+    {
+      path: '/reset-password',
+      name: 'PageResetPassword',
+      component: () => import('@/pages/resetPassword/Index')
+    },
+    {
+      path: '/admin',
+      name: 'PageAdmin',
+      component: () => import('@/pages/admin/Index')
+    },
+    {
       path: '/signup',
       name: 'PageSignup',
       component: () => import('@/pages/signup/Index')
@@ -359,7 +412,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   // Declare routes without authentication
-  const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage']
+  const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage', 'PageForgetPassword', 'PageResetPassword', 'PageAdmin']
   if (pathWithoutAuth.includes(to.name)) {
     next()
     return

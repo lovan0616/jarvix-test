@@ -11,6 +11,9 @@
       class="layout-spinner"
       size="50"
     />
+    <model-result
+      v-else-if="isModelResult"
+    />
     <component
       v-else
       :is="layout || 'EmptyResult'"
@@ -22,6 +25,7 @@
       :transcript="transcript"
       :intent="intent"
       :is-war-room-addable="isWarRoomAddable"
+      :is-histogram-bin-setting="isHistogramBinSetting"
       mode="display"
       @fetch-new-components-list="getComponentV2"
     />
@@ -43,12 +47,15 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
+import ModelResult from './components/ModelResult'
 import { mapState, mapGetters } from 'vuex'
+import { isEnOrEnum, intentType } from '@/utils/general'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    UnknownInfoBlock
+    UnknownInfoBlock,
+    ModelResult
   },
   data () {
     return {
@@ -69,30 +76,18 @@ export default {
       transcript: null,
       // 目前兩版 transcript 過渡期先放這
       isWarRoomAddable: false,
+      isHistogramBinSetting: false,
       currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200,
-      intent: null
+      intent: null,
+      intentType
     }
   },
   computed: {
-    ...mapState('result', ['currentResultId']),
+    ...mapState('result', ['currentResultId', 'isModelResult']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'currentQuestionId', 'currentQuestionInfo', 'algoConfig']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    },
-    currentQuestionInfo () {
-      return this.$store.state.dataSource.currentQuestionInfo
-    },
-    currentQuestionId () {
-      return this.$store.state.dataSource.currentQuestionId
-    },
-    currentResultId () {
-      return this.$store.state.result.currentResultId
-    },
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
     }
@@ -100,7 +95,11 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
+      this.fetchApiAsk({
+        question, 'dataSourceId': this.dataSourceId,
+        'dataFrameId': this.dataFrameId,
+        shouldCancelToken: true
+      })
     },
     askCondition: {
       deep: true,
@@ -110,19 +109,29 @@ export default {
           newValue.columnList === null && newValue.filterList.length === 0
           // 開啟進階設定取得欄位資料時也不重新問問題
           || oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length)
+          || this.segmentationPayload === null
         ) return
 
         // 預先觸發重新計算 column summary 和 column correlation
         // this.triggerColumnDataCalculation()
         this.fetchApiAsk({
-          question: this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
+          question: this.segmentationPayload.sentence.reduce((acc, cur, index) => {
+            let currentWord = cur.word
+            return acc + ((index !== 0 && isEnOrEnum(currentWord)) ? ` ${currentWord}` : currentWord)
+          }, ''),
           'dataSourceId': this.$route.query.dataSourceId, 
-          'dataFrameId': this.$route.query.dataFrameId
+          'dataFrameId': this.$route.query.dataFrameId,
+          shouldCancelToken: true
         })
       }
     }
   },
   mounted () {
+    if(this.isModelResult) {
+      setTimeout(() => {
+        this.isLoading = false
+      }, 2 * 1000)
+    }
     this.fetchData()
   },
   destroyed () {
@@ -138,7 +147,8 @@ export default {
       this.fetchApiAsk({
         dataSourceId, 
         dataFrameId,
-        question
+        question,
+        shouldCancelToken: true
       })
     },
     clearLayout () {
@@ -150,7 +160,9 @@ export default {
       this.currentQuestionDataFrameId = null
       this.transcript = null
       this.isWarRoomAddable = false
+      this.isHistogramBinSetting = false
       this.intent = null
+      this.$store.commit('dataSource/resetAlgoConfig')
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -160,13 +172,19 @@ export default {
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
       document.title = `JarviX-${data.question}`
-
+      
       if (this.currentQuestionInfo) {
         this.$store.dispatch('chatBot/askResult', {
+          algoConfig: this.algoConfig[this.currentQuestionInfo.denotation.toLowerCase()] || null,
           questionId: this.currentQuestionId,
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
-          selectedColumnList: this.selectedColumnList
+          selectedColumnList: this.selectedColumnList,
+          displayConfig: {
+            histogramBinSize: null,
+            sortOrders: []
+          },
+          isFilter: false
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.$store.commit('result/updateCurrentResultId', res.resultId)
@@ -217,9 +235,15 @@ export default {
             
             this.$store.dispatch('chatBot/askResult', {
               questionId,
+              algoConfig: this.algoConfig[segmentationList[0].denotation.toLowerCase()] || null,
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
-              selectedColumnList: this.selectedColumnList
+              selectedColumnList: this.selectedColumnList,
+              displayConfig: {
+                histogramBinSize: null,
+                sortOrders: []
+              },
+              isFilter: false
             }).then(res => {
               this.$store.commit('result/updateCurrentResultId', res.resultId)
               if (res.layout === 'no_answer') {
@@ -269,7 +293,8 @@ export default {
                 this.getComponentV2(resultId)
               }, this.totalSec)
 
-              this.totalSec += this.periodSec
+              // request 間隔最多三秒
+              this.totalSec = this.totalSec + this.periodSec > 3000 ? 3000 : this.totalSec + this.periodSec
               this.periodSec = this.totalSec
               break
             case 'Complete':
@@ -285,6 +310,7 @@ export default {
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
               this.transcript = componentResponse.transcript
               this.isWarRoomAddable = componentResponse.isWarRoomAddable
+              this.isHistogramBinSetting = componentResponse.isHistogramIntervalSetting
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false

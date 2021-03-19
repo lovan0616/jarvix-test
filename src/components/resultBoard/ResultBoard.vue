@@ -179,6 +179,7 @@ import { Message } from 'element-ui'
 import { mapState, mapGetters } from 'vuex'
 import { toPng } from 'html-to-image'
 import * as download from 'downloadjs'
+import { isEnOrEnum } from '@/utils/general'
 
 export default {
   name: 'ResultBoard',
@@ -265,7 +266,10 @@ export default {
       return this.isWarRoomAddable && this.hasPermission('war_room')
     },
     question () {
-      return this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+      return this.segmentationPayload.sentence.reduce((acc, cur, index) => {
+        let currentWord = cur.word
+        return acc + ((index !== 0 && isEnOrEnum(currentWord)) ? ` ${currentWord}` : currentWord)
+      }, '')
     },
     pinboardAccountName () {
       const pinboardAccount = this.accountList.find(item => item.id === this.pinboardAccountId)
@@ -285,7 +289,7 @@ export default {
       if(this.isDownloading) return
       this.isDownloading = true
       const node = this.$el
-      const fileName = this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+      const fileName = this.question
 
       const excludeNode = node => node.tagName !== 'BUTTON'
       toPng(node, { filter: excludeNode })
@@ -296,7 +300,7 @@ export default {
     },
     refreshData () {
       this.isRefreshing = true
-      refreshResult(this.resultId)
+      refreshResult({ askResultId: this.resultId, isFilter: false })
         .then(res => {
           let promise = new Promise(resolve => this.$emit('refresh', {resolveFunction: resolve, pinBoardId: this.pinBoardId}))
           promise.then(() => {
@@ -444,7 +448,7 @@ export default {
   .board-header {
     position: relative;
     display: flex;
-    z-index: 1;
+    z-index: 2;
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);

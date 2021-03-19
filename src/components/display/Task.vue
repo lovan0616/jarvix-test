@@ -26,6 +26,9 @@
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
+        :component-id="componentId"
+        :can-download-csv="canDownloadCsv"
+        :diagram="diagram"
         :has-pagination="hasNextPage"
         :dataset="componentData.dataset"
         :title="componentData.title"
@@ -36,6 +39,7 @@
         :confidence="componentData.confidence"
         :formula="componentData.displayCoefficients"
         :coefficients="componentData.coeffs"
+        :coefficient-line-type="componentData.coefficientLineType"
         :text="componentData.text"
         :chart-data="componentData.chart_data"
         :notes="componentData.notes"
@@ -45,13 +49,23 @@
         :item-count="componentData.item_count"
         :coeffs="componentData.coeffs"
         :cluster-infos="componentData.clusterInfos"
+        :sub-components="componentData.subComponents"
         :key="componentId"
-        :show-toolbox="showToolbox"
+        :is-show-toolbox="isShowToolbox"
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
         :is-show-label-data="isShowLabelData"
+        :is-show-description="isShowDescription"
+        :is-show-coefficients="isShowCoefficients"
+        :is-show-donwnload-btn="isShowDonwnloadBtn"
+        :custom-cell-class-name="customCellClassName"
+        :is-hoverable="isHoverable"
+        class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
+        @clickCell="$emit('clickCell', $event)"
+        @clickRow="$emit('clickRow', $event)"
+        @clickChart="$emit('clickChart', $event)"
       />
       <div
         v-for="(note, index) in notes"
@@ -91,7 +105,19 @@ export default {
       type: String,
       default: null
     },
-    showToolbox: {
+    isShowToolbox: {
+      type: Boolean,
+      default: true
+    },
+    isShowDescription: {
+      type: Boolean,
+      default: true
+    },
+    isShowCoefficients: {
+      type: Boolean,
+      default: true
+    },
+    isShowDonwnloadBtn: {
       type: Boolean,
       default: true
     },
@@ -102,6 +128,18 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    convertedType: {
+      type: String,
+      default: null
+    },
+    customCellClassName: {
+      type: Array,
+      default: () => []
+    },
+    isHoverable: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -109,6 +147,7 @@ export default {
       resultId: null,
       diagram: null,
       loading: true,
+      canDownloadCsv: false,
       componentName: null,
       componentData: null,
       isError: false,
@@ -170,13 +209,25 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.diagram = response.diagram
               this.resultId = response.resultId
-              this.componentName = this.getChartTemplate(this.diagram)
+              this.canDownloadCsv = response.canDownloadCsv
+              this.componentName = this.getChartTemplate(this.convertedType || this.diagram)
               let responseData = response.data
               
               // 推薦洞察 需要將 question 傳給外層組件顯示用
               if (responseData.question) {
                 this.$emit('setQuestion', responseData.question)
               }
+              // miniApp 需要將 diagram 傳給外層以顯示不同新增元件設定項
+              this.$emit('setDiagram', response.diagram)
+
+              // component 設定資訊
+              this.$emit('setConfig', {
+                enableAlert: response.enableAlert,
+                // 2N 異常設定示警需要 x 軸欄位資訊
+                ...((response.enableAlert && responseData.title) && {
+                  xAxis: responseData.title.xAxis
+                })
+              })
 
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
@@ -194,8 +245,8 @@ export default {
               }
               // 判斷是否為 圖表
               if (responseData.dataset) {
-                // 如果拿到的資料為空陣列 表示這一頁已經是最後一頁了
-                if (responseData.dataset.data && responseData.dataset.data.length === 0) {
+                // 如果拿到的資料為空陣列 表示這一頁已經是最後一頁了。或是 total 為 0 代表 pie chart 沒有資料
+                if (responseData.dataset.data === null || responseData.dataset.data && (responseData.dataset.data.length === 0 || responseData.total === 0)) {
                   this.loading = false
                   this.hasNextPage = false
                   this.nextPageData = null
@@ -204,6 +255,7 @@ export default {
                   if (page === 0) {
                     this.isError = true
                     this.errorMessage = this.$t('message.emptyResult')
+                    this.$emit('isEmpty')
                   }
                 } else {
                   resolve(responseData)
@@ -250,6 +302,7 @@ export default {
             this.hasNextPage = false
           }
         })
+        .finally(() => this.$emit('finished'))
       })
     },
     handleTaskInitData () {
@@ -307,9 +360,9 @@ export default {
           // 更新 columns
           this.componentData.dataset.display_columns = concatDisplayColumns
         }
-
+        
         /**
-         * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆依樣時間的話
+         * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆一樣時間的話
          **/
         if (this.componentData.dataset.index[this.componentData.dataset.index.length - 1] === taskData.dataset.index[0]) {
           /**
@@ -356,6 +409,11 @@ export default {
               taskData.dataset.display_index.shift()
               this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
             }
+
+            if (taskData.dataset.timeStampList) {
+              taskData.dataset.timeStampList.shift()
+              this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
+            }
           }
         } else {
           /**
@@ -381,6 +439,9 @@ export default {
 
           // index 更新
           this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+          if (this.componentData.dataset.timeStampList) {
+            this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
+          }
           if (taskData.dataset.display_index) {
             this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
           }
@@ -388,8 +449,14 @@ export default {
       } else {
         this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
         this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+        if (this.componentData.dataset.timeStampList) {
+          this.componentData.dataset.timeStampList = this.componentData.dataset.timeStampList.concat(taskData.dataset.timeStampList)
+        }
         if (this.componentData.dataset.display_index) {
           this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+        }
+        if (this.componentData.dataset.predictDataList) {
+          this.componentData.dataset.predictDataList = this.componentData.dataset.predictDataList.concat(taskData.dataset.predictDataList)
         }
       }
     },

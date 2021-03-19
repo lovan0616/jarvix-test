@@ -102,6 +102,31 @@
             <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
           </div>
         </div>
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
+            {{ $t('warRoom.recipientList') }}
+          </div>
+          <el-select
+            v-model="warRoomData.alertUserIdList" 
+            :placeholder="$t('editing.defaultOption')" 
+            multiple
+            filterable
+            popper-class="multiple-selector__popper"
+            class="multiple-selector"
+            @remove-tag="removeTag"
+            @change="listChange">
+            <el-option
+              v-for="item in alertUserIdList"
+              :disabled="!hasRemovePermission(item.value)"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"/>
+          </el-select>
+          <span 
+            class="war-room-setting__block-text-description">
+            {{ $t('warRoom.recipientListSettingWarning') }} 
+          </span>
+        </div>
       </div>
       <div class="war-room-setting__button-block">
         <button
@@ -131,9 +156,11 @@
 </template>
 
 <script>
+import { getGroupMemberList } from '@/API/Group'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
+import { mapState } from 'vuex'
 import {
   updateWarRoomSetting,
   deleteWarRoom
@@ -150,6 +177,7 @@ export default {
     configData: {
       type: Object,
       default: () => ({
+        alertUserIdList:null,
         customEndTime: null,
         customStartTime: null,
         displayDateRangeSwitch: false,
@@ -162,7 +190,11 @@ export default {
   data () {
     return {
       warRoomData: null,
+      isLoading: false,
       isProcessing: false,
+      userList: null,
+      tempAlertUserIdList: null,
+      alertUserIdList: null,
       customTimeInterval: {
         startTime: '',
         endTime: '',
@@ -181,6 +213,10 @@ export default {
     }
   },
   computed: {
+    ...mapState('userManagement', ['userId']),
+    isGroupViewer () {
+      return this.userList.filter(user => user.id === this.userId)[0]['role'] === 'group_viewer'
+    },
     selectedTimeInterval () {
       if (!this.warRoomData || !this.warRoomData.displayDateRangeSwitch) return null
       
@@ -195,8 +231,27 @@ export default {
   },
   mounted () {
     this.warRoomData = JSON.parse(JSON.stringify(this.configData))
+    this.tempAlertUserIdList = this.warRoomData.alertUserIdList
+    this.fetchData()
   },
   methods: {
+    fetchData () {
+      this.isLoading = true
+      const currentGroupId = this.$route.params.group_id
+      getGroupMemberList(currentGroupId)
+        .then(userList => {
+          this.userList = userList
+          this.alertUserIdList = userList.map(user => {
+            return {
+              value: user.id,
+              name: user.name
+            }
+          })
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
     saveSetting () {
       this.$validator.validateAll().then(result => {
         if (!result) return
@@ -278,6 +333,23 @@ export default {
         this.warRoomData.recentTimeIntervalAmount = recentTimeIntervalAmount
         this.warRoomData.recentTimeIntervalUnit = recentTimeIntervalUnit
       })
+    },
+    hasRemovePermission (removeUserId) {
+      return this.isGroupViewer 
+        ? this.userId === removeUserId
+        : true
+    },
+    listChange (newList) {
+      const isRemoveSelf = (newList.length < this.tempAlertUserIdList.length) && !newList.includes(this.userId) && this.tempAlertUserIdList.includes(this.userId)
+      // 表示加入的是使用者自己，故需要被存起來
+      if(newList.length > this.tempAlertUserIdList.length || isRemoveSelf) {
+        this.tempAlertUserIdList = newList
+      }
+    },
+    removeTag (removeUserId) {
+      if(this.hasRemovePermission(removeUserId)) return
+      //  非 group__viewer 無權限可移除其他使用者，故要用 temp 覆蓋
+      this.warRoomData.alertUserIdList = this.tempAlertUserIdList
     }
   }
 }
@@ -295,6 +367,14 @@ export default {
 
   &__content {
     justify-content: space-between;
+
+    .multiple-selector {
+      margin-top: 12px;
+      
+      /deep/ .el-select-dropdown__wrap .el-select-dropdown__item::after {
+        border: 1.2px solid #FFF;
+      }
+    }
   }
 
   &__button-block-button {

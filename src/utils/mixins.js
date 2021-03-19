@@ -47,6 +47,16 @@ Vue.mixin({
           value: 'others',
           name: i18n.t('warRoom.customize')
         }
+      ],
+      timeScopeUnitOptionList: [
+        { value: 'Second', name: i18n.t('timeScopeUnit.second') },
+        { value: 'Minute', name: i18n.t('timeScopeUnit.minute') },
+        { value: 'Hour', name: i18n.t('timeScopeUnit.hour') },
+        { value: 'Day', name: i18n.t('timeScopeUnit.day') },
+        { value: 'Week', name: i18n.t('timeScopeUnit.week') },
+        { value: 'Month', name: i18n.t('timeScopeUnit.month') },
+        { value: 'Season', name: i18n.t('timeScopeUnit.season') },
+        { value: 'Year', name: i18n.t('timeScopeUnit.year') }
       ]
     }
   },
@@ -77,7 +87,7 @@ Vue.mixin({
     },
     // 標註千分位
     formatComma (str) {
-      if (!str) return str
+      if (!str || str === 'NaN') return str
       // 只處理整數位，不處理小數點位
       const isInt = Number.isInteger(Number(str))
       if (isInt) return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -151,6 +161,64 @@ Vue.mixin({
     timeToDateTimeSecondPrecision (time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
+    customerTimeFormatter (time, timeScope, isRangeEnd = false) {
+      // 處理季
+      if (timeScope === 'QUARTER' && isRangeEnd) {
+        // 結束時間再加三個月
+        const format = this.getDatePickerOptions(timeScope).format.replace('dd', 'DD').replace('yyyy', 'YYYY')
+        return moment.utc(time).add(2, 'month').format(format)
+      }
+
+      if(timeScope === "WEEK") {
+        /* 當一年最後一週跨到下一年
+         * moment js 與後端回傳的 week 不同
+         * EX: 2018-12-30(日)禮拜天落在 2018年第52週，但後端會傳 2019年第一週
+        */
+        let weekCrossYear = moment.utc(time).format('YYYY') !== moment.utc(time).add(1, 'weeks').format('YYYY')
+        let year = weekCrossYear ? moment.utc(time).add(1, 'weeks').format('YYYY') : moment.utc(time).format('YYYY')
+        return `${year}-${i18n.tc('timeScopeUnit.allowArg.week', moment.utc(time).week())}`
+      }
+      const format = this.getDatePickerOptions(timeScope).format.replace('dd', 'DD').replace('yyyy', 'YYYY')
+      return moment.utc(time).format(format)
+    },
+    // 在使用 TimePicker 時，把後端的 timeScope 對印到 element-ui 的 type, format
+    getDatePickerOptions (timeScope) {
+      switch(timeScope) {
+        case "SECOND":
+        case "MINUTE":
+        case "HOUR":
+          return {
+            type: "datetime",
+            format: "yyyy-MM-dd HH:mm:ss"
+          }
+        case "DAY":
+          return {
+            type: "date",
+            format: "yyyy-MM-dd"
+          }
+        case "WEEK":
+          return {
+            type: "week",
+            format: "yyyy-W WW"
+          }
+        case "MONTH":
+        case "QUARTER":
+          return {
+            type: "month",
+            format: "yyyy-MM"
+          }
+        case "YEAR":
+          return {
+            type: "year",
+            format: "yyyy"
+          }
+        default:
+          return {
+            type: "datetime",
+            format: "yyyy-MM-dd HH:mm:ss"
+          }
+      }
+    },
     // 時間補十分位，為了滿足 YYYY-MM-DD 格式
     paddingZero (n) {
       return n < 10 ? '0' + n : n
@@ -223,6 +291,10 @@ Vue.mixin({
           return 'DisplayCompositionLineChart'
         case 'predict_line_chart':
           return 'DisplayPredictChart'
+        case 'line_confidential_interval_chart':
+          return 'DisplayLineConfidentialIntervalChart'
+        case 'periodic_line_charts':
+          return 'DisplayPeriodicLineCharts'
         case 'pie_chart':
           return 'DisplayPieChart'
         case 'scatter_correlation_chart':
@@ -230,6 +302,8 @@ Vue.mixin({
           return 'DisplayScatterChart'
         case 'scatter_probability_density_chart':
           return 'DisplayScatterProbabilityDensityChart'
+        case 'scatter_cluster_chart':
+          return 'DisplayScatterClusterChart'
         case 'table':
           return 'SyTable'
         case 'tree_map':
@@ -267,6 +341,33 @@ Vue.mixin({
           return 'DisplayNoAnswerInfo'
         case 'index_info':
           return 'DisplayIndexInfo'
+        case 'text_info':
+          return 'DisplayTextInfo'
+        case 'param_comparison_table':
+          return 'ParameterComparisonTable'
+      }
+    },
+    // 藉由後端的 result denotation 名稱取得前端的顯示資訊
+    getSwitchTypeInfoList (denotation) {
+      switch (denotation) {
+        case 'OVERVIEW':
+          return { name: i18n.t('denotation.dataOverview'), icon: 'basic-info' }
+        case 'CLUSTERING': 
+          return { name: i18n.t('denotation.clusteringAnalysis'), icon: 'clustering' }
+        case 'CORRELATION_VERIFICATION':
+          return { name: i18n.t('denotation.correlationAnalysis'), icon: 'correlation-analysis' }
+        case 'PREDICTION':
+          return { name: i18n.t('denotation.predictionAnalysis'), icon: 'telescope' }
+        case 'TREND':
+          return { name: i18n.t('denotation.trendAnalysis'), icon: 'trend' }
+        case 'ANOMALY':
+          return { name: i18n.t('denotation.anomalyAnalysis'), icon: 'anomaly-analysis' }
+        case 'SEASONALITY':
+          return { name: i18n.t('denotation.periodicityAnalysis'), icon: 'cycle' }
+        case 'NORMALITY_TEST':
+          return { name: i18n.t('denotation.normalityTest'), icon: 'normality-analysis' }
+        case 'STABILITY':
+          return { name: i18n.t('denotation.stabilityAnalysis'), icon: 'stability-analysis' }
       }
     },
     // 整個結果頁的 layout
@@ -281,6 +382,15 @@ Vue.mixin({
       return parseFloat((value).toFixed(count))
     },
     // export data
+    addCSVDownloadTask (question, componentId) {
+      let taskList = this.$store.state.result.tableDataCSVDownloadList
+      if (taskList.some(task => task.componentId === componentId)) return
+      this.$store.commit('result/updateTableDataCSVDownloadList', {
+        question: question,
+        componentId: componentId,
+        status: 'Ready'
+      })
+    },
     exportCSVFile (el, question, data) {
       let exportFunction = (e) => {
         if (e.target && e.target.id === 'export-btn') {
@@ -290,6 +400,9 @@ Vue.mixin({
            * 註冊事件當下由 function 傳進的 data，遇到 pagination 更新資料後
            * 便不再拿取新的 data，所以暫時改由 vue instance 內的 computed options 去拿
            */
+          // 還有資料沒有拿回，直接打 API 下載所有資料
+          if (data.hasPagination && data.canDownloadCsv) return this.addCSVDownloadTask(question, data.componentId)
+
           this.exportToCSV(question, data.options.dataset.source)
         }
       }
@@ -304,7 +417,7 @@ Vue.mixin({
         el.setAttribute('listener', true)
       }
     },
-    exportToCSV (question, rows) {
+    downloadCSV (question, csvFile) {
       /**
        * 在結果頁下載資料可以從 url 上拿到時間資訊
        * 但是 pinboard 頁無法
@@ -312,6 +425,26 @@ Vue.mixin({
       let fileName = window.location.search.split('&')[1]
         ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question + '.csv'
         : this.timeToFileName(new Date().getTime()) + '.csv'
+      // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
+      let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
+      if (navigator.msSaveBlob) {
+        // IE 10+
+        navigator.msSaveBlob(blob, fileName)
+      } else {
+        let link = document.createElement('a')
+        if (link.download !== undefined) {
+          // Browsers that support HTML5 download attribute
+          let url = URL.createObjectURL(blob)
+          link.setAttribute('href', url)
+          link.setAttribute('download', fileName)
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      }
+    },
+    exportToCSV (question, rows) {
       let processRow = (row) => {
         let finalVal = ''
         for (let j = 0; j < row.length; j++) {
@@ -339,24 +472,7 @@ Vue.mixin({
         csvFile += processRow(rows[i])
       }
 
-      // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
-      let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
-      if (navigator.msSaveBlob) {
-        // IE 10+
-        navigator.msSaveBlob(blob, fileName)
-      } else {
-        let link = document.createElement('a')
-        if (link.download !== undefined) {
-          // Browsers that support HTML5 download attribute
-          let url = URL.createObjectURL(blob)
-          link.setAttribute('href', url)
-          link.setAttribute('download', fileName)
-          link.style.visibility = 'hidden'
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }
-      }
+      this.downloadCSV(question, csvFile)
     },
     // 圖表在preview 時，不顯示 legend、tooltip
     previewChartSetting (config) {
@@ -369,6 +485,27 @@ Vue.mixin({
       // config.yAxis.name = null
 
       return config
+    },
+    getChartMaxData (dataset) {
+      let maxValue = [...dataset[0]]
+      // 多組數據，需要存多組 maxValue
+      dataset.forEach(row => {
+        row.forEach((data, index) => {
+          maxValue[index] = Math.max(data, maxValue[index])
+        })
+      })
+      return maxValue
+    },
+    chartLabelFormatter (num, maxValue) {
+      if (num === 0) return num
+      /* format value 的規則是
+      * 數線上用到最大單位的數值需要到小數點後第 2 位（因為量級有差距時，小單位的數值其實在數線上看起來不會有明顯差別）
+      * EX: 若同時有 aM, bK，只有單位是 aM 且和 maxValue 差不到十倍的要顯示到小數點後第 2 位
+      *     若所有的單位都是 K，則全部和 maxValue 差不到十倍的 bK 都要顯示到小數點後第 2 位
+      */
+      let lessThanTenTimes =  maxValue / num <= 10
+      let numberFixedDigits = lessThanTenTimes ? 2 : 0
+      return this.shortenNumber(num, numberFixedDigits)
     },
     objectToArray (obj) {
       return Object.keys(obj).map(element => {

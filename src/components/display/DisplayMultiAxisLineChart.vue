@@ -38,7 +38,7 @@
           >
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope), end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true) }) }}
             </div>
           </div>
         </div>
@@ -74,6 +74,10 @@ export default {
   name: 'DisplayMultiAxisLineChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -88,6 +92,10 @@ export default {
       default: '420px'
     },
     hasPagination: {
+      type: Boolean,
+      default: false
+    },
+    canDownloadCsv: {
       type: Boolean,
       default: false
     },
@@ -174,6 +182,7 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
+      config.toolbox.feature.magicType.type = ['bar', 'line']
       // 座標軸名稱
       config.xAxis = this.title.xAxis.map(axis => {
         return {
@@ -230,7 +239,8 @@ export default {
   },
   methods: {
     composeColumn (element, colIndex) {
-      const shortenNumberMethod = this.shortenNumber
+      const labelFormatter = this.chartLabelFormatter
+      const maxValue = this.getChartMaxData(this.dataset.data)
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
@@ -244,7 +254,10 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+            formatter (value) { 
+              let num = value.data[colIndex + 1]
+              return labelFormatter(num, maxValue[colIndex]) 
+            }
           }
         })
       }
@@ -268,11 +281,12 @@ export default {
         return {
           type: 'range',
           properties: {
-            dc_name: this.title.xAxis[0].dc_name,
+            dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]]
+            start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
+            end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
+            timeScope: this.dataset.timeScope
           }
         }
       })

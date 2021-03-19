@@ -5,6 +5,7 @@
       :type="type"
       :name="name"
       :placeholder="placeholder"
+      :disabled="isDisabled"
       class="input-verify-text"
     >
     <div
@@ -36,7 +37,11 @@ export default {
     value: {
       type: [Number, String],
       default: ''
-    }
+    },
+    isDisabled: {
+      type: Boolean, 
+      default: false
+    },
   },
   computed: {
     inputValue: {

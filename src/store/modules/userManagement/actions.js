@@ -35,7 +35,7 @@ export default {
         })
       }
 
-      if (userInfo.accountList.length) {
+      if (userInfo.accountList && userInfo.accountList.length) {
         defaultAccount = userInfo.accountList.find(account => account.isDefault)
         accountPermissionList = defaultAccount.accountPermissionList
         licensePermissionList = defaultAccount.licensePermissionList
@@ -50,13 +50,16 @@ export default {
         userName: userInfo.userData.name,
         userEmail: userInfo.userData.email,
         accountList: userInfo.accountList,
-        groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
+        groupList: userInfo.accountList && userInfo.accountList.length ? defaultAccount.groupList : [],
         permission: [
           ...accountPermissionList,
           ...groupPermissionList,
           ...licensePermissionList
-        ]
+        ],
+        isAdmin: userInfo.userData.isAdmin
       })
+      // 如果是 admin 的話就 return 出去，因為他沒有語系也沒有權限或是 accountList
+      if (userInfo.userData.isAdmin) return
 
       // get locale info
       const hasPermission = rootGetters['userManagement/hasPermission']
@@ -86,18 +89,12 @@ export default {
       commit('setLicenseInfo', accountInfo.license)
       
       const account_id = rootGetters['userManagement/getCurrentAccountId']
-      const group_id = rootGetters['userManagement/getCurrentGroupId']
-      if (defaultGroup) {
-        router.push({
-          name: 'PageIndex', 
-          params: { account_id, group_id }
-        })
-      } else {
-        router.push({ 
+      if (!defaultGroup) {
+        return router.push({
           name: 'PageGrouplessGuidance',
           params: { account_id }
         })
-      }
+      } 
       // refresh token
       // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)

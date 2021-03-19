@@ -16,6 +16,7 @@
       :options="options"
       auto-resize
       @brushselected="brushRegionSelected"
+      @click="chartClicked"
     />
     <arrow-button
       v-show="showPagination"
@@ -78,6 +79,10 @@ export default {
   name: 'DisplayParallelBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -92,7 +97,11 @@ export default {
       type: Boolean,
       default: false
     },
-    showToolbox: {
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -189,7 +198,8 @@ export default {
         return res
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
-      config.toolbox.feature.magicType.show = true
+      // 目前 echarts 4.9.0 看起來切換有問題，先隱藏
+      // config.toolbox.feature.magicType.show = true
       // 圖表是水平
       config.xAxis = yAxisDefault()
       config.xAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
@@ -197,6 +207,9 @@ export default {
       config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis.reduce((acc, cur, index) => acc + (index !== 0 ? ', ' : '') + cur.display_name.replace(/ /g, '\r\n'), '') : null
       // 如果是 bar chart
       config.yAxis.scale = true
+      // 開啟點擊觸發事件
+      config.xAxis. triggerEvent = true
+      config.yAxis. triggerEvent = true
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 20) {
@@ -205,7 +218,7 @@ export default {
         config.dataZoom = verticalZoomIn()
         config.animation = false
       }
-      config.toolbox.show = this.showToolbox
+      config.toolbox.show = this.isShowToolbox
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
@@ -216,6 +229,8 @@ export default {
         config.visualMap = monitorVisualMap(upperLimit, lowerLimit, parallelColorOnly1[0])
         // 門檻線
         config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit, true)
+      } else {
+         config.visualMap = monitorVisualMap(null, 0, parallelColorOnly1[0])
       }
       return config
     },
@@ -241,6 +256,8 @@ export default {
       if (this.dataset.index.length === 0) return false
       if (this.dataset.index[0].length !== 2) return false
       if (this.dataset.columns.length > 1) return false
+      // 在戰情室的話也不讓他切換圖表
+      if (!this.isShowToolbox) return false
 
       let lineChartIndex = []
       let lineChartColumns = []
@@ -288,11 +305,47 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    chartClicked (params) {
+      let dataInfo = []
+      // handle click event from axis label
+      if ((params.componentType === 'xAxis' || params.componentType === 'yAxis') && params.targetType === 'axisLabel') {
+        const columnList = params.value.split(',')
+        columnList.forEach((name, index) => {
+          const axis = params.componentType === 'xAxis' ? 'yAxis' : 'xAxis'
+          dataInfo.push({
+            ...this.title[axis][index],
+            value: name
+          })
+        })
+      }
+
+      // handle click event from a bar on the chart
+      if (params.componentType === 'series') {
+        params.dimensionNames.forEach((name, index) => {
+          if (name === 'index') {
+            params.value[index].split(',').forEach((column, columnIndex) => {
+              dataInfo.push({
+                ...this.title['xAxis'][columnIndex],
+                value: column
+              })
+            })
+          } else {
+            dataInfo.push({
+              ...this.title['yAxis'][0],
+              value: params.value[index]
+            })
+          }
+        })
+      }
+      dataInfo = dataInfo.filter(data => data.dc_id && data.stats_type)
+      if (dataInfo.length > 0) this.$emit('clickChart', dataInfo)
+    },
     changeDiagram () {
       this.showLineChart = !this.showLineChart
     },
     composeColumn (element, colIndex) {
-      const shortenNumberMethod = this.shortenNumber
+      const labelFormatter = this.chartLabelFormatter
+      const maxValue = this.getChartMaxData(this.dataset.data)
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
@@ -305,7 +358,10 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+            formatter (value) { 
+              let num = value.data[colIndex + 1]
+              return labelFormatter(num, maxValue[colIndex]) 
+            }
           }
         })
       }
@@ -330,7 +386,7 @@ export default {
           return {
             type: 'enum',
             properties: {
-              dc_name: axis.dc_name,
+              dc_id: axis.dc_id,
               data_type: axis.data_type,
               display_name: axis.display_name,
               datavalues: [this.dataset.index[indexValue][index]],
@@ -348,7 +404,7 @@ export default {
       }).filter((element, index, self) => {
         return self.findIndex((item, restrictionIndex) => {
           let mapArray = item.restraints.filter((restrict, restrictIndex) => {
-            return restrict.properties.dc_name === element.restraints[restrictIndex].properties.dc_name && restrict.properties.datavalues[0] === element.restraints[restrictIndex].properties.datavalues[0]
+            return restrict.properties.dc_id === element.restraints[restrictIndex].properties.dc_id && restrict.properties.datavalues[0] === element.restraints[restrictIndex].properties.datavalues[0]
           })
           return mapArray.length === item.restraints.length
         }) === index

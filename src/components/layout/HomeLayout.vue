@@ -3,7 +3,7 @@
     <transition 
       name="fade" 
       mode="out-in">
-      <chat-room-block/>
+      <chat-room-block class="with-side-nav"/>
     </transition>
     <transition name="fast-fade-in">
       <advance-data-frame-setting v-if="isShowSettingBox" />

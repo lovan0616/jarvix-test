@@ -1,6 +1,30 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
+      <div class="setting-block__title">應用程式設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">開啟應用程式：</label>
+          <el-switch 
+            v-model="openMiniAppModule"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
+      <div class="setting-block__title">資料處理設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">開啟分片設定：</label>
+          <el-switch 
+            v-model="openDistributedSetting"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
       <div class="setting-block__title">排程模組設定</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -66,25 +90,24 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">檔案上傳限制</div>
-      <div class="setting-block__content">
-        <div class="input-block">
-          <label for="">單一檔案上限(MB)：</label>
-          <el-input 
-            v-model="fileUploadLimit"
-            type="number"
-            class="el-input"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="setting-block">
       <div class="setting-block__title">Join Table 限制</div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟 Join Table 檢查資料量的限制：</label>
           <el-switch 
             v-model="hasJoinLimit"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
+      <div class="setting-block__title">問句相關設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">關閉自動問問句：</label>
+          <el-switch 
+            v-model="hasCloseQuickAsk"
             class="setting-switch"
           />
         </div>
@@ -114,18 +137,53 @@ export default {
   name: 'PageSisSetting',
   data () {
     return {
+<<<<<<< HEAD
+=======
+      closeQuickAsk: localStorage.getItem('closeQuickAsk'),
+      isShowMiniAppModule: localStorage.getItem('isShowMiniAppModule'),
+      isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
+>>>>>>> dabd13f0b63476df158ab803ceab7fcf9fd83385
       isShowOrderUpload: localStorage.getItem('isShowOrderUpload'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
       isShowAlgorithmBtn: localStorage.getItem('isShowAlgorithmBtn'),
       isDemoEnd: localStorage.getItem('isDemoEnd'),
       demoDatasource: localStorage.getItem('demoDatasource'),
       demoWaitTime: localStorage.getItem('demoWaitTime'),
-      uploadLimit: localStorage.getItem('uploadLimit'),
       joinLimit: localStorage.getItem('joinLimit'),
       newParser: localStorage.getItem('newParser')
     }
   },
   computed: {
+<<<<<<< HEAD
+=======
+    hasCloseQuickAsk: {
+      get () {
+        return this.closeQuickAsk === 'true' || this.closeQuickAsk
+      },
+      set (value) {
+        this.closeQuickAsk = value
+        localStorage.setItem('closeQuickAsk', value)
+      }
+    },
+    openMiniAppModule: {
+      get () {
+        return this.isShowMiniAppModule === 'true' || this.isShowMiniAppModule
+      },
+      set (value) {
+        this.isShowMiniAppModule = value
+        localStorage.setItem('isShowMiniAppModule', value)
+      }
+    },
+    openDistributedSetting: {
+      get () {
+        return this.isShowDistributedSetting === 'true' || this.isShowDistributedSetting
+      },
+      set (value) {
+        this.isShowDistributedSetting = value
+        localStorage.setItem('isShowDistributedSetting', value)
+      }
+    },
+>>>>>>> dabd13f0b63476df158ab803ceab7fcf9fd83385
     openOrderUpload: {
       get () {
         return this.isShowOrderUpload === 'true' || this.isShowOrderUpload
@@ -178,15 +236,6 @@ export default {
       set (value) {
         this.demoWaitTime = value
         localStorage.setItem('demoWaitTime', value)
-      }
-    },
-    fileUploadLimit: {
-      get () {
-        return this.uploadLimit
-      },
-      set (value) {
-        this.uploadLimit = value
-        localStorage.setItem('uploadLimit', value)
       }
     },
     hasJoinLimit: {

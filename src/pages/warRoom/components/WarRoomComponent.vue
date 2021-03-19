@@ -53,7 +53,7 @@
           :total="componentData.total"
           :item-count="componentData.item_count"
           :key="componentId"
-          :show-toolbox="showToolbox"
+          :is-show-toolbox="isShowToolbox"
           :custom-chart-style="customChartStyle"
           :is-show-alert="isAboveUpperBound || isBelowLowerBound"
           :is-show-legend="false"
@@ -103,13 +103,9 @@ import {
   checkPublishedComponentUpdateStatus
 } from '@/API/WarRoom'
 import moment from 'moment'
-import DisplayIndexInfo from './DisplayIndexInfo'
 
 export default {
   name: 'WarRoomComponent',
-  components: {
-    DisplayIndexInfo
-  },
   props: {
     componentId: {
       type: Number,
@@ -140,7 +136,7 @@ export default {
     return {
       question: '',
       isTaskComplete: true,
-      showToolbox: false,
+      isShowToolbox: false,
       customChartStyle: {
         width: '100%', 
         height: '100%',

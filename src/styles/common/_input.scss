@@ -76,6 +76,10 @@ input.input {
     &:focus {
       border-color: $theme-color-primary;
     }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
 
   .placeholder {

@@ -1,11 +1,19 @@
 import Vue from 'vue'
 
 export default {
-  updateImportedFileList (state, file) {
-    state.importedFileList.push(file)
-  },
   updateUploadFileList (state, data) {
     state.uploadFileList = data
+  },
+  updateUploadFileTabDetail (state, data) {
+    // this.$set(state.uploadFileList[data.index], 'tabDetail', data.tabDetail)
+    state.uploadFileList[data.index].tabDetail = data.tabDetail
+  },
+  updateUploadFileStatus (state, data) {
+    const {index, status, ...fileInfo} = data
+    state.uploadFileList[index].status = status
+    // 預設選第一個 tab
+    if (fileInfo.tabDetails.length > 0) fileInfo.tabDetail = fileInfo.tabDetails[0]
+    state.uploadFileList[index] = {...state.uploadFileList[index], ...fileInfo}
   },
   removeUploadFile (state, data) {
     state.uploadFileList.splice(data, 1)
@@ -38,9 +46,12 @@ export default {
     state.fileUploadSuccess = data
   },
   updateEtlTableList (state, data) {
-
     // 如果為再編輯的 dataFrame 就不需要再處理，直接 set
     if (!Object.prototype.hasOwnProperty.call(data, 'enableEdit')) {
+      if (localStorage.getItem('isShowDistributedSetting') === 'true') {
+        Vue.set(data, 'isDistributed', false)
+        Vue.set(data, 'distributedColumnName', null)
+      }
       let columnList = data.columns
       if (columnList.length > 0) {
         columnList.forEach((element, index) => {
@@ -75,12 +86,15 @@ export default {
     }
     state.etlTableList.push(data)
   },
+  updateIsDistributed (state, data) {
+    state.etlTableList[state.currentTableIndex].isDistributed = data
+  },
+  updateDistributedColumnName (state, data) {
+    state.etlTableList[state.currentTableIndex].distributedColumnName = data
+  },
   updateReplaceValue (state, data) {
     let {tableIndex, columnIndex, info} = data
     Vue.set(state.etlTableList[tableIndex].columns, columnIndex, info)
-  },
-  clearImportedTableList (state) {
-    state.importedFileList = []
   },
   clearEtlTableList (state, data) {
     state.etlTableList = []
@@ -99,5 +113,25 @@ export default {
   updateSummaryInfo (state, data) {
     let {tableIndex, columnIndex, dataSummary} = data
     Vue.set(state.etlTableList[tableIndex].columns[columnIndex], 'dataSummary', dataSummary)
+  },
+  updateCurrentUploadScriptInfo (state, data) {
+    state.currentUploadScriptInfo = data
+  },
+  updateScriptName (state, data) {
+    state.currentUploadScriptName = data
+  },
+  clearCurrentUploadScriptInfo(state) {
+    state.currentUploadScriptInfo = {
+      scriptId: null,
+      dataframeId: null,
+      type: null,
+      ioArgs: {}
+    }
+  },
+  updateDatetimePatterns (state, data) {
+    state.datetimePatterns = data
+  },
+  clearDatetimePatterns (state) {
+    state.datetimePatterns = []
   }
 }

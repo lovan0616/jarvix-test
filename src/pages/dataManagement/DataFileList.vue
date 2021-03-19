@@ -9,7 +9,12 @@
         class="spinner-icon"/>{{ $t('editing.dataProcessing') }}
     </div>
     <div class="page-title-row">
-      <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
+      <h1 class="title">
+        <div class="title-left">{{ $t('nav.dataManagement') }}</div>
+        <div class="title-right">
+          <data-storage-usage-info />
+        </div>
+      </h1>
       <div class="bread-crumb">
         <router-link 
           :to="{ name: 'DataSourceList' }" 
@@ -19,20 +24,28 @@
     </div>
     <div class="table-board">
       <div class="board-title-row">
-        <div class="button-block">
-          <button 
-            :disabled="isProcessing || reachLimit"
-            class="btn-m btn-default btn-has-icon"
-            @click="createDataSource"
-          >
-            <svg-icon 
-              icon-class="file-plus" 
-              class="icon"/>{{ $t('editing.newTable') }}
-          </button>
-          <div 
-            v-if="reachLimit"
-            class="reach-limit"
-          >{{ $t('notification.uploadLimitNotification') }}</div>
+        <div class="board-title-row__left">
+          <div class="button-block">
+            <button 
+              :disabled="isProcessing || reachLimit"
+              class="btn-m btn-default btn-has-icon"
+              @click="createDataFrame"
+            >
+              <svg-icon 
+                icon-class="file-plus" 
+                class="icon"/>{{ $t('editing.newTable') }}
+            </button>
+            <div 
+              v-if="reachLimit"
+              class="reach-limit"
+            >{{ $t('notification.uploadLimitNotification') }}</div>
+          </div>
+          <!-- 目前只允許十張表，暫時不需要搜尋 -->
+          <!-- <search-block
+            v-model="searchedDataFileName"
+            :placeholder="$t('etl.tableSearch')"
+            class="search-block"
+          /> -->
         </div>
         <div class="button-block dataframe-action">
           <button 
@@ -58,12 +71,13 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="dataList"
+        :data-list="filterDataList"
         :selection.sync="selectList"
         :is-processing="isProcessing"
+        :is-search-result-empty="searchedDataFileName.length > 0 && filterDataList.length === 0"
         :loading="isLoading"
         :empty-message="$t('editing.clickToUploadTable')"
-        @create="createDataSource"
+        @create="createDataFrame"
         @delete="confirmDelete"
         @edit="editTableColumn"
         @dataFrameAlias="editDataFrameAlias"
@@ -73,6 +87,8 @@
         @etlSetting="editEtlSetting"
         @batchLoad="editBatchLoadSetting"
         @createdInfo="viewCreatedInfo"
+        @fetch="fetchData"
+        @sort="sortData"
       />
     </div>
     <file-upload-dialog
@@ -146,6 +162,8 @@
   </div>
 </template>
 <script>
+import SearchBlock from '@/components/SearchBlock'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDialog'
@@ -159,15 +177,19 @@ import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import ViewCreatedInfoDialog from './components/ViewCreatedInfoDialog'
+import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
+import orderBy from 'lodash.orderby'
 
 export default {
   name: 'DataFileList',
   components: {
+    SearchBlock,
+    EmptyInfoBlock,
     DataTable,
     FileUploadDialog,
     ConfirmDeleteDataFrameDialog,
@@ -181,7 +203,8 @@ export default {
     EditEtlDialog,
     EditBatchLoadDialog,
     EditFileDataUpdateDialog,
-    ViewCreatedInfoDialog 
+    ViewCreatedInfoDialog,
+    DataStorageUsageInfo
   },
   data () {
     return {
@@ -200,6 +223,7 @@ export default {
       isProcessing: false,
       dataList: [],
       tableList: [],
+      searchedDataFileName: '',
       // checkbox 所選擇的檔案列表
       selectList: [],
       // 目前正在編輯的資料表
@@ -219,6 +243,7 @@ export default {
   },
   computed: {
     ...mapState('userManagement', ['license']),
+    ...mapGetters('userManagement', ['hasPermission']),
     reachLicenseFileSizeLimit () {
       return this.license.currentDataStorageSize >= this.license.maxDataStorageSize && this.license.maxDataStorageSize !== -1
     },
@@ -230,6 +255,9 @@ export default {
     },
     reachFileLengthLimit () {
       return this.dataList.length >= this.fileCountLimit
+    },
+    filterDataList() {
+      return this.dataList.filter(data => data.primaryAlias.toLowerCase().includes(this.searchedDataFileName.toLowerCase()))
     },
     // 用來生成 data table
     tableHeaders () {
@@ -266,7 +294,7 @@ export default {
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '90px'
+          width: '110px'
         },
         {
           text: this.$t('editing.lastUpdateResult'),
@@ -287,8 +315,8 @@ export default {
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
                 { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
                 { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' },
-                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad' },
-                { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo' }
+                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad', checkPermission: ['group_edit_data'] },
+                { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo', checkPermission: ['group_edit_data'] }
               ]
             },
             {
@@ -359,6 +387,7 @@ export default {
     this.fetchData()
     this.checkDataSourceStatus()
     this.checkIfReachFileSizeLimit()
+    this.getDatetimePatterns()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -367,8 +396,11 @@ export default {
     if (this.checkDataFrameIntervalFunction) {
       window.clearInterval(this.checkDataFrameIntervalFunction)
     }
+    this.clearDatetimePatterns()
   },
   methods: {
+    ...mapActions('dataManagement', ['getDatetimePatterns']),
+    ...mapMutations('dataManagement', ['clearDatetimePatterns']),
     checkIfReachFileSizeLimit () {
       getAccountInfo()
         .then((accountInfo) => {
@@ -382,12 +414,16 @@ export default {
         this.isLoading = false
       })
     },
+    sortData ({name, order}) {
+      this.dataList = orderBy(this.dataList, [name], [order])
+    },
     updateDataTable () {
       return getDataFrameById(this.currentDataSourceId, true).then(response => {
         // 因為 ETL 會預建立 data frame，如果未執行預處理 data frame 會處於 pending 狀態，在這邊需要過濾掉
         this.dataList = response.filter(element => element.state !== 'Temp').map(element => {
           return {
             ...element,
+            dataSourceId: this.$route.params.id,
             createMethod: element.joinCount > 1 ? 'tableJoin' : this.createMethod(element.originType),
             createMethodLabel: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
           }
@@ -395,10 +431,13 @@ export default {
       })
     },
     createMethod (value) {
-      if (value === 'file') {
-        return this.$t('editing.userUpload')
-      } else {
-        return this.$t('editing.connectDB')
+      switch (value) {
+        case 'file':
+          return this.$t('editing.userUpload')
+        case 'database':
+          return this.$t('editing.connectDB')
+        case 'script':
+          return this.$t('editing.runScript')
       }
     },
     checkDataSourceStatus () {
@@ -407,7 +446,8 @@ export default {
         this.dataSourceName = response.name
       })
     },
-    createDataSource () {
+    createDataFrame () {
+      if (this.reachLimit) return
       // 為了資料表上傳
       this.$store.commit('dataManagement/updateCurrentUploadInfo', {
         dataSourceId: this.currentDataSourceId,
@@ -459,10 +499,7 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     canEditJoinTable () {
-      const editableDataList = this.dataList.filter(dataFrame => dataFrame.state === 'Enable')
-      // return editableDataList.length > 0
-      // 暫時無開啟 self join 功能，因此至少需兩張 dataframe 才可編輯
-      return editableDataList.length > 1
+      return this.hasPermission('join_table')
     },
     openEditJoinTableDialog () {
       if (!this.canEditJoinTable) return

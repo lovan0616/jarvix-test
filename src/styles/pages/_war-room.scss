@@ -58,6 +58,13 @@ $setting-header-height: 57px;
     height: 40px;
   }
 
+  &__block-text-description {
+    display: block;
+    font-size: 12px;
+    line-height: 22px;
+    color: #A7A7A7;
+  }
+
   &__block-choose {
     display: flex;
     justify-content: space-between;

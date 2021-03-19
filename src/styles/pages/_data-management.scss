@@ -6,6 +6,9 @@
       margin-top: 0;
       font-size: 24px;
       line-height: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
     .bread-crumb {
@@ -20,9 +23,7 @@
   .button-block {
     display: flex;
     align-items: center;
-    &:first-child {
-      flex: 1;
-    }
+
     &+.button-block {
       margin-left: 16px;
     }
@@ -53,6 +54,17 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
+
+    &__left {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .search-block {
+      margin-left: 16px;
+      width: 220px;
+    }
   }
 
   .limit-notification {
