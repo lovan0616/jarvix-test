@@ -17,7 +17,8 @@
     "algorithm": "演算法",
     "helper": "帮助",
     "warRoom": "战情室",
-    "application": "应用程式"
+    "application": "应用程式",
+    "modelManagement": "模型管理"
   },
   "sideNav": {
     "functionList": "功能选单",
@@ -38,7 +39,13 @@
     "dataFileList": "数据表列表",
     "schedule": "生产排程",
     "preferences": "个人设定",
-    "updateLicense": "更新产品金钥"
+    "updateLicense": "更新产品金钥",
+    "modelManagement": "模型管理",
+    "modelList": "模型列表",
+    "modelSetting": "管理设定",
+    "modelDetail": "详细内容",
+    "reUploadFile": "重新上传档案",
+    "configSetting": "参数设定"
   },
   "user": {
     "changePwd": "变更密码",
@@ -600,6 +607,52 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位",
     "isDistributed": "是否进行分片",
     "distributedColumnName": "分片栏位"
+  },
+  "model": {
+    "newModel": "新增模型",
+    "id": "ID",
+    "modelName": "模型名称",
+    "creator": "建立者",
+    "createdTime": "建立时间",
+    "updatedTime": "更新时间",
+    "createdMethod": "建立方式",
+    "managementSetting": "管理设定",
+    "deleteConfirmText": "删除模型将会导致相关应用失效，您确认要继续删除？",
+    "UsedModelCannotBeEdited": "模型已被流程使用，故无法进行编辑。",
+    "clickToUploadModel": "点击上传您的模型",
+    "deleteModel": "删除模型",
+    "modelNameId": "模型名称 / ID",
+    "name": "名称",
+    "modelFile": "模型档案",
+    "inputParameters": "Input 参数",
+    "parameterDataType": "参数资料类型",
+    "parameterDataName": "参数名称",
+    "outputParameters": "Output 参数",
+    "createInfo": "建立资料",
+    "lastUpdatedTime": "最后上传时间",
+    "fileInfo": "档案内容",
+    "reUploadReminder": "若 {mainScriptName} 档案异动后，请确认模型参数与 {mainScriptName} 的 Input/Output 格式是否一致。",
+    "upload": {
+      "failedUpload": "档案上传未完成",
+      "succeedUpload": "档案上传完成",
+      "inputArgsSetting": "设定 Input 参数",
+      "columnReminder": "栏位具有顺序性，优先顺序为由上至下，可用滑鼠拖曳变更顺序。",
+      "argsReminder": "参数需要与 {mainScriptName} 输入栏位格式一致，且名称不可以重复、不可以有反斜线。",
+      "outputArgsSetting": "设定 Output 参数",
+      "columnDataType": "参数资料类型",
+      "columnDataName": "参数名称",
+      "setModelName": "请设定名称",
+      "lackOfMainScript": "未包含 {mainScriptName}",
+      "modelLimit": {
+        "0": "主要脚本名称须为 {mainScriptName}",
+        "1": "脚本里面需有 run() 的函数",
+        "2": "函数传入与回传都必须为 pandas 的 DataFrame 类型"
+      },
+      "executionStep1": "设定名称",
+      "executionStep2": "上传档案",
+      "executionStep3": "设定 Input",
+      "executionStep4": "设定 Output"
+    }
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
