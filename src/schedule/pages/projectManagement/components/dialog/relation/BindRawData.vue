@@ -158,15 +158,17 @@ export default {
             .forEach(key => {
               const checkedInfo = res[this.snakeToCamel(key)]
               const bindable = this.resultHandler.bindable(checkedInfo)
-              this.checkedResult[key].bindable = bindable
+              const checkedResult = this.checkedResult[key]
+
+              checkedResult.bindable = bindable
               if (checkedInfo.hasOwnProperty('headerErrorMessage')) {
-                this.checkedResult[key].headerErrorMessage = checkedInfo.headerErrorMessage
+                checkedResult.headerErrorMessage = checkedInfo.headerErrorMessage
               } else {
-                this.checkedResult[key].headerErrorMessage = null
-                this.checkedResult[key].columns = checkedInfo.columns
-                this.checkedResult[key].totalRowCount = checkedInfo.rows
-                this.checkedResult[key].applicableRowCount = checkedInfo.available
-                this.checkedResult[key].notApplicableRowCount = checkedInfo.notApplicableRowIndexes.length
+                checkedResult.headerErrorMessage = null
+                checkedResult.columns = checkedInfo.columns
+                checkedResult.totalRowCount = checkedInfo.rows
+                checkedResult.applicableRowCount = checkedInfo.available
+                checkedResult.notApplicableRowCount = checkedInfo.notApplicableRowIndexes.length
               }
             })
 

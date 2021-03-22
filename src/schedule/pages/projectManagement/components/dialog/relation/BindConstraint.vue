@@ -135,9 +135,7 @@ export default {
         .filter(item => this.checkedResult[item.code].bindable)
     },
     options () {
-      const options = [ ...this.dataFrameOptions ]
-      options.unshift({ value: null, label: this.$t('editing.defaultOption') })
-      return options
+      return [ { value: null, label: this.$t('editing.defaultOption') }, ...this.dataFrameOptions ]
     }
   },
   methods: {
@@ -162,15 +160,17 @@ export default {
           
           dataframeCheckedResults.forEach(({ code, result }) => {
             const bindable = this.resultHandler.bindable(result)
-            this.checkedResult[code].bindable = bindable
+            const checkedResult = this.checkedResult[code]
+
+            checkedResult.bindable = bindable
             if (result.hasOwnProperty('headerErrorMessage')) {
-              this.checkedResult[code].headerErrorMessage = result.headerErrorMessage
+              checkedResult.headerErrorMessage = result.headerErrorMessage
             } else {
-              this.checkedResult[code].headerErrorMessage = null
-              this.checkedResult[code].columns = result.columns
-              this.checkedResult[code].totalRowCount = result.rows
-              this.checkedResult[code].applicableRowCount = result.available
-              this.checkedResult[code].notApplicableRowCount = result.notApplicableRowIndexes.length
+              checkedResult.headerErrorMessage = null
+              checkedResult.columns = result.columns
+              checkedResult.totalRowCount = result.rows
+              checkedResult.applicableRowCount = result.available
+              checkedResult.notApplicableRowCount = result.notApplicableRowIndexes.length
             }
           })
 
