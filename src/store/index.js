@@ -4,6 +4,7 @@ import dataSource from './modules/dataSource'
 import pinboard from './modules/pinboard'
 import dataManagement from './modules/dataManagement'
 import modelManagement from './modules/modelManagement'
+import modelFlowManagement from './modules/modelFlowManagement'
 import chatBot from './modules/chatBot'
 import result from './modules/result'
 import setting from './modules/setting'
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     pinboard,
     dataManagement,
     modelManagement,
+    modelFlowManagement,
     chatBot,
     setting,
     userManagement,

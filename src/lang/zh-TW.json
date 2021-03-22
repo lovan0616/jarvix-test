@@ -18,7 +18,8 @@
     "helper": "幫助",
     "warRoom": "戰情室",
     "application": "應用程式",
-    "modelManagement": "模型管理"
+    "modelManagement": "模型管理",
+    "modelFlowManagement": "流程管理"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -45,7 +46,9 @@
     "modelSetting": "管理設定",
     "modelDetail": "詳細內容",
     "reUploadFile": "重新上傳檔案",
-    "configSetting": "參數設定"
+    "configSetting": "參數設定",
+    "modelFlowManagement": "流程管理",
+    "flowList": "流程列表"
   },
   "user": {
     "changePwd": "變更密碼",
@@ -658,6 +661,9 @@
       "executionStep3": "設定 Input",
       "executionStep4": "設定 Output"
     }
+  },
+  "modelFlow": {
+    "newFlow": "新增流程"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
