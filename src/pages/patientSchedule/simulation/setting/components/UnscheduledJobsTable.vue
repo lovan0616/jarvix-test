@@ -40,7 +40,7 @@
         @dblclick.once="hasEmergecy = true">
         <el-badge 
           :hidden="!hasEmergecy" 
-          is-dot>
+          value="2">
           <default-button
             size="m"
             class="sync-btn"
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
+import JobSelectionPaginationTable from './JobSelectionPaginationTable'
 import DataSyncDialog from './DataSyncDialog'
 import { mapState, mapMutations } from 'vuex'
 
@@ -93,97 +93,25 @@ export default {
       isShowDataSyncDialog: false,
       jobSearchNumber: null,
       tmpJobData: null,
-      jobData: {
-        "columns":{
-          "titles":[
-            { title: 'roomName', name: 'Room Name', width: '160' },
-            { title: 'patientId', name: 'Patient Id', width: '160' },
-            { title: 'surgeon', name: 'Surgeon', width: '160' },
-            { title: 'surgeryTime', name: 'Surgery Time', width: '160' },
-            { title: 'surgeryType', name: 'Surgery Type', width: '160' },
-            { title: 'assistant', name: 'Assistant', width: '160' },
-            { title: 'anesthetist', name: 'Anesthetist', width: '160' },
-            { title: 'plannedDate', name: 'Planned Date', width: '160' },
-            { title: 'priority', name: 'Priority', width: '160' }
-          ]
-        },
-        "data":[
-          {
-            id: 'S000001',
-            roomName: 'Room_1',
-            patientId: 'AC000001',
-            surgeon: 'John',
-            surgeryTime: '10:00 - 15:00',
-            surgeryType: 'CKK2-1234',
-            assistant: 'Patrick W.',
-            anesthetist: 'H.W.L.',
-            plannedDate: '2021/3/1',
-            priority: 1,
-          },
-          {
-            id: 'S000002',
-            roomName: 'Room_2',
-            patientId: 'AC000001',
-            surgeon: 'John',
-            surgeryTime: '10:00 - 15:00',
-            surgeryType: 'CKK2-1234',
-            assistant: 'Patrick W.',
-            anesthetist: 'H.W.L.',
-            plannedDate: '2021/3/1',
-            priority: 1,
-          },
-          {
-            id: 'S000003',
-            roomName: 'Room_3',
-            patientId: 'AC000001',
-            surgeon: 'John',
-            surgeryTime: '10:00 - 15:00',
-            surgeryType: 'CKK2-1234',
-            assistant: 'Patrick W.',
-            anesthetist: 'H.W.L.',
-            plannedDate: '2021/3/1',
-            priority: 1,
-          },
-          {
-            id: 'S000004',
-            roomName: 'Room_4',
-            patientId: 'AC000001',
-            surgeon: 'John',
-            surgeryTime: '10:00 - 15:00',
-            surgeryType: 'CKK2-1234',
-            assistant: 'Patrick W.',
-            anesthetist: 'H.W.L.',
-            plannedDate: '2021/3/1',
-            priority: 1,
-          }
-        ],
-        "index":[
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
+      jobData: {},
       selectedData: [],
       period: [],
       pagination: {
         currentPage: 0,
-        totalPages: 0,
-        totalItems: 0,
+        totalPages: 1,
+        totalItems: 20,
         itemPerPage: 20
       },
       jobTableHeaderList: [
-        { title: 'job', name: this.$t('schedule.simulation.table.job'), width: '' },
-        { title: 'order', name: this.$t('schedule.simulation.table.order'), width: '' },
-        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '202' },
-        { title: 'deadline', name: this.$t('schedule.simulation.table.deadline'), width: '120' },
-        { title: 'quantity', name: this.$t('schedule.simulation.table.quantity'), width: '120' }
+        { title: 'sugeoryId', name: 'Sugeory Id' },
+        { title: 'patient', name: 'Patient' },
+        { title: 'patientID', name: 'Patient ID' },
+        { title: 'surgeon', name: 'Surgeon' },
+        { title: 'surgeryType', name: 'Surgery Type' },
+        { title: 'date', name: 'Date' },
+        { title: 'equipmentNo', name: 'equipmentNo' },
+        { title: 'assistant', name: 'assistant' },
+        { title: 'anesthetist', name: 'anesthetist' }
       ]
     }
   },
@@ -199,8 +127,277 @@ export default {
       deep: true
     }
   },
+  mounted () {
+    this.fetchJobData()
+  },
   methods: {
     ...mapMutations('simulation', ['updateScheduledJobs']),
+    fetchJobData () {
+      const mockData = [
+        {
+          "id": 1,
+          "sugeoryId": "ZXXXX122",
+          "patient": "Alice L\r",
+          "patientID": "AXC12749500333\r",
+          "surgeon": "John K.\r",
+          "surgeryType": " head and neck",
+          "date": "2021/3/1",
+          "priority": "1",
+          "equipmentNo": "Sterilizers AA1\nDefibrillators X2",
+          "assistant": "Patrick W.\r\n",
+          "anesthetist": "H.W.L.\r\n"
+        },
+        {
+          "id": 2,
+          "sugeoryId": "YCCCCC234",
+          "patient": "K.F. Lin",
+          "patientID": "AXC1274950 MR. A",
+          "surgeon": "Jeffery W.",
+          "surgeryType": "AXX1-Surgery",
+          "date": "2021/3/1",
+          "priority": "2",
+          "equipmentNo": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
+          "assistant": "Melody L.\r",
+          "anesthetist": "Phillip F.\r"
+        },
+        {
+          "id": 3,
+          "sugeoryId": "ZXXXX133",
+          "patient": "Dan M.",
+          "patientID": "AXC12749500111",
+          "surgeon": "Kate U.H.",
+          "surgeryType": "orthopedic",
+          "date": "2021/3/1",
+          "priority": "3",
+          "equipmentNo": "Surgical Lights\nSterilizers X123",
+          "assistant": "Jacob Tan\r",
+          "anesthetist": "Ben L.\r"
+        },
+        {
+          "id": 4,
+          "sugeoryId": "YCJKCC234",
+          "patient": "Mark K.",
+          "patientID": "AXC12749500885",
+          "surgeon": "Yvonne Z.",
+          "surgeryType": "AXX1-Surgery",
+          "date": "2021/3/1",
+          "priority": "3",
+          "equipmentNo": "EKG machines XX5\r\n",
+          "assistant": "Edward Z.\r",
+          "anesthetist": "H.W.L.\n"
+        },
+        {
+          "id": 5,
+          "sugeoryId": "ZX9990122",
+          "patient": "Melissa R.",
+          "patientID": "BXC12749500225",
+          "surgeon": "Yvonne Z",
+          "surgeryType": "orthopedic",
+          "date": "2021/3/1",
+          "priority": "1",
+          "equipmentNo": "Stretcher XX10",
+          "assistant": "William H.\r",
+          "anesthetist": "Anderson H."
+        },
+        {
+          "id": 6,
+          "sugeoryId": "ZXXXX133",
+          "patient": "Dan M.",
+          "patientID": "AXC12749500123",
+          "surgeon": "KKK",
+          "surgeryType": "orthopedic",
+          "date": "2021/3/1",
+          "priority": "3",
+          "equipmentNo": "Surgical Lights\nSterilizers X123",
+          "assistant": "Jacob Tan\r",
+          "anesthetist": "Ben L.\r"
+        },
+        {
+          "id": 7,
+          "sugeoryId": "YCJKCC234",
+          "patient": "Mark V.",
+          "patientID": "AXC12749500555",
+          "surgeon": "Daniel K",
+          "surgeryType": "Dental restorations",
+          "date": "2021/3/1",
+          "priority": "3",
+          "equipmentNo": "Anaesthetic\nDental drill",
+          "assistant": "Edward Z.\r",
+          "anesthetist": "H.W.L.\n"
+        },
+        {
+          "id": 8,
+          "sugeoryId": "ACJKCC235",
+          "patient": "Markin Lee",
+          "patientID": "ABC12749500556",
+          "surgeon": "Daniel K",
+          "surgeryType": "Dental restorations",
+          "date": "2021/3/1",
+          "priority": "3",
+          "equipmentNo": "Anaesthetic\nDental drill",
+          "assistant": "Edward Z.\r",
+          "anesthetist": "H.W.L.\n"
+        },
+        {
+          "id": 9,
+          "sugeoryId": "ALJKCC234",
+          "patient": "James H.",
+          "patientID": "AXC12749500987",
+          "surgeon": "Jeffery W.",
+          "surgeryType": "Breast Surgery",
+          "date": "2021/3/1",
+          "priority": "1",
+          "equipmentNo": "Breast Retractors\nBipolar Scissors",
+          "assistant": "Patrick Z.\n",
+          "anesthetist": "Betty Liu"
+        },
+        {
+          "id": 10,
+          "sugeoryId": "ZX9999873",
+          "patient": "Leo Koh",
+          "patientID": "AXC12749501419",
+          "surgeon": "John K.\r",
+          "surgeryType": "cataract surgery",
+          "date": "2021/3/1",
+          "priority": "2",
+          "equipmentNo": "Utrata Capsulorhexis Forceps\nCaliper",
+          "assistant": "Melody Tan",
+          "anesthetist": "Ben L.\r"
+        },
+        {
+          "id": 11,
+          "sugeoryId": "ZXX37533",
+          "patient": "Charles W.",
+          "patientID": "ABC12749500557",
+          "surgeon": "John S.\r",
+          "surgeryType": "intrathoracic",
+          "date": "2021/3/1",
+          "priority": "3",
+          "equipmentNo": "Diathermy forceps\nArtery forceps\nligature clamps",
+          "assistant": "Jacob Tan\r",
+          "anesthetist": "Phillip F.\r"
+        },
+        {
+          "id": 12,
+          "sugeoryId": "BCJKCC234",
+          "patient": "Susan I.",
+          "patientID": "AXC12749501851",
+          "surgeon": "Wilson L.",
+          "surgeryType": "orthopedic",
+          "date": "2021/3/1",
+          "priority": "1",
+          "equipmentNo": "Electrosurgery Unit",
+          "assistant": "Paul E.",
+          "anesthetist": "Caroline D."
+        },
+        {
+          "id": 13,
+          "sugeoryId": "ACJKCC997",
+          "patient": "Patricia Ng",
+          "patientID": "AXC12749502283",
+          "surgeon": "Andrew C.",
+          "surgeryType": "orthopedic",
+          "date": "2021/3/1",
+          "priority": "2",
+          "equipmentNo": "Electrosurgery Unit",
+          "assistant": "Ashley B.",
+          "anesthetist": "Caroline D."
+        },
+        {
+          "id": 14,
+          "sugeoryId": "ACJKCC998",
+          "patient": "Laura N",
+          "patientID": "AXC12749502284",
+          "surgeon": "Howard C.",
+          "surgeryType": "orthopedic",
+          "date": "2021/3/1",
+          "priority": "2",
+          "equipmentNo": "Electrosurgery Unit",
+          "assistant": "Emily F.",
+          "anesthetist": "Rick D."
+        },
+        {
+          "id": 15,
+          "sugeoryId": "ACJKCC999",
+          "patient": "Sharon W.",
+          "patientID": "AXC12749502285",
+          "surgeon": "Andrew C.",
+          "surgeryType": "orthopedic",
+          "date": "2021/3/1",
+          "priority": "2",
+          "equipmentNo": "Electrosurgery Unit",
+          "assistant": "Jackson S.",
+          "anesthetist": "Rachel E."
+        },
+        {
+          "id": 16,
+          "sugeoryId": "ZX9990122",
+          "patient": "Melissa R1",
+          "patientID": "BXC12274950000",
+          "surgeon": "Yvonne Z",
+          "surgeryType": "CKKS-Cardiac",
+          "date": "2021/3/1",
+          "priority": "1",
+          "equipmentNo": "Stretcher XX10",
+          "assistant": "William H.\r",
+          "anesthetist": "Anderson H."
+        },
+        {
+          "id": 17,
+          "sugeoryId": "ZX9990123",
+          "patient": "Melissa R2",
+          "patientID": "BXC12274950001",
+          "surgeon": "Jeffery W.",
+          "surgeryType": "CKKS-Cardiac",
+          "date": "2021/3/2",
+          "priority": "1",
+          "equipmentNo": "Stretcher XX11",
+          "assistant": "William H.\r",
+          "anesthetist": "Anderson H."
+        },
+        {
+          "id": 18,
+          "sugeoryId": "ZX9990124",
+          "patient": "Melissa R3",
+          "patientID": "BXC12274950002",
+          "surgeon": "Kate U.H.",
+          "surgeryType": "CKKS-Cardiac",
+          "date": "2021/3/3",
+          "priority": "1",
+          "equipmentNo": "Stretcher XX12",
+          "assistant": "William H.\r",
+          "anesthetist": "Anderson H."
+        },
+        {
+          "id": 19,
+          "sugeoryId": "ZX9990125",
+          "patient": "Melissa R4",
+          "patientID": "BXC12274950003",
+          "surgeon": "Yvonne Tan",
+          "surgeryType": "CKKS-Cardiac",
+          "date": "2021/3/4",
+          "priority": "1",
+          "equipmentNo": "Stretcher XX13",
+          "assistant": "William H.\r",
+          "anesthetist": "Anderson H."
+        },
+        {
+          "id": 20,
+          "sugeoryId": "ZX9990126",
+          "patient": "Melissa R.R.",
+          "patientID": "BXC12274950004",
+          "surgeon": "Yvonne K",
+          "surgeryType": "CKKS-Cardiac",
+          "date": "2021/3/5",
+          "priority": "1",
+          "equipmentNo": "Stretcher XX14",
+          "assistant": "William H.\r",
+          "anesthetist": "Anderson H."
+        }
+      ]
+      this.tmpJobData = mockData
+      this.updateJobData(mockData)
+    },
     updateJobData (tmpJobData) {
       if (!tmpJobData) return
       this.jobData = {
@@ -225,46 +422,30 @@ export default {
       if (!this.hasEmergecy) return
       this.jobData.data.unshift(...[
         {
-          id: 'S000005',
-          roomName: 'Room_A',
-          patientId: 'AC000001',
-          surgeon: 'John',
-          surgeryTime: '10:00 - 15:00',
-          surgeryType: 'CKK2-1234',
-          assistant: 'Patrick W.',
-          anesthetist: 'H.W.L.',
-          plannedDate: '2021/3/1',
-          priority: 1,
-          isChecked: false,
-          isScheduled: false
+          "id": 98,
+          "sugeoryId": "ZXXXX999\r",
+          "patient": "Alison W.",
+          "patientID": "BXC12749500123",
+          "surgeon": "John S.\r",
+          "surgeryType": "Major Emergency",
+          "date": "2021/3/1",
+          "priority": "1",
+          "equipmentNo": "Sterilizers AB1\nDefibrillators X8",
+          "assistant": "Jacob Tan\r",
+          "anesthetist": "Leo J.",
         },
         {
-          id: 'S000006',
-          roomName: 'Room_B',
-          patientId: 'AC000001',
-          surgeon: 'John',
-          surgeryTime: '10:00 - 15:00',
-          surgeryType: 'CKK2-1234',
-          assistant: 'Patrick W.',
-          anesthetist: 'H.W.L.',
-          plannedDate: '2021/3/1',
-          priority: 1,
-          isChecked: false,
-          isScheduled: false
-        },
-        {
-          id: 'S000007',
-          roomName: 'Room_C',
-          patientId: 'AC000001',
-          surgeon: 'John',
-          surgeryTime: '10:00 - 15:00',
-          surgeryType: 'CKK2-1234',
-          assistant: 'Patrick W.',
-          anesthetist: 'H.W.L.',
-          plannedDate: '2021/3/1',
-          priority: 1,
-          isChecked: false,
-          isScheduled: false
+          "id": 99,
+          "sugeoryId": "YCCCCC999",
+          "patient": "M.K.",
+          "patientID": "BXC12749500222",
+          "surgeon": "Wilson L.",
+          "surgeryType": "Plastic Surgery",
+          "date": "2021/3/1",
+          "priority": "1",
+          "equipmentNo": "Sterilizers A19\nDefibrillators X2",
+          "assistant": "Edward Z.\r",
+          "anesthetist": "Thomas T.",
         }
       ])
       this.hasEmergecy = false

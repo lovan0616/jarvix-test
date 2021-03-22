@@ -1,6 +1,16 @@
 
 <template>
-  <div class="current-simulation">
+  <div
+    v-if="isReScheduling"
+    class="re-scheduling-mask"
+  >
+    <spinner
+      title="Rescheduling ..."
+    />
+  </div>
+  <div 
+    v-else 
+    class="current-simulation">
     <h2 class="header">
       Current Scheduling Plan
     </h2>
@@ -34,8 +44,13 @@
           </span>
         </div>
       </div>
-      <plan-job />
-      <plan-gantt />
+      <plan-job
+        :re-scheduled="reScheduled"
+        @reSchedule="reSchedule"
+      />
+      <plan-gantt
+        :re-scheduled="reScheduled"
+      />
     </div>
     <div
       v-else
@@ -74,17 +89,36 @@ export default {
   },
   data () {
     return {
+      isReScheduling: false,
+      reScheduled: false
     }
   },
   computed: {
     planned () {
-      return this.$route.query.planned
+      return this.$route.query.planned || this.$route.query.planned === 'true'
+    }
+  },
+  methods: {
+    reSchedule () {
+      this.isReScheduling = true
+      window.setTimeout(() => {
+        this.isReScheduling = false
+        this.reScheduled = true
+      }, 3000)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.re-scheduling-mask {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: $theme-color-primary;
+}
 .current-simulation {
   position: relative;
   padding: 24px;

@@ -37,7 +37,7 @@
           </h2>
           <default-button
             size="m"
-            @click="$router.push({ name: 'SimulationSetting' })">
+            @click="$router.push({ name: 'DemoOTSimulationSetting' })">
             Back To Setting
           </default-button>
           <default-button
@@ -219,8 +219,6 @@ export default {
       return !this.$store.state.simulation.simulationResult.failedSolutionIds.includes(solution.solutionId)
     })
     this.currentSolutionId = completedSolutions[0].solutionId
-    // this.fetchOrderSimulateResult()
-    // this.fetchKpiResult()
   },
   methods: {
     fetchMachineSimulateResult (page = 0, size = 20, resetPagination = true) {
@@ -314,23 +312,15 @@ export default {
     switchSolution (solutionId) {
       if (this.isSolutionFailed(solutionId)) return
       if (this.currentSolutionId === solutionId) return
-      // this.resultType = 'order'
       this.currentSolutionId = solutionId
-      // this.fetchOrderSimulateResult(0, 20, true)
     },
     switchTab (type) {
       if (this.resultType === type) return
       this.isLoading = false
       this.isProcessing = false
       this.resultType = type
-      // if (this.resultType === 'order') return this.fetchOrderSimulateResult(0, 20, true)
-      // if (this.resultType === 'machine') return this.fetchMachineSimulateResult(0, 20, true)
       if (this.resultType === 'schedule') return this.fetchGanttChartData()
     },
-    // updatePage (page) {
-    //   if (this.resultType === 'order') return this.fetchOrderSimulateResult(page - 1, 20, false)
-    //   if (this.resultType === 'machine') return this.fetchMachineSimulateResult(page - 1, 20, false)
-    // },
     scrollToLeft (value) {
       this.position = { x: value }
     },

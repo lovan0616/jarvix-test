@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
+import JobSelectionPaginationTable from './JobSelectionPaginationTable'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
@@ -79,8 +79,8 @@ export default {
       filterJobData: [],
       pagination: {
         currentPage: 0,
-        totalPages: 0,
-        totalItems: 0,
+        totalPages: 1,
+        totalItems: 20,
         itemPerPage: 20
       },
       sliceInfo: {
@@ -88,15 +88,15 @@ export default {
         end: 0
       },
       jobTableHeaderList: [
-        { title: 'roomName', name: 'Room Name', width: '160' },
-        { title: 'patientId', name: 'Patient Id', width: '160' },
+        { title: 'sugeoryId', name: 'Sugeory Id', width: '160' },
+        { title: 'patient', name: 'Patient', width: '160' },
+        { title: 'patientID', name: 'Patient ID', width: '160' },
         { title: 'surgeon', name: 'Surgeon', width: '160' },
-        { title: 'surgeryTime', name: 'Surgery Time', width: '160' },
         { title: 'surgeryType', name: 'Surgery Type', width: '160' },
-        { title: 'assistant', name: 'Assistant', width: '160' },
-        { title: 'anesthetist', name: 'Anesthetist', width: '160' },
-        { title: 'plannedDate', name: 'Planned Date', width: '160' },
-        { title: 'priority', name: 'Priority', width: '160' }
+        { title: 'date', name: 'Date', width: '160' },
+        { title: 'equipmentNo', name: 'equipmentNo' },
+        { title: 'assistant', name: 'assistant', width: '120' },
+        { title: 'anesthetist', name: 'anesthetist', width: '120' }
       ]
     }
   },

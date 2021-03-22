@@ -21,25 +21,27 @@
             <img src="@/assets/images/sygps_logo.png">
           </a>
           <nav class="nav-header">
-            <!-- OT Scheduling -->
+            <!-- Surgery Scheduling -->
             <section
               v-if="isOTSchedule"
               class="nav-left"
             >
               <router-link 
                 :to="{ name: 'DemoCurrentOTSimulation'}"
+                :class="{ 'active': $route.name === 'DemoCurrentOTSimulation' }"
                 class="nav-item"
               >
-                Current Result
+                Surgery Schedule
               </router-link>
               <router-link 
-                :to="{ name: 'DemoCurrentOTSimulation'}"
+                :to="{ name: 'DemoOTSimulationSetting'}"
+                :class="{ 'active': $route.name === 'DemoOTSimulationSetting' }"
                 class="nav-item"
               >
-                Simulation
+                Surgery Simulation
               </router-link>
             </section>
-            <!-- Beedroom Scheduling -->
+            <!-- Bedroom Scheduling -->
             <section
               v-else
               class="nav-left"
@@ -48,10 +50,10 @@
                 :to="{ name: 'DemoCurrentBedSimulation', query: { planned: true } }"
                 class="nav-item"
               >
-                Current Result
+                Bed Schedule
               </router-link>
               <span class="nav-item">
-                Simulation
+                Bed Simulation
               </span>
             </section>
           </nav>
@@ -62,8 +64,9 @@
       <aside>
         <el-menu 
           :collapse="isCollapse" 
-          default-active="2" 
-          class="el-menu-vertical-demo"
+          :class="!isCollapse ? 'is-opened' : ''" 
+          default-active="2"
+          class="surgery-menu"
           background-color="#191919"
           text-color="#fff"
           active-text-color="#4DE2F0"
@@ -94,9 +97,12 @@
             <el-menu-item-group>
               <el-menu-item
                 index="3-1"
-                @click="$router.push({ name: 'DemoCurrentOTSimulation' })"
+                @click="alert(123); $router.push({ name: 'DemoCurrentOTSimulation' })"
               >OT Room Scheduling</el-menu-item>
-              <el-menu-item index="3-2">Bedroom Scheduling</el-menu-item>
+              <el-menu-item
+                index="3-2"
+                @click="$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })"
+              >Bedroom Scheduling</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-menu-item index="4">
@@ -138,7 +144,7 @@ export default {
   computed: {
     ...mapState(['isShowFullSideNav']),
     isOTSchedule () {
-      return this.$route.name === 'DemoCurrentOTSimulation'
+      return this.$route.name.includes('OT')
     }
   },
   methods: {
@@ -411,7 +417,7 @@ export default {
   }
 }
 
-.el-menu-vertical-demo {
+.surgery-menu {
   position: absolute;
   top: 0;
   left: 0;

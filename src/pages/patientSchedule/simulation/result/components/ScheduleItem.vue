@@ -3,19 +3,21 @@
     popper-class="job-detail-dialog job"
     placement="bottom"
     trigger="hover"
-    width="230"
+    width="260"
   >
     <div
       slot="reference"
-      :class="[item.type !== 'surgeory' ? 'job__chart--break' : 'job__chart--ordinary']"
-    />
+      :class="['job__chart', getScheduleItemClass(item.type, item.priority)]"
+    >
+      {{ shouldShowLabel(item.type) ? item.type : null }}
+    </div>
     <div class="job__detail">
       <div class="job__detail-description">
-        <div>Patient ID: {{ item.patientId }}</div>
-        <div>SurgeryType: {{ item.surgeryType }}</div>
+        <div v-if="item.patientID">Patient ID: {{ item.patientID }}</div>
+        <div v-if="item.surgeryType">Surgery Type: {{ item.surgeryType }}</div>
+        <div>Type: {{ item.type }}</div>
         <div>Start: {{ item.start }}</div>
         <div>End: {{ item.end }}</div>
-        <div>Type: {{ item.type }}</div>
       </div>
     </div>
   </el-popover>
@@ -35,21 +37,22 @@ export default {
     }
   },
   methods: {
-    // handleMouseEnter (orderId) {
-    //   if (!orderId) return
-    //   this.$emit('search-order', orderId)
-    // },
-    // handleMouseLeave (orderId) {
-    //   if (!orderId) return
-    //   this.$emit('cancel-search-order')
-    // },
-    // getHoursDiff (startTime, endTime) {
-    //   const duration = moment(endTime).diff(moment(startTime), 'minutes')
-    //   return `${this.padZero(Math.floor(duration / 60))} ${this.$t('schedule.base.hour')} ${this.padZero(duration % 60)} ${this.$t('schedule.base.minute')}`
-    // },
-    // padZero (value) {
-    //   return value < 10 ? `0${value}` : value
-    // }
+    shouldShowLabel (type) {
+      return type !== 'surgery' && type !== 'stay'
+    },
+    getScheduleItemClass (type, priority) {
+      switch (priority) {
+        case 1:
+          return 'job__chart--highlight'
+      }
+
+      switch (type) {
+        case 'surgery':
+        case 'stay':
+          return 'job__chart--ordinary'
+      }
+      return 'job__chart--break'
+    }
   }
 }
 </script>
@@ -71,27 +74,31 @@ export default {
   }
 
   &__chart {
+    text-transform: capitalize;
+    height: 25px;
+    border-radius: 4px;
+    margin-top: 7px;
+    font-size: 12px;
+    line-height: 23px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+    &:hover {
+      background-color: $theme-color-warning;
+    }
+    &--highlight {
+      background-color: $theme-color-danger;
+    }
     &--break {
-      height: 25px;
-      border-radius: 4px;
-      font-size: 12px;
-      line-height: 23px;
-      margin-top: 7px;
       color: var(--color-text);
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      vertical-align: top;
       border: 1px solid #FFFFFF;
     }
 
     &--ordinary {
       min-width: 1px;
-      height: 25px;
-      border-radius: 4px;
       background-color: #2AD2E2;
-      margin: 7px 2px 0 0;
       transition: background-color .2s linear;
       &.active { background-color: var(--color-warning); }
     }
