@@ -5,7 +5,7 @@
       class="schedule-helper__close-btn"
       @click="closeScheduleHelper"
     ><svg-icon icon-class="close"/></a>
-    <h1>{{ $t('schedule.helper.columnDescription') }}</h1>
+    <h1 class="schedule-helper__title">{{ $t('schedule.helper.columnDescription') }}</h1>
     <div class="schedule-helper__content">
       <div class="sample__menus">
         <!-- 共用資料設定 -->
@@ -15,12 +15,12 @@
           </div>
           <div class="sample__menu__list">
             <div 
-              v-for="(smaple, index) in samples.rawData"
+              v-for="(sample, index) in samples.rawData"
               :key="index"
               :class="{'sample__menu__item--active': isActive('rawData', index)}"
               class="sample__menu__item"
               @click="selectSample('rawData', index)"
-            >{{ $t(`schedule.setting.commonData${smaple.dataFrameCode}`) }}</div>
+            >{{ $t(`schedule.setting.commonData${sample.dataFrameCode}`) }}</div>
           </div>
         </div>
         <!-- 額外限制條件設定 -->
@@ -30,12 +30,12 @@
           </div>
           <div class="sample__menu__list">
             <div 
-              v-for="(smaple, index) in samples.constraint"
+              v-for="(sample, index) in samples.constraint"
               :key="index"
               :class="{'sample__menu__item--active': isActive('constraint', index)}"
               class="sample__menu__item"
               @click="selectSample('constraint', index)"
-            >{{ $t(`schedule.setting.extraConstraint${smaple.dataFrameCode}`) }}</div>
+            >{{ $t(`schedule.setting.extraConstraint${sample.dataFrameCode}`) }}</div>
           </div>
         </div>
       </div>
@@ -347,6 +347,9 @@ export default {
   height: calc(100vh - #{$header-height});
   width: calc(100vw - #{$app-side-nav-closed-width});
   background-color: #171717;
+  &__title {
+    font-size: 24px;
+  }
   &__close-btn {
     position: absolute;
     top: 32px;
