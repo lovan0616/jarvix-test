@@ -241,8 +241,8 @@ export default {
                 ...((response.enableAlert && responseData.title) && {
                   xAxis: responseData.title.xAxis
                 }),
-                // 圖表是否可設定異常標記
-                enableAnomalySetting: response.enableAnomalySetting
+                // 元件設定資訊集
+                supportedFunction: response.supportedFunction
               })
 
               // 圖表異常標記設定和轉換

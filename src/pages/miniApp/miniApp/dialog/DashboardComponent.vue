@@ -713,9 +713,9 @@ export default {
         })
     },
     setConfig (configData) {
-      const { enableAnomalySetting, ...restData } = configData
-      this.isShowAnomalySetting = enableAnomalySetting
-      this.$emit('setConfig', restData)
+      const { supportedFunction = {} } = configData
+      this.isShowAnomalySetting = supportedFunction.enableAnomalySetting
+      this.$emit('setConfig', configData)
     },
     createAnomolyNewRule () {
       this.tempComponentAnomalySettings.push({
