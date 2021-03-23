@@ -8,8 +8,12 @@ import request from '@/utils/publicRequest'
  */
  export function getModelList(groupId, page = 0, size=20) {
   return request({
-    url: `/models?groupId=${groupId}&size=${size}&page=${page}`,
-    method: 'GET'
+    url: `/models?groupId=${groupId}`,
+    method: 'GET',
+    params: {
+      page,
+      size: 20
+    }
   })
 }
 
