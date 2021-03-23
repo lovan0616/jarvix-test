@@ -20,6 +20,12 @@
 
 export default {
   name: '',
+  props: {
+    isInserted: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       timer: null
@@ -29,7 +35,7 @@ export default {
   },
   mounted () {
     window.setTimeout(() => {
-      this.$router.push({ name: 'DemoOTSimulationResult' })
+      this.$router.push({ name: 'DemoOTSimulationResult', query: { inserted: this.isInserted } })
     }, 3000)
   },
   methods: {

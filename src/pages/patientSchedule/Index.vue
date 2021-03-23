@@ -97,7 +97,7 @@
             <el-menu-item-group>
               <el-menu-item
                 index="3-1"
-                @click="alert(123); $router.push({ name: 'DemoCurrentOTSimulation' })"
+                @click="$router.push({ name: 'DemoCurrentOTSimulation' })"
               >OT Room Scheduling</el-menu-item>
               <el-menu-item
                 index="3-2"
@@ -119,7 +119,9 @@
         <transition
           name="fade" 
           mode="out-in">
-          <router-view :is-ot="isOTSchedule" />
+          <router-view 
+            :is-ot="isOTSchedule" 
+            :key="isOTSchedule" />
         </transition>
       </div>
     </main>

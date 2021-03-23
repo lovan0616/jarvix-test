@@ -4,6 +4,7 @@
   >
     <unscheduled-jobs-table
       class="unscheduled-jobs-table"
+      @insert="$emit('insert')"
     />
     <hr>
     <scheduled-jobs-table

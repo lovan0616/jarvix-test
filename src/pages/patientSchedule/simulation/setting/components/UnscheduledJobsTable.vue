@@ -78,12 +78,14 @@
 import JobSelectionPaginationTable from './JobSelectionPaginationTable'
 import DataSyncDialog from './DataSyncDialog'
 import { mapState, mapMutations } from 'vuex'
+import DefaultDatePicker from './DefaultDatePicker'
 
 export default {
   name: 'UnscheduledJobsTable',
   components: {
     JobSelectionPaginationTable,
-    DataSyncDialog
+    DataSyncDialog,
+    DefaultDatePicker
   },
   data () {
     return {
@@ -448,6 +450,7 @@ export default {
           "anesthetist": "Thomas T.",
         }
       ])
+      this.$emit('insert')
       this.hasEmergecy = false
     },
     addItem () {

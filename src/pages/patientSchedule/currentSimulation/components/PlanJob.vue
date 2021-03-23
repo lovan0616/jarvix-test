@@ -2,7 +2,7 @@
   <div class="plan-job job">
     <div class="job__header">
       <h3 class="job__title">
-        Surgery Schedule
+        {{ $route.name.includes('OT') ? 'Surgery Schedule' : 'Bed Room Schedule' }}
       </h3>
       <default-button
         type="outline"
@@ -35,6 +35,7 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
+// import JobSelectionPaginationTable from '../../simulation/setting/components/JobSelectionPaginationTable'
 
 export default {
   name: 'PlanJob',
@@ -54,9 +55,18 @@ export default {
       isLoading: false,
       isProcessing: false,
       resultType: 'order',
-      jobData: {
-        "columns":{
-          "titles": [
+      jobData: {},
+      pagination: {
+        currentPage: 0,
+        totalPage: 0
+      }
+    }
+  },
+  mounted () {
+    if (this.$route.name.includes('OT')) {
+      this.jobData = {
+        columns: {
+          titles: [
             { title: 'sugeoryId', name: 'Sugeory Id', width: '160' },
             { title: 'patient', name: 'Patient', width: '160' },
             { title: 'patientID', name: 'Patient ID', width: '160' },
@@ -350,10 +360,109 @@ export default {
           8,
           9
         ]
-      },
-      pagination: {
-        currentPage: 0,
-        totalPage: 0
+      }
+    } else {
+      this.jobData = {
+        columns: {
+          titles: [
+            { title: 'roomNo', name: 'Room No.' },
+            { title: 'type', name: 'Type' },
+            { title: 'start', name: 'Start Time', width: 160 },
+            { title: 'end', name: 'End Time', width: 160 },
+            { title: 'roomType', name: 'Room Type', width: 160 },
+            { title: 'patientName', name: 'Patient Name', width: 160 },
+            { title: 'patientId', name: 'Paitent ID', width: 160 },
+            { title: 'division', name: 'Division', width: 160 },
+            { title: 'attendingPhysician', name: 'Attending Physician', width: 180 },
+            { title: 'nurse', name: 'Nurse', width: 160 },
+            { title: 'admissionDate', name: 'Admission Date', width: 160 },
+            { title: 'plannedDischargedDate', name: 'Planned Discharged Date', width: 220 }
+          ]
+        },
+        data: [
+          {
+            "roomNo": "Room_1",
+            "type": "stay",
+            "start": "2021-03-01 09:00",
+            "end": "2021-03-10 12:00",
+            "roomType": "General Ward",
+            "patientName": "Jennie Tan",
+            "patientId": "P1012345",
+            "division": "Neurology\r",
+            "attendingPhysician": "Lucas Lee",
+            "nurse": "David L",
+            "admissionDate": "2021/3/1",
+            "plannedDischargedDate": "2021/3/3"
+          },
+          {
+            "roomNo": "Room_2",
+            "type": "stay",
+            "start": "2021-03-01 11:30",
+            "end": "2021-03-03 11:30",
+            "roomType": "Speical Ward",
+            "patientName": "James Ng",
+            "patientId": "P8479502",
+            "division": "Ophthalmology",
+            "attendingPhysician": "Oliver Lim",
+            "nurse": "Andrew Tan",
+            "admissionDate": "2021/3/1",
+            "plannedDischargedDate": "2021/3/3"
+          },
+          {
+            "roomNo": "Room_3",
+            "type": "stay",
+            "start": "2021-03-01 8:30",
+            "end": "2021-03-05 12:30",
+            "roomType": "ICU",
+            "patientName": "Noah Lim\r",
+            "patientId": "P1034859",
+            "division": "Plastic Surgery\r",
+            "attendingPhysician": "Kevin Wong",
+            "nurse": "Patrick K.",
+            "admissionDate": "2021/3/1",
+            "plannedDischargedDate": "2021/3/5"
+          },
+          {
+            "roomNo": "Room_4",
+            "type": "stay",
+            "start": "2021-03-01 8:30",
+            "end": "2021-03-01 14:30",
+            "roomType": "Deluxe Ward",
+            "patientName": "Davis Chua",
+            "patientId": "P0039485\r",
+            "division": "Orthopedics",
+            "attendingPhysician": "Mason Tan",
+            "nurse": "Connor Ong\r",
+            "admissionDate": "2021/2/28",
+            "plannedDischargedDate": "2021/3/1"
+          },
+          {
+            "roomNo": "Room_4",
+            "type": "stay",
+            "start": "2021-03-01 16:30",
+            "end": "2021-03-05 16:30",
+            "roomType": "General Ward",
+            "patientName": "Angela Koh",
+            "patientId": "P2495839",
+            "division": "Nephrology",
+            "attendingPhysician": "Joseph Wong",
+            "nurse": "Catherine Lim\r",
+            "admissionDate": "2021/3/1",
+            "plannedDischargedDate": "2021/3/5"
+          }
+        ],
+        index: [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
       }
     }
   }

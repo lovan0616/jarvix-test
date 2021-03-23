@@ -82,12 +82,12 @@ export default {
               "Room No.": "Room_1",
               "type": "cleaning",
               "start": "2021-03-01 08:30",
-              "end": "2021-03-01 09:00"
+              "end": "2021-03-01 09:15"
             },
             {
               "Room No.": "Room_1",
               "type": "stay",
-              "start": "2021-03-01 09:00",
+              "start": "2021-03-01 09:15",
               "end": "2021-03-10 12:00",
               "Room Type": "General Ward",
               "Patient Name": "Jennie Tan",
@@ -608,6 +608,31 @@ export default {
           value: 1440
         }
       ]
+    }
+  },
+  created () {
+    if (this.$route.query.inserted) {
+      this.otGanttChartDataList.unshift({
+        gtArray: [
+          {
+            "name": "Room_A",
+            "type": "surgery",
+            "start": "2021-03-01 08:30",
+            "end": "2021-03-01 10:00",
+            "sugeoryId": "ZXXXX133",
+            "patient": "Dan M.",
+            "patientID": "AXC12749500123",
+            "surgeon": "KKK",
+            "surgeryType": "orthopedic",
+            "date": "2021/3/1",
+            "priority": 1,
+            "Equipment No.": "Surgical Lights\nSterilizers X123",
+            "Assistant": "Jacob Tan\r",
+            "Anesthetist": "Ben L.\r",
+          },
+        ],
+        name: 'Room_A'
+      })
     }
   },
   methods: {

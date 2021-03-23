@@ -88,6 +88,7 @@ export default {
     dataset: {
       type: [Object, Array],
       validator: value => {
+        console.log(value)
         if (Object.prototype.hasOwnProperty.call(value, 'enableEdit') && value.columns) return true
         if (typeof value !== 'object') return false
         if (!(value instanceof Array)) {

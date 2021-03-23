@@ -11,7 +11,7 @@
     <div class="page__section detail">
       <div class="section__side-nav">
         <div class="section__title">
-          {{ $t('schedule.simulation.solution') }}
+          Solutions
         </div>
         <div class="solution__list">
           <div
@@ -78,7 +78,7 @@
           class="section__collapse-controller"
           @click="isKpiCollapse = !isKpiCollapse"
         >
-          {{ isKpiCollapse ? $t('schedule.base.open') : $t('schedule.base.close') }}
+          {{ isKpiCollapse ? 'Open' : 'Close' }}
           <i class="icon-controller el-icon-arrow-down" />
         </div>
       </h3>
@@ -99,7 +99,7 @@
 
 <script>
 import PaginationTable from '@/schedule/components/table/PaginationTable'
-import { getMachineSimulateResult, getMachineExcludeList, adoptionSolution } from '@/schedule/API/Simulation'
+import { getMachineSimulateResult, getMachineExcludeList } from '@/schedule/API/Simulation'
 import ScheduleItem from './components/ScheduleItem'
 import ScheduleLabel from './components/ScheduleLabel'
 import BarChart from './components/BarChart'
@@ -141,7 +141,7 @@ export default {
       tabs: [
         {
           type: 'schedule',
-          name: 'Scheduling Chart'
+          name: 'Scheduling'
         }
       ],
       orderTableHeaderList: [
@@ -325,7 +325,11 @@ export default {
       this.position = { x: value }
     },
     adoptPlan () {
-      this.$router.push({ name: 'DemoCurrentOTSimulation', query: { planned: true } })
+      this.$router.push({ name: 'DemoCurrentOTSimulation', query: {
+          planned: true,
+          inserted: this.$route.query.inserted
+        }
+      })
     },
     searchOrder (orderId) {
       this.searchedOrderId = orderId

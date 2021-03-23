@@ -92,10 +92,11 @@
       <h2 class="header__title">
         Scheduling Surgeory Simulation
       </h2>
-      <plan-simulation />
+      <plan-simulation @insert="isInserted = true"/>
     </div>
     <simulating-dialog
       v-if="isSimulatingDialogOpen"
+      :is-inserted="isInserted"
       @cancel="cancelSimulation"
     />
     <decide-dialog
@@ -129,6 +130,7 @@ export default {
   },
   data () {
     return {
+      isInserted: false,
       editSolutionSequence: null,
       isShowChangeAlert: false,
       renderingSetting: false,
