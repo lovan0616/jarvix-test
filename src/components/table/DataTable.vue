@@ -247,7 +247,6 @@
 </template>
 <script>
 import UploadBlock from '@/components/UploadBlock'
-import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { mapGetters } from 'vuex'
@@ -409,7 +408,8 @@ export default {
       }
 
       let order = this.sortStatus[name] > 0 ? 'asc' : 'desc'
-      this.$emit('update:dataList', orderBy(this.dataList, [name], [order]))
+
+      this.$emit('sort', {name, order})
     },
     linkTo (link, id) {
       let paramKey = link.paramName || 'id'
@@ -512,6 +512,7 @@ export default {
           // 需要擁有權限或是是自己建立的表
           hasPermission = this.hasPermission(action.checkPermission) || Number(data.createBy) === this.$store.state.userManagement.userId
         }
+        if (action.dialogName === 'batchLoad' && data.joinCount > 1) return false
         if (action.dialogName === 'etlSetting') return data.etlExists
         if (action.dialogName === 'createdInfo') return data.originType === 'database' && hasPermission
         return hasPermission
