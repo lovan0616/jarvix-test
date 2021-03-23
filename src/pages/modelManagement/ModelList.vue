@@ -158,10 +158,10 @@ export default {
   },
   methods: {
     ...mapMutations('modelManagement', ['updateShowCreateModelDialog', 'updateModelUploadSuccess']),
-    fetchData (init = true, page = 0, size = 20) {
+    fetchData (init = true, page = 0) {
       if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
       this.isLoading = true
-      return getModelList(this.groupId, page, size)
+      return getModelList(this.groupId, page)
         .then(({models, pagination}) => {
           this.modelList = models
           this.paginationInfo = pagination
