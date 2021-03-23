@@ -4,11 +4,11 @@ import request from '@/utils/publicRequest'
  * get model list
  * @query {Number} groupId - group id 
  * @query {Number} page - pagination page
- * @query {Number} offset - pagination item per page
+ * @query {Number} size - pagination item per page
  */
- export function getModelList(groupId, page = 0, offset=20) {
+ export function getModelList(groupId, page = 0, size=20) {
   return request({
-    url: `/models?groupId=${groupId}&offset=${offset}&page=${page}`,
+    url: `/models?groupId=${groupId}&size=${size}&page=${page}`,
     method: 'GET'
   })
 }
