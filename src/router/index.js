@@ -5,6 +5,7 @@ import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 import ScheduleRouter from '@/schedule/router'
+import DemoPatientSchedule from '@/pages/patientSchedule/router.js'
 
 Vue.use(Router)
 
@@ -398,7 +399,8 @@ const router = new Router({
       path: '/oe-exhibition',
       name: 'OeExhibition',
       component: () => import('@/pages/oeExhibition/Index')
-    }
+    },
+    ...DemoPatientSchedule.options.routes
   ],
   linkActiveClass: 'active',
   scrollBehavior (to, from, savedPosition) {
