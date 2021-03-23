@@ -58,9 +58,10 @@
               :is-show-coefficients="segmentation && segmentation.denotation === 'STABILITY'"
               :is-show-donwnload-btn="false"
               :is-show-toolbox="false"
+              :anomaly-setting="anomalySetting"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
-              @setConfig="$emit('setConfig', $event)"
+              @setConfig="setConfig($event)"
             />
           </div>
         </div>
@@ -153,10 +154,68 @@
           <div class="display-setting__button-box">
             <button 
               class="btn btn-default display-setting__button" 
-              @click="saveChartSetting"
+              @click="saveChartSetting(true)"
             >
               {{ $t('button.change') }}
             </button>
+          </div>
+        </div>
+      </div>
+      <!--異常標記設定-->
+      <div 
+        v-if="computedKeyResultId && isShowAnomalySetting"
+        class="key-result__setting anomaly">
+        <div class="anomaly__title">{{ $t('miniApp.anomalySetting') }}</div>
+        <div class="anomaly__content">
+          <div class="anomaly__content-title">{{ $t('miniApp.anomalyRules') }}</div>
+          <div class="anomaly__settings">
+            <div class="anomaly__settings--top">
+              <div
+                v-if="tempComponentAnomalySettings.length === 0" 
+                class="anomaly__empty-message">{{ $t('miniApp.emptyRules') }}</div>
+              <div
+                v-for="setting in tempComponentAnomalySettings"
+                v-else
+                :key="setting.id"
+                class="anomaly__setting-item threshold"
+              >
+                <div class="threshold--left">
+                  <default-select
+                    v-model="setting.comparison"
+                    :option-list="anomalyOptionList"
+                    class="input threshold__select"
+                  />
+                  <input-verify
+                    v-validate="'decimal|required'"
+                    v-model.trim="setting.value"
+                    :placeholder="$t('miniApp.datumValue')"
+                    :name="setting.id + '-componentDisplayName'"
+                    class="threshold__input"
+                  />
+                </div>
+                <div 
+                  class="threshold--right" 
+                  @click="removeSetting(setting.id)">
+                  <svg-icon
+                    icon-class="delete"
+                    class="icon threshold__delete-icon" 
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="anomaly__settings--bottom">
+              <button 
+                v-if="tempComponentAnomalySettings.length < 2"
+                type="button" 
+                class="btn btn-outline"
+                @click="createAnomolyNewRule"
+              >{{ $t('button.createNewRule') }}</button>
+              <button
+                v-if="isAnomalySettingChanged"
+                class="btn btn-default anomaly__button" 
+                @click="saveAnomalySetting"
+              >{{ $t('button.applyToChart') }}</button>
+            </div>
           </div>
         </div>
       </div>
@@ -168,12 +227,17 @@
 import { mapState, mapGetters } from 'vuex'
 import { getDateTimeColumns } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import InputVerify from '@/components/InputVerify'
 import { algoConfig } from '@/utils/general'
 import moment from 'moment'
+import { v4 as uuidv4 } from 'uuid'
+import { formatAnomalySetting } from '@/components/display/common/addons'
 
 export default {
+  inject: ['$validator'],
   components: {
-    DefaultSelect
+    DefaultSelect,
+    InputVerify
   },
   props: {
     currentComponent: {
@@ -228,7 +292,32 @@ export default {
           value: '3',
           name: 3
         }
-      ]
+      ],
+      isShowAnomalySetting: false,
+      anomalyOptionList: [
+        {
+          value: 'gt',
+          name: this.$t('miniApp.greaterThan')
+        },
+        {
+          value: 'gte',
+          name: this.$t('miniApp.greaterThanAndEqualTo')
+        },
+        {
+          value: 'equal',
+          name: this.$t('miniApp.equalTo')
+        },
+        {
+          value: 'lte',
+          name: this.$t('miniApp.lessThanAndEqualTo')
+        },
+        {
+          value: 'lt',
+          name: this.$t('miniApp.lessThan')
+        }
+      ],
+      anomalySetting: null,
+      tempComponentAnomalySettings: []
     }
   },
   computed: {
@@ -249,6 +338,21 @@ export default {
     },
     isNeededDisplaySetting () {
       return this.segmentation && (this.segmentation.denotation === 'STABILITY' || this.segmentation.denotation === 'ANOMALY')
+    },
+    isAnomalySettingChanged () {
+      if (!this.computedKeyResultId || !this.isShowAnomalySetting) return
+      let tempSetting = this.tempComponentAnomalySettings || []
+      let tempCurrentSetting = this.currentComponent.anomalySettings || []
+      if (tempSetting.length !== tempCurrentSetting.length) return true
+      tempSetting = tempSetting.sort((a, b) => a.value - b.value)
+      tempCurrentSetting  = tempCurrentSetting.sort((a, b) => a.value - b.value)
+      for (let i = 0; i < tempSetting.length; i++) {
+        if (
+          (tempSetting[i].comparison !== tempCurrentSetting[i].comparison)
+          || (tempSetting[i].value !== tempCurrentSetting[i].value)
+        )  return true
+      }
+      return false
     }
   },
   watch: {
@@ -259,7 +363,17 @@ export default {
     }
   },
   mounted () {
-    if (this.currentComponent.keyResultId) this.askQuestion(this.currentComponent.question)
+    this.resetAnomalySetting()
+    if (this.currentComponent.keyResultId) {
+      this.tempComponentAnomalySettings = JSON.parse(JSON.stringify(this.currentComponent.anomalySettings))
+      if (this.currentComponent.anomalySettings && this.currentComponent.anomalySettings.length > 0) {
+        this.anomalySetting.yAxis = {
+          ...this.anomalySetting.yAxis,
+          ...formatAnomalySetting(this.tempComponentAnomalySettings)
+        }
+      }
+      this.askQuestion(this.currentComponent.question)
+    }
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
@@ -285,6 +399,7 @@ export default {
       this.periodSec = 200
       this.resultInfo = null
       this.layout = ''
+      this.isShowAnomalySetting = false
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
@@ -564,15 +679,68 @@ export default {
       return properties
     },
     resetComponent () {
+      this.resetAnomalySetting()
+      this.currentComponent.anomalySettings = []
       this.switchComponentType('chart')
       this.currentComponent.indexInfo = { 
         unit: ''
       }
       this.currentComponent.config.fontSize = 'middle'
     },
-    saveChartSetting () {
-      this.askResult(this.segmentation, this.questionInfo.questionId, true)
-    }
+    saveChartSetting (isSetAlgoConfig) {
+      this.askResult(this.segmentation, this.questionInfo.questionId, isSetAlgoConfig)
+    },
+    saveAnomalySetting () {
+      this.$validator.validateAll()
+        .then(valid => {
+          if (!valid) return
+          this.resetAnomalySetting()
+  
+          // 確保 input 字串轉為數值
+          this.tempComponentAnomalySettings = this.tempComponentAnomalySettings.map(setting => ({
+            ...setting,
+            value: parseFloat(setting.value)
+          }))
+
+          // 將暫存儲存回 component data 當中
+          this.currentComponent.anomalySettings = JSON.parse(JSON.stringify(this.tempComponentAnomalySettings))
+
+          // 如果有設定，則轉換成上下線及射線的格式
+          if (this.tempComponentAnomalySettings && this.tempComponentAnomalySettings.length > 0) {
+            this.anomalySetting.yAxis = formatAnomalySetting(this.tempComponentAnomalySettings)
+          }
+          this.saveChartSetting(false)
+        })
+    },
+    setConfig (configData) {
+      const { supportedFunction = {} } = configData
+      this.isShowAnomalySetting = supportedFunction.enableAnomalySetting
+      this.$emit('setConfig', configData)
+    },
+    createAnomolyNewRule () {
+      this.tempComponentAnomalySettings.push({
+        id: uuidv4(),
+        comparison: 'gt',
+        value: null
+      })
+    },
+    removeSetting(settingId) {
+      this.tempComponentAnomalySettings = this.tempComponentAnomalySettings.filter(setting => setting.id !== settingId)
+    },
+    resetAnomalySetting () {
+      this.anomalySetting = {
+        xAxis: {
+          upperLimit: null,
+          lowerLimit: null,
+          markLine: null
+        },
+        yAxis: {
+          upperLimit: null,
+          lowerLimit: null,
+          markLine: null
+        }
+      }
+    },
   }
 }
 </script>
@@ -734,6 +902,86 @@ export default {
       margin-left: 16px;
       height: 30px;
       min-width: 50px;
+    }
+  }
+
+  .anomaly {
+    &__title {
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 25px;
+      color: #FFFFFF;
+    }
+
+    &__content {
+      background: #1C292B;
+      border-radius: 12px;
+      padding: 18.5px;
+      display: flex;
+    }
+
+    &__content-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #AAAAAA;
+      margin-right: 33px;
+    }
+
+    &__settings {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      &--top {
+        display: flex;
+        margin-bottom: 16px;
+      }
+    }
+
+    &__setting-item {
+      &:not(:last-of-type) {
+        margin-right: 16px;
+      }
+    }
+
+    &__empty-message {
+      color: #AAAAAA;
+      font-size: 14px;
+    }
+
+    .threshold {
+      display: flex;
+      width: 50%;
+      background: #141C1D;
+      border-radius: 8px;
+      padding: 18px 20px;
+      justify-content: space-between;
+
+      &--left {
+        display: flex;
+      }
+      
+      &__select {
+        height: 40px;
+        border-bottom: 1px solid #FFFFFF;
+        max-width: 115px;
+        margin-right: 16px;
+      }
+
+      &__input {
+        width: 135px;
+        /deep/ .input-verify-text {
+          margin-bottom: 12px;
+        }
+        /deep/ .input-error {
+          margin-bottom: -20px;
+        }
+      }
+
+      &__delete-icon {
+        cursor: pointer;
+        color: #AAAAAA;
+      }
     }
   }
 }

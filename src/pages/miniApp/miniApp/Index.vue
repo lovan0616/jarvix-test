@@ -1473,6 +1473,7 @@ export default {
           fontSize: 'middle',
         },
         algoConfig: null,
+        anomalySettings: [],
         // 給定 null 值存到 DB 時，整個屬性會被拔除，所以先給定預設值
         parserLanguage: this.parserLanguage,
         updateTime: new Date().getTime(),
