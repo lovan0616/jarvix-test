@@ -26,7 +26,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: customerTimeFormatter(singleType.properties.start, singleType.properties.timeScope), end: customerTimeFormatter(singleType.properties.end, singleType.properties.timeScope, true) }) }}
+              {{ singleType.properties.display_name }} {{ formatSelectedData(singleType) }}
             </div>
           </div>
         </div>
@@ -36,12 +36,14 @@
       :title="$t('resultDescription.dataInsight')"
       :message-list="dataset.descriptions"
       icon-name="len-with-line-chart"
+      class="description-block"
     />
     <insight-description-block
       :title="$t('resultDescription.warning')"
       :message-list="dataset.warnings"
       message-type="warning"
       icon-name="alert-circle"
+      class="description-block"
     />
   </div>
 </template>
@@ -86,7 +88,15 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
-    }
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    isShowToolbox: {
+      type: Boolean,
+      default: true
+    },
   },
   data () {
     return {
@@ -98,13 +108,17 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '420px'
+        height: '420px',
+        ...this.customChartStyle
       }
     },
    seriesName () {
+    const middleLineName = this.isAnomalyTwoNumericDependence 
+      ? this.$t(`chart.feature.${this.dataset.midlineType.toLowerCase()}`)
+      : this.$t('chart.forecastValue')
      return [
         this.title.xAxis[0].display_name,
-        this.$t('chart.forecastValue'),
+        middleLineName,
         this.$t('chart.lowerBoundValue'),
         this.$t('chart.upperBoundValue'),
         this.$t('chart.normalValue'),
@@ -120,20 +134,38 @@ export default {
           return 1.960
         case 99: 
           return 2.576
+        case 99.7:
+          return 3
       }
     },
+    stddevTimes () {
+      return this.isAnomalyTwoNumericDependence ? this.dataset.stddevTimes : this.zValue
+    },
+    isAnomalyTwoNumericDependence () {
+      return !this.dataset.predictDataList && !!this.dataset.midlineValue
+    },
+    standardLine () {
+      const dataAmount = this.dataset.data.length
+      return this.isAnomalyTwoNumericDependence 
+        ? Array(dataAmount).fill(this.dataset.midlineValue)
+        : this.dataset.predictDataList
+    },
     lowerBoundList () {
-      return this.dataset.predictDataList.map(item => item - this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => item - this.stddevTimes * this.dataset.sigma)
     },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
-      return Math.floor(this.adjustValueWithOffsetValue(Math.min(...this.lowerBoundList, ...invalidDataList)))*0.9
+      const minDataValue = Math.min(...this.lowerBoundList, ...invalidDataList)
+      return minDataValue - this.interval * 0.4
     },
     yAxisOffsetValue () {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
+    interval () {
+      return 2 * this.stddevTimes * this.dataset.sigma
+    },
     toUpperBoundIntervalList () {
-      return this.dataset.predictDataList.map(item => 2 * this.zValue * this.dataset.sigma)
+      return this.standardLine.map(item => this.interval)
     },
     actualDataList () {
       const actualDataList = {
@@ -155,10 +187,12 @@ export default {
       this.dataset.index.forEach((value, index) => {
         source.push([
           value, 
-          this.adjustValueWithOffsetValue(this.dataset.predictDataList[index]),
+          this.adjustValueWithOffsetValue(this.standardLine[index]),
           this.adjustValueWithOffsetValue(this.lowerBoundList[index]), 
           this.toUpperBoundIntervalList[index],
-          this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
+          //this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
+          // 2N 異常需要把原始資料點連起來，因此要使用原始資料
+          this.adjustValueWithOffsetValue(this.isAnomalyTwoNumericDependence ? this.dataset.data[index] : this.actualDataList.validDataList[index]),
           this.adjustValueWithOffsetValue(this.actualDataList.invalidDataList[index])
         ])
       })
@@ -238,7 +272,7 @@ export default {
             color: chartVariable['normalValueColor']
           },
           lineStyle: {
-            opacity: 0
+            opacity: Number(this.isAnomalyTwoNumericDependence) * 0.5
           },
           // 顯示所有點，不省略
           showAllSymbol: true
@@ -289,8 +323,11 @@ export default {
       // 不顯示上下限和實際資料的 legend 選項
       config.legend.data = [this.seriesName[4], this.seriesName[5]]
 
+      config.toolbox.show = this.isShowToolbox
+
       // 準備 tooltip 內容
       config.tooltip.formatter = (params) => {
+        let hasAnomalyData = params[0].value[5] !== null
         let res = params[0].name + '<br/>'
         for (let i = 0, length = params.length; i < length; i++) {
           let componentIndex = params[i].componentIndex + 1
@@ -301,7 +338,8 @@ export default {
           // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
           displayValue += this.yAxisOffsetValue
           let marker = params[i].marker ? params[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color.colorStops[0].color};"></span>`
-          res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
+          // 有異常分析的時候，不顯示正常值
+          if(i !== 3 || !hasAnomalyData) res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
         }
         return res
       }
@@ -363,6 +401,13 @@ export default {
       if (this.yAxisOffsetValue === 0 || value === null) return value
       return value +  Math.abs(this.yAxisOffsetValue)
     },
+    formatSelectedData (selectedData) {
+      const formatFunction = this.isAnomalyTwoNumericDependence ? 'roundNumber' : 'customerTimeFormatter'
+      return this.$t('resultDescription.between', {
+        start: this[formatFunction](selectedData.properties.start, selectedData.properties.timeScope), 
+        end: this[formatFunction](selectedData.properties.end, selectedData.properties.timeScope, true) 
+      })
+    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
@@ -376,9 +421,13 @@ export default {
             dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
-            timeScope: this.dataset.timeScope
+            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
+            ...(!this.isAnomalyTwoNumericDependence && { 
+              start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
+              end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
+              timeScope: this.dataset.timeScope
+            })
           }
         }
       })
@@ -389,3 +438,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.description-block {
+  height: 150px;
+  overflow-y: auto;
+}
+</style>

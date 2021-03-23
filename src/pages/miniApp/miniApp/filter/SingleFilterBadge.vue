@@ -1,196 +1,211 @@
 <template>
-  <div
-    ref="container"
-    :class="{
-      'grey-bg': isSingleChoiceFilter,
-      'blue-bg': !isEditMode && isShowFilterPanel,
-      'hoverable': !isEditMode 
-    }"
-    class="filter"
-    @click="toggleFilterPanel"
-  >
-    <spinner 
-      v-if="isProcessing"
-      size="10"
-    />
-    <template v-else>
-      <div class="filter__title">{{ displayName }}</div>
-      <div
-        v-if="isEditMode"
-        class="filter__delete-icon-box" 
-        @click="removeFilter">
+  <el-tooltip
+    slot="label"
+    :disabled="!isFailed"
+    :enterable="false"
+    class="tooltip">
+    <div slot="content">
+      <div class="tooltip__title">{{ $t('miniApp.pleaseCheckFollowingSituations') + '：' }}</div>
+      <p class="tooltip__item">{{ '1.' + $t('miniApp.dataframeExistenceAndRebuild') }}</p>
+      <p class="tooltip__item">{{ '2.' + $t('miniApp.connectionStatus') }}</p>
+      <p class="tooltip__item">{{ '3.' + $t('miniApp.otherReasons') }}</p>
+    </div>
+    <div
+      ref="container"
+      :class="{
+        'grey-bg': isSingleChoiceFilter,
+        'blue-bg': !isEditMode && isShowFilterPanel,
+        'hoverable': !isEditMode 
+      }"
+      class="filter"
+      @click="toggleFilterPanel"
+    >
+      <spinner 
+        v-if="isProcessing"
+        size="10"
+      />
+      <template v-else>
+        <div
+          :class="{'filter__title--error': isFailed}"
+          class="filter__title"
+        >{{ displayName }}</div>
+        <div
+          v-if="isEditMode"
+          class="filter__delete-icon-box" 
+          @click="removeFilter">
+          <svg-icon
+            icon-class="close" 
+            class="filter__delete-icon"/>
+        </div>
         <svg-icon
-          icon-class="close" 
-          class="filter__delete-icon"/>
-      </div>
-      <svg-icon
-        v-else
-        icon-class="triangle"
-        class="filter__dropdown-icon"/>
-      <!--Range-->
-      <div
-        v-if="isShowFilterPanel && filter.statsType === 'NUMERIC'"
-        class="filter__input-panel input-panel"
-        @click.stop
-      >
-        <spinner 
-          v-if="isLoading"
-          class="filter-spinner"
-        />
-        <template v-else>
-          <div class="input-panel__input-group">
-            <label 
-              class="input-panel__label" 
-              for="max">{{ `${$t('miniApp.upperBound')}(max: ${filter.dataMax})` }}</label>
-            <input
-              v-validate="upperBoundRules"
-              id="max"
-              ref="upperBound"
-              v-model.trim="tempFilter.end"
-              :placeholder="$t('miniApp.pleaseEnterNumber')"
-              name="upperBound" 
-              class="input-panel__input input" 
-              type="text">
-            <div 
-              v-show="errors.has('upperBound')"
-              class="error-text"
-            >{{ errors.first('upperBound') }}</div>
-          </div>
-          <div class="input-panel__input-group">
-            <label 
-              class="input-panel__label" 
-              for="min">{{ `${$t('miniApp.lowerBound')}(min: ${filter.dataMin})` }}</label>
-            <input 
-              v-validate="lowerBoundRules"
-              id="min"
-              ref="lowerBound"
-              v-model.trim="tempFilter.start"
-              :placeholder="$t('miniApp.pleaseEnterNumber')" 
-              name="lowerBound"
-              class="input-panel__input input" 
-              type="text">
-            <div 
-              v-show="errors.has('lowerBound')"
-              class="error-text"
-            >{{ errors.first('lowerBound') }}</div>
-          </div>
-          <div class="button__block">
-            <button 
-              class="btn btn-outline"
-              @click="toggleFilterPanel"
-            >{{ $t('button.cancel') }}</button>
-            <button 
-              class="btn btn-default"
-              @click="updateRangeFilteredColumnValue"
-            >{{ $t('button.save') }}</button>
-          </div>
-        </template>
-      </div>
-      <!--Datetime-->
-      <div 
-        v-else-if="filter.statsType === 'DATETIME'"
-        :class="{ 'hidden': isShowFilterPanel }"
-        class="filter__datetime-picker-panel"
-      >
-        <el-date-picker
-          ref="datepicker"
-          :value="dateTimeRange"
-          :format="'yyyy-MM-dd HH:mm'"
-          :picker-options="pickerOptions"
-          :editable="false"
-          :clearable="false"
-          :default-value="filter.dataMin"
-          type="datetimerange"
-          value-format="yyyy-MM-dd HH:mm"
-          @input="updateDateTimeFilteredColumnValue"
-        />
-      </div>
-      <!--Enum-->
-      <div
-        v-if="isShowFilterPanel && (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN')"
-        class="filter__selector-panel selector"
-        @click.stop>
-        <input
-          v-model.trim="searchInput"
-          :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
-          class="selector__input-block"
-          type="text"
+          v-else
+          icon-class="triangle"
+          class="filter__dropdown-icon"/>
+        <!--Range-->
+        <div
+          v-if="isShowFilterPanel && filter.statsType === 'NUMERIC'"
+          class="filter__input-panel input-panel"
+          @click.stop
         >
-        <spinner
-          v-if="isLoading"
-          class="filter-spinner"
-          size="20"
-        />
-        <template v-else>
+          <spinner 
+            v-if="isLoading"
+            class="filter-spinner"
+          />
+          <template v-else>
+            <div class="input-panel__input-group">
+              <label 
+                class="input-panel__label" 
+                for="max">{{ `${$t('miniApp.upperBound')}(max: ${filter.dataMax})` }}</label>
+              <input
+                v-validate="upperBoundRules"
+                id="max"
+                ref="upperBound"
+                v-model.trim="tempFilter.end"
+                :placeholder="$t('miniApp.pleaseEnterNumber')"
+                name="upperBound" 
+                class="input-panel__input input" 
+                type="text">
+              <div 
+                v-show="errors.has('upperBound')"
+                class="error-text"
+              >{{ errors.first('upperBound') }}</div>
+            </div>
+            <div class="input-panel__input-group">
+              <label 
+                class="input-panel__label" 
+                for="min">{{ `${$t('miniApp.lowerBound')}(min: ${filter.dataMin})` }}</label>
+              <input 
+                v-validate="lowerBoundRules"
+                id="min"
+                ref="lowerBound"
+                v-model.trim="tempFilter.start"
+                :placeholder="$t('miniApp.pleaseEnterNumber')" 
+                name="lowerBound"
+                class="input-panel__input input" 
+                type="text">
+              <div 
+                v-show="errors.has('lowerBound')"
+                class="error-text"
+              >{{ errors.first('lowerBound') }}</div>
+            </div>
+            <div class="button__block">
+              <button 
+                class="btn btn-outline"
+                @click="toggleFilterPanel"
+              >{{ $t('button.cancel') }}</button>
+              <button 
+                class="btn btn-default"
+                @click="updateRangeFilteredColumnValue"
+              >{{ $t('button.save') }}</button>
+            </div>
+          </template>
+        </div>
+        <!--Datetime-->
+        <div 
+          v-else-if="filter.statsType === 'DATETIME'"
+          :class="{ 'hidden': isShowFilterPanel }"
+          class="filter__datetime-picker-panel"
+        >
+          <el-date-picker
+            ref="datepicker"
+            :value="dateTimeRange"
+            :format="'yyyy-MM-dd HH:mm'"
+            :picker-options="pickerOptions"
+            :editable="false"
+            :clearable="false"
+            :default-value="filter.dataMin"
+            type="datetimerange"
+            value-format="yyyy-MM-dd HH:mm"
+            @input="updateDateTimeFilteredColumnValue"
+          />
+        </div>
+        <!--Enum-->
+        <div
+          v-if="isShowFilterPanel && (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN')"
+          class="filter__selector-panel selector"
+          @click.stop>
+          <input
+            v-model.trim="searchInput"
+            :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
+            class="selector__input-block"
+            type="text"
+          >
+          <spinner
+            v-if="isLoading"
+            class="filter-spinner"
+            size="20"
+          />
+          <template v-else>
+            <div 
+              v-if="filter.dataValueOptionList.length === 0" 
+              class="empty-message">
+              {{ $t('message.emptyResult') }}
+            </div>
+            <div class="selector__list-block">
+              <template v-for="(value, index) in filter.dataValueOptionList">
+                <!--Control panel filter-->
+                <label
+                  v-if="isSingleChoiceFilter"
+                  :key="index"
+                  name="control"
+                  class="radio">
+                  <input
+                    :checked="checkValueIsChecked(value.name)"
+                    class="radio__input"
+                    type="radio"
+                    @input="updateSingleEnumFilteredColumnValue($event, value.name)"
+                  >
+                  <span class="radio__name">{{ value.name }}</span>
+                </label>
+                <!--: Multiple choice Filter-->
+                <label
+                  v-else
+                  :key="index"
+                  class="checkbox">
+                  <div class="checkbox-label">
+                    <input
+                      :checked="checkValueIsChecked(value.name)"
+                      type="checkbox"
+                      @input="updateMultipleEnumFilteredColumnValue($event, value.name)"
+                    >
+                    <div class="checkbox-square"/>
+                  </div>
+                  <span class="radio__name">{{ value.name }}</span>
+                </label>
+              </template>
+            </div>
+          </template>
+        </div>
+        <!--Relative Datetime-->
+        <div
+          v-if="isShowFilterPanel && (filter.statsType === 'RELATIVEDATETIME')"
+          class="filter__selector-panel selector"
+          @click.stop>
           <div 
             v-if="filter.dataValueOptionList.length === 0" 
             class="empty-message">
             {{ $t('message.emptyResult') }}
           </div>
           <div class="selector__list-block">
-            <template v-for="(value, index) in filter.dataValueOptionList">
-              <!--Control panel filter-->
+            <template v-for="(option, index) in filter.dataValueOptionList">
               <label
-                v-if="isSingleChoiceFilter"
                 :key="index"
                 name="control"
                 class="radio">
                 <input
-                  :checked="checkValueIsChecked(value.name)"
+                  :checked="checkValueIsChecked(option.value)"
                   class="radio__input"
                   type="radio"
-                  @input="updateSingleEnumFilteredColumnValue($event, value.name)"
+                  @input="updateSingleEnumFilteredColumnValue($event, option.value)"
                 >
-                <span class="radio__name">{{ value.name }}</span>
-              </label>
-              <!--: Multiple choice Filter-->
-              <label
-                v-else
-                :key="index"
-                class="checkbox">
-                <div class="checkbox-label">
-                  <input
-                    :checked="checkValueIsChecked(value.name)"
-                    type="checkbox"
-                    @input="updateMultipleEnumFilteredColumnValue($event, value.name)"
-                  >
-                  <div class="checkbox-square"/>
-                </div>
-                <span class="radio__name">{{ value.name }}</span>
+                <span class="radio__name">{{ $t('miniApp.' + option.name) }}</span>
               </label>
             </template>
           </div>
-        </template>
-      </div>
-      <!--Relative Datetime-->
-      <div
-        v-if="isShowFilterPanel && (filter.statsType === 'RELATIVEDATETIME')"
-        class="filter__selector-panel selector"
-        @click.stop>
-        <div 
-          v-if="filter.dataValueOptionList.length === 0" 
-          class="empty-message">
-          {{ $t('message.emptyResult') }}
         </div>
-        <div class="selector__list-block">
-          <template v-for="(option, index) in filter.dataValueOptionList">
-            <label
-              :key="index"
-              name="control"
-              class="radio">
-              <input
-                :checked="checkValueIsChecked(option.value)"
-                class="radio__input"
-                type="radio"
-                @input="updateSingleEnumFilteredColumnValue($event, option.value)"
-              >
-              <span class="radio__name">{{ $t('miniApp.' + option.name) }}</span>
-            </label>
-          </template>
-        </div>
-      </div>
-    </template>
-  </div>
+      </template>
+    </div>
+  </el-tooltip>
 </template>
 
 <script>
@@ -236,7 +251,8 @@ export default {
       searchInput: '',
       isShowFilterPanel: false,
       tempFilter: {},
-      relativeDatetimeOptions: ['unset', 'today', '6hour', '3hour', '1hour']
+      relativeDatetimeOptions: ['unset', 'today', '6hour', '3hour', '1hour'],
+      isFailed: false
     }
   },
   computed: {
@@ -247,6 +263,7 @@ export default {
       return 'required|decimal|validLowerBound:upperBound'
     },
     displayName () {
+      if (this.isFailed) return this.filter.columnName + ': ' + this.$t('miniApp.fetchDataFailed')
       if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
         const selectedAmount = this.filter.dataValues.length
         if (selectedAmount === 0) return this.filter.columnName
@@ -283,13 +300,23 @@ export default {
         }
       }
     },
-    searchInput () {
-      this.searchValue()
+    searchInput (value) {
+      this.isLoading = true
+      this.searchValue(value)
+        .then(response => {
+          this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
+            value: value,
+            name: value,
+            isSelected: this.filter.dataValues.includes(value)
+          }))
+        })  
         .finally(() => this.isLoading = false)
     },
     isNeedUpdate (val) {
       if (!val) return
       if (this.isShowFilterPanel) this.toggleFilterPanel()
+      // 父層 filter 改變時，先清空此曾選擇的 data value
+      this.filter.dataValues = []
       this.fetchData()
     }
   },
@@ -308,20 +335,34 @@ export default {
     },
     async fetchData () {
       this.isLoading = true
+      this.$emit('update:isProcessing', true)
       try {
         if (this.filter.statsType === 'RELATIVEDATETIME') return this.getRelativeDatetimeOption()
         if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
 
-        // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
+        const { fuzzySearchResult: tempOptionList } = await this.searchValue()
+
+        // 如果當前 filter 有已選定的值，先確認是否有在 option 清單中
         if (this.filter.dataValues.length > 0) {
-          await this.searchValue()
-          if (this.filter.dataValueOptionList === 0) {
-            this.searchInput = ''
-            await this.searchValue()
+          const defaultSearchInput = this.filter.dataValues[0]
+          const { fuzzySearchResult: checkedOptionList } = await this.searchValue(defaultSearchInput)
+          // 如果沒有結果，則把之前選定的值清空
+          if (checkedOptionList.length === 0) {
+            this.filter.dataValues = []
+          } else {
+            // 確認有沒有在無搜尋字串時，至多 200 個選項當中
+            const isInTempOptionList = tempOptionList.includes(defaultSearchInput)
+            // 如果沒有，代表選定值在 200 個選項之外，因此把它加到第 201 個選項
+            !isInTempOptionList && tempOptionList.push(defaultSearchInput)
           }
-        } else {
-          await this.searchValue()
         }
+
+        // 將值轉換成下拉選項
+        this.filter.dataValueOptionList = tempOptionList.map(value => ({
+          value: value,
+          name: value,
+          isSelected: this.filter.dataValues.includes(value)
+        }))
       
         // 控制項須確保至少選定其中一個項目：如果當前沒有或之前選定的值在新取的選項中沒有，則預設為第一個選項
         const isNeedDefaultSelect = this.isSingleChoiceFilter 
@@ -332,7 +373,10 @@ export default {
         if (isNeedDefaultSelect) return this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
         // 如果是因為階層被觸發去重新取選單資料，須把取完後的結果更新出去，並由外層委派下一個 filter 去更新
         this.isNeedUpdate || this.filter.dataValues.length === 0 ? this.$emit('updateFilter', this.filter) : this.$emit('update:isProcessing', false)
+      } catch (e) {
+        this.isFailed = true
       } finally {
+        this.$emit('update:isProcessing', false)
         this.isLoading = false
       }
     },
@@ -363,25 +407,16 @@ export default {
           }
         })
     },
-    searchValue () {
-      this.isLoading = true
+    searchValue (searchString = '') {
       return dataValueSearch(this.filter.columnId, {
         page: 0,
-        searchString: this.searchInput,
+        searchString,
         size: 200,
         restrictions: this.restrictions()
       })
-        .then((response, index) => {
-          this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
-            value: value,
-            name: value,
-            isSelected: this.filter.dataValues.includes(value)
-          }))
-        })
-        .finally(() => this.isLoading = false)
     },
     toggleFilterPanel () {
-      if (this.isProcessing) return
+      if (this.isProcessing || this.isFailed) return
       if (!this.isShowFilterPanel) {
         this.createTempFilter()
       } else {
@@ -521,6 +556,9 @@ export default {
     font-size: 12px;
     line-height: 17px;
     margin-right: 4px;
+    &--error {
+      color: #FFDF6F;
+    }
   }
 
   &__delete-icon-box {
@@ -623,6 +661,16 @@ export default {
 
   /deep/ .spinner-block {
     padding: 3.5px 0;
+  }
+}
+
+.tooltip {
+  &__title {
+    font-size: 12px;
+    font-weight: bold;
+  }
+  &__item {
+    font-size: 12px;
   }
 }
 

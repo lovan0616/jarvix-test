@@ -507,3 +507,25 @@ export function checkClusteringColumnStatus (taskId) {
     method: 'GET'
   })
 }
+
+/**
+ * 重新計算 meta
+ */
+export function reCalculateMetaData (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/calculated-mata`,
+    method: 'POST'
+  })
+}
+
+/**
+ * update numeric column ordinal setting
+ * @param {Object} data - 欄位設定資料
+ */
+export function updateColumnOrdinality(data) {
+  return request({
+    url: `/dataColumn/ordinality`,
+    method: 'PUT',
+    data
+  })
+}

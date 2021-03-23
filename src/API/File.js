@@ -38,7 +38,7 @@ export function fileUpload (fileData, onProgress, cancelFunction) {
  */
 export function fileImport (fileData, onProgress, cancelFunction) {
   return request({
-    url: '/files/import',
+    url: '/files/upload-parse',
     method: 'POST',
     data: fileData,
     onUploadProgress (progressEvent) {
@@ -55,44 +55,39 @@ export function fileImport (fileData, onProgress, cancelFunction) {
 
 /**
  * analysis file
- * @param {Number} fileId - 欲取得的資料源 ID
- * @param {Number} dataSourceId - 欲取得的資料源 ID
+ * @param {Number} fileId - 檔案 ID
+ * @param {Object} fileInfo - 檔案相關資訊
  */
-export function analysisFile (fileId, dataSourceId) {
+export function analysisFile (fileId, fileInfo) {
   return request({
-    url: `/files/${fileId}/dataSource/${dataSourceId}/analysis`,
-    method: 'POST'
+    url: `files/${fileId}/analyze`,
+    method: 'POST',
+    data: fileInfo
   })
 }
 
 /**
  * append file
- * @param {Number} fileId - 欲取得的 file ID
- * @param {Number} dataFrameId - 欲取得的資料源 ID
+ * @param {Object} data - 欲更新的檔案資訊
  */
-export function appendFile (fileId, dataFrameId) {
+export function appendFile (data) {
+  const {fileId, ...fileInfo} = data
   return request({
     url: `/files/${fileId}/append`,
     method: 'POST',
-    data: {
-      dataFrameId
-    }
+    data: fileInfo
   })
 }
 
 /**
- * append file
- * @param {Number} fileId - 欲取得的 file ID
- * @param {Number} dataFrameId - 欲取得的資料源 ID
+ * reimport file
+ * @param {Object} data - 欲更新的檔案資訊
  */
-export function reimportFile (fileId, dataFrameId) {
+export function reimportFile (fileInfo) {
   return request({
     url: '/data/reimport',
     method: 'POST',
-    data: {
-      dataFrameId,
-      fileId
-    }
+    data: fileInfo
   })
 }
 
@@ -112,6 +107,16 @@ export function deleteFile (fileId) {
 export function getDataFrameSummary (dataFrameId) {
   return request({
     url: `/import/table/${dataFrameId}/summary`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get datetime patterns
+ */
+export function getDatetimePatterns () {
+  return request({
+    url: `/data/datetime-patterns`,
     method: 'GET'
   })
 }

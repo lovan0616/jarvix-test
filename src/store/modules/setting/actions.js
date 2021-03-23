@@ -1,4 +1,5 @@
 import { refreshToken } from '@/API/User'
+import { getSystemInfo } from '@/API/Admin'
 
 export default {
   checkToken ({ commit, state }) {
@@ -21,5 +22,10 @@ export default {
         })   
     }
     return Promise.resolve(state)
+  },
+  checkSystemInfo ({ state }) {
+    getSystemInfo().then(response => {
+      state.isSmtpConnected = response.isSmtpConnected
+    })
   }
 }

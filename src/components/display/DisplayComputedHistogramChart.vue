@@ -25,9 +25,16 @@
         </div>
       </div>
     </selected-region>
+    <feature-information-block
+      v-if="dataset.featureInformation"
+      :feature-information="dataset.featureInformation"
+      class="feature-information"
+    />
   </div>
 </template>
 <script>
+import FeatureInformationBlock from './FeatureInformationBlock'
+import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import { monitorVisualMap, monitorMarkLine, colorOnly1, getDrillDownTool } from '@/components/display/common/addons'
 
@@ -63,12 +70,13 @@ let histogramChartConfig = {
 
 export default {
   name: 'DisplayComputedHistogramChart',
+  components: {
+    FeatureInformationBlock
+  },
   props: {
     dataset: {
       type: Object,
-      default () {
-        return {}
-      }
+      default: () => ({})
     },
     title: {
       type: Object,
@@ -94,10 +102,28 @@ export default {
   },
   data () {
     return {
-      selectedData: []
+      selectedData: [],
+      lineChartPointAmount: 130
     }
   },
   computed: {
+    isNormalityTestChart () {
+      if (!this.dataset.featureInformation) return false
+      // 標準差 sigma 為零，就不畫常態分佈
+      return this.dataset.featureInformation !== null && this.dataset.featureInformation.sigma !== 0
+    },
+    lineChartAxisTick () {
+      const xAxisMin = this.dataset.range[0]
+      const xAxisMax = this.dataset.range[1]
+      const getSingleAxisTick = currentIndex => xAxisMin + currentIndex * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
+      const axisTickList = [...Array(this.lineChartPointAmount).keys()].map(getSingleAxisTick)
+      return [
+        // 依照給定要畫的點數量依序產生的 x 軸 index
+        ...axisTickList,
+        // 適時在最後補值來確保 x 軸最後一個值對齊資料最大值
+        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) && [xAxisMax])
+      ]
+    },
     chartOption () {
       let histogramConfig = JSON.parse(JSON.stringify(histogramChartConfig))
       let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
@@ -105,6 +131,31 @@ export default {
       let max = this.dataset.range[1]
       let dataLength = this.dataset.data.length
       let interval = this.floatSub(max, min) / dataLength
+      let chartData
+
+      if (this.dataset.indexList && this.dataset.indexList.length > 1) {
+        interval = this.dataset.indexList[1] - this.dataset.indexList[0]
+
+        chartData = this.dataset.data.map((element, index) => {
+          return [
+            // bar start
+            this.displayFloat(this.dataset.indexList[index]),
+            // bar end
+            this.displayFloat(this.dataset.indexList[index+1]),
+            element
+          ]
+        })
+      } else {
+        chartData = this.dataset.data.map((element, index) => {
+          return [
+            // bar start
+            this.displayFloat(min + interval * index),
+            // bar end
+            index === dataLength - 1 ? max : this.displayFloat(min + interval * (index + 1)),
+            element
+          ]
+        })
+      }
 
       // 預設 四捨五入 到小數點後第幾位
       const defaultDisplayDigit = 2
@@ -121,16 +172,6 @@ export default {
         }
         interval = Math.round(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
       }
-      
-      let chartData = this.dataset.data.map((element, index) => {
-        return [
-          // bar start
-          this.displayFloat(min + interval * index),
-          // bar end
-          index === dataLength - 1 ? max : this.displayFloat(min + interval * (index + 1)),
-          element
-        ]
-      })
 
       chartAddon.toolbox.feature.myShowLabel.show = true
       chartAddon.toolbox.feature.myShowLabel.onclick = () => {
@@ -188,7 +229,7 @@ export default {
       chartAddon.xAxis.axisLabel.formatter = (value, index) => {
         if (dataLength > 20) {
           let labelInterval = Math.floor(dataLength / 15)
-          if (index % labelInterval === 0) return this.formatComma(value)
+          if (index % labelInterval === 0) return index === dataLength ? this.formatComma(max) : this.formatComma(value)
         } else {
           return index === dataLength ? this.formatComma(max) : this.formatComma(value)
         }
@@ -197,7 +238,7 @@ export default {
       histogramConfig.chartData.data = chartData 
       const labelFormatter = this.chartLabelFormatter
       const maxValue = Math.max(...this.dataset.data)
-      chartAddon.series[0] = {
+      chartAddon.series = [{
         ...histogramConfig.chartData,
         ...(this.isShowLabelData && {
           label: {
@@ -208,8 +249,25 @@ export default {
             formatter (value) { return labelFormatter(value.data[2], maxValue) }
           }
         })
+      }]
+      // 常態檢定分佈圖
+      if(this.isNormalityTestChart) {
+        histogramConfig.chartData.itemStyle.color = chartVariable['chartColorList-1']
+        chartAddon.series.push({
+          type: 'line',
+          name: this.$t('chart.normalDistribution'),
+          smooth: true,
+          symbol: 'none',
+          data: this.lineChartAxisTick.map(tick => this.calculateProbability(this.dataset.featureInformation.mean, this.dataset.featureInformation.sigma, tick)),
+          tooltip: {
+            show: false
+          }, 
+          itemStyle: {
+            color: '#FF9559'
+          }
+        })
       }
-
+      
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
       if (upperLimit !== null || lowerLimit !== null) {
@@ -256,6 +314,9 @@ export default {
         style: style
       }
     },
+    calculateProbability (mean, sigma, xAxisIndex) {
+      return [xAxisIndex, (1 / (Math.sqrt(2 * Math.PI) * sigma)) * Math.exp(-1 * (Math.pow((xAxisIndex - mean), 2) / (2 * Math.pow(sigma, 2))))]
+    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
@@ -281,3 +342,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.feature-information {
+  height: 150px;
+}
+</style>

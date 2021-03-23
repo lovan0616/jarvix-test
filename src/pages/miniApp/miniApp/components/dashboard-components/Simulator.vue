@@ -56,7 +56,7 @@
               :key="index"
               class="simulator__result-item item">
               <div class="item__label">{{ result.name }}</div>
-              <div class="item__value">{{ result.value }}</div>
+              <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
             </div>
           </div>
         </template>
@@ -241,6 +241,7 @@ export default {
     display: flex;
     width: 100%;
     flex-direction: column;
+    overflow-y: auto;
   }
 
   &__result-item {

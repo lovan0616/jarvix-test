@@ -49,6 +49,14 @@ export function mergeDeep (...objects) {
   }, {})
 }
 
+export function copyToClickBoard (element) {
+  let input = element
+  input.select()
+  /* For mobile devices */
+  input.setSelectionRange(0, 99999)
+  document.execCommand('copy')
+}
+
 export function isObject (target) {
   return typeof target === 'object' && !(target instanceof Array)
 }
@@ -86,6 +94,8 @@ export const importType = {
   SCRIPT: 'import_script'
 }
 
+export const statsTypeList = ['CATEGORY', 'NUMERIC', 'BOOLEAN', 'DATETIME']
+
 export const statsTypeOptionList = [
   { value: 'CATEGORY', name: 'Category' },
   { value: 'NUMERIC', name: 'Numeric' },
@@ -102,4 +112,52 @@ export const intentType = {
   OVERVIEW: 'OVERVIEW',
   CLUSTERING: 'CLUSTERING',
   PREDICTION: "PREDICTION"
+}
+
+export const alertTargetType = {
+  DATA_COLUMN: 'DATA_COLUMN',
+  COMPONENT: 'COMPONENT'
+}
+
+export const algoConfig = {
+  clustering: {
+    '@type': 'ClusterAlgoConfig',
+    clusteringCount: null
+  },
+  prediction: {
+    '@type': 'PredictionAlgoConfig',
+    predictionIntervalLength: '4'
+  },
+  anomaly: {
+    '@type': 'AnomalyAlgoConfig',
+    standardLineType: 'MEDIAN',
+    stddevTimes: 3
+  },
+  stability: {
+    '@type': 'StandardLineAlgoConfig',
+    standardLineType: 'MEDIAN'
+  }
+}
+
+export const sizeTable = {
+  large: {
+    'font-size': '80px', 
+    'height': '83px', 
+    'line-height': '80px'
+  },
+  middle: {
+    'font-size': '54px', 
+    'height': '54px', 
+    'line-height': '54px'
+  },
+  small: {
+    'font-size': '36px', 
+    'height': '36px', 
+    'line-height': '36px'
+  },
+  mini: {
+    'font-size': '28px', 
+    'height': '28px', 
+    'line-height': '28px'
+  },
 }

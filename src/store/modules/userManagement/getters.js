@@ -16,6 +16,7 @@ export default {
     return defaultAccount.name
   },
   getCurrentAccountId: state => {
+    if (!state.accountList) return
     const defaultAccount = state.accountList.find(account => account.isDefault)
     if (!defaultAccount) return
     return defaultAccount.id

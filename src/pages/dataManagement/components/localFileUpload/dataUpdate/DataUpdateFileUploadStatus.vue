@@ -103,55 +103,46 @@ export default {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.fail
       })
-    },
-    importedFileList () {
-      return this.$store.state.dataManagement.importedFileList
     }
   },
   methods: {
     chooseFileUpload () {
       this.$store.commit('dataManagement/updateUploadFileList', [])
-			this.$store.commit('dataManagement/clearImportedTableList')
       this.$emit("prev")
     },
     cancelFileUpdate () {
       this.$emit("close")
     },
 		build () {
-			this.isProcessing = true
-			const fileId = this.importedFileList[0].id
+      this.isProcessing = true
+      // 更新一定只有一筆資料，所以才可以直接取 index 0
+      let uploadFile = this.successList[0]
+      let uploadFileInfo =  {
+        fileId: uploadFile.fileId,
+        dataFrameId: this.dataFrameInfo.id,
+        ...(uploadFile.tabDetail ? {tabDetail: uploadFile.tabDetail} : {})
+      }
+      let promise
 			switch(this.updateMode) {
 				case 'append':
-					appendFile(fileId, this.dataFrameInfo.id)
-						.then (() => {
-							this.$store.commit('dataSource/setProcessingDataFrameList', {
-								dataSourceId: this.$route.params.id,
-								dataFrameId: this.dataFrameInfo.id,
-								primaryAlias: this.dataFrameInfo.primaryAlias,
-							})
-							this.$emit('next')
-						})
-						.catch(() => {})
-						.finally(() => {
-							this.isProcessing = false
-						})
+					promise = appendFile(uploadFileInfo)
 					break
 				case 'reimport':
-					reimportFile(fileId, this.dataFrameInfo.id)
-						.then (() => {
-							this.$store.commit('dataSource/setProcessingDataFrameList', {
-								dataSourceId: this.$route.params.id,
-								dataFrameId: this.dataFrameInfo.id,
-								primaryAlias: this.dataFrameInfo.primaryAlias,
-							})
-							this.$emit('next')
-						})
-						.catch(() => {})
-						.finally(() => {
-							this.isProcessing = false
-						})
+					promise = reimportFile(uploadFileInfo)
 					break
-			}
+      }
+      promise.then (() => {
+        this.$store.commit('dataSource/setProcessingDataFrameList', {
+          dataSourceId: this.$route.params.id,
+          dataFrameId: this.dataFrameInfo.id,
+          primaryAlias: this.dataFrameInfo.primaryAlias,
+        })
+        this.$emit('next')
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.isProcessing = false
+      })
 		}
   }
 }

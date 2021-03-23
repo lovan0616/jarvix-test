@@ -71,7 +71,6 @@ export default {
 	destroyed () {
 		this.$store.commit('dataManagement/updateUploadFileList', [])
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
-    this.$store.commit('dataManagement/clearImportedTableList')
   },
 	methods: {
 		chooseMode (updateMode) {

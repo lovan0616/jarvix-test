@@ -96,8 +96,15 @@
   tr.el-table__row.hover-row > td {
     background-color: transparent;
   }
-  &.el-table--enable-row-hover .el-table__body tr:hover > td {
-    background-color: transparent;
+
+  &.el-table--enable-row-hover .el-table__body tr {
+    &:hover > td {
+      background-color: transparent;
+    }
+    &.is-hovered:hover > td {
+      background-color: #5C7578;
+      cursor: pointer;
+    }
   }
 
   thead {
@@ -290,6 +297,59 @@
     }
     .el-popover__title {
       display: none;
+    }
+  }
+  &--datetime-pattern {
+    color: #A7A7A7;
+    border: none;
+    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+    .popper__arrow[x-arrow] {
+      top: -7px;
+      border-right-color: #233131;
+      &::after {
+        border-right-color: #233131;
+      }
+    }
+    .selector {
+      &__input-block {
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #888888;
+        background-color: #141C1D;
+      }
+
+      &__list-block {
+        max-height: 220px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.7);
+        }
+      }
+
+      &__list-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 5px;
+        cursor: pointer;
+
+        &:hover {
+          color: #FFFFFF;
+        }
+
+        &:not(:last-child) {
+          border-bottom: 1px solid #52696A;
+        }
+      }
     }
   }
 }

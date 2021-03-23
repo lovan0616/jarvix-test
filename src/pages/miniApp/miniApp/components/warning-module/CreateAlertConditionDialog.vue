@@ -244,6 +244,7 @@ export default {
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
         this.dataColumnAllOptionList = response.reduce((acc, cur) => {
           acc.push({
+            type: 'column',
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
             originalName: cur.primaryAlias  || cur.name,
@@ -261,7 +262,7 @@ export default {
     },
     onAlertMessageProcessFinished () {
       this.isProcessing = false
-      this.$emit('created')
+      this.$emit('close')
     },
     createAlertCondition () {
       this.$validator.validateAll().then(async (isValid) => {
@@ -271,6 +272,7 @@ export default {
         try {
           // 創造示警條件
           this.conditionId = await postAlertCondition(this.newConditionSetting)
+          this.$emit('created', this.conditionId)
           Message({
             message: this.$t('alert.alertConditionSuccessfullyCreated'),
             type: 'success',
