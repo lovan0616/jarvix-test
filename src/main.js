@@ -38,6 +38,7 @@ import {
   Menu,
   Submenu,
   MenuItem,
+  MenuItemGroup,
   Badge,
   Cascader
 } from 'element-ui'
@@ -161,6 +162,7 @@ Vue.use(Switch)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
+Vue.use(MenuItemGroup)
 Vue.use(Badge)
 Vue.use(Cascader)
 // element ui 帶入 i18n 語系
