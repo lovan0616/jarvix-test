@@ -57,7 +57,7 @@
         class="empty-dialog__icon"
         src="@/schedule/icons/empty.svg"
       >
-      <span class="empty-dialog__text"> {{ $t('schedule.simulation.table.notChosenJobs') }} </span>
+      <span class="empty-dialog__text"> No Surgery Selected. </span>
     </div>
   </div>
 </template>

@@ -36,10 +36,14 @@
 </template>
 
 <script>
+import DefaultDatePicker from './DefaultDatePicker'
 import moment from 'moment'
 
 export default {
   name: 'ExceptionTimeSetting',
+  components: {
+    DefaultDatePicker
+  },
   props: {
     title: {
       type: String,

@@ -186,7 +186,7 @@ export default {
         data: this.settingInfo
       })
       Message({
-        message: this.$t('schedule.successMessage.settingSaved'),
+        message: 'Setting Saved',
         type: 'success',
         duration: 3 * 1000,
         showClose: true

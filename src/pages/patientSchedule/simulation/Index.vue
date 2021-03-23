@@ -1,10 +1,19 @@
 <template>
-  <router-view />
+  <router-view
+    :has-emergency="hasEmergency"
+    @insert="$emit('insert')"
+  />
 </template>
 
 <script>
 export default {
   name: 'Simulation',
+  props: {
+    hasEmergency: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {}
   }

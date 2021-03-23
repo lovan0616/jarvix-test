@@ -92,7 +92,10 @@
       <h2 class="header__title">
         Scheduling Surgeory Simulation
       </h2>
-      <plan-simulation @insert="isInserted = true"/>
+      <plan-simulation
+        :has-emergency="hasEmergency"
+        @insert="insert"
+      />
     </div>
     <simulating-dialog
       v-if="isSimulatingDialogOpen"
@@ -128,6 +131,12 @@ export default {
     PlanSimulation,
     SimulatingDialog
   },
+  props: {
+    hasEmergency: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       isInserted: false,
@@ -161,6 +170,10 @@ export default {
   },
   methods: {
     ...mapMutations('simulation', ['addSolution', 'removeSolution']),
+    insert () {
+      this.isInserted = true
+      this.$emit('insert')
+    },
     isSolutionFocus (id) {
       return this.editSolutionSequence === id
     },
@@ -312,6 +325,7 @@ export default {
       line-height: 32px;
       margin-top: 0;
       margin-bottom: 20px;
+      user-select: none;
     }
   }
   &__spinner {

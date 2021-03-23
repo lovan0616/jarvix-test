@@ -3,6 +3,7 @@
     class="plan-simulation"
   >
     <unscheduled-jobs-table
+      :has-emergency="hasEmergency"
       class="unscheduled-jobs-table"
       @insert="$emit('insert')"
     />
@@ -23,6 +24,12 @@ export default {
   components: {
     UnscheduledJobsTable,
     ScheduledJobsTable
+  },
+  props: {
+    hasEmergency: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     ...mapMutations('simulation', ['updateScheduledJobs'])

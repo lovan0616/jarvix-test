@@ -35,11 +35,9 @@
       >
         Send
       </default-button>
-      <div 
-        class="header__button" 
-        @dblclick.once="hasEmergecy = true">
+      <div class="header__button">
         <el-badge 
-          :hidden="!hasEmergecy" 
+          :hidden="!hasEmergency" 
           value="2">
           <default-button
             size="m"
@@ -87,9 +85,14 @@ export default {
     DataSyncDialog,
     DefaultDatePicker
   },
+  props: {
+    hasEmergency: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      hasEmergecy: false,
       isLoading: false,
       isProcessing: false,
       isShowDataSyncDialog: false,
@@ -421,7 +424,7 @@ export default {
       this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
     },
     dataSync () {
-      if (!this.hasEmergecy) return
+      if (!this.hasEmergency) return
       this.jobData.data.unshift(...[
         {
           "id": 98,
@@ -451,7 +454,6 @@ export default {
         }
       ])
       this.$emit('insert')
-      this.hasEmergecy = false
     },
     addItem () {
       this.selectedData.forEach(data => { data.isScheduled = true })

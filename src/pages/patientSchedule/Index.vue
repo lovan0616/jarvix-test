@@ -1,19 +1,10 @@
 <template>
   <div class="app-layout">
     <header class="header">
-      <div class="header__sidenav-toggle-container">
-        <a 
-          href="javascript:void(0);" 
-          class="toggle"
-          @click="isCollapse = !isCollapse"
-        >
-          <svg-icon 
-            icon-class="side-nav" 
-            class="toggle__icon"
-          />
-        </a>
-      </div>
-      <div class="header__container">
+      <div
+        class="header__container"
+        @dblclick="hasEmergency = true"
+      >
         <div class="header__root">
           <a
             class="header__logo" 
@@ -38,7 +29,12 @@
                 :class="{ 'active': $route.name === 'DemoOTSimulationSetting' }"
                 class="nav-item"
               >
-                Surgery Simulation
+                <el-badge
+                  :hidden="!hasEmergency"
+                  class="menu-badge" 
+                  value="2">
+                  <span>Surgery Simulation</span>
+                </el-badge>
               </router-link>
             </section>
             <!-- Bedroom Scheduling -->
@@ -62,66 +58,68 @@
     </header>
     <main class="main">
       <aside>
-        <el-menu 
-          :collapse="isCollapse" 
-          :class="!isCollapse ? 'is-opened' : ''" 
-          default-active="2"
+        <ul
+          v-if="isOpen"
           class="surgery-menu"
-          background-color="#191919"
-          text-color="#fff"
-          active-text-color="#4DE2F0"
         >
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-setting"/>
-              <span slot="title">Overview</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="1-1">Cardiac</el-menu-item>
-              <el-menu-item index="1-2">Thoratic</el-menu-item>
-              <el-menu-item index="1-3">Netural</el-menu-item>
-              <el-menu-item index="1-4">Orthopedics</el-menu-item>
-              <el-menu-item index="1-5">Plastic</el-menu-item>
-              <el-menu-item index="1-6">General</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-menu-item index="2">
-            <i class="el-icon-setting"/>
-            <span slot="title">Pre-op Assessment</span>
-          </el-menu-item>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-setting"/>
-              <span slot="title">Scheduling</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item
-                index="3-1"
-                @click="$router.push({ name: 'DemoCurrentOTSimulation' })"
-              >OT Room Scheduling</el-menu-item>
-              <el-menu-item
-                index="3-2"
-                @click="$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })"
-              >Bedroom Scheduling</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-menu-item index="4">
-            <i class="el-icon-setting"/>
-            <span slot="title">Patient/Asset Monitoring</span>
-          </el-menu-item>
-          <el-menu-item index="5">
-            <i class="el-icon-setting"/>
-            <span slot="title">Covid-19 Tracking</span>
-          </el-menu-item>
-        </el-menu>
+          <li class="item">
+            <div class="item-label">Overview</div>
+            <ul class="sub-menu">
+              <li class="sub-item">Cardiac</li>
+              <li class="sub-item">Thoratic</li>
+              <li class="sub-item">Netural</li>
+              <li class="sub-item">Orthopedics</li>
+              <li class="sub-item">Plastic</li>
+              <li class="sub-item">General</li>
+            </ul>
+          </li>
+          <li class="item">
+            <div class="item-label">Pre-op Assessment</div>
+          </li>
+          <li class="item">
+            <svg-icon icon-class="triangle"/>
+            <div class="item-label is-active">Scheduling</div>
+            <ul class="sub-menu">
+              <li 
+                class="sub-item" 
+                @click="clickOT">OT Room Scheduling</li>
+              <li 
+                class="sub-item" 
+                @click="clickBed">Bedroom Scheduling</li>
+            </ul>
+          </li>
+          <li class="item">
+            <div class="item-label">Patient/Asset Monitoring</div>
+          </li>
+          <li class="item">
+            <div class="item-label">Covid-19 Tracking</div>
+          </li>
+          <div class="copyright-block">
+            <img 
+              class="logo" 
+              src="@/assets/images/logo-green-x.svg">
+            <div class="copyright-slogan">Powered by JarviX Scheduling Engine TM</div>
+          </div>
+        </ul>
+        <ul
+          v-else
+          class="fake-icon-menu"
+          @click="isOpen = true"
+        >
+          <li><svg-icon icon-class="home" /></li>
+          <li><svg-icon icon-class="pin" /></li>
+          <li><svg-icon icon-class="user" /></li>
+        </ul>
       </aside>
       <div class="main-content">
         <transition
           name="fade" 
           mode="out-in">
           <router-view 
-            :is-ot="isOTSchedule" 
-            :key="isOTSchedule" />
+            :is-ot="isOTSchedule"
+            :has-emergency="hasEmergency"
+            :key="isOTSchedule"
+            @insert="hasEmergency = false" />
         </transition>
       </div>
     </main>
@@ -140,7 +138,8 @@ export default {
   data: () => {
     return {
       isAppLoading: false,
-      isCollapse: true
+      isOpen: true,
+      hasEmergency: false
     }
   },
   computed: {
@@ -153,6 +152,14 @@ export default {
     ...mapMutations(['updateSideNavStatus']),
     toggleSideNav() {
       this.updateSideNavStatus(!this.isShowFullSideNav)
+    },
+    clickOT () {
+      this.$router.push({ name: 'DemoCurrentOTSimulation' })
+      this.isOpen = false
+    },
+    clickBed () {
+      this.$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })
+      this.isOpen = false
     }
   }
 }
@@ -166,6 +173,7 @@ export default {
   position: relative;
   padding-left: 64px;
   height: calc(100vh - #{$header-height});
+  background-color: rgba(0, 0, 0, .55);
   .main-content {
     height: 100%;
   }
@@ -179,56 +187,11 @@ export default {
   height: $header-height;
   z-index: $header-z-index;
   box-shadow: $header-shadow;
-  background-color: #171717;
+  background-color: rgba(0, 0, 0, 0.55);
   border-bottom: 1px solid #04262B;
-  // transition: all 0.1s;
-
-  &__sidenav-toggle-container {
-    position: fixed;
-    white-space: nowrap;
-    border-right: 1px solid var(--color-border);
-    width: $app-side-nav-closed-width;
-    background: var(--color-bg-3);
-    z-index: 1000;
-
-    .toggle {
-      padding: ($app-side-nav-closed-width - 20px) / 2;
-      display: flex;
-      align-items: center;
-      &__icon {
-        flex: 0 0 20px;
-        color: #2AD2E2;
-        font-size: 20px;
-        margin-right: 0;
-      }
-
-      &__text {
-        flex: 1 1 0;
-        font-weight: bold;
-        color: #2AD2E2;
-        overflow: hidden;
-        white-space: nowrap;
-        opacity: 0;
-        transition: opacity .1s linear .1s;
-      }
-    }
-
-    &--expand {
-      width: $app-side-nav-opened-width;
-      .toggle {
-        &__icon {
-          margin-right: 13px;
-        }
-
-        &__text {
-          opacity: 1;
-        }
-      }
-    }
-  }
 
   &__container {
-    width: calc(100% - #{$app-side-nav-closed-width});
+    width: 100%;
     height: 100%;
     margin: 0 0 0 auto;
     padding: 0 34px 0 24px;
@@ -423,13 +386,96 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  min-height: 400px;
   height: 100%;
   border: 0;
   z-index: 1000;
+  margin: 0;
+  padding: 12px 0;
+  background-color: rgb(0, 0, 0);
   box-shadow: 0px 0px 20px rgba(12, 209, 222, .1);
-  &.el-menu--collapse {
-    width: 56px;
+  color: #8B9B9C;
+  
+  .sub-menu {
+    margin: 0;
+    padding: 0;
   }
+  .item {
+    position: relative;
+    text-indent: 48px;
+    .svg-icon {
+      display: block;
+      position: absolute;
+      left: 24px;
+      top: 19px;
+      font-size: 10px;
+      transform: rotate(90deg);
+      color: #fff;
+    }
+  }
+  .item-label, .sub-item {
+    display: block;
+    line-height: 48px;
+    list-style: none;
+    padding: 0 24px 0 0;
+    cursor: pointer;
+    border-bottom: 1px solid #232C2E;
+    &.is-active {
+      color: #fff;
+      background: #42A5B3;
+    }
+  }
+  .sub-item {
+    text-indent: 64px;
+  }
+  .svg-icon {
+    display: none;
+  }
+  .copyright-block {
+    width: 100%;
+    bottom: 20px;
+    position: absolute;
+    text-align: center;
+    .logo {
+      width: 120px;
+      margin-bottom: 8px;
+    }
+    .copyright-slogan {
+      font-size: 10px;
+      color: #999;
+      text-align: center;
+    }
+  }
+}
+
+.fake-icon-menu {
+  width: 56px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border: 0;
+  z-index: 1000;
+  margin: 0;
+  padding: 24px 0 0 0;
+  background-color: rgb(0, 0, 0);
+  box-shadow: 0px 0px 20px rgba(12, 209, 222, .1);
+  color: #8B9B9C;
+  text-align: center;
+  font-weight: normal;
+  .svg-icon {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+}
+
+/deep/ .el-badge.menu-badge {
+  user-select: none;
+  .el-badge__content {
+    top: 16px;
+  }
+}
+
+* {
+  user-select: none;
 }
 </style>
