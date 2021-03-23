@@ -380,11 +380,8 @@ export default {
   }
 
   /deep/ .el-table {
-    /deep/.cell {
+    .cell {
       overflow: unset;
-    }
-    &__body-wrapper {
-      // overflow: unset;
     }
   }
 }
