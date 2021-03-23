@@ -11,7 +11,7 @@
           <div class="button-block">
             <button
               class="btn-m btn-default btn-has-icon"
-              @click="createModel"
+              @click="createModelFlow"
             >
               <svg-icon 
                 icon-class="plus" 
@@ -21,7 +21,10 @@
         </div>
       </div>
       <template>
-        List
+        <flow-card
+          v-for="flow in modelFlowList"
+          :key="flow.id"
+          :flow-info="flow" />
       </template>
     </div>
     <!-- <upload-dialog
@@ -39,13 +42,15 @@
   </div>
 </template>
 <script>
-// import { getModelList } from '@/API/Model'
+import FlowCard from './components/FlowCard'
+import { getModelFlowList } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
 // import { Message } from 'element-ui'
 
 export default {
   name: 'FlowList',
   components: {
+    FlowCard
   },
   data () {
     return {
@@ -53,7 +58,7 @@ export default {
       isShowDeleteDialog: false,
       isShowCreateFlowDialog: false,
       deleteFlowId: null,
-      flowList: [],
+      modelFlowList: [],
       paginationInfo: {
         currentPage: 0,
         totalPages: 0,
@@ -63,30 +68,33 @@ export default {
     }
   },
   computed: {
-    ...mapState('flowManagement', ['showCreateFlowDialog']),
+    ...mapState('modelFlowManagement', ['showCreateFlowDialog']),
     groupId () {
       return this.$route.params.group_id
-    }
-  },
-  watch: {
-    modelUploadSuccess (value) {
-      if (value) {
-        this.fetchData(true)
-        this.updateModelUploadSuccess(false)
-      }
     }
   },
   mounted () {
     this.fetchData(true)
   },
   methods: {
-    ...mapMutations('modelManagement', ['updateShowCreateFlowDialog', 'updateModelUploadSuccess']),
-    fetchData (init = true, page = 0, offset = 20) {
+    ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog']),
+    fetchData (init = true, page = 0, size = 20) {
       if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
-      // this.isLoading = true
-      // return getModelList(this.groupId, page, offset)
-      //   .then(({models, pagination}) => {
-      //     this.modelList = models
+      this.isLoading = true
+      this.modelFlowList = [
+        {
+          createdAt: "2021-03-23T09:58:05.426Z",
+          createdBy: "BABABA",
+          id: 123,
+          name: "owo",
+          targetDataFrame: "string",
+          targetDataSource: "string",
+          targetDataframeStatusType: "Enable"
+        }
+      ]
+      // return getModelFlowList(this.groupId, page, size)
+      //   .then(({getModelFlowList, pagination}) => {
+      //     this.modelFlowList = getModelFlowList
       //     this.paginationInfo = pagination
       //   }).finally(() => {
       //     this.isLoading = false
@@ -103,7 +111,7 @@ export default {
       this.deleteFlowId = null
       this.isShowDeleteDialog = false
     },
-    createModel () {
+    createModelFlow () {
       this.updateShowCreateFlowDialog(true)
     },
     closeCreateFlowDialog () {
@@ -129,9 +137,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.flow-delete-dialog {
-  >>> .dialog-content-wrapper > .content {
-    color: #FFF;
+.data-management {
+  .table-board {
+    padding: 0;
+    background: transparent;
+    box-shadow: unset;
   }
 }
+
 </style>

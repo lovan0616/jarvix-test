@@ -663,7 +663,10 @@
     }
   },
   "modelFlow": {
-    "newFlow": "新增流程"
+    "newFlow": "新增流程",
+    "createdInfo": "由 {name} 於 {time} 建立",
+    "updatedInformation": "更新資訊",
+    "outputResult": "輸出結果"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
