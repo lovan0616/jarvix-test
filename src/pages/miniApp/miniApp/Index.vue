@@ -1204,8 +1204,8 @@ export default {
     addComponentAlertToWarningModuleSetting (conditionId) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       editedMiniApp.settings.editModeData.warningModule.conditions.push({
-        id: conditionId,
-        activate: true
+        id: conditionId, 
+        relatedDashboardId: null
       })
       this.updateAppSetting(editedMiniApp)
         .then(() => this.miniApp = editedMiniApp)

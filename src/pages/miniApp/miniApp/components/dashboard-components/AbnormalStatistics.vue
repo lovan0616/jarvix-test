@@ -14,7 +14,7 @@
 
 <script>
 
-import { getAlertLogsCount } from '@/API/Alert'
+import { getAlertLogsCount, getAlertConditions } from '@/API/Alert'
 import { mapGetters } from 'vuex'
 import { sizeTable } from '@/utils/general'
 
@@ -49,7 +49,8 @@ export default {
     return {
       sizeTable,
       isLoading: false,
-      logCount: 0   
+      logCount: 0,
+      appConditions: []
     }
   },
   computed: {
@@ -66,11 +67,6 @@ export default {
         ...this.sizeTable[this.conponentConfig.fontSize || 'middle'],
         'color': this.textColor
       }
-    },
-    conditionIds () {
-      return this.warningModuleSetting.conditions
-        .filter(condition => condition.activate)
-        .map(condition => condition.id)
     }
   },
   watch: {
@@ -84,13 +80,36 @@ export default {
     }
   },
   mounted () {
-    this.fetchData()
+    this.init()
   },
   methods: {
-    fetchData () {
+    init () {
+      if (
+        !this.warningModuleSetting.activate 
+        || !this.warningModuleSetting.conditions
+        || this.warningModuleSetting.conditions.length === 0
+      ) return
+      const appConditionIds = this.warningModuleSetting.conditions.map(item => item.id)
+      const conditionIdSet = new Set(appConditionIds)
+
+      this.isLoading = true
+
+      // 取得當前 app active 狀態的示警條件
+      getAlertConditions(this.getCurrentGroupId)
+        .then(conditions => {
+          this.appConditions = conditions.reduce((acc, cur) => {
+            if (!cur.active || !conditionIdSet.has(cur.id)) return acc
+            acc.push(cur.id)
+            return acc
+          }, [])
+          this.fetchData()
+        })
+        .catch(() => this.isLoading = false)
+    },
+    fetchData () {  
       this.isLoading = true
       getAlertLogsCount({ 
-        conditionIds: this.conditionIds, 
+        conditionIds: this.appConditions, 
         groupId: this.getCurrentGroupId, 
         active: this.isGetHandledComponentCount,
         startTime: this.filterTime.start,

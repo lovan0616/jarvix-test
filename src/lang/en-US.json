@@ -977,7 +977,9 @@
     "dataframeExistenceAndRebuild": "Whether the dataframe current column belongs to has been removed or updated, otherwise, rebuild it.",
     "connectionStatus": "Connection status.",
     "otherReasons": "Any other possible reason.",
-    "fetchDataFailed": "Failed Fetching Data"
+    "fetchDataFailed": "Failed Fetching Data",
+    "displayUnderPublishMode": "Display Under Publish Mode",
+    "hideUnderPublishMode": "Hide Under Publish Mode"
   },
   "alert": {
     "alertLogs": "Alert Record",

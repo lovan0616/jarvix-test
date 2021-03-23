@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { getAlertLogs } from '@/API/Alert'
+import { getAlertLogs, getAlertConditions } from '@/API/Alert'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -57,32 +57,50 @@ export default {
     return {
       warningLogs: [],
       isLoading: false,
-      autoRefreshFunction: null
+      autoRefreshFunction: null,
+      appConditions: []
     }
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
-    activeConditionIds () {
-      if (!this.setting.activate || !this.setting.conditions) return []
-      return this.setting.conditions.filter(item => item.activate).map(item => item.id)
-    }
   },
   created () {
-    if (this.activeConditionIds.length > 0) {
-      this.getWarningLogs()
-      this.setComponentRefresh()
-    }
+    this.init()
   },
   destroyed () {
     window.clearInterval(this.autoRefreshFunction)
   },
   methods: {
+    init () {
+      if (
+        !this.setting.activate 
+        || !this.setting.conditions
+        || this.setting.conditions.length === 0
+      ) return
+      const appConditionIds = this.setting.conditions.map(item => item.id)
+      const conditionIdSet = new Set(appConditionIds)
+
+      this.isLoading = true
+
+      // 取得當前 app active 狀態的示警條件
+      getAlertConditions(this.getCurrentGroupId)
+        .then(conditions => {
+          this.appConditions = conditions.reduce((acc, cur) => {
+            if (!cur.active || !conditionIdSet.has(cur.id)) return acc
+            acc.push(cur.id)
+            return acc
+          }, [])
+          this.getWarningLogs()
+          this.setComponentRefresh()
+        })
+        .catch(() => this.isLoading = false)
+    },
     setComponentRefresh () {
       this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs () {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId, active: false }).then(response => {
+      getAlertLogs({ conditionIds: this.appConditions, groupId: this.getCurrentGroupId, active: false }).then(response => {
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {

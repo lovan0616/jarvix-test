@@ -22,6 +22,17 @@ export function deleteAlertCondition (conditionId) {
 }
 
 /**
+ * 修改 監控示警條件開關
+ */
+export function toggleAlertCondition (conditionId, data) {
+  return request({
+    url: `/alert/condition/${conditionId}`,
+    method: 'PATCH',
+    data
+  })
+}
+
+/**
  * 取得 所有示警條件
  */
 export function getAlertConditions (groupId) {

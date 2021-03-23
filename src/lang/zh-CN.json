@@ -978,7 +978,9 @@
     "dataframeExistenceAndRebuild": "资料表是否正常 或 尝试重建此项目",
     "connectionStatus": "连线是否正常",
     "otherReasons": "其他原因",
-    "fetchDataFailed": "取得资料失败"
+    "fetchDataFailed": "取得资料失败",
+    "displayUnderPublishMode": "发布端显示",
+    "hideUnderPublishMode": "发布端隐藏"
   },
   "alert": {
     "alertLogs": "示警纪录",

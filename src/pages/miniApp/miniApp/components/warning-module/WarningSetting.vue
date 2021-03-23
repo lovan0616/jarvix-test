@@ -7,15 +7,17 @@
           <el-switch
             v-model="tempWarningModuleConfig.activate"
             :width="Number('32')"
+            :disabled="isLoading"
             active-color="#2AD2E2"
             inactive-color="#324B4E"
             @change="saveWarningModuleSetting"
           />
-          {{ tempWarningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
+          {{ tempWarningModuleConfig.activate ? $t('miniApp.displayUnderPublishMode') : $t('miniApp.hideUnderPublishMode') }}
         </div>
       </div>
       <div class="nav-right">
         <button
+          :disabled="isLoading"
           class="btn-m btn-secondary button-container__button"
           @click="isShowCreateConditionDialog = true"
         >{{ $t('alert.createAlertCondition') }}</button>
@@ -27,6 +29,7 @@
           {{ $t('miniApp.monitorUpdateFrequency') }}：
           <default-select 
             v-model="tempWarningModuleConfig.updateFrequency"
+            :is-disabled="isLoading"
             :option-list="updateFrequency"
             :placeholder="$t('miniApp.chooseUpdateFrequency')"
             class="setting__block-select"
@@ -58,11 +61,12 @@
             class="setting-block">
             <div class="col-enable">
               <el-switch
-                v-model="condition.activate"
+                :disabled="condition.isDisabled"
+                :value="condition.activate"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
-                @change="saveWarningModuleSetting"
+                @change="toggleSingleAlertCondition(condition.id, $event)"
               />
             </div>
             <div class="col-condition">
@@ -99,16 +103,18 @@
               />
             </div>
             <div class="col-status">
-              <button
-                v-if="isAllowManulTriggerAlert(condition.status)"
-                class="btn btn-outline"
-                @click="runAlert(condition.id)"
-              >{{ $t('button.runRightAway') }}</button>
-              <div
-                v-else
-                class="message">
-                <spinner size="14"/>{{ $t('alert.operating') }}
-              </div>
+              <template v-if="condition.activate">
+                <button
+                  v-if="isAllowManulTriggerAlert(condition.status)"
+                  class="btn btn-outline"
+                  @click="runAlert(condition.id)"
+                >{{ $t('button.runRightAway') }}</button>
+                <div
+                  v-else
+                  class="message">
+                  <spinner size="14"/>{{ $t('alert.operating') }}
+                </div>
+              </template>
             </div>
             <div class="col-deletion">
               <alert-condition-deleter
@@ -135,7 +141,7 @@
 </template>
 
 <script>
-import { getAlertConditions, manualTriggerAlert } from '@/API/Alert'
+import { getAlertConditions, manualTriggerAlert, toggleAlertCondition } from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import CreateAlertConditionDialog from './CreateAlertConditionDialog'
 import AlertConditionDeleter from './AlertConditionDeleter'
@@ -253,15 +259,17 @@ export default {
               // 組成示警條件列表
               latestConditions.push({
                 ...condition,
-                activate: prevConditionSetting ? prevConditionSetting.activate : false,
-                relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
+                activate: condition.active,
+                relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null,
+                isDisabled: false
               })
             })
 
           this.tempWarningModuleConfig.conditions = latestConditions
 
-          // 如果場上有示警條件則設定輪詢持續取得最新狀態
-          if (this.tempWarningModuleConfig.conditions.length > 0) {
+          // 如果場上有示警條件且正被使用中則設定輪詢持續取得最新狀態
+          const hasEnabledAlertConditions = this.tempWarningModuleConfig.conditions.some(condition => condition.active)
+          if (hasEnabledAlertConditions) {
             this.timeoutFunction = window.setTimeout(() => {
               this.fetchAlertConditions()
             }, 5000)
@@ -277,7 +285,6 @@ export default {
         ...this.tempWarningModuleConfig,
         conditions: this.tempWarningModuleConfig.conditions.map(item => ({
           id: item.id,
-          activate: item.activate,
           relatedDashboardId: item.relatedDashboardId
         }))
       })
@@ -309,10 +316,7 @@ export default {
       
     },
     createAlertCondition (conditionId) {
-      this.setting.conditions.push({
-        id: conditionId,
-        activate: true
-      })
+      this.setting.conditions.push({ id: conditionId })
     },
     async alertConditionUpdated (action, conditionId) {
       switch (action) {
@@ -349,6 +353,13 @@ export default {
             return { ...condition, status: 'Fail' }
           })
         })
+    },
+    toggleSingleAlertCondition (conditionId, isActive) {
+      const condition = this.tempWarningModuleConfig.conditions.find(condition => condition.id === conditionId)
+      condition.isDisabled = true
+      toggleAlertCondition(conditionId, { active: isActive })
+        .then(() => this.fetchAlertConditions())
+        .catch(() => condition.isDisabled = false)
     }
   },
 }
