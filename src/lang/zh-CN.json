@@ -1001,7 +1001,12 @@
     "otherSettings": "其他设定",
     "formulaType": "公式类型",
     "singleColumnData": "单栏资料",
-    "singleRowData": "整列资料"
+    "singleRowData": "整列资料",
+    "pleaseCheckFollowingSituations": "请确认以下状况",
+    "dataframeExistenceAndRebuild": "资料表是否正常 或 尝试重建此项目",
+    "connectionStatus": "连线是否正常",
+    "otherReasons": "其他原因",
+    "fetchDataFailed": "取得资料失败"
   },
   "alert": {
     "alertLogs": "示警纪录",

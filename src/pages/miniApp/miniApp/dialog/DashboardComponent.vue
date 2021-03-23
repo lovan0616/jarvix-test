@@ -344,7 +344,7 @@ export default {
         this.$store.commit('dataSource/setCurrentQuestionInfo', null)
       })
     },
-    askResult (selectedResultSegmentationInfo, questionId) {
+    askResult (selectedResultSegmentationInfo, questionId, isSetAlgoConfig) {
       this.$emit('update:isLoading', true)
       if (selectedResultSegmentationInfo) this.segmentation = selectedResultSegmentationInfo
 
@@ -356,7 +356,7 @@ export default {
       // 確認是否為趨勢類型問題
       const isTrendQuestion = this.segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
-        algoConfig: this.currentComponent.algoConfig || null,
+        algoConfig: isSetAlgoConfig ? this.currentComponent.algoConfig || null : null,
         questionId: questionId || this.currentQuestionId,
         segmentation: this.segmentation,
         restrictions: this.restrictions(),
@@ -414,8 +414,10 @@ export default {
                 dateTimeColumn: this.mainDateColumn
               })
             
-              if (this.isNeededDisplaySetting && !this.currentComponent.algoConfig) {
-                this.currentComponent.algoConfig = this.algoConfig[componentResponse.intent.toLowerCase()]
+              if (this.isNeededDisplaySetting) {
+                this.currentComponent.algoConfig = this.currentComponent.algoConfig || this.algoConfig[componentResponse.intent.toLowerCase()]
+              } else {
+                this.currentComponent.algoConfig = null
               }
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
@@ -583,7 +585,7 @@ export default {
       this.currentComponent.config.fontSize = 'middle'
     },
     saveChartSetting () {
-      this.askResult(this.segmentation, this.questionInfo.questionId)
+      this.askResult(this.segmentation, this.questionInfo.questionId, true)
     }
   }
 }
