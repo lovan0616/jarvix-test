@@ -49,10 +49,6 @@ export default {
     },
     prevStep () {
       this.step -= 1
-    },
-    uploadFinish () {
-      // close fileUploadDialog
-      this.$store.commit('modelManagement/updateShowCreateModelDialog', false)
     }
   }
 }
