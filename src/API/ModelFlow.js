@@ -4,12 +4,15 @@ import request from '@/utils/publicRequest'
  * get model flow list
  * @query {Number} groupId - group id 
  * @query {Number} page - pagination page
- * @query {Number} size - pagination item per page
  */
- export function getModelFlowList(groupId, page = 0, size=20) {
+ export function getModelFlowList(groupId, page = 0) {
   return request({
-    url: `/model-flows?groupId=${groupId}&size=${size}&page=${page}`,
-    method: 'GET'
+    url: `/model-flows?groupId=${groupId}`,
+    method: 'GET',
+    params: {
+      page,
+      size: 20
+    }
   })
 }
 

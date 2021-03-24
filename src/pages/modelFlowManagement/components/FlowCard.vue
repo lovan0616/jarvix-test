@@ -54,6 +54,7 @@ export default {
 .flow-card {
   padding: 20px;
   border-radius: 5px;
+  border: 2px solid #1C292B;
   background: #1C292B;
   &:not(:last-child) {
     margin-bottom: 8px;
