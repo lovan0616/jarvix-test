@@ -6,9 +6,13 @@ export default {
   namespaced: true,
   state: {
     showCreateFlowDialog: false,
-    currentFlowInfo: {
-      FlowId: null,
-      name: ''
+    currentUploadFlowInfo: {
+      name: '',
+      modelId: null,
+      sourceDataframeId: null,
+      targetDataframeName: null,
+      triggerType: 'AUTOMATIC',
+      ioArgs: {}
     }
   },
   actions,

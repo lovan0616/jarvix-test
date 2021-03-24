@@ -27,10 +27,11 @@
           :flow-info="flow" />
       </template>
     </div>
-    <!-- <upload-dialog
-      v-if="showCreateModelDialog"
-      @close="closeCreateModelDialog"
+    <upload-dialog
+      v-if="showCreateFlowDialog"
+      @close="closeCreateFlowDialog"
     />
+    <!-- 
     <decide-dialog
       v-if="isShowDeleteDialog"
       :content="$t('flow.deleteConfirmText')"
@@ -42,14 +43,16 @@
   </div>
 </template>
 <script>
+import UploadDialog from './flowExecution/UploadDialog'
 import FlowCard from './components/FlowCard'
-import { getModelFlowList } from '@/API/ModelFlow'
+// import { getModelFlowList } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
 // import { Message } from 'element-ui'
 
 export default {
   name: 'FlowList',
   components: {
+    UploadDialog,
     FlowCard
   },
   data () {

@@ -657,16 +657,22 @@
         "2": "函數傳入與回傳都必須為 pandas 的 DataFrame 類型"
       },
       "executionStep1": "設定名稱",
-      "executionStep2": "上傳檔案",
-      "executionStep3": "設定 Input",
-      "executionStep4": "設定 Output"
+      "executionStep2": "內容設定",
+      "executionStep3": "其他設定"
     }
   },
   "modelFlow": {
     "newFlow": "新增流程",
     "createdInfo": "由 {name} 於 {time} 建立",
     "updatedInformation": "更新資訊",
-    "outputResult": "輸出結果"
+    "outputResult": "輸出結果",
+    "upload": {
+      "setFlowName": "請輸入流程名稱",
+      "executionStep1": "設定名稱",
+      "executionStep2": "上傳檔案",
+      "executionStep3": "設定 Input",
+      "executionStep4": "設定 Output"
+    }
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
