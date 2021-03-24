@@ -67,16 +67,16 @@ export default {
       this.jobData = {
         columns: {
           titles: [
-            { title: 'sugeoryId', name: 'Sugeory Id', width: '160' },
-            { title: 'patient', name: 'Patient', width: '160' },
-            { title: 'patientID', name: 'Patient ID', width: '160' },
-            { title: 'surgeon', name: 'Surgeon', width: '160' },
-            { title: 'surgeryType', name: 'Surgery Type', width: '160' },
-            { title: 'date', name: 'Date', width: '160' },
-            { title: 'priority', name: 'Priority', width: '100' },
+            { title: 'sugeoryId', name: 'Sugeory Id', width: '180' },
+            { title: 'patient', name: 'Patient', width: '180' },
+            { title: 'patientID', name: 'Patient ID', width: '180' },
+            { title: 'surgeon', name: 'Surgeon', width: '180' },
+            { title: 'surgeryType', name: 'Surgery Type', width: '180' },
+            { title: 'date', name: 'Date', width: '180' },
+            { title: 'priority', name: 'Priority', width: '120' },
             { title: 'equipmentNo', name: 'Equipment No.' },
-            { title: 'assistant', name: 'Assistant', width: '120' },
-            { title: 'anesthetist', name: 'Anesthetist', width: '120' }
+            { title: 'assistant', name: 'Assistant', width: '140' },
+            { title: 'anesthetist', name: 'Anesthetist', width: '140' }
           ]
         },
         "data": [
@@ -367,16 +367,16 @@ export default {
           titles: [
             { title: 'roomNo', name: 'Room No.' },
             { title: 'type', name: 'Type' },
-            { title: 'start', name: 'Start Time', width: 160 },
-            { title: 'end', name: 'End Time', width: 160 },
-            { title: 'roomType', name: 'Room Type', width: 160 },
-            { title: 'patientName', name: 'Patient Name', width: 160 },
-            { title: 'patientId', name: 'Paitent ID', width: 160 },
-            { title: 'division', name: 'Division', width: 160 },
-            { title: 'attendingPhysician', name: 'Attending Physician', width: 180 },
-            { title: 'nurse', name: 'Nurse', width: 160 },
-            { title: 'admissionDate', name: 'Admission Date', width: 160 },
-            { title: 'plannedDischargedDate', name: 'Planned Discharged Date', width: 220 }
+            { title: 'start', name: 'Start Time', width: 180 },
+            { title: 'end', name: 'End Time', width: 180 },
+            { title: 'roomType', name: 'Room Type', width: 180 },
+            { title: 'patientName', name: 'Patient Name', width: 180 },
+            { title: 'patientId', name: 'Paitent ID', width: 180 },
+            { title: 'division', name: 'Division', width: 180 },
+            { title: 'attendingPhysician', name: 'Attending Physician', width: 200 },
+            { title: 'nurse', name: 'Nurse', width: 180 },
+            { title: 'admissionDate', name: 'Admission Date', width: 180 },
+            { title: 'plannedDischargedDate', name: 'Planned Discharged Date', width: 240 }
           ]
         },
         data: [
