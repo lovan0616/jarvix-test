@@ -58,53 +58,46 @@
     </header>
     <main class="main">
       <aside>
-        <ul
-          v-if="isOpen"
-          class="surgery-menu"
-        >
-          <li class="item">
-            <div class="item-label">Overview</div>
-            <ul class="sub-menu">
-              <li class="sub-item">Cardiac</li>
-              <li class="sub-item">Thoratic</li>
-              <li class="sub-item">Netural</li>
-              <li class="sub-item">Orthopedics</li>
-              <li class="sub-item">Plastic</li>
-              <li class="sub-item">General</li>
-            </ul>
-          </li>
-          <li class="item">
-            <div class="item-label">Pre-op Assessment</div>
-          </li>
-          <li class="item">
-            <svg-icon icon-class="triangle"/>
-            <div class="item-label is-active">Scheduling</div>
-            <ul class="sub-menu">
-              <li 
-                class="sub-item" 
-                @click="clickOT">OT Room Scheduling</li>
-              <li 
-                class="sub-item" 
-                @click="clickBed">Bedroom Scheduling</li>
-            </ul>
-          </li>
-          <li class="item">
-            <div class="item-label">Patient/Asset Monitoring</div>
-          </li>
-          <li class="item">
-            <div class="item-label">Covid-19 Tracking</div>
-          </li>
+        <div 
+          v-if="isMenuOpen" 
+          class="surgery-menu">
+          <ul class="surgery-menu__list">
+            <li
+              v-for="(item, index) in menuItem"
+              :key="index"
+              class="item"
+            >
+              <div
+                :class="['item-label', activeIMenuItem === item.label ? 'is-active' : '']"
+                @click="clickMenuItem(item.label)"
+              >
+                <svg-icon icon-class="triangle"/>
+                {{ item.label }}
+              </div>
+              <ul
+                v-if="item.children && item.isOpen"
+                class="sub-menu"
+              >
+                <li
+                  v-for="(childItem, index) in item.children"
+                  :key="index"
+                  class="sub-item"
+                  @click.stop="clickSubmenu(childItem.label)"
+                >{{ childItem.label }}</li>
+              </ul>
+            </li>
+          </ul>
           <div class="copyright-block">
             <img 
               class="logo" 
               src="@/assets/images/logo-green-x.svg">
             <div class="copyright-slogan">Powered by JarviX Scheduling Engine TM</div>
           </div>
-        </ul>
+        </div>
         <ul
           v-else
           class="fake-icon-menu"
-          @click="isOpen = true"
+          @click="isMenuOpen = true"
         >
           <li><svg-icon icon-class="home" /></li>
           <li><svg-icon icon-class="pin" /></li>
@@ -137,9 +130,35 @@ export default {
   },
   data: () => {
     return {
+      menuItem: [
+        {
+          label: 'Overview',
+          isOpen: false,
+          children: [
+            { label: 'Cardiac' },
+            { label: 'Thoratic' },
+            { label: 'Netural' },
+            { label: 'Orthopedics' },
+            { label: 'Plastic' },
+            { label: 'General' },
+          ]
+        },
+        { label: 'Pre-op Assessment' },
+        {
+          label: 'Scheduling',
+          isOpen: false,
+          children: [
+            { label: 'OT Room Scheduling' },
+            { label: 'Bedroom Scheduling' }
+          ]
+        },
+        { label: 'Patient / Asset Monitoring' },
+        { label: 'Covid-19 Tracking' }
+      ],
       isAppLoading: false,
-      isOpen: true,
-      hasEmergency: false
+      isMenuOpen: false,
+      hasEmergency: false,
+      activeIMenuItem: 'Scheduling'
     }
   },
   computed: {
@@ -153,13 +172,24 @@ export default {
     toggleSideNav() {
       this.updateSideNavStatus(!this.isShowFullSideNav)
     },
-    clickOT () {
-      this.$router.push({ name: 'DemoCurrentOTSimulation' })
-      this.isOpen = false
+    clickMenuItem (menuName) {
+      this.activeIMenuItem = menuName
+      const openabelMenuItem = this.menuItem.find(item => item.children && (item.label === menuName))
+      if (openabelMenuItem) {
+        openabelMenuItem.isOpen = !openabelMenuItem.isOpen
+      }
     },
-    clickBed () {
-      this.$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })
-      this.isOpen = false
+    clickSubmenu (menuName) {
+      switch (menuName) {
+        case 'OT Room Scheduling':
+          this.$router.push({ name: 'DemoCurrentOTSimulation' })
+          this.isMenuOpen = false
+          return
+        case 'Bedroom Scheduling':
+          this.$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })
+          this.isMenuOpen = false
+          return
+      }
     }
   }
 }
@@ -176,6 +206,7 @@ export default {
   background-color: rgba(0, 0, 0, .55);
   .main-content {
     height: 100%;
+    overflow: auto;
   }
 }
 .header {
@@ -383,6 +414,8 @@ export default {
 }
 
 .surgery-menu {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 0;
   left: 0;
@@ -390,50 +423,60 @@ export default {
   border: 0;
   z-index: 1000;
   margin: 0;
-  padding: 12px 0;
+  padding: 0;
   background-color: rgb(0, 0, 0);
   box-shadow: 0px 0px 20px rgba(12, 209, 222, .1);
   color: #8B9B9C;
   
-  .sub-menu {
-    margin: 0;
+  &__list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    margin: 0 0 12px 0;
     padding: 0;
-  }
-  .item {
-    position: relative;
-    text-indent: 48px;
-    .svg-icon {
+    .sub-menu {
+      margin: 0;
+      padding: 0;
+    }
+    .item {
+      position: relative;
+      text-indent: 48px;
+      .svg-icon {
+        position: absolute;
+        left: 24px;
+        top: 19px;
+        font-size: 10px;
+        transform: rotate(90deg);
+        color: #fff;
+      }
+    }
+    .item-label, .sub-item {
       display: block;
-      position: absolute;
-      left: 24px;
-      top: 19px;
-      font-size: 10px;
-      transform: rotate(90deg);
-      color: #fff;
+      line-height: 48px;
+      list-style: none;
+      padding: 0 24px 0 0;
+      cursor: pointer;
+      border-bottom: 1px solid #232C2E;
+      &:hover {
+        background: rgba(66, 165, 179, 0.5);
+      }
+      &.is-active {
+        color: #fff;
+        background: #42A5B3;
+        .svg-icon {
+          display: block;
+        }
+      }
     }
-  }
-  .item-label, .sub-item {
-    display: block;
-    line-height: 48px;
-    list-style: none;
-    padding: 0 24px 0 0;
-    cursor: pointer;
-    border-bottom: 1px solid #232C2E;
-    &.is-active {
-      color: #fff;
-      background: #42A5B3;
+    .sub-item {
+      text-indent: 64px;
     }
-  }
-  .sub-item {
-    text-indent: 64px;
-  }
-  .svg-icon {
-    display: none;
+    .svg-icon {
+      display: none;
+    }
   }
   .copyright-block {
     width: 100%;
-    bottom: 20px;
-    position: absolute;
     text-align: center;
     .logo {
       width: 120px;

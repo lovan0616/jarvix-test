@@ -88,15 +88,15 @@ export default {
         end: 0
       },
       jobTableHeaderList: [
-        { title: 'sugeoryId', name: 'Sugeory Id', width: '160' },
-        { title: 'patient', name: 'Patient', width: '160' },
-        { title: 'patientID', name: 'Patient ID', width: '160' },
-        { title: 'surgeon', name: 'Surgeon', width: '160' },
-        { title: 'surgeryType', name: 'Surgery Type', width: '160' },
-        { title: 'date', name: 'Date', width: '160' },
-        { title: 'equipmentNo', name: 'equipmentNo' },
-        { title: 'assistant', name: 'assistant', width: '120' },
-        { title: 'anesthetist', name: 'anesthetist', width: '120' }
+        { title: 'sugeoryId', name: 'Sugeory Id', width: 180 },
+        { title: 'patient', name: 'Patient', width: 180 },
+        { title: 'patientID', name: 'Patient ID', width: 180 },
+        { title: 'surgeon', name: 'Surgeon', width: 180 },
+        { title: 'surgeryType', name: 'Surgery Type', width: 180 },
+        { title: 'date', name: 'Date', width: 180 },
+        { title: 'equipmentNo', name: 'equipmentNo', width: 300 },
+        { title: 'assistant', name: 'assistant', width: 180 },
+        { title: 'anesthetist', name: 'anesthetist', width: 180 }
       ]
     }
   },
