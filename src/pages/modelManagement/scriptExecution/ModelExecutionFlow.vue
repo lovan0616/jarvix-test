@@ -51,7 +51,6 @@ export default {
       this.step -= 1
     },
     uploadFinish () {
-      this.$store.commit('dataManagement/updateFileUploadSuccess', true)
       // close fileUploadDialog
       this.$store.commit('modelManagement/updateShowCreateModelDialog', false)
     }
