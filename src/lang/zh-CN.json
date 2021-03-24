@@ -1037,7 +1037,8 @@
     "columnValueCombination": "展开条件",
     "dataFilterCondition": "资料过滤条件",
     "dataSource": "资料源",
-    "dataFrame": "资料表"
+    "dataFrame": "资料表",
+    "monitoredField": "监测栏位"
   },
   "clustering": {
     "cluster": "群体",

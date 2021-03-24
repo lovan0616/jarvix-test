@@ -1036,7 +1036,8 @@
     "columnValueCombination": "Data Column Combination",
     "dataFilterCondition": "Filter Conditions",
     "dataSource": "Data Source",
-    "dataFrame": "Data Set"
+    "dataFrame": "Data Set",
+    "monitoredField": "Monitored Field"
    },
   "clustering": {
     "cluster": "Cluster",

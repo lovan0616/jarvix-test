@@ -45,6 +45,12 @@
               class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
           </div>
           <div
+            v-if="analysisValueType === 'DATA_VALUE'"
+            class="data-source">
+            <div class="data-source__title">{{ $t('alert.monitoredField') }}</div>       
+            <div class="data-source__content">{{ componentData.chartInfo.yAxis[0].display_name }}</div>
+          </div>
+          <div
             v-if="componentType === 'formula'"
             class="data-source"
           >
@@ -60,7 +66,9 @@
           </div>
         </div>
         <!--示警指標-->
-        <div class="setting-block">
+        <div
+          v-show="analysisValueType !== 'DATA_VALUE'" 
+          class="setting-block">
           <div class="setting-block__title">{{ $t('alert.alertIndicator') }}</div>
           <spinner
             v-if="isFetchingIndocators"
@@ -154,10 +162,12 @@
         >
           <div class="setting-block__title">{{ $t('alert.conditionSetting') }}</div>
           <single-comparing-value-card
-            v-for="(comparingSet, index) in newConditionSetting.comparingValues"
-            :key="index"
-            :comparing-set="newConditionSetting.comparingValues[index]"
+            v-for="(comparingSet, index) in conditionComparings"
+            :key="comparingSet.id"
+            :is-show-radio="conditionComparings.length > 1"
+            :comparing-set="comparingSet"
             :comparison-operator-option-list="comparisonOperatorOptionList"
+            @selected="updateComparingSet(index)"
           />
         </div>
         <!-- Condition Message Settings -->
@@ -200,6 +210,7 @@ import {
   convertComponentToAlertCondition
 } from '@/API/Alert'
 import { getFormulaList } from '@/API/NewAsk'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'ComponentToAlertConditionDialog',
@@ -225,13 +236,7 @@ export default {
       filterOptionList: [],
       // 後端儲存用
       newConditionSetting: {
-        comparingValues: [
-          {
-            comparisonOperator: null,
-            dataType: 'INT',
-            value: ''
-          }
-        ],
+        comparingValues: null,
         componentId: null,
         dataFrameId: null,
         name: '',
@@ -257,7 +262,8 @@ export default {
       isFetchingIndocators: false,
       isFetchingFormulas: false,
       xAxis: [],
-      hasError: false
+      hasError: false,
+      conditionComparings: []
     }
   },
   computed: {
@@ -296,8 +302,8 @@ export default {
         .map(indicator => ({ 
           type: 'indicator',
           value: indicator.type,
-          name: indicator.text,
-          originalName: indicator.text
+          name: this.analysisValueType === 'DATA_VALUE' ? this.componentData.chartInfo.yAxis[0].display_name : indicator.text,
+          originalName: this.analysisValueType === 'DATA_VALUE' ? this.componentData.chartInfo.yAxis[0].display_name : indicator.text
         }))
 
       // 展開條件
@@ -310,9 +316,12 @@ export default {
           originalName: column.columnName
         }))
 
-      // 如果選離群值，須將圖表 x 軸資訊加入參數列表
+      // 如果選離群值或數值型，須將圖表 x 軸資訊加入參數列表
       const xAxisColumns = []
-      if (this.newConditionSetting.targetConfig.analysisValueType === 'OUTLIER_VALUE') {
+      if (
+        this.analysisValueType === 'OUTLIER_VALUE'
+        || this.analysisValueType === 'DATA_VALUE'
+      ) {
         this.componentData.chartInfo.xAxis.forEach(column => {
           xAxisColumns.push({
             type: 'column',
@@ -324,6 +333,9 @@ export default {
       }
       return [...selectedIndicator, ...selectedColumnValueCombinations, ...xAxisColumns]
     },
+    analysisValueType () {
+      return this.newConditionSetting.targetConfig.analysisValueType
+    },
     showConditionComapringSection () {
       return this.newConditionSetting.targetConfig.analysisValueType && this.newConditionSetting.targetConfig.analysisValueType !== 'OUTLIER_VALUE'
     },
@@ -334,7 +346,7 @@ export default {
       return this.componentData.type
     }
   },
-  mounted () {false
+  mounted () {
     this.fetchDataFrameList(this.currentDataSource.id)
     this.componentType === 'formula' && this.fetchFormulaList()
     this.getComponentIndicators(this.componentData.keyResultId)
@@ -344,6 +356,7 @@ export default {
       return acc
     }, [])
     this.configFilterOptionList()
+    this.configConditionComparings()
   },
   methods: {
     configFilterOptionList() {
@@ -464,7 +477,11 @@ export default {
           settingData.targetConfig.dateRangeColumn = this.formatRelatvieDateTimeFilter(selectedFilterLists.relativeDateTime[0])
           
           // 指標如果選定離群值，不帶條件設定
-          if (!this.showConditionComapringSection) settingData.comparingValues = null
+          if (!this.showConditionComapringSection) {
+            settingData.comparingValues = null
+          } else {
+            settingData.comparingValues = this.conditionComparings.filter(condition => condition.isSelected)
+          }
 
           this.conditionId = await convertComponentToAlertCondition(settingData)
           this.$emit('update', this.conditionId)
@@ -565,6 +582,57 @@ export default {
             }
           }]
         })
+    },
+    configConditionComparings () {
+      let optionList = []
+      
+      // 元件本身已經設定警示線
+      this.componentData.anomalySettings.forEach(setting => {
+        optionList.push({
+          comparisonOperator: this.convertOperator(setting.comparison),
+          value: setting.value,
+          id: setting.id,
+          dataType: 'INT',
+          isSelected: false,
+          isDisabled: true
+        })
+      })
+
+      // 固定會有一個客製化選項
+      optionList.push({
+        comparisonOperator: null,
+        dataType: 'INT',
+        value: '',
+        id: uuidv4(),
+        isSelected: false,
+        isDisabled: false
+      })
+
+      if (!optionList.some(option => option.isSelected)) {
+        optionList[0].isSelected = true
+      }
+
+      this.conditionComparings = optionList
+    },
+    updateComparingSet (comparingSetIndex) {
+      this.conditionComparings = this.conditionComparings.map((condition, index) => ({
+        ...condition,
+        isSelected: index === comparingSetIndex
+      }))
+    },
+    convertOperator (operator) {
+      switch (operator) {
+        case 'gt':
+          return 'GREATER_THAN'
+        case 'gte': 
+          return 'GREATER_THAN_OR_EQUAL_TO'
+        case 'equal':
+          return 'EQUAL'
+        case 'lte':
+          return 'LESS_THAN_OR_EQUAL_TO'
+        case 'lt':
+          return 'LESS_THAN'
+      }
     },
   }
 }

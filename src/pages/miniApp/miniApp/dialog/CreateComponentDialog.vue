@@ -596,7 +596,8 @@ export default {
     },
     setComponentConfig (config) {
       this.currentComponent.chartInfo = {
-        xAxis: config.xAxis
+        xAxis: config.xAxis,
+        yAxis: config.yAxis
       }
     },
     setAlgoConfig (intent) {

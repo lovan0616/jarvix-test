@@ -1037,7 +1037,8 @@
     "dataFilterCondition": "資料過濾條件",
     "dataSource": "資料源",
     "dataFrame": "資料表",
-    "expression": "運算式"
+    "expression": "運算式",
+    "monitoredField": "監測欄位"
   },
   "clustering": {
     "cluster": "群體",
