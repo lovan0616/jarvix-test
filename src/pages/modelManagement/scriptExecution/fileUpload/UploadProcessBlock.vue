@@ -41,8 +41,8 @@ export default {
   .upload-process-block {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    margin: 0 auto 12px auto;
+    width: 95%;
+    margin: 0 auto 16px auto;
 
     .step-process {
       display: flex;

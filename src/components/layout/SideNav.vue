@@ -86,6 +86,8 @@ export default {
 
     &--locked {
       color: #3C4545;
+      cursor: not-allowed;
+      
       &:hover {
         color: #3C4545;
       }

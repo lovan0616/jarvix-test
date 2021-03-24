@@ -41,7 +41,7 @@
         <div class="info-block__content">
           <div class="info__row">
             <div class="info__label">{{ $t('model.lastUpdatedTime') }}:</div>
-            <div class="info__text">{{ timeToDateTime(modelInfo.updatedAt) }}</div>
+            <div class="info__text">{{ modelInfo.updatedAt ? timeToDateTime(modelInfo.updatedAt) : "-" }}</div>
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('model.fileInfo') }}:</div>

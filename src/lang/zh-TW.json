@@ -637,7 +637,7 @@
     "parameterDataName": "參數名稱",
     "outputParameters": "Output 參數",
     "createInfo": "建立資料",
-    "lastUpdatedTime": "最後上傳時間",
+    "lastUpdatedTime": "最後更新時間",
     "fileInfo": "檔案內容",
     "reUploadReminder": "若 {mainScriptName} 檔案異動後，請確認模型參數與 {mainScriptName} 的 Input/Output 格式是否一致。",
     "upload": {
