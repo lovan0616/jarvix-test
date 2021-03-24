@@ -28,6 +28,7 @@
           :empty-message="$t('model.clickToUploadModel')"
           @create="createModel"
           @delete="confirmDelete"
+          @sort="sortData"
         />
         <el-pagination 
           :v-if="paginationInfo.totalPages > 1"
@@ -64,6 +65,7 @@ import ModelExecutionFlow from './scriptExecution/ModelExecutionFlow'
 import { getModelList, deleteModelById } from '@/API/Model'
 import { mapState, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
+import orderBy from 'lodash.orderby'
 
 export default {
   name: 'ModelList',
@@ -168,6 +170,9 @@ export default {
         }).finally(() => {
           this.isLoading = false
         })
+    },
+    sortData ({name, order}) {
+      this.modelList = orderBy(this.modelList, [name], [order])
     },
     changePage (page) {
       this.fetchData(false, page - 1)
