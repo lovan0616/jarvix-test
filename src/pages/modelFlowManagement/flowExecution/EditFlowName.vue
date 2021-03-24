@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('modelFlowManagement', ['updateCurrentUploadFlowInfo']),
+    ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateCurrentUploadFlowInfo']),
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
@@ -68,7 +68,7 @@ export default {
       })
     },
     cancel () {
-      this.$store.commit('modelFlowManagement/updateShowCreateFlowDialog', false)
+      this.updateShowCreateFlowDialog(false)
     }
   }
 }

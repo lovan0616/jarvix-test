@@ -657,8 +657,9 @@
         "2": "函數傳入與回傳都必須為 pandas 的 DataFrame 類型"
       },
       "executionStep1": "設定名稱",
-      "executionStep2": "內容設定",
-      "executionStep3": "其他設定"
+      "executionStep2": "上傳檔案",
+      "executionStep3": "設定 Input",
+      "executionStep4": "設定 Output"
     }
   },
   "modelFlow": {
@@ -669,9 +670,8 @@
     "upload": {
       "setFlowName": "請輸入流程名稱",
       "executionStep1": "設定名稱",
-      "executionStep2": "上傳檔案",
-      "executionStep3": "設定 Input",
-      "executionStep4": "設定 Output"
+      "executionStep2": "內容設定",
+      "executionStep3": "其他設定"
     }
   },
   "pinboard": {

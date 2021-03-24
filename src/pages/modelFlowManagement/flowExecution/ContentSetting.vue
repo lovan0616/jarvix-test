@@ -10,6 +10,28 @@
         <div class="setting-block__title">
           {{ $t('editing.sourceOfData') }}
         </div>
+        <default-select 
+          v-validate="'required'"
+          :option-list="dataSourceOptionList"
+          :placeholder="$t('miniApp.chooseDataSource')"
+          :is-disabled="isLoading"
+          v-model="sourceDataSourceId"
+          filterable
+          class="setting-block__select"
+          name="dataframeId"
+          @change="fetchDataColumnList"
+        />
+        <default-select 
+          v-validate="'required'"
+          :option-list="dataFrameOptionList"
+          :placeholder="$t('miniApp.chooseDataFrame')"
+          :is-disabled="!sourceDataSourceId"
+          v-model="sourceDataframeId"
+          filterable
+          class="setting-block__select"
+          name="dataframeId"
+          @change="fetchDataColumnList"
+        />
         <!-- <div class="setting-block__warning">
           <svg-icon icon-class="data-explanation" />
           {{ $t('model.upload.argsReminder', {mainScriptName}) }}
@@ -33,11 +55,14 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
+
 import UploadProcessBlock from './components/UploadProcessBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { v4 as uuidv4 } from 'uuid'
+import { getDataSourceList, getDataFrameById } from '@/API/DataSource'
 import { statsTypeOptionList } from '@/utils/general'
+import { mapState, mapMutations } from 'vuex'
+import { v4 as uuidv4 } from 'uuid'
+
 
 export default {
   name: 'ContentSetting',
@@ -48,22 +73,33 @@ export default {
   },
   data () {
     return {
+      isLoading: false,
       statsTypeOptionList,
-      columnList: []
+      dataSourceOptionList: [],
+      dataFrameOptionList: [],
+      columnList: [],
+      modelId: null,
+      sourceDataSourceId: null,
+      sourceDataframeId: null,
+      targetDataframeName: null
     }
   },
   computed: {
     ...mapState('modelManagement', ['currentUploadModelInfo'])
   },
   mounted () {
-    this.fetchDataFrameList()
+    this.fetchData()
   },
   methods: {
     ...mapMutations('modelManagement', ['updateCurrentUploadModelInfo', 'updateShowCreateModelDialog']),
-    fetchDataFrameList () {
+    fetchData () {
+      getDataSourceList().then(response => {
+        console.log('dks')
+      })
+
       // 清空原資料
-      this.columnList = []
-      this.addNewColumnCard()
+      // this.columnList = []
+      // this.addNewColumnCard()
     },
     addNewColumnCard () {
       this.columnList.push({
@@ -127,9 +163,29 @@ export default {
       color: var(--color-warning);
     }
 
+    &__select {
+      &:not(:first-child) {
+        margin-left: 16px;
+      }
+    }
+
     /deep/ .el-input__inner {
       padding-left: 0;
       border-bottom: 1px solid #FFFFFF;
+    }
+
+    /deep/ .el-input {
+      &.is-disabled {
+        .el-input__inner {
+          color: #AAAAAA;
+          border-bottom: 1px solid #AAAAAA;
+        }
+
+        &::placeholder { 
+          font-size: 14px;
+          color: #AAAAAA;
+        }
+      } 
     }
 
     /deep/ .input-field {
