@@ -5,38 +5,91 @@
       :step="1"
     />
     <div class="dialog-body">
-      <div 
-        class="setting-block">
+      <!-- select data source -->
+      <div class="setting-block">
         <div class="setting-block__title">
           {{ $t('editing.sourceOfData') }}
         </div>
-        <default-select 
-          v-validate="'required'"
-          :option-list="dataSourceOptionList"
-          :placeholder="$t('miniApp.chooseDataSource')"
-          :is-disabled="isLoading"
-          v-model="sourceDataSourceId"
-          filterable
-          class="setting-block__select"
-          name="dataframeId"
-          @change="fetchDataColumnList"
-        />
-        <default-select 
-          v-validate="'required'"
-          :option-list="dataFrameOptionList"
-          :placeholder="$t('miniApp.chooseDataFrame')"
-          :is-disabled="!sourceDataSourceId"
-          v-model="sourceDataframeId"
-          filterable
-          class="setting-block__select"
-          name="dataframeId"
-          @change="fetchDataColumnList"
-        />
-        <!-- <div class="setting-block__warning">
-          <svg-icon icon-class="data-explanation" />
-          {{ $t('model.upload.argsReminder', {mainScriptName}) }}
-        </div> -->
+        <div class="setting-block__content">
+          <div class="select-wrapper">
+            <default-select 
+              v-validate="'required'"
+              :option-list="dataSourceOptionList"
+              :placeholder="$t('miniApp.chooseDataSource')"
+              :is-disabled="isLoading"
+              v-model="sourceDataSourceId"
+              filterable
+              class="setting-block__select"
+              name="dataSourceId"
+              @change="fetchDataFrameList"
+            />
+            <div 
+              v-show="errors.has('dataSourceId')"
+              class="error-text"
+            >{{ errors.first('dataSourceId') }}</div>
+          </div>
+          <div class="select-wrapper">
+            <default-select 
+              v-validate="'required'"
+              :option-list="dataFrameOptionList"
+              :placeholder="$t('miniApp.chooseDataFrame')"
+              :is-disabled="!!(!isLoading && !sourceDataSourceId)"
+              v-model="sourceDataframeId"
+              filterable
+              class="setting-block__select"
+              name="dataframeId"
+              @change="fetchDataColumnList"
+            />
+            <div 
+              v-show="errors.has('dataframeId')"
+              class="error-text"
+            >{{ errors.first('dataframeId') }}</div>
+          </div>
+        </div>
       </div>
+      <!-- select model -->
+      <div class="setting-block">
+        <div class="setting-block__title">
+          {{ $t('modelFlow.upload.modelSetting') }}
+        </div>
+        <default-select 
+          v-validate="'required'"
+          :option-list="modelOptionList"
+          :placeholder="$t('modelFlow.upload.chooseModel')"
+          v-model="modelId"
+          filterable
+          class="setting-block__select"
+          name="modelId"
+          @change="modelChangedHandler"
+        />
+        <div 
+          v-show="errors.has('modelId')"
+          class="error-text"
+        >{{ errors.first('modelId') }}</div>
+      </div>
+      <!-- input setting -->
+      <div 
+        v-if="modelId"
+        class="setting-block">
+        <div class="setting-block__title">
+          {{ $t('modelFlow.upload.inputSetting') }}
+        </div>
+        <input-column-setting-card
+          v-for="(input, index) in ioArgs.input"
+          :key="index"
+          :column-info="input"
+          :is-processing="false"
+        />
+      </div>
+      <!-- output setting -->
+      <div 
+        v-if="modelId" 
+        class="setting-block">
+        <div class="setting-block__title">
+          {{ $t('modelFlow.upload.outputSetting') }}
+        </div>
+      </div>
+      
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -53,79 +106,164 @@
       </div>
     </div>
   </div>
+  <!-- <div class="setting-block__warning">
+          <svg-icon icon-class="data-explanation" />
+          {{ $t('model.upload.argsReminder', {mainScriptName}) }}
+        </div> -->
 </template>
 <script>
-
 import UploadProcessBlock from './components/UploadProcessBlock'
+import InputColumnSettingCard from './components/InputColumnSettingCard'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { getDataSourceList, getDataFrameById } from '@/API/DataSource'
+import { getDataSourceList, getDataFrameById, getDataFrameColumnInfoById } from '@/API/DataSource'
+import { getModelList, getModelInfo } from '@/API/Model'
 import { statsTypeOptionList } from '@/utils/general'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
-
 
 export default {
   name: 'ContentSetting',
   inject: ['$validator'],
   components: {
     UploadProcessBlock,
+    InputColumnSettingCard,
     DefaultSelect
   },
   data () {
     return {
       isLoading: false,
       statsTypeOptionList,
-      dataSourceOptionList: [],
-      dataFrameOptionList: [],
-      columnList: [],
       modelId: null,
       sourceDataSourceId: null,
       sourceDataframeId: null,
-      targetDataframeName: null
+      dataSourceOptionList: [],
+      dataFrameOptionList: [],
+      dataColumnOptionList: [],
+      modelOptionList: [],
+      ioArgs: {
+        input: [],
+        output: []
+      },
+      targetDataframeName: ''
     }
   },
   computed: {
-    ...mapState('modelManagement', ['currentUploadModelInfo'])
+    ...mapState('modelFlowManagement', ['currentUploadFlowInfo']),
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
   },
   mounted () {
     this.fetchData()
   },
   methods: {
-    ...mapMutations('modelManagement', ['updateCurrentUploadModelInfo', 'updateShowCreateModelDialog']),
+    ...mapMutations('modelFlowManagement', ['updateCurrentUploadFlowInfo', 'updateShowCreateFlowDialog']),
     fetchData () {
-      getDataSourceList().then(response => {
-        console.log('dks')
-      })
-
+      this.fetchDataSourceList()
+      this.fetchModelList()
       // 清空原資料
-      // this.columnList = []
-      // this.addNewColumnCard()
+      this.clearData()
     },
-    addNewColumnCard () {
-      this.columnList.push({
-        statsType: null,
-        modelColumnName: null,
-        id: uuidv4()
-      })
+    fetchDataSourceList () {
+      this.isLoading = true
+      getDataSourceList()
+        .then(response => {
+          this.dataSourceOptionList = response
+            .filter(source => source.state === 'ENABLE')
+            .map(source => {
+              return {
+                name: source.name,
+                value: source.id
+              }
+            })
+        }).finally(() => {
+          this.isLoading = false
+        })
     },
-    updateDataColumn(statesType, selectedColumnCardId) {
-      const columnCard = this.columnList.find(columnCard => columnCard.id === selectedColumnCardId)
-      columnCard.statsType = statesType
+    fetchDataFrameList () {
+      getDataFrameById(this.sourceDataSourceId)
+        .then(response => {
+          this.clearData()
+          this.dataFrameOptionList = response
+            .map(frame => {
+              return {
+                name: frame.primaryAlias,
+                value: frame.id
+              }
+            })
+          // 先選第一個
+          if (this.dataFrameOptionList.length > 0 ) {
+            this.sourceDataframeId = this.dataFrameOptionList[0].value
+            this.fetchDataColumnList()
+          }
+        })
     },
-    removeColumnCard(cardId) {
-      this.columnList = this.columnList.filter(columnCard => columnCard.id !== cardId)
+    fetchDataColumnList () {
+      getDataFrameColumnInfoById(this.sourceDataframeId)
+        .then(response => {
+          this.dataColumnOptionList = response.map(column => {
+            return {
+              name: `${column.name}(${this.getStatsType(column.statsType)})`,
+              value: column.id,
+              statsType: column.statsType
+            }
+          })
+        })
+    },
+    fetchModelList () {
+      // TODO: 把失敗的 filter
+      getModelList(this.getCurrentGroupId)
+        .then(response => {
+          this.modelOptionList = response.models
+            .map(model => {
+              return {
+                name: `${model.name} (ID:${model.id})`,
+                value: model.id
+              }
+            })
+        })
+    },
+    clearData () {
+      this.sourceDataframeId = null
+      this.dataFrameOptionList = []
+      this.dataColumnOptionList = []
+      this.columnList = []
+    },
+    getStatsType (statsType) {
+      return this.statsTypeOptionList.filter(element => statsType === element.value)[0].name
+    },
+    modelChangedHandler () {
+      // 模型更動要把 IO 全部更新
+      getModelInfo(this.modelId)
+        .then(({ioArgs}) => {
+          this.ioArgs = {
+            input: ioArgs.input.map(input => {
+              return {
+                ...input,
+                columnId: null,
+                id: uuidv4()
+              }
+            }),
+            output: ioArgs.output.map(output => {
+              return {
+                modelColumnName: output.modelColumnName,
+                columnStatsType: output.statsType,
+                originalName: '',
+                id: uuidv4()
+              }
+            })
+          }
+        })
     },
     cancel () {
-      this.updateShowCreateModelDialog(false)
+      this.updateShowCreateFlowDialog(false)
     },
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.updateCurrentUploadModelInfo({
-          ...this.currentUploadModelInfo,
-          ioArgs: {
-            input: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
-          }
+          // ...this.currentUploadModelInfo,
+          // ioArgs: {
+          //   input: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
+          // }
         })
         this.$emit('next')
       })
@@ -156,6 +294,17 @@ export default {
       margin-bottom: 16px;
     }
 
+    &__content {
+      display: flex;
+      .select-wrapper {
+        display: inline-block;
+
+        &:not(:first-of-type) {
+          margin-left: 16px;
+        }
+      }
+    }
+
     &__warning {
       margin-bottom: 8px;
       font-size: 13px;
@@ -163,30 +312,35 @@ export default {
       color: var(--color-warning);
     }
 
+    
+
     &__select {
-      &:not(:first-child) {
-        margin-left: 16px;
-      }
+      
     }
 
     /deep/ .el-input__inner {
       padding-left: 0;
       border-bottom: 1px solid #FFFFFF;
+
+      &::placeholder { 
+        font-size: 16px;
+      }
     }
 
-    /deep/ .el-input {
-      &.is-disabled {
-        .el-input__inner {
-          color: #AAAAAA;
-          border-bottom: 1px solid #AAAAAA;
-        }
+    /deep/ .el-input.is-disabled {
+      .el-input__inner {
+        color: #AAAAAA;
+        border-bottom: 1px solid #AAAAAA;
 
         &::placeholder { 
-          font-size: 14px;
           color: #AAAAAA;
         }
-      } 
-    }
+      }
+
+      .el-icon-arrow-up:before {
+        color: #AAAAAA;
+      }
+    } 
 
     /deep/ .input-field {
       &__label {
