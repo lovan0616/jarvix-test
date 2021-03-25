@@ -2,7 +2,7 @@
   <div class="full-page-dialog relation-dialog">
     <div class="dialog-container">
       <div class="dialog-title">
-        {{ $t('schedule.project.dataSourceReRelation') }}
+        {{ $t('schedule.project.dataSourceBindingManagement') }}
         <a 
           href="javascript:void(0)" 
           class="close-btn"
@@ -282,7 +282,7 @@ export default {
         &-label {
           display: flex;
           align-items: center;
-          margin-bottom: 14px;
+          margin-bottom: 8px;
           &::before {
             content: '';
             margin-right: 8px;
