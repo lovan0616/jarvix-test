@@ -5,28 +5,26 @@
       <div class="form-action">
         <button
           :disabled="isUnbinding"
-          class="btn btn-default"
+          class="btn btn-outline"
           @click="unbind"
         >
           {{ $t('schedule.binding.unbind') }}
         </button>
         <button
-          v-if="isDataBindable"
-          :disabled="isBinding"
-          class="btn btn-default"
-          @click="bind">
-          <spinner 
-            v-show="isBinding" 
-            size="10"/>
-          {{ $t('schedule.binding.bind') }}
-        </button>
-        <button
-          v-else
           :disabled="isChecking"
           class="btn btn-default"
           @click="check">
           <spinner 
             v-show="isChecking" 
+            size="10"/>
+          {{ $t('schedule.binding.check') }}
+        </button>
+        <button
+          :disabled="!isDataBindable || isBinding"
+          class="btn btn-default"
+          @click="bind">
+          <spinner 
+            v-show="isBinding" 
             size="10"/>
           {{ $t('schedule.binding.bind') }}
         </button>
@@ -173,7 +171,7 @@ export default {
             })
 
           // 全部資料表皆檢查通過
-          const allPass = Object.values(this.checkedResult).every(value => value.bindable)
+          const allPass = Object.values(this.checkedResult).every(value => !this.resultHandler.hasError(value))
           if (allPass) {
             Message({
               message: this.$t('schedule.binding.allRawdataDataIsValid'),

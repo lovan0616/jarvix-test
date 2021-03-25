@@ -5,7 +5,7 @@
       <div class="form-action">
         <button
           :disabled="isUnbinding"
-          class="btn btn-default"
+          class="btn btn-outline"
           @click="unbind"
         >
           <spinner 
@@ -14,12 +14,22 @@
           {{ $t('schedule.binding.unbind') }}
         </button>
         <button
-          :disabled="isChecking || isBinding"
+          :disabled="isChecking"
           class="btn btn-default"
           @click="check"
         >
           <spinner 
-            v-show="isChecking || isBinding" 
+            v-show="isChecking" 
+            size="10"/>
+          {{ $t('schedule.binding.check') }}
+        </button>
+        <button
+          :disabled="isBinding || bindableConstranints.length === 0"
+          class="btn btn-default"
+          @click="bind"
+        >
+          <spinner 
+            v-show="isBinding" 
             size="10"/>
           {{ $t('schedule.binding.bind') }}
         </button>
@@ -174,31 +184,24 @@ export default {
             }
           })
 
-          const allFailed = Object.values(this.checkedResult).every(value => !value.bindable)
-          // 全部資料都無法做綁定才擋下，有可以綁定的就送去綁定
-          if (allFailed) {
-            return Message({
-              message: this.$t('schedule.binding.allConstraintsDataIsInvalid'),
-              type: 'warning',
+          // 全部資料表皆檢查通過
+          const allPass = Object.keys(this.checkedResult)
+            .filter(fileCode => this.validCodes.includes(fileCode))
+            .every(fileCode => !this.resultHandler.hasError(this.checkedResult[fileCode]))
+          if (allPass) {
+            Message({
+              message: this.$t('schedule.binding.allConstraintsDataIsValid'),
+              type: 'success',
               duration: 3 * 1000,
               showClose: true
             })
+            this.bind()
           }
-          this.bind()
         })
         .catch(() => {})
         .finally(() => this.isChecking = false)
     },
     bind () {
-      if (this.validConstraints.length === 0) {
-        return Message({
-          message: this.$t('schedule.binding.pleaseSelectConstraint'),
-          type: 'warning',
-          duration: 3 * 1000,
-          showClose: true
-        })
-      }
-
       const requestBody = {
         constraints: this.bindableConstranints,
         projectId: this.scheduleProjectId
@@ -216,6 +219,7 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
+          this.$emit('resetCheckedResult', this.validCodes)
         })
         .catch(() => {})
         .finally(() => this.isBinding = false)

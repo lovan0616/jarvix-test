@@ -334,10 +334,6 @@ export default {
 
       this.isLoading = true
       const copiedSetting = { ...this.settingInfo }
-      copiedSetting.excludeEquipments = copiedSetting.excludeEquipments.map(item => ({
-        equipment: item.equipmentId,
-        reasons: item.reasons
-      }))
       this.$store.dispatch('scheduleSetting/setSetting', copiedSetting).then(() => {
         Message({
           message: this.$t('schedule.successMessage.settingSaved'),

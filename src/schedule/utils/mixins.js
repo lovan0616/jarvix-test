@@ -29,9 +29,9 @@ export function validateSimulationSetting (settingInfo) {
   // 0 欄位未填
   for (let i = 0; i < settingInfo.excludeEquipments.length; i++) {
     // 0.1 排除機台未選
-    if (!settingInfo.excludeEquipments[i].equipmentId) {
+    if (!settingInfo.excludeEquipments[i].equipment) {
       Message({
-        message: '未選排除機台',
+        message: i18n.t('schedule.errorMessage.emptyExcludeEquipment'),
         type: 'warning',
         duration: 3 * 1000
       })
@@ -51,7 +51,7 @@ export function validateSimulationSetting (settingInfo) {
     }
   }
   // 1. 機台重複
-  const eqIds = settingInfo.excludeEquipments.map(e => e.equipmentId)
+  const eqIds = settingInfo.excludeEquipments.map(e => e.equipment)
   if (new Set(eqIds).size < eqIds.length) {
     Message({
       message: i18n.t('schedule.errorMessage.duplicatedExcludedEquipment'),

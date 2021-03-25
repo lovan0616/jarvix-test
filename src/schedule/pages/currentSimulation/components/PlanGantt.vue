@@ -293,15 +293,14 @@ export default {
     }
   }
 
-  /deep/.gantt-timeline {
-    margin-left: 0 !important;
-  }
-
   /deep/ .gantt-container {
     width: 100% !important;
     max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
+    .gantt-timeline {
+      margin-left: -30px !important;
+    }
   }
 
   /deep/ .gantt-scroll-y {
