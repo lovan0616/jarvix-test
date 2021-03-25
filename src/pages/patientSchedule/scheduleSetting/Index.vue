@@ -63,12 +63,22 @@
           class="body__block body__block--shift"
         >
           <h3 class="block__title">
-            Work Time Setting
+            Staff Availability Hours
             <i
               :class="{'is-rotate': collapseAll.worktimes}"
               class="block__collapse-controller el-icon-arrow-down"
               @click="toggleCollapse('worktimes')"
             />
+            <div class="block__title-right">
+              <default-select
+                v-model="selectedStaff"
+                :options="staffOptions"
+              />
+              <default-select
+                v-model="selectedName"
+                :options="nameOptions"
+              />
+            </div>
           </h3>
           <div class="block__form">
             <shift-setting
@@ -157,13 +167,28 @@ export default {
         disabledDate (time) {
           return time.getTime() < Date.now()
         }
-      }
+      },
+      selectedStaff: 'Surgeon',
+      selectedName: 'Ashely L.'
     }
   },
   computed: {
     ...mapState('simulation', ['solutions', 'planId']),
     isShowOrderUpload () {
       return localStorage.getItem('isShowOrderUpload') === 'true'
+    },
+    staffOptions () {
+      return [
+        { label: 'Surgeon', value: 'Surgeon' },
+        { label: 'Anesthetist', value: 'Anesthetist' }
+      ]
+    },
+    nameOptions () {
+      return [
+        { label: 'Ashely L.', value: 'Ashely L.' },
+        { label: 'Katherine W.', value: 'Katherine W.' },
+        { label: 'Paul H.', value: 'Paul H.' }
+      ]
     }
   },
   mounted () {
@@ -279,6 +304,15 @@ export default {
         .block__title {
           margin-top: 0;
           margin-bottom: 0;
+          display: flex;
+          align-items: center;
+          &-right {
+            flex: 1;
+            text-align: right;
+            .default-select + .default-select {
+              margin-left: 8px;
+            }
+          }
         }
         &--shift, &--equipment, &--kpi {
           .block__title {
@@ -302,7 +336,7 @@ export default {
             vertical-align: middle;
             width: 6px;
             height: 6px;
-            margin-right: 4px;
+            margin: 4px 4px 0 0;
             background-color: var(--color-info);
             transform: translateY(-50%);
           }

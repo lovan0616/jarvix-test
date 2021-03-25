@@ -45,7 +45,7 @@
                   class="error-icon el-icon-error"
                 />
               </div>
-              Solution {{ solution.sequence }}
+              Scenario {{ solution.sequence }}
             </div>
             <div
               :key="solution.simulated"
@@ -90,7 +90,7 @@
       class="page__main"
     >
       <h2 class="header__title">
-        Scheduling Surgeory Simulation
+        Scheduling Surgery Simulation
       </h2>
       <plan-simulation
         :has-emergency="hasEmergency"
@@ -154,7 +154,7 @@ export default {
     displaySelectedJobCounter () {
       return this.scheduledJobs.length > 0
         ? `${this.scheduledJobs.length} Surgeries Selected`
-        : 'No Surgeory Selected'
+        : 'No Surgery Selected'
     },
     hasInvalidSolution () {
       return this.solutions.some(s => !s.valid)
