@@ -1,44 +1,30 @@
 <template>
   <div class="card">
     <div class="input-field">
-      <label class="input-field__label">{{ $t('modelFlow.upload.modelInputArg') }}</label>
+      <label class="input-field__label">{{ $t('modelFlow.upload.modelOutputArgs') }}</label>
       <div class="input-field__text">
-        {{ columnInfo.modelColumnName + ` (${columnInfo.statsType})` }}
+        {{ columnInfo.modelColumnName + ` (${columnInfo.columnStatsType})` }}
       </div>
     </div>
-    <svg-icon 
-      icon-class="sort" 
-      class="card__sort-icon"/>
     <div class="input-field">
-      <label class="input-field__label">{{ $t('model.upload.columnDataType') }}</label>
+      <label class="input-field__label">{{ $t('modelFlow.upload.outputColumnName') }}</label>
       <div class="input-field__input">
-        <default-select 
+        <svg-icon 
+          icon-class="go-right" 
+          class="icon"/>
+        <input-verify
           v-validate="'required'"
-          :option-list="dataColumnOptionList"
-          :placeholder="$t('batchLoad.chooseColumn')"
-          :is-disabled="isProcessing"
-          v-model="columnInfo.statsType"
-          :name="'select' + columnInfo.id"
-          filterable
-          class="input-field__select"
-          @change="$emit('updateDataColumn', $event)"
+          v-model.trim="columnInfo.originalName"
+          :placeholder="$t('editing.pleaseEnterName')"
+          :name="'input' + columnInfo.id"
+          type="text"
         />
         <div 
-          v-show="errors.has('select' + columnInfo.id)"
+          v-show="errors.has('input' + columnInfo.id)"
           class="error-text"
-        >{{ errors.first('select' + columnInfo.id) }}</div>
+        >{{ errors.first('input' + columnInfo.id) }}</div>
       </div>
     </div>
-    <!-- <div class="input-field">
-      <label class="input-field__label">{{ $t('model.upload.columnDataName') }}</label>
-      <input-verify
-        v-validate="'required'"
-        v-model.trim="columnInfo.modelColumnName"
-        :placeholder="$t('editing.pleaseEnterName')"
-        :name="'input' + columnInfo.id"
-        type="text"
-      />
-    </div> -->
   </div>
 </template>
 
@@ -54,10 +40,6 @@ export default {
     InputVerify
   },
   props: {
-    dataColumnOptionList: {
-      type: Array,
-      default: () => ([])
-    },
     columnInfo: {
       type: Object,
       default: () => ({})
@@ -79,25 +61,6 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  cursor: move;
-
-  &__sort-icon {
-    margin-right: 24px;
-    font-size: 32px;
-    color: #8F9595;
-  }
-
-  &__
-
-  .input-field {
-    &:not(:last-of-type) {
-      margin-right: 16px;
-    }
-
-    .error-text {
-      position: absolute;
-    }
-  }
 
   /deep/ .input-verify .input-verify-text {
     margin-bottom: 0;

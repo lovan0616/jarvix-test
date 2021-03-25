@@ -676,13 +676,14 @@
       "modelSetting": "模型設定",
       "inputSetting": "Input 設定",
       "outputSetting": "Output 設定",
-      "modelInputArg": "模型 Input 參數",
+      "modelInputArgs": "模型 Input 參數",
       "referencedColumn": "對應資料表欄位",
       "outputFrameName": "Output 資料表名稱",
       "enterOutputFrameName": "請輸入資料表名稱",
       "outputColumnSetting": "Output 欄位設定",
-      "modelOutputArg": "模型 Output 參數",
-      "outputColumnName": "Output 欄位名稱"
+      "modelOutputArgs": "模型 Output 參數",
+      "outputColumnName": "Output 欄位名稱",
+      "pleaseChooseDataFrame": "請先選擇資料表"
     }
   },
   "pinboard": {

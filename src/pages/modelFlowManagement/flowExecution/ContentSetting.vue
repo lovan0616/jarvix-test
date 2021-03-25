@@ -77,8 +77,11 @@
         <input-column-setting-card
           v-for="(input, index) in ioArgs.input"
           :key="index"
+          :data-column-option-list="dataColumnOptionList"
           :column-info="input"
           :is-processing="false"
+          :placeholder="sourceDataframeId ? $t('batchLoad.chooseColumn') : $t('modelFlow.upload.pleaseChooseDataFrame')"
+          class="setting-block__card"
         />
       </div>
       <!-- output setting -->
@@ -88,8 +91,28 @@
         <div class="setting-block__title">
           {{ $t('modelFlow.upload.outputSetting') }}
         </div>
+        <div class="setting-block__subtitle">
+          {{ $t('modelFlow.upload.outputFrameName') }}
+        </div>
+        <input-verify
+          v-validate="'required'"
+          v-model.trim="targetDataframeName"
+          :placeholder="$t('modelFlow.upload.enterOutputFrameName')"
+          :name="'output-frame-name'"
+          class="setting-block__input"
+          type="text"
+        />
+        <div class="setting-block__subtitle">
+          {{ $t('modelFlow.upload.outputFrameName') }}
+        </div>
+        <output-column-setting-card
+          v-for="(output, index) in ioArgs.output"
+          :key="index"
+          :column-info="output"
+          :is-processing="false"
+          class="setting-block__card"
+        />
       </div>
-      
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -107,16 +130,19 @@
     </div>
   </div>
   <!-- <div class="setting-block__warning">
-          <svg-icon icon-class="data-explanation" />
-          {{ $t('model.upload.argsReminder', {mainScriptName}) }}
-        </div> -->
+    <svg-icon icon-class="data-explanation" />
+    {{ $t('model.upload.argsReminder', {mainScriptName}) }}
+  </div> -->
 </template>
 <script>
 import UploadProcessBlock from './components/UploadProcessBlock'
 import InputColumnSettingCard from './components/InputColumnSettingCard'
+import OutputColumnSettingCard from './components/OutputColumnSettingCard'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import InputVerify from '@/components/InputVerify'
 import { getDataSourceList, getDataFrameById, getDataFrameColumnInfoById } from '@/API/DataSource'
 import { getModelList, getModelInfo } from '@/API/Model'
+import { createModelFlow } from '@/API/ModelFlow'
 import { statsTypeOptionList } from '@/utils/general'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
@@ -127,7 +153,9 @@ export default {
   components: {
     UploadProcessBlock,
     InputColumnSettingCard,
-    DefaultSelect
+    OutputColumnSettingCard,
+    DefaultSelect,
+    InputVerify
   },
   data () {
     return {
@@ -259,12 +287,27 @@ export default {
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        this.updateCurrentUploadModelInfo({
-          // ...this.currentUploadModelInfo,
-          // ioArgs: {
-          //   input: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
-          // }
+        this.updateCurrentUploadFlowInfo({
+          ...this.currentUploadModelInfo,
+          ioArgs: {
+            input: this.columnList.map(({ modelColumnName, statsType, columnId }) => ({ modelColumnName, statsType, columnId })),
+            output: this.columnList.map(({ modelColumnName, columnStatsType, originalName }) => ({ modelColumnName, columnStatsType, originalName }))
+          },
+          modelId: this.modelId,
+          sourceDataframeId: this.sourceDataframeId,
+          targetDataframeName: this.targetDataframeName
         })
+        createModelFlow({
+          ...this.currentUploadModelInfo,
+          ioArgs: {
+            input: this.columnList.map(({ modelColumnName, statsType, columnId }) => ({ modelColumnName, statsType, columnId })),
+            output: this.columnList.map(({ modelColumnName, columnStatsType, originalName }) => ({ modelColumnName, columnStatsType, originalName }))
+          },
+          modelId: this.modelId,
+          sourceDataframeId: this.sourceDataframeId,
+          targetDataframeName: this.targetDataframeName
+        })
+        
         this.$emit('next')
       })
     }
@@ -294,6 +337,26 @@ export default {
       margin-bottom: 16px;
     }
 
+    &__subtitle {
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #CCCCCC;
+    }
+
+    &__input {
+      margin-bottom: 24px;
+      width: 300px;
+
+      >>> .input-verify-text {
+        margin-bottom: 0;
+      }
+
+      >>> .input-error {
+        bottom: -16px;
+      }
+    }
+
     &__content {
       display: flex;
       .select-wrapper {
@@ -310,12 +373,6 @@ export default {
       font-size: 13px;
       font-weight: normal;
       color: var(--color-warning);
-    }
-
-    
-
-    &__select {
-      
     }
 
     /deep/ .el-input__inner {
@@ -343,15 +400,52 @@ export default {
     } 
 
     /deep/ .input-field {
+      &:not(:last-of-type) {
+        margin-right: 16px;
+      }
+
+      .error-text {
+        position: absolute;
+      }
+
       &__label {
         font-size: 14px;
         color: #CCCCCC;
+      }
+
+      &__text {
+        font-size: 16px;
+        line-height: 39px;
+        @include text-hidden;
+      }
+
+      &__select {
+        width: 238px;
+      }
+
+      &__input {
+        position: relative;
+
+        .icon {
+          position: absolute;
+          left: -25px;
+          bottom: 12px;
+          font-size: 16px;
+          color: #8F9595;
+        }
       }
 
       .el-input__inner {
         &::placeholder { 
           font-size: 14px;
         }
+      }
+    }
+
+    /deep/ .card > .input-field {
+      min-width: 220px;
+      &:not(:last-of-type) {
+        margin-right: 50px;
       }
     }
   }

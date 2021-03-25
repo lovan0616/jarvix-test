@@ -4,6 +4,7 @@ import request from '@/utils/publicRequest'
  * get model flow list
  * @query {Number} groupId - group id 
  * @query {Number} page - pagination page
+ * @query {Number} size - list size
  */
  export function getModelFlowList(groupId, page = 0) {
   return request({
