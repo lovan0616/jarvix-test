@@ -333,6 +333,7 @@
       "networkError": "網路連線發生錯誤，請檢查連線，稍後再試",
       "fileRequiredInAllFiled": "所有欄位皆需上傳檔案",
       "emptyExcludedPeriod": "機台排除時段未填",
+      "emptyExcludeEquipment": "排除機台未填",
       "emptySyncURL": "連線 URL 未填",
       "duplicatedExcludedEquipment": "排除機台重複填入",
       "duplicatedKPI": "KPI 值重複"

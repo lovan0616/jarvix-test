@@ -333,6 +333,7 @@
       "networkError": "网路连线发生错误，请检查连线，稍后再试",
       "fileRequiredInAllFiled": "所有栏位皆需上传档案",
       "emptyExcludedPeriod": "机台排除时段未填",
+      "emptyExcludeEquipment": "排除机台未填",
       "emptySyncURL": "连线 URL 未填",
       "duplicatedExcludedEquipment": "排除机台重复填入",
       "duplicatedKPI": "KPI 值重复"
