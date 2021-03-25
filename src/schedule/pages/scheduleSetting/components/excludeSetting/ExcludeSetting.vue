@@ -7,13 +7,13 @@
       <el-collapse-item
         v-for="(equipment, equipmentIndex) in excludedEquipment"
         :key="`${equipmentIndex}-${equipment.reasons.length}`"
-        :title="equipment.equipmentName"
-        :name="equipment.equipmentId"
+        :title="equipment.equipment"
+        :name="equipment.equipment"
       >
         <template slot="title">
           <span class="single-machine__label">{{ $t('schedule.setting.excludedMachine') }}</span>
           <default-select
-            v-model="equipment.equipmentId"
+            v-model="equipment.equipment"
             :options="equipments"
             filterable
           />
@@ -113,13 +113,12 @@ export default {
     },
     addEquipment () {
       // 找出第一個不重複的 equipment
-      const selectedIds = this.excludedEquipment.map(item => item.equipmentId)
+      const selectedIds = this.excludedEquipment.map(item => item.equipment)
       const eq = this.equipments.find(item => !selectedIds.includes(item.value))
 
       if (!eq) return
       this.excludedEquipment.push({
-        equipmentId: eq.value,
-        equipmentName: eq.label,
+        equipment: eq.value,
         reasons: [{ ...this.defaultExcludedVal }]
       })
       this.activeCollapseItems.push(eq.value)
@@ -134,8 +133,15 @@ export default {
 <style lang="scss" scoped>
 .excluded-setting {
   width: 100%;
-  /deep/ .el-collapse-item__content {
-    margin-top: 8px;
+  /deep/ .el-collapse-item {
+    &__header {
+      .default-select {
+        padding-bottom: 12px;
+      }
+    }
+    &__content {
+      margin-top: 8px;
+    }
   }
   &__footer {
     display: flex;

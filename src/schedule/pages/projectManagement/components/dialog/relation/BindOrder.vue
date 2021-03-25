@@ -5,28 +5,26 @@
       <div class="form-action">
         <button
           :disabled="isUnbinding"
-          class="btn btn-default"
+          class="btn btn-outline"
           @click="unbind"
         >
           {{ $t('schedule.binding.unbind') }}
         </button>
         <button
-          v-if="checkedResult.bindable"
-          :disabled="isBinding"
-          class="btn btn-default"
-          @click="bind">
-          <spinner 
-            v-show="isBinding" 
-            size="10"/>
-          {{ $t('schedule.binding.bind') }}
-        </button>
-        <button
-          v-else
           :disabled="isChecking"
           class="btn btn-default"
           @click="check">
           <spinner 
             v-show="isChecking" 
+            size="10"/>
+          {{ $t('schedule.binding.check') }}
+        </button>
+        <button
+          :disabled="!checkedResult.bindable || isBinding"
+          class="btn btn-default"
+          @click="bind">
+          <spinner 
+            v-show="isBinding" 
             size="10"/>
           {{ $t('schedule.binding.bind') }}
         </button>

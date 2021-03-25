@@ -369,17 +369,16 @@ export default {
           const schedule = [...operateData, ...restData]
 
           schedule.forEach(item => {
-            if (!tempChartList[item.equipmentId]) {
-              tempChartList[item.equipmentId] = {}
-              tempChartList[item.equipmentId].gtArray = [{
+            if (!tempChartList[item.equipment]) {
+              tempChartList[item.equipment] = {}
+              tempChartList[item.equipment].gtArray = [{
                 ...item,
                 start: item.startTime || item.startDatetime,
                 end: item.endTime || item.endDatetime
               }]
-              tempChartList[item.equipmentId].id = item.equipmentId
-              tempChartList[item.equipmentId].name = item.equipment
+              tempChartList[item.equipment].name = item.equipment
             } else {
-              tempChartList[item.equipmentId].gtArray.push({
+              tempChartList[item.equipment].gtArray.push({
                 ...item,
                 start: item.startTime || item.startDatetime,
                 end: item.endTime || item.endDatetime
@@ -403,7 +402,6 @@ export default {
           this.endTime = endTime.format('YYYY-MM-DD HH:mm:ss')
 
           for (const equipmentId in tempChartList) {
-            tempChartList[equipmentId].name = this.equipments.find(option => option.value === Number(equipmentId)).label
             this.ganttChartDataList.push(tempChartList[equipmentId])
           }
           this.isLoadingGantt = false
@@ -550,6 +548,16 @@ export default {
           justify-content: space-between;
           align-items: center;
           font-size: 14px;
+          &-select {
+            display: flex;
+            align-items: center;
+            &-label {
+              margin-right: 4px;
+            }
+            .default-select {
+              padding-bottom: 0;
+            }
+          }
         }
       }
     }
@@ -660,8 +668,14 @@ export default {
     }
   }
 
-  /deep/.gantt-timeline {
-    margin-left: 0 !important;
+  /deep/ .gantt-container {
+    width: 100% !important;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .gantt-timeline {
+      margin-left: -30px !important;
+    }
   }
 
   /deep/ .el-tabs {
