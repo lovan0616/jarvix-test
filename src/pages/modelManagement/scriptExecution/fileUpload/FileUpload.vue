@@ -71,11 +71,11 @@
         class="dialog-status-block status">
         <svg-icon 
           :icon-class="uploadStatusInfo.icon"
-          :class="{[`status-${currntUploadStatus}`]: uploadStatusInfo}"
+          :class="[`status-${currntUploadStatus}`]"
           class="status-icon"
         />
         <div 
-          :class="{[`status-${currntUploadStatus}`]: uploadStatusInfo}" 
+          :class="[`status-${currntUploadStatus}`]"
           class="status-title">{{ uploadStatusInfo.title }}</div>
       </div>
       <div class="dialog-button-block">
