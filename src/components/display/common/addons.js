@@ -565,14 +565,14 @@ export function monitorVisualMap (upperLimit, lowerLimit, chartColor = colorOnly
       type: 'piecewise',
       show: false,
       pieces: [{
-        gte: upperLimit,
+        [upperLimit.isIncluded ? 'gte' : 'gt']: upperLimit.value,
         color: warningColor[0]
       }, {
-        gt: lowerLimit,
-        lte: upperLimit,
+        [lowerLimit.isIncluded ? 'gt' : 'gte']: lowerLimit.value,
+        [upperLimit.isIncluded ? 'lt' : 'lte']: upperLimit.value,
         color: chartColor
       }, {
-        lt: lowerLimit,
+        [lowerLimit.isIncluded ? 'lte' : 'lt']: lowerLimit.value,
         color: warningColor[0]
       }]
     }]
@@ -582,10 +582,10 @@ export function monitorVisualMap (upperLimit, lowerLimit, chartColor = colorOnly
       type: 'piecewise',
       show: false,
       pieces: [{
-        gt: lowerLimit,
+        [lowerLimit.isIncluded ? 'gt' : 'gte']: lowerLimit.value,
         color: chartColor
       }, {
-        lt: lowerLimit,
+        [lowerLimit.isIncluded ? 'lte' : 'lt']: lowerLimit.value,
         color: warningColor[0]
       }]
     }]
@@ -595,20 +595,19 @@ export function monitorVisualMap (upperLimit, lowerLimit, chartColor = colorOnly
       type: 'piecewise',
       show: false,
       pieces: [{
-        gte: upperLimit,
+        [upperLimit.isIncluded ? 'gte' : 'gt']: upperLimit.value,
         color: warningColor[0]
       }, {
-        lte: upperLimit,
+        [upperLimit.isIncluded ? 'lt' : 'lte']: upperLimit.value,
         color: chartColor
       }]
     }]
   }
 }
 
-export function monitorMarkLine (upperLimit, lowerLimit, isParallel = false) {
+export function monitorMarkLine ([...limits], isParallel = false) {
   let markLineData = []
-  if (upperLimit !== null) markLineData.push(isParallel ? {xAxis: upperLimit} : {yAxis: upperLimit})
-  if (lowerLimit !== null) markLineData.push(isParallel ? {xAxis: lowerLimit} : {yAxis: lowerLimit})
+  limits.forEach(limit => limit && markLineData.push(isParallel ? { xAxis: limit.value } : { yAxis: limit.value }))
   return {
     symbol: 'none',
     lineStyle: {
@@ -626,33 +625,38 @@ export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, d
       type: 'piecewise',
       dimension: dimension,
       show: false,
-      pieces: [{
-        gte: upperLimit,
+      pieces: upperLimit.value > lowerLimit.value ? [{
+        [upperLimit.isIncluded ? 'gte' : 'gt']: upperLimit.value,
         color: warningColor
       }, {
-        gt: lowerLimit,
-        lte: upperLimit,
+        [lowerLimit.isIncluded ? 'gt' : 'gte']: lowerLimit.value,
+        [upperLimit.isIncluded ? 'lt' : 'lte']: upperLimit.value,
         color: chartColor
       }, {
-        lt: lowerLimit,
+        [lowerLimit.isIncluded ? 'lte' : 'lt']: lowerLimit.value,
+        color: warningColor
+      }] : [{
+        lte: maxY,
+        gt: minY,
         color: warningColor
       }]
     }
   } else if (lowerLimit === null) {
+      // 只有上限
       return {
         type: 'piecewise',
         dimension: dimension,
         show: false,
-        pieces: upperLimit > minY ? [{
-          gt: upperLimit,
+        pieces: upperLimit.value > minY ? [{
+          [upperLimit.isIncluded ? 'gte' : 'gt']: upperLimit.value,
           color: warningColor
         },{
-          lte: upperLimit,
+          [upperLimit.isIncluded ? 'lt' : 'lte']: upperLimit.value,
           gt: minY,
           color: chartColor
         }] : [{
           lte: maxY,
-          gt: upperLimit,
+          gte: minY,
           color: warningColor
         }]
       }
@@ -661,18 +665,110 @@ export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, d
       type: 'piecewise',
       dimension: dimension,
       show: false,
-      pieces: lowerLimit > minY ? [{
-        gt: lowerLimit,
+      pieces: lowerLimit.value > minY ? [{
+        [lowerLimit.isIncluded ? 'gt' : 'gte']: lowerLimit.value,
         color: chartColor
       },{
-        lte: lowerLimit,
-        gt: minY,
+        [lowerLimit.isIncluded ? 'lte' : 'lt']: lowerLimit.value,
+        gte: minY,
         color: warningColor
-      }] : [{
-        lte: maxY,
-        gt: lowerLimit,
-        color: chartColor
-      }]
+      }] : [
+        {
+          lt: maxY,
+          gt: lowerLimit.value,
+          color: chartColor
+        },
+        ...(lowerLimit.isIncluded && [{
+          lte: lowerLimit.value,
+          gte: lowerLimit.value,
+          color: warningColor
+        }])
+      ]
+    }
+  }
+}
+
+export function formatComponentTitle(axisList, additionalAxisSetting) {
+  return axisList.map(axis => ({
+    ...axis,
+    ...(axis.lowerLimit && {
+      lowerLimit: {
+        value: axis.lowerLimit,
+        isIncluded: false
+      }
+    }),
+    ...(additionalAxisSetting && additionalAxisSetting.lowerLimit && {
+      lowerLimit: {
+        value: additionalAxisSetting.lowerLimit.value,
+        isIncluded: additionalAxisSetting.lowerLimit.isIncluded
+      }
+    }),
+    ...(axis.upperLimit && {
+      upperLimit: {
+        value: axis.upperLimit,
+        isIncluded: true
+      }
+    }),
+    ...(additionalAxisSetting && additionalAxisSetting.upperLimit && {
+      upperLimit: {
+        value: additionalAxisSetting.upperLimit.value,
+        isIncluded: additionalAxisSetting.upperLimit.isIncluded
+      }
+    }),
+    ...(additionalAxisSetting && additionalAxisSetting.markLine && {
+      markLine: additionalAxisSetting.markLine
+    })
+  }))
+}
+
+export function formatAnomalySetting(settings) {
+  if (settings.length === 1) {
+    if (settings[0].comparison.includes('gt')) {
+      return { upperLimit: { value: settings[0].value, isIncluded: settings[0].comparison === 'gte' } }
+    } else if (settings[0].comparison.includes('lt')) {
+      return { lowerLimit: { value: settings[0].value, isIncluded: settings[0].comparison === 'lte' } }
+    } else {
+      return { markLine: [{ value: settings[0].value }] }
+    }
+  } else {
+    // 設定兩個大於類型
+    if (settings.every(setting => setting.comparison.includes('gt'))) {
+      let orderedSettings = []
+      // 處理兩個值相同，但比較不同
+      if (settings[0].value === settings[1].value && settings[0].comparison !== settings[1].comparison) {
+        orderedSettings[0] = settings.find(setting => setting.comparison.includes('gte'))
+        orderedSettings[1] = settings.find(setting => setting.comparison.includes('gt'))
+      } else {
+        orderedSettings = settings.sort((a, b) => a.value - b.value)
+      }
+      return {
+        upperLimit: { value: orderedSettings[0].value, isIncluded: orderedSettings[0].comparison === 'gte' },
+        markLine: [{ value: orderedSettings[1].value }]
+      }
+    } else if (settings.every(setting => setting.comparison.includes('lt'))) {
+      // 設定兩個小於類型
+      let orderedSettings = []
+      // 處理兩個值相同，但比較不同
+      if (settings[0].value === settings[1].value && settings[0].comparison !== settings[1].comparison) {
+        orderedSettings[1] = settings.find(setting => setting.comparison.includes('lte'))
+        orderedSettings[0] = settings.find(setting => setting.comparison.includes('lt'))
+      } else {
+        orderedSettings = settings.sort((a, b) => a.value - b.value)
+      }
+
+      return {
+        lowerLimit: { value: orderedSettings[1].value, isIncluded: orderedSettings[1].comparison === 'lte' },
+        markLine: [{ value: orderedSettings[0].value }]
+      }
+    } else {
+      // 設定包含至少一個等於或ㄧ大一小
+      const lowerBound = settings.find(setting => setting.comparison.includes('lt'))
+      const upperBound = settings.find(setting => setting.comparison.includes('gt'))
+      return {
+        markLine: settings.filter(setting => setting.comparison === 'equal').map(setting => ({ value: setting.value })),
+        ...(lowerBound && { lowerLimit: { value: lowerBound.value, isIncluded: lowerBound.comparison === 'lte' } }),
+        ...(upperBound && { upperLimit: { value: upperBound.value, isIncluded: upperBound.comparison === 'gte' } })
+      }
     }
   }
 }
