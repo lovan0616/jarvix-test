@@ -41,7 +41,7 @@
             <!-- 綁定共同資料 -->
             <bind-raw-data
               :files="files.raw_data"
-              :form-data="formRawData"
+              :parent-form-data="formRawData"
               :original-bound-status="files.raw_data[0].dataframeStatus === 'BOUND'"
               :data-frame-options="dataFrameOptions"
               :checked-result="checkedResultRawData"
@@ -54,7 +54,7 @@
             <!-- 綁定額外限制 -->
             <bind-constraint
               :files="files.constraint"
-              :form-data="formConstraint"
+              :parent-form-data="formConstraint"
               :original-bound-status="files.constraint"
               :data-frame-options="dataFrameOptions"
               :checked-result="checkedResultConstraint"
@@ -146,12 +146,14 @@ export default {
       }
     }
   },
-  created () {
+  async mounted () {
     if (this.isBoundWithDataSource) {
       this.datasourceId = this.projectInfo.datasourceId
-      this.fetchDataFrames()
+      await this.fetchDataFrames()
+      this.fetchDataBoundStatus()
+    } else {
+      this.fetchDataBoundStatus()
     }
-    this.fetchDataBoundStatus()
   },
   methods: {
     fetchDataBoundStatus () {
@@ -192,7 +194,7 @@ export default {
     },
     fetchDataFrames () {
       this.isLoadingDataFrames = true
-      getDataFrameById(this.datasourceId)
+      return getDataFrameById(this.datasourceId)
         .then(dataFrames => {
           this.dataFrames = dataFrames
           this.resetDataFrameSelectors()

@@ -95,7 +95,7 @@ export default {
       type: Array,
       default: () => []
     },
-    formData: {
+    parentFormData: {
       type: Object,
       default: () => {}
     },
@@ -148,7 +148,13 @@ export default {
       return [ { value: null, label: this.$t('editing.defaultOption') }, ...this.dataFrameOptions ]
     }
   },
+  created () {
+    this.init()
+  },
   methods: {
+    init () {
+      this.formData = { ...this.parentFormData }
+    },
     check () {
       if (this.validConstraints.length === 0) {
         return Message({
