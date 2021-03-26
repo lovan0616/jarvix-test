@@ -2,7 +2,7 @@
   <div class="content-setting-dialog">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="1"
+      :step="2"
     />
     <div class="dialog-body">
       <!-- select data source -->
@@ -74,15 +74,23 @@
         <div class="setting-block__title">
           {{ $t('modelFlow.upload.inputSetting') }}
         </div>
-        <input-column-setting-card
-          v-for="(input, index) in ioArgs.input"
-          :key="index"
-          :data-column-option-list="dataColumnOptionList"
-          :column-info="input"
-          :is-processing="false"
-          :placeholder="sourceDataframeId ? $t('batchLoad.chooseColumn') : $t('modelFlow.upload.pleaseChooseDataFrame')"
-          class="setting-block__card"
+        <spinner 
+          v-if="isProcessing"
+          :title="$t('editing.loading')"
+          class="spinner-container"
+          size="30"
         />
+        <template v-else>
+          <input-column-setting-card
+            v-for="(input, index) in ioArgs.input"
+            :key="index"
+            :data-column-option-list="dataColumnOptionList"
+            :column-info="input"
+            :is-processing="false"
+            :placeholder="sourceDataframeId ? $t('batchLoad.chooseColumn') : $t('modelFlow.upload.pleaseChooseDataFrame')"
+            class="setting-block__card"
+          />
+        </template>
       </div>
       <!-- output setting -->
       <div 
@@ -91,27 +99,35 @@
         <div class="setting-block__title">
           {{ $t('modelFlow.upload.outputSetting') }}
         </div>
-        <div class="setting-block__subtitle">
-          {{ $t('modelFlow.upload.outputFrameName') }}
-        </div>
-        <input-verify
-          v-validate="'required'"
-          v-model.trim="targetDataframeName"
-          :placeholder="$t('modelFlow.upload.enterOutputFrameName')"
-          :name="'output-frame-name'"
-          class="setting-block__input"
-          type="text"
+        <spinner 
+          v-if="isProcessing"
+          :title="$t('editing.loading')"
+          class="spinner-container"
+          size="30"
         />
-        <div class="setting-block__subtitle">
-          {{ $t('modelFlow.upload.outputFrameName') }}
-        </div>
-        <output-column-setting-card
-          v-for="(output, index) in ioArgs.output"
-          :key="index"
-          :column-info="output"
-          :is-processing="false"
-          class="setting-block__card"
-        />
+        <template v-else>
+          <div class="setting-block__subtitle">
+            {{ $t('modelFlow.upload.outputFrameName') }}
+          </div>
+          <input-verify
+            v-validate="'required'"
+            v-model.trim="targetDataframeName"
+            :placeholder="$t('modelFlow.upload.enterOutputFrameName')"
+            :name="'output-frame-name'"
+            class="setting-block__input"
+            type="text"
+          />
+          <div class="setting-block__subtitle">
+            {{ $t('modelFlow.upload.outputFrameName') }}
+          </div>
+          <output-column-setting-card
+            v-for="(output, index) in ioArgs.output"
+            :key="index"
+            :column-info="output"
+            :is-processing="false"
+            class="setting-block__card"
+          />
+        </template>
       </div>
     </div>
     <div class="dialog-footer">
@@ -142,7 +158,6 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import InputVerify from '@/components/InputVerify'
 import { getDataSourceList, getDataFrameById, getDataFrameColumnInfoById } from '@/API/DataSource'
 import { getModelList, getModelInfo } from '@/API/Model'
-import { createModelFlow } from '@/API/ModelFlow'
 import { statsTypeOptionList } from '@/utils/general'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
@@ -160,6 +175,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isProcessing: false,
       statsTypeOptionList,
       modelId: null,
       sourceDataSourceId: null,
@@ -259,6 +275,7 @@ export default {
       return this.statsTypeOptionList.filter(element => statsType === element.value)[0].name
     },
     modelChangedHandler () {
+      this.isProcessing = true
       // 模型更動要把 IO 全部更新
       getModelInfo(this.modelId)
         .then(({ioArgs}) => {
@@ -279,6 +296,8 @@ export default {
               }
             })
           }
+        }).finally(() => {
+          this.isProcessing = false
         })
     },
     cancel () {
@@ -288,26 +307,15 @@ export default {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.updateCurrentUploadFlowInfo({
-          ...this.currentUploadModelInfo,
+          ...this.currentUploadFlowInfo,
           ioArgs: {
-            input: this.columnList.map(({ modelColumnName, statsType, columnId }) => ({ modelColumnName, statsType, columnId })),
-            output: this.columnList.map(({ modelColumnName, columnStatsType, originalName }) => ({ modelColumnName, columnStatsType, originalName }))
+            input: this.ioArgs.input.map(({ modelColumnName, statsType, columnId }) => ({ modelColumnName, statsType, columnId })),
+            output: this.ioArgs.output.map(({ modelColumnName, columnStatsType, originalName }) => ({ modelColumnName, columnStatsType, originalName }))
           },
           modelId: this.modelId,
           sourceDataframeId: this.sourceDataframeId,
           targetDataframeName: this.targetDataframeName
         })
-        createModelFlow({
-          ...this.currentUploadModelInfo,
-          ioArgs: {
-            input: this.columnList.map(({ modelColumnName, statsType, columnId }) => ({ modelColumnName, statsType, columnId })),
-            output: this.columnList.map(({ modelColumnName, columnStatsType, originalName }) => ({ modelColumnName, columnStatsType, originalName }))
-          },
-          modelId: this.modelId,
-          sourceDataframeId: this.sourceDataframeId,
-          targetDataframeName: this.targetDataframeName
-        })
-        
         this.$emit('next')
       })
     }

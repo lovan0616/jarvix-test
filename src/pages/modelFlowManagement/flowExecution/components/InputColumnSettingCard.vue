@@ -57,7 +57,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: this.$t('batchLoad.chooseColumn')
+      default: null
     }
   }
 }

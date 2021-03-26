@@ -20,7 +20,13 @@
           </div>
         </div>
       </div>
-      <template>
+      <spinner 
+        v-if="isLoading"
+        :title="$t('editing.loading')"
+        class="spinner-container"
+        size="50"
+      />
+      <template v-else>
         <flow-card
           v-for="flow in modelFlowList"
           :key="flow.id"
@@ -34,11 +40,11 @@
     <!-- 
     <decide-dialog
       v-if="isShowDeleteDialog"
-      :content="$t('flow.deleteConfirmText')"
+      :content="$t('modelFlow.deleteConfirmText')"
       :type="'delete'"
       class="flow-delete-dialog"
       @closeDialog="cancelDelete"
-      @confirmBtn="deleteModel"
+      @confirmBtn="deleteAll"
     /> -->
   </div>
 </template>
@@ -104,6 +110,7 @@ export default {
           targetDataframeStatusType: "Enable"
         }
       ]
+      this.isLoading = false
       // return getModelFlowList(this.groupId, page, size)
       //   .then(({getModelFlowList, pagination}) => {
       //     this.modelFlowList = getModelFlowList

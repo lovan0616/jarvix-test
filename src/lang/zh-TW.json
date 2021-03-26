@@ -667,6 +667,7 @@
     "createdInfo": "由 {name} 於 {time} 建立",
     "updatedInformation": "更新資訊",
     "outputResult": "輸出結果",
+    "deleteConfirmText": "流程刪除後，相關資料表將不再被更新，請選擇刪除方式",
     "upload": {
       "setFlowName": "請輸入流程名稱",
       "executionStep1": "設定名稱",
@@ -683,7 +684,10 @@
       "outputColumnSetting": "Output 欄位設定",
       "modelOutputArgs": "模型 Output 參數",
       "outputColumnName": "Output 欄位名稱",
-      "pleaseChooseDataFrame": "請先選擇資料表"
+      "pleaseChooseDataFrame": "請先選擇資料表",
+      "updatedMode": "觸發更新模式",
+      "NoUpdate": "不更新",
+      "updatedByFrame": "跟隨資料表更新"
     }
   },
   "pinboard": {

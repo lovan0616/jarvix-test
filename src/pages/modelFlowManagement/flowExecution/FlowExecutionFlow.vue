@@ -11,18 +11,23 @@
         v-if="step === 1"
         @next="nextStep"
       />
+      <other-setting
+        v-if="step === 2"
+      />
     </transition>
   </div>
 </template>
 <script>
-import ContentSetting from './ContentSetting.vue'
 import EditFlowName from './EditFlowName'
+import ContentSetting from './ContentSetting'
+import OtherSetting from './OtherSetting'
 
 export default {
   name: 'FlowExecutionFlow',
   components: {
     EditFlowName,
-    ContentSetting
+    ContentSetting,
+    OtherSetting
   },
   data () {
     return {
@@ -35,10 +40,6 @@ export default {
     },
     prevStep () {
       this.step -= 1
-    },
-    uploadFinish () {
-      // close fileUploadDialog
-      this.$store.commit('modelFlowManagement/updateShowCreateFlowDialog', false)
     }
   }
 }
