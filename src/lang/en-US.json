@@ -654,6 +654,34 @@
       "executionStep4": "Set Output"
     }
   },
+  "modelFlow": {
+    "newFlow": "新增流程",
+    "createdInfo": "由 {name} 于 {time} 建立",
+    "updatedInformation": "更新资讯",
+    "outputResult": "输出结果",
+    "deleteConfirmText": "流程删除后，相关资料表将不再被更新，请选择删除方式",
+    "upload": {
+      "setFlowName": "请输入流程名称",
+      "executionStep1": "设定名称",
+      "executionStep2": "内容设定",
+      "executionStep3": "其他设定",
+      "chooseModel": "选择模型",
+      "modelSetting": "模型设定",
+      "inputSetting": "Input 设定",
+      "outputSetting": "Output 设定",
+      "modelInputArgs": "模型 Input 参数",
+      "referencedColumn": "对应资料表栏位",
+      "outputFrameName": "Output 资料表名称",
+      "enterOutputFrameName": "请输入资料表名称",
+      "outputColumnSetting": "Output 栏位设定",
+      "modelOutputArgs": "模型 Output 参数",
+      "outputColumnName": "Output 栏位名称",
+      "pleaseChooseDataFrame": "请先选择资料表",
+      "updatedMode": "触发更新模式",
+      "NoUpdate": "不更新",
+      "updatedByFrame": "跟随资料表更新"
+    }
+  },
   "pinboard": {
     "intelligentAnalysis": "Intelligent Analysis",
     "source": "Source",
