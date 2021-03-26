@@ -678,7 +678,7 @@
       "outputColumnName": "Output Column Name",
       "pleaseChooseDataFrame": "Please choose a Data Set",
       "updatedTriggerMode": "Update Trigger",
-      "NoUpdate": "No Automatic Update Trigger",
+      "NoAutomaticUpdate": "No Automatic Update Trigger",
       "updatedByFrame": "Trigger by Data Set update"
     }
   },

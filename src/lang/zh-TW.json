@@ -673,6 +673,7 @@
       "executionStep1": "設定名稱",
       "executionStep2": "內容設定",
       "executionStep3": "其他設定",
+      "reminder": "僅能選擇資料庫連線的資料表",
       "chooseModel": "選擇模型",
       "modelSetting": "模型設定",
       "inputSetting": "Input 設定",
@@ -686,7 +687,7 @@
       "outputColumnName": "Output 欄位名稱",
       "pleaseChooseDataFrame": "請先選擇資料表",
       "updatedTriggerMode": "觸發更新模式",
-      "NoUpdate": "不更新",
+      "NoAutomaticUpdate": "不自動更新",
       "updatedByFrame": "跟隨資料表更新"
     }
   },

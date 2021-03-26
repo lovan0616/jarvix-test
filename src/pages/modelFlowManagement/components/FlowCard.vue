@@ -14,7 +14,7 @@
     <div class="flow-card__content">
       <div class="flow-card__list">
         <div class="flow-label">{{ $t('modelFlow.updatedInformation') }}：</div>
-        <div class="flow-text">{{ timeToDateTime(flowInfo.createdAt) }}</div>
+        <div class="flow-text">{{ flowInfo.targetDataFrameUpdatedAt && timeToDateTime(flowInfo.targetDataFrameUpdatedAt) }}</div>
       </div>
       <div class="flow-card__list">
         <div class="flow-label">{{ $t('modelFlow.outputResult') }}：</div>
@@ -28,7 +28,7 @@
           <svg-icon 
             icon-class="table"
             class="icon" /> 
-          <div class="flow-text">{{ flowInfo.targetDataFrame }}</div>
+          <div class="flow-text">{{ flowInfo.targetDataFrameName }}</div>
         </div> 
       </div>
     </div>

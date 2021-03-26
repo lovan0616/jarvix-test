@@ -670,6 +670,7 @@
       "executionStep1": "设定名称",
       "executionStep2": "内容设定",
       "executionStep3": "其他设定",
+      "reminder": "仅能选择资料库连线的资料表",
       "chooseModel": "选择模型",
       "modelSetting": "模型设定",
       "inputSetting": "Input 设定",
@@ -683,7 +684,7 @@
       "outputColumnName": "Output 栏位名称",
       "pleaseChooseDataFrame": "请先选择资料表",
       "updatedTriggerMode": "触发更新模式",
-      "NoUpdate": "不更新",
+      "NoAutomaticUpdate": "不自动更新",
       "updatedByFrame": "跟随资料表更新"
     }
   },

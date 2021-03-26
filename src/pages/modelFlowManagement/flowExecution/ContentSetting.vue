@@ -10,6 +10,10 @@
         <div class="setting-block__title">
           {{ $t('editing.sourceOfData') }}
         </div>
+        <div class="setting-block__warning">
+          <svg-icon icon-class="data-explanation" />
+          {{ $t('modelFlow.upload.reminder') }}
+        </div>
         <div class="setting-block__content">
           <div class="select-wrapper">
             <default-select 
@@ -145,10 +149,6 @@
       </div>
     </div>
   </div>
-  <!-- <div class="setting-block__warning">
-    <svg-icon icon-class="data-explanation" />
-    {{ $t('model.upload.argsReminder', {mainScriptName}) }}
-  </div> -->
 </template>
 <script>
 import UploadProcessBlock from './components/UploadProcessBlock'
@@ -227,6 +227,7 @@ export default {
         .then(response => {
           this.clearData()
           this.dataFrameOptionList = response
+            .filter(frame => frame.hasPrimaryKey)
             .map(frame => {
               return {
                 name: frame.primaryAlias,

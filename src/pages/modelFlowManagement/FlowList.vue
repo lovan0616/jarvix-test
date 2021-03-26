@@ -35,6 +35,17 @@
           v-for="flow in modelFlowList"
           :key="flow.id"
           :flow-info="flow" />
+        <el-pagination 
+          :v-if="paginationInfo.totalPages > 1"
+          :total="paginationInfo.totalItems"
+          :page-size="paginationInfo.itemPerPage"
+          :current-page="paginationInfo.currentPage + 1"
+          class="table-pagination"
+          layout="prev, pager, next"
+          @current-change="changePage"
+          @prev-click="changePage"
+          @next-click="changePage"
+        />
       </template>
     </div>
     <upload-dialog
@@ -78,7 +89,7 @@ export default {
         currentPage: 0,
         totalPages: 0,
         totalItems: 0,
-        itemPerPage: 20
+        itemPerPage: 10
       }
     }
   },
@@ -101,10 +112,10 @@ export default {
   },
   methods: {
     ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateFlowUploadSuccess']),
-    fetchData (init = true, page = 0) {
+    fetchData (init = true, page = 0, size = 10) {
       if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
       this.isLoading = true
-      return getModelFlowList(this.groupId, page)
+      return getModelFlowList(this.groupId, page, size)
         .then(({modelFlows, pagination}) => {
           this.modelFlowList = modelFlows
           this.paginationInfo = pagination

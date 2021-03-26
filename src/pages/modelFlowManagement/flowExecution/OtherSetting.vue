@@ -70,7 +70,7 @@ export default {
       updateStatusList: [
 				{
           type: 'AUTOMATIC',
-          name: this.$t('modelFlow.upload.NoUpdate')
+          name: this.$t('modelFlow.upload.NoAutomaticUpdate')
         }
         // {
         //   type: '',

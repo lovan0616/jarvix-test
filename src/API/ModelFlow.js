@@ -6,13 +6,13 @@ import request from '@/utils/publicRequest'
  * @query {Number} page - pagination page
  * @query {Number} size - list size
  */
- export function getModelFlowList(groupId, page = 0) {
+ export function getModelFlowList(groupId, page = 0, size) {
   return request({
     url: `/model-flows?groupId=${groupId}`,
     method: 'GET',
     params: {
       page,
-      size: 20
+      size
     }
   })
 }
