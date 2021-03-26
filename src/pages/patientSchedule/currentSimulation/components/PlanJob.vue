@@ -74,7 +74,7 @@ export default {
             { title: 'surgeryType', name: 'Surgery Type', width: '180' },
             { title: 'date', name: 'Date', width: '180' },
             { title: 'priority', name: 'Priority', width: '120' },
-            { title: 'equipmentNo', name: 'Equipment No.' },
+            { title: 'equipmentNo', name: 'Equipment No.', width: '300' },
             { title: 'assistant', name: 'Assistant', width: '140' },
             { title: 'anesthetist', name: 'Anesthetist', width: '140' }
           ]
