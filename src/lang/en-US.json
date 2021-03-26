@@ -18,7 +18,8 @@
     "helper": "Help",
     "warRoom": "War Room",
     "application": "Application",
-    "modelManagement": "Model Management"
+    "modelManagement": "Model Management",
+    "modelFlowManagement": "流程管理"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -45,7 +46,9 @@
     "modelSetting": "Model Setting",
     "modelDetail": "Model Detail",
     "reUploadFile": "Reimport Model",
-    "configSetting": "Model Configuration"
+    "configSetting": "Model Configuration",
+    "modelFlowManagement": "流程管理",
+    "flowList": "流程列表"
   },
   "user": {
     "changePwd": "Change Password",
@@ -665,6 +668,7 @@
       "executionStep1": "Settings Name",
       "executionStep2": "Content Settings",
       "executionStep3": "Other Settings",
+      "reminder": "僅能選擇資料庫連線的資料表",
       "chooseModel": "Select a model",
       "modelSetting": "Model Settings",
       "inputSetting": "Input Settings",
