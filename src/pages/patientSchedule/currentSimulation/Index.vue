@@ -49,6 +49,7 @@
         @reSchedule="reSchedule"
       />
       <plan-gantt
+        v-show="isOt"
         :re-scheduled="reScheduled"
       />
     </div>

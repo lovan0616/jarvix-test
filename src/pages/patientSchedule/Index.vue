@@ -6,10 +6,10 @@
         @dblclick="hasEmergency = true"
       >
         <div class="header__root">
-          <a
-            class="header__logo" 
-          >
-            <img src="@/assets/images/sygps_logo.png">
+          <a class="header__logo" >
+            <img 
+              class="img-logo" 
+              src="@/assets/images/sygps_logo.png">
           </a>
           <nav class="nav-header">
             <!-- Surgery Scheduling -->
@@ -238,8 +238,9 @@ export default {
   &__logo {
     height: 32px;
     cursor: pointer;
-    img {
+    .img-logo {
       height: 100%;
+      filter: grayscale(100%) brightness(3);
     }
   }
 }

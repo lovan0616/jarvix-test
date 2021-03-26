@@ -2,7 +2,7 @@
   <div class="unscheduled-jobs-table">
     <div class="header">
       <h3 class="header__title">
-        Unscheduled Surgeories
+        Unscheduled Surgeries
       </h3>
       <default-date-picker
         v-model="period"
@@ -114,9 +114,9 @@ export default {
         { title: 'surgeon', name: 'Surgeon', width: 180 },
         { title: 'surgeryType', name: 'Surgery Type', width: 180 },
         { title: 'date', name: 'Date', width: 180 },
-        { title: 'equipmentNo', name: 'equipmentNo', width: 300 },
-        { title: 'assistant', name: 'assistant', width: 180 },
-        { title: 'anesthetist', name: 'anesthetist', width: 180 }
+        { title: 'equipmentNo', name: 'Equipment No', width: 300 },
+        { title: 'assistant', name: 'Assistant', width: 180 },
+        { title: 'anesthetist', name: 'Anesthetist', width: 180 }
       ]
     }
   },
