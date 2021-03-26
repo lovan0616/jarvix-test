@@ -83,26 +83,32 @@ export default {
     }
   },
   computed: {
-    ...mapState('modelFlowManagement', ['showCreateFlowDialog']),
+    ...mapState('modelFlowManagement', ['showCreateFlowDialog', 'flowUploadSuccess']),
     groupId () {
       return this.$route.params.group_id
+    }
+  },
+    watch: {
+    flowUploadSuccess (value) {
+      if (value) {
+        this.fetchData(true)
+        this.updateFlowUploadSuccess(false)
+      }
     }
   },
   mounted () {
     this.fetchData()
   },
   methods: {
-    ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog']),
+    ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateFlowUploadSuccess']),
     fetchData (init = true, page = 0) {
       if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
       this.isLoading = true
       return getModelFlowList(this.groupId, page)
-        .then((res) => {
-          console.log(res)
+        .then(({modelFlows, pagination}) => {
           this.modelFlowList = modelFlows
           this.paginationInfo = pagination
-        }).catch(err => { console.log(err) })
-        .finally(() => {
+        }).finally(() => {
           this.isLoading = false
         })
     },

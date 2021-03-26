@@ -86,7 +86,7 @@ export default {
     this.fetchData()
   },
   methods: {
-    ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog']),
+    ...mapMutations('modelFlowManagement', ['updateFlowUploadSuccess', 'updateShowCreateFlowDialog']),
     fetchData () {
     },
     cancel () {
@@ -98,6 +98,7 @@ export default {
         ...this.currentUploadFlowInfo,
         triggerType: this.updateMode
       }).then(() => {
+        this.updateFlowUploadSuccess(true)
         this.updateShowCreateFlowDialog(false)
       }).catch(() => { this.isProcessing = false })
     }
