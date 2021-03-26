@@ -22,5 +22,14 @@ export default {
   },
   deleteSimulatedSolution ({ state }, solutionId) {
     return deleteSimulatedSolution(state.planId, solutionId)
+  },
+  resetSimulationProgress ({ commit }) {
+    commit('simulation/setSolutions', [])
+    commit('simulation/setPlanId', null)
+    commit('simulation/setSimulationResult', {
+      completedSolutionIds: [],
+      failedSolutionIds: [],
+      inProgressIds: []
+    })
   }
 }

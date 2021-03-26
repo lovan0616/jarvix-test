@@ -85,7 +85,7 @@
         class="page__spinner"
       /> -->
       <default-setting
-        v-if="editSolutionSequence"
+        v-show="editSolutionSequence"
         :key="editSolutionSequence"
         :solution-sequence="editSolutionSequence"
       />
