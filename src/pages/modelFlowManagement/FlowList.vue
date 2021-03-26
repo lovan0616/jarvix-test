@@ -36,7 +36,7 @@
           :key="flow.id"
           :flow-info="flow" />
         <el-pagination 
-          :v-if="paginationInfo.totalPages > 1"
+          v-if="paginationInfo.totalPages > 1"
           :total="paginationInfo.totalItems"
           :page-size="paginationInfo.itemPerPage"
           :current-page="paginationInfo.currentPage + 1"
