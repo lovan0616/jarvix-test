@@ -331,7 +331,23 @@ export default {
           })
         })
       }
-      return [...selectedIndicator, ...selectedColumnValueCombinations, ...xAxisColumns]
+
+      // 元件補充參數：例如 x 軸無 dc_id 而是排序等
+      const complemataryParams = []
+      if (this.componentData.supportedFunction && this.componentData.supportedFunction.analysisInfo) {
+        let params = this.componentData.supportedFunction.analysisInfo.columnParameters || []
+        params.forEach(param => {
+          complemataryParams.push({
+            type: 'indicator',
+            value: param.type,
+            name: param.text,
+            originalName: param.text
+          })
+        })
+      }
+
+
+      return [...selectedIndicator, ...selectedColumnValueCombinations, ...xAxisColumns, ...complemataryParams]
     },
     analysisValueType () {
       return this.newConditionSetting.targetConfig.analysisValueType

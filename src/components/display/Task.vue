@@ -240,7 +240,7 @@ export default {
                 // 2N 異常設定示警需要 x 軸欄位資訊
                 // 圖表設定示警線需要 y ˊ軸資訊做為訊息參數
                 ...((response.enableAlert && responseData.title) && {
-                  xAxis: responseData.title.xAxis,
+                  xAxis: responseData.title.xAxis && responseData.title.xAxis.filter(xAxis => xAxis.dc_id),
                   yAxis: responseData.title.yAxis
                 }),
                 // 元件設定資訊集

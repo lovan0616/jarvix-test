@@ -60,7 +60,6 @@
             :filters="filters"
             :controls="controls"
             @setDiagram="currentComponent.diagram = $event"
-            @setConfig="setComponentConfig"
           />
           <transition name="fast-fade-in">
             <section 
@@ -593,12 +592,6 @@ export default {
     updateTriggerColumnInfo () {
       const column = this.categoryColumnOptions.find(item => item.dataColumnId === this.selectedTriggerColumn)
       this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo = column
-    },
-    setComponentConfig (config) {
-      this.currentComponent.chartInfo = {
-        xAxis: config.xAxis,
-        yAxis: config.yAxis
-      }
     },
     setAlgoConfig (intent) {
       this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
