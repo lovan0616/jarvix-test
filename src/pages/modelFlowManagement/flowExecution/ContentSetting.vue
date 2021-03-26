@@ -354,7 +354,7 @@ export default {
 
     &__input {
       margin-bottom: 24px;
-      width: 300px;
+      max-width: 300px;
 
       >>> .input-verify-text {
         margin-bottom: 0;

@@ -7,7 +7,7 @@
     <div class="dialog-body">
       <div class="setting-block">
         <div class="setting-block__title">
-          {{ $t('editing.sourceOfData') }}
+          {{ $t('modelFlow.upload.updatedTriggerMode') }}
         </div>
         <div
           v-for="status in updateStatusList"

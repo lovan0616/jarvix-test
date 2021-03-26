@@ -685,7 +685,7 @@
       "modelOutputArgs": "模型 Output 參數",
       "outputColumnName": "Output 欄位名稱",
       "pleaseChooseDataFrame": "請先選擇資料表",
-      "updatedMode": "觸發更新模式",
+      "updatedTriggerMode": "觸發更新模式",
       "NoUpdate": "不更新",
       "updatedByFrame": "跟隨資料表更新"
     }

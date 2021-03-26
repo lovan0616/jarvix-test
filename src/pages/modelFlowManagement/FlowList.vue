@@ -26,6 +26,10 @@
         class="spinner-container"
         size="50"
       />
+      <empty-info-block
+        v-else-if="modelFlowList.length === 0"
+        :msg="$t('editing.emptyPinboard')"
+      />
       <template v-else>
         <flow-card
           v-for="flow in modelFlowList"
@@ -49,15 +53,17 @@
   </div>
 </template>
 <script>
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadDialog from './flowExecution/UploadDialog'
 import FlowCard from './components/FlowCard'
-// import { getModelFlowList } from '@/API/ModelFlow'
+import { getModelFlowList } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
 // import { Message } from 'element-ui'
 
 export default {
   name: 'FlowList',
   components: {
+    EmptyInfoBlock,
     UploadDialog,
     FlowCard
   },
@@ -83,41 +89,22 @@ export default {
     }
   },
   mounted () {
-    this.fetchData(true)
+    this.fetchData()
   },
   methods: {
     ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog']),
     fetchData (init = true, page = 0) {
       if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
       this.isLoading = true
-      this.modelFlowList = [
-        {
-          createdAt: "2021-03-23T09:58:05.426Z",
-          createdBy: "BABABA",
-          id: 123,
-          name: "owo",
-          targetDataFrame: "dfdf",
-          targetDataSource: "dsds",
-          targetDataframeStatusType: "Enable"
-        },
-        {
-          createdAt: "2021-03-23T09:58:05.426Z",
-          createdBy: "BABA",
-          id: 13,
-          name: "o-o",
-          targetDataFrame: "df",
-          targetDataSource: "ds",
-          targetDataframeStatusType: "Enable"
-        }
-      ]
-      this.isLoading = false
-      // return getModelFlowList(this.groupId, page, size)
-      //   .then(({getModelFlowList, pagination}) => {
-      //     this.modelFlowList = getModelFlowList
-      //     this.paginationInfo = pagination
-      //   }).finally(() => {
-      //     this.isLoading = false
-      //   })
+      return getModelFlowList(this.groupId, page)
+        .then((res) => {
+          console.log(res)
+          this.modelFlowList = modelFlows
+          this.paginationInfo = pagination
+        }).catch(err => { console.log(err) })
+        .finally(() => {
+          this.isLoading = false
+        })
     },
     changePage (page) {
       this.fetchData(false, page - 1)
