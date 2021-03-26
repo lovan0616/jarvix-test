@@ -22,8 +22,15 @@ export default {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     ...mapState('scheduleSetting', ['scheduleProjects', 'scheduleProjectId', 'isShowScheduleHelper'])
   },
+  watch: {
+    '$route' () {
+      this.$store.commit('scheduleSetting/setIsShowScheduleHelper', false)
+    }
+  },
   destroyed () {
     this.$store.commit('scheduleSetting/setCurrentProjectId', null)
+    // 離開子專案時，清除其模擬進度
+    this.$store.dispatch('simulation/resetSimulationProgress')
   },
   beforeRouteEnter (to, from, next) {
     // 進入子專案前，先確保真的有這個 project id

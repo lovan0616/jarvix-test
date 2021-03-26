@@ -11,7 +11,7 @@
         <div class="setting-cascader-container">
           <el-cascader
             v-model="editColumnInfo.statsType"
-            :is-disabled="isReviewMode"
+            :disabled="isReviewMode"
             :show-all-levels="false"
             :options="cascaderStatsTypeOptions"
             :props="{ expandTrigger: 'hover', label: 'name', children: 'pattern' }"

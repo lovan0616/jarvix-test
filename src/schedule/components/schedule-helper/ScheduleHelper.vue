@@ -347,7 +347,7 @@ export default {
   height: calc(100vh - #{$header-height});
   width: calc(100vw - #{$app-side-nav-closed-width});
   background-color: #171717;
-  z-index: 3;
+  z-index: 1000;
   &__title {
     font-size: 24px;
   }

@@ -35,7 +35,7 @@
           <h2 class="section__title">
             {{ $t('schedule.simulation.title') }}
           </h2>
-          <default-button @click="$router.push({ name: 'SimulationSetting' })">
+          <default-button @click="backToSetting">
             {{ this.$t('schedule.simulation.backToSetting') }}
           </default-button>
           <default-button
@@ -459,6 +459,11 @@ export default {
           this.$router.push({ name: 'CurrentSimulation' })
         })
         .finally(() => { this.isSubmitting = false })
+    },
+    backToSetting () {
+      // 從模擬結果返回模擬設定，會清除當前任何模擬進度
+      this.$store.commit('simulation/setPlanId', null)
+      this.$router.push({ name: 'SimulationSetting' })
     },
     searchOrder (orderId) {
       this.searchedOrderId = orderId

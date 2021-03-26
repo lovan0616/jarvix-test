@@ -74,7 +74,7 @@ export default {
       type: Array,
       default: () => []
     },
-    formData: {
+    parentFormData: {
       type: Object,
       default: () => {}
     },
@@ -102,6 +102,7 @@ export default {
   },
   data: () => {
     return {
+      formData: {},
       isChecking: false,
       isBinding: false,
       isUnbinding: false,
@@ -133,6 +134,7 @@ export default {
   methods: {
     init () {
       this.currentBoundStatus = this.originalBoundStatus
+      this.formData = { ...this.parentFormData }
     },
     check () {
       if (this.isCheckDisabled) {
