@@ -268,7 +268,7 @@ export default {
           min: this.yAxisMinValue,
           name: this.title.yAxis[0].display_name,
           axisLabel: {
-            formatter: value => this.roundNumber(this.yAxisOffsetValue + value)
+            formatter: value => this.yAxisOffsetValue + value
           }
         },
         ...JSON.parse(JSON.stringify(commonChartOptions())),
