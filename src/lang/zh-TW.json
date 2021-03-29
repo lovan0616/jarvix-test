@@ -1040,6 +1040,7 @@
     "dataSource": "資料源",
     "dataFrame": "資料表",
     "expression": "運算式",
+    "monitoredField": "監測欄位",
     "operatingStatus": "運行狀態",
     "operating": "運行中"
   },

@@ -59,7 +59,7 @@
               <!-- <slot name="drowdown"/> -->
               <dropdown-select
                 :bar-data="componentSettingOptions"
-                @switchDialogName="$emit('switchDialogName', $event)"
+                @switchDialogName="$emit('switchDialogName', { name: $event, componentComplementaryInfo })"
               />
             </div>
             <div v-if="!isEditMode && componentData.type === 'monitor-warning-list'">
@@ -251,7 +251,8 @@ export default {
       tempFilteredKeyResultId: null,
       isInitializing: true,
       segmentation: null,
-      enableAlert: false
+      enableAlert: false,
+      componentComplementaryInfo: null
     }
   },
   computed: {
@@ -498,6 +499,7 @@ export default {
       this.totalSec = 50
       this.periodSec = 200
       this.isEmptyData = false
+      this.componentComplementaryInfo = null
 
       // 透過公式創建元件需使用不同方式取得 result
       if (this.componentData.type === 'formula') return this.getFormulaResult()
@@ -738,12 +740,18 @@ export default {
       const maxHeight = this.$refs.component.getBoundingClientRect().height - 135
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
     },
-    updateComponentConfigInfo (config) {
+    updateComponentConfigInfo ({ enableAlert, supportedFunction, ...axisData }) {
+      // 存取元件能使用的功能及其資料
+      this.componentComplementaryInfo = {
+        chartInfo: axisData || {},
+        supportedFunction
+      }
+
       // 能用來轉示警條件的元件類型
       const enabledComponentTypeList = ['formula', 'chart']
       const isEnabledComponent = enabledComponentTypeList.includes(this.componentData.type)
       if (!isEnabledComponent) return
-      this.enableAlert = config.enableAlert
+      this.enableAlert = enableAlert
     },
     onComponentFailed () {
       this.isComponentFailed = true

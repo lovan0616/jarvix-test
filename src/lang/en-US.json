@@ -1039,6 +1039,7 @@
     "dataFilterCondition": "Filter Conditions",
     "dataSource": "Data Source",
     "dataFrame": "Data Set",
+    "monitoredField": "Monitored Field",
     "operatingStatus": "Operating Status",
     "operating": "Operating"
    },

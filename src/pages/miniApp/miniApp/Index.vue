@@ -338,7 +338,7 @@
                     @chartTriggered="chartTriggered"
                     @warningLogTriggered="warningLogTriggered($event)"
                     @goToCertainDashboard="activeCertainDashboard($event)"
-                    @switchDialogName="switchDialogName($event, componentData)"
+                    @switchDialogName="handleDashboardSwitchName($event, componentData)"
                   >
                     <template 
                       v-if="componentData.type === 'monitor-warning-list'" 
@@ -1549,6 +1549,12 @@ export default {
           duration: 3 * 1000,
           showClose: true
         })
+      })
+    },
+    handleDashboardSwitchName({ name, componentComplementaryInfo }, componentData) {
+      this.switchDialogName(name, {
+        ...componentData,
+        ...componentComplementaryInfo
       })
     }
   }

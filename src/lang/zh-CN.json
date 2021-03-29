@@ -1040,6 +1040,7 @@
     "dataFilterCondition": "资料过滤条件",
     "dataSource": "资料源",
     "dataFrame": "资料表",
+    "monitoredField": "监测栏位",
     "operatingStatus": "运行状态",
     "operating": "运行中"
   },
