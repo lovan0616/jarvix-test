@@ -57,32 +57,37 @@ export default {
     return {
       warningLogs: [],
       isLoading: false,
-      autoRefreshFunction: null
+      autoRefreshFunction: null,
+      appAciveConditions: []
     }
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
-    activeConditionIds () {
-      if (!this.setting.activate || !this.setting.conditions) return []
-      return this.setting.conditions.filter(item => item.activate).map(item => item.id)
-    }
   },
   created () {
-    if (this.activeConditionIds.length > 0) {
-      this.getWarningLogs()
-      this.setComponentRefresh()
-    }
+    this.init()
   },
   destroyed () {
     window.clearInterval(this.autoRefreshFunction)
   },
   methods: {
+    init () {
+      this.isLoading = true
+      this.fetchMiniAppActiveWarningConditions(this.setting)
+        .then(conditionList => {
+          if (conditionList.length === 0) return this.isLoading = false
+          this.appAciveConditions = conditionList
+          this.getWarningLogs()
+          this.setComponentRefresh()
+        })
+        .catch(() => this.isLoading = false)
+    },
     setComponentRefresh () {
       this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs () {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId, active: false }).then(response => {
+      getAlertLogs({ conditionIds: this.appAciveConditions, groupId: this.getCurrentGroupId, active: false }).then(response => {
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {

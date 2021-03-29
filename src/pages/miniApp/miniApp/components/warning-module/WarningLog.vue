@@ -148,7 +148,8 @@ export default {
       filterSetting: {
         activenessValue: null, // active, inactive, null
         createdTimeRangeValue: []
-      }
+      },
+      appAciveConditions: []
     }    
   },
   computed: {
@@ -167,16 +168,12 @@ export default {
         }
       ]
     },
-    activeConditionIds () {
-      if (!this.setting.conditions) return []
-      return this.setting.conditions.filter(item => item.activate).map(item => item.id)
-    },
     timeFilterSelected () {
       return this.filterSetting.createdTimeRangeValue.length === 2
     }
   },
   created () {
-    if (this.activeConditionIds.length > 0) this.getWarningLogs()
+    this.init()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
@@ -184,6 +181,16 @@ export default {
     document.removeEventListener('click', this.autoHide, false)
   },
   methods: {
+    init () {
+      this.isLoading = true
+      this.fetchMiniAppActiveWarningConditions(this.setting)
+        .then(conditionList => {
+          if (conditionList.length === 0) return this.isLoading = false
+          this.appAciveConditions = conditionList
+          this.getWarningLogs()
+        })
+        .catch(() => this.isLoading = false)
+    },
     toggleIsAutoRefresh (isAutoRefresh) {
       this.clearAutoRefreshTimer()
       if (isAutoRefresh) {
@@ -197,7 +204,7 @@ export default {
     getWarningLogs (page = 0) {
       this.isLoading = true
       getAlertLogs({
-        conditionIds: this.activeConditionIds,
+        conditionIds: this.appAciveConditions,
         page,
         groupId: this.getCurrentGroupId,
         ...(this.filterSetting.activenessValue !== null && {active: this.filterSetting.activenessValue === 'active'}),
@@ -373,11 +380,8 @@ export default {
   }
 
   /deep/ .el-table {
-    /deep/.cell {
+    .cell {
       overflow: unset;
-    }
-    &__body-wrapper {
-      // overflow: unset;
     }
   }
 }

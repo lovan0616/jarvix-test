@@ -986,7 +986,9 @@
     "dataframeExistenceAndRebuild": "Whether the dataframe current column belongs to has been removed or updated, otherwise, rebuild it.",
     "connectionStatus": "Connection status.",
     "otherReasons": "Any other possible reason.",
-    "fetchDataFailed": "Failed Fetching Data"
+    "fetchDataFailed": "Failed Fetching Data",
+    "displayUnderPublishMode": "Display Under Publish Mode",
+    "hideUnderPublishMode": "Hide Under Publish Mode"
   },
   "alert": {
     "alertLogs": "Alert Record",
@@ -1037,7 +1039,9 @@
     "dataFilterCondition": "Filter Conditions",
     "dataSource": "Data Source",
     "dataFrame": "Data Set",
-    "monitoredField": "Monitored Field"
+    "monitoredField": "Monitored Field",
+    "operatingStatus": "Operating Status",
+    "operating": "Operating"
    },
   "clustering": {
     "cluster": "Cluster",
@@ -1252,9 +1256,10 @@
     "changeDiagram": "Change Diagram",
     "columnSummaryInfo": "Column Summary Info",
     "createAlert": "Create Alert Condition",
+    "send": "Send",
+    "runRightAway": "Run Right Away",
     "createNewRule": "Create A New Rule",
-    "applyToChart": "Apply To Chart",
-    "send": "Send"
+    "applyToChart": "Apply To Chart"
   },
   "timeScopeUnit": {
     "second": "seconds",
