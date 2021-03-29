@@ -28,10 +28,10 @@ export default {
   computed: {
     processText () {
       return [
-        this.$t('editing.scriptExecutionStep1'),
-        this.$t('editing.scriptExecutionStep2'),
-        this.$t('editing.scriptExecutionStep3'),
-        this.$t('editing.scriptExecutionStep4')
+        this.$t('model.upload.executionStep1'),
+        this.$t('model.upload.executionStep2'),
+        this.$t('model.upload.executionStep3'),
+        this.$t('model.upload.executionStep4')
       ]
     }
   }
@@ -41,8 +41,8 @@ export default {
   .upload-process-block {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    margin: 0 auto 12px auto;
+    width: 95%;
+    margin: 0 auto 16px auto;
 
     .step-process {
       display: flex;

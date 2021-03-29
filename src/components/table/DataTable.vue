@@ -110,13 +110,13 @@
             :disabled="isDisabledActionButton(action.value, data)"
             href="javascript:void(0)"
             class="link action-link link-dropdown"
-            @click="doAction(action.value, data)"
+            @click="doAction(action.value, action.link, data)"
           >
             <dropdown-select
               v-if="showActionDropdown(action.subAction, data)"
               :bar-data="showSubAction(action.subAction, data)"
               class="dropdown"
-              @switchDialogName="doAction($event, data)"
+              @switchDialogName="doAction($event, action.link, data)"
             />
             {{ action.name }}
             <svg-icon 
@@ -412,10 +412,11 @@ export default {
       this.$emit('sort', {name, order})
     },
     linkTo (link, id) {
+      let paramKey = link.paramName || 'id'
       this.$router.push({
         name: link.name,
         params: {
-          id
+          [paramKey]: id
         }
       })
     },
@@ -443,11 +444,12 @@ export default {
         return '-'
       }
     },
-    doAction (actionName, data) {
+    doAction (actionName, actionLink, data) {
       if (
         !actionName
         || this.isDisabledActionButton(actionName, data)
       ) return false
+      if (actionLink) return this.linkTo(actionLink, data.id)
       this.$emit(actionName, data)
     },
     isDisabledActionButton(actionName, data) {
@@ -455,7 +457,6 @@ export default {
         this.isProcessing
         || this.isInProcess(data) 
         || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
-        || (data.originType === 'script' && actionName !== 'delete')
       ) return true
       return false
     },

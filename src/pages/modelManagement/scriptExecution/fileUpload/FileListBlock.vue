@@ -1,7 +1,6 @@
 <template>
   <div class="file-list-block">
     <div class="block-title-row">
-      <div class="block-title">{{ title }}</div>
       <slot name="fileListTitle"/>
     </div>
     <div 
@@ -28,10 +27,6 @@ export default {
     SingleFileRow
   },
   props: {
-    title: {
-      type: String,
-      default: null
-    },
     fileList: {
       type: Array,
       default: () => {

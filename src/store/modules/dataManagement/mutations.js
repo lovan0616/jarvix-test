@@ -114,20 +114,6 @@ export default {
     let {tableIndex, columnIndex, dataSummary} = data
     Vue.set(state.etlTableList[tableIndex].columns[columnIndex], 'dataSummary', dataSummary)
   },
-  updateCurrentUploadScriptInfo (state, data) {
-    state.currentUploadScriptInfo = data
-  },
-  updateScriptName (state, data) {
-    state.currentUploadScriptName = data
-  },
-  clearCurrentUploadScriptInfo(state) {
-    state.currentUploadScriptInfo = {
-      scriptId: null,
-      dataframeId: null,
-      type: null,
-      ioArgs: {}
-    }
-  },
   updateDatetimePatterns (state, data) {
     state.datetimePatterns = data
   },

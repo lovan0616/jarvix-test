@@ -436,8 +436,6 @@ export default {
           return this.$t('editing.userUpload')
         case 'database':
           return this.$t('editing.connectDB')
-        case 'script':
-          return this.$t('editing.runScript')
       }
     },
     checkDataSourceStatus () {

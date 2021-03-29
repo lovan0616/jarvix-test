@@ -3,27 +3,30 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="4"
-      :process-text="processText"
     />
     <div class="dialog-body">
       <div class="setting-block">
         <div class="setting-block__title">
-          {{ $t('script.selectOutputColumn') }}
+          {{ $t('model.upload.outputArgsSetting') }}
           <div class="setting-block__reminder">
-            {{ "*" + $t('script.scriptColumnReminder') }}
+            {{ "*" + $t('model.upload.columnReminder') }}
           </div>
         </div>
-        <output-column-setting-card
-          v-for="column in columnList"
-          :column-info="column"
-          :data-type-option-list="dataTypeOptionList"
-          :column-list="columnList"
-          :key="column.id"
-          :is-processing="isProcessing"
-          @updateDataColumn="updateDataColumn($event, column.id)"
-          @remove="removeColumnCard"
-        />
+        <draggable
+          v-model="columnList">
+          <model-column-setting-card
+            v-for="column in columnList"
+            :column-info="column"
+            :data-type-option-list="statsTypeOptionList"
+            :column-list="columnList"
+            :key="column.id"
+            :is-processing="isProcessing"
+            @updateDataColumn="updateDataColumn($event, column.id)"
+            @remove="removeColumnCard"
+          />
+        </draggable> 
         <button
+          :disabled="isProcessing"
           class="btn btn-m btn-outline"
           @click="addNewColumnCard()"
         >
@@ -61,10 +64,11 @@
 import { mapState, mapMutations } from 'vuex'
 import UploadProcessBlock from './fileUpload/UploadProcessBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import SingleColumnCard from '@/components/card/SingleColumnCard'
-import OutputColumnSettingCard from './OutputColumnSettingCard'
+import ModelColumnSettingCard from './components/ModelColumnSettingCard'
+import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
-import { scriptInit } from '@/API/Script'
+import { createModel } from '@/API/Model'
+import { statsTypeOptionList } from '@/utils/general'
 
 export default {
   name: 'OutputSetting',
@@ -72,23 +76,18 @@ export default {
   components: {
     UploadProcessBlock,
     DefaultSelect,
-    SingleColumnCard,
-    OutputColumnSettingCard
-  },
-  props: {
-    processText: {
-      type: Array,
-      required: true
-    }
+    ModelColumnSettingCard,
+    draggable
   },
   data () {
     return {
       columnList: [],
-      isProcessing: false
+      isProcessing: false,
+      statsTypeOptionList
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadScriptInfo']),
+    ...mapState('modelManagement', ['currentUploadModelInfo']),
     dataTypeOptionList () {
       const acceptedDataTypeList = ['FLOAT', 'STRING', 'INT', 'DATETIME', 'BOOLEAN']
       return acceptedDataTypeList.map(type => ({
@@ -102,42 +101,39 @@ export default {
     this.addNewColumnCard()
   },
   methods: {
-    ...mapMutations('dataManagement', ['updateCurrentUploadScriptInfo']),
+    ...mapMutations('modelManagement', ['updateCurrentUploadModelInfo', 'updateShowCreateModelDialog']),
     addNewColumnCard () {
       this.columnList.push({
-        primaryAlias: null,
-        dataColumnId: null,
-        dataType: null,
+        statsType: null,
+        modelColumnName: null,
         id: uuidv4()
       })
     },
-    updateDataColumn(columnId, selectedColumnCardId) {
+    updateDataColumn(statesType, selectedColumnCardId) {
       const columnCard = this.columnList.find(columnCard => columnCard.id === selectedColumnCardId)
-      const dataColumnInfo = this.dataColumnOptionList.find(column => column.id === columnId)
-      columnCard.dataType = dataColumnInfo.dataType
+      columnCard.statsType = statesType
     },
     removeColumnCard(cardId) {
       this.columnList = this.columnList.filter(columnCard => columnCard.id !== cardId)
     },
     cancel () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+     this.updateShowCreateModelDialog(false)
     },
     buildData () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.isProcessing = true
-        scriptInit({
-          ...this.currentUploadScriptInfo,
+        createModel({
+          ...this.currentUploadModelInfo,
           ioArgs: {
-            ...this.currentUploadScriptInfo.ioArgs,
-            output: this.columnList
-          },
-          type: "ROW_BASED"
+            ...this.currentUploadModelInfo.ioArgs,
+            output: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
+          }
         })
         .then(() => {
           // 為了觸發重新撈取資料
-          this.$store.commit('dataManagement/updateFileUploadSuccess', true)
-          this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+          this.$store.commit('modelManagement/updateModelUploadSuccess', true)
+          this.updateShowCreateModelDialog(false)
         })
         .catch(() => { this.isProcessing = false })
       })
