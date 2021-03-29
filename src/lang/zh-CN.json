@@ -987,7 +987,9 @@
     "dataframeExistenceAndRebuild": "资料表是否正常 或 尝试重建此项目",
     "connectionStatus": "连线是否正常",
     "otherReasons": "其他原因",
-    "fetchDataFailed": "取得资料失败"
+    "fetchDataFailed": "取得资料失败",
+    "displayUnderPublishMode": "发布端显示",
+    "hideUnderPublishMode": "发布端隐藏"
   },
   "alert": {
     "alertLogs": "示警纪录",
@@ -1037,7 +1039,9 @@
     "columnValueCombination": "展开条件",
     "dataFilterCondition": "资料过滤条件",
     "dataSource": "资料源",
-    "dataFrame": "资料表"
+    "dataFrame": "资料表",
+    "operatingStatus": "运行状态",
+    "operating": "运行中"
   },
   "clustering": {
     "cluster": "群体",
@@ -1252,9 +1256,10 @@
     "changeDiagram": "切换图表",
     "columnSummaryInfo": "栏位统计信息",
     "createAlert": "新增示警",
+    "send": "发送",
+    "runRightAway": "立即运行",
     "createNewRule": "增加规则",
-    "applyToChart": "使用于图表",
-    "send": "发送"
+    "applyToChart": "使用于图表"
   },
   "timeScopeUnit": {
     "second": "秒",

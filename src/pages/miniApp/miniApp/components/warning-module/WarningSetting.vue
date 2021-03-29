@@ -7,15 +7,17 @@
           <el-switch
             v-model="tempWarningModuleConfig.activate"
             :width="Number('32')"
+            :disabled="isLoading"
             active-color="#2AD2E2"
             inactive-color="#324B4E"
             @change="saveWarningModuleSetting"
           />
-          {{ tempWarningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
+          {{ tempWarningModuleConfig.activate ? $t('miniApp.displayUnderPublishMode') : $t('miniApp.hideUnderPublishMode') }}
         </div>
       </div>
       <div class="nav-right">
         <button
+          :disabled="isLoading"
           class="btn-m btn-secondary button-container__button"
           @click="isShowCreateConditionDialog = true"
         >{{ $t('alert.createAlertCondition') }}</button>
@@ -27,6 +29,7 @@
           {{ $t('miniApp.monitorUpdateFrequency') }}：
           <default-select 
             v-model="tempWarningModuleConfig.updateFrequency"
+            :is-disabled="isLoading"
             :option-list="updateFrequency"
             :placeholder="$t('miniApp.chooseUpdateFrequency')"
             class="setting__block-select"
@@ -49,6 +52,7 @@
             <span class="col-enable">{{ $t('alert.enableAlertModule') }}</span>
             <span class="col-condition">{{ $t('alert.alertCondition') }}</span>
             <span class="col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
+            <span class="col-status">{{ $t('alert.operatingStatus') }}</span>
             <span class="col-deletion"/>
           </div>
           <section
@@ -57,11 +61,12 @@
             class="setting-block">
             <div class="col-enable">
               <el-switch
-                v-model="condition.activate"
+                :disabled="condition.isDisabled"
+                :value="condition.activate"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
-                @change="saveWarningModuleSetting"
+                @change="toggleSingleAlertCondition(condition.id, $event)"
               />
             </div>
             <div class="col-condition">
@@ -97,10 +102,24 @@
                 @change="saveWarningModuleSetting"
               />
             </div>
+            <div class="col-status">
+              <template v-if="condition.activate">
+                <button
+                  v-if="isAllowManulTriggerAlert(condition.status)"
+                  class="btn btn-outline"
+                  @click="runAlert(condition.id)"
+                >{{ $t('button.runRightAway') }}</button>
+                <div
+                  v-else
+                  class="message">
+                  <spinner size="14"/>{{ $t('alert.operating') }}
+                </div>
+              </template>
+            </div>
             <div class="col-deletion">
               <alert-condition-deleter
                 :condition="condition"
-                @deleted="fetchAlertConditions"
+                @deleted="fetchSettingData"
               />
             </div>
           </section>
@@ -122,7 +141,7 @@
 </template>
 
 <script>
-import { getAlertConditions } from '@/API/Alert'
+import { getAlertConditions, manualTriggerAlert, toggleAlertCondition } from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import CreateAlertConditionDialog from './CreateAlertConditionDialog'
 import AlertConditionDeleter from './AlertConditionDeleter'
@@ -158,7 +177,8 @@ export default {
       currentEditingCondition: null,
       isShowCreateConditionDialog: false,
       isShowEditConditionMessageDialog: false,
-      alertTargetType
+      alertTargetType,
+      timeoutFunction: null
     }
   },
   computed: {
@@ -203,20 +223,27 @@ export default {
     }
   },
   created () {
-    this.fetchAlertConditions()
+    this.fetchSettingData()
+  },
+  destroyed() {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
-    fetchAlertConditions () {
+    fetchSettingData () {
       this.isLoading = true
 
       // 示警模組設定
       const { activate, updateFrequency } = this.setting
       this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
-
+      return this.fetchAlertConditions()
+        .finally(() => this.isLoading = false )
+    },
+    fetchAlertConditions () {
+      window.clearTimeout(this.timeoutFunction)
       const isOwnConditionIdList = this.setting.conditions.map(condition => condition.id)
-
       return getAlertConditions(this.getCurrentGroupId)
         .then(conditions => {      
+          let latestConditions = []
           conditions
             .filter(condition => isOwnConditionIdList.includes(condition.id))
             .sort((a, b) => a.id - b.id)
@@ -230,15 +257,24 @@ export default {
               if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
               
               // 組成示警條件列表
-              this.tempWarningModuleConfig.conditions.push({
+              latestConditions.push({
                 ...condition,
-                activate: prevConditionSetting ? prevConditionSetting.activate : false,
-                relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
+                activate: condition.active,
+                relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null,
+                isDisabled: false
               })
             })
-          })
-          .catch(() => '-')
-          .finally(() => this.isLoading = false )
+
+          this.tempWarningModuleConfig.conditions = latestConditions
+
+          // 如果場上有示警條件且正被使用中則設定輪詢持續取得最新狀態
+          const hasEnabledAlertConditions = this.tempWarningModuleConfig.conditions.some(condition => condition.active)
+          if (hasEnabledAlertConditions) {
+            this.timeoutFunction = window.setTimeout(() => {
+              this.fetchAlertConditions()
+            }, 5000)
+          }
+        })
     },
     openAlertConditionMessageDialog (condition) {
       this.currentEditingCondition = { ...condition }
@@ -249,7 +285,6 @@ export default {
         ...this.tempWarningModuleConfig,
         conditions: this.tempWarningModuleConfig.conditions.map(item => ({
           id: item.id,
-          activate: item.activate,
           relatedDashboardId: item.relatedDashboardId
         }))
       })
@@ -281,10 +316,7 @@ export default {
       
     },
     createAlertCondition (conditionId) {
-      this.setting.conditions.push({
-        id: conditionId,
-        activate: true
-      })
+      this.setting.conditions.push({ id: conditionId })
     },
     async alertConditionUpdated (action, conditionId) {
       switch (action) {
@@ -296,13 +328,40 @@ export default {
           this.currentEditingCondition = null
           break
       }
-      await this.fetchAlertConditions()
+      await this.fetchSettingData()
       this.saveWarningModuleSetting()
     },
     isComponentAlerter (targetType) {
       return targetType === this.alertTargetType['COMPONENT']
+    },
+    isAllowManulTriggerAlert(status) {
+      const enableList = ['Ready', 'Complete', 'Fail']
+      return enableList.includes(status)
+    },
+    runAlert (conditionId) {
+      // 先更新狀態，待下一次輪詢取得最新更新資訊
+      manualTriggerAlert(conditionId)
+        .then(() => {
+          this.tempWarningModuleConfig.conditions = this.tempWarningModuleConfig.conditions.map(condition => {
+            if (condition.id !== conditionId) return condition
+            return { ...condition, status: 'Process' }
+          })
+        })
+        .catch(() => {
+           this.tempWarningModuleConfig.conditions = this.tempWarningModuleConfig.conditions.map(condition => {
+            if (condition.id !== conditionId) return condition
+            return { ...condition, status: 'Fail' }
+          })
+        })
+    },
+    toggleSingleAlertCondition (conditionId, isActive) {
+      const condition = this.tempWarningModuleConfig.conditions.find(condition => condition.id === conditionId)
+      condition.isDisabled = true
+      toggleAlertCondition(conditionId, { active: isActive })
+        .then(() => this.fetchAlertConditions())
+        .catch(() => condition.isDisabled = false)
     }
-  }
+  },
 }
 </script>
 
@@ -419,14 +478,27 @@ export default {
         }
       }
       &-relation {
-        flex: 0 0 200px;
+        flex: 0 0 285px;
+      }
+      &-status {
+        flex: 0 1 160px;
+        .message {
+          display: flex;
+          color: #CCCCCC;
+          font-size: 12px;
+        }
+        /deep/ .spinner-block {
+          padding: 0;
+          margin-right: 7px;
+        }
       }
       &-deletion {
         flex: 0 0 20px;
         .alert-condition-deleter {
           position: absolute;
-          top: 12px;
-          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 1;
         }
       }
     }
