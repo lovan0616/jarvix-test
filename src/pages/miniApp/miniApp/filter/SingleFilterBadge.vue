@@ -296,7 +296,9 @@ export default {
       handler (val) {
         this.filter = {
           ...JSON.parse(JSON.stringify(val)),
-          dataValueOptionList: this.filter.dataValueOptionList
+          dataValueOptionList: this.filter.dataValueOptionList,
+          dataMin: this.filter.dataMin,
+          dataMax: this.filter.dataMax
         }
       }
     },
