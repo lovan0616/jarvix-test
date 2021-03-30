@@ -668,6 +668,17 @@
     "updatedInformation": "更新資訊",
     "outputResult": "輸出結果",
     "deleteConfirmText": "流程刪除後，相關資料表將不再被更新，請選擇刪除方式",
+    "updateMode": "觸發更新模式",
+    "notUpdate": "不更新",
+    "updateUponDataUpdated": "跟隨資料表更新",
+    "function": "功能",
+    "immediatelyUpdate": "立即更新",
+    "modelFlowUpdateStatus": {
+      "temp": "未更新",
+      "process": "更新中",
+      "complete": "更新成功",
+      "fail": "更新失敗"
+    },
     "upload": {
       "setFlowName": "請輸入流程名稱",
       "executionStep1": "設定名稱",

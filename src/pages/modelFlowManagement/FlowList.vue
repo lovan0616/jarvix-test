@@ -34,7 +34,9 @@
         <flow-card
           v-for="flow in modelFlowList"
           :key="flow.id"
-          :flow-info="flow" />
+          :flow-info="flow"
+          @action="onClickFlowCardAction($event, flow)"
+        />
         <el-pagination 
           v-if="paginationInfo.totalPages > 1"
           :total="paginationInfo.totalItems"
@@ -67,9 +69,9 @@
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadDialog from './flowExecution/UploadDialog'
 import FlowCard from './components/FlowCard'
-import { getModelFlowList } from '@/API/ModelFlow'
+import { getModelFlowList, updateModelFlow } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
-// import { Message } from 'element-ui'
+import { Message } from 'element-ui'
 
 export default {
   name: 'FlowList',
@@ -139,6 +141,14 @@ export default {
     },
     closeCreateFlowDialog () {
       this.updateShowCreateFlowDialog(false)
+    },
+    onClickFlowCardAction (actionName, { id }) {
+      switch (actionName) {
+        case 'manulUpdate':
+          this.updateModelFlow(id)
+      }
+    },
+    updateModelFlow (id) {
     },
     deleteFlow () {
       // deleteFlowById(this.deleteFlowId)

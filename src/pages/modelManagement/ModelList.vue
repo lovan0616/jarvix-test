@@ -98,7 +98,6 @@ export default {
         {
           text: this.$t('model.modelName'),
           value: 'name',
-          width: '130px'
         },
         {
           text: this.$t('model.creator'),

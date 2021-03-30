@@ -4,7 +4,7 @@
       <transition 
         name="fade" 
         mode="out-in">
-        <modelflow-execution-flow
+        <model-execution-flow
           head
         />
       </transition>

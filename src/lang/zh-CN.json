@@ -665,6 +665,17 @@
     "updatedInformation": "更新资讯",
     "outputResult": "输出结果",
     "deleteConfirmText": "流程删除后，相关资料表将不再被更新，请选择删除方式",
+    "updateMode": "触发更新模式",
+    "notUpdate": "不更新",
+    "updateUponDataUpdated": "跟随资料表更新",
+    "function": "功能",
+    "immediatelyUpdate": "立即更新",
+    "modelFlowUpdateStatus": {
+      "temp": "未更新",
+      "process": "更新中",
+      "complete": "更新成功",
+      "fail": "更新失败"
+    },
     "upload": {
       "setFlowName": "请输入流程名称",
       "executionStep1": "设定名称",
