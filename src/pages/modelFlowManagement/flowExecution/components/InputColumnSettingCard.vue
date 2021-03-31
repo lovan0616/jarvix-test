@@ -14,7 +14,7 @@
           class="icon"/>
         <default-select 
           v-validate="'required'"
-          :option-list="dataColumnOptionList"
+          :option-list="sameStatsTypeDataColumnOptionList"
           :placeholder="placeholder"
           :is-disabled="isProcessing"
           v-model="columnInfo.columnId"
@@ -58,6 +58,11 @@ export default {
     placeholder: {
       type: String,
       default: null
+    }
+  },
+  computed: {
+    sameStatsTypeDataColumnOptionList () {
+      return this.dataColumnOptionList.filter(column => column.statsType === this.columnInfo.statsType)
     }
   }
 }

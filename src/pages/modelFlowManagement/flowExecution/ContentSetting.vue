@@ -255,7 +255,8 @@ export default {
     },
     fetchModelList () {
       // TODO: 把失敗的 filter
-      getModelList(this.getCurrentGroupId)
+      // TODO: 前端分頁取 model
+      getModelList(this.getCurrentGroupId, 0, 999)
         .then(response => {
           this.modelOptionList = response.models
             .map(model => {

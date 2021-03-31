@@ -15,9 +15,12 @@
       <div class="flow-card__list">
         <div class="flow-info-wrapper">
           <div class="flow-label">{{ $t('modelFlow.updateMode') }}：</div>
-          <div class="flow-text">{{ $t('modelFlow.notUpdate') }}</div>
+          <div class="flow-text">
+            <!-- Next Sprint -->
+            {{ $t('modelFlow.notUpdate') }}
+          </div>
         </div>
-        <div class="flow-info-wrapper">
+        <div class="flow-info-wrapper update-status-block">
           <div class="flow-label">{{ $t('modelFlow.updatedInformation') }}：</div>
           <div class="flow-text">
             <spinner 
@@ -86,7 +89,7 @@ export default {
   },
   computed: {
     getFlowClasses () {
-      return ['flow-card', this.isFlowDisabled ? 'is-disabled' : '']
+      return ['flow-card', this.isFlowDisabled ? 'is-disabled' : null]
     },
     isFlowDisabled () {
       return this.isFlowUpdating
@@ -159,6 +162,25 @@ export default {
 
     &:not(:last-child) {
       margin-bottom: 10px;
+    }
+  }
+
+  &.is-disabled {
+    background: rgba(28, 41, 43, 0.2);
+    cursor: not-allowed;
+    [class^="flow"] {
+      color: rgba(153, 153, 153, 0.4);
+    }
+    .flow-function .link {
+      color: rgba(42, 210, 226, 0.4);
+    }
+    .update-status-block {
+      [class^="flow"] {
+        color: rgba(153, 153, 153, 0.9);
+      }
+    }
+    .flow-function {
+      pointer-events: none;
     }
   }
 
