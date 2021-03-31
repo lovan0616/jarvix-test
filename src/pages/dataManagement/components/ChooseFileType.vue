@@ -53,8 +53,15 @@ export default {
   },
   data () {
     return {
-      selectedDataType: importType.LOCAL,
-      dataTypeList: [
+      selectedDataType: importType.LOCAL
+    }
+  },
+  computed: {
+    isShowMiniAppModule () {
+      return localStorage.getItem('isShowMiniAppModule') === 'true'
+    },
+    dataTypeList () {
+      return [
         {
           type: importType.LOCAL,
           icon: 'upload',
@@ -67,14 +74,14 @@ export default {
           title: this.$t('editing.remoteConnection'),
           description: this.$t('editing.remoteConnectionDescription')
         },
-        {
+        ...(this.isShowMiniAppModule ? [{
           type: importType.SCRIPT,
           icon: 'script',
           title: this.$t('editing.runScript'),
           description: this.$t('editing.runScriptDescription')
-        }
+        }] : [])
       ]
-    }
+    } 
   },
   methods: {
     hasPermission (type) {
