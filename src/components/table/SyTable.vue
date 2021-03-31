@@ -82,6 +82,14 @@ export default {
       default: () => []
     },
     autoMerge: { type: Boolean, default: false },
+    componentId: {
+      type: Number,
+      default: null
+    },
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
     indexWidth: {
       type: Number,
       default: 80
@@ -241,6 +249,7 @@ export default {
       let tableData = JSON.parse(JSON.stringify(this.dataset.data))
       tableData.unshift(this.dataset.columns)
       let fileName = this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + this.appQuestion
+      if (this.hasPagination && this.canDownloadCsv) return this.addCSVDownloadTask(this.appQuestion, this.componentId)
       this.exportToCSV(fileName, tableData)
     },
     getCellIndex ({ row, column, rowIndex, columnIndex }) {
