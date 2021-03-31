@@ -18,7 +18,8 @@
     "helper": "帮助",
     "warRoom": "战情室",
     "application": "应用程式",
-    "modelManagement": "模型管理"
+    "modelManagement": "模型管理",
+    "modelFlowManagement": "流程管理"
   },
   "sideNav": {
     "functionList": "功能选单",
@@ -45,7 +46,9 @@
     "modelSetting": "管理设定",
     "modelDetail": "详细内容",
     "reUploadFile": "重新上传档案",
-    "configSetting": "参数设定"
+    "configSetting": "参数设定",
+    "modelFlowManagement": "流程管理",
+    "flowList": "流程列表"
   },
   "user": {
     "changePwd": "变更密码",
@@ -670,6 +673,7 @@
     "updateUponDataUpdated": "跟随资料表更新",
     "function": "功能",
     "immediatelyUpdate": "立即更新",
+    "updateAtBackground": "流程开始更新，将在背景继续执行",
     "modelFlowUpdateStatus": {
       "temp": "未更新",
       "process": "更新中",

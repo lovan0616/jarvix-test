@@ -87,6 +87,7 @@ export default {
       isShowCreateFlowDialog: false,
       deleteFlowId: null,
       modelFlowList: [],
+      intervalFunction: null,
       paginationInfo: {
         currentPage: 0,
         totalPages: 0,
@@ -110,23 +111,27 @@ export default {
     }
   },
   mounted () {
-    this.fetchData()
+    this.startPolling()
+  },
+  destroyed () {
+    this.clearPolling()
   },
   methods: {
     ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateFlowUploadSuccess']),
-    fetchData (init = true, page = 0, size = 10) {
+    fetchData (init = true, showSpinner = true, page = 0, size = 10) {
       if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
-      this.isLoading = true
+      if (showSpinner) this.isLoading = true
       return getModelFlowList(this.groupId, page, size)
         .then(({modelFlows, pagination}) => {
           this.modelFlowList = modelFlows
           this.paginationInfo = pagination
         }).finally(() => {
-          this.isLoading = false
+          if (showSpinner) this.isLoading = false
         })
     },
     changePage (page) {
-      this.fetchData(false, page - 1)
+      this.clearPolling()
+      this.startPolling(false, true, page - 1)
     },
     confirmDelete ({id}) {
       this.deleteFlowId = id
@@ -149,6 +154,17 @@ export default {
       }
     },
     updateModelFlow (id) {
+      updateModelFlow(id)
+        .then(() => {
+          Message({
+            message: this.$t('modelFlow.updateAtBackground'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.clearPolling()
+          this.startPolling(true, false, this.paginationInfo.currentPage)
+        })
     },
     deleteFlow () {
       // deleteFlowById(this.deleteFlowId)
@@ -165,6 +181,15 @@ export default {
       //   }).finally(() => {
       //     this.cancelDelete()
       //   })
+    },
+    startPolling (init, showSpinner, page) {
+      this.fetchData(init, showSpinner, page)
+      this.intervalFunction = window.setInterval(() => {
+        this.fetchData(true, page, false)
+      }, 5000)
+    },
+    clearPolling () {
+      if (this.intervalFunction) window.clearInterval(this.intervalFunction)
     }
   }
 }
