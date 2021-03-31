@@ -114,6 +114,7 @@ export default {
         { title: 'surgeon', name: 'Surgeon', width: 180 },
         { title: 'surgeryType', name: 'Surgery Type', width: 180 },
         { title: 'date', name: 'Date', width: 180 },
+        { title: 'flexibility', name: 'Flexibility', width: 120 },
         { title: 'equipmentNo', name: 'Equipment No', width: 300 },
         { title: 'assistant', name: 'Assistant', width: 180 },
         { title: 'anesthetist', name: 'Anesthetist', width: 180 }
@@ -148,6 +149,7 @@ export default {
           "surgeryType": " head and neck",
           "date": "2021/3/1",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Sterilizers AA1\nDefibrillators X2",
           "assistant": "Patrick W.\r\n",
           "anesthetist": "H.W.L.\r\n"
@@ -161,6 +163,7 @@ export default {
           "surgeryType": "AXX1-Surgery",
           "date": "2021/3/1",
           "priority": "2",
+          "flexibility": "inpatient",
           "equipmentNo": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
           "assistant": "Melody L.\r",
           "anesthetist": "Phillip F.\r"
@@ -174,6 +177,7 @@ export default {
           "surgeryType": "orthopedic",
           "date": "2021/3/1",
           "priority": "3",
+          "flexibility": "outpatient",
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r"
@@ -187,6 +191,7 @@ export default {
           "surgeryType": "AXX1-Surgery",
           "date": "2021/3/1",
           "priority": "3",
+          "flexibility": "inpatient",
           "equipmentNo": "EKG machines XX5\r\n",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n"
@@ -200,6 +205,7 @@ export default {
           "surgeryType": "orthopedic",
           "date": "2021/3/1",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H."
@@ -213,6 +219,7 @@ export default {
           "surgeryType": "orthopedic",
           "date": "2021/3/1",
           "priority": "3",
+          "flexibility": "inpatient",
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r"
@@ -226,6 +233,7 @@ export default {
           "surgeryType": "Dental restorations",
           "date": "2021/3/1",
           "priority": "3",
+          "flexibility": "outpatient",
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n"
@@ -239,6 +247,7 @@ export default {
           "surgeryType": "Dental restorations",
           "date": "2021/3/1",
           "priority": "3",
+          "flexibility": "inpatient",
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n"
@@ -252,6 +261,7 @@ export default {
           "surgeryType": "Breast Surgery",
           "date": "2021/3/1",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Breast Retractors\nBipolar Scissors",
           "assistant": "Patrick Z.\n",
           "anesthetist": "Betty Liu"
@@ -265,6 +275,7 @@ export default {
           "surgeryType": "cataract surgery",
           "date": "2021/3/1",
           "priority": "2",
+          "flexibility": "outpatient",
           "equipmentNo": "Utrata Capsulorhexis Forceps\nCaliper",
           "assistant": "Melody Tan",
           "anesthetist": "Ben L.\r"
@@ -278,6 +289,7 @@ export default {
           "surgeryType": "intrathoracic",
           "date": "2021/3/1",
           "priority": "3",
+          "flexibility": "outpatient",
           "equipmentNo": "Diathermy forceps\nArtery forceps\nligature clamps",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Phillip F.\r"
@@ -291,6 +303,7 @@ export default {
           "surgeryType": "orthopedic",
           "date": "2021/3/1",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Paul E.",
           "anesthetist": "Caroline D."
@@ -304,6 +317,7 @@ export default {
           "surgeryType": "orthopedic",
           "date": "2021/3/1",
           "priority": "2",
+          "flexibility": "inpatient",
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Ashley B.",
           "anesthetist": "Caroline D."
@@ -317,6 +331,7 @@ export default {
           "surgeryType": "orthopedic",
           "date": "2021/3/1",
           "priority": "2",
+          "flexibility": "outpatient",
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Emily F.",
           "anesthetist": "Rick D."
@@ -330,6 +345,7 @@ export default {
           "surgeryType": "orthopedic",
           "date": "2021/3/1",
           "priority": "2",
+          "flexibility": "inpatient",
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Jackson S.",
           "anesthetist": "Rachel E."
@@ -343,6 +359,7 @@ export default {
           "surgeryType": "CKKS-Cardiac",
           "date": "2021/3/1",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H."
@@ -356,6 +373,7 @@ export default {
           "surgeryType": "CKKS-Cardiac",
           "date": "2021/3/2",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX11",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H."
@@ -369,6 +387,7 @@ export default {
           "surgeryType": "CKKS-Cardiac",
           "date": "2021/3/3",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX12",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H."
@@ -382,6 +401,7 @@ export default {
           "surgeryType": "CKKS-Cardiac",
           "date": "2021/3/4",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX13",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H."
@@ -395,6 +415,7 @@ export default {
           "surgeryType": "CKKS-Cardiac",
           "date": "2021/3/5",
           "priority": "1",
+          "flexibility": "inpatient",
           "equipmentNo": "Stretcher XX14",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H."
@@ -435,6 +456,7 @@ export default {
           "surgeryType": "Major Emergency",
           "date": "2021/3/1",
           "priority": "1",
+          "flexibility": "outpatient",
           "equipmentNo": "Sterilizers AB1\nDefibrillators X8",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Leo J.",
@@ -448,6 +470,7 @@ export default {
           "surgeryType": "Plastic Surgery",
           "date": "2021/3/1",
           "priority": "1",
+          "flexibility": "inpatient",
           "equipmentNo": "Sterilizers A19\nDefibrillators X2",
           "assistant": "Edward Z.\r",
           "anesthetist": "Thomas T.",

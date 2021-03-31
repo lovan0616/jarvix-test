@@ -23,7 +23,7 @@
             @click="onClickAddSolution"
           >
             <i class="el-icon-plus" />
-            Add Simulation
+            Add Scenario
           </default-button>
         </div>
         <div class="step__content">
