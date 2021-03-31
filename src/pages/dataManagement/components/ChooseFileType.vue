@@ -57,9 +57,6 @@ export default {
     }
   },
   computed: {
-    isShowMiniAppModule () {
-      return localStorage.getItem('isShowMiniAppModule') === 'true'
-    },
     dataTypeList () {
       return [
         {
@@ -74,7 +71,7 @@ export default {
           title: this.$t('editing.remoteConnection'),
           description: this.$t('editing.remoteConnectionDescription')
         },
-        ...(this.isShowMiniAppModule ? [{
+        ...(this.hasPermission('app') ? [{
           type: importType.SCRIPT,
           icon: 'script',
           title: this.$t('editing.runScript'),
