@@ -105,7 +105,8 @@ export default {
     watch: {
     flowUploadSuccess (value) {
       if (value) {
-        this.fetchData(true)
+        this.clearPolling()
+        this.startPolling()
         this.updateFlowUploadSuccess(false)
       }
     }
