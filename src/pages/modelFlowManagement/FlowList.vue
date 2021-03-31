@@ -185,7 +185,7 @@ export default {
     startPolling (init, showSpinner, page) {
       this.fetchData(init, showSpinner, page)
       this.intervalFunction = window.setInterval(() => {
-        this.fetchData(true, page, false)
+        this.fetchData(true, false, page)
       }, 5000)
     },
     clearPolling () {
