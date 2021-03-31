@@ -11,7 +11,7 @@
     <div class="page__section detail">
       <div class="section__side-nav">
         <div class="section__title">
-          Solutions
+          Scenarios
         </div>
         <div class="solution__list">
           <div
@@ -22,7 +22,7 @@
             @click="switchSolution(solution.solutionId)"
           >
             <div class="solution__title">
-              Solution {{ solution.sequence }}
+              Scenario {{ solution.sequence }}
             </div>
             <div class="solution__result--failed">
               Simulattion Failed
@@ -46,7 +46,7 @@
             type="outline"
             @click="adoptPlan"
           >
-            Accept Solution
+            Accept Scenario
           </default-button>
         </div>
         <el-tabs
@@ -177,7 +177,7 @@ export default {
         totalPage: 0
       },
       searchedOrderId: null,
-      kpiData: [{"title":"Utilization Rate","series":[6293,6293],"yAxisName":"Count","xAxis":["Solution 1","Solution 2"]},{"title":"Turnover time","series":["56.70","39.70"],"yAxisName":"%","xAxis":["Solution 1","Solution 2"]},{"title":"Cost","series":[0.10277777777777779,0.10277777777777779],"yAxisName":"K","xAxis":["Solution 1","Solution 2"]},{"title":"Resource","series":["43.75","13.13"],"yAxisName":"K","xAxis":["Solution 1","Solution 2"]}],
+      kpiData: [{"title":"Utilization Rate","series":[6293,6293],"yAxisName":"Count","xAxis":["Scenario 1","Scenario 2"]},{"title":"Turnover time","series":["56.70","39.70"],"yAxisName":"%","xAxis":["Scenario 1","Scenario 2"]},{"title":"Cost","series":[0.10277777777777779,0.10277777777777779],"yAxisName":"K","xAxis":["Scenario 1","Scenario 2"]},{"title":"Resource","series":["43.75","13.13"],"yAxisName":"K","xAxis":["Scenario 1","Scenario 2"]}],
       priortyOptions: [
         { value: 1, label: this.$t('schedule.simulation.table.highPriority') },
         { value: 2, label: this.$t('schedule.simulation.table.secondPriority') },

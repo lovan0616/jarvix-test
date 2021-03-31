@@ -2,7 +2,7 @@
   <div class="block__form">
     <div class="form__item">
       <div class="form__label">
-        *Utilization
+        *Special Equipment
       </div>
       <div class="form__content">
         <default-select
@@ -13,7 +13,7 @@
     </div>
     <div class="form__item">
       <div class="form__label">
-        *Resource
+        *Equipment Cost
       </div>
       <div class="form__content">
         <default-select
@@ -24,7 +24,7 @@
     </div>
     <div class="form__item">
       <div class="form__label">
-        *Turnover Time
+        *Labor Cost
       </div>
       <div class="form__content">
         <default-select
@@ -35,7 +35,7 @@
     </div>
     <div class="form__item">
       <div class="form__label">
-        *Cost
+        *Turnover time
       </div>
       <div class="form__content">
         <default-select

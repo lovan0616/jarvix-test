@@ -30,7 +30,7 @@
       :title-width="168"
       :scale="scale"
       :scroll-to-postion="position"
-      start-time="2021-03-01 07:00:00"
+      start-time="2021-03-01 06:30:00"
       end-time="2021-03-01 23:00:00"
       class="schedule-gantt-chart"
       @scroll-left="scrollToLeft"
@@ -200,11 +200,10 @@ export default {
       otGanttChartDataList: [
         {
           gtArray: [
-            // 刪單
-            ...(!this.reScheduled && [{
+            {
               "name": "Room_1",
               "type": "surgery",
-              "start": "2021-03-01 09:00",
+              "start": "2021-03-01 07:30",
               "end": "2021-03-01 12:00",
               "sugeoryId": "ZXXXX122",
               "patient": "Alice L\r",
@@ -212,11 +211,11 @@ export default {
               "surgeon": "John K.\r",
               "surgeryType": " head and neck",
               "date": "2021/3/1",
-              "priority": 1,
+              "priority": 2,
               "Equipment No.": "Sterilizers AA1\nDefibrillators X2",
               "Assistant": "Patrick W.\r\n",
               "Anesthetist": "H.W.L.\r\n",
-            }]),
+            },
             {
               "name": "Room_1",
               "type": "cleaning",
@@ -294,10 +293,11 @@ export default {
         },
         {
           gtArray: [
-            {
+            // 刪單，後面的單都往前排
+            ...(!this.reScheduled && [{
               "name": "Room_2",
               "type": "surgery",
-              "start": "2021-03-01 08:30",
+              "start": "2021-03-01 07:00",
               "end": "2021-03-01 10:00",
               "sugeoryId": "ZXXXX133",
               "patient": "Dan M.",
@@ -309,12 +309,16 @@ export default {
               "Equipment No.": "Surgical Lights\nSterilizers X123",
               "Assistant": "Jacob Tan\r",
               "Anesthetist": "Ben L.\r",
-            },
+            }]),
             {
               "name": "Room_2",
               "type": "cleaning",
               "start": "2021-03-01 10:00",
-              "end": "2021-03-01 10:45"
+              "end": "2021-03-01 10:45",
+              ...this.reScheduled && {
+                "start": "2021-03-01 07:00",
+                "end": "2021-03-01 07:45",
+              }
             },
             {
               "name": "Room_2",
@@ -331,6 +335,10 @@ export default {
               "Equipment No.": "EKG machines XX5\r\n",
               "Assistant": "Edward Z.\r",
               "Anesthetist": "H.W.L.\n",
+              ...this.reScheduled && {
+                "start": "2021-03-01 07:45",
+                "end": "2021-03-01 08:30"
+              }
             },
             {
               "name": "Room_2",
@@ -347,12 +355,20 @@ export default {
               "Equipment No.": "Anaesthetic\nDental drill",
               "Assistant": "Edward Z.\r",
               "Anesthetist": "H.W.L.\n",
+              ...this.reScheduled && {
+                "start": "2021-03-01 08:30",
+                "end": "2021-03-01 09:30"
+              }
             },
             {
               "name": "Room_2",
               "type": "cleaning",
               "start": "2021-03-01 12:30",
-              "end": "2021-03-01 13:15"
+              "end": "2021-03-01 13:15",
+              ...this.reScheduled && {
+                "start": "2021-03-01 09:30",
+                "end": "2021-03-01 10:45"
+              }
             },
             {
               "name": "Room_2",
@@ -369,12 +385,20 @@ export default {
               "Equipment No.": "Breast Retractors\nBipolar Scissors",
               "Assistant": "Patrick Z.\n",
               "Anesthetist": "Betty Liu",
+              ...this.reScheduled && {
+                "start": "2021-03-01 10:45",
+                "end": "2021-03-01 12:30"
+              }
             },
             {
               "name": "Room_2",
               "type": "cleaning",
               "start": "2021-03-01 15:00",
-              "end": "2021-03-01 15:45"
+              "end": "2021-03-01 15:45",
+              ...this.reScheduled && {
+                "start": "2021-03-01 12:30",
+                "end": "2021-03-01 13:15"
+              }
             },
             {
               "name": "Room_2",
@@ -391,12 +415,20 @@ export default {
               "Equipment No.": "Utrata Capsulorhexis Forceps\nCaliper",
               "Assistant": "Melody Tan",
               "Anesthetist": "Ben L.\r",
+              ...this.reScheduled && {
+                "start": "2021-03-01 13:15",
+                "end": "2021-03-01 14:00"
+              }
             },
             {
               "name": "Room_2",
               "type": "maintenance",
               "start": "2021-03-01 16:30",
-              "end": "2021-03-01 18:30"
+              "end": "2021-03-01 18:30",
+              ...this.reScheduled && {
+                "start": "2021-03-01 14:00",
+                "end": "2021-03-01 16:00"
+              }
             },
           ],
           name: 'Room_2'
@@ -406,7 +438,7 @@ export default {
             {
               "name": "Room_3",
               "type": "surgery",
-              "start": "2021-03-01 09:00",
+              "start": "2021-03-01 07:00",
               "end": "2021-03-01 12:00",
               "sugeoryId": "ZX9990122",
               "patient": "Melissa R1",
@@ -493,7 +525,7 @@ export default {
             {
               "name": "Room_4",
               "type": "surgery",
-              "start": "2021-03-01 09:00",
+              "start": "2021-03-01 06:30",
               "end": "2021-03-01 11:00",
               "sugeoryId": "ZXX37533",
               "patient": "Charles W.",
@@ -612,26 +644,22 @@ export default {
   },
   created () {
     if (this.$route.query.inserted) {
-      this.otGanttChartDataList.unshift({
-        gtArray: [
-          {
-            "name": "Room_A",
-            "type": "surgery",
-            "start": "2021-03-01 08:30",
-            "end": "2021-03-01 10:00",
-            "sugeoryId": "ZXXXX133",
-            "patient": "Dan M.",
-            "patientID": "AXC12749500123",
-            "surgeon": "KKK",
-            "surgeryType": "orthopedic",
-            "date": "2021/3/1",
-            "priority": 1,
-            "Equipment No.": "Surgical Lights\nSterilizers X123",
-            "Assistant": "Jacob Tan\r",
-            "Anesthetist": "Ben L.\r",
-          },
-        ],
-        name: 'Room_A'
+      // 插單
+      this.otGanttChartDataList[0].gtArray.unshift({
+        "name": "Room_1",
+        "type": "surgery",
+        "start": "2021-03-01 06:00",
+        "end": "2021-03-01 07:30",
+        "sugeoryId": "ZXXXX133",
+        "patient": "Dan M.",
+        "patientID": "AXC12749500123",
+        "surgeon": "KKK",
+        "surgeryType": "orthopedic",
+        "date": "2021/3/1",
+        "priority": 1,
+        "Equipment No.": "Surgical Lights\nSterilizers X123",
+        "Assistant": "Jacob Tan\r",
+        "Anesthetist": "Ben L.\r"
       })
     }
   },

@@ -209,7 +209,8 @@ const router = new Router({
                         {
                           path: '/',
                           name: 'MiniAppList',
-                          component: () => import('@/pages/miniApp/miniAppList/Index')
+                          component: () => import('@/pages/miniApp/miniAppList/Index'),
+                          meta: { permission: ['app'] }
                         },
                         {
                           path: ':mini_app_id',
@@ -217,7 +218,8 @@ const router = new Router({
                           component: () => import('@/pages/miniApp/miniApp/Index'),
                           meta: {
                             isHeaderHidden: true,
-                            isSideNavHidden: true
+                            isSideNavHidden: true,
+                            meta: { permission: ['app'] }
                           }
                         }
                       ]
