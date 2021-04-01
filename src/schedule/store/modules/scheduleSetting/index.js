@@ -9,7 +9,8 @@ export default {
     scheduleProjectId: null,
     defaultSetting: null,
     equipments: null,
-    isShowScheduleHelper: false
+    isShowScheduleHelper: false,
+    refErrorResultSizeLimit: 100 // 檢查資料時，預設向後端取的最多 refErrorValue 數量
   },
   actions,
   mutations,

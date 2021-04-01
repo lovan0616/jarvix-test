@@ -262,7 +262,7 @@ export default {
 <style lang="scss" scoped>
 .relation-dialog {
   .dialog-container {
-    width: 752px;
+    width: 760px;
   }
   /deep/ .relation-container {
     &__section {
