@@ -479,6 +479,7 @@ export default {
   .copyright-block {
     width: 100%;
     text-align: center;
+    margin-bottom: 8px;
     .logo {
       width: 120px;
       margin-bottom: 8px;

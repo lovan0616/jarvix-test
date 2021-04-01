@@ -177,7 +177,7 @@ export default {
         totalPage: 0
       },
       searchedOrderId: null,
-      kpiData: [{"title":"Utilization Rate","series":[6293,6293],"yAxisName":"Count","xAxis":["Scenario 1","Scenario 2"]},{"title":"Turnover time","series":["56.70","39.70"],"yAxisName":"%","xAxis":["Scenario 1","Scenario 2"]},{"title":"Cost","series":[0.10277777777777779,0.10277777777777779],"yAxisName":"K","xAxis":["Scenario 1","Scenario 2"]},{"title":"Resource","series":["43.75","13.13"],"yAxisName":"K","xAxis":["Scenario 1","Scenario 2"]}],
+      kpiData: [{"title":"Special Equipment","series":[6293,6293],"yAxisName":"Count","xAxis":["Scenario 1","Scenario 2"]},{"title":"Equipment Cost","series":["56.70","39.70"],"yAxisName":"%","xAxis":["Scenario 1","Scenario 2"]},{"title":"Labor Cost","series":[0.10277777777777779,0.10277777777777779],"yAxisName":"K","xAxis":["Scenario 1","Scenario 2"]},{"title":"Turnover time","series":["43.75","13.13"],"yAxisName":"K","xAxis":["Scenario 1","Scenario 2"]}],
       priortyOptions: [
         { value: 1, label: this.$t('schedule.simulation.table.highPriority') },
         { value: 2, label: this.$t('schedule.simulation.table.secondPriority') },
