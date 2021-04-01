@@ -125,8 +125,8 @@ export default {
   name: 'PageSisSetting',
   data () {
     return {
-      isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
       closeQuickAsk: localStorage.getItem('closeQuickAsk'),
+      isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
       isShowOrderUpload: localStorage.getItem('isShowOrderUpload'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
       isShowAlgorithmBtn: localStorage.getItem('isShowAlgorithmBtn'),

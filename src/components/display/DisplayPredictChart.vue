@@ -113,6 +113,19 @@ export default {
         height: '420px'
       }
     },
+    yAxisMinValue () {
+      let yAxisMinValue = Infinity
+      let yAxisMaxValue = -Infinity
+      this.dataset.data.forEach(dataset => {
+        // 排除 null 值和區間值
+        const datasetWithoutNull = dataset.filter((data, index) => data !== null && index !== 4)
+        // const datasetMinValue = Math.min()
+        yAxisMinValue = Math.min(yAxisMinValue, ...datasetWithoutNull)
+        yAxisMaxValue = Math.max(yAxisMinValue, ...datasetWithoutNull)
+      })
+
+      return yAxisMinValue - (yAxisMaxValue - yAxisMinValue) / 4
+    },
     yAxisOffsetValue () {
       let yAxisMinValue = Infinity
       this.dataset.data.forEach(dataset => {
@@ -139,7 +152,7 @@ export default {
               // 誤差區間值不用調整
               if(index === 4) return data
               return this.adjustValueWithOffsetValue(data)
-            }) 
+            })
         ])
       })
       return source
@@ -252,9 +265,10 @@ export default {
         xAxis: xAxisDefault(),
         yAxis: {
           ...yAxisDefault(),
+          min: this.yAxisMinValue,
           name: this.title.yAxis[0].display_name,
           axisLabel: {
-            formatter: value => this.roundNumber(this.yAxisOffsetValue + value)
+            formatter: value => this.yAxisOffsetValue + value
           }
         },
         ...JSON.parse(JSON.stringify(commonChartOptions())),
