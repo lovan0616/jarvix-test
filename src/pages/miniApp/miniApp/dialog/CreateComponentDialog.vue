@@ -29,7 +29,7 @@
         </button>
         <button
           v-else
-          :disabled="!isAddable"
+          :disabled="!isAddable || isLoading || isFailed"
           class="btn btn-default"
           @click="createComponent"
         >
@@ -83,6 +83,14 @@
           :formula-setting="currentComponent.formulaSetting"
           :formula-component-info="formulaComponentInfo"
           :current-component="currentComponent"
+        />
+        <simulator-setting 
+          v-else-if="currentComponent.type === 'simulator'"
+          :model-setting="currentComponent.modelSetting"
+          :model-component-info="modelComponentInfo"
+          :current-component="currentComponent"
+          :is-loading.sync="isLoading"
+          :is-failed.sync="isFailed"
         />
       </div>
       <div
@@ -309,6 +317,7 @@
 <script>
 import DataFrameMenu from '@/components/select/DataFrameMenu'
 import FormulaSetting from '../components/componentSetting/FormulaSetting'
+import SimulatorSetting from '../components/componentSetting/SimulatorSetting'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
@@ -323,6 +332,7 @@ export default {
   components: {
     DataFrameMenu,
     FormulaSetting,
+    SimulatorSetting,
     DefaultSelect,
     AskBlock,
     ResultDisplay,
@@ -351,6 +361,7 @@ export default {
     return {
       isAddable: null,
       isLoading: false,
+      isFailed: false,
       currentComponent: null,
       selectedTriggerColumn: null,
       relatedDashboardTemplate: {
@@ -376,7 +387,8 @@ export default {
           name: this.$t('miniApp.mini')
         }
       ],
-      formulaComponentInfo: {}
+      formulaComponentInfo: {},
+      modelComponentInfo: {}
     }
   },
   computed: {
@@ -390,10 +402,10 @@ export default {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator'
     },
     isShowUpdatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator'
     },
     isShowFontSizeOption () {
       return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
@@ -500,7 +512,7 @@ export default {
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
     // 所有可以不需透過問問句就能創建的元件類型
-    const isDirectAddableComponentTypes = ['formula']
+    const isDirectAddableComponentTypes = ['formula', 'simulator']
     this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
     const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
     this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
@@ -528,7 +540,8 @@ export default {
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
           // 公式元件需補上一般問問句會取得的資料
-          ...this.formulaComponentInfo
+          ...this.formulaComponentInfo,
+          ...this.modelComponentInfo
         })
       })
     },
@@ -541,7 +554,8 @@ export default {
         if (!valid) return
         this.$emit('updateSetting', {
           ...this.currentComponent,
-          ...this.formulaComponentInfo
+          ...this.formulaComponentInfo,
+          ...this.modelComponentInfo
         })
       })
     },
