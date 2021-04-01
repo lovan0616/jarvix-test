@@ -86,6 +86,7 @@
         @dateTime="editDateTime"
         @etlSetting="editEtlSetting"
         @batchLoad="editBatchLoadSetting"
+        @updateSetting="editUpdateSetting"
         @createdInfo="viewCreatedInfo"
         @fetch="fetchData"
         @sort="sortData"
@@ -145,6 +146,11 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditFileDataUpdateDialog"
     />
+    <edit-update-setting-dialog
+      v-if="showEditUpdateSettingDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeEditUpdateSettingDialog"
+    />
     <feature-management-dialog
       v-if="showEditFeatureDialog"
       @close="toggleEditFeatureDialog"
@@ -172,6 +178,7 @@ import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
 import EditEtlDialog from './components/EditEtlDialog'
 import EditFileDataUpdateDialog from './components/EditFileDataUpdateDialog'
+import EditUpdateSettingDialog from './components/EditUpdateSettingDialog'
 import EditBatchLoadDialog from './components/EditBatchLoadDialog'
 import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
@@ -203,6 +210,7 @@ export default {
     EditEtlDialog,
     EditBatchLoadDialog,
     EditFileDataUpdateDialog,
+    EditUpdateSettingDialog,
     ViewCreatedInfoDialog,
     DataStorageUsageInfo
   },
@@ -217,6 +225,7 @@ export default {
       showEditEtlDialog: false,
       showEditBatchLoadDialog: false,
       showEditFileDataUpdateDialog:false, 
+      showEditUpdateSettingDialog: false,
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -315,7 +324,8 @@ export default {
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
                 { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
                 { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' },
-                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad', checkPermission: ['group_edit_data'] },
+                { icon: '', title: 'button.updateData', dialogName: 'batchLoad', checkPermission: ['group_edit_data'] },
+                { icon: '', title: 'button.updateSetting', dialogName: 'updateSetting', checkPermission: ['group_edit_data'] },
                 { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo', checkPermission: ['group_edit_data'] }
               ]
             },
@@ -563,6 +573,10 @@ export default {
           break
       }
     },
+    editUpdateSetting ({ id, primaryAlias }) {
+      this.currentEditDataFrameInfo = { id, primaryAlias }
+      this.showEditUpdateSettingDialog = true
+    },
     viewCreatedInfo ({ id, primaryAlias }) {
       this.currentEditDataFrameInfo = { id, primaryAlias }
       this.showCreatedInfoDialog = true
@@ -595,6 +609,11 @@ export default {
     },
     closeEditFileDataUpdateDialog () {
       this.showEditFileDataUpdateDialog = false
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
+      this.fetchData()
+    },
+    closeEditUpdateSettingDialog () {
+      this.showEditUpdateSettingDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
       this.fetchData()
     },

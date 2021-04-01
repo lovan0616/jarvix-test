@@ -90,7 +90,7 @@
             <a
               v-if="scope.row.relatedDashboardId"
               class="link" 
-              @click.stop="goToCertainDashboard(scope.row.relatedDashboardId, scope.row.monitoredData)">
+              @click.stop="goToCertainDashboard(scope.row.relatedDashboardId, scope.row)">
               {{ $t('miniApp.link') }}
             </a>
             <span 
@@ -229,10 +229,24 @@ export default {
     changePage (pageNumber) {
       this.getWarningLogs(pageNumber - 1)
     },
-    goToCertainDashboard (relatedDashboardId, rowData) {
+    goToCertainDashboard (relatedDashboardId, { monitoredData, monitoredDateRange }) {
       this.$emit('goToCertainDashboard', {
         relatedDashboardId,
-        rowData: rowData.filter(item => item.statsType === 'CATEGORY')
+        rowData: {
+          controlList: monitoredData.filter(item => item.statsType === 'CATEGORY'),
+          filterList: [
+            ...(monitoredDateRange.length > 0 && {
+              filterList: {
+                columnId: monitoredDateRange[0].dataColumnId,
+                columnName: monitoredDateRange[0].displayName,
+                dataType: monitoredDateRange[0].dataType,
+                end: monitoredDateRange[0].end,
+                start: monitoredDateRange[0].start,
+                statsType: monitoredDateRange[0].statsType,
+              }
+            })
+          ]
+        }
       })
     },
     onFilterCriteriaChanged () {
@@ -359,11 +373,8 @@ export default {
   }
 
   /deep/ .el-table {
-    /deep/.cell {
+    .cell {
       overflow: unset;
-    }
-    &__body-wrapper {
-      // overflow: unset;
     }
   }
 }

@@ -119,10 +119,24 @@ export default {
     logMonitoredData (rowData) {
       return rowData.reduce((acc, cur) => acc.concat(`${cur.displayName}: ${cur.datum[0]}<br>`), '')
     },
-    warningLogTriggered (log) {
+    warningLogTriggered ({ relatedDashboardId, monitoredData, monitoredDateRange }) {
       this.$emit('warningLogTriggered', {
-        relatedDashboardId: log.relatedDashboardId,
-        rowData: log.monitoredData
+        relatedDashboardId: relatedDashboardId,
+        rowData: {
+          controlList: monitoredData.filter(item => item.statsType === 'CATEGORY'),
+          filterList: [
+            ...(monitoredDateRange.length > 0 && {
+              filterList: {
+                columnId: monitoredDateRange[0].dataColumnId,
+                columnName: monitoredDateRange[0].displayName,
+                dataType: monitoredDateRange[0].dataType,
+                end: monitoredDateRange[0].end,
+                start: monitoredDateRange[0].start,
+                statsType: monitoredDateRange[0].statsType,
+              }
+            })
+          ]
+        }
       })
     }
   }

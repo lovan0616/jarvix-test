@@ -44,6 +44,20 @@
               v-else 
               class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
           </div>
+          <div
+            v-if="componentType === 'formula'"
+            class="data-source"
+          >
+            <div class="data-source__title">{{ $t('alert.expression') }}</div>
+            <spinner
+              v-if="isFetchingFormulas"
+              class="setting-block__spinner"
+              size="20"
+            /> 
+            <div 
+              v-else 
+              class="data-source__content">{{ currentFormula.name }}</div>
+          </div>
         </div>
         <!--示警指標-->
         <div class="setting-block">
@@ -88,8 +102,7 @@
               :key="control + '-' + index"
               class="single-select"
             >
-              <!--暫時隱藏，待後端修正-->
-              <!-- <div class="checkbox-group">
+              <div class="checkbox-group">
                 <div class="checkbox-label">
                   <input
                     v-model="control.isSelected"
@@ -98,7 +111,7 @@
                   >
                   <div class="checkbox-square"/>
                 </div>
-              </div> -->
+              </div>
               <div class="label-content">
                 <div class="label-title">{{ control.columnName }}</div>
               </div>
@@ -117,8 +130,7 @@
               :key="filter + '-' + index"
               class="single-select"
             >
-              <!--暫時隱藏，待後端修正-->
-              <!-- <div class="checkbox-group">
+              <div class="checkbox-group">
                 <div class="checkbox-label">
                   <input
                     v-model="filter.isSelected"
@@ -127,7 +139,7 @@
                   >
                   <div class="checkbox-square"/>
                 </div>
-              </div> -->
+              </div>
               <div class="label-content">
                 <div class="label-title">{{ filter.columnName }}</div>
                 <div class="label-description">{{ filter.targetValues }}</div>
@@ -187,6 +199,7 @@ import {
   getComponentIndicators,
   convertComponentToAlertCondition
 } from '@/API/Alert'
+import { getFormulaList } from '@/API/NewAsk'
 
 export default {
   name: 'ComponentToAlertConditionDialog',
@@ -206,6 +219,7 @@ export default {
   data () {
     return {
       currentDataFrame: {},
+      currentFormula: {},
       indicators: [],
       columnValueCombinationOptionList: [],
       filterOptionList: [],
@@ -241,6 +255,7 @@ export default {
       isProcessing: false,
       isFetchingDataFrame: false,
       isFetchingIndocators: false,
+      isFetchingFormulas: false,
       xAxis: [],
       hasError: false
     }
@@ -255,7 +270,11 @@ export default {
       }, [])
     },
     currentDataSource () {
-      return this.dataSourceOptionList.find(dataSource => dataSource.id === this.componentData.dataSourceId)
+      const currentDataSourceId = this.componentType === 'formula' ? this.componentData.formulaSetting.dataSourceId : this.componentData.dataSourceId
+      return this.dataSourceOptionList.find(dataSource => dataSource.id === currentDataSourceId)
+    },
+    currentDataFrameId () {
+     return this.componentType === 'formula' ? this.componentData.formulaSetting.dataFrameId : this.componentData.dataFrameId
     },
     comparisonOperatorOptionList () {
       return [
@@ -310,10 +329,14 @@ export default {
     },
     isSaveable () {
       return !this.isProcessing && !this.isFetchingDataFrame && !this.isFetchingIndocators && !this.hasError
+    },
+    componentType () {
+      return this.componentData.type
     }
   },
   mounted () {false
     this.fetchDataFrameList(this.currentDataSource.id)
+    this.componentType === 'formula' && this.fetchFormulaList()
     this.getComponentIndicators(this.componentData.keyResultId)
     this.columnValueCombinationOptionList = this.componentData.controlList.reduce((acc, cur) => {
       // 暫時預設全選，待後端修正
@@ -349,7 +372,10 @@ export default {
           return filter.start && filter.end
         case ('DATETIME'):
           return filter.start && filter.end
-        // TODO: relative datetime
+        case ('RELATIVEDATETIME'): 
+          return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+        default: 
+          return false
       }
     },
     transformFilterValue (filter) {
@@ -362,13 +388,14 @@ export default {
           return `${filter.start} - ${filter.end}`
         case ('DATETIME'):
           return `${filter.start} - ${filter.end}`
-        // TODO: relative datetime
+        case ('RELATIVEDATETIME'): 
+          return this.$t('miniApp.' + filter.dataValues[0])
       }
     },
     fetchDataFrameList (dataSourceId) {
       this.isFetchingDataFrame = true
       getDataFrameById(dataSourceId, false)
-        .then(response => this.currentDataFrame = response.find(dataFrame => dataFrame.id === this.componentData.dataFrameId))
+        .then(response => this.currentDataFrame = response.find(dataFrame => dataFrame.id === this.currentDataFrameId))
         .catch(() => this.hasError = true)
         .finally(() => this.isFetchingDataFrame = false)
     },
@@ -382,6 +409,13 @@ export default {
         })
         .catch(() => this.hasError = true)
         .finally(() => this.isFetchingIndocators = false)
+    },
+    fetchFormulaList () {
+      this.isFetchingFormulas = true
+      getFormulaList()
+        .then(formulaList => this.currentFormula = formulaList.find(formula => formula.id === this.componentData.formulaSetting.formulaId))
+        .catch(() => this.hasError = true)
+        .finally(() => this.isFetchingFormulas = false)
     },
     updateSelectedIndicator (type) {
       this.newConditionSetting.targetConfig.analysisValueType = type
@@ -399,7 +433,7 @@ export default {
           const settingData = {
             ...this.newConditionSetting,
             componentId: this.componentData.keyResultId,
-            dataFrameId: this.componentData.dataFrameId,
+            dataFrameId: this.currentDataFrameId,
           }
           // 展開條件
           settingData.targetConfig.combinationColumns = this.columnValueCombinationOptionList
@@ -411,10 +445,24 @@ export default {
               statsType: column.statsType
             }))
 
-          // 資料過濾條件
-          const selectedFilterList = this.filterOptionList.filter(option => option.isSelected)
-          settingData.targetConfig.restrictions = this.restrictions(selectedFilterList)
+          // 分類和處理資料過濾條件
+          const initialFilterLists = {
+            general: [],
+            relativeDateTime: []
+          }
+          const selectedFilterLists = this.filterOptionList.reduce((acc, cur) => {
+            if (!cur.isSelected) return acc
+            const category = cur.statsType === 'RELATIVEDATETIME' ? 'relativeDateTime' : 'general'
+            acc[category].push(cur)
+            return acc
+          }, initialFilterLists)
 
+          // 資料過濾條件: 一般 filter
+          settingData.targetConfig.restrictions = this.restrictions(selectedFilterLists.general)
+
+          // 資料過濾條件: 相對時間 filter
+          settingData.targetConfig.dateRangeColumn = this.formatRelatvieDateTimeFilter(selectedFilterLists.relativeDateTime[0])
+          
           // 指標如果選定離群值，不帶條件設定
           if (!this.showConditionComapringSection) settingData.comparingValues = null
 
@@ -432,22 +480,52 @@ export default {
         }
       })
     },
+    formatRelatvieDateTimeFilter (filter) {
+      if (!filter) return null
+      const selectedValue = filter.dataValues[0]
+      const filterInfo = {
+        dataColumnId: this.componentData.dateTimeColumn.dataColumnId,
+        dataType: 'DATETIME',
+        displayName: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+        recentInterval: null,
+        recentIntervalUnit: null,
+        statsType: 'DATETIME'
+      }
+
+      // update datetime range
+      switch (true) {
+        case RegExp('^.*hour.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('hour')[0])
+          filterInfo.recentIntervalUnit = 'Hour'
+          break
+        case RegExp('^today$').test(selectedValue): 
+          filterInfo.recentInterval = 0
+          filterInfo.recentIntervalUnit = 'Day'
+          break
+        case RegExp('^.*day.*$').test(selectedValue): 
+          filterInfo.recentInterval = Number(selectedValue.split('day')[0])
+          filterInfo.recentIntervalUnit = 'Day'
+          break
+        case RegExp('^.*week.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('week')[0])
+          filterInfo.recentIntervalUnit = 'Week'
+          break
+        case RegExp('^.*month.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('month')[0])
+          filterInfo.recentIntervalUnit = 'Month'
+          break
+        case RegExp('^.*season.*$').test(selectedValue):
+          filterInfo.recentInterval = Number(selectedValue.split('season')[0])
+          filterInfo.recentIntervalUnit = 'Season'
+          break
+      }
+
+      return filterInfo
+    },
     restrictions (filterList) {
       if (filterList.length === 0) return []
       return filterList
-        .filter(filter => {
-          // TODO: 相對時間有全選的情境，不需帶入限制中
-          // if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
-          // 時間欄位要有開始和結束時間
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
-          // filter 必須有值
-          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
-          return false
-        })
+        .filter(filter => this.checkShouldApplyMiniAppFilter(filter))
         .map(filter => {
           let type = ''
           let data_type = ''
@@ -469,17 +547,6 @@ export default {
               type = 'range'
               break  
           }
-
-          // TODO: 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          // if (filter.statsType === 'RELATIVEDATETIME') return [{
-          //   type,
-          //   properties: {
-          //     data_type,
-          //     dc_id: this.componentData.dateTimeColumn.dataColumnId,
-          //     display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-          //     ...this.formatRelativeDatetime(filter.dataValues[0])
-          //   }
-          // }]
 
           return [{
             type,

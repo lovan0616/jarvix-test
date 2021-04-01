@@ -1,18 +1,6 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
-      <div class="setting-block__title">應用程式設定</div>
-      <div class="setting-block__content">
-        <div class="input-block">
-          <label for="">開啟應用程式：</label>
-          <el-switch 
-            v-model="openMiniAppModule"
-            class="setting-switch"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="setting-block">
       <div class="setting-block__title">資料處理設定</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -138,7 +126,6 @@ export default {
   data () {
     return {
       closeQuickAsk: localStorage.getItem('closeQuickAsk'),
-      isShowMiniAppModule: localStorage.getItem('isShowMiniAppModule'),
       isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
       isShowOrderUpload: localStorage.getItem('isShowOrderUpload'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
@@ -158,15 +145,6 @@ export default {
       set (value) {
         this.closeQuickAsk = value
         localStorage.setItem('closeQuickAsk', value)
-      }
-    },
-    openMiniAppModule: {
-      get () {
-        return this.isShowMiniAppModule === 'true' || this.isShowMiniAppModule
-      },
-      set (value) {
-        this.isShowMiniAppModule = value
-        localStorage.setItem('isShowMiniAppModule', value)
       }
     },
     openDistributedSetting: {

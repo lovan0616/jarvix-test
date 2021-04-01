@@ -595,7 +595,6 @@ export default {
       this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo = column
     },
     setComponentConfig (config) {
-      this.currentComponent.config.enableAlert = !!config.enableAlert
       this.currentComponent.chartInfo = {
         xAxis: config.xAxis
       }

@@ -296,7 +296,9 @@ export default {
       handler (val) {
         this.filter = {
           ...JSON.parse(JSON.stringify(val)),
-          dataValueOptionList: this.filter.dataValueOptionList
+          dataValueOptionList: this.filter.dataValueOptionList,
+          dataMin: this.filter.dataMin,
+          dataMax: this.filter.dataMax
         }
       }
     },
@@ -473,18 +475,7 @@ export default {
       const currentFilterIndex = this.filterSet.findIndex(filter => filter.columnId === this.initialFilter.columnId)
       const restrictions = this.filterSet
         .slice(0, currentFilterIndex)
-        .filter(filter => {
-          // 相對時間有全選的情境，不需帶入限制中
-          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
-          // filter 必須有值
-          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
-          return false
-        })
+        .filter(filter => this.checkShouldApplyMiniAppFilter(filter))
         .map(filter => {
 
           let type = ''
