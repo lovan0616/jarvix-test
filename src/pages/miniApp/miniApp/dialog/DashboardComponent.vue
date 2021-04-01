@@ -490,21 +490,7 @@ export default {
     },
     restrictions () {
       return this.allFilterList
-        .filter(filter => {
-          // 相對時間有全選的情境，不需帶入限制中
-          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
-
-          // 時間欄位要有開始和結束時間// 只處理相同 datafram 或欄位名稱相同的 filter
-          // if (this.questionInfo.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
-          // filter 必須有值
-          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
-          return false
-        })
+        .filter(filter => this.checkShouldApplyMiniAppFilter(filter, this.mainDateColumn))
         .map(filter => {
           let type = ''
           let data_type = ''

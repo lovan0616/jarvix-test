@@ -514,6 +514,7 @@ export default {
         if (action.dialogName === 'batchLoad' && data.joinCount > 1) return false
         if (action.dialogName === 'etlSetting') return data.etlExists
         if (action.dialogName === 'createdInfo') return data.originType === 'database' && hasPermission
+        if (action.dialogName === 'updateSetting') return data.originType === 'file' && hasPermission
         return hasPermission
       })
     },

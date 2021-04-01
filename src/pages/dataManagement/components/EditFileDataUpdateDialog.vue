@@ -4,7 +4,7 @@
       <choose-file-data-update-mode 
         v-if="step === 1"
         :step="1"
-        :title="$t('fileDataUpdate.dataUpdateSetting')"
+        :title="$t('fileDataUpdate.updateData')"
         :data-frame-info="dataFrameInfo"
         :process-text="processText"
         @next="chooseMode"

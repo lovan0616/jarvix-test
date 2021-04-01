@@ -56,7 +56,11 @@
               <svg-icon 
                 icon-class="more"
                 class="more-icon" />
-              <slot name="drowdown"/>
+              <!-- <slot name="drowdown"/> -->
+              <dropdown-select
+                :bar-data="componentSettingOptions"
+                @switchDialogName="$emit('switchDialogName', $event)"
+              />
             </div>
             <div v-if="!isEditMode && componentData.type === 'monitor-warning-list'">
               <svg-icon 
@@ -79,7 +83,7 @@
                 :converted-type="'index_info'"
                 intend="key_result"
                 @isEmpty="isEmptyData = true"
-                @failed="isComponentFailed = true"
+                @failed="onComponentFailed"
                 @finished="isIndexTypeComponentLoading = false"
                 @setConfig="updateComponentConfigInfo"
               />
@@ -149,6 +153,8 @@
             @clickCell="columnTriggered($event)"
             @clickRow="rowTriggered($event)"
             @clickChart="chartriggered($event)"
+            @setConfig="updateComponentConfigInfo"
+            @failed="onComponentFailed"
           />
         </div>
       </template>
@@ -168,6 +174,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
 import AbnormalStatistics from './AbnormalStatistics'
 import Simulator from './Simulator'
+import DropdownSelect from '@/components/select/DropdownSelect'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
@@ -179,7 +186,8 @@ export default {
     DecideDialog,
     MonitorWarningList,
     AbnormalStatistics,
-    Simulator
+    Simulator,
+    DropdownSelect
   },
   props: {
     componentData: {
@@ -241,6 +249,7 @@ export default {
       tempFilteredKeyResultId: null,
       isInitializing: true,
       segmentation: null,
+      enableAlert: false
     }
   },
   computed: {
@@ -376,7 +385,29 @@ export default {
           'height': 'calc(100% - 80px)',
         })
       }
-    }
+    },
+    componentSettingOptions () {
+      const options = [
+        {
+          title: 'miniApp.componentSetting',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponent'
+        },
+        {
+          title: 'button.delete',
+          icon: 'delete',
+          dialogName: 'DeleteComponent'
+        },
+        ...(this.enableAlert && [
+          {
+            title: 'button.createAlert',
+            icon: 'warning',
+            dialogName: 'CreateWarningCriteria'
+          }
+        ])
+      ]
+      return options
+    },
   },
   watch: {
     isCurrentDashboardInit: {
@@ -445,6 +476,7 @@ export default {
       this.isProcessing = true
       this.isIndexTypeComponentLoading = true
       this.isComponentFailed = false
+      this.enableAlert = false
       this.totalSec = 50
       this.periodSec = 200
       this.isEmptyData = false
@@ -542,21 +574,7 @@ export default {
     },
     restrictions () {
       return this.allFilterList
-        .filter(filter => {
-          // 相對時間有全選的情境，不需帶入限制中
-          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
-          // 只處理相同 datafram 或欄位名稱相同的 filter
-          // if (this.componentData.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
-          // 時間欄位要有開始和結束時間
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
-          // filter 必須有值
-          if (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN') return filter.dataValues.length > 0
-          return false
-        })
+        .filter(filter => this.checkShouldApplyMiniAppFilter(filter, this.componentData.dateTimeColumn))
         .map(filter => {
           let type = ''
           let data_type = ''
@@ -703,7 +721,15 @@ export default {
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
     },
     updateComponentConfigInfo (config) {
-      this.componentData.enableAlert = config.enableAlert
+      // 能用來轉示警條件的元件類型
+      const enabledComponentTypeList = ['formula', 'chart']
+      const isEnabledComponent = enabledComponentTypeList.includes(this.componentData.type)
+      if (!isEnabledComponent) return
+      this.enableAlert = config.enableAlert
+    },
+    onComponentFailed () {
+      this.isComponentFailed = true
+      this.enableAlert = false
     }
   }
 }
@@ -824,6 +850,7 @@ $direction-span: ("col": 12, "row": 12);
           border-radius: 4px;
         }
         .dropdown-select {
+          visibility: hidden;
           z-index: 1;
           /deep/ .dropdown-select-box {
             box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);

@@ -7,6 +7,7 @@
           <el-switch
             v-model="tempWarningModuleConfig.activate"
             :width="Number('32')"
+            :disabled="isLoading"
             active-color="#2AD2E2"
             inactive-color="#324B4E"
             @change="saveWarningModuleSetting"
@@ -16,6 +17,7 @@
       </div>
       <div class="nav-right">
         <button
+          :disabled="isLoading"
           class="btn-m btn-secondary button-container__button"
           @click="isShowCreateConditionDialog = true"
         >{{ $t('alert.createAlertCondition') }}</button>
@@ -27,6 +29,7 @@
           {{ $t('miniApp.monitorUpdateFrequency') }}：
           <default-select 
             v-model="tempWarningModuleConfig.updateFrequency"
+            :is-disabled="isLoading"
             :option-list="updateFrequency"
             :placeholder="$t('miniApp.chooseUpdateFrequency')"
             class="setting__block-select"
