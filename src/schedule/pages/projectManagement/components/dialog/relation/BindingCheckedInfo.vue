@@ -51,11 +51,11 @@
             </i18n>
           </div>
           <div
-            v-if="column.refErrorRows.length > 0"
+            v-if="column.refErrorValueCounts && column.refErrorValueCounts.length > 0"
             class="error-info"
           >
             <div><b>{{ $t('schedule.binding.failedBecauseOfRef') }}</b>（{{ $t('schedule.binding.failedBecauseOfRefDesc') }}）</div>
-            <span class="highlight">{{ concatedValues(parseRefErrorRows(column.refErrorRows)) }}</span>
+            <span class="highlight">{{ concatedValues(parseRefErrorValues(column.refErrorValueCounts)) }}</span>
           </div>
           <div
             v-if="column.typeErrorRowIndexes.length > 0"
@@ -83,6 +83,7 @@
 <script>
 import WritingDialog from '@/components/dialog/WritingDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
+import { mapState } from 'vuex'
 
 export default {
   name: 'BindingCheckedInfo',
@@ -104,25 +105,22 @@ export default {
     }
   },
   computed: {
+    ...mapState('scheduleSetting', ['refErrorResultSizeLimit']),
     failedRowCount () {
       return this.info.notApplicableRowCount
     },
     failedColumns () {
       return this.info.notApplicableRowCount > 0
-        ? this.info.columns.filter(column => column.emptyRowIndexes.length > 0 || column.typeErrorRowIndexes.length > 0 || column.refErrorRows.length > 0)
+        ? this.info.columns.filter(column => column.emptyRowIndexes.length > 0 || column.typeErrorRowIndexes.length > 0 || (column.refErrorValueCounts && column.refErrorValueCounts.length > 0))
         : []
     }
   },
   methods: {
-    parseRefErrorRows (refErrorRows) {
-      // 使用 Set 除去重複值
-      const valueSet = new Set(refErrorRows.reduce((acc, cur) => acc.concat(cur.value), []))
-      // 畫面上最多顯示幾筆
-      const maxShowAmount = 10000
-      const exceedMaxShowAmount = valueSet.size > maxShowAmount
+    parseRefErrorValues (refErrorValues) {
+      // 後端會將 refErrorValues 去重複並由大到小排序
       return {
-        values: exceedMaxShowAmount ? [ ...valueSet ].slice(0, maxShowAmount) : [ ...valueSet ],
-        exceedMaxShowAmount
+        values: refErrorValues.filter(item => item.value !== null).reduce((acc, cur) => acc.concat(cur.value), []),
+        exceedMaxShowAmount: refErrorValues.length >= this.refErrorResultSizeLimit
       }
     },
     concatedValues ({ values, exceedMaxShowAmount }) {

@@ -110,7 +110,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapState('scheduleSetting', ['scheduleProjectId', 'refErrorResultSizeLimit']),
     isDataBindable () {
       return Object.values(this.checkedResult).every(value => value.bindable)
     },
@@ -148,7 +148,8 @@ export default {
 
       const requestBody = {
         ...this.formattedData,
-        projectId: this.scheduleProjectId
+        projectId: this.scheduleProjectId,
+        refErrorResultSizeLimit: this.refErrorResultSizeLimit
       }
 
       this.isChecking = true
