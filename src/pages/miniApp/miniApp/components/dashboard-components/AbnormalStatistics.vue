@@ -49,7 +49,8 @@ export default {
     return {
       sizeTable,
       isLoading: false,
-      logCount: 0   
+      logCount: 0,
+      appAciveConditions: []
     }
   },
   computed: {
@@ -66,11 +67,6 @@ export default {
         ...this.sizeTable[this.conponentConfig.fontSize || 'middle'],
         'color': this.textColor
       }
-    },
-    conditionIds () {
-      return this.warningModuleSetting.conditions
-        .filter(condition => condition.activate)
-        .map(condition => condition.id)
     }
   },
   watch: {
@@ -84,13 +80,23 @@ export default {
     }
   },
   mounted () {
-    this.fetchData()
+    this.init()
   },
   methods: {
-    fetchData () {
+    init () {
+      this.isLoading = true
+      this.fetchMiniAppActiveWarningConditions(this.warningModuleSetting)
+        .then(conditionList => {
+          if (conditionList.length === 0) return this.isLoading = false
+          this.appAciveConditions = conditionList
+          this.fetchData()
+        })
+        .catch(() => this.isLoading = false)
+    },
+    fetchData () {  
       this.isLoading = true
       getAlertLogsCount({ 
-        conditionIds: this.conditionIds, 
+        conditionIds: this.appAciveConditions, 
         groupId: this.getCurrentGroupId, 
         active: this.isGetHandledComponentCount,
         startTime: this.filterTime.start,

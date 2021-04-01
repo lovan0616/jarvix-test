@@ -973,11 +973,22 @@
     "formulaType": "Calculation Formula Type",
     "singleColumnData": "Single Column Data",
     "singleRowData": "Single Row Data",
+    "anomalySetting": "Anomaly Setting",
+    "greaterThanAndEqualTo": "Greater Than And Equal To",
+    "greaterThan": "Greater Than",
+    "equalTo": "Equal To",
+    "lessThan": "Less Than",
+    "lessThanAndEqualTo": "Less Than And Equal To",
+    "datumValue": "Datum Value",
+    "emptyRules": "Empty Rules",
+    "anomalyRules": "Anomaly Rules",
     "pleaseCheckFollowingSituations": "Please Check For The Following Situations",
     "dataframeExistenceAndRebuild": "Whether the dataframe current column belongs to has been removed or updated, otherwise, rebuild it.",
     "connectionStatus": "Connection status.",
     "otherReasons": "Any other possible reason.",
-    "fetchDataFailed": "Failed Fetching Data"
+    "fetchDataFailed": "Failed Fetching Data",
+    "displayUnderPublishMode": "Display Under Publish Mode",
+    "hideUnderPublishMode": "Hide Under Publish Mode"
   },
   "alert": {
     "alertLogs": "Alert Record",
@@ -1027,7 +1038,10 @@
     "columnValueCombination": "Data Column Combination",
     "dataFilterCondition": "Filter Conditions",
     "dataSource": "Data Source",
-    "dataFrame": "Data Set"
+    "dataFrame": "Data Set",
+    "monitoredField": "Monitored Field",
+    "operatingStatus": "Operating Status",
+    "operating": "Operating"
    },
   "clustering": {
     "cluster": "Cluster",
@@ -1242,7 +1256,10 @@
     "changeDiagram": "Change Diagram",
     "columnSummaryInfo": "Column Summary Info",
     "createAlert": "Create Alert Condition",
-    "send": "Send"
+    "send": "Send",
+    "runRightAway": "Run Right Away",
+    "createNewRule": "Create A New Rule",
+    "applyToChart": "Apply To Chart"
   },
   "timeScopeUnit": {
     "second": "seconds",

@@ -22,6 +22,17 @@ export function deleteAlertCondition (conditionId) {
 }
 
 /**
+ * 修改 監控示警條件開關
+ */
+export function toggleAlertCondition (conditionId, data) {
+  return request({
+    url: `/alert/condition/${conditionId}`,
+    method: 'PATCH',
+    data
+  })
+}
+
+/**
  * 取得 所有示警條件
  */
 export function getAlertConditions (groupId) {
@@ -137,5 +148,16 @@ export function convertComponentToAlertCondition(data) {
     url: `/alert/condition/component`,
     method: 'POST',
     data
+  })
+}
+
+/**
+ * 手動觸發示警
+ * @param {Number} id - condition id
+ */
+export function manualTriggerAlert(id) {
+  return request({
+    url: `alert/conditions/${id}/trigger`,
+    method: 'POST'
   })
 }

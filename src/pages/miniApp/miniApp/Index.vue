@@ -338,7 +338,7 @@
                     @chartTriggered="chartTriggered"
                     @warningLogTriggered="warningLogTriggered($event)"
                     @goToCertainDashboard="activeCertainDashboard($event)"
-                    @switchDialogName="switchDialogName($event, componentData)"
+                    @switchDialogName="handleDashboardSwitchName($event, componentData)"
                   >
                     <template 
                       v-if="componentData.type === 'monitor-warning-list'" 
@@ -1204,8 +1204,8 @@ export default {
     addComponentAlertToWarningModuleSetting (conditionId) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       editedMiniApp.settings.editModeData.warningModule.conditions.push({
-        id: conditionId,
-        activate: true
+        id: conditionId, 
+        relatedDashboardId: null
       })
       this.updateAppSetting(editedMiniApp)
         .then(() => this.miniApp = editedMiniApp)
@@ -1473,6 +1473,7 @@ export default {
           fontSize: 'middle',
         },
         algoConfig: null,
+        anomalySettings: [],
         // 給定 null 值存到 DB 時，整個屬性會被拔除，所以先給定預設值
         parserLanguage: this.parserLanguage,
         updateTime: new Date().getTime(),
@@ -1548,6 +1549,12 @@ export default {
           duration: 3 * 1000,
           showClose: true
         })
+      })
+    },
+    handleDashboardSwitchName({ name, componentComplementaryInfo }, componentData) {
+      this.switchDialogName(name, {
+        ...componentData,
+        ...componentComplementaryInfo
       })
     }
   }
