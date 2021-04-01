@@ -60,11 +60,13 @@
           v-validate="'required'"
           :option-list="modelOptionList"
           :placeholder="$t('modelFlow.upload.chooseModel')"
+          :enable-lazy-loading="enableModelsLazyLoading"
           v-model="modelId"
           filterable
           class="setting-block__select"
           name="modelId"
           @change="modelChangedHandler"
+          @intersect="fetchModelList"
         />
         <div 
           v-show="errors.has('modelId')"
@@ -188,7 +190,14 @@ export default {
         input: [],
         output: []
       },
-      targetDataframeName: ''
+      targetDataframeName: '',
+      enableModelsLazyLoading: true,
+      modelsPagination: {
+        currentPage: -1,
+        itemPerPage: 0,
+        totalItems: 0,
+        totalPages: 0
+      }
     }
   },
   computed: {
@@ -255,16 +264,23 @@ export default {
     },
     fetchModelList () {
       // TODO: 把失敗的 filter
-      // TODO: 前端分頁取 model
-      getModelList(this.getCurrentGroupId, 0, 999)
-        .then(response => {
-          this.modelOptionList = response.models
+      // 取過且已經取到最後一頁
+      if (this.modelsPagination.currentPage >= 0
+        && this.modelsPagination.currentPage >= this.modelsPagination.totalPages - 1) {
+        this.enableModelsLazyLoading = false
+        return
+      }
+      getModelList(this.getCurrentGroupId, ++this.modelsPagination.currentPage)
+        .then(({ models, pagination }) => {
+          this.modelsPagination = pagination
+          const newModelOptions = models
             .map(model => {
               return {
                 name: `${model.name} (ID:${model.id})`,
                 value: model.id
               }
             })
+          this.modelOptionList = [ ...this.modelOptionList, ...newModelOptions ]
         })
     },
     clearData () {
