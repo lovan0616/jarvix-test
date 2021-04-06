@@ -86,6 +86,7 @@
 </template>
 <script>
 import MonitorSettingDialog from '@/pages/pinboard/components/MonitorSettingDialog'
+import { formatComponentTitle } from '@/components/display/common/addons'
 
 export default {
   name: 'Task',
@@ -140,6 +141,19 @@ export default {
     isHoverable: {
       type: Boolean,
       default: false
+    },
+     anomalySetting: {
+      type: Object,
+      default: () => ({
+        xAxis: {
+          upperLimit: null,
+          lowerLimit: null
+        },
+        yAxis: {
+          upperLimit: null,
+          lowerLimit: null
+        }
+      })
     }
   },
   data () {
@@ -221,9 +235,18 @@ export default {
                 enableAlert: response.enableAlert,
                 // 2N 異常設定示警需要 x 軸欄位資訊
                 ...((response.enableAlert && responseData.title) && {
-                  xAxis: responseData.title.xAxis
-                })
+                  xAxis: responseData.title.xAxis && responseData.title.xAxis.filter(xAxis => xAxis.dc_id),
+                  yAxis: responseData.title.yAxis
+                }),
+                // 元件設定資訊集
+                supportedFunction: response.supportedFunction
               })
+
+              // 圖表異常標記設定和轉換
+              if (responseData.title) {
+                responseData.title.xAxis = formatComponentTitle(responseData.title.xAxis, this.anomalySetting.xAxis)
+                responseData.title.yAxis = formatComponentTitle(responseData.title.yAxis, this.anomalySetting.yAxis)
+              }
 
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
