@@ -123,15 +123,12 @@ export default {
       userQuestion: null,
       showHistoryQuestion: false,
       websocketHandler: null,
-      recommendList: [],
-      cursorPositionQuestion: null,
-      isFocus: false,
-      closeQuickAsk: localStorage.getItem('closeQuickAsk') || false
+      isFocus: false
     }
   },
   computed: {
     ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName']),
-    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList']),
+    ...mapState('dataSource', ['dataSourceId', 'appQuestion']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     newParserMode () {
@@ -153,16 +150,6 @@ export default {
         this.$store.commit('chatBot/setParserLanguage', value)
       }
     },
-    dictionaries () {
-      return [
-        ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
-        ...this.dataSourceColumnInfoList.category.map(element => ({type: 'category', text: element})),
-        ...this.dataSourceColumnInfoList.dateTime.map(element => ({type: 'dateTime', text: element})),
-        ...this.dataSourceColumnInfoList.numeric.map(element => ({type: 'numeric', text: element})),
-        ...this.dataSourceColumnInfoList.uniqueList.map(element => ({type: 'unique', text: element})),
-        ...this.$t('questionToken')
-      ]
-    },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
     },
@@ -181,54 +168,12 @@ export default {
     dataSourceList () {
       return this.$store.state.dataSource.dataSourceList
     },
-    questionTokenList () {
-      let tokenList = []
-      // 處理問句字串
-      if (!this.userQuestion) return []
-      for (let i = 0; i < this.userQuestion.length; i++) {
-        for (let j = this.userQuestion.length; j >= i + 1; j--) {
-          let currentText = this.userQuestion.slice(i, j)
-          // 找出是否有符合的 token
-          let tokenIndex = this.dictionaries.findIndex(element => element.text.toLowerCase() === currentText.toLowerCase())
-          if (tokenIndex > -1) {
-            tokenList.push(this.dictionaries[tokenIndex])
-            i = j - 1
-            break
-          }
-
-          if (j === i + 1) {
-            tokenList.push({type: 'unknown', text: this.userQuestion[i]})
-          }
-        }
-      }
-
-      return tokenList
-    },
     availableDataSourceList () {
       if (!this.dataSourceList) return []
       return this.dataSourceList.filter(dataSource => dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount > 0)
     }
   },
   watch: {
-    questionTokenList (value, oldValue) {
-      if (this.closeQuickAsk === 'true') return
-      if (value.length === 0) return
-      // token 減少不處理
-      let newRecognizeTokenList = value.filter(element => element.type !== 'unknown')
-      let oldRecognizeTokenList = oldValue.filter(element => element.type !== 'unknown')
-      if (newRecognizeTokenList.length <= oldRecognizeTokenList.length) return
-
-      // 如果最後一個是認得出來的 token 就問問題
-      let lastToken = value[value.length - 1]
-      if (lastToken.type !== 'unknown') {
-        this.enterQuestion()
-      } else {
-        // 未來作推薦問句的處理
-        // this.recommendList = this.dictionaries.filter(element => {
-        //   return element.text.indexOf(lastToken.text) !== -1
-        // }).map(element => element.text)
-      }
-    },
     userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
         this.showHistory()
@@ -352,7 +297,11 @@ export default {
     enterQuestion () {
       let modelQuestionKeyWordList = ['預測', '專案', '是否', '成案']
       if (this.availableDataSourceList.length === 0) return
-      this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
+      /**
+       * 移除特殊符號 (unicode \u0008, referred to as \b in strings)
+       * 先移除特殊符號再問問句 
+       */
+      this.$store.commit('dataSource/setAppQuestion', this.userQuestion.replace(/[\b]/g, ''))
       if (this.redirectOnAsk) {
         this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
         

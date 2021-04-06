@@ -2668,26 +2668,5 @@
     "boolean": "布林",
     "datetime": "時間",
     "others": "其他"
-  },
-  "questionToken": [
-    {"type": "intend", "text": "概況"},
-    {"type": "aggregate", "text": "平均"},
-    {"type": "aggregate", "text": "總和"},
-    {"type": "aggregate", "text": "總合"},
-    {"type": "aggregate", "text": "總數"},
-    {"type": "aggregate", "text": "最大"},
-    {"type": "aggregate", "text": "最小"},
-    {"type": "aggregate", "text": "標準差"},
-    {"type": "aggregate", "text": "中位數"},
-    {"type": "intend", "text": "趨勢"},
-    {"type": "intend", "text": "比較"},
-    {"type": "rootCause", "text": "上升"},
-    {"type": "rootCause", "text": "下降"},
-    {"type": "intend", "text": "根因分析"},
-    {"type": "intend", "text": "預測"},
-    {"type": "intend", "text": "比例"},
-    {"type": "intend", "text": "關係"},
-    {"type": "intend", "text": "有關"},
-    {"type": "intend", "text": "差異"}
-  ]
+  }
 }
