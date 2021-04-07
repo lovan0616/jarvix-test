@@ -235,7 +235,7 @@ export default {
         .then(response => {
           this.clearData()
           this.dataFrameOptionList = response
-            .filter(frame => frame.hasPrimaryKey)
+            .filter(this.isSelectableSourceDataframe)
             .map(frame => {
               return {
                 name: frame.primaryAlias,
@@ -299,7 +299,8 @@ export default {
           this.ioArgs = {
             input: ioArgs.input.map(input => {
               return {
-                ...input,
+                modelColumnName: input.modelColumnName,
+                columnStatsType: input.statsType,
                 columnId: null,
                 id: uuidv4()
               }
@@ -326,7 +327,7 @@ export default {
         this.updateCurrentUploadFlowInfo({
           ...this.currentUploadFlowInfo,
           ioArgs: {
-            input: this.ioArgs.input.map(({ modelColumnName, statsType, columnId }) => ({ modelColumnName, statsType, columnId })),
+            input: this.ioArgs.input.map(({ modelColumnName, columnStatsType, columnId }) => ({ modelColumnName, columnStatsType, columnId })),
             output: this.ioArgs.output.map(({ modelColumnName, columnStatsType, originalName }) => ({ modelColumnName, columnStatsType, originalName }))
           },
           modelId: this.modelId,
@@ -335,6 +336,9 @@ export default {
         })
         this.$emit('next')
       })
+    },
+    isSelectableSourceDataframe (frame) {
+      return frame.hasPrimaryKey && !frame.name.startsWith('sc_')
     }
   }
 }

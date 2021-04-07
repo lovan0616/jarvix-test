@@ -3,7 +3,7 @@
     <div class="input-field">
       <label class="input-field__label">{{ $t('modelFlow.upload.modelInputArgs') }}</label>
       <div class="input-field__text">
-        {{ columnInfo.modelColumnName + ` (${columnInfo.statsType})` }}
+        {{ columnInfo.modelColumnName + ` (${columnInfo.columnStatsType})` }}
       </div>
     </div>
     <div class="input-field">
@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     sameStatsTypeDataColumnOptionList () {
-      return this.dataColumnOptionList.filter(column => column.statsType === this.columnInfo.statsType)
+      return this.dataColumnOptionList.filter(column => column.statsType === this.columnInfo.columnStatsType)
     }
   }
 }
