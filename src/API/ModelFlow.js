@@ -39,3 +39,10 @@ import request from '@/utils/publicRequest'
     method: 'POST'
   })
 }
+
+export function deleteModelFlow(modelFlowId) {
+  return request({
+    url: `/model-flows/${modelFlowId}`,
+    method: 'DELETE'
+  })
+}

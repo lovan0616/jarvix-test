@@ -54,22 +54,23 @@
       v-if="showCreateFlowDialog"
       @close="closeCreateFlowDialog"
     />
-    <!-- 
     <decide-dialog
       v-if="isShowDeleteDialog"
-      :content="$t('modelFlow.deleteConfirmText')"
-      :type="'delete'"
+      :title="$t('modelFlow.deleteConfirmText')"
+      :is-processing="isDeleting"
+      type="delete"
       class="flow-delete-dialog"
-      @closeDialog="cancelDelete"
-      @confirmBtn="deleteAll"
-    /> -->
+      @closeDialog="closeDeleteDialog"
+      @confirmBtn="deleteFlow"
+    />
   </div>
 </template>
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadDialog from './flowExecution/UploadDialog'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import FlowCard from './components/FlowCard'
-import { getModelFlowList, updateModelFlow } from '@/API/ModelFlow'
+import { getModelFlowList, updateModelFlow, deleteModelFlow } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 
@@ -78,7 +79,8 @@ export default {
   components: {
     EmptyInfoBlock,
     UploadDialog,
-    FlowCard
+    FlowCard,
+    DecideDialog
   },
   data () {
     return {
@@ -93,7 +95,8 @@ export default {
         totalPages: 0,
         totalItems: 0,
         itemPerPage: 10
-      }
+      },
+      isDeleting: false
     }
   },
   computed: {
@@ -134,11 +137,7 @@ export default {
       this.clearPolling()
       this.startPolling(false, true, page - 1)
     },
-    confirmDelete ({id}) {
-      this.deleteFlowId = id
-      this.isShowDeleteDialog = true
-    },
-    cancelDelete () {
+    closeDeleteDialog () {
       this.deleteFlowId = null
       this.isShowDeleteDialog = false
     },
@@ -152,6 +151,11 @@ export default {
       switch (actionName) {
         case 'manulUpdate':
           this.updateModelFlow(id)
+          return
+        case 'deleteModelFlow':
+          this.deleteFlowId = id
+          this.isShowDeleteDialog = true
+          return
       }
     },
     updateModelFlow (id) {
@@ -168,20 +172,24 @@ export default {
         })
     },
     deleteFlow () {
-      // deleteFlowById(this.deleteFlowId)
-      //   .then(() => {
-      //     this.fetchData()
-      //       .then(() => {
-      //         Message({
-      //           message: this.$t('message.deleteSuccess'),
-      //           type: 'success',
-      //           duration: 3 * 1000,
-      //           showClose: true
-      //         })
-      //       })
-      //   }).finally(() => {
-      //     this.cancelDelete()
-      //   })
+      this.isDeleting = true
+      deleteModelFlow(this.deleteFlowId)
+        .then(() => {
+          this.fetchData()
+            .then(() => {
+              Message({
+                message: this.$t('message.deleteSuccess'),
+                type: 'success',
+                duration: 3 * 1000,
+                showClose: true
+              })
+            })
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isDeleting = false
+          this.closeDeleteDialog()
+        })
     },
     startPolling (init, showSpinner, page) {
       this.fetchData(init, showSpinner, page)

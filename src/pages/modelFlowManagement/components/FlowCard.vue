@@ -113,13 +113,9 @@ export default {
     },
     flowFunctions () {
       return [
-        { title: 'modelFlow.immediatelyUpdate', dialogName: 'manulUpdate' }
+        { title: 'modelFlow.immediatelyUpdate', dialogName: 'manulUpdate' },
+        { title: 'modelFlow.deleteModelFlow', dialogName: 'deleteModelFlow' }
       ]
-    }
-  },
-  methods: {
-    switchDialogName (action) {
-      this.$emit('action', action)
     }
   }
 }

@@ -669,6 +669,7 @@
     "function": "功能",
     "immediatelyUpdate": "立即更新",
     "updateAtBackground": "流程開始更新，將在背景繼續執行",
+    "deleteModelFlow": "刪除流程",
     "modelFlowUpdateStatus": {
       "temp": "未更新",
       "process": "更新中",
