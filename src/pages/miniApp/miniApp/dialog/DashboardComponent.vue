@@ -234,6 +234,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { formatAnomalySetting } from '@/components/display/common/addons'
 
 export default {
+  name: 'DashboardComponent',
   inject: ['$validator'],
   components: {
     DefaultSelect,
@@ -467,9 +468,10 @@ export default {
       if (!this.currentComponent.init) {
         this.currentComponent.config.diaplayedName = this.segmentation.sentence.reduce((acc, cur) =>  acc += ` ${cur.matchedWord}`, '')
       }
-      
+
       // 確認是否為趨勢類型問題
       const isTrendQuestion = this.segmentation.denotation === 'TREND'
+      let dateTimeColumn = this.segmentation.transcript.subjectList.find(subject => subject.dateTime)
       return this.$store.dispatch('chatBot/askResult', {
         algoConfig: isSetAlgoConfig ? this.currentComponent.algoConfig || null : null,
         questionId: questionId || this.currentQuestionId,
@@ -480,12 +482,12 @@ export default {
         ...(isTrendQuestion && {
           displayConfig: {
             histogramBarSize: null,
-            sortOrders: [
+            sortOrders: dateTimeColumn ? [
               {
-                dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                dataColumnId: dateTimeColumn.dateTime.dataColumn.dataColumnId,
                 sortType: 'DESC'
               }
-            ]
+            ] : []
           }
         })
       })
