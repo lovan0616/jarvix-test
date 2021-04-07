@@ -499,6 +499,7 @@ export default {
           this.segmentation = segmentationList[0]
           // 確認是否為趨勢類型問題
           const isTrendQuestion = segmentationList[0].denotation === 'TREND'
+          let dateTimeColumn = segmentationList[0].transcript.subjectList.find(subject => subject.dateTime)
           this.$store.dispatch('chatBot/askResult', {
             algoConfig: this.componentData.algoConfig || null,
             questionId,
@@ -509,12 +510,12 @@ export default {
             ...(isTrendQuestion && {
               displayConfig: {
                 histogramBarSize: null,
-                sortOrders: [
+                sortOrders: dateTimeColumn ? [
                   {
-                    dataColumnId: segmentationList[0].transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                    dataColumnId: dateTimeColumn.dateTime.dataColumn.dataColumnId,
                     sortType: 'DESC'
                   }
-                ]
+                ] : []
               }
             })
           }).then(res => {
