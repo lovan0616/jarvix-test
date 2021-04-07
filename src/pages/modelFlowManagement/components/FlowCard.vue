@@ -171,16 +171,16 @@ export default {
     [class^="flow"] {
       color: rgba(153, 153, 153, 0.4);
     }
-    .flow-function .link {
-      color: rgba(42, 210, 226, 0.4);
+    .flow-function {
+      pointer-events: none;
+      .link {
+        color: rgba(42, 210, 226, 0.4);
+      }
     }
     .update-status-block {
       [class^="flow"] {
         color: rgba(153, 153, 153, 0.9);
       }
-    }
-    .flow-function {
-      pointer-events: none;
     }
   }
 

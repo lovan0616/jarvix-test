@@ -62,7 +62,6 @@
           :placeholder="$t('modelFlow.upload.chooseModel')"
           :enable-lazy-loading="enableModelsLazyLoading"
           v-model="modelId"
-          filterable
           class="setting-block__select"
           name="modelId"
           @change="modelChangedHandler"
