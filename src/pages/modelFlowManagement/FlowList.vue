@@ -61,7 +61,7 @@
       type="delete"
       class="flow-delete-dialog"
       @closeDialog="closeDeleteDialog"
-      @confirmBtn="deleteFlow"
+      @confirmBtn="deleteModelFlow"
     />
   </div>
 </template>
@@ -70,9 +70,8 @@ import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadDialog from './flowExecution/UploadDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import FlowCard from './components/FlowCard'
-import { getModelFlowList, updateModelFlow, deleteModelFlow } from '@/API/ModelFlow'
+import { getModelFlowList } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
-import { Message } from 'element-ui'
 
 export default {
   name: 'FlowList',
@@ -158,34 +157,18 @@ export default {
           return
       }
     },
-    updateModelFlow (id) {
-      updateModelFlow(id)
-        .then(() => {
-          Message({
-            message: this.$t('modelFlow.updateAtBackground'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-          this.clearPolling()
-          this.startPolling(true, false, this.paginationInfo.currentPage)
-        })
+    async updateModelFlow (id) {
+      await this.$store.dispatch('modelFlowManagement/updateModelFlow', id)
+      this.clearPolling()
+      this.startPolling(true, false, this.paginationInfo.currentPage)
     },
-    deleteFlow () {
+    deleteModelFlow () {
       this.isDeleting = true
-      deleteModelFlow(this.deleteFlowId)
+      this.$store.dispatch('modelFlowManagement/deleteModelFlow', this.deleteFlowId)
         .then(() => {
-          this.fetchData()
-            .then(() => {
-              Message({
-                message: this.$t('message.deleteSuccess'),
-                type: 'success',
-                duration: 3 * 1000,
-                showClose: true
-              })
-            })
+          this.clearPolling()
+          this.startPolling(true, false)
         })
-        .catch(() => {})
         .finally(() => {
           this.isDeleting = false
           this.closeDeleteDialog()

@@ -48,7 +48,9 @@
     "reUploadFile": "重新上传档案",
     "configSetting": "参数设定",
     "modelFlowManagement": "流程管理",
-    "flowList": "流程列表"
+    "flowList": "流程列表",
+    "flowSetting": "流程设定",
+    "flowDetail": "详细内容"
   },
   "user": {
     "changePwd": "变更密码",
@@ -664,6 +666,9 @@
   },
   "modelFlow": {
     "newFlow": "新增流程",
+    "modelFlowNameId": "流程名称 / ID",
+    "name": "名称",
+    "id": "ID",
     "createdInfo": "由 {name} 于 {time} 建立",
     "updatedInformation": "更新资讯",
     "outputResult": "输出结果",
@@ -672,14 +677,31 @@
     "notUpdate": "不更新",
     "updateUponDataUpdated": "跟随资料表更新",
     "function": "功能",
+    "settingManagement": "管理设定",
+    "creator": "建立者",
+    "createdTime": "建立时间",
+    "modelInputParameter": "模型 Input 参数",
+    "modelOutputParameter": "模型 Output 参数",
+    "correspondingDataFrameColumnName": "对应资料表栏位",
+    "outputDataFrameColumnName": "Output 资料表栏位",
+    "outputDataFrameName": "Output资料表名称",
     "immediatelyUpdate": "立即更新",
     "updateAtBackground": "流程开始更新，将在背景继续执行",
     "deleteModelFlow": "刪除流程",
+    "createInfo": "建立资料",
+    "adoptedModel": "使用模型",
+    "triggerUpdateType": "触发更新模式",
+    "triggerType": "触发模式",
+    "triggerTypes": {
+      "manual": "不自动更新",
+      "automatic": "跟随资料表更新"
+    },
     "modelFlowUpdateStatus": {
-      "temp": "未更新",
-      "process": "更新中",
-      "complete": "更新成功",
-      "fail": "更新失败"
+      "temp": "未执行",
+      "process": "执行中",
+      "enable": "执行成功",
+      "fail": "执行失败",
+      "warn": "执行失败"
     },
     "upload": {
       "setFlowName": "请输入流程名称",
@@ -699,8 +721,8 @@
       "modelOutputArgs": "模型 Output 参数",
       "outputColumnName": "Output 栏位名称",
       "pleaseChooseDataFrame": "请先选择资料表",
-      "updatedTriggerMode": "触发更新模式",
-      "NoAutomaticUpdate": "不自动更新",
+      "updatedtriggerType": "触发更新模式",
+      "noAutomaticUpdate": "不自动更新",
       "updatedByFrame": "跟随资料表更新"
     }
   },

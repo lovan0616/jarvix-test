@@ -46,6 +46,7 @@ export default {
   },
   methods: {
     dialogEvent (bar) {
+      if (bar.disabled) return
       if (bar.path) {
         return this.$router.push(bar.path)
       } else if (bar.name) {
@@ -78,6 +79,7 @@ export default {
     display: flex;
     color: #a7a7a7;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .dropdown-flex:hover {

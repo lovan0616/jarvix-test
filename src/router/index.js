@@ -455,6 +455,29 @@ const router = new Router({
                               }
                             }
                           ]
+                        },
+                        {
+                          path: ':flow_id',
+                          component: () => import('@/pages/modelFlowManagement/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'FlowDetail' },
+                              name: 'FlowSetting',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'filter-setting'
+                              }
+                            },
+                            {
+                              path: 'detail',
+                              name: 'FlowDetail',
+                              component: () => import('@/pages/modelFlowManagement/FlowDetail'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id']
+                              }
+                            }
+                          ]
                         }
                       ]
                     }

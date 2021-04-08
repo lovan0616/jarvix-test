@@ -17,6 +17,13 @@ import request from '@/utils/publicRequest'
   })
 }
 
+export function getModelFlowDetail(modelFlowId) {
+  return request({
+    url: `model-flows/${modelFlowId}`,
+    method: 'GET'
+  })
+}
+
 /**
  * create model flow
  * @param {Object} data - 建立的流程資訊
