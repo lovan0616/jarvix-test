@@ -106,7 +106,7 @@
             <input-verify
               v-validate="'required'"
               v-model="currentComponent.config.diaplayedName"
-              name="componentDisplayName"
+              name="createComponentDisplayName"
             />
           </div>
         </div>
@@ -135,13 +135,13 @@
                 :option-list="dashboardOptions"
                 :placeholder="$t('miniApp.selectDashboard')"
                 class="setting__block-select"
-                name="relatedDashboard"
+                name="createrelatedDashboard"
                 @change="updateRelatedDashboard"
               />
               <div 
-                v-show="errors.has('relatedDashboard')"
+                v-show="errors.has('createrelatedDashboard')"
                 class="error-text"
-              >{{ errors.first('relatedDashboard') }}</div>
+              >{{ errors.first('createrelatedDashboard') }}</div>
             </div>
           </div>
         </div>
@@ -204,13 +204,13 @@
                   :option-list="categoryColumnOptions"
                   :placeholder="$t('miniApp.chooseColumn')"
                   class="setting__block-select"
-                  name="triggerColumn"
+                  name="createtriggerColumn"
                   @change="updateTriggerColumnInfo"
                 />
                 <div 
-                  v-show="errors.has('triggerColumn')"
+                  v-show="errors.has('createtriggerColumn')"
                   class="error-text"
-                >{{ errors.first('triggerColumn') }}</div>
+                >{{ errors.first('createtriggerColumn') }}</div>
               </div>
               <div class="setting__block-select-field">
                 <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
@@ -220,13 +220,13 @@
                   :option-list="dashboardOptions"
                   :placeholder="$t('miniApp.chooseDashboard')"
                   class="setting__block-select"
-                  name="columnRelatedDashboard"
+                  name="createcolumnRelatedDashboard"
                   @change="updateTableRelatedDashboard"
                 />
                 <div 
-                  v-show="errors.has('columnRelatedDashboard')"
+                  v-show="errors.has('createcolumnRelatedDashboard')"
                   class="error-text"
-                >{{ errors.first('columnRelatedDashboard') }}</div>
+                >{{ errors.first('createcolumnRelatedDashboard') }}</div>
               </div>
             </template>
           </div>
@@ -256,12 +256,12 @@
                 :option-list="updateFrequency"
                 :placeholder="$t('miniApp.chooseUpdateFrequency')"
                 class="setting__block-select"
-                name="updateFrequency"
+                name="createupdateFrequency"
               />
               <div 
-                v-show="errors.has('updateFrequency')"
+                v-show="errors.has('createupdateFrequency')"
                 class="error-text"
-              >{{ errors.first('updateFrequency') }}</div>
+              >{{ errors.first('createupdateFrequency') }}</div>
             </div>
           </div>
         </div>
@@ -525,9 +525,20 @@ export default {
   },
   methods: {
     createComponent () {
-      this.$validator.validateAll()
-      .then(valid => {
-        if (!valid) return
+      const validatePromises = []
+
+      // 只取當前元件的欄位來驗證
+      // 避免把全欲的所有欄位都抓進來
+      const regex = /^create/
+      for (let field in this.fields) {
+        if (field.match(regex) && field.match(regex).length > 0) {
+          validatePromises.push(this.$validator.validate(field))
+        }
+      }
+    
+      Promise.all(validatePromises)
+      .then(validationResultList => {
+        if (!validationResultList.every(result => result)) return
         this.$emit('create', {
           ...this.currentComponent,
           // Demo 使用：為了展示參數最佳化比較，把元件名稱帶有特定字串的元件改 type

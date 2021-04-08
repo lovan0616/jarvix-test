@@ -208,6 +208,9 @@ export default {
   mounted () {
     this.getModelList()
     this.fetchDataSourceList()
+
+    // 重新編輯時才直接取 model 資料
+    this.modelSetting.modelId && this.fetchModelInfo(this.modelSetting.modelId)
   },
   methods: {
     fetchDataSourceList () {
@@ -293,6 +296,10 @@ export default {
       this.modelSetting.inputList = []
       this.modelOuptputList = []
 
+      this.fetchModelInfo (selectedId)
+    },
+    fetchModelInfo (selectedId) {
+      this.$emit('update:isLoading', true)
       getModelInfo(selectedId)
         .then(({ioArgs: { input, output }}) => {
           this.modelInputList = input

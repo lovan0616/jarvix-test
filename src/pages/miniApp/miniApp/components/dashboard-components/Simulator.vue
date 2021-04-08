@@ -14,11 +14,11 @@
         <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
         <div class="simulator__setting-content">
           <simulator-input
-            v-for="(columnInfo, index) in scriptInfo"
+            v-for="(columnInfo, index) in modelInfo"
             :is-processing="isProcessing"
             :restrictions="restrictions"
             :column-info="columnInfo"
-            :script-id="scriptId"
+            :model-id="modelSetting.modelId"
             :key="index + '-' + columnInfo.columnId"
             class="simulator__setting-input"
             @done="updateColumnInfoState(index)"
@@ -69,7 +69,7 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SimulatorInput from './SimulatorInput'
-import { getScripInfo, executeScript } from '@/API/Script'
+import { modelSimulate } from '@/API/Model'
 
 export default {
   inject: ['$validator'],
@@ -84,20 +84,20 @@ export default {
       type: Boolean,
       default: false,
     },
-    scriptId: {
-      type: Number,
-      required: true
-    },
     restrictions: {
       type: Array,
       default: () => ([])
+    },
+    modelSetting: {
+      type: Object,
+      required: true
     }
   },
   data () {
     return {
       isLoading: false,
       isProcessing: false,
-      scriptInfo: null,
+      modelInfo: null,
       resultList: null,
       isFetchInputFailed: false,
       isSimulateFailed: false,
@@ -108,7 +108,7 @@ export default {
     
   },
   watch: {
-    scriptInfo: {
+    modelInfo: {
       deep: true,
       handler (newList) {
         const isAllInit = newList.every(column => column.isInit)
@@ -118,33 +118,27 @@ export default {
     }
   },
   mounted () {
-    this.getScriptInfo()
+    this.getModelInfo()
   },
   methods: {
-    getScriptInfo () {
+    getModelInfo () {
       this.isLoading = true
-      getScripInfo(this.scriptId)
-        .then(response => {
-          this.scriptInfo = response.inputColumns.map(column => ({
-            columnId: column,
-            isInit: false,
-            userInput: ''
-          }))
-        })
-        .catch(() => {
-          this.isLoading = false
-          this.isFetchInputFailed = true
-        })
+      this.modelInfo = this.modelSetting.inputList.map(column => ({
+        ...column,
+        columnId: column.dcId,
+        isInit: false,
+        userInput: ''
+      }))
     },
     updateColumnInfoState(index) {
-      this.scriptInfo = this.scriptInfo.map((input, currentIndex) => {
+      this.modelInfo = this.modelInfo.map((input, currentIndex) => {
         if (index !== currentIndex) return input
         return {
           ...input, 
           isInit: true
         }
       })
-      this.scriptInfo[index].isInit = true
+      this.modelInfo[index].isInit = true
     },
     simulate () {
       this.$validator.validateAll().then(result => {
@@ -152,8 +146,8 @@ export default {
         this.isSimulateFailed = false
         this.isProcessing = true
         
-        executeScript(this.scriptId, {
-          inputValues: this.scriptInfo.map(column => column.userInput)
+        modelSimulate(this.modelSetting.modelId, {
+          inputValues: this.modelInfo.map(column => column.userInput)
         })
           .then(response => {
             this.resultList = response.outputPrimaryAlias.map((element, index) => {
