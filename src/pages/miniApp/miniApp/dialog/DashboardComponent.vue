@@ -342,8 +342,8 @@ export default {
     },
     isAnomalySettingChanged () {
       if (!this.computedKeyResultId || !this.isShowAnomalySetting) return
-      let tempSetting = this.tempComponentAnomalySettings || []
-      let tempCurrentSetting = this.currentComponent.anomalySettings || []
+      let tempSetting = this.tempComponentAnomalySettings ? [...this.tempComponentAnomalySettings] : []
+      let tempCurrentSetting = this.currentComponent.anomalySettings ? [...this.currentComponent.anomalySettings] : []
       if (tempSetting.length !== tempCurrentSetting.length) return true
       tempSetting = tempSetting.sort((a, b) => a.value - b.value)
       tempCurrentSetting  = tempCurrentSetting.sort((a, b) => a.value - b.value)
