@@ -19,7 +19,10 @@
             {{ $t(`modelFlow.triggerTypes.${flowInfo.triggerType.toLowerCase()}`) }}
           </div>
         </div>
-        <flow-update-status :flow-info="flowInfo"/>
+        <flow-update-status
+          :flow-info="flowInfo"
+          :is-flow-updating="isFlowUpdating"
+        />
         <div class="flow-function-wrapper">
           <span class="flow-function">
             <a

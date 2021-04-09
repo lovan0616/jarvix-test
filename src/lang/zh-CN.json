@@ -721,7 +721,6 @@
       "modelOutputArgs": "模型 Output 参数",
       "outputColumnName": "Output 栏位名称",
       "pleaseChooseDataFrame": "请先选择资料表",
-      "updatedtriggerType": "触发更新模式",
       "noAutomaticUpdate": "不自动更新",
       "updatedByFrame": "跟随资料表更新"
     }

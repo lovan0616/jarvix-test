@@ -720,7 +720,9 @@
       "outputColumnSetting": "Output 欄位設定",
       "modelOutputArgs": "模型 Output 參數",
       "outputColumnName": "Output 欄位名稱",
-      "pleaseChooseDataFrame": "請先選擇資料表"
+      "pleaseChooseDataFrame": "請先選擇資料表",
+      "noAutomaticUpdate": "不自動更新",
+      "updatedByFrame": "跟隨資料表更新"
     }
   },
   "pinboard": {

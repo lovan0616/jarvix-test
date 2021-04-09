@@ -3,7 +3,7 @@
     <div class="flow-label">{{ $t('modelFlow.updatedInformation') }}：</div>
     <div class="flow-text">
       <spinner 
-        v-if="flowInfo.targetDataFrameStatusType === 'Process'" 
+        v-if="isFlowUpdating" 
         size="14" />
       <span
         v-if="flowUpdateTime"
@@ -24,6 +24,10 @@ export default {
     flowInfo: {
       type: Object,
       default: () => {}
+    },
+    isFlowUpdating: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
