@@ -721,7 +721,7 @@ export function formatComponentTitle(axisList, additionalAxisSetting) {
   }))
 }
 
-export function formatAnomalySetting(settings) {
+export function formatAnomalySetting([...settings]) {
   if (settings.length === 1) {
     if (settings[0].comparison.includes('gt')) {
       return { upperLimit: { value: settings[0].value, isIncluded: settings[0].comparison === 'gte' } }
