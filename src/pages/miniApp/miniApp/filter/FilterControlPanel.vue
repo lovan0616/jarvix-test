@@ -10,7 +10,7 @@
         class="filter-control__list">
         <single-filter-badge
           v-for="(filter, index) in filterSet"
-          :key="index"
+          :key="filter.filterId"
           :initial-filter="filter"
           :is-edit-mode="isEditMode"
           :is-single-choice-filter="isSingleChoiceFilter"
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 import SingleFilterBadge from './SingleFilterBadge'
 
 export default {
@@ -73,7 +74,8 @@ export default {
         // 階層情況下，filter 需戴上前面所有 filter 的 restriction，因此由左至右每次只處理一個 filter 
         isNeedUpdate: index === 0 && filter.dataValues.length === 0,
         // 給定處理狀態，如果有 filter 在處理中，其以後的 filter 都需押處理中
-        isProcessing: true
+        isProcessing: true,
+        filterId: uuidv4()
       }))
     })
     // 如果有剛創完的控制項須給定預設值時，代表設定完成後，filtet list 需傳出去更新
