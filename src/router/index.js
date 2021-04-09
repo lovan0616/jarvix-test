@@ -428,6 +428,35 @@ const router = new Router({
                           ]
                         }
                       ]
+                    },
+                    {
+                      path: 'model-flow',
+                      component: () => import('@/pages/management/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          component: () => import('@/pages/modelFlowManagement/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'FlowList' },
+                              name: 'ModelFlowManagement',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'algo-flow'
+                              }
+                            },
+                            {
+                              path: '/',
+                              name: 'FlowList',
+                              component: () => import('@/pages/modelFlowManagement/FlowList'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', '/']
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },

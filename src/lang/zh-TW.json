@@ -18,7 +18,8 @@
     "helper": "幫助",
     "warRoom": "戰情室",
     "application": "應用程式",
-    "modelManagement": "模型管理"
+    "modelManagement": "模型管理",
+    "modelFlowManagement": "流程管理"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -45,7 +46,9 @@
     "modelSetting": "管理設定",
     "modelDetail": "詳細內容",
     "reUploadFile": "重新上傳檔案",
-    "configSetting": "參數設定"
+    "configSetting": "參數設定",
+    "modelFlowManagement": "流程管理",
+    "flowList": "流程列表"
   },
   "user": {
     "changePwd": "變更密碼",
@@ -657,6 +660,47 @@
       "executionStep2": "上傳檔案",
       "executionStep3": "設定 Input",
       "executionStep4": "設定 Output"
+    }
+  },
+  "modelFlow": {
+    "newFlow": "新增流程",
+    "createdInfo": "由 {name} 於 {time} 建立",
+    "updatedInformation": "更新資訊",
+    "outputResult": "輸出結果",
+    "deleteConfirmText": "流程刪除後，相關資料表將不再被更新，請選擇刪除方式",
+    "updateMode": "觸發更新模式",
+    "notUpdate": "不更新",
+    "updateUponDataUpdated": "跟隨資料表更新",
+    "function": "功能",
+    "immediatelyUpdate": "立即更新",
+    "updateAtBackground": "流程開始更新，將在背景繼續執行",
+    "modelFlowUpdateStatus": {
+      "temp": "未更新",
+      "process": "更新中",
+      "complete": "更新成功",
+      "fail": "更新失敗"
+    },
+    "upload": {
+      "setFlowName": "請輸入流程名稱",
+      "executionStep1": "設定名稱",
+      "executionStep2": "內容設定",
+      "executionStep3": "其他設定",
+      "reminder": "僅能選擇資料庫連線的資料表",
+      "chooseModel": "選擇模型",
+      "modelSetting": "模型設定",
+      "inputSetting": "Input 設定",
+      "outputSetting": "Output 設定",
+      "modelInputArgs": "模型 Input 參數",
+      "referencedColumn": "對應資料表欄位",
+      "outputFrameName": "Output 資料表名稱",
+      "enterOutputFrameName": "請輸入資料表名稱",
+      "outputColumnSetting": "Output 欄位設定",
+      "modelOutputArgs": "模型 Output 參數",
+      "outputColumnName": "Output 欄位名稱",
+      "pleaseChooseDataFrame": "請先選擇資料表",
+      "updatedTriggerMode": "觸發更新模式",
+      "NoAutomaticUpdate": "不自動更新",
+      "updatedByFrame": "跟隨資料表更新"
     }
   },
   "pinboard": {
