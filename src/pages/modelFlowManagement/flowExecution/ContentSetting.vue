@@ -250,7 +250,7 @@ export default {
         })
     },
     fetchDataColumnList () {
-      getDataFrameColumnInfoById(this.sourceDataframeId)
+      getDataFrameColumnInfoById(this.sourceDataframeId, true, true, false, false)
         .then(response => {
           this.dataColumnOptionList = response.map(column => {
             return {
@@ -262,7 +262,6 @@ export default {
         })
     },
     fetchModelList () {
-      // TODO: 把失敗的 filter
       // 取過且已經取到最後一頁
       if (this.modelsPagination.currentPage >= 0
         && this.modelsPagination.currentPage >= this.modelsPagination.totalPages - 1) {
