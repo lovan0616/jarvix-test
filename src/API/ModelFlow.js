@@ -53,3 +53,14 @@ export function deleteModelFlow(modelFlowId) {
     method: 'DELETE'
   })
 }
+
+export function getModelFlowUpdateLogs (modelFlowId, page = 0, size = 20) {
+  return request({
+    url: `/model-flows/${modelFlowId}/logs`,
+    method: 'GET',
+    params: {
+      page,
+      size
+    }
+  })
+}

@@ -177,9 +177,9 @@ export default {
       return this.flowInfo.targetDataFrameStatusType === 'Process'
     },
     triggerTypeLabel () {
-      switch (this.flowInfo.triggerType.toLowerCase()) {
-        case 'manual':
-        case 'automatic':
+      switch (this.flowInfo.triggerType) {
+        case 'MANUAL':
+        case 'AUTOMATIC':
           return this.$t(`modelFlow.triggerTypes.${this.flowInfo.triggerType.toLowerCase()}`)
         default:
           return '-'
@@ -193,8 +193,9 @@ export default {
     fetchData () {
       this.isLoading = true
       getModelFlowDetail(this.flowId)
-        .then((response) => {
-          this.flowInfo = response
+        .then(flowInfo => {
+          this.flowInfo = flowInfo
+          this.$store.commit('modelFlowManagement/updateCurrentFlowInfo', flowInfo)
         })
         .finally(() => {
           this.isLoading = false

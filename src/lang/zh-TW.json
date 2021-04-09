@@ -50,7 +50,8 @@
     "modelFlowManagement": "流程管理",
     "flowList": "流程列表",
     "flowSetting": "流程設定",
-    "flowDetail": "詳細內容"
+    "flowDetail": "詳細內容",
+    "flowLogs": "更新紀錄"
   },
   "user": {
     "changePwd": "變更密碼",
@@ -692,6 +693,10 @@
     "adoptedModel": "使用模型",
     "triggerUpdateType": "觸發更新模式",
     "triggerType": "觸發模式",
+    "flowUpdateLogs": "更新紀錄",
+    "updatedTime": "更新時間",
+    "updatedStatus": "更新狀態",
+    "updateMessage": "訊息",
     "triggerTypes": {
       "manual": "不自動更新",
       "automatic": "跟隨資料表更新"
@@ -702,6 +707,11 @@
       "enable": "執行成功",
       "fail": "執行失敗",
       "warn": "執行失敗"
+    },
+    "modelFlowLogStatus": {
+      "complete": "成功",
+      "fail": "失敗",
+      "process": "執行中"
     },
     "upload": {
       "setFlowName": "請輸入流程名稱",

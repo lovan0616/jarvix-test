@@ -476,6 +476,14 @@ const router = new Router({
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id']
                               }
+                            },
+                            {
+                              path: 'logs',
+                              name: 'FlowLogs',
+                              component: () => import('@/pages/modelFlowManagement/FlowLogs'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id']
+                              }
                             }
                           ]
                         }

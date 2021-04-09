@@ -91,6 +91,7 @@ export default {
   },
   methods: {
     goToFlowDetailPage (flow_id) {
+      this.$store.commit('modelFlowManagement/updateCurrentFlowInfo', this.flowInfo)
       this.$router.push({
         name: 'FlowDetail',
         params: {

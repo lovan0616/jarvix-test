@@ -8,5 +8,8 @@ export default {
   },
   updateFlowUploadSuccess (state, data) {
     state.flowUploadSuccess = data
+  },
+  updateCurrentFlowInfo (state, data) {
+    state.currentFlowInfo = data
   }
 }
