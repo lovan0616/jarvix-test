@@ -108,7 +108,7 @@ export default {
     if (!this.currentFlowInfo) this.fetchModelFlowDetail()
   },
   methods: {
-    fetchData (page = 0, size = 4) {
+    fetchData (page = 0, size = 20) {
       this.isLoading = true
       getModelFlowUpdateLogs(this.flowId, page, size)
         .then(({ logs, pagination }) => {
