@@ -121,20 +121,27 @@ export default {
   },
   methods: {
     ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateFlowUploadSuccess']),
-    fetchData (init = true, showSpinner = true, page = 0, size = 10) {
-      if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
+    fetchData (showSpinner = true, page = 0, size = 1) {
       if (showSpinner) this.isLoading = true
       return getModelFlowList(this.groupId, page, size)
         .then(({modelFlows, pagination}) => {
-          this.modelFlowList = modelFlows
           this.paginationInfo = pagination
+
+          // 若索取不存在的頁數，就回頭拿第一頁
+          if (pagination.currentPage >= pagination.totalPages) {
+            this.clearPolling()
+            this.startPolling(true, 0)
+            return
+          } 
+          this.modelFlowList = modelFlows
         }).finally(() => {
           if (showSpinner) this.isLoading = false
         })
     },
     changePage (page) {
+      if (this.paginationInfo.currentPage === page - 1) return
       this.clearPolling()
-      this.startPolling(false, true, page - 1)
+      this.startPolling(true, page - 1)
     },
     closeDeleteDialog () {
       this.deleteFlowId = null
@@ -160,24 +167,24 @@ export default {
     async updateModelFlow (id) {
       await this.$store.dispatch('modelFlowManagement/updateModelFlow', id)
       this.clearPolling()
-      this.startPolling(true, false, this.paginationInfo.currentPage)
+      this.startPolling(false, this.paginationInfo.currentPage)
     },
     deleteModelFlow () {
       this.isDeleting = true
       this.$store.dispatch('modelFlowManagement/deleteModelFlow', this.deleteFlowId)
         .then(() => {
           this.clearPolling()
-          this.startPolling(true, false)
+          this.startPolling()
         })
         .finally(() => {
           this.isDeleting = false
           this.closeDeleteDialog()
         })
     },
-    startPolling (init, showSpinner, page) {
-      this.fetchData(init, showSpinner, page)
+    startPolling (showSpinner, page) {
+      this.fetchData(showSpinner, page)
       this.intervalFunction = window.setInterval(() => {
-        this.fetchData(true, false, page)
+        this.fetchData(false, page)
       }, 5000)
     },
     clearPolling () {
