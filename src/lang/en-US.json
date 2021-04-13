@@ -1033,7 +1033,14 @@
     "dataframeExistenceAndRebuild": "Whether the dataframe current column belongs to has been removed or updated, otherwise, rebuild it.",
     "connectionStatus": "Connection status.",
     "otherReasons": "Any other possible reason.",
-    "fetchDataFailed": "Failed Fetching Data"
+    "fetchDataFailed": "Failed Fetching Data",
+    "modelSetting": "Model Setting",
+    "operatedModel": "Model",
+    "modelOperatedResult": "Operation Result",
+    "inputParamSetting": "InputSetting",
+    "modelInputParams": "Input Parameters",
+    "targetedDataFrameColumn": "Targeted Data Column",
+    "selectModel": "Select a model"
   },
   "clustering": {
     "cluster": "Cluster",
