@@ -674,9 +674,6 @@
     "updatedInformation": "更新資訊",
     "outputResult": "輸出結果",
     "deleteConfirmText": "流程刪除後，相關資料表將不再被更新",
-    "updateMode": "觸發更新模式",
-    "notUpdate": "不更新",
-    "updateUponDataUpdated": "跟隨資料表更新",
     "function": "功能",
     "settingManagement": "管理設定",
     "creator": "建立者", 
@@ -692,7 +689,7 @@
     "createInfo": "建立資料",
     "adoptedModel": "使用模型",
     "triggerUpdateType": "觸發更新模式",
-    "triggerType": "觸發模式",
+    "updateMode": "觸發模式",
     "flowUpdateLogs": "更新紀錄",
     "updatedTime": "更新時間",
     "updatedStatus": "更新狀態",
@@ -730,9 +727,7 @@
       "outputColumnSetting": "Output 欄位設定",
       "modelOutputArgs": "模型 Output 參數",
       "outputColumnName": "Output 欄位名稱",
-      "pleaseChooseDataFrame": "請先選擇資料表",
-      "noAutomaticUpdate": "不自動更新",
-      "updatedByFrame": "跟隨資料表更新"
+      "pleaseChooseDataFrame": "請先選擇資料表"
     }
   },
   "pinboard": {

@@ -674,9 +674,6 @@
     "updatedInformation": "更新资讯",
     "outputResult": "输出结果",
     "deleteConfirmText": "流程删除后，相关资料表将不再被更新",
-    "updateMode": "触发更新模式",
-    "notUpdate": "不更新",
-    "updateUponDataUpdated": "跟随资料表更新",
     "function": "功能",
     "settingManagement": "管理设定",
     "creator": "建立者",
@@ -692,7 +689,7 @@
     "createInfo": "建立资料",
     "adoptedModel": "使用模型",
     "triggerUpdateType": "触发更新模式",
-    "triggerType": "触发模式",
+    "updateMode": "触发模式",
     "flowUpdateLogs": "更新纪录",
     "updatedTime": "更新时间",
     "updatedStatus": "更新状态",
@@ -730,9 +727,7 @@
       "outputColumnSetting": "Output 栏位设定",
       "modelOutputArgs": "模型 Output 参数",
       "outputColumnName": "Output 栏位名称",
-      "pleaseChooseDataFrame": "请先选择资料表",
-      "noAutomaticUpdate": "不自动更新",
-      "updatedByFrame": "跟随资料表更新"
+      "pleaseChooseDataFrame": "请先选择资料表"
     }
   },
   "pinboard": {

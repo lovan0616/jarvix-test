@@ -670,6 +670,7 @@
     "updatedInformation": "Update information",
     "outputResult": "Output result",
     "deleteConfirmText": "Dataset will not be updated after removing the flow. Please choose a delete type",
+    "function": "Function",
     "settingManagement": "Settings",
     "creator": "Creator", 
     "createdTime": "Create Date",
@@ -678,20 +679,32 @@
     "correspondingDataFrameColumnName":"Data Set Column",
     "outputDataFrameColumnName":"Output Data Set Column",
     "outputDataFrameName":"Output Data Set Name",
+    "immediatelyUpdate": "Trigger Update",
+    "updateAtBackground": "Flow updating, it will run in the background.",
     "deleteModelFlow": "Delete Flow",
     "createInfo":"Create Info",
     "adoptedModel":"Use Model",
+    "triggerUpdateType": "Trigger Mode",
     "updateMode": "Trigger Mode",
-    "notUpdate": "Manual Trigger",
-    "updateUponDataUpdated": "Trigger with Data Update",
-    "function": "Function",
-    "immediatelyUpdate": "Trigger Update",
-    "updateAtBackground": "Flow updating, it will run in the background.",
+    "flowUpdateLogs": "Update Logs",
+    "updatedTime": "Updated Time",
+    "updatedStatus": "Updated Status",
+    "updateMessage": "Message",
+    "triggerTypes": {
+      "manual": "Manual Trigger",
+      "automatic": "Trigger with Data Update"
+    },
     "modelFlowUpdateStatus": {
       "temp": "No Update",
       "process": "Updating",
+      "enable": "Update Complete",
       "complete": "Update Complete",
       "fail": "Update Failed"
+    },
+    "modelFlowLogStatus": {
+      "complete": "Success",
+      "fail": "Fail",
+      "process": "Processing"
     },
     "upload": {
       "setFlowName": "Please input flow name",
@@ -710,9 +723,7 @@
       "outputColumnSetting": "Output Column Setting",
       "modelOutputArgs": "Model Output Parameters",
       "outputColumnName": "Output Column Name",
-      "pleaseChooseDataFrame": "Please choose a Data Set",
-      "noAutomaticUpdate": "No Automatic Update Trigger",
-      "updatedByFrame": "Trigger by Data Set update"
+      "pleaseChooseDataFrame": "Please choose a Data Set"
     }
   },
   "pinboard": {

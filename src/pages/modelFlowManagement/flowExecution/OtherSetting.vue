@@ -69,12 +69,12 @@ export default {
       updateMode: 'MANUAL',
       updateStatusList: [
 				{
-          type: 'AUTOMATIC',
-          name: this.$t('modelFlow.noAutomaticUpdate')
+          type: 'MANUAL',
+          name: this.$t('modelFlow.triggerTypes.manual')
         },
         {
-          type: '',
-          name: this.$t('modelFlow.updatedByFrame')
+          type: 'AUTOMATIC',
+          name: this.$t('modelFlow.triggerTypes.automatic')
         }
 			]
     }

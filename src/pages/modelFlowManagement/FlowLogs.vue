@@ -32,7 +32,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$t('modelFlow.triggerType')"
+          :label="$t('modelFlow.updateMode')"
           prop="triggerType"
           width="180">
           <template slot-scope="scope">

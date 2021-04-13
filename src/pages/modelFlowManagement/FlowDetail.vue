@@ -113,7 +113,7 @@
         </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.triggerType') }}:</div>
+            <div class="info__label">{{ $t('modelFlow.updateMode') }}:</div>
             <div class="info__text">{{ triggerTypeLabel }}</div>
           </div>
         </div>
