@@ -718,7 +718,7 @@
       "executionStep1": "设定名称",
       "executionStep2": "内容设定",
       "executionStep3": "其他设定",
-      "reminder": "仅能选择资料库连线的资料表",
+      "reminder": "仅能选择资料库连线并已更新过的资料表",
       "chooseModel": "选择模型",
       "modelSetting": "模型设定",
       "inputSetting": "Input 设定",
@@ -1078,7 +1078,14 @@
     "dataframeExistenceAndRebuild": "资料表是否正常 或 尝试重建此项目",
     "connectionStatus": "连线是否正常",
     "otherReasons": "其他原因",
-    "fetchDataFailed": "取得资料失败"
+    "fetchDataFailed": "取得资料失败",
+    "modelSetting": "模型设定",
+    "operatedModel": "操作模型",
+    "modelOperatedResult": "模型结果",
+    "inputParamSetting": "Input配置",
+    "modelInputParams": "模型输入参数",
+    "targetedDataFrameColumn": "对应资料表栏位",
+    "selectModel": "选择模型"
   },
   "alert": {
     "alertLogs": "示警纪录",

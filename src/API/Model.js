@@ -88,3 +88,41 @@ import request from '@/utils/publicRequest'
     method: 'DELETE'
   })
 }
+
+/**
+ * search column default value under restrictions
+ * @params {Number} modelId - model id 
+ * @params {Number} dataColumnId - data column id
+ */
+export function searchColumnDefaultValue(modelId, dataColumnId, data) {
+  return request({
+    url: `/models/${modelId}/input-columns/${dataColumnId}/search-default-value`,
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * search numeric column value range under restrictions
+ * @params {Number} modelId - model id 
+ * @params {Number} dataColumnId - data column id
+ */
+export function searchNumericColumnValueRange(modelId, dataColumnId, data) {
+  return request({
+    url: `/models/${modelId}/input-columns/${dataColumnId}/search-range`,
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * simulate
+ * @params {Number} modelId - model id 
+ */
+export function modelSimulate(modelId, data) {
+  return request({
+    url: `/models/${modelId}/simulate`,
+    method: 'POST',
+    data
+  })
+}

@@ -66,16 +66,16 @@ export default {
   data () {
     return {
       isProcessing: false,
-      updateMode: 'AUTOMATIC',
+      updateMode: 'MANUAL',
       updateStatusList: [
 				{
           type: 'AUTOMATIC',
           name: this.$t('modelFlow.noAutomaticUpdate')
+        },
+        {
+          type: '',
+          name: this.$t('modelFlow.updatedByFrame')
         }
-        // {
-        //   type: '',
-        //   name: this.$t('modelFlow.updatedByFrame')
-        // }
 			]
     }
   },

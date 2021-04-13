@@ -445,28 +445,6 @@
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
     />
-    <writing-dialog
-      v-if="isShowCreateSimulatorDialog"
-      :title="$t('miniApp.selectScript')"
-      :button="$t('button.build')"
-      :show-both="true"
-      :is-loading="isProcessing"
-      @closeDialog="isShowCreateSimulatorDialog = false"
-      @confirmBtn="createSimulator"
-    >
-      <div class="mini-app__dialog-select-wrapper">
-        <default-select 
-          :option-list="scriptOptionList"
-          :placeholder="$t('miniApp.selectScript')"
-          :is-disabled="isProcessing"
-          v-model="simulatorScriptInfo.id"
-          filterable
-          class="mini-app__dialog-select"
-          name="scriptId"
-          @change="updateSimulatorScriptInfo"
-        />
-      </div>
-    </writing-dialog>
     <component-to-alert-condition-dialog
       v-if="isShowCreateWarningCriteriaDialog"
       :component-data="componentToWarningCriteriaData"
@@ -507,7 +485,6 @@ import ComponentToAlertConditionDialog from './dialog/ComponentToAlertConditionD
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
-import { getScriptList } from '@/API/Script'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState } from 'vuex'
 
@@ -570,12 +547,7 @@ export default {
       filterCreationDialogTitle: null,
       draggedContext: { index: -1, futureIndex: -1 },
       isCurrentDashboardInit: false,
-      isShowCreateSimulatorDialog: false,
       scriptOptionList: [],
-      simulatorScriptInfo: {
-        id: null,
-        name: null
-      },
       initComponent: null,
       isMiniAppCompiled: false
     }
@@ -1301,46 +1273,8 @@ export default {
       this.createDefaultComponent('handled-abnormal-statistics')
     },
     createSimulatorComponent () {
-      this.isShowCreateSimulatorDialog = true
-      this.isProcessing = true
-      getScriptList(this.$route.params.group_id)
-        .then(response => {
-          this.scriptOptionList = response.scriptIdAndName.map((script, index) => {
-            if (index === 0) {
-              this.simulatorScriptInfo.id = script.scriptId
-              this.simulatorScriptInfo.name = script.scriptName
-            }
-            return {
-              name: script.scriptName,
-              value: script.scriptId
-            }
-          })
-        })
-        .finally(() => { this.isProcessing = false })
-    },
-    updateSimulatorScriptInfo (scriptId) {
-      this.simulatorScriptInfo.name = this.scriptOptionList.find(script => script.value === scriptId).name
-    },
-    createSimulator () {
-      this.$validator.validateAll().then(isValidate => {
-        if (!isValidate) return
-        this.isProcessing = true
-        const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
-        updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
-          if (board.id === this.currentDashboardId) {
-            board.components.push(this.componentTemplateFactory('simulator'))
-          }
-        })
-
-        this.updateAppSetting(updatedMiniAppData)
-          .then(() => { 
-            this.miniApp = updatedMiniAppData 
-            this.isShowCreateSimulatorDialog = false
-            this.simulatorScriptInfo.name = null
-            this.simulatorScriptInfo.id = null
-          })
-          .finally(() => this.isProcessing = false)
-      })
+      this.initComponent = this.componentTemplateFactory('simulator')
+      this.isShowCreateComponentDialog = true
     },
     createGeneralComponent () {
       this.initComponent = this.componentTemplateFactory()
@@ -1509,15 +1443,19 @@ export default {
         }),
         // 模擬器元件
         ...(type === 'simulator' && {
-          init: true,
           isCreatedViaAsking: false,
-          scriptId: this.simulatorScriptInfo.id,
           config: {
             ...generalConfig,
             // demo 因為有八個 Input，先設定六個列
             size: { row: 12, column: 12 },
-            diaplayedName: `${this.$t('miniApp.simulator')} (${this.simulatorScriptInfo.name})`
+            diaplayedName: `${this.$t('miniApp.simulator')}`
           },
+          modelSetting: {
+            dataSourceId: null,
+            dataFrameId: null,
+            modelId: null,
+            inputList: []
+          }
         }),
         // 特殊數值行元件
         ...(type === 'formula' && {

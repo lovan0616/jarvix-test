@@ -62,7 +62,6 @@
           :placeholder="$t('modelFlow.upload.chooseModel')"
           :enable-lazy-loading="enableModelsLazyLoading"
           v-model="modelId"
-          filterable
           class="setting-block__select"
           name="modelId"
           @change="modelChangedHandler"
@@ -236,7 +235,7 @@ export default {
         .then(response => {
           this.clearData()
           this.dataFrameOptionList = response
-            .filter(frame => frame.hasPrimaryKey)
+            .filter(this.isSelectableSourceDataframe)
             .map(frame => {
               return {
                 name: frame.primaryAlias,
@@ -252,7 +251,7 @@ export default {
         .finally(() => this.isLoadingDataFrame = false)
     },
     fetchDataColumnList () {
-      getDataFrameColumnInfoById(this.sourceDataframeId)
+      getDataFrameColumnInfoById(this.sourceDataframeId, true, true, false, false)
         .then(response => {
           this.dataColumnOptionList = response.map(column => {
             return {
@@ -264,7 +263,6 @@ export default {
         })
     },
     fetchModelList () {
-      // TODO: 把失敗的 filter
       // 取過且已經取到最後一頁
       if (this.modelsPagination.currentPage >= 0
         && this.modelsPagination.currentPage >= this.modelsPagination.totalPages - 1) {
@@ -301,7 +299,8 @@ export default {
           this.ioArgs = {
             input: ioArgs.input.map(input => {
               return {
-                ...input,
+                modelColumnName: input.modelColumnName,
+                columnStatsType: input.statsType,
                 columnId: null,
                 id: uuidv4()
               }
@@ -328,7 +327,7 @@ export default {
         this.updateCurrentUploadFlowInfo({
           ...this.currentUploadFlowInfo,
           ioArgs: {
-            input: this.ioArgs.input.map(({ modelColumnName, statsType, columnId }) => ({ modelColumnName, statsType, columnId })),
+            input: this.ioArgs.input.map(({ modelColumnName, columnStatsType, columnId }) => ({ modelColumnName, columnStatsType, columnId })),
             output: this.ioArgs.output.map(({ modelColumnName, columnStatsType, originalName }) => ({ modelColumnName, columnStatsType, originalName }))
           },
           modelId: this.modelId,
@@ -337,6 +336,12 @@ export default {
         })
         this.$emit('next')
       })
+    },
+    isSelectableSourceDataframe (frame) {
+      // 來源資料表：
+      // 必須為資料庫連線且至少更新過一次、
+      // 並且不得為其他 model script 產出來的表 (用 table name 判斷)
+      return frame.hasPrimaryKey && !frame.name.startsWith('sc_')
     }
   }
 }

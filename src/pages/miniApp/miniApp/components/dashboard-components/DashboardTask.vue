@@ -127,7 +127,7 @@
           v-else-if="componentData.type === 'simulator'"
           :is-edit-mode="isEditMode"
           :restrictions="restrictions()"
-          :script-id="componentData.scriptId"
+          :model-setting="componentData.modelSetting"
           :key="JSON.stringify(allFilterList)"
         />
         <div 

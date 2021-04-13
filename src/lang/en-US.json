@@ -19,7 +19,7 @@
     "warRoom": "War Room",
     "application": "Application",
     "modelManagement": "Model Management",
-    "modelFlowManagement": "流程管理"
+    "modelFlowManagement": "Flow Management"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -47,7 +47,7 @@
     "modelDetail": "Model Detail",
     "reUploadFile": "Reimport Model",
     "configSetting": "Model Configuration",
-    "modelFlowManagement": "流程管理",
+    "modelFlowManagement": "Flow Management",
     "flowList": "Flow List",
     "flowSetting": "Flow Setting",
     "flowDetail": "Details"
@@ -670,10 +670,6 @@
     "updatedInformation": "Update information",
     "outputResult": "Output result",
     "deleteConfirmText": "Dataset will not be updated after removing the flow. Please choose a delete type",
-    "updateMode": "觸發更新模式",
-    "notUpdate": "不更新",
-    "updateUponDataUpdated": "跟隨資料表更新",
-    "function": "功能",
     "settingManagement": "Settings",
     "creator": "Creator", 
     "createdTime": "Create Date",
@@ -682,39 +678,27 @@
     "correspondingDataFrameColumnName":"Data Set Column",
     "outputDataFrameColumnName":"Output Data Set Column",
     "outputDataFrameName":"Output Data Set Name",
-    "immediatelyUpdate": "立即更新",
-    "updateAtBackground": "流程開始更新，將在背景繼續執行",
     "deleteModelFlow": "Delete Flow",
     "createInfo":"Create Info",
     "adoptedModel":"Use Model",
-    "triggerUpdateType": "觸發更新模式",
-    "triggerType": "觸發模式",
-    "flowUpdateLogs": "更新紀錄",
-    "updatedTime": "更新時間",
-    "updatedStatus": "更新狀態",
-    "updateMessage": "訊息",
-    "triggerTypes": {
-      "manual": "不自動更新",
-      "automatic": "跟隨資料表更新"
-    },
+    "updateMode": "Trigger Mode",
+    "notUpdate": "Manual Trigger",
+    "updateUponDataUpdated": "Trigger with Data Update",
+    "function": "Function",
+    "immediatelyUpdate": "Trigger Update",
+    "updateAtBackground": "Flow updating, it will run in the background.",
     "modelFlowUpdateStatus": {
-      "temp": "未執行",
-      "process": "執行中",
-      "enable": "執行成功",
-      "fail": "執行失敗",
-      "warn": "執行失敗"
-    },
-    "modelFlowLogStatus": {
-      "complete": "成功",
-      "fail": "失敗",
-      "process": "執行中"
+      "temp": "No Update",
+      "process": "Updating",
+      "complete": "Update Complete",
+      "fail": "Update Failed"
     },
     "upload": {
       "setFlowName": "Please input flow name",
       "executionStep1": "Settings Name",
       "executionStep2": "Content Settings",
       "executionStep3": "Other Settings",
-      "reminder": "僅能選擇資料庫連線的資料表",
+      "reminder": "Choose Data Set with Database connection, and have been updated at least once.",
       "chooseModel": "Select a model",
       "modelSetting": "Model Settings",
       "inputSetting": "Input Settings",
@@ -1066,7 +1050,14 @@
     "dataframeExistenceAndRebuild": "Whether the dataframe current column belongs to has been removed or updated, otherwise, rebuild it.",
     "connectionStatus": "Connection status.",
     "otherReasons": "Any other possible reason.",
-    "fetchDataFailed": "Failed Fetching Data"
+    "fetchDataFailed": "Failed Fetching Data",
+    "modelSetting": "Model Setting",
+    "operatedModel": "Model",
+    "modelOperatedResult": "Operation Result",
+    "inputParamSetting": "InputSetting",
+    "modelInputParams": "Input Parameters",
+    "targetedDataFrameColumn": "Targeted Data Column",
+    "selectModel": "Select a model"
   },
   "clustering": {
     "cluster": "Cluster",
