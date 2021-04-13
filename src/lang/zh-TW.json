@@ -685,7 +685,7 @@
       "executionStep1": "設定名稱",
       "executionStep2": "內容設定",
       "executionStep3": "其他設定",
-      "reminder": "僅能選擇資料庫連線的資料表",
+      "reminder": "僅能選擇資料庫連線並已更新過的資料表",
       "chooseModel": "選擇模型",
       "modelSetting": "模型設定",
       "inputSetting": "Input 設定",
