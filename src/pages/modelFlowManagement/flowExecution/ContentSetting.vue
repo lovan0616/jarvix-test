@@ -251,7 +251,11 @@ export default {
         .finally(() => this.isLoadingDataFrame = false)
     },
     fetchDataColumnList () {
-      getDataFrameColumnInfoById(this.sourceDataframeId, true, true, false, false)
+      const hasFeature = true
+      const hasAliasLimit = true
+      const hasBlockClustering = false
+      const includePrimaryKey = false
+      getDataFrameColumnInfoById(this.sourceDataframeId, hasFeature, hasAliasLimit, hasBlockClustering, includePrimaryKey)
         .then(response => {
           this.dataColumnOptionList = response.map(column => {
             return {
