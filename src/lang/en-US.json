@@ -224,6 +224,8 @@
     "localUploadDescription": "Upload .xlsx .xls .csv file",
     "remoteConnection": "Connect to Database",
     "remoteConnectionDescription": "Connect and copy data from database",
+    "runScript": "Data Set Algorithmize",
+    "runScriptDescription": "To execute calculation with the system data and create new data sets",
     "confirmDeleteForeign": "Are you sure you want to delete this association?",
     "chooseDataSource": "Please select a Data Source.",
     "allDataFrames": "All Data Sets",
