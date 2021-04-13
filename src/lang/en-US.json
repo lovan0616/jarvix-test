@@ -680,7 +680,7 @@
       "executionStep1": "Settings Name",
       "executionStep2": "Content Settings",
       "executionStep3": "Other Settings",
-      "reminder": "Choose Data Set with Database connection",
+      "reminder": "Choose Data Set with Database connection, and have been updated at least once.",
       "chooseModel": "Select a model",
       "modelSetting": "Model Settings",
       "inputSetting": "Input Settings",
