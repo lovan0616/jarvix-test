@@ -6,7 +6,10 @@
         {{ $t('sideNav.flowDetail') }}
       </div>
       <div class="title--right">
-        <flow-update-status :flow-info="flowInfo"/>
+        <flow-update-status
+          :flow-info="flowInfo"
+          :is-flow-updating="isFlowUpdating"
+        />
         <flow-action-dropdown
           :is-show-dropdown-arrow="true"
           :is-flow-updating="isFlowUpdating"
@@ -166,7 +169,8 @@ export default {
       isLoading: false,
       isDeleting: false,
       isShowDeleteDialog: false,
-      flowInfo: {}
+      flowInfo: {},
+      timeoutFunction: null
     }
   },
   computed: {
@@ -189,16 +193,26 @@ export default {
   mounted () {
     this.fetchData()
   },
+  destroyed () {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+  },
   methods: {
-    fetchData () {
-      this.isLoading = true
+    fetchData (showSpinner = true) {
+      if (this.showSpinner) this.isLoading = true
       getModelFlowDetail(this.flowId)
         .then(flowInfo => {
           this.flowInfo = flowInfo
           this.$store.commit('modelFlowManagement/updateCurrentFlowInfo', flowInfo)
+          if (this.isFlowUpdating) {
+            this.timeoutFunction = window.setTimeout(() => {
+              this.fetchData(false)
+            }, 5000)
+          } else {
+            if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+          }
         })
         .finally(() => {
-          this.isLoading = false
+          if (this.showSpinner) this.isLoading = false
         })
     },
     closeDeleteDialog () {
