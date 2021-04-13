@@ -1007,6 +1007,7 @@
     "unhandledAbnormalStatisticsComponent": "未處理異常統計元件",
     "handledAbnormalStatisticsComponent": "已處理異常統計元件",
     "simulateComponent": "模擬元件",
+    "parameterOptimizedSimulateComponent": "最佳參數模擬元件",
     "specialIndexTypeComponent": "特殊數值元件",
     "timeScope": "時間範圍",
     "dashboardNoLongerExist": "關聯看板已不存在",

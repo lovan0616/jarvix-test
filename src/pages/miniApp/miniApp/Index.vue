@@ -687,6 +687,10 @@ export default {
           id: 'Simulator'
         },
         {
+          name: this.$t('miniApp.parameterOptimizedSimulateComponent'),
+          id: 'ParameterOptimizedSimulate'
+        },
+        {
           name: this.$t('miniApp.specialIndexTypeComponent'),
           id: 'Formula'
         }
@@ -1065,22 +1069,22 @@ export default {
       })
     },
     updateDashboardNameByDialog (newDashboardName) {
-        this.isProcessing = true
-        const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-        editedMiniApp.settings.editModeData.dashboards.forEach(board => {
-          if (board.id === this.currentDashboardId) board.name = newDashboardName
+      this.isProcessing = true
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards.forEach(board => {
+        if (board.id === this.currentDashboardId) board.name = newDashboardName
+      })
+      
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.miniApp = editedMiniApp
+          this.newDashboardName = newDashboardName
         })
-        
-        this.updateAppSetting(editedMiniApp)
-          .then(() => {
-            this.miniApp = editedMiniApp
-            this.newDashboardName = newDashboardName
-          })
-          .catch(() => {})
-          .finally(() => {
-            this.isShowUpdateDashboardNameDialog = false
-            this.isProcessing = false
-          })
+        .catch(() => {})
+        .finally(() => {
+          this.isShowUpdateDashboardNameDialog = false
+          this.isProcessing = false
+        })
     },
     deleteDashboard () {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
@@ -1341,6 +1345,10 @@ export default {
           })
           .finally(() => this.isProcessing = false)
       })
+    },
+    createParameterOptimizedSimulateComponent () {
+      this.initComponent = this.componentTemplateFactory()
+      this.isShowCreateComponentDialog = true
     },
     createGeneralComponent () {
       this.initComponent = this.componentTemplateFactory()
