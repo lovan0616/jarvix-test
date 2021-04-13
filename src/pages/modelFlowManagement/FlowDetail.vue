@@ -194,25 +194,24 @@ export default {
     this.fetchData()
   },
   destroyed () {
-    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+    this.clearTimer()
   },
   methods: {
     fetchData (showSpinner = true) {
-      if (this.showSpinner) this.isLoading = true
+      if (showSpinner) this.isLoading = true
       getModelFlowDetail(this.flowId)
         .then(flowInfo => {
           this.flowInfo = flowInfo
           this.$store.commit('modelFlowManagement/updateCurrentFlowInfo', flowInfo)
+          this.clearTimer()
           if (this.isFlowUpdating) {
             this.timeoutFunction = window.setTimeout(() => {
               this.fetchData(false)
             }, 5000)
-          } else {
-            if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
           }
         })
         .finally(() => {
-          if (this.showSpinner) this.isLoading = false
+          if (showSpinner) this.isLoading = false
         })
     },
     closeDeleteDialog () {
@@ -241,6 +240,9 @@ export default {
         }).finally(() => {
           this.isShowDeleteDialog = false 
         })
+    },
+    clearTimer () {
+      if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
     }
   }
 }
