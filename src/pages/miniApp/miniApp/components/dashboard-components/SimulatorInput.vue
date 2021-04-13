@@ -55,9 +55,8 @@
 </template>
 
 <script>
-import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
-import { searchColumnDefaultValue } from '@/API/Script'
-import { getColumnAliasInfoById } from '@/API/Alias'
+import { dataValueSearch } from '@/API/DataSource'
+import { searchColumnDefaultValue, searchNumericColumnValueRange } from '@/API/Model'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
@@ -79,7 +78,7 @@ export default {
       type: Boolean,
       default: false
     },
-    scriptId: {
+    modelId: {
       type: Number,
       required: true
     },
@@ -114,21 +113,21 @@ export default {
     
   },
   mounted () {
-    this.getInputListInfo()
+    this.configInputData()
   },
   methods: {
-    getInputListInfo () {
-      this.isLoading = true
+    configInputData () {
       Promise.all([
-        getDataColumnValue(this.columnInfo.columnId),
-        getColumnAliasInfoById(this.columnInfo.columnId),
-        searchColumnDefaultValue(this.scriptId, this.columnInfo.columnId, {
+        ...(this.columnInfo.statsType === 'NUMERIC' && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
+          restrictions: this.restrictions.length > 0 ? this.restrictions : null 
+        })]),
+        ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') && [this.searchValue(this.columnInfo.columnId, '')]),
+        searchColumnDefaultValue(this.modelId, this.columnInfo.columnId, {
           restrictions: this.restrictions
         })
       ])
-        .then(([columnValueInfo, columnAliasInfo, defaultValue]) => {
+        .then(([columnValueInfo, defaultValue]) => {
           this.handleColumnValue(columnValueInfo, defaultValue)
-          this.inputData.columnName = columnAliasInfo[0].dataValue
         })
         .catch(() => {
           this.$emit('failed')
@@ -136,20 +135,11 @@ export default {
     },
     async handleColumnValue (columnInfo, defaultValue) {
       const inputData = {}
-      inputData.statsType = columnInfo.type
+      inputData.statsType = this.columnInfo.statsType
+      inputData.columnName = this.columnInfo.originalName
 
-      if(inputData.statsType === 'CATEGORY') {
-        /// CATEGORY 值超過 200 筆時候會回傳 null
-        if(!inputData.valueList) {
-          try {
-            const response = await this.searchValue(this.columnInfo.columnId, '')
-            inputData.valueList = response.fuzzySearchResult
-          } catch (e) {
-            this.$emit('failed', e.message || this.$t('message.systemIsError'))
-          }
-        } else {
-          inputData.valueList = inputData.valueList.map(value => value.displayColumnValue)
-        }
+      if(inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
+        inputData.valueList = columnInfo.fuzzySearchResult
         inputData.valueList = inputData.valueList.map(element => ({
           value: element,
           name: element
@@ -157,12 +147,7 @@ export default {
         this.columnInfo.userInput = defaultValue
       } else if (inputData.statsType === 'NUMERIC') {
         this.columnInfo.userInput = defaultValue
-        this.inputData.valueList = columnInfo.numeric
-      } else if (inputData.statsType === 'BOOLEAN') {
-        this.columnInfo.userInput = defaultValue
-        if (columnInfo['bool']) {
-          inputData.valueList = columnInfo['bool'].map(item => ({ value: item, name: item }))
-        }
+        this.inputData.valueList = columnInfo
       } else if (inputData.statsType === 'DATETIME') {
         this.columnInfo.userInput = defaultValue
         inputData.datetimeInfo = {
@@ -182,7 +167,7 @@ export default {
         page: 0,
         searchString,
         size: 200,
-        restrictions: null
+        restrictions: this.restrictions.length > 0 ? this.restrictions : null
       })
     },
   },
@@ -226,7 +211,7 @@ export default {
     color: #ffffff;
   }
 
-  /deep/ .input-error .error-text {
+  /deep/ .input-error.error-text {
     bottom: -17px;
   }
 }
