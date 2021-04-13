@@ -20,7 +20,7 @@
               v-validate="'required'"
               :option-list="dataSourceOptionList"
               :placeholder="$t('miniApp.chooseDataSource')"
-              :is-disabled="isLoading"
+              :is-disabled="isLoadingDataSource"
               v-model="sourceDataSourceId"
               filterable
               class="setting-block__select"
@@ -37,7 +37,7 @@
               v-validate="'required'"
               :option-list="dataFrameOptionList"
               :placeholder="$t('miniApp.chooseDataFrame')"
-              :is-disabled="!!(!isLoading && !sourceDataSourceId)"
+              :is-disabled="!!(isLoadingDataFrame || !sourceDataSourceId)"
               v-model="sourceDataframeId"
               filterable
               class="setting-block__select"
@@ -176,7 +176,8 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
+      isLoadingDataSource: false,
+      isLoadingDataFrame: false,
       isProcessing: false,
       statsTypeOptionList,
       modelId: null,
@@ -216,7 +217,7 @@ export default {
       this.clearData()
     },
     fetchDataSourceList () {
-      this.isLoading = true
+      this.isLoadingDataSource = true
       getDataSourceList()
         .then(response => {
           this.dataSourceOptionList = response
@@ -228,10 +229,11 @@ export default {
               }
             })
         }).finally(() => {
-          this.isLoading = false
+          this.isLoadingDataSource = false
         })
     },
     fetchDataFrameList () {
+      this.isLoadingDataFrame = true
       getDataFrameById(this.sourceDataSourceId)
         .then(response => {
           this.clearData()
@@ -249,6 +251,7 @@ export default {
             this.fetchDataColumnList()
           }
         })
+        .finally(() => this.isLoadingDataFrame = false)
     },
     fetchDataColumnList () {
       getDataFrameColumnInfoById(this.sourceDataframeId)
