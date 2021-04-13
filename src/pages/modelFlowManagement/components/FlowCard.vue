@@ -43,7 +43,10 @@
           <svg-icon 
             icon-class="data-source"
             class="icon" /> 
-          <div class="flow-text flow-text--underline">{{ flowInfo.targetDataSource }}</div>
+          <div
+            class="flow-text flow-text--underline"
+            @click="goToDataSourcePage"
+          >{{ flowInfo.targetDataSource }}</div>
         </div>
         <div class="flow-text-wrapper">
           <svg-icon 
@@ -100,6 +103,9 @@ export default {
           flow_id
         }
       })
+    },
+    goToDataSourcePage () {
+      window.open(`/account/${this.getCurrentAccountId}/group/${this.getCurrentGroupId}/datasource/${this.flowInfo.targetDataSourceId}/`, '_blank')
     }
   }
 }
@@ -163,6 +169,7 @@ export default {
 
     &--underline {
       text-decoration: underline;
+      cursor: pointer;
     }
 
     .spinner-block {

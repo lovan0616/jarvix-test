@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateFlowUploadSuccess']),
-    fetchData (showSpinner = true, page = 0, size = 1) {
+    fetchData (showSpinner = true, page = 0, size = 10) {
       if (showSpinner) this.isLoading = true
       return getModelFlowList(this.groupId, page, size)
         .then(({modelFlows, pagination}) => {
