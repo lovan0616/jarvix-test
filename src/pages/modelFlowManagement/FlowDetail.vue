@@ -91,7 +91,7 @@
           <div class="info__row output-df-name">
             <span class="info__label">{{ $t('modelFlow.outputDataFrameName') }}:
             </span>
-            <span class="info__text">{{ flowInfo.name }}</span>
+            <span class="info__text">{{ flowInfo.targetDataFrameName }}</span>
           </div>
           <div class="table-header">
             <div class="info__label info__cell ">{{ $t('modelFlow.modelOutputParameter') }}</div>
