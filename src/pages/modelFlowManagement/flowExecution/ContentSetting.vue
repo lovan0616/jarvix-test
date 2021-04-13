@@ -92,7 +92,6 @@
             :key="index"
             :data-column-option-list="dataColumnOptionList"
             :column-info="input"
-            :is-processing="false"
             :placeholder="sourceDataframeId ? $t('batchLoad.chooseColumn') : $t('modelFlow.upload.pleaseChooseDataFrame')"
             class="setting-block__card"
           />
@@ -130,7 +129,6 @@
             v-for="(output, index) in ioArgs.output"
             :key="index"
             :column-info="output"
-            :is-processing="false"
             class="setting-block__card"
           />
         </template>
