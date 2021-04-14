@@ -528,7 +528,7 @@ export default {
       const validatePromises = []
 
       // 只取當前元件的欄位來驗證
-      // 避免把全欲的所有欄位都抓進來
+      // 避免把全域的所有欄位都抓進來
       const regex = /^create/
       for (let field in this.fields) {
         if (field.match(regex) && field.match(regex).length > 0) {
