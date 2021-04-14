@@ -123,6 +123,13 @@
           :warning-module-setting="warningModuleSetting"
           :is-edit-mode="isEditMode"
         />
+        <parameters-optimized-simulator
+          v-else-if="componentData.type === 'parametersOptimizedSimulator'"
+          :is-edit-mode="isEditMode"
+          :restrictions="restrictions()"
+          :model-setting="componentData.modelSetting"
+          :key="JSON.stringify(allFilterList)"
+        />
         <simulator
           v-else-if="componentData.type === 'simulator'"
           :is-edit-mode="isEditMode"
@@ -167,6 +174,7 @@
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
 import AbnormalStatistics from './AbnormalStatistics'
+import ParametersOptimizedSimulator from './ParametersOptimizedSimulator'
 import Simulator from './Simulator'
 import moment from 'moment'
 import { mapState } from 'vuex'
@@ -179,6 +187,7 @@ export default {
     DecideDialog,
     MonitorWarningList,
     AbnormalStatistics,
+    ParametersOptimizedSimulator,
     Simulator
   },
   props: {
@@ -246,7 +255,10 @@ export default {
   computed: {
     ...mapState('dataSource', ['algoConfig']),
     isIndependentComponent () {
-      return this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'abnormal-statistics' || this.componentData.type === 'simulator'
+      return this.componentData.type === 'monitor-warning-list' 
+        || this.componentData.type === 'abnormal-statistics' 
+        || this.componentData.type === 'simulator' 
+        || this.componentData.type === 'parametersOptimizedSimulator'
     },
     shouldComponentBeFiltered () {
       if (this.isIndependentComponent) return false
