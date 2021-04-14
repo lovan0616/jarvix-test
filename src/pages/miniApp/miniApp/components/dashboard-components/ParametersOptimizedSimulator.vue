@@ -182,13 +182,12 @@ export default {
     display: flex;
     height: 100%;
     justify-content: center;
+    border-radius: 5px;
   }
 
   &__setting,
   &__result {
-    background: #101919;
-    border-radius: 5.2px;
-    width: 50%;
+    background: #253030;
     height: 100%;
     padding: 16px;
     &-title {
@@ -203,7 +202,8 @@ export default {
   &__setting {
     display: flex;
     flex-direction: column;
-    margin-right: 12px;
+    width: 30%;
+    border-right: 1px solid #3B4343;
     &-content {
       flex: 1;
       height: calc(100% - 36px);
@@ -213,6 +213,9 @@ export default {
     }
     &-action {
       padding-top: 12px;
+      .btn-simulate {
+        width: 100%;
+      }
     }
     &-input {
       &:not(:last-of-type) {
@@ -228,6 +231,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 70%;
   }
 
   &__result-content {
