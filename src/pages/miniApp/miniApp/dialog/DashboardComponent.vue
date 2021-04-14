@@ -162,9 +162,11 @@
         </div>
       </div>
       <!--異常標記設定-->
-      <div 
+      <form 
         v-if="computedKeyResultId && isShowAnomalySetting"
-        class="key-result__setting anomaly">
+        data-vv-scope="anomaly"
+        class="key-result__setting anomaly"
+        @submit.prevent="saveAnomalySetting">
         <div class="anomaly__title">{{ $t('miniApp.anomalySetting') }}</div>
         <div class="anomaly__content">
           <div class="anomaly__content-title">{{ $t('miniApp.anomalyRules') }}</div>
@@ -189,7 +191,7 @@
                     v-validate="'decimal|required'"
                     v-model.trim="setting.value"
                     :placeholder="$t('miniApp.datumValue')"
-                    :name="setting.id + '-componentDisplayName'"
+                    :name="'anomaly.' + setting.id + '-componentDisplayName'"
                     class="threshold__input"
                   />
                 </div>
@@ -212,13 +214,13 @@
               >{{ $t('button.createNewRule') }}</button>
               <button
                 v-if="isAnomalySettingChanged"
+                type="submit"
                 class="btn btn-default anomaly__button" 
-                @click="saveAnomalySetting"
               >{{ $t('button.applyToChart') }}</button>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </template>
   </div>
 </template>
@@ -693,7 +695,7 @@ export default {
       this.askResult(this.segmentation, this.questionInfo.questionId, isSetAlgoConfig)
     },
     saveAnomalySetting () {
-      this.$validator.validateAll()
+      this.$validator.validateAll('anomaly')
         .then(valid => {
           if (!valid) return
           this.resetAnomalySetting()
