@@ -212,6 +212,7 @@
                   :data-list="componentTypeOptions"
                   :has-bullet-point="false"
                   trigger="hover"
+                  class="component-type-dropdown"
                   @select="createComponentType"
                 >
                   <template #display>
@@ -647,20 +648,30 @@ export default {
           id: 'MonitorWarning'
         },
         {
-          name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
-          id: 'UnhandledAbnormalStatistics'
-        },
-        {
-          name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
-          id: 'HandledAbnormalStatistics'
+          name: this.$t('miniApp.abnormalStatisticsComponent'),
+          children: [
+            {
+              name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
+              id: 'UnhandledAbnormalStatistics'
+            },
+            {
+              name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
+              id: 'HandledAbnormalStatistics'
+            }
+          ]
         },
         {
           name: this.$t('miniApp.simulateComponent'),
-          id: 'Simulator'
-        },
-        {
-          name: this.$t('miniApp.parameterOptimizedSimulateComponent'),
-          id: 'ParameterOptimizedSimulate'
+          children: [
+            {
+              name: this.$t('miniApp.modelSimulateComponent'),
+              id: 'Simulator'
+            },
+            {
+              name: this.$t('miniApp.parametersOptimizedSimulateComponent'),
+              id: 'ParametersOptimizedSimulator'
+            }
+          ]
         },
         {
           name: this.$t('miniApp.specialIndexTypeComponent'),
@@ -1253,7 +1264,7 @@ export default {
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
-     createDefaultComponent (componentType) {
+    createDefaultComponent (componentType) {
       this.isProcessing = true
       this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -1280,8 +1291,8 @@ export default {
       this.initComponent = this.componentTemplateFactory('simulator')
       this.isShowCreateComponentDialog = true
     },
-    createParameterOptimizedSimulateComponent () {
-      this.initComponent = this.componentTemplateFactory()
+    createParametersOptimizedSimulatorComponent () {
+      this.initComponent = this.componentTemplateFactory('parametersOptimizedSimulator')
       this.isShowCreateComponentDialog = true
     },
     createGeneralComponent () {
@@ -1450,13 +1461,13 @@ export default {
           },
         }),
         // 模擬器元件
-        ...(type === 'simulator' && {
+        ...((type === 'simulator' || type === 'parametersOptimizedSimulator') && {
           isCreatedViaAsking: false,
           config: {
             ...generalConfig,
             // demo 因為有八個 Input，先設定六個列
             size: { row: 12, column: 12 },
-            diaplayedName: `${this.$t('miniApp.simulator')}`
+            diaplayedName: this.$t(`miniApp.${type}`)
           },
           modelSetting: {
             dataSourceId: null,
@@ -1762,6 +1773,9 @@ export default {
             font-weight: 600;
             font-size: 14px;
           }
+        }
+        .component-type-dropdown >>> .dropdown__list-container {
+          width: 160px;
         }
       }
     }
