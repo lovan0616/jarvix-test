@@ -20,7 +20,7 @@
               v-validate="'required'"
               :option-list="dataSourceOptionList"
               :placeholder="$t('miniApp.chooseDataSource')"
-              :is-disabled="isLoading"
+              :is-disabled="isLoadingDataSource"
               v-model="sourceDataSourceId"
               filterable
               class="setting-block__select"
@@ -37,7 +37,7 @@
               v-validate="'required'"
               :option-list="dataFrameOptionList"
               :placeholder="$t('miniApp.chooseDataFrame')"
-              :is-disabled="!!(!isLoading && !sourceDataSourceId)"
+              :is-disabled="!!(isLoadingDataFrame || !sourceDataSourceId)"
               v-model="sourceDataframeId"
               filterable
               class="setting-block__select"
@@ -91,7 +91,6 @@
             :key="index"
             :data-column-option-list="dataColumnOptionList"
             :column-info="input"
-            :is-processing="false"
             :placeholder="sourceDataframeId ? $t('batchLoad.chooseColumn') : $t('modelFlow.upload.pleaseChooseDataFrame')"
             class="setting-block__card"
           />
@@ -129,7 +128,6 @@
             v-for="(output, index) in ioArgs.output"
             :key="index"
             :column-info="output"
-            :is-processing="false"
             class="setting-block__card"
           />
         </template>
@@ -175,7 +173,8 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
+      isLoadingDataSource: false,
+      isLoadingDataFrame: false,
       isProcessing: false,
       statsTypeOptionList,
       modelId: null,
@@ -215,7 +214,7 @@ export default {
       this.clearData()
     },
     fetchDataSourceList () {
-      this.isLoading = true
+      this.isLoadingDataSource = true
       getDataSourceList()
         .then(response => {
           this.dataSourceOptionList = response
@@ -227,10 +226,11 @@ export default {
               }
             })
         }).finally(() => {
-          this.isLoading = false
+          this.isLoadingDataSource = false
         })
     },
     fetchDataFrameList () {
+      this.isLoadingDataFrame = true
       getDataFrameById(this.sourceDataSourceId)
         .then(response => {
           this.clearData()
@@ -248,9 +248,14 @@ export default {
             this.fetchDataColumnList()
           }
         })
+        .finally(() => this.isLoadingDataFrame = false)
     },
     fetchDataColumnList () {
-      getDataFrameColumnInfoById(this.sourceDataframeId, true, true, false, false)
+      const hasFeature = true
+      const hasAliasLimit = true
+      const hasBlockClustering = false
+      const includePrimaryKey = false
+      getDataFrameColumnInfoById(this.sourceDataframeId, hasFeature, hasAliasLimit, hasBlockClustering, includePrimaryKey)
         .then(response => {
           this.dataColumnOptionList = response.map(column => {
             return {

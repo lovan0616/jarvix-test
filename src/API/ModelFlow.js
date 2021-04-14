@@ -18,6 +18,13 @@ import request from '@/utils/publicRequest'
   })
 }
 
+export function getModelFlowDetail(modelFlowId) {
+  return request({
+    url: `model-flows/${modelFlowId}`,
+    method: 'GET'
+  })
+}
+
 /**
  * create model flow
  * @param {Object} data - 建立的流程資訊
@@ -38,5 +45,23 @@ import request from '@/utils/publicRequest'
   return request({
     url: `/model-flows/${modelFlowId}/update`,
     method: 'POST'
+  })
+}
+
+export function deleteModelFlow(modelFlowId) {
+  return request({
+    url: `/model-flows/${modelFlowId}`,
+    method: 'DELETE'
+  })
+}
+
+export function getModelFlowUpdateLogs (modelFlowId, page = 0, size = 20) {
+  return request({
+    url: `/model-flows/${modelFlowId}/logs`,
+    method: 'GET',
+    params: {
+      page,
+      size
+    }
   })
 }
