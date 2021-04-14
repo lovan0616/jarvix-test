@@ -652,7 +652,7 @@ export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, d
           color: warningColor
         },{
           [upperLimit.isIncluded ? 'lt' : 'lte']: upperLimit.value,
-          gt: minY,
+          gte: minY,
           color: chartColor
         }] : [{
           lte: maxY,
