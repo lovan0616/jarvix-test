@@ -19,7 +19,7 @@
     "warRoom": "War Room",
     "application": "Application",
     "modelManagement": "Model Management",
-    "modelFlowManagement": "流程管理"
+    "modelFlowManagement": "Flow Management"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -47,8 +47,8 @@
     "modelDetail": "Model Detail",
     "reUploadFile": "Reimport Model",
     "configSetting": "Model Configuration",
-    "modelFlowManagement": "流程管理",
-    "flowList": "流程列表"
+    "modelFlowManagement": "Flow Management",
+    "flowList": "Flow List"
   },
   "user": {
     "changePwd": "Change Password",
@@ -663,24 +663,24 @@
     "updatedInformation": "Update information",
     "outputResult": "Output result",
     "deleteConfirmText": "Dataset will not be updated after removing the flow. Please choose a delete type",
-    "updateMode": "觸發更新模式",
-    "notUpdate": "不更新",
-    "updateUponDataUpdated": "跟隨資料表更新",
-    "function": "功能",
-    "immediatelyUpdate": "立即更新",
-    "updateAtBackground": "流程開始更新，將在背景繼續執行",
+    "updateMode": "Trigger Mode",
+    "notUpdate": "Manual Trigger",
+    "updateUponDataUpdated": "Trigger with Data Update",
+    "function": "Function",
+    "immediatelyUpdate": "Trigger Update",
+    "updateAtBackground": "Flow updating, it will run in the background.",
     "modelFlowUpdateStatus": {
-      "temp": "未更新",
-      "process": "更新中",
-      "complete": "更新成功",
-      "fail": "更新失敗"
+      "temp": "No Update",
+      "process": "Updating",
+      "complete": "Update Complete",
+      "fail": "Update Failed"
     },
     "upload": {
       "setFlowName": "Please input flow name",
       "executionStep1": "Settings Name",
       "executionStep2": "Content Settings",
       "executionStep3": "Other Settings",
-      "reminder": "僅能選擇資料庫連線的資料表",
+      "reminder": "Choose Data Set with Database connection, and have been updated at least once.",
       "chooseModel": "Select a model",
       "modelSetting": "Model Settings",
       "inputSetting": "Input Settings",
