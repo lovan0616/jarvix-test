@@ -753,9 +753,12 @@ export default {
       if (this.isIndependentComponent) return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
 
-      let question = `${this.componentData.question}`
+      const questionWordList = this.componentData.segmentation.sentence.map(word => ({
+        ...word,
+        isChanged: false
+      }))
+      
       const availableControllers = [...this.yAxisControls]
-
       for (let alias of this.dataColumnAlias) {
         // 逐一確認有無 y controller 包含當前 alias 的選項
         availableControllers.forEach((controller, index) => {
@@ -763,7 +766,9 @@ export default {
           if (hasMatchedOption) {
             // 替換成選定的欄位名稱
             const selectedOption = controller.find(option => option.isSelected)
-            question = question.replace(alias, isWithStyling ? this.columnNameStringToTag(selectedOption.columnName) : selectedOption.columnName)
+            const matchedWord = questionWordList.find(wordItem => !wordItem.isChanged && wordItem.matchedWord === alias)
+            matchedWord.word = isWithStyling ? this.columnNameStringToTag(selectedOption.columnName) : selectedOption.columnName
+            matchedWord.isChanged = true
 
             // 從可用名單中拔除，下一個 alias 只能從其他 y controller 適用
             availableControllers.splice(index, 1)
@@ -771,7 +776,10 @@ export default {
         })
         if (availableControllers.length === 0) break
       }
-      return question
+      return questionWordList.reduce((acc, cur) => {
+        acc += cur.word
+        return acc
+      }, '')
     },
   }
 }
