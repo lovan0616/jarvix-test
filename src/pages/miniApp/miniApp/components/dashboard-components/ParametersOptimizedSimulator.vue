@@ -10,24 +10,26 @@
     <section 
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
-      <div class="simulator__setting">
-        <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
-        <div class="simulator__setting-content">
-          <simulator-input
-            v-for="(columnInfo, index) in modelInfo"
-            :is-processing="isProcessing"
-            :restrictions="restrictions"
-            :column-info="columnInfo"
-            :model-id="modelSetting.modelId"
-            :key="index + '-' + columnInfo.columnId"
-            class="simulator__setting-input"
-            @done="updateColumnInfoState(index)"
-            @failed="handleFetchInputFailed"
-          />
+      <div class="simulator__setting-container">
+        <div class="simulator__setting">
+          <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
+          <div class="simulator__setting-content">
+            <parameters-optimized-simulator-input
+              v-for="(columnInfo, index) in modelInfo"
+              :is-processing="isSimulating"
+              :restrictions="restrictions"
+              :column-info="columnInfo"
+              :model-id="modelSetting.modelId"
+              :key="index + '-' + columnInfo.columnId"
+              class="simulator__setting-input"
+              @done="updateColumnInfoState(index)"
+              @failed="handleFetchInputFailed"
+            />
+          </div>
         </div>
         <div class="simulator__setting-action">
           <button
-            :disabled="isProcessing"
+            :disabled="isSimulating"
             type="button"
             class="btn-m btn-default btn-simulate"
             @click="simulate"
@@ -41,7 +43,7 @@
           {{ $t('miniApp.notYetSimulate') }}
         </div>
         <spinner
-          v-else-if="isProcessing"
+          v-else-if="isSimulating"
           :title="$t('miniApp.simulating')"
         />
         <empty-info-block
@@ -68,16 +70,16 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import SimulatorInput from './SimulatorInput'
-import { modelSimulate } from '@/API/Model'
+import ParametersOptimizedSimulatorInput from './ParametersOptimizedSimulatorInput'
+import { createParamOptimizationTask, getModelInfo } from '@/API/Model'
 
 export default {
   inject: ['$validator'],
-  name: "Simulator",
+  name: "ParametersOptimizedSimulator",
   components: {
     DefaultSelect,
     EmptyInfoBlock,
-    SimulatorInput
+    ParametersOptimizedSimulatorInput
   },
   props: {
     isEditMode: {
@@ -96,7 +98,7 @@ export default {
   data () {
     return {
       isLoading: false,
-      isProcessing: false,
+      isSimulating: false,
       modelInfo: null,
       resultList: null,
       isFetchInputFailed: false,
@@ -123,11 +125,15 @@ export default {
   methods: {
     getModelInfo () {
       this.isLoading = true
+      getModelInfo(this.modelSetting.modelId)
+        .then(({ioArgs: { output }}) => this.modelSetting.outputList = output)
       this.modelInfo = this.modelSetting.inputList.map(column => ({
         ...column,
         columnId: column.dcId,
         isInit: false,
-        userInput: ''
+        userInput: {
+          type: column.statsType === 'NUMERIC' ? 'RANGE' : 'ALL'
+        }
       }))
     },
     updateColumnInfoState(index) {
@@ -144,21 +150,44 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isSimulateFailed = false
-        this.isProcessing = true
-        
-        modelSimulate(this.modelSetting.modelId, {
-          inputValues: this.modelInfo.map(column => column.userInput)
-        })
-          .then(response => {
-            this.resultList = response.outputPrimaryAlias.map((element, index) => {
-              return {
-                name: element,
-                value: response.outputValues[index]
+        this.isSimulating = true
+
+        createParamOptimizationTask({
+          dataFrameId: this.modelSetting.dataFrameId,
+          modelId: this.modelSetting.modelId,
+          restrictions: this.restrictions.length > 0 ? this.restrictions : null,
+          riskProperty: 'HIGH',
+          setting: {
+            expectItems: this.modelSetting.outputList.map(output => ({
+              expectType: 'MAX'
+            })),
+            inputItems: this.modelInfo.map(input => {
+              if (input.statsType === 'CATEGORY') {
+                return {
+                  conditionType: input.userInput.type,
+                  dataColumnId: input.columnId,
+                  items: input.userInput.type === 'ALL' ? null : input.userInput.selectedList,
+                  fixedValue: null,
+                  rangeMax: null,
+                  rangeMin: null,
+                  statsType: input.statsType
+                }
+              } else if (input.statsType === 'NUMERIC') { 
+                return {
+                  conditionType: input.userInput.type,
+                  dataColumnId: input.columnId,
+                  items: null,
+                  fixedValue: input.userInput.type === 'RANGE' ? null : input.userInput.min,
+                  rangeMax: input.userInput.type === 'RANGE' ? input.userInput.max : null,
+                  rangeMin: input.userInput.type === 'RANGE' ? input.userInput.min : null,
+                  statsType: input.statsType
+                }
               }
-            })
-          })
-          .catch(() => { this.isSimulateFailed = true })
-          .finally(() => { this.isProcessing = false })        
+            }),
+            outputLimit: 5
+          }
+        })
+        .catch(() => { this.isSimulateFailed = true })      
       })
     },
     handleFetchInputFailed (message) {
@@ -185,11 +214,16 @@ export default {
     border-radius: 5px;
   }
 
-  &__setting,
+  &__setting-container,
   &__result {
     background: #253030;
     height: 100%;
     padding: 16px;
+    overflow-y: auto;
+  }
+
+  &__setting,
+  &__result {
     &-title {
       font-weight: 600;
       font-size: 14px;
@@ -199,11 +233,14 @@ export default {
     }
   }
 
-  &__setting {
+  &__setting-container {
     display: flex;
     flex-direction: column;
-    width: 30%;
+    flex: 0 0 365px;
     border-right: 1px solid #3B4343;
+  }
+
+  &__setting {
     &-content {
       flex: 1;
       height: calc(100% - 36px);
@@ -231,7 +268,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 70%;
+    flex: 1 1 auto;
   }
 
   &__result-content {

@@ -1046,7 +1046,10 @@
     "inputParamSetting": "InputSetting",
     "modelInputParams": "Input Parameters",
     "targetedDataFrameColumn": "Targeted Data Column",
-    "selectModel": "Select a model"
+    "selectModel": "Select a model",
+    "inputParamsCriteria": "Input Parameter Criteria",
+    "outputParamsCriteria": "Output Result Criteria",
+    "outputResultSetting": "Output Result Setting"
   },
   "clustering": {
     "cluster": "Cluster",
