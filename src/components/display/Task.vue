@@ -86,6 +86,7 @@
 </template>
 <script>
 import MonitorSettingDialog from '@/pages/pinboard/components/MonitorSettingDialog'
+import { formatComponentTitle } from '@/components/display/common/addons'
 
 export default {
   name: 'Task',
@@ -140,6 +141,19 @@ export default {
     isHoverable: {
       type: Boolean,
       default: false
+    },
+     anomalySetting: {
+      type: Object,
+      default: () => ({
+        xAxis: {
+          upperLimit: null,
+          lowerLimit: null
+        },
+        yAxis: {
+          upperLimit: null,
+          lowerLimit: null
+        }
+      })
     }
   },
   data () {
@@ -163,9 +177,6 @@ export default {
       // 是否有下一頁資料
       hasNextPage: false,
       maxDataLengthPerPage: 200,
-      // 下個分頁資料
-      nextPageData: null,
-      singlePage: true,
       isShowMonitorSettingDialog: false,
       isShowLabelData: false
     }
@@ -190,10 +201,9 @@ export default {
           id: this.componentId,
           page
         }).then(response => {
-          // 是否只有一個頁面
-          this.singlePage = response.singlePage
+          // 是否有下一頁，singlePage 為 false 代表還有下一頁
+          this.hasNextPage = !response.singlePage
           if (response.isAutoRefresh) {
-            this.singlePage = true
             this.hasNextPage = false
           }
           switch (response.status) {
@@ -225,9 +235,18 @@ export default {
                 enableAlert: response.enableAlert,
                 // 2N 異常設定示警需要 x 軸欄位資訊
                 ...((response.enableAlert && responseData.title) && {
-                  xAxis: responseData.title.xAxis
-                })
+                  xAxis: responseData.title.xAxis && responseData.title.xAxis.filter(xAxis => xAxis.dc_id),
+                  yAxis: responseData.title.yAxis
+                }),
+                // 元件設定資訊集
+                supportedFunction: response.supportedFunction
               })
+
+              // 圖表異常標記設定和轉換
+              if (responseData.title) {
+                responseData.title.xAxis = formatComponentTitle(responseData.title.xAxis, this.anomalySetting.xAxis)
+                responseData.title.yAxis = formatComponentTitle(responseData.title.yAxis, this.anomalySetting.yAxis)
+              }
 
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
@@ -249,7 +268,6 @@ export default {
                 if (responseData.dataset.data === null || responseData.dataset.data && (responseData.dataset.data.length === 0 || responseData.total === 0)) {
                   this.loading = false
                   this.hasNextPage = false
-                  this.nextPageData = null
                   this.isGetPagination = false
                   // 空資料的處理
                   if (page === 0) {
@@ -264,7 +282,6 @@ export default {
                 // 圖表以外的 task
                 this.componentData = responseData
                 this.hasNextPage = false
-                this.nextPageData = null
                 this.loading = false
               }
               break
@@ -282,7 +299,6 @@ export default {
               if (page > 0) {
                 this.hasNextPage = false
                 this.isGetPagination = false
-                this.nextPageData = null
               } else {
                 if (this.intend === 'key_result') {
                   this.isError = true
@@ -308,30 +324,24 @@ export default {
     handleTaskInitData () {
       this.fetchData(this.pagination.currentPage).then(taskData => {
         this.componentData = taskData
-        if (!this.singlePage) {
-          this.getNextPage(this.pagination.currentPage + 1)
-        } else {
-          this.loading = false
-          this.hasNextPage = false
-        }
+      }).finally(() => {
+        this.isGetPagination = false
+        this.loading = false
       })
     },
     getNextPage (page) {
       this.fetchData(page).then(taskData => {
-        this.nextPageData = taskData
-        this.hasNextPage = true
-        this.isGetPagination = false
+        // 將下一頁的資料塞進去
+        this.updateChartData(taskData)
       }).finally(() => {
+        this.isGetPagination = false
         this.loading = false
       })
     },
     getNewPageInfo () {
       this.isGetPagination = true
       this.pagination.currentPage += 1
-      // 將下一頁的資料塞進去
-      this.updateChartData(this.nextPageData)
-      // 確認下一頁有沒有資料
-      this.getNextPage(this.pagination.currentPage + 1)
+      this.getNextPage(this.pagination.currentPage)
     },
     updateChartData (taskData) {
       // 分頁的資料 push 進去

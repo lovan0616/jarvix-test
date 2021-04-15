@@ -90,18 +90,6 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">問句相關設定</div>
-      <div class="setting-block__content">
-        <div class="input-block">
-          <label for="">關閉自動問問句：</label>
-          <el-switch 
-            v-model="hasCloseQuickAsk"
-            class="setting-switch"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="setting-block">
       <div class="setting-block__title">快捷鍵</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -125,7 +113,6 @@ export default {
   name: 'PageSisSetting',
   data () {
     return {
-      closeQuickAsk: localStorage.getItem('closeQuickAsk'),
       isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
       isShowOrderUpload: localStorage.getItem('isShowOrderUpload'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
@@ -138,15 +125,6 @@ export default {
     }
   },
   computed: {
-    hasCloseQuickAsk: {
-      get () {
-        return this.closeQuickAsk === 'true' || this.closeQuickAsk
-      },
-      set (value) {
-        this.closeQuickAsk = value
-        localStorage.setItem('closeQuickAsk', value)
-      }
-    },
     openDistributedSetting: {
       get () {
         return this.isShowDistributedSetting === 'true' || this.isShowDistributedSetting

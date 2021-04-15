@@ -974,11 +974,22 @@
     "formulaType": "公式类型",
     "singleColumnData": "单栏资料",
     "singleRowData": "整列资料",
+    "anomalySetting": "异常标记设定",
+    "greaterThanAndEqualTo": "大于等于",
+    "greaterThan": "大于",
+    "equalTo": "等于",
+    "lessThan": "小于",
+    "lessThanAndEqualTo": "小于等于",
+    "datumValue": "基准值",
+    "emptyRules": "目前没有任何设定",
+    "anomalyRules": "标记规则",
     "pleaseCheckFollowingSituations": "请确认以下状况",
     "dataframeExistenceAndRebuild": "资料表是否正常 或 尝试重建此项目",
     "connectionStatus": "连线是否正常",
     "otherReasons": "其他原因",
-    "fetchDataFailed": "取得资料失败"
+    "fetchDataFailed": "取得资料失败",
+    "displayUnderPublishMode": "发布端显示",
+    "hideUnderPublishMode": "发布端隐藏"
   },
   "alert": {
     "alertLogs": "示警纪录",
@@ -1028,7 +1039,10 @@
     "columnValueCombination": "展开条件",
     "dataFilterCondition": "资料过滤条件",
     "dataSource": "资料源",
-    "dataFrame": "资料表"
+    "dataFrame": "资料表",
+    "monitoredField": "监测栏位",
+    "operatingStatus": "运行状态",
+    "operating": "运行中"
   },
   "clustering": {
     "cluster": "群体",
@@ -1243,7 +1257,10 @@
     "changeDiagram": "切换图表",
     "columnSummaryInfo": "栏位统计信息",
     "createAlert": "新增示警",
-    "send": "发送"
+    "send": "发送",
+    "runRightAway": "立即运行",
+    "createNewRule": "增加规则",
+    "applyToChart": "使用于图表"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -2651,26 +2668,5 @@
     "boolean": "布林",
     "datetime": "时间",
     "others": "其他"
-  },
-  "questionToken": [
-    {"type": "intend", "text": "概况"},
-    {"type": "aggregate", "text": "平均"},
-    {"type": "aggregate", "text": "总和"},
-    {"type": "aggregate", "text": "总合"},
-    {"type": "aggregate", "text": "总数"},
-    {"type": "aggregate", "text": "最大"},
-    {"type": "aggregate", "text": "最小"},
-    {"type": "aggregate", "text": "标准差"},
-    {"type": "aggregate", "text": "中位数"},
-    {"type": "intend", "text": "趋势"},
-    {"type": "intend", "text": "比较"},
-    {"type": "rootCause", "text": "上升"},
-    {"type": "rootCause", "text": "下降"},
-    {"type": "intend", "text": "根因分析"},
-    {"type": "intend", "text": "预测"},
-    {"type": "intend", "text": "比例"},
-    {"type": "intend", "text": "关系"},
-    {"type": "intend", "text": "有关"},
-    {"type": "intend", "text": "差异"}
-  ]
+  }
 }

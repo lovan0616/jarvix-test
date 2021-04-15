@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import moment from 'moment'
 import i18n from '@/lang/index.js'
+import { getAlertConditions } from '@/API/Alert'
 
 // 全站共用的 function，會注入每個 component 當中
 Vue.mixin({
@@ -598,11 +599,11 @@ Vue.mixin({
     getAccountRoleLocaleName (accountRole) {
       return this.$t(`userManagement.${this.accountRoleToCamelCase(accountRole)}`)
     },
-    checkShouldApplyMiniAppFilter (filter, mainDataColumn = null) {
+    checkShouldApplyMiniAppFilter (filter, mainDateColumn = null) {
       switch (filter.statsType) {
         case 'RELATIVEDATETIME':
           // 如果當前 dataframe 無日期欄位，或相對時間選全選時，不需帶入限制中
-          return mainDataColumn & filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+          return mainDateColumn && filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
         case 'NUMERIC':
         case 'FLOAT':
         case 'DATETIME':
@@ -613,5 +614,27 @@ Vue.mixin({
           return false
       }
     },
+    fetchMiniAppActiveWarningConditions (settingData) {
+      if (
+        !settingData.activate
+        || !settingData.conditions
+        || settingData.conditions.length === 0
+      ) return []
+
+      const appConditionIds = settingData.conditions.map(item => item.id)
+      const conditionIdSet = new Set(appConditionIds)
+
+      // 取得當前 app active 狀態的示警條件
+      return getAlertConditions(this.getCurrentGroupId)
+        .then(conditions => {
+          let appConditions = []
+          appConditions = conditions.reduce((acc, cur) => {
+            if (!cur.active || !conditionIdSet.has(cur.id)) return acc
+            acc.push(cur.id)
+            return acc
+          }, [])
+          return appConditions
+        })
+    }
   }
 })

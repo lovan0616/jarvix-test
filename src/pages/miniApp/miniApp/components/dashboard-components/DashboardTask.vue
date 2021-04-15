@@ -59,7 +59,7 @@
               <!-- <slot name="drowdown"/> -->
               <dropdown-select
                 :bar-data="componentSettingOptions"
-                @switchDialogName="$emit('switchDialogName', $event)"
+                @switchDialogName="$emit('switchDialogName', { name: $event, componentComplementaryInfo })"
               />
             </div>
             <div v-if="!isEditMode && componentData.type === 'monitor-warning-list'">
@@ -149,6 +149,7 @@
             :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
             :is-hoverable="isHoverable"
+            :anomaly-setting="anomalySetting"
             intend="key_result"
             @clickCell="columnTriggered($event)"
             @clickRow="rowTriggered($event)"
@@ -179,6 +180,7 @@ import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
 import { sizeTable } from '@/utils/general'
+import { formatAnomalySetting } from '@/components/display/common/addons'
 
 export default {
   name: 'DashboardTask',
@@ -249,7 +251,8 @@ export default {
       tempFilteredKeyResultId: null,
       isInitializing: true,
       segmentation: null,
-      enableAlert: false
+      enableAlert: false,
+      componentComplementaryInfo: null
     }
   },
   computed: {
@@ -267,43 +270,40 @@ export default {
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
+      // 元件問題需包含數值型欄位
       if (
         this.componentData.diagram === 'table'
         || this.componentData.type === 'monitor-warning-list'
         || this.componentData.type === 'simulator'
         || this.componentData.type === 'formula'
+        || this.yAxisControls.length === 0
+        || this.componentNumericColumns.length === 0
       ) return false
 
-      const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
-      return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
+      // 至少其中一個欄位名稱是任一 controller 中的選項
+      return this.yAxisControls.some(controller => {
+        return controller.some(option => {
+          return this.componentNumericColumns.find(column => column.columnName === option.columnName)
+        })
+      })
+    },
+    componentNumericColumns () {
+      return this.componentData.dataColumns.filter(column => column.statsType === 'NUMERIC') || []
     },
     keyResultId () {
       return this.tempFilteredKeyResultId
     },
     dataColumnAlias () {
-      if (this.isIndependentComponent) return ''
-      const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
-      return dataColumn ? dataColumn.dataColumnAlias : ''
-    },
-    newYAxisColumnNames () {
-      if (!this.shouldComponentYAxisBeControlled) return null
-      return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
-    },
-    controllerMutatedQuestion () {
-      if (this.isIndependentComponent) return ''
-      if (!this.shouldComponentYAxisBeControlled) return ''
-      return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
-    },
-    controllerMutatedQuestionWithStyleTag () {
-      if (this.isIndependentComponent) return ''
-      if (!this.shouldComponentYAxisBeControlled) return ''
-      return this.componentData.question.replace(this.dataColumnAlias, `
-        <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
-      `)
+      if (this.isIndependentComponent) return []
+      return this.componentData.segmentation.transcript.subjectList.reduce((acc, cur) => {
+        if (!cur.dataColumn) return acc
+        acc.push(cur.dataColumn.dataColumnAlias)
+        return acc
+      }, [])
     },
     dashboardTaskTitle () {
       return this.shouldComponentYAxisBeControlled
-        ? this.controllerMutatedQuestionWithStyleTag
+        ? this.controllerMutatedQuestion(true)
         : this.componentData.config.diaplayedName
     },
     allFilterList () {
@@ -315,17 +315,6 @@ export default {
         .filter(item => item[0]['statsType'] === 'RELATIVEDATETIME')
         .map(filter => (this.formatRelativeDatetime(filter[0].dataValues[0])))
       return relativeDatetime[0]
-    },
-    selectedYAxisControls () {
-      return this.yAxisControls.reduce((acc, cur) => {
-        // 只有相同 dataFrame 才有作用
-        if (cur[0].dataFrameId === this.componentData.dataFrameId) {
-          // 找出被選到的 controller
-          const option = cur.find(item => item.isSelected)
-          return option ? acc.concat(option) : acc
-        }
-        return acc
-      }, [])
     },
     includeSameDataFrameFilter () {
       let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
@@ -358,6 +347,7 @@ export default {
         && this.componentData.config.tableRelationInfo.triggerTarget === 'row'
     },
     displayedRelatedDashboard () {
+      if (!this.componentData.config.relatedDashboard) return
       return `
         ${this.$t('miniApp.relatedDashboard')}：
         ${this.componentData.config.relatedDashboard.name}
@@ -408,6 +398,21 @@ export default {
       ]
       return options
     },
+    anomalySetting () {
+      return {
+        xAxis: {
+          upperLimit: null,
+          lowerLimit: null,
+          markLine: null
+        },
+        yAxis: {
+          upperLimit: null,
+          lowerLimit: null,
+          markLine: null,
+          ...(this.componentData.anomalySettings && this.componentData.anomalySettings.length > 0 && formatAnomalySetting(this.componentData.anomalySettings))
+        }
+      }
+    }
   },
   watch: {
     isCurrentDashboardInit: {
@@ -471,7 +476,7 @@ export default {
       window.clearTimeout(this.debouncedAskFunction)
       this.debouncedAskFunction = window.setTimeout(this.askQuestion, 0)
     },
-    askQuestion (question = this.controllerMutatedQuestion || this.componentData.question) {
+    askQuestion (question = this.controllerMutatedQuestion() || this.componentData.question) {
       window.clearTimeout(this.timeoutFunction)
       this.isProcessing = true
       this.isIndexTypeComponentLoading = true
@@ -480,6 +485,7 @@ export default {
       this.totalSec = 50
       this.periodSec = 200
       this.isEmptyData = false
+      this.componentComplementaryInfo = null
 
       // 透過公式創建元件需使用不同方式取得 result
       if (this.componentData.type === 'formula') return this.getFormulaResult()
@@ -721,17 +727,60 @@ export default {
       const maxHeight = this.$refs.component.getBoundingClientRect().height - 135
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
     },
-    updateComponentConfigInfo (config) {
+    updateComponentConfigInfo ({ enableAlert, supportedFunction, ...axisData }) {
+      // 存取元件能使用的功能及其資料
+      this.componentComplementaryInfo = {
+        chartInfo: axisData || {},
+        supportedFunction
+      }
+
       // 能用來轉示警條件的元件類型
       const enabledComponentTypeList = ['formula', 'chart']
       const isEnabledComponent = enabledComponentTypeList.includes(this.componentData.type)
       if (!isEnabledComponent) return
-      this.enableAlert = config.enableAlert
+      this.enableAlert = enableAlert
     },
     onComponentFailed () {
       this.isComponentFailed = true
       this.enableAlert = false
-    }
+    },
+    columnNameStringToTag (name) {
+      return `
+        <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: inline-block;">${name}</div>
+      `
+    },
+    controllerMutatedQuestion (isWithStyling = false) {
+      if (this.isIndependentComponent) return ''
+      if (!this.shouldComponentYAxisBeControlled) return ''
+
+      const questionWordList = this.componentData.segmentation.sentence.map(word => ({
+        ...word,
+        isChanged: false
+      }))
+      
+      const availableControllers = [...this.yAxisControls]
+      for (let alias of this.dataColumnAlias) {
+        // 逐一確認有無 y controller 包含當前 alias 的選項
+        availableControllers.forEach((controller, index) => {
+          const hasMatchedOption = controller.some(option => option.columnName === alias)
+          if (hasMatchedOption) {
+            // 替換成選定的欄位名稱
+            const selectedOption = controller.find(option => option.isSelected)
+            const matchedWord = questionWordList.find(wordItem => !wordItem.isChanged && wordItem.matchedWord === alias)
+            matchedWord.word = isWithStyling ? this.columnNameStringToTag(selectedOption.columnName) : selectedOption.columnName
+            matchedWord.isChanged = true
+
+            // 從可用名單中拔除，下一個 alias 只能從其他 y controller 適用
+            availableControllers.splice(index, 1)
+          }
+        })
+        if (availableControllers.length === 0) break
+      }
+      return questionWordList.reduce((acc, cur) => {
+        acc += cur.word
+        return acc
+      }, '')
+    },
   }
 }
 </script>
