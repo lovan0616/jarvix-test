@@ -104,6 +104,7 @@
     "formMailWrong": "信箱格式错误",
     "formNumberEmpty": "请输入数字",
     "formLetterSpaceEmpty": "请填字串(含空格)",
+    "formLetterDashUnderscore": "限中英数以及'-'、'_'字符",
     "formCharacterOverMax": "最多{max}个字元",
     "formCharacterOverMin": "最少{min}个字元",
     "formValueOverMin": "数字需大於{min}",
