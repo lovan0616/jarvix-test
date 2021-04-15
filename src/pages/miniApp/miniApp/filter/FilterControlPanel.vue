@@ -64,7 +64,15 @@ export default {
     }
   },
   mounted () {
-    if (this.isYAxisController || !this.isSingleChoiceFilter) return this.filterList = JSON.parse(JSON.stringify(this.initialFilterList))
+    if (this.isYAxisController || !this.isSingleChoiceFilter) {
+      return this.filterList = this.initialFilterList.map(filterSet => {
+        return filterSet.map(filter => ({ 
+          ...filter,
+          filterId: uuidv4()
+        }))
+      })
+    }
+
     // 控制項有階層，且創立完後需要給定預設值，所以須額外處理
     this.filterList = this.initialFilterList.map((filterSet, setIndex) => {
       // 確認當前組是否剛被創出來，需要給 filter 預設值
