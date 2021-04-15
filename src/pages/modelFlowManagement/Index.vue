@@ -4,6 +4,9 @@
 
 <script>
 export default {
-  name: 'ModelFlowManagementIndex'
+  name: 'ModelFlowManagementIndex',
+  destroyed () {
+    this.$store.commit('modelFlowManagement/updateCurrentFlowInfo', null)
+  }
 }
 </script>

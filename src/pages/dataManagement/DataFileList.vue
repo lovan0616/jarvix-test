@@ -424,14 +424,16 @@ export default {
           return {
             ...element,
             dataSourceId: this.$route.params.id,
-            createMethod: element.joinCount > 1 ? 'tableJoin' : this.createMethod(element.originType),
-            createMethodLabel: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
+            createMethod: element.joinCount > 1 ? 'tableJoin' : this.createMethod(element),
+            createMethodLabel: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element)
           }
         })
       })
     },
-    createMethod (value) {
-      switch (value) {
+    createMethod (dataFrame) {
+      // model產的表後端給的originType失準，先用name判斷
+      if (dataFrame.name.startsWith('sc_')) return this.$t('editing.runScript')
+      switch (dataFrame.originType) {
         case 'file':
           return this.$t('editing.userUpload')
         case 'database':

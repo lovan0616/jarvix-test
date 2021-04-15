@@ -48,7 +48,9 @@
     "reUploadFile": "Reimport Model",
     "configSetting": "Model Configuration",
     "modelFlowManagement": "Flow Management",
-    "flowList": "Flow List"
+    "flowList": "Flow List",
+    "flowSetting": "Flow Setting",
+    "flowDetail": "Details"
   },
   "user": {
     "changePwd": "Change Password",
@@ -222,6 +224,8 @@
     "localUploadDescription": "Upload .xlsx .xls .csv file",
     "remoteConnection": "Connect to Database",
     "remoteConnectionDescription": "Connect and copy data from database",
+    "runScript": "Data Set Algorithmize",
+    "runScriptDescription": "To execute calculation with the system data and create new data sets",
     "confirmDeleteForeign": "Are you sure you want to delete this association?",
     "chooseDataSource": "Please select a Data Source.",
     "allDataFrames": "All Data Sets",
@@ -659,21 +663,48 @@
   },
   "modelFlow": {
     "newFlow": "New Flow",
+    "modelFlowNameId": "Flow Name / ID",
+    "name": "Name",
+    "id": "ID",
     "createdInfo": "Flow {name} is created at {time}",
     "updatedInformation": "Update information",
     "outputResult": "Output result",
     "deleteConfirmText": "Dataset will not be updated after removing the flow. Please choose a delete type",
-    "updateMode": "Trigger Mode",
-    "notUpdate": "Manual Trigger",
-    "updateUponDataUpdated": "Trigger with Data Update",
     "function": "Function",
+    "settingManagement": "Settings",
+    "creator": "Creator", 
+    "createdTime": "Create Date",
+    "modelInputParameter": "Model Input Parameters",
+    "modelOutputParameter":"Model Output Parameters",
+    "correspondingDataFrameColumnName":"Data Set Column",
+    "outputDataFrameColumnName":"Output Data Set Column",
+    "outputDataFrameName":"Output Data Set Name",
     "immediatelyUpdate": "Trigger Update",
     "updateAtBackground": "Flow updating, it will run in the background.",
+    "deleteModelFlow": "Delete Flow",
+    "createInfo":"Create Info",
+    "adoptedModel":"Use Model",
+    "triggerUpdateType": "Trigger Mode",
+    "updateMode": "Trigger Mode",
+    "flowUpdateLogs": "Update Logs",
+    "updatedTime": "Updated Time",
+    "updatedStatus": "Updated Status",
+    "updateMessage": "Message",
+    "triggerTypes": {
+      "manual": "Manual Trigger",
+      "automatic": "Trigger with Data Update"
+    },
     "modelFlowUpdateStatus": {
       "temp": "No Update",
       "process": "Updating",
+      "enable": "Update Complete",
       "complete": "Update Complete",
       "fail": "Update Failed"
+    },
+    "modelFlowLogStatus": {
+      "complete": "Success",
+      "fail": "Fail",
+      "process": "Processing"
     },
     "upload": {
       "setFlowName": "Please input flow name",
@@ -692,10 +723,7 @@
       "outputColumnSetting": "Output Column Setting",
       "modelOutputArgs": "Model Output Parameters",
       "outputColumnName": "Output Column Name",
-      "pleaseChooseDataFrame": "Please choose a Data Set",
-      "updatedTriggerMode": "Update Trigger",
-      "NoAutomaticUpdate": "No Automatic Update Trigger",
-      "updatedByFrame": "Trigger by Data Set update"
+      "pleaseChooseDataFrame": "Please choose a Data Set"
     }
   },
   "pinboard": {

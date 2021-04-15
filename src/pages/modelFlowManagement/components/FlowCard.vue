@@ -16,38 +16,25 @@
         <div class="flow-info-wrapper">
           <div class="flow-label">{{ $t('modelFlow.updateMode') }}：</div>
           <div class="flow-text">
-            <!-- Next Sprint -->
-            {{ $t('modelFlow.notUpdate') }}
+            {{ $t(`modelFlow.triggerTypes.${flowInfo.triggerType.toLowerCase()}`) }}
           </div>
         </div>
-        <div class="flow-info-wrapper update-status-block">
-          <div class="flow-label">{{ $t('modelFlow.updatedInformation') }}：</div>
-          <div class="flow-text">
-            <spinner 
-              v-if="isFlowUpdating" 
-              size="14" />
-            <span
-              v-if="flowUpdateTime"
-              class="flow-update-time">
-              {{ flowUpdateTime }}
-            </span>
-            <span class="flow-update-status">
-              {{ flowUpdateStatus }}
-            </span>
-          </div>
-        </div>
+        <flow-update-status
+          :flow-info="flowInfo"
+          :is-flow-updating="isFlowUpdating"
+        />
         <div class="flow-function-wrapper">
-          <!-- Next Sprint -->
-          <!-- <span class="flow-function">
-            <a class="link">功能管理</a>
-          </span> -->
           <span class="flow-function">
-            <a class="link">{{ $t('modelFlow.function') }}</a>
-            <dropdown-select
-              :bar-data="flowFunctions" 
-              @switchDialogName="$emit('action', $event)"
-            />
+            <a
+              class="link"
+              @click="goToFlowDetailPage(flowInfo.id)"
+            >{{ $t('modelFlow.settingManagement') }}</a>
           </span>
+          <flow-action-dropdown
+            :is-flow-updating="isFlowUpdating"
+            class="flow-function"
+            @action="$emit('action', $event)"
+          />
         </div>
       </div>
       <div class="flow-card__list">
@@ -56,7 +43,10 @@
           <svg-icon 
             icon-class="data-source"
             class="icon" /> 
-          <div class="flow-text flow-text--underline">{{ flowInfo.targetDataSource }}</div>
+          <div
+            class="flow-text flow-text--underline"
+            @click="goToDataSourcePage"
+          >{{ flowInfo.targetDataSource }}</div>
         </div>
         <div class="flow-text-wrapper">
           <svg-icon 
@@ -70,12 +60,15 @@
 </template>
 
 <script>
-import DropdownSelect from '@/components/select/DropdownSelect'
+import FlowUpdateStatus from './FlowUpdateStatus'
+import FlowActionDropdown from './FlowActionDropdown'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'FlowCard',
   components: {
-    DropdownSelect
+    FlowUpdateStatus,
+    FlowActionDropdown
   },
   props: {
     flowInfo: {
@@ -88,6 +81,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     getFlowClasses () {
       return ['flow-card', this.isFlowDisabled ? 'is-disabled' : null]
     },
@@ -96,30 +90,22 @@ export default {
     },
     isFlowUpdating () {
       return this.flowInfo.targetDataFrameStatusType === 'Process'
-    },
-    flowUpdateTime () {
-      switch (this.flowInfo.targetDataFrameStatusType) {
-        case 'Complete':
-        case 'Fail':
-          return this.flowInfo.targetDataFrameUpdatedAt && this.timeToDateTime(this.flowInfo.targetDataFrameUpdatedAt)
-        case 'Temp':
-        case 'Process':
-        default:
-          return ''
-      }
-    },
-    flowUpdateStatus () {
-      return this.$t(`modelFlow.modelFlowUpdateStatus.${(this.flowInfo.targetDataFrameStatusType).toLowerCase()}`)
-    },
-    flowFunctions () {
-      return [
-        { title: 'modelFlow.immediatelyUpdate', dialogName: 'manulUpdate' }
-      ]
     }
   },
   methods: {
-    switchDialogName (action) {
-      this.$emit('action', action)
+    goToFlowDetailPage (flow_id) {
+      this.$store.commit('modelFlowManagement/updateCurrentFlowInfo', this.flowInfo)
+      this.$router.push({
+        name: 'FlowDetail',
+        params: {
+          account_id: this.getCurrentAccountId,
+          group_id: this.getCurrentGroupId,
+          flow_id
+        }
+      })
+    },
+    goToDataSourcePage () {
+      window.open(`/account/${this.getCurrentAccountId}/group/${this.getCurrentGroupId}/datasource/${this.flowInfo.targetDataSourceId}/`, '_blank')
     }
   }
 }
@@ -167,17 +153,10 @@ export default {
 
   &.is-disabled {
     background: rgba(28, 41, 43, 0.2);
-    cursor: not-allowed;
     [class^="flow"] {
       color: rgba(153, 153, 153, 0.4);
     }
-    .flow-function {
-      pointer-events: none;
-      .link {
-        color: rgba(42, 210, 226, 0.4);
-      }
-    }
-    .update-status-block {
+    /deep/ .update-status-block {
       [class^="flow"] {
         color: rgba(153, 153, 153, 0.9);
       }
@@ -190,6 +169,7 @@ export default {
 
     &--underline {
       text-decoration: underline;
+      cursor: pointer;
     }
 
     .spinner-block {
@@ -210,9 +190,6 @@ export default {
 
     .flow-text {
       display: flex;
-      .flow-update-time {
-        margin-right: 8px;
-      }
     }
   }
 
@@ -231,9 +208,9 @@ export default {
   }
 
   .flow-function-wrapper {
+    display: flex;
     margin-left: auto;
     .flow-function {
-      position: relative;
       &:not(:first-child) {
         padding-left: 20px;
         &::before {
@@ -244,28 +221,6 @@ export default {
           height: 16px;
           width: 1px;
           background-color: #9DBDBD;
-        }
-      }
-      &:hover {
-        .dropdown-select {
-          visibility: visible;
-        }
-      }
-    }
-
-    /deep/ .dropdown-select {
-      visibility: hidden;
-      &:hover {
-        visibility: visible;
-      }
-      .dropdown-select-box {
-        box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
-        top: 24px;
-        left: unset;
-        right: -30px;
-        .dropdown-flex {
-          padding: 0 12px;
-          cursor: pointer;
         }
       }
     }
