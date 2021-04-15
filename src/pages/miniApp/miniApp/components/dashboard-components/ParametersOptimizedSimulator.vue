@@ -35,30 +35,30 @@
         </div>
       </div>
       <div class="simulator__result">
-        <div 
-          v-if="!resultList" 
-          class="simulator__default-message">
-          {{ $t('miniApp.notYetSimulate') }}
-        </div>
-        <spinner
-          v-else-if="isProcessing"
-          :title="$t('miniApp.simulating')"
-        />
-        <empty-info-block
-          v-else-if="isSimulateFailed"
-          :msg="failedMessage || $t('message.systemIsError')"
-        />
-        <template v-else>
-          <div class="simulator__result-title">{{ $t('miniApp.simulationResult') }}</div>
-          <div class="simulator__result-content">
-            <div 
-              v-for="(result, index) in resultList"
-              :key="index"
-              class="simulator__result-item item">
-              <div class="item__label">{{ result.name }}</div>
-              <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
-            </div>
-          </div>
+        <template>
+          <el-tabs 
+            v-model="activeTabName"
+            class="simulator__result-tab"
+            type="card">
+            <el-tab-pane 
+              :label="$t('miniApp.simulationResult')" 
+              :name="$t('miniApp.simulationResult')">
+              <div class="simulator__result-panel">
+                <simulator-result-card
+                  v-for="(result, index) in simulatorResults"
+                  :key="index"
+                  :result="result"
+                />
+              </div>
+            </el-tab-pane>
+            <el-tab-pane 
+              :label="$t('miniApp.savedRecord')" 
+              :name="$t('miniApp.savedRecord')">
+              <div class="simulator__record-panel">
+                {{ $t('miniApp.savedRecord') }}
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </template>
       </div>
     </section>
@@ -69,15 +69,17 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SimulatorInput from './SimulatorInput'
-import { modelSimulate } from '@/API/Model'
-
+import SimulatorResultCard from './SimulatorResultCard'
+import { modelSimulate, getParamOptimizationResult } from '@/API/Model'
+ 
 export default {
   inject: ['$validator'],
   name: "Simulator",
   components: {
     DefaultSelect,
     EmptyInfoBlock,
-    SimulatorInput
+    SimulatorInput,
+    SimulatorResultCard
   },
   props: {
     isEditMode: {
@@ -97,11 +99,39 @@ export default {
     return {
       isLoading: false,
       isProcessing: false,
+      isSimulating: false,
       modelInfo: null,
       resultList: null,
       isFetchInputFailed: false,
       isSimulateFailed: false,
-      failedMessage: null
+      failedMessage: null,
+      activeTabName: this.$t('miniApp.simulationResult'),
+      simulatorResults: [
+        [
+          {type: 'input', name: '產品價格', value: '1,000'},
+          {type: 'input', name: '產品利潤', value: '700'},
+          {type: 'input', name: '產品品牌', value: 'AAA'},
+          {type: 'output', name: '銷售量', value: '1,200,234'}
+        ],
+        [
+          {type: 'input', name: '產品價格', value: '1,000'},
+          {type: 'input', name: '產品利潤', value: '700'},
+          {type: 'input', name: '產品品牌', value: 'AAA'},
+          {type: 'output', name: '銷售量', value: '1,200,234'}
+        ],
+        [
+          {type: 'input', name: '產品價格', value: '1,000'},
+          {type: 'input', name: '產品利潤', value: '700'},
+          {type: 'input', name: '產品品牌', value: 'AAA'},
+          {type: 'output', name: '銷售量', value: '1,200,234'}
+        ],
+        [
+          {type: 'input', name: '產品價格', value: '1,000'},
+          {type: 'input', name: '產品利潤', value: '700'},
+          {type: 'input', name: '產品品牌', value: 'AAA, dfnsjof, fnjdskf, fndusjfnsod, mdisjkonf'},
+          {type: 'output', name: '銷售量', value: '1,200,234'}
+        ],
+      ]
     }
   },
   computed: {
@@ -229,8 +259,7 @@ export default {
 
   &__result {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    padding-top: 0;
     width: 70%;
   }
 
@@ -242,22 +271,62 @@ export default {
     overflow-y: auto;
   }
 
-  &__result-item {
-    margin-bottom: 12px;
-    width: 100%;
+  &__result-panel, 
+  &__record-panel {
+    padding-top: 16px;
+    height: 100%;
   }
 
-  .item {
-    &__label {
-      margin-bottom: 8px;
-      color: #AAAAAA;
-      font-weight: 600;
-      font-size: 14px;
+  &__result-panel {
+    display: flex;
+    overflow-y: auto;
+  }
+
+  /deep/ .el-tabs {
+    width: 100%;
+    &>.el-tabs__header {
+      border: none;
+      margin: 0;
+      width: 100%;
+
+      .el-tabs__nav {
+        position: relative;
+        width: 100%;
+        border: none;
+        overflow-x: auto;
+
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 1px;
+          background: #3B4343;
+        }
+      }
+      .el-tabs__item {
+        border: none;
+        color:  #646464;
+        border-bottom: 1px solid #3B4343;
+        text-align: center;
+        width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: top;
+        &.is-active {
+          color: $theme-text-color-primary;
+          border-bottom: 3px solid $theme-text-color-primary;
+        }
+      }
     }
 
-    &__value {
-      color: #FFFFFF;
-      font-size: 14px;
+    &>.el-tabs__content {
+      height: calc(100% - 40px);
+
+      .el-tab-pane {
+        height: 100%;
+      }
     }
   }
 

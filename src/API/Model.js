@@ -126,3 +126,14 @@ export function modelSimulate(modelId, data) {
     data
   })
 }
+
+/**
+ * get parameter optimization task result
+ * @query {Number} taskId - task id 
+ */
+ export function getParamOptimizationResult(taskId) {
+  return request({
+    url: `/model-param-opt/tasks/${taskId}/result`,
+    method: 'GET'
+  })
+}
