@@ -35,6 +35,10 @@
         </div>
       </div>
       <div class="simulator__result">
+        <!-- <spinner 
+          v-if="isSimulating" 
+          :title="$t('miniApp.simulating')"
+        /> -->
         <template>
           <el-tabs 
             v-model="activeTabName"
@@ -105,39 +109,18 @@ export default {
       isFetchInputFailed: false,
       isSimulateFailed: false,
       failedMessage: null,
+      intervalFunction: null,
+      simulatorResults: [],
       activeTabName: this.$t('miniApp.simulationResult'),
-      simulatorResults: [
-        [
-          {type: 'input', name: '產品價格', value: '1,000'},
-          {type: 'input', name: '產品利潤', value: '700'},
-          {type: 'input', name: '產品品牌', value: 'AAA'},
-          {type: 'output', name: '銷售量', value: '1,200,234'}
-        ],
-        [
-          {type: 'input', name: '產品價格', value: '1,000'},
-          {type: 'input', name: '產品利潤', value: '700'},
-          {type: 'input', name: '產品品牌', value: 'AAA'},
-          {type: 'output', name: '銷售量', value: '1,200,234'}
-        ],
-        [
-          {type: 'input', name: '產品價格', value: '1,000'},
-          {type: 'input', name: '產品利潤', value: '700'},
-          {type: 'input', name: '產品品牌', value: 'AAA'},
-          {type: 'output', name: '銷售量', value: '1,200,234'}
-        ],
-        [
-          {type: 'input', name: '產品價格', value: '1,000'},
-          {type: 'input', name: '產品利潤', value: '700'},
-          {type: 'input', name: '產品品牌', value: 'AAA, dfnsjof, fnjdskf, fndusjfnsod, mdisjkonf'},
-          {type: 'output', name: '銷售量', value: '1,200,234'}
-        ],
-      ]
     }
   },
   computed: {
     
   },
   watch: {
+    isSimulating(value) {
+      if (value) this.startPolling()
+    },
     modelInfo: {
       deep: true,
       handler (newList) {
@@ -195,9 +178,34 @@ export default {
       this.isLoading = false
       this.isFetchInputFailed = true
       if (!this.failedMessage) this.failedMessage = message
+    },
+    startPolling () {
+      if(!this.isSimulating) return
+      this.intervalFunction = window.setInterval(() => {
+        getParamOptimizationResult(21)
+          .then(({status, results, errorMessage})=> {
+            switch(status) {
+              case 'Ready':
+              case 'Process':
+                break
+              case 'Complete':
+                this.simulatorResults = results
+                this.clearPolling()
+                break
+              case 'Fail':
+                this.isSimulateFailed = true
+                this.failedMessage = errorMessage
+                this.clearPolling()
+                break
+            }
+          })
+      }, 5000)
+    },
+    clearPolling () {
+      this.isSimulating = false
+      if (this.intervalFunction) window.clearInterval(this.intervalFunction)
     }
   },
-
 }
 </script>
 
