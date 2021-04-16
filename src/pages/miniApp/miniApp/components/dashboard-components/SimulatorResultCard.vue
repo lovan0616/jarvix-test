@@ -2,7 +2,7 @@
   <div class="simulator-result-card">
     <div 
       v-for="(output, index) in outputList" 
-      :key="index"
+      :key="'output-' + index"
       class="output-field">
       <div class="output-field__label">{{ output.name }}</div>
       <div class="output-field__value">{{ output.value }}</div>
@@ -10,7 +10,7 @@
     <hr>
     <div 
       v-for="(input, index) in inputList" 
-      :key="index"
+      :key="'input-' + index"
       class="input-field">
       <div class="input-field__label">{{ input.name }}</div>
       <div class="input-field__value">{{ input.value }}</div>

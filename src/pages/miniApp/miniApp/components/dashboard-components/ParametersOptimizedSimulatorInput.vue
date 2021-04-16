@@ -241,11 +241,11 @@ export default {
 .input-field {
   display: flex;
   &__label {
+    padding-top: 10px;
     color: #AAAAAA;
     font-weight: 600;
     font-size: 14px;
     width: 80px;
-    line-height: 40px;
   }
 
   &__content-container {
