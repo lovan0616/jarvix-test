@@ -637,7 +637,7 @@
     "name": "名稱",
     "modelFile": "模型檔案",
     "inputParameters": "Input 參數",
-    "inputParamNameDuplicated": "Input 參數名稱重複",
+    "paramNameDuplicated": "Input 參數名稱重複",
     "parameterDataType": "參數資料類型",
     "parameterDataName": "參數名稱",
     "outputParameters": "Output 參數",

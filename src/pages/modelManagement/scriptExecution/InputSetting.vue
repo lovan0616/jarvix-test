@@ -119,7 +119,7 @@ export default {
         const modelColumnNameSet = this.columnList.reduce((acc, cur) => acc.add(cur.modelColumnName), new Set())
         if (modelColumnNameSet.size < this.columnList.length) {
           return Message({
-            message: this.$t('model.inputParamNameDuplicated'),
+            message: this.$t('model.paramNameDuplicated'),
             type: 'warning',
             duration: 3 * 1000,
             showClose: true
