@@ -647,7 +647,7 @@
       "succeedUpload": "Success",
       "inputArgsSetting": "Set Input Parameter",
       "columnReminder": "Please follow the orders of the model settings.",
-      "argsReminder": "Naming of the parameters in {mainScriptName} needs to be the same and names can't be repeated and contain backslashes.",
+      "argsReminder": "Parameters' format needs to be consistent with {mainScriptName}'s input parameters. Cannot repeat name, and only character containing symbols: '-', '_'.",
       "outputArgsSetting": "Set Output Parameter",
       "columnDataType": "Parameter Data Type",
       "columnDataName": "Parameter Name",

@@ -515,6 +515,8 @@ export default {
         if (action.dialogName === 'batchLoad' && data.joinCount > 1) return false
         if (action.dialogName === 'etlSetting') return data.etlExists
         if (action.dialogName === 'createdInfo') return data.originType === 'database' && hasPermission
+        // Script 產出來的表，不能做資料更新設定
+        if (action.dialogName === 'batchLoad') return !data.name.startsWith('sc_')
         return hasPermission
       })
     },
