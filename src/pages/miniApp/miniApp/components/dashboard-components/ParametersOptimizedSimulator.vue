@@ -144,6 +144,9 @@ export default {
   mounted () {
     this.getModelInfo()
   },
+  destroyed () {
+    this.clearPolling()
+  },
   methods: {
     getModelInfo () {
       this.isLoading = true
