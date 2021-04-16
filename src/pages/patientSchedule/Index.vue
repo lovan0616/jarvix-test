@@ -46,7 +46,7 @@
                 :to="{ name: 'DemoCurrentBedSimulation', query: { planned: true } }"
                 class="nav-item"
               >
-                Bed Schedule
+                Bed Allocation
               </router-link>
               <span class="nav-item">
                 Bed Simulation
@@ -91,7 +91,6 @@
             <img 
               class="logo" 
               src="@/assets/images/logo-green-x.svg">
-            <div class="copyright-slogan">Powered by JarviX Scheduling Engine TM</div>
           </div>
         </div>
         <ul
@@ -132,7 +131,7 @@ export default {
     return {
       menuItem: [
         {
-          label: 'Overview',
+          label: 'Overview (C3)',
           isOpen: false,
           children: [
             { label: 'Cardiac' },
@@ -149,7 +148,7 @@ export default {
           isOpen: false,
           children: [
             { label: 'OT Room Scheduling' },
-            { label: 'Bedroom Scheduling' }
+            { label: 'Bedroom Allocation' }
           ]
         },
         { label: 'Patient / Asset Monitoring' },
@@ -185,7 +184,7 @@ export default {
           this.$router.push({ name: 'DemoCurrentOTSimulation' })
           this.isMenuOpen = false
           return
-        case 'Bedroom Scheduling':
+        case 'Bedroom Allocation':
           this.$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })
           this.isMenuOpen = false
           return
