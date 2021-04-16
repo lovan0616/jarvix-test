@@ -21,10 +21,19 @@
     <div class="header__container">
       <div class="header__root">
         <a
+          :class="logoType === 'ASE' ? 'ase_logo' : ''"
           class="header__logo" 
           @click="directToHomePage"
         >
-          <img src="@/assets/images/logo.svg">
+          <img 
+            v-if="logoType === 'ASE'" 
+            src="@/assets/images/ase-logo.png">
+          <img 
+            v-else-if="logoType === 'SyGPS'" 
+            src="@/assets/images/logo_white.svg">
+          <img 
+            v-else 
+            src="@/assets/images/logo.svg">
         </a>
         <slot name="nav"/>
       </div>
@@ -42,6 +51,9 @@ export default {
     ...mapState('userManagement', ['groupList']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
+    logoType () {
+      return localStorage.getItem('currentLogo')
+    }
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
@@ -146,9 +158,16 @@ export default {
   &__logo {
     height: 32px;
     cursor: pointer;
+
+    &.ase_logo {
+      height: 45px;
+    }
+
     img {
       height: 100%;
     }
   }
+
+  
 }
 </style>

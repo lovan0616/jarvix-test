@@ -1,7 +1,18 @@
 <template>
   <div class="app-layout page-layout">
     <div class="wrapper">
-      <img 
+      <img
+        v-if="logoType === 'SyGPS'"
+        src="@/assets/images/logo_white.svg" 
+        alt="logo" 
+        class="page-logo-img">
+      <img
+        v-else-if="logoType === 'ASE'"
+        src="@/assets/images/ase-logo.png" 
+        alt="logo"
+        class="page-logo-img">
+      <img
+        v-else
         src="@/assets/images/logo-text.svg" 
         alt="logo" 
         class="page-logo-img">
@@ -35,6 +46,11 @@ export default {
   data () {
     return {
       isShowLanguage: false
+    }
+  },
+  computed: {
+    logoType () {
+      return localStorage.getItem('currentLogo')
     }
   },
   methods: {

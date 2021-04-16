@@ -383,6 +383,11 @@ const router = new Router({
       component: () => import('@/pages/sisSetting/Index')
     },
     {
+      path: '/partner-setting',
+      name: 'PartnerSetting',
+      component: () => import('@/pages/partnerSetting/Index')
+    },
+    {
       path: '/share-result/:id',
       name: 'ShareResult',
       component: () => import('@/pages/result/SingleResult')
