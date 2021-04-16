@@ -12,7 +12,7 @@
     v-else 
     class="current-simulation">
     <h2 class="header">
-      Current Scheduling Plan
+      Current {{ isOt ? 'Scheduling' : 'Allocation' }} Plan
     </h2>
     <default-button
       v-if="planned"
@@ -25,9 +25,11 @@
       v-if="planned"
       class="simulation-content"
     >
-      <div class="plan-KPI KPI">
+      <div 
+        v-if="isOt" 
+        class="plan-KPI KPI">
         <h3 class="KPI__title">
-          {{ isOt ? 'OT' : 'Bed' }} Room Scheduling
+          OT Room Scheduling
         </h3>
         <div class="KPI__info">
           <span class="KPI__info--item">

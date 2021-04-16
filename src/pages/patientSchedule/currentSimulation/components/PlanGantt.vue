@@ -654,7 +654,7 @@ export default {
         "patient": "Dan M.",
         "patientID": "AXC12749500123",
         "surgeon": "KKK",
-        "surgeryType": "orthopedic",
+        "surgeryType": "Heart Surgery",
         "date": "2021/3/1",
         "priority": 1,
         "Equipment No.": "Surgical Lights\nSterilizers X123",

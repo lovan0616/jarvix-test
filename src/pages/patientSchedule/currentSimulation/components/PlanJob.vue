@@ -2,7 +2,7 @@
   <div class="plan-job job">
     <div class="job__header">
       <h3 class="job__title">
-        {{ $route.name.includes('OT') ? 'Surgery Schedule' : 'Bed Room Schedule' }}
+        {{ $route.name.includes('OT') ? 'Surgery Schedule' : 'Bed Room Allocation' }}
       </h3>
       <default-button
         type="outline"
@@ -77,7 +77,8 @@ export default {
             { title: 'flexibility', name: 'Flexibility', width: '120' },
             { title: 'equipmentNo', name: 'Equipment No.', width: '300' },
             { title: 'assistant', name: 'Assistant', width: '140' },
-            { title: 'anesthetist', name: 'Anesthetist', width: '140' }
+            { title: 'anesthetist', name: 'Anesthetist', width: '140' },
+            { title: 'noShowRecord', name: 'No Show Record', width: '180' }
           ]
         },
         "data": [
@@ -122,6 +123,7 @@ export default {
             "equipmentNo": "Anaesthetic\nDental drill",
             "assistant": "Edward Z.\r",
             "anesthetist": "H.W.L.\n",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ACJKCC997",
@@ -135,6 +137,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Ashley B.",
             "anesthetist": "Caroline D.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ACJKCC998",
@@ -148,6 +151,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Emily F.",
             "anesthetist": "Rick D.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ACJKCC999",
@@ -161,6 +165,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Jackson S.",
             "anesthetist": "Rachel E.",
+            "noShowRecord": "3"
           },
           {
             "sugeoryId": "ALJKCC234",
@@ -174,6 +179,7 @@ export default {
             "equipmentNo": "Breast Retractors\nBipolar Scissors",
             "assistant": "Patrick Z.\n",
             "anesthetist": "Betty Liu",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "BCJKCC234",
@@ -187,6 +193,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Paul E.",
             "anesthetist": "Caroline D.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "YCCCCC234",
@@ -200,6 +207,7 @@ export default {
             "equipmentNo": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
             "assistant": "Melody L.\r",
             "anesthetist": "Phillip F.\r",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "YCJKCC234",
@@ -213,6 +221,7 @@ export default {
             "equipmentNo": "EKG machines XX5\r\n",
             "assistant": "Edward Z.\r",
             "anesthetist": "H.W.L.\n",
+            "noShowRecord": "1"
           },
           {
             "sugeoryId": "YCJKCC234",
@@ -226,6 +235,7 @@ export default {
             "equipmentNo": "Anaesthetic\nDental drill",
             "assistant": "Edward Z.\r",
             "anesthetist": "H.W.L.\n",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZX9990122",
@@ -239,6 +249,7 @@ export default {
             "equipmentNo": "Stretcher XX10",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
+            "noShowRecord": "2"
           },
           {
             "sugeoryId": "ZX9990122",
@@ -252,6 +263,7 @@ export default {
             "equipmentNo": "Stretcher XX10",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZX9990123",
@@ -265,6 +277,7 @@ export default {
             "equipmentNo": "Stretcher XX11",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZX9990124",
@@ -278,6 +291,7 @@ export default {
             "equipmentNo": "Stretcher XX12",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZX9990125",
@@ -291,6 +305,7 @@ export default {
             "equipmentNo": "Stretcher XX13",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZX9990126",
@@ -304,6 +319,7 @@ export default {
             "equipmentNo": "Stretcher XX14",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZX9999873",
@@ -317,6 +333,7 @@ export default {
             "equipmentNo": "Utrata Capsulorhexis Forceps\nCaliper",
             "assistant": "Melody Tan",
             "anesthetist": "Ben L.\r",
+            "noShowRecord": "1"
           },
           {
             "sugeoryId": "ZXX37533",
@@ -330,6 +347,7 @@ export default {
             "equipmentNo": "Diathermy forceps\nArtery forceps\nligature clamps",
             "assistant": "Jacob Tan\r",
             "anesthetist": "Phillip F.\r",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZXXXX122",
@@ -343,6 +361,7 @@ export default {
             "equipmentNo": "Sterilizers AA1\nDefibrillators X2",
             "assistant": "Patrick W.\r\n",
             "anesthetist": "H.W.L.\r\n",
+            "noShowRecord": "3"
           },
           {
             "sugeoryId": "ZXXXX133",
@@ -356,6 +375,7 @@ export default {
             "equipmentNo": "Surgical Lights\nSterilizers X123",
             "assistant": "Jacob Tan\r",
             "anesthetist": "Ben L.\r",
+            "noShowRecord": ""
           },
           {
             "sugeoryId": "ZXXXX133",
@@ -368,7 +388,8 @@ export default {
             "flexibility": "inpatient",
             "equipmentNo": "Surgical Lights\nSterilizers X123",
             "assistant": "Jacob Tan\r",
-            "anesthetist": "Ben L.\r"
+            "anesthetist": "Ben L.\r",
+            "noShowRecord": ""
           }
         ],
         "index": [
