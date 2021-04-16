@@ -785,6 +785,7 @@ $direction-span: ("col": 12, "row": 12);
     .header-right {
       display: flex;
       justify-content: flex-end;
+      z-index: 3;
       .component-property-box {
         display: flex;
         align-items: center;

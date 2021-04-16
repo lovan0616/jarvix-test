@@ -1084,7 +1084,10 @@
     "inputParamSetting": "Input配置",
     "modelInputParams": "模型输入参数",
     "targetedDataFrameColumn": "对应资料表栏位",
-    "selectModel": "选择模型"
+    "selectModel": "选择模型",
+    "inputParamsCriteria": "输入参数条件",
+    "outputParamsCriteria": "输出结果条件",
+    "outputResultSetting": "导出结果设置"
   },
   "alert": {
     "alertLogs": "示警纪录",

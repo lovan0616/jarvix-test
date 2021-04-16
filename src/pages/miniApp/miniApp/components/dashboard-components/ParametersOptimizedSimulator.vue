@@ -10,24 +10,26 @@
     <section 
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
-      <div class="simulator__setting">
-        <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
-        <div class="simulator__setting-content">
-          <simulator-input
-            v-for="(columnInfo, index) in modelInfo"
-            :is-processing="isProcessing"
-            :restrictions="restrictions"
-            :column-info="columnInfo"
-            :model-id="modelSetting.modelId"
-            :key="index + '-' + columnInfo.columnId"
-            class="simulator__setting-input"
-            @done="updateColumnInfoState(index)"
-            @failed="handleFetchInputFailed"
-          />
+      <div class="simulator__setting-container">
+        <div class="simulator__setting">
+          <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
+          <div class="simulator__setting-content">
+            <parameters-optimized-simulator-input
+              v-for="(columnInfo, index) in modelInfo"
+              :is-processing="isSimulating"
+              :restrictions="restrictions"
+              :column-info="columnInfo"
+              :model-id="modelSetting.modelId"
+              :key="index + '-' + columnInfo.columnId"
+              class="simulator__setting-input"
+              @done="updateColumnInfoState(index)"
+              @failed="handleFetchInputFailed"
+            />
+          </div>
         </div>
         <div class="simulator__setting-action">
           <button
-            :disabled="isProcessing"
+            :disabled="isSimulating"
             type="button"
             class="btn-m btn-default btn-simulate"
             @click="simulate"
@@ -35,11 +37,12 @@
         </div>
       </div>
       <div class="simulator__result">
-        <!-- <spinner 
-          v-if="isSimulating" 
-          :title="$t('miniApp.simulating')"
-        /> -->
-        <template>
+        <div 
+          v-if="!taskId" 
+          class="simulator__default-message">
+          {{ $t('miniApp.notYetSimulate') }}
+        </div>
+        <template v-else>
           <el-tabs 
             v-model="activeTabName"
             class="simulator__result-tab"
@@ -47,7 +50,18 @@
             <el-tab-pane 
               :label="$t('miniApp.simulationResult')" 
               :name="$t('miniApp.simulationResult')">
-              <div class="simulator__result-panel">
+              <div
+                v-if="isSimulateFailed"
+                class="simulator__default-message">
+                {{ failedMessage || $t('message.systemIsError') }}
+              </div>
+              <spinner
+                v-else-if="isSimulating"
+                :title="$t('miniApp.simulating')"
+              />
+              <div 
+                v-else
+                class="simulator__result-panel">
                 <simulator-result-card
                   v-for="(result, index) in simulatorResults"
                   :key="index"
@@ -72,18 +86,18 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import SimulatorInput from './SimulatorInput'
 import SimulatorResultCard from './SimulatorResultCard'
-import { modelSimulate, getParamOptimizationResult } from '@/API/Model'
- 
+import ParametersOptimizedSimulatorInput from './ParametersOptimizedSimulatorInput'
+import { getModelInfo, createParamOptimizationTask, getParamOptimizationResult } from '@/API/Model'
+
 export default {
   inject: ['$validator'],
-  name: "Simulator",
+  name: "ParametersOptimizedSimulator",
   components: {
     DefaultSelect,
     EmptyInfoBlock,
-    SimulatorInput,
-    SimulatorResultCard
+    SimulatorResultCard,
+    ParametersOptimizedSimulatorInput
   },
   props: {
     isEditMode: {
@@ -102,10 +116,10 @@ export default {
   data () {
     return {
       isLoading: false,
-      isProcessing: false,
       isSimulating: false,
       modelInfo: null,
       resultList: null,
+      taskId: null,
       isFetchInputFailed: false,
       isSimulateFailed: false,
       failedMessage: null,
@@ -118,9 +132,6 @@ export default {
     
   },
   watch: {
-    isSimulating(value) {
-      if (value) this.startPolling()
-    },
     modelInfo: {
       deep: true,
       handler (newList) {
@@ -136,11 +147,15 @@ export default {
   methods: {
     getModelInfo () {
       this.isLoading = true
+      getModelInfo(this.modelSetting.modelId)
+        .then(({ioArgs: { output }}) => this.modelSetting.outputList = output)
       this.modelInfo = this.modelSetting.inputList.map(column => ({
         ...column,
         columnId: column.dcId,
         isInit: false,
-        userInput: ''
+        userInput: {
+          type: column.statsType === 'NUMERIC' ? 'RANGE' : 'ALL'
+        }
       }))
     },
     updateColumnInfoState(index) {
@@ -157,21 +172,52 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isSimulateFailed = false
-        this.isProcessing = true
-        
-        modelSimulate(this.modelSetting.modelId, {
-          inputValues: this.modelInfo.map(column => column.userInput)
-        })
-          .then(response => {
-            this.resultList = response.outputPrimaryAlias.map((element, index) => {
-              return {
-                name: element,
-                value: response.outputValues[index]
+        this.isSimulating = true
+
+        createParamOptimizationTask({
+          dataFrameId: this.modelSetting.dataFrameId,
+          modelId: this.modelSetting.modelId,
+          restrictions: this.restrictions.length > 0 ? this.restrictions : null,
+          riskProperty: 'MEDIUM',
+          setting: {
+            expectItems: this.modelSetting.outputList.map(output => ({
+              expectType: 'MAX'
+            })),
+            inputItems: this.modelInfo.map(input => {
+              if (input.statsType === 'CATEGORY') {
+                return {
+                  conditionType: input.userInput.type,
+                  dataColumnId: input.columnId,
+                  items: input.userInput.type === 'ALL' ? null : input.userInput.selectedList,
+                  fixedValue: null,
+                  rangeMax: null,
+                  rangeMin: null,
+                  statsType: input.statsType
+                }
+              } else if (input.statsType === 'NUMERIC') { 
+                return {
+                  conditionType: input.userInput.type,
+                  dataColumnId: input.columnId,
+                  items: null,
+                  fixedValue: input.userInput.type === 'RANGE' ? null : input.userInput.min,
+                  rangeMax: input.userInput.type === 'RANGE' ? input.userInput.max : null,
+                  rangeMin: input.userInput.type === 'RANGE' ? input.userInput.min : null,
+                  statsType: input.statsType
+                }
               }
-            })
-          })
-          .catch(() => { this.isSimulateFailed = true })
-          .finally(() => { this.isProcessing = false })        
+            }),
+            outputLimit: 5
+          }
+        })
+        .then((taskId) => {
+          this.taskId = taskId
+          this.startPolling()
+        })
+        .catch(error => { 
+          this.isSimulating = false
+          this.failedMessage = error.error && error.error.message
+          this.isSimulateFailed = true
+         })      
       })
     },
     handleFetchInputFailed (message) {
@@ -182,7 +228,7 @@ export default {
     startPolling () {
       if(!this.isSimulating) return
       this.intervalFunction = window.setInterval(() => {
-        getParamOptimizationResult(21)
+        getParamOptimizationResult(this.taskId)
           .then(({status, results, errorMessage})=> {
             switch(status) {
               case 'Ready':
@@ -193,13 +239,19 @@ export default {
                 this.clearPolling()
                 break
               case 'Fail':
-                this.isSimulateFailed = true
                 this.failedMessage = errorMessage
+                this.isSimulateFailed = true
                 this.clearPolling()
                 break
             }
           })
-      }, 5000)
+          .catch(error => { 
+            this.isSimulating = false
+            this.failedMessage = error.error && error.error.message
+            this.isSimulateFailed = true
+            this.clearPolling()
+          }) 
+      }, 5000) 
     },
     clearPolling () {
       this.isSimulating = false
@@ -216,6 +268,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   &__content {
     display: flex;
     height: 100%;
@@ -223,11 +276,23 @@ export default {
     border-radius: 5px;
   }
 
-  &__setting,
+  &__setting-container,
   &__result {
     background: #253030;
     height: 100%;
     padding: 16px;
+    overflow-y: auto;
+  }
+
+  &__setting-container {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 365px;
+    border-right: 1px solid #3B4343;
+  }
+
+  &__setting,
+  &__result {
     &-title {
       font-weight: 600;
       font-size: 14px;
@@ -238,10 +303,10 @@ export default {
   }
 
   &__setting {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    width: 30%;
-    border-right: 1px solid #3B4343;
+    min-height: 0;
     &-content {
       flex: 1;
       height: calc(100% - 36px);
@@ -266,6 +331,7 @@ export default {
   }
 
   &__result {
+    flex: 1 1 auto;
     display: flex;
     padding-top: 0;
     width: 70%;
@@ -332,13 +398,14 @@ export default {
     &>.el-tabs__content {
       height: calc(100% - 40px);
 
-      .el-tab-pane {
+      .el-tab-pane, .spinner-block {
         height: 100%;
       }
     }
   }
 
   &__default-message {
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -370,23 +437,10 @@ export default {
     color: #CCC;
   }
 
-  &__content {
-    margin-bottom: 16px;
-    overflow-y: auto;
-
-    .empty-message {
-      padding: 8px 12px;
-      background-color: #1C292B;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #CCC;
-    }
-  }
-
   /deep/ .empty-info-block {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 }
-</style>
+</style>  

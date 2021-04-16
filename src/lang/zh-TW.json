@@ -1085,7 +1085,10 @@
     "inputParamSetting": "Input設定",
     "modelInputParams": "模型輸入參數",
     "targetedDataFrameColumn": "對應資料表欄位",
-    "selectModel": "選擇模型"
+    "selectModel": "選擇模型",
+    "inputParamsCriteria": "輸入參數條件",
+    "outputParamsCriteria": "輸出結果條件",
+    "outputResultSetting": "輸出結果設定"
   },
   "alert": {
     "alertLogs": "示警紀錄",

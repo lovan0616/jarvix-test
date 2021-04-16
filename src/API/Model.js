@@ -137,3 +137,15 @@ export function modelSimulate(modelId, data) {
     method: 'GET'
   })
 }
+
+/**
+ * create parameter optimization task
+ */
+export function createParamOptimizationTask(data) {
+  return request({
+    url: `/model-param-opt/tasks/create`,
+    method: 'POST',
+    data
+  })
+}
+
