@@ -187,7 +187,11 @@ export default {
             outputLimit: 5
           }
         })
-        .catch(() => { this.isSimulateFailed = true })      
+        .catch(error => { 
+          this.isSimulating = false
+          this.failedMessage = error.error && error.error.message
+          this.isSimulateFailed = true
+         })      
       })
     },
     handleFetchInputFailed (message) {
