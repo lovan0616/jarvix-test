@@ -33,7 +33,7 @@
         </h3>
         <div class="KPI__info">
           <span class="KPI__info--item">
-            Scheduling Time Range: 2021/3/1-2021/2/31
+            Scheduling Time Range: 2021/3/1-2021/3/31
           </span>
           <span class="KPI__info--item">
             Total Surgeroy: 128
