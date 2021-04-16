@@ -69,13 +69,14 @@
                 />
               </div>
             </el-tab-pane>
-            <el-tab-pane 
+            <!-- 下次再加 -->
+            <!-- <el-tab-pane 
               :label="$t('miniApp.savedRecord')" 
               :name="$t('miniApp.savedRecord')">
               <div class="simulator__record-panel">
                 {{ $t('miniApp.savedRecord') }}
               </div>
-            </el-tab-pane>
+            </el-tab-pane> -->
           </el-tabs>
         </template>
       </div>
