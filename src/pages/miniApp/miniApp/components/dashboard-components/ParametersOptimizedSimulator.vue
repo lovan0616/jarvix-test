@@ -11,23 +11,39 @@
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
       <div class="simulator__setting-container">
-        <div class="simulator__setting">
-          <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
-          <div class="simulator__setting-content">
-            <parameters-optimized-simulator-input
-              v-for="(columnInfo, index) in modelInfo"
-              :is-processing="isSimulating"
-              :restrictions="restrictions"
-              :column-info="columnInfo"
-              :model-id="modelSetting.modelId"
-              :key="index + '-' + columnInfo.columnId"
-              class="simulator__setting-input"
-              @done="updateColumnInfoState(index)"
-              @failed="handleFetchInputFailed"
-            />
+        <div class="simulator__setting-container--top">
+          <div class="simulator__setting">
+            <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
+            <div class="simulator__setting-content">
+              <parameters-optimized-simulator-input
+                v-for="(columnInfo, index) in modelInfo"
+                :is-processing="isSimulating"
+                :restrictions="restrictions"
+                :column-info="columnInfo"
+                :model-id="modelSetting.modelId"
+                :key="index + '-' + columnInfo.columnId"
+                class="simulator__setting-input"
+                @done="updateColumnInfoState(index)"
+                @failed="handleFetchInputFailed"
+              />
+            </div>
+          </div>
+          <div class="simulator__setting">
+            <div class="simulator__setting-title">{{ $t('miniApp.outputParamsCriteria') }}</div>
+            <div class="simulator__setting-content">
+              <parameters-optimized-simulator-output
+                v-for="(output, index) in outputInfo"
+                :is-processing="isSimulating"
+                :output-info="output"
+                :key="index + '-' + output.modelColumnName"
+                class="simulator__setting-input"
+              />
+              
+            </div>
           </div>
         </div>
-        <div class="simulator__setting-action">
+        
+        <div class="simulator__setting-container--bottom">
           <button
             :disabled="isSimulating"
             type="button"
@@ -89,6 +105,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SimulatorResultCard from './SimulatorResultCard'
 import ParametersOptimizedSimulatorInput from './ParametersOptimizedSimulatorInput'
+import ParametersOptimizedSimulatorOutput from './ParametersOptimizedSimulatorOutput'
 import { getModelInfo, createParamOptimizationTask, getParamOptimizationResult } from '@/API/Model'
 
 export default {
@@ -98,7 +115,8 @@ export default {
     DefaultSelect,
     EmptyInfoBlock,
     SimulatorResultCard,
-    ParametersOptimizedSimulatorInput
+    ParametersOptimizedSimulatorInput,
+    ParametersOptimizedSimulatorOutput
   },
   props: {
     isEditMode: {
@@ -119,6 +137,7 @@ export default {
       isLoading: false,
       isSimulating: false,
       modelInfo: null,
+      outputInfo: null,
       resultList: null,
       taskId: null,
       isFetchInputFailed: false,
@@ -152,7 +171,11 @@ export default {
     getModelInfo () {
       this.isLoading = true
       getModelInfo(this.modelSetting.modelId)
-        .then(({ioArgs: { output }}) => this.modelSetting.outputList = output)
+        .then(({ioArgs: { output: outputList }}) => this.outputInfo = outputList.map(output => ({
+          ...output,
+          expectType: 'MAX'
+        })))
+        .catch(() => this.isFetchInputFailed = true)
       this.modelInfo = this.modelSetting.inputList.map(column => ({
         ...column,
         columnId: column.dcId,
@@ -184,8 +207,8 @@ export default {
           restrictions: this.restrictions.length > 0 ? this.restrictions : null,
           riskProperty: 'MEDIUM',
           setting: {
-            expectItems: this.modelSetting.outputList.map(output => ({
-              expectType: 'MAX'
+            expectItems: this.outputInfo.map(output => ({
+              expectType: output.expectType
             })),
             inputItems: this.modelInfo.map(input => {
               if (input.statsType === 'CATEGORY') {
@@ -291,8 +314,19 @@ export default {
   &__setting-container {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     flex: 0 0 365px;
     border-right: 1px solid #3B4343;
+
+    &--top {
+      height: calc(100% - 46px);
+      overflow-y: auto;
+    }
+    &--bottom {
+      .btn-simulate {
+        width: 100%;
+      }
+    }
   }
 
   &__setting,
@@ -317,12 +351,6 @@ export default {
       overflow-y: auto;
       overflow-x: hidden;
       padding-right: 12px;
-    }
-    &-action {
-      padding-top: 12px;
-      .btn-simulate {
-        width: 100%;
-      }
     }
     &-input {
       &:not(:last-of-type) {
