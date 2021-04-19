@@ -54,31 +54,32 @@
       v-if="showCreateFlowDialog"
       @close="closeCreateFlowDialog"
     />
-    <!-- 
     <decide-dialog
       v-if="isShowDeleteDialog"
-      :content="$t('modelFlow.deleteConfirmText')"
-      :type="'delete'"
+      :title="$t('modelFlow.deleteConfirmText')"
+      :is-processing="isDeleting"
+      type="delete"
       class="flow-delete-dialog"
-      @closeDialog="cancelDelete"
-      @confirmBtn="deleteAll"
-    /> -->
+      @closeDialog="closeDeleteDialog"
+      @confirmBtn="deleteModelFlow"
+    />
   </div>
 </template>
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadDialog from './flowExecution/UploadDialog'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import FlowCard from './components/FlowCard'
-import { getModelFlowList, updateModelFlow } from '@/API/ModelFlow'
+import { getModelFlowList } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
-import { Message } from 'element-ui'
 
 export default {
   name: 'FlowList',
   components: {
     EmptyInfoBlock,
     UploadDialog,
-    FlowCard
+    FlowCard,
+    DecideDialog
   },
   data () {
     return {
@@ -93,7 +94,8 @@ export default {
         totalPages: 0,
         totalItems: 0,
         itemPerPage: 10
-      }
+      },
+      isDeleting: false
     }
   },
   computed: {
@@ -119,26 +121,29 @@ export default {
   },
   methods: {
     ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateFlowUploadSuccess']),
-    fetchData (init = true, showSpinner = true, page = 0, size = 10) {
-      if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
+    fetchData (showSpinner = true, page = 0, size = 10) {
       if (showSpinner) this.isLoading = true
       return getModelFlowList(this.groupId, page, size)
         .then(({modelFlows, pagination}) => {
-          this.modelFlowList = modelFlows
           this.paginationInfo = pagination
+
+          // 若索取不存在的頁數，就回頭拿第一頁
+          if (pagination.currentPage >= pagination.totalPages) {
+            this.clearPolling()
+            this.startPolling(true, 0)
+            return
+          } 
+          this.modelFlowList = modelFlows
         }).finally(() => {
           if (showSpinner) this.isLoading = false
         })
     },
     changePage (page) {
+      if (this.paginationInfo.currentPage === page - 1) return
       this.clearPolling()
-      this.startPolling(false, true, page - 1)
+      this.startPolling(true, page - 1)
     },
-    confirmDelete ({id}) {
-      this.deleteFlowId = id
-      this.isShowDeleteDialog = true
-    },
-    cancelDelete () {
+    closeDeleteDialog () {
       this.deleteFlowId = null
       this.isShowDeleteDialog = false
     },
@@ -152,41 +157,34 @@ export default {
       switch (actionName) {
         case 'manulUpdate':
           this.updateModelFlow(id)
+          return
+        case 'deleteModelFlow':
+          this.deleteFlowId = id
+          this.isShowDeleteDialog = true
+          return
       }
     },
-    updateModelFlow (id) {
-      updateModelFlow(id)
+    async updateModelFlow (id) {
+      await this.$store.dispatch('modelFlowManagement/updateModelFlow', id)
+      this.clearPolling()
+      this.startPolling(false, this.paginationInfo.currentPage)
+    },
+    deleteModelFlow () {
+      this.isDeleting = true
+      this.$store.dispatch('modelFlowManagement/deleteModelFlow', this.deleteFlowId)
         .then(() => {
-          Message({
-            message: this.$t('modelFlow.updateAtBackground'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
           this.clearPolling()
-          this.startPolling(true, false, this.paginationInfo.currentPage)
+          this.startPolling()
+        })
+        .finally(() => {
+          this.isDeleting = false
+          this.closeDeleteDialog()
         })
     },
-    deleteFlow () {
-      // deleteFlowById(this.deleteFlowId)
-      //   .then(() => {
-      //     this.fetchData()
-      //       .then(() => {
-      //         Message({
-      //           message: this.$t('message.deleteSuccess'),
-      //           type: 'success',
-      //           duration: 3 * 1000,
-      //           showClose: true
-      //         })
-      //       })
-      //   }).finally(() => {
-      //     this.cancelDelete()
-      //   })
-    },
-    startPolling (init, showSpinner, page) {
-      this.fetchData(init, showSpinner, page)
+    startPolling (showSpinner, page) {
+      this.fetchData(showSpinner, page)
       this.intervalFunction = window.setInterval(() => {
-        this.fetchData(true, false, page)
+        this.fetchData(false, page)
       }, 5000)
     },
     clearPolling () {

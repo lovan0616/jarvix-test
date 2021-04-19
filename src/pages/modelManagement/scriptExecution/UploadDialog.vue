@@ -4,9 +4,7 @@
       <transition 
         name="fade" 
         mode="out-in">
-        <model-execution-flow
-          head
-        />
+        <model-execution-flow />
       </transition>
     </div>
   </div>

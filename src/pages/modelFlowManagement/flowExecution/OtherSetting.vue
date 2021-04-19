@@ -7,7 +7,7 @@
     <div class="dialog-body">
       <div class="setting-block">
         <div class="setting-block__title">
-          {{ $t('modelFlow.upload.updatedTriggerMode') }}
+          {{ $t('modelFlow.triggerUpdateType') }}
         </div>
         <div
           v-for="status in updateStatusList"
@@ -70,11 +70,11 @@ export default {
       updateStatusList: [
 				{
           type: 'MANUAL',
-          name: this.$t('modelFlow.upload.NoAutomaticUpdate')
+          name: this.$t('modelFlow.triggerTypes.manual')
         },
         {
           type: 'AUTOMATIC',
-          name: this.$t('modelFlow.upload.updatedByFrame')
+          name: this.$t('modelFlow.triggerTypes.automatic')
         }
 			]
     }
