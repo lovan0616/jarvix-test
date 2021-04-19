@@ -117,7 +117,8 @@ export default {
         { title: 'flexibility', name: 'Flexibility', width: 120 },
         { title: 'equipmentNo', name: 'Equipment No', width: 300 },
         { title: 'assistant', name: 'Assistant', width: 180 },
-        { title: 'anesthetist', name: 'Anesthetist', width: 180 }
+        { title: 'anesthetist', name: 'Anesthetist', width: 180 },
+        { title: 'noShowRecord', name: 'No Show Record', width: 180 }
       ]
     }
   },
@@ -153,6 +154,7 @@ export default {
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
+          "noShowRecord": ""
         },
         {
           "id": 2,
@@ -167,6 +169,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Ashley B.",
           "anesthetist": "Caroline D.",
+          "noShowRecord": ""
         },
         {
           "id": 3,
@@ -181,6 +184,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Emily F.",
           "anesthetist": "Rick D.",
+          "noShowRecord": ""
         },
         {
           "id": 4,
@@ -195,6 +199,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Jackson S.",
           "anesthetist": "Rachel E.",
+          "noShowRecord": "3"
         },
         {
           "id": 5,
@@ -209,6 +214,7 @@ export default {
           "equipmentNo": "Breast Retractors\nBipolar Scissors",
           "assistant": "Patrick Z.\n",
           "anesthetist": "Betty Liu",
+          "noShowRecord": ""
         },
         {
           "id": 6,
@@ -223,6 +229,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Paul E.",
           "anesthetist": "Caroline D.",
+          "noShowRecord": ""
         },
         {
           "id": 7,
@@ -237,6 +244,7 @@ export default {
           "equipmentNo": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
           "assistant": "Melody L.\r",
           "anesthetist": "Phillip F.\r",
+          "noShowRecord": ""
         },
         {
           "id": 8,
@@ -251,6 +259,7 @@ export default {
           "equipmentNo": "EKG machines XX5\r\n",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
+          "noShowRecord": "1"
         },
         {
           "id": 9,
@@ -265,6 +274,7 @@ export default {
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
+          "noShowRecord": ""
         },
         {
           "id": 10,
@@ -279,6 +289,7 @@ export default {
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
+          "noShowRecord": "2"
         },
         {
           "id": 11,
@@ -292,7 +303,8 @@ export default {
           "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
-          "anesthetist": "Anderson H."
+          "anesthetist": "Anderson H.",
+          "noShowRecord": ""
         },
         {
           "id": 12,
@@ -306,7 +318,8 @@ export default {
           "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX11",
           "assistant": "William H.\r",
-          "anesthetist": "Anderson H."
+          "anesthetist": "Anderson H.",
+          "noShowRecord": ""
         },
         {
           "id": 13,
@@ -320,7 +333,8 @@ export default {
           "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX12",
           "assistant": "William H.\r",
-          "anesthetist": "Anderson H."
+          "anesthetist": "Anderson H.",
+          "noShowRecord": ""
         },
         {
           "id": 14,
@@ -334,7 +348,8 @@ export default {
           "flexibility": "outpatient",
           "equipmentNo": "Stretcher XX13",
           "assistant": "William H.\r",
-          "anesthetist": "Anderson H."
+          "anesthetist": "Anderson H.",
+          "noShowRecord": ""
         },
         {
           "id": 15,
@@ -349,6 +364,7 @@ export default {
           "equipmentNo": "Stretcher XX14",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
+          "noShowRecord": ""
         },
         {
           "id": 16,
@@ -363,6 +379,7 @@ export default {
           "equipmentNo": "Utrata Capsulorhexis Forceps\nCaliper",
           "assistant": "Melody Tan",
           "anesthetist": "Ben L.\r",
+          "noShowRecord": "1"
         },
         {
           "id": 17,
@@ -377,6 +394,7 @@ export default {
           "equipmentNo": "Diathermy forceps\nArtery forceps\nligature clamps",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Phillip F.\r",
+          "noShowRecord": ""
         },
         {
           "id": 18,
@@ -391,6 +409,7 @@ export default {
           "equipmentNo": "Sterilizers AA1\nDefibrillators X2",
           "assistant": "Patrick W.\r\n",
           "anesthetist": "H.W.L.\r\n",
+          "noShowRecord": "3"
         },
         {
           "id": 19,
@@ -405,6 +424,7 @@ export default {
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r",
+          "noShowRecord": ""
         },
         {
           "id": 20,
@@ -419,6 +439,7 @@ export default {
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r",
+          "noShowRecord": ""
         }
       ]
       this.tmpJobData = mockData
@@ -460,6 +481,7 @@ export default {
           "equipmentNo": "Sterilizers A19\nDefibrillators X2",
           "assistant": "Edward Z.\r",
           "anesthetist": "Thomas T.",
+          "noShowRecord": ""
         },
         {
           "id": 99,
@@ -474,6 +496,7 @@ export default {
           "equipmentNo": "Sterilizers AB1\nDefibrillators X8",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Leo J.",
+          "noShowRecord": "2"
         }
       ])
       this.$emit('insert')

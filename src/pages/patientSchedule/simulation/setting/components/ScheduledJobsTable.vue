@@ -97,7 +97,8 @@ export default {
         { title: 'flexibility', name: 'Flexibility', width: 120 },
         { title: 'equipmentNo', name: 'equipmentNo', width: 300 },
         { title: 'assistant', name: 'assistant', width: 180 },
-        { title: 'anesthetist', name: 'anesthetist', width: 180 }
+        { title: 'anesthetist', name: 'anesthetist', width: 180 },
+        { title: 'noShowRecord', name: 'No Show Record', width: 180 }
       ]
     }
   },

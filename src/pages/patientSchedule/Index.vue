@@ -46,7 +46,7 @@
                 :to="{ name: 'DemoCurrentBedSimulation', query: { planned: true } }"
                 class="nav-item"
               >
-                Bed Schedule
+                Bed Allocation
               </router-link>
               <span class="nav-item">
                 Bed Simulation
@@ -89,9 +89,10 @@
           </ul>
           <div class="copyright-block">
             <img 
-              class="logo" 
-              src="@/assets/images/logo-green-x.svg">
-            <div class="copyright-slogan">Powered by JarviX Scheduling Engine TM</div>
+              class="logo"
+              src="@/assets/images/logo-green-x.svg"
+              @click="goToWarRoom"
+            >
           </div>
         </div>
         <ul
@@ -132,7 +133,7 @@ export default {
     return {
       menuItem: [
         {
-          label: 'Overview',
+          label: 'Overview (C3)',
           isOpen: false,
           children: [
             { label: 'Cardiac' },
@@ -149,7 +150,7 @@ export default {
           isOpen: false,
           children: [
             { label: 'OT Room Scheduling' },
-            { label: 'Bedroom Scheduling' }
+            { label: 'Bedroom Allocation' }
           ]
         },
         { label: 'Patient / Asset Monitoring' },
@@ -185,10 +186,21 @@ export default {
           this.$router.push({ name: 'DemoCurrentOTSimulation' })
           this.isMenuOpen = false
           return
-        case 'Bedroom Scheduling':
+        case 'Bedroom Allocation':
           this.$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })
           this.isMenuOpen = false
           return
+      }
+    },
+    goToWarRoom () {
+      if (window.location.href.includes('https://sygps.sis.ai/account/2/group/2')) {
+        this.$router.push({
+          name: 'WarRoomList',
+          params: {
+            account_id: 2,
+            group_id: 2
+          }
+        })
       }
     }
   }
@@ -483,6 +495,7 @@ export default {
     .logo {
       width: 120px;
       margin-bottom: 8px;
+      cursor: pointer;
     }
     .copyright-slogan {
       font-size: 10px;
