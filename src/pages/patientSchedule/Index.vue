@@ -89,8 +89,10 @@
           </ul>
           <div class="copyright-block">
             <img 
-              class="logo" 
-              src="@/assets/images/logo-green-x.svg">
+              class="logo"
+              src="@/assets/images/logo-green-x.svg"
+              @click="goToWarRoom"
+            >
           </div>
         </div>
         <ul
@@ -188,6 +190,17 @@ export default {
           this.$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })
           this.isMenuOpen = false
           return
+      }
+    },
+    goToWarRoom () {
+      if (window.location.href.includes('https://sygps.sis.ai/account/2/group/2')) {
+        this.$router.push({
+          name: 'WarRoomList',
+          params: {
+            account_id: 2,
+            group_id: 2
+          }
+        })
       }
     }
   }
@@ -482,6 +495,7 @@ export default {
     .logo {
       width: 120px;
       margin-bottom: 8px;
+      cursor: pointer;
     }
     .copyright-slogan {
       font-size: 10px;
