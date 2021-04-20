@@ -128,13 +128,27 @@ export default {
     },
     yAxisOffsetValue () {
       let yAxisMinValue = Infinity
+      // 當全部資料都是負的，offset為0即可
+      let allNegative = true
       this.dataset.data.forEach(dataset => {
         // 排除 null 值和區間值
         const datasetWithoutNull = dataset.filter((data, index) => data !== null && index !== 4)
         const datasetMinValue = Math.min(...datasetWithoutNull)
+        if (datasetMinValue > 0) allNegative = false
         yAxisMinValue = this.roundNumber(Math.min(0, yAxisMinValue, datasetMinValue))
       })
-      return yAxisMinValue
+      return allNegative ? 0 : yAxisMinValue
+    },
+    yAxisMaxValue () {
+      let yAxisMinValue = Infinity
+      let yAxisMaxValue = -Infinity
+      this.dataset.data.forEach(dataset => {
+        // 排除 null 值和區間值
+        const datasetWithoutNull = dataset.filter((data, index) => data !== null && index !== 4)
+        yAxisMinValue = Math.min(yAxisMinValue, ...datasetWithoutNull)
+        yAxisMaxValue = Math.max(yAxisMaxValue, ...datasetWithoutNull)
+      })
+      return yAxisMaxValue + (yAxisMaxValue - yAxisMinValue) / 4
     },
     seriesName () {
      return [
@@ -265,6 +279,7 @@ export default {
         xAxis: xAxisDefault(),
         yAxis: {
           ...yAxisDefault(),
+          max: this.yAxisMaxValue,
           min: this.yAxisMinValue,
           name: this.title.yAxis[0].display_name,
           axisLabel: {

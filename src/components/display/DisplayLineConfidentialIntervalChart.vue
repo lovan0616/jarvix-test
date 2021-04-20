@@ -153,13 +153,31 @@ export default {
     lowerBoundList () {
       return this.standardLine.map(item => item - this.stddevTimes * this.dataset.sigma)
     },
+    upperBoundList () {
+      return this.lowerBoundList.map(item => item + this.interval)
+    },
     yAxisMinValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
       const minDataValue = Math.min(...this.lowerBoundList, ...invalidDataList)
       return minDataValue - this.interval * 0.4
     },
     yAxisOffsetValue () {
-      return Math.floor(Math.min(0, ...this.lowerBoundList))
+      // 當全部資料都是負的，offset為0即可
+      let allNegative = true
+      this.lowerBoundList.forEach(data => {
+        if (data > 0) allNegative = false
+      })
+      return allNegative ? 0 : Math.floor(Math.min(0, ...this.lowerBoundList))
+    },
+    yAxisMaxValue () {
+      // 找出上限值中的最大值
+      let yAxisMinValue = Infinity
+      let yAxisMaxValue = -Infinity
+      this.upperBoundList.forEach(data => {
+        yAxisMinValue = Math.min(yAxisMinValue, data)
+        yAxisMaxValue = Math.max(yAxisMaxValue, data)
+      })
+      return yAxisMaxValue + (yAxisMaxValue - yAxisMinValue) / 4
     },
     interval () {
       return 2 * this.stddevTimes * this.dataset.sigma
@@ -304,6 +322,7 @@ export default {
         },
         yAxis: {
           ...yAxisDefault(),
+          max: this.yAxisMaxValue,
           min: this.yAxisMinValue,
           name: this.title.yAxis[0].display_name,
           axisLabel: {
@@ -352,7 +371,7 @@ export default {
           let tableData = dataset[i].reduce((acc, cur, index) => {
             let displayedValue = cur
             // 計算上限值
-            if (index === 3) displayedValue = dataset[i][2] + cur
+            if (index === 3 && typeof cur === 'number') displayedValue = dataset[i][2] + cur
             // 如果為 null 則留空
             if ((index === 4 || index === 5) && cur === null) displayedValue = ''
             // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
