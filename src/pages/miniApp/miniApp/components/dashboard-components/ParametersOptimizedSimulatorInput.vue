@@ -87,20 +87,22 @@
             :type="'Number'"
             :name="'input-min-' + inputData.columnName"
           />
-          <span class="tooltip-container">
-            <svg-icon
-              class="icon"
-              icon-class="information-circle"
-            />
-            <div class="tooltip">{{ 
+          <el-tooltip
+            class="tooltip-container"
+            effect="dark" 
+            placement="bottom">
+            <div slot="content">{{ 
               columnInfo.userInput.type === 'RANGE' 
                 ? $t('aggregation.min') + '：' + formatComma(columnInfo.userInput.min)
                 : $t('miniApp.numberRange', { 
-                  min: formatComma(Math.round(columnInfo.userInput.min * 100) / 100), 
-                  max: formatComma(Math.round(columnInfo.userInput.max * 100) / 100)
+                  min: formatComma(columnInfo.userInput.min), 
+                  max: formatComma(columnInfo.userInput.max)
                 })
             }}</div>
-          </span>
+            <svg-icon
+              class="icon"
+              icon-class="information-circle"/>
+          </el-tooltip>
         </div>
         <template v-if="columnInfo.userInput.type === 'RANGE'">
           <div class="input-field__divider">
@@ -114,13 +116,15 @@
               :type="'Number'"
               :name="'input-max-' + inputData.columnName"
             />
-            <span class="tooltip-container">
+            <el-tooltip
+              class="tooltip-container"
+              effect="dark" 
+              placement="bottom">
+              <div slot="content">{{ $t('aggregation.max') + '：' + formatComma(columnInfo.userInput.max) }}</div>
               <svg-icon
                 class="icon"
-                icon-class="information-circle"
-              />
-              <div class="tooltip">{{ $t('aggregation.max') + '：' + formatComma(columnInfo.userInput.max) }}</div>
-            </span>
+                icon-class="information-circle"/>
+            </el-tooltip>
           </div>
         </template>
       </div>
@@ -298,22 +302,9 @@ export default {
 
   .tooltip-container {
     position: absolute;
-    top: calc(50% - 12px);
+    bottom: 10px;
     right: 0;
-
-    .tooltip {
-      min-width: 120px;
-      max-width: 170px;
-      text-align: center;
-      white-space: normal;
-      padding: 8px;
-      line-height: 16px;
-      color: #DDDDDD;
-    }
-
-    .icon {
-      color: #777777;
-    }
+    color: #777777;
   }
 
   .input-radio-group:not(:last-of-type) {
