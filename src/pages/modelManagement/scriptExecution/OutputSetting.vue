@@ -12,6 +12,10 @@
             {{ "*" + $t('model.upload.columnReminder') }}
           </div>
         </div>
+        <div class="setting-block__warning">
+          <svg-icon icon-class="data-explanation" />
+          {{ $t('model.upload.argsReminder', {mainScriptName}) }}
+        </div>
         <draggable
           v-model="columnList">
           <model-column-setting-card
@@ -84,7 +88,8 @@ export default {
     return {
       columnList: [],
       isProcessing: false,
-      statsTypeOptionList
+      statsTypeOptionList,
+      mainScriptName: 'main.py'
     }
   },
   computed: {
@@ -180,6 +185,13 @@ export default {
     &__reminder {
       font-size: 12px;
       font-weight: normal;
+    }
+
+    &__warning {
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: normal;
+      color: var(--color-warning);
     }
 
     /deep/ .el-input__inner {

@@ -127,6 +127,13 @@ export default {
         .then(({modelFlows, pagination}) => {
           this.paginationInfo = pagination
 
+          // 0筆資料
+          if (pagination.totalItems === 0) {
+            this.clearPolling()
+            this.modelFlowList = []
+            return
+          }
+
           // 若索取不存在的頁數，就回頭拿第一頁
           if (pagination.currentPage >= pagination.totalPages) {
             this.clearPolling()
