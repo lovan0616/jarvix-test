@@ -12,6 +12,10 @@
             {{ "*" + $t('model.upload.columnReminder') }}
           </div>
         </div>
+        <div class="setting-block__warning">
+          <svg-icon icon-class="data-explanation" />
+          {{ $t('model.upload.argsReminder', {mainScriptName}) }}
+        </div>
         <draggable
           v-model="columnList">
           <model-column-setting-card
@@ -69,6 +73,7 @@ import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
 import { createModel } from '@/API/Model'
 import { statsTypeOptionList } from '@/utils/general'
+import { Message } from 'element-ui'
 
 export default {
   name: 'OutputSetting',
@@ -83,7 +88,8 @@ export default {
     return {
       columnList: [],
       isProcessing: false,
-      statsTypeOptionList
+      statsTypeOptionList,
+      mainScriptName: 'main.py'
     }
   },
   computed: {
@@ -122,6 +128,18 @@ export default {
     buildData () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+
+        // 檢查欄位名稱是否重複
+        const modelColumnNameSet = this.columnList.reduce((acc, cur) => acc.add(cur.modelColumnName), new Set())
+        if (modelColumnNameSet.size < this.columnList.length) {
+          return Message({
+            message: this.$t('model.paramNameDuplicated'),
+            type: 'warning',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+
         this.isProcessing = true
         createModel({
           ...this.currentUploadModelInfo,
@@ -167,6 +185,13 @@ export default {
     &__reminder {
       font-size: 12px;
       font-weight: normal;
+    }
+
+    &__warning {
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: normal;
+      color: var(--color-warning);
     }
 
     /deep/ .el-input__inner {

@@ -26,7 +26,7 @@
     <div class="input-field">
       <label class="input-field__label">{{ $t('model.upload.columnDataName') }}</label>
       <input-verify
-        v-validate="'required'"
+        v-validate="`required|letterDashUnderscore|max:${max}`"
         v-model.trim="columnInfo.modelColumnName"
         :placeholder="$t('editing.pleaseEnterName')"
         :name="'input' + columnInfo.id"
@@ -76,6 +76,11 @@ export default {
     isLoading: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {

@@ -63,6 +63,7 @@ import ModelColumnSettingCard from './components/ModelColumnSettingCard'
 import draggable from 'vuedraggable'
 import { v4 as uuidv4 } from 'uuid'
 import { statsTypeOptionList } from '@/utils/general'
+import { Message } from 'element-ui'
 
 export default {
   name: 'InputSetting',
@@ -113,6 +114,18 @@ export default {
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+
+        // 檢查欄位名稱是否重複
+        const modelColumnNameSet = this.columnList.reduce((acc, cur) => acc.add(cur.modelColumnName), new Set())
+        if (modelColumnNameSet.size < this.columnList.length) {
+          return Message({
+            message: this.$t('model.paramNameDuplicated'),
+            type: 'warning',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+
         this.updateCurrentUploadModelInfo({
           ...this.currentUploadModelInfo,
           ioArgs: {

@@ -42,7 +42,7 @@
       <!-- 資料來源 -->
       <div class="info-block">
         <div class="info-block__title">
-          {{ $t('editing.sourceOfData') }}
+          {{ $t('modelFlow.outputResult') }}
         </div>
         <div class="info-block__content">
           <div class="info__row">
@@ -88,11 +88,6 @@
       <div class="info-block">
         <div class="info-block__title">{{ $t('model.outputParameters') }}</div>
         <div class="info-block__content">
-          <div class="info__row output-df-name">
-            <span class="info__label">{{ $t('modelFlow.outputDataFrameName') }}:
-            </span>
-            <span class="info__text">{{ flowInfo.targetDataFrameName }}</span>
-          </div>
           <div class="table-header">
             <div class="info__label info__cell ">{{ $t('modelFlow.modelOutputParameter') }}</div>
             <div class="info__label info__cell ">{{ $t('modelFlow.outputDataFrameColumnName') }}</div>
