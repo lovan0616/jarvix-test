@@ -87,6 +87,20 @@
             :type="'Number'"
             :name="'input-min-' + inputData.columnName"
           />
+          <span class="tooltip-container">
+            <svg-icon
+              class="icon"
+              icon-class="information-circle"
+            />
+            <div class="tooltip">{{ 
+              columnInfo.userInput.type === 'RANGE' 
+                ? $t('aggregation.min') + '：' + formatComma(columnInfo.userInput.min)
+                : $t('miniApp.numberRange', { 
+                  min: formatComma(Math.round(columnInfo.userInput.min * 100) / 100), 
+                  max: formatComma(Math.round(columnInfo.userInput.max * 100) / 100)
+                })
+            }}</div>
+          </span>
         </div>
         <template v-if="columnInfo.userInput.type === 'RANGE'">
           <div class="input-field__divider">
@@ -100,6 +114,13 @@
               :type="'Number'"
               :name="'input-max-' + inputData.columnName"
             />
+            <span class="tooltip-container">
+              <svg-icon
+                class="icon"
+                icon-class="information-circle"
+              />
+              <div class="tooltip">{{ $t('aggregation.max') + '：' + formatComma(columnInfo.userInput.max) }}</div>
+            </span>
           </div>
         </template>
       </div>
@@ -266,6 +287,7 @@ export default {
 
   &__input {
     flex: 1 1 110px;
+    position: relative;
   }
 
   &__divider {
@@ -274,10 +296,30 @@ export default {
     line-height: 40px;
   }
 
+  .tooltip-container {
+    position: absolute;
+    top: calc(50% - 12px);
+    right: 0;
+
+    .tooltip {
+      min-width: 120px;
+      max-width: 170px;
+      text-align: center;
+      white-space: normal;
+      padding: 8px;
+      line-height: 16px;
+      color: #DDDDDD;
+    }
+
+    .icon {
+      color: #777777;
+    }
+  }
+
   .input-radio-group:not(:last-of-type) {
     margin-right: 12px;
   }
-  
+
   .el-input {
     width: 100%;
   }
@@ -298,6 +340,18 @@ export default {
   /deep/ .input-verify .input-verify-text {
     margin-bottom: 0;
     color: #ffffff;
+
+    /* Chrome, Safari, Edge, Opera */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    &[type=number] {
+      -moz-appearance: textfield;
+    }
   }
 
   /deep/ .input-error.error-text {

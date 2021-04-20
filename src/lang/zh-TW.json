@@ -1088,7 +1088,8 @@
     "selectModel": "選擇模型",
     "inputParamsCriteria": "輸入參數條件",
     "outputParamsCriteria": "輸出結果條件",
-    "outputResultSetting": "輸出結果設定"
+    "outputResultSetting": "輸出結果設定",
+    "numberRange": "數值範圍: {min} - {max}"
   },
   "alert": {
     "alertLogs": "示警紀錄",

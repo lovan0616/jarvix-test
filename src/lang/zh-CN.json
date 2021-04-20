@@ -1087,7 +1087,8 @@
     "selectModel": "选择模型",
     "inputParamsCriteria": "输入参数条件",
     "outputParamsCriteria": "输出结果条件",
-    "outputResultSetting": "导出结果设置"
+    "outputResultSetting": "导出结果设置",
+    "numberRange": "数值范围: {min} - {max}"
   },
   "alert": {
     "alertLogs": "示警纪录",
