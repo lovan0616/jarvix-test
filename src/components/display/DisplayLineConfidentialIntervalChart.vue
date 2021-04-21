@@ -162,11 +162,8 @@ export default {
       return minDataValue - this.interval * 0.4
     },
     yAxisOffsetValue () {
-      // 當全部資料都是負的，offset為0即可
-      let allNegative = true
-      this.lowerBoundList.forEach(data => {
-        if (data > 0) allNegative = false
-      })
+      // 當全部資料都 <=0 時，offset為 0 即可
+      let allNegative = this.lowerBoundList.every(data => data <= 0)
       return allNegative ? 0 : Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     yAxisMaxValue () {
@@ -322,8 +319,8 @@ export default {
         },
         yAxis: {
           ...yAxisDefault(),
-          max: this.yAxisMaxValue,
-          min: this.yAxisMinValue,
+          max: this.yAxisMaxValue + Math.abs(this.yAxisOffsetValue),
+          min: this.yAxisMinValue + Math.abs(this.yAxisOffsetValue),
           name: this.title.yAxis[0].display_name,
           axisLabel: {
             formatter: value => this.yAxisOffsetValue + value
