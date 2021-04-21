@@ -1080,8 +1080,8 @@
     "outputParamsCriteria": "Output Result Criteria",
     "outputResultSetting": "Output Result Setting",
     "numberRange": "Range: {min} - {max}",
-    "max": "Max",
-    "min": "Min",
+    "max": "Larger-the-Better",
+    "min": "Smaller-the-Better",
     "riskLevel": "Risk Level",
     "low": "Low",
     "medium": "Medium"
