@@ -1081,7 +1081,8 @@
     "outputResultSetting": "Output Result Setting",
     "range": "range",
     "startTime": "Start Time",
-    "endTime": "End Time"
+    "endTime": "End Time",
+    "noResultUnderCurrentRestrictions": "No result under current restrictions"
   },
   "clustering": {
     "cluster": "Cluster",

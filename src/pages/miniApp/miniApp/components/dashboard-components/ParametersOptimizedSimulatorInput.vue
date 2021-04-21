@@ -9,6 +9,7 @@
         <div
           v-for="(option, index) in categoryOptionList"
           :key="index"
+          :class="{ 'disabled': disableInput }"
           class="input-radio-group"
         >
           <input
@@ -49,6 +50,9 @@
           class="error-text"
         >{{ errors.first('category' + inputData.columnName) }}</div>
       </div>
+      <div 
+        v-if="disableInput" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
     </div>
   </div>
   <!--NUMERIC-->
@@ -61,6 +65,7 @@
         <div
           v-for="(option, index) in numericOptionList"
           :key="index"
+          :class="{ 'disabled': disableInput }"
           class="input-radio-group"
         >
           <input
@@ -81,7 +86,9 @@
         </div>
       </div>
       <div class="input-field__input-group-container">
-        <div class="input-field__input">
+        <div 
+          :class="{ 'disabled': disableInput }" 
+          class="input-field__input">
           <input-verify
             v-validate="'required'"
             v-model.number="columnInfo.userInput.min"
@@ -94,7 +101,9 @@
           <div class="input-field__divider">
             -
           </div>
-          <div class="input-field__input">
+          <div 
+            :class="{ 'disabled': disableInput }" 
+            class="input-field__input" >
             <input-verify
               v-validate="'required'"
               v-model.number="columnInfo.userInput.max"
@@ -105,6 +114,9 @@
           </div>
         </template>
       </div>
+      <div 
+        v-if="disableInput" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
     </div>
   </div>
   <!--DATETIME-->
@@ -132,6 +144,9 @@
           @input="updateDateTimeRange"
         />
       </div>
+      <div 
+        v-if="disableInput" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
     </div>
   </div>
 </template>
@@ -327,6 +342,18 @@ export default {
 
   &__input {
     flex: 1 1 110px;
+    &.disabled {
+      opacity: .5;
+      /deep/ .error-text {
+        visibility: hidden;
+      }
+    }
+  }
+
+  &__reminder {
+    font-size: 12px;
+    color: #FF5C46;
+    margin-top: 9px;
   }
 
   &__divider,
@@ -338,25 +365,13 @@ export default {
     color: #ffffff;
   }
 
-  .input-radio-group:not(:last-of-type) {
-    margin-right: 12px;
-  }
-  
-  .el-input {
-    width: 100%;
-  }
-
-  /deep/ .el-input__inner {
-    padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
-    border-bottom: 1px solid #FFFFFF;
-    border-radius: 0;
-    background: transparent;
-    font-size: 16px;
-    &::placeholder {
-      color: #AAAAAA;
-      font-weight: normal;
-      font-size: 16px;
-    } 
+  .input-radio-group {
+    &:not(:last-of-type) {
+      margin-right: 12px;
+    }
+    &.disabled {
+      opacity: .5;
+    }
   }
 
   /deep/ .input-verify .input-verify-text {
@@ -381,8 +396,8 @@ export default {
     }
   }
 
-  /deep/ .el-input,
-  .el-input.is-disabled .el-input {
+  /deep/ .el-input {
+    width: 100%;
     &__prefix {
       display: none;
     }
@@ -403,23 +418,11 @@ export default {
     }
   }
 
-  /deep/ .el-input.is-disabled .el-input {
-    &__inner {
-      opacity: .5;
-    }
+  /deep/ .el-range-editor.is-disabled .el-range-input {
+    opacity: .5;
   }
 
-  /deep/ .el-input.is-disabled .el-input__inner {
-    border: none;
-    border-radius: 0;
-    font-size: 16px;
-    padding-left: 0;
-    padding-right: 20px;
-    background-color: transparent;
-    color: $theme-text-color;
-  }
-
-  /deep/ .el-date-editor .el-range__icon {
+  /deep/ .el-range-editor .el-range__icon {
     display: none;
   }
 
@@ -430,10 +433,6 @@ export default {
     font-size: 16px;
     border-bottom: 1px solid #ffffff;
     border-radius: 0;
-  }
-
-  /deep/ .el-date-editor .el-range__close-icon {
-    color: #ffffff;
   }
 }
 </style>
