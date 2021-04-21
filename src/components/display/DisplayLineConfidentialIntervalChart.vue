@@ -162,9 +162,7 @@ export default {
       return minDataValue - this.interval * 0.4
     },
     yAxisOffsetValue () {
-      // 當全部資料都 <=0 時，offset為 0 即可
-      let allNegative = this.lowerBoundList.every(data => data <= 0)
-      return allNegative ? 0 : Math.floor(Math.min(0, ...this.lowerBoundList))
+      return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     yAxisMaxValue () {
       const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
