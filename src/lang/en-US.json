@@ -1078,7 +1078,10 @@
     "selectModel": "Select a model",
     "inputParamsCriteria": "Input Parameter Criteria",
     "outputParamsCriteria": "Output Result Criteria",
-    "outputResultSetting": "Output Result Setting"
+    "outputResultSetting": "Output Result Setting",
+    "range": "range",
+    "startTime": "Start Time",
+    "endTime": "End Time"
   },
   "clustering": {
     "cluster": "Cluster",

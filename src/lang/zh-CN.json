@@ -1087,7 +1087,10 @@
     "selectModel": "选择模型",
     "inputParamsCriteria": "输入参数条件",
     "outputParamsCriteria": "输出结果条件",
-    "outputResultSetting": "导出结果设置"
+    "outputResultSetting": "导出结果设置",
+    "range": "范围",
+    "startTime": "开始时间",
+    "endTime": "结束时间"
   },
   "alert": {
     "alertLogs": "示警纪录",
