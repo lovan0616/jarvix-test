@@ -258,7 +258,7 @@ export default {
       return this.componentData.type === 'monitor-warning-list' 
         || this.componentData.type === 'abnormal-statistics' 
         || this.componentData.type === 'simulator' 
-        || this.componentData.type === 'parametersOptimizedSimulator'
+        || this.componentData.type === 'parameters-optimized-simulator'
     },
     shouldComponentBeFiltered () {
       if (this.isIndependentComponent) return false
