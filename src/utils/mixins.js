@@ -89,6 +89,8 @@ Vue.mixin({
     // 標註千分位
     formatComma (str) {
       if (!str || str === 'NaN') return str
+      // 如果進來的字串已經有帶千分位先拔除
+      if (typeof str === 'string') str = str.replace(new RegExp(',', 'g'), '')
       // 只處理整數位，不處理小數點位
       const isInt = Number.isInteger(Number(str))
       if (isInt) return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
