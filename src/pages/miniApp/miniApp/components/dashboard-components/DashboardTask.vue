@@ -124,7 +124,7 @@
           :is-edit-mode="isEditMode"
         />
         <parameters-optimized-simulator
-          v-else-if="componentData.type === 'parametersOptimizedSimulator'"
+          v-else-if="componentData.type === 'parameters-optimized-simulator'"
           :is-edit-mode="isEditMode"
           :restrictions="restrictions()"
           :model-setting="componentData.modelSetting"
