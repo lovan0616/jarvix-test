@@ -1094,7 +1094,10 @@
     "min": "望小",
     "riskLevel": "風險程度",
     "low": "低",
-    "medium": "中"
+    "medium": "中",
+    "range": "範圍",
+    "startTime": "開始時間",
+    "endTime": "結束時間"
   },
   "alert": {
     "alertLogs": "示警紀錄",

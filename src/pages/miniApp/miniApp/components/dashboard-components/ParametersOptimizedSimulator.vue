@@ -233,17 +233,33 @@ export default {
                   fixedValue: null,
                   rangeMax: null,
                   rangeMin: null,
-                  statsType: input.statsType
+                  statsType: input.statsType,
+                  startTime: null,
+                  endTime: null
                 }
               } else if (input.statsType === 'NUMERIC') { 
                 return {
-                  conditionType: input.userInput.type,
+                  conditionType: null,
                   dataColumnId: input.columnId,
                   items: null,
                   fixedValue: input.userInput.type === 'RANGE' ? null : input.userInput.min,
                   rangeMax: input.userInput.type === 'RANGE' ? input.userInput.max : null,
                   rangeMin: input.userInput.type === 'RANGE' ? input.userInput.min : null,
-                  statsType: input.statsType
+                  statsType: input.statsType,
+                  startTime: null,
+                  endTime: null
+                }
+              } else if (input.statsType === 'DATETIME') {
+                return {
+                  conditionType: null,
+                  dataColumnId: input.columnId,
+                  items: null,
+                  fixedValue: null,
+                  rangeMax: null,
+                  rangeMin: null,
+                  statsType: input.statsType,
+                  startTime: this.customerTimeFormatter(input.userInput.start, 'SECOND'),
+                  endTime: this.customerTimeFormatter(input.userInput.end, 'SECOND')
                 }
               }
             }),
