@@ -279,8 +279,8 @@ export default {
         xAxis: xAxisDefault(),
         yAxis: {
           ...yAxisDefault(),
-          max: this.yAxisMaxValue,
-          min: this.yAxisMinValue,
+          max: this.yAxisMaxValue + Math.abs(this.yAxisOffsetValue),
+          min: this.yAxisMinValue + Math.abs(this.yAxisOffsetValue),
           name: this.title.yAxis[0].display_name,
           axisLabel: {
             formatter: value => this.yAxisOffsetValue + value
