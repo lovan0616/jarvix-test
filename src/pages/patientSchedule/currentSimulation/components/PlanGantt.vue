@@ -293,15 +293,14 @@ export default {
         },
         {
           gtArray: [
-            // 刪單，後面的單都往前排
-            ...(!this.reScheduled && [{
+            {
               "name": "Room_2",
               "type": "surgery",
               "start": "2021-03-01 07:00",
               "end": "2021-03-01 10:00",
               "sugeoryId": "ZXXXX133",
               "patient": "Dan M.",
-              "patientID": "AXC12749500123",
+              "patientID": this.reScheduled ? "00000000000000" : "AXC12749500123", // 刪單後，單不動，patientId 變為 0
               "surgeon": "KKK",
               "surgeryType": "orthopedic",
               "date": "2021/3/1",
@@ -309,16 +308,12 @@ export default {
               "Equipment No.": "Surgical Lights\nSterilizers X123",
               "Assistant": "Jacob Tan\r",
               "Anesthetist": "Ben L.\r",
-            }]),
+            },
             {
               "name": "Room_2",
               "type": "cleaning",
               "start": "2021-03-01 10:00",
-              "end": "2021-03-01 10:45",
-              ...this.reScheduled && {
-                "start": "2021-03-01 07:00",
-                "end": "2021-03-01 07:45",
-              }
+              "end": "2021-03-01 10:45"
             },
             {
               "name": "Room_2",
@@ -334,11 +329,7 @@ export default {
               "priority": 3,
               "Equipment No.": "EKG machines XX5\r\n",
               "Assistant": "Edward Z.\r",
-              "Anesthetist": "H.W.L.\n",
-              ...this.reScheduled && {
-                "start": "2021-03-01 07:45",
-                "end": "2021-03-01 08:30"
-              }
+              "Anesthetist": "H.W.L.\n"
             },
             {
               "name": "Room_2",
@@ -354,21 +345,13 @@ export default {
               "priority": 3,
               "Equipment No.": "Anaesthetic\nDental drill",
               "Assistant": "Edward Z.\r",
-              "Anesthetist": "H.W.L.\n",
-              ...this.reScheduled && {
-                "start": "2021-03-01 08:30",
-                "end": "2021-03-01 09:30"
-              }
+              "Anesthetist": "H.W.L.\n"
             },
             {
               "name": "Room_2",
               "type": "cleaning",
               "start": "2021-03-01 12:30",
-              "end": "2021-03-01 13:15",
-              ...this.reScheduled && {
-                "start": "2021-03-01 09:30",
-                "end": "2021-03-01 10:45"
-              }
+              "end": "2021-03-01 13:15"
             },
             {
               "name": "Room_2",
@@ -384,21 +367,13 @@ export default {
               "priority": 1,
               "Equipment No.": "Breast Retractors\nBipolar Scissors",
               "Assistant": "Patrick Z.\n",
-              "Anesthetist": "Betty Liu",
-              ...this.reScheduled && {
-                "start": "2021-03-01 10:45",
-                "end": "2021-03-01 12:30"
-              }
+              "Anesthetist": "Betty Liu"
             },
             {
               "name": "Room_2",
               "type": "cleaning",
               "start": "2021-03-01 15:00",
-              "end": "2021-03-01 15:45",
-              ...this.reScheduled && {
-                "start": "2021-03-01 12:30",
-                "end": "2021-03-01 13:15"
-              }
+              "end": "2021-03-01 15:45"
             },
             {
               "name": "Room_2",
@@ -414,21 +389,13 @@ export default {
               "priority": 2,
               "Equipment No.": "Utrata Capsulorhexis Forceps\nCaliper",
               "Assistant": "Melody Tan",
-              "Anesthetist": "Ben L.\r",
-              ...this.reScheduled && {
-                "start": "2021-03-01 13:15",
-                "end": "2021-03-01 14:00"
-              }
+              "Anesthetist": "Ben L.\r"
             },
             {
               "name": "Room_2",
               "type": "maintenance",
               "start": "2021-03-01 16:30",
-              "end": "2021-03-01 18:30",
-              ...this.reScheduled && {
-                "start": "2021-03-01 14:00",
-                "end": "2021-03-01 16:00"
-              }
+              "end": "2021-03-01 18:30"
             },
           ],
           name: 'Room_2'
