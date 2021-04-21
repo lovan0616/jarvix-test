@@ -1089,7 +1089,12 @@
     "inputParamsCriteria": "輸入參數條件",
     "outputParamsCriteria": "輸出結果條件",
     "outputResultSetting": "輸出結果設定",
-    "numberRange": "數值範圍: {min} - {max}"
+    "numberRange": "數值範圍: {min} - {max}",
+    "max": "望大",
+    "min": "望小",
+    "riskLevel": "風險程度",
+    "low": "低",
+    "medium": "中"
   },
   "alert": {
     "alertLogs": "示警紀錄",

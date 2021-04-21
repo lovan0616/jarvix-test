@@ -1,6 +1,9 @@
 <template>
-  <div class="input-field">
-    <label class="input-field__label">{{ outputInfo.modelColumnName }}</label>
+  <!-- Output Params EXPECTATIOKN -->
+  <div 
+    v-if="settingType === 'EXPECTATION'"
+    class="input-field">
+    <label class="input-field__label">{{ criteriaInfo.modelColumnName }}</label>
     <div class="input-field__content-container">
       <div class="input-field__radio-group-container">
         <div
@@ -10,14 +13,44 @@
         >
           <input
             :id="inputId + option.type"
-            v-model="outputInfo.expectType"
+            v-model="criteriaInfo.expectType"
             :value="option.type"
-            :name="inputId + outputInfo.expectType"
+            :name="inputId + criteriaInfo.expectType"
             class="input-radio"
             type="radio"
           >
           <label
             :for="inputId + option.type"
+            class="input-radio-label"
+          >
+            {{ option.name }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Output Params Risk Property -->
+  <div 
+    v-else-if="settingType === 'RISK'"
+    class="input-field">
+    <label class="input-field__label">{{ $t('miniApp.riskLevel') }}</label>
+    <div class="input-field__content-container">
+      <div class="input-field__radio-group-container">
+        <div
+          v-for="(option, index) in riskLevelList"
+          :key="index"
+          class="input-radio-group"
+        >
+          <input
+            :id="option.type"
+            :checked="riskProperty === option.type"
+            :value="option.type"
+            class="input-radio"
+            type="radio"
+            @change="setRiskProperty(option.type)"
+          >
+          <label
+            :for="option.type"
             class="input-radio-label"
           >
             {{ option.name }}
@@ -34,22 +67,39 @@ import { v4 as uuidv4 } from 'uuid'
 export default {
   name: 'ParametersOptimizedSimulatorOutput',
   props: {
-    outputInfo: {
+    criteriaInfo: {
       type: Object,
-      required: true
+      default: () => ({})
+    },
+    riskProperty: {
+      type: String,
+      default: 'LOW'
     },
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    settingType: {
+      type: String,
+      required: true
     }
   },
   data () {
     return {
       inputId: uuidv4(),
       expectTypeList: [
-        { type: 'MAX', name: '望大' },
-        { type: 'MIN', name: '望小' }
-      ]
+        { type: 'MAX', name: this.$t('miniApp.max') },
+        { type: 'MIN', name: this.$t('miniApp.min') }
+      ],
+      riskLevelList: [
+        { type: 'LOW', name: this.$t('miniApp.low') },
+        { type: 'MEDIUM', name: this.$t('miniApp.medium') }
+      ],
+    }
+  },
+  methods: {
+    setRiskProperty (type) {
+      this.$emit('update:riskProperty', type)
     }
   }
 }

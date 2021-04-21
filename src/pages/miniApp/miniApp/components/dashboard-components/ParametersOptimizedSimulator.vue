@@ -32,13 +32,24 @@
             <div class="simulator__setting-title">{{ $t('miniApp.outputParamsCriteria') }}</div>
             <div class="simulator__setting-content">
               <parameters-optimized-simulator-output
-                v-for="(output, index) in outputInfo"
+                v-for="(output, index) in outputInfo.criteria"
                 :is-processing="isSimulating"
-                :output-info="output"
+                :criteria-info="output"
                 :key="index + '-' + output.modelColumnName"
+                setting-type="EXPECTATION"
                 class="simulator__setting-input"
               />
-              
+            </div>
+          </div>
+          <div class="simulator__setting">
+            <div class="simulator__setting-title">{{ $t('miniApp.outputResultSetting') }}</div>
+            <div class="simulator__setting-content">
+              <parameters-optimized-simulator-output
+                :is-processing="isSimulating"
+                :risk-property.sync="outputInfo.riskProperty"
+                setting-type="RISK"
+                class="simulator__setting-input"
+              />
             </div>
           </div>
         </div>
@@ -137,7 +148,10 @@ export default {
       isLoading: false,
       isSimulating: false,
       modelInfo: null,
-      outputInfo: null,
+      outputInfo: {
+        criteria: [],
+        riskProperty: 'LOW'
+      },
       resultList: null,
       taskId: null,
       isFetchInputFailed: false,
@@ -171,7 +185,7 @@ export default {
     getModelInfo () {
       this.isLoading = true
       getModelInfo(this.modelSetting.modelId)
-        .then(({ioArgs: { output: outputList }}) => this.outputInfo = outputList.map(output => ({
+        .then(({ioArgs: { output: outputList }}) => this.outputInfo.criteria = outputList.map(output => ({
           ...output,
           expectType: 'MAX'
         })))
@@ -205,9 +219,9 @@ export default {
           dataFrameId: this.modelSetting.dataFrameId,
           modelId: this.modelSetting.modelId,
           restrictions: this.restrictions.length > 0 ? this.restrictions : null,
-          riskProperty: 'MEDIUM',
+          riskProperty: this.outputInfo.riskProperty,
           setting: {
-            expectItems: this.outputInfo.map(output => ({
+            expectItems: this.outputInfo.criteria.map(output => ({
               expectType: output.expectType
             })),
             inputItems: this.modelInfo.map(input => {

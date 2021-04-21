@@ -1056,6 +1056,7 @@
     "savedRecord": "保存纪录",
     "startSimulating": "进行模拟",
     "simulator": "模拟器",
+    "parametersOptimizedSimulator": "参数最佳化模拟",
     "notYetSimulate": "尚未模拟资料",
     "simulating": "模拟中",
     "optimalParameterComparison": "的最佳参数比较",
@@ -1088,7 +1089,12 @@
     "inputParamsCriteria": "输入参数条件",
     "outputParamsCriteria": "输出结果条件",
     "outputResultSetting": "导出结果设置",
-    "numberRange": "数值范围: {min} - {max}"
+    "numberRange": "数值范围: {min} - {max}",
+    "max": "望大",
+    "min": "望小",
+    "riskLevel": "风险程度",
+    "low": "低",
+    "medium": "中"
   },
   "alert": {
     "alertLogs": "示警纪录",

@@ -1079,7 +1079,12 @@
     "inputParamsCriteria": "Input Parameter Criteria",
     "outputParamsCriteria": "Output Result Criteria",
     "outputResultSetting": "Output Result Setting",
-    "numberRange": "Range: {min} - {max}"
+    "numberRange": "Range: {min} - {max}",
+    "max": "Max",
+    "min": "Min",
+    "riskLevel": "Risk Level",
+    "low": "Low",
+    "medium": "Medium"
   },
   "clustering": {
     "cluster": "Cluster",
