@@ -10,22 +10,26 @@
     <section 
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
-      <div class="simulator__setting">
-        <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
-        <div class="simulator__setting-content">
-          <simulator-input
-            v-for="(columnInfo, index) in modelInfo"
-            :is-processing="isProcessing"
-            :restrictions="restrictions"
-            :column-info="columnInfo"
-            :model-id="modelSetting.modelId"
-            :key="index + '-' + columnInfo.columnId"
-            class="simulator__setting-input"
-            @done="updateColumnInfoState(index)"
-            @failed="handleFetchInputFailed"
-          />
+      <div class="simulator__setting-container">
+        <div class="simulator__setting-container--top">
+          <div class="simulator__setting">
+            <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
+            <div class="simulator__setting-content">
+              <simulator-input
+                v-for="(columnInfo, index) in modelInfo"
+                :is-processing="isProcessing"
+                :restrictions="restrictions"
+                :column-info="columnInfo"
+                :model-id="modelSetting.modelId"
+                :key="index + '-' + columnInfo.columnId"
+                class="simulator__setting-input"
+                @done="updateColumnInfoState(index)"
+                @failed="handleFetchInputFailed"
+              />
+            </div>
+          </div>
         </div>
-        <div class="simulator__setting-action">
+        <div class="simulator__setting-container--bottom">
           <button
             :disabled="isProcessing"
             type="button"
@@ -172,140 +176,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.simulator {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  &__content {
-    display: flex;
-    height: 100%;
-    justify-content: center;
-  }
-
-  &__setting,
-  &__result {
-    background: #101919;
-    border-radius: 5.2px;
-    width: 50%;
-    height: 100%;
-    padding: 16px;
-    &-title {
-      font-weight: 600;
-      font-size: 14px;
-      color: #FFFFFF;
-      line-height: 20px;
-      margin-bottom: 16px;
-    }
-  }
-
-  &__setting {
-    display: flex;
-    flex-direction: column;
-    margin-right: 12px;
-    &-content {
-      flex: 1;
-      height: calc(100% - 36px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding-right: 12px;
-    }
-    &-action {
-      padding-top: 12px;
-    }
-    &-input {
-      &:not(:last-of-type) {
-        margin-bottom: 16px;
-      }
-      &:last-of-type {
-        margin-bottom: 21px;
-      }
-    }
-  }
-
-  &__result {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  &__result-content {
-    height: calc(100% - 36px);
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    overflow-y: auto;
-  }
-
-  &__result-item {
-    margin-bottom: 12px;
-    width: 100%;
-  }
-
-  .item {
-    &__label {
-      margin-bottom: 8px;
-      color: #AAAAAA;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    &__value {
-      color: #FFFFFF;
-      font-size: 14px;
-    }
-  }
-
-  &__default-message {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #999999;
-    font-size: 14px;
-  }
-
-  &__header {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 8px;
-
-    .btn-delete {
-      color: #CCC;
-      cursor: pointer;
-
-      &:hover {
-        color: $theme-color-primary;
-      }
-    }
-  }
-
-  &__title {
-    flex: 1;
-    margin: 0;
-    font-size:14px;
-    line-height: 22px;
-    color: #CCC;
-  }
-
-  &__content {
-    margin-bottom: 16px;
-    overflow-y: auto;
-
-    .empty-message {
-      padding: 8px 12px;
-      background-color: #1C292B;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #CCC;
-    }
-  }
-
-  /deep/ .empty-info-block {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
+.simulator {}
 </style>
