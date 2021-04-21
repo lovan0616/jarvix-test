@@ -211,7 +211,7 @@ export default {
               expectType: output.expectType
             })),
             inputItems: this.modelInfo.map(input => {
-              if (input.statsType === 'CATEGORY') {
+              if (input.statsType === 'CATEGORY' || input.statsType === 'BOOLEAN') {
                 return {
                   conditionType: input.userInput.type,
                   dataColumnId: input.columnId,

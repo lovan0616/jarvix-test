@@ -1,7 +1,7 @@
 <template>
   <!--CATEGORY or BOOLEAN-->
   <div 
-    v-if="inputData.statsType === 'CATEGORY'" 
+    v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'" 
     class="input-field">
     <label class="input-field__label">{{ inputData.columnName }}</label>
     <div class="input-field__content-container">
@@ -234,8 +234,8 @@ export default {
         case 'DATETIME':
           return this.columnInfo.userInput.start === null || this.columnInfo.userInput.end === null
         case 'CATEGORY':
+        case 'BOOLEAN':
           return !this.inputData.valueList || this.inputData.valueList.length === 0
-        // case 'BOOLEAN':
       }
     }
   },
