@@ -1,4 +1,4 @@
-displaySetting<template>
+<template>
   <div class="wrapper wrapper--without-nav-header mini-app">
     <spinner
       v-if="isLoading"
@@ -862,7 +862,6 @@ export default {
         })
     },
     updateComponentSetting (updatedComponentInfo) {
-      console.log(updatedComponentInfo)
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.forEach((board, boardIndex) => {
         if (board.id === this.currentDashboardId) {
