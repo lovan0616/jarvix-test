@@ -159,7 +159,7 @@ export default {
       failedMessage: null,
       intervalFunction: null,
       simulatorResults: [],
-      activeTabName: this.$t('miniApp.simulationResult'),
+      activeTabName: this.$t('miniApp.simulationResult')
     }
   },
   computed: {
