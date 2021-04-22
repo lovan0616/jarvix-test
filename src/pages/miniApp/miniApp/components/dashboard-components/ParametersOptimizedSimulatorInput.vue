@@ -92,8 +92,9 @@
           <input-verify
             v-validate="'required'"
             v-model.number="columnInfo.userInput.min"
+            :validate-scope="'params-optimization'"
             :is-disabled="isProcessing || disableInput"
-            :type="'Number'"
+            :type="'text'"
             :name="'input-min-' + inputData.columnName"
           />
         </div>
@@ -107,8 +108,9 @@
             <input-verify
               v-validate="'required'"
               v-model.number="columnInfo.userInput.max"
+              :validate-scope="'params-optimization'"
               :is-disabled="isProcessing || disableInput"
-              :type="'Number'"
+              :type="'text'"
               :name="'input-max-' + inputData.columnName"
             />
           </div>
@@ -328,7 +330,6 @@ export default {
     flex: 1;
     flex-wrap: wrap;
     margin-left: 8px;
-    overflow: hidden;
   }
 
   &__radio-group-container {
@@ -418,11 +419,20 @@ export default {
     }
   }
 
+  /deep/ .el-date-editor--datetimerange.el-input__inner {
+    width: auto;
+    padding-right: 0;
+  }
+
   /deep/ .el-range-editor.is-disabled .el-range-input {
     opacity: .5;
   }
 
   /deep/ .el-range-editor .el-range__icon {
+    display: none;
+  }
+
+  /deep/ .el-range__close-icon {
     display: none;
   }
 

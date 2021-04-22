@@ -10,7 +10,10 @@
     <section 
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
-      <div class="simulator__setting-container">
+      <form 
+        class="simulator__setting-container" 
+        data-vv-scope="params-optimization" 
+        @submit.prevent="simulate">
         <div class="simulator__setting-container--top">
           <div class="simulator__setting">
             <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
@@ -46,12 +49,11 @@
         <div class="simulator__setting-container--bottom">
           <button
             :disabled="isSimulating"
-            type="button"
+            type="submit"
             class="btn-m btn-default btn-simulate"
-            @click="simulate"
           >{{ $t('miniApp.startSimulating') }}</button>
         </div>
-      </div>
+      </form>
       <div class="simulator__result">
         <div 
           v-if="!taskId" 
@@ -196,7 +198,8 @@ export default {
       this.modelInfo[index].isInit = true
     },
     simulate () {
-      this.$validator.validateAll().then(result => {
+      this.$validator.validateAll('params-optimization').then(result => {
+        console.log(result)
         if (!result) return
         this.isSimulateFailed = false
         this.isSimulating = true
