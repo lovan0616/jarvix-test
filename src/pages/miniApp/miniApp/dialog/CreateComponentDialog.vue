@@ -524,20 +524,8 @@ export default {
   },
   methods: {
     createComponent () {
-      const validatePromises = []
-
-      // 只取當前元件的欄位來驗證
-      // 避免把全域的所有欄位都抓進來
-      const regex = /^create/
-      for (let field in this.fields) {
-        if (field.match(regex) && field.match(regex).length > 0) {
-          validatePromises.push(this.$validator.validate(field))
-        }
-      }
-    
-      Promise.all(validatePromises)
-      .then(validationResultList => {
-        if (!validationResultList.every(result => result)) return
+      this.$validator.validateAll().then(valid => {
+        if (!valid) return
         this.$emit('create', {
           ...this.currentComponent,
           // Demo 使用：為了展示參數最佳化比較，把元件名稱帶有特定字串的元件改 type

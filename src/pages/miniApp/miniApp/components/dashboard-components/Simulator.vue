@@ -10,7 +10,11 @@
     <section 
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
-      <div class="simulator__setting-container">
+      <form 
+        class="simulator__setting-container" 
+        data-vv-scope="simulator"
+        @submit.prevent="simulate"
+      >
         <div class="simulator__setting-container--top">
           <div class="simulator__setting">
             <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
@@ -32,12 +36,11 @@
         <div class="simulator__setting-container--bottom">
           <button
             :disabled="isProcessing"
-            type="button"
+            type="submit"
             class="btn-m btn-default btn-simulate"
-            @click="simulate"
           >{{ $t('miniApp.startSimulating') }}</button>
         </div>
-      </div>
+      </form>
       <div class="simulator__result">
         <div 
           v-if="!resultList" 
@@ -64,11 +67,11 @@
               <div 
                 v-else
                 class="simulator__result-panel">
-                <div 
-                  v-for="(result, index) in resultList"
-                  :key="index"
-                  class="simulator__result-card">
-                  <div class="item">
+                <div class="simulator__result-card">
+                  <div 
+                    v-for="(result, index) in resultList"
+                    :key="index"
+                    class="item">
                     <div class="item__label">{{ result.name }}</div>
                     <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
                   </div>  
@@ -167,7 +170,7 @@ export default {
       this.modelInfo[index].isInit = true
     },
     simulate () {
-      this.$validator.validateAll().then(result => {
+      this.$validator.validateAll('simulator').then(result => {
         if (!result) return
         this.isSimulateFailed = false
         this.isProcessing = true

@@ -321,7 +321,8 @@ export default {
       return this.dataColumnOptionList.filter(option => option.statsType === statesType)
     },
     handleModelInputChange(index, id) {
-      this.modelSetting.inputList[index] = this.dataColumnOptionList.find(column => column.id === id)
+      const selectedOption = this.dataColumnOptionList.find(column => column.id === id)
+      this.modelSetting.inputList[index] = JSON.parse(JSON.stringify(selectedOption))
     }
   }
 }
