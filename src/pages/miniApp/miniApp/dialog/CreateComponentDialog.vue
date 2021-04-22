@@ -85,7 +85,7 @@
           :current-component="currentComponent"
         />
         <simulator-setting 
-          v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parametersOptimizedSimulator'"
+          v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parameters-optimized-simulator'"
           :model-setting="currentComponent.modelSetting"
           :model-component-info="modelComponentInfo"
           :current-component="currentComponent"
@@ -402,10 +402,10 @@ export default {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parametersOptimizedSimulator'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowUpdatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parametersOptimizedSimulator'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowFontSizeOption () {
       return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
@@ -512,7 +512,7 @@ export default {
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
     // 所有可以不需透過問問句就能創建的元件類型
-    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parametersOptimizedSimulator']
+    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
     const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
     this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId

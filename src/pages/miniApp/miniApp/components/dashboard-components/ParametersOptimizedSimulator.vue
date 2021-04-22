@@ -10,55 +10,103 @@
     <section 
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
-      <div class="simulator__setting">
-        <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
-        <div class="simulator__setting-content">
-          <simulator-input
-            v-for="(columnInfo, index) in modelInfo"
-            :is-processing="isProcessing"
-            :restrictions="restrictions"
-            :column-info="columnInfo"
-            :model-id="modelSetting.modelId"
-            :key="index + '-' + columnInfo.columnId"
-            class="simulator__setting-input"
-            @done="updateColumnInfoState(index)"
-            @failed="handleFetchInputFailed"
-          />
+      <form 
+        class="simulator__setting-container" 
+        data-vv-scope="params-optimization" 
+        @submit.prevent="simulate">
+        <div class="simulator__setting-container--top">
+          <div class="simulator__setting">
+            <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
+            <div class="simulator__setting-content">
+              <parameters-optimized-simulator-input
+                v-for="(columnInfo, index) in modelInfo"
+                :is-processing="isSimulating"
+                :restrictions="restrictions"
+                :column-info="columnInfo"
+                :model-id="modelSetting.modelId"
+                :key="index + '-' + columnInfo.columnId"
+                class="simulator__setting-input"
+                @done="updateColumnInfoState(index)"
+                @failed="handleFetchInputFailed"
+              />
+            </div>
+          </div>
+          <div class="simulator__setting">
+            <div class="simulator__setting-title">{{ $t('miniApp.outputParamsCriteria') }}</div>
+            <div class="simulator__setting-content">
+              <parameters-optimized-simulator-output
+                v-for="(output, index) in outputInfo.criteria"
+                :is-processing="isSimulating"
+                :criteria-info="output"
+                :key="index + '-' + output.modelColumnName"
+                setting-type="EXPECTATION"
+                class="simulator__setting-input"
+              />
+            </div>
+          </div>
+          <div class="simulator__setting">
+            <div class="simulator__setting-title">{{ $t('miniApp.outputResultSetting') }}</div>
+            <div class="simulator__setting-content">
+              <parameters-optimized-simulator-output
+                :is-processing="isSimulating"
+                :risk-property.sync="outputInfo.riskProperty"
+                setting-type="RISK"
+                class="simulator__setting-input"
+              />
+            </div>
+          </div>
         </div>
-        <div class="simulator__setting-action">
+        
+        <div class="simulator__setting-container--bottom">
           <button
-            :disabled="isProcessing"
-            type="button"
+            :disabled="isSimulating"
+            type="submit"
             class="btn-m btn-default btn-simulate"
-            @click="simulate"
           >{{ $t('miniApp.startSimulating') }}</button>
         </div>
-      </div>
+      </form>
       <div class="simulator__result">
         <div 
-          v-if="!resultList" 
+          v-if="!taskId" 
           class="simulator__default-message">
           {{ $t('miniApp.notYetSimulate') }}
         </div>
-        <spinner
-          v-else-if="isProcessing"
-          :title="$t('miniApp.simulating')"
-        />
-        <empty-info-block
-          v-else-if="isSimulateFailed"
-          :msg="failedMessage || $t('message.systemIsError')"
-        />
         <template v-else>
-          <div class="simulator__result-title">{{ $t('miniApp.simulationResult') }}</div>
-          <div class="simulator__result-content">
-            <div 
-              v-for="(result, index) in resultList"
-              :key="index"
-              class="simulator__result-item item">
-              <div class="item__label">{{ result.name }}</div>
-              <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
-            </div>
-          </div>
+          <el-tabs 
+            v-model="activeTabName"
+            class="simulator__result-tab"
+            type="card">
+            <el-tab-pane 
+              :label="$t('miniApp.simulationResult')" 
+              :name="$t('miniApp.simulationResult')">
+              <div
+                v-if="isSimulateFailed"
+                class="simulator__default-message">
+                {{ failedMessage || $t('message.systemIsError') }}
+              </div>
+              <spinner
+                v-else-if="isSimulating"
+                :title="$t('miniApp.simulating')"
+              />
+              <div 
+                v-else
+                class="simulator__result-panel">
+                <simulator-result-card
+                  v-for="(result, index) in simulatorResults"
+                  :key="index"
+                  :result="result"
+                />
+              </div>
+            </el-tab-pane>
+            <!-- 下次再加 -->
+            <!-- <el-tab-pane 
+              :label="$t('miniApp.savedRecord')" 
+              :name="$t('miniApp.savedRecord')">
+              <div class="simulator__record-panel">
+                {{ $t('miniApp.savedRecord') }}
+              </div>
+            </el-tab-pane> -->
+          </el-tabs>
         </template>
       </div>
     </section>
@@ -68,16 +116,20 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import SimulatorInput from './SimulatorInput'
-import { modelSimulate } from '@/API/Model'
+import SimulatorResultCard from './SimulatorResultCard'
+import ParametersOptimizedSimulatorInput from './ParametersOptimizedSimulatorInput'
+import ParametersOptimizedSimulatorOutput from './ParametersOptimizedSimulatorOutput'
+import { getModelInfo, createParamOptimizationTask, getParamOptimizationResult } from '@/API/Model'
 
 export default {
   inject: ['$validator'],
-  name: "Simulator",
+  name: "ParametersOptimizedSimulator",
   components: {
     DefaultSelect,
     EmptyInfoBlock,
-    SimulatorInput
+    SimulatorResultCard,
+    ParametersOptimizedSimulatorInput,
+    ParametersOptimizedSimulatorOutput
   },
   props: {
     isEditMode: {
@@ -96,12 +148,20 @@ export default {
   data () {
     return {
       isLoading: false,
-      isProcessing: false,
+      isSimulating: false,
       modelInfo: null,
+      outputInfo: {
+        criteria: [],
+        riskProperty: 'LOW'
+      },
       resultList: null,
+      taskId: null,
       isFetchInputFailed: false,
       isSimulateFailed: false,
-      failedMessage: null
+      failedMessage: null,
+      intervalFunction: null,
+      simulatorResults: [],
+      activeTabName: this.$t('miniApp.simulationResult')
     }
   },
   computed: {
@@ -120,14 +180,25 @@ export default {
   mounted () {
     this.getModelInfo()
   },
+  destroyed () {
+    this.clearPolling()
+  },
   methods: {
     getModelInfo () {
       this.isLoading = true
+      getModelInfo(this.modelSetting.modelId)
+        .then(({ioArgs: { output: outputList }}) => this.outputInfo.criteria = outputList.map(output => ({
+          ...output,
+          expectType: 'MAX'
+        })))
+        .catch(() => this.isFetchInputFailed = true)
       this.modelInfo = this.modelSetting.inputList.map(column => ({
         ...column,
         columnId: column.dcId,
         isInit: false,
-        userInput: ''
+        userInput: {
+          type: column.statsType === 'NUMERIC' ? 'RANGE' : 'ALL'
+        }
       }))
     },
     updateColumnInfoState(index) {
@@ -138,178 +209,112 @@ export default {
           isInit: true
         }
       })
-      this.modelInfo[index].isInit = true
     },
     simulate () {
-      this.$validator.validateAll().then(result => {
+      this.$validator.validateAll('params-optimization').then(result => {
         if (!result) return
         this.isSimulateFailed = false
-        this.isProcessing = true
-        
-        modelSimulate(this.modelSetting.modelId, {
-          inputValues: this.modelInfo.map(column => column.userInput)
-        })
-          .then(response => {
-            this.resultList = response.outputPrimaryAlias.map((element, index) => {
-              return {
-                name: element,
-                value: response.outputValues[index]
+        this.isSimulating = true
+
+        createParamOptimizationTask({
+          dataFrameId: this.modelSetting.dataFrameId,
+          modelId: this.modelSetting.modelId,
+          restrictions: this.restrictions.length > 0 ? this.restrictions : null,
+          riskProperty: this.outputInfo.riskProperty,
+          setting: {
+            expectItems: this.outputInfo.criteria.map(output => ({
+              expectType: output.expectType
+            })),
+            inputItems: this.modelInfo.map(input => {
+              if (input.statsType === 'CATEGORY' || input.statsType === 'BOOLEAN') {
+                return {
+                  conditionType: input.userInput.type,
+                  dataColumnId: input.columnId,
+                  items: input.userInput.type === 'ALL' ? null : input.userInput.selectedList,
+                  fixedValue: null,
+                  rangeMax: null,
+                  rangeMin: null,
+                  statsType: input.statsType,
+                  startTime: null,
+                  endTime: null
+                }
+              } else if (input.statsType === 'NUMERIC') { 
+                return {
+                  conditionType: input.userInput.type,
+                  dataColumnId: input.columnId,
+                  items: null,
+                  fixedValue: input.userInput.type === 'RANGE' ? null : input.userInput.min,
+                  rangeMax: input.userInput.type === 'RANGE' ? input.userInput.max : null,
+                  rangeMin: input.userInput.type === 'RANGE' ? input.userInput.min : null,
+                  statsType: input.statsType,
+                  startTime: null,
+                  endTime: null
+                }
+              } else if (input.statsType === 'DATETIME') {
+                return {
+                  conditionType: 'RANGE',
+                  dataColumnId: input.columnId,
+                  items: null,
+                  fixedValue: null,
+                  rangeMax: null,
+                  rangeMin: null,
+                  statsType: input.statsType,
+                  startTime: this.customerTimeFormatter(input.userInput.start, 'SECOND'),
+                  endTime: this.customerTimeFormatter(input.userInput.end, 'SECOND')
+                }
               }
-            })
-          })
-          .catch(() => { this.isSimulateFailed = true })
-          .finally(() => { this.isProcessing = false })        
+            }),
+            outputLimit: 5
+          }
+        })
+        .then((taskId) => {
+          this.taskId = taskId
+          this.startPolling()
+        })
+        .catch(error => { 
+          this.isSimulating = false
+          this.failedMessage = error.error && error.error.message
+          this.isSimulateFailed = true
+         })      
       })
     },
     handleFetchInputFailed (message) {
       this.isLoading = false
       this.isFetchInputFailed = true
       if (!this.failedMessage) this.failedMessage = message
+    },
+    startPolling () {
+      if(!this.isSimulating) return
+      this.intervalFunction = window.setInterval(() => {
+        getParamOptimizationResult(this.taskId)
+          .then(({status, results, errorMessage})=> {
+            switch(status) {
+              case 'Ready':
+              case 'Process':
+                break
+              case 'Complete':
+                this.simulatorResults = results
+                this.clearPolling()
+                break
+              case 'Fail':
+                this.failedMessage = errorMessage
+                this.isSimulateFailed = true
+                this.clearPolling()
+                break
+            }
+          })
+          .catch(error => { 
+            this.isSimulating = false
+            this.failedMessage = error.error && error.error.message
+            this.isSimulateFailed = true
+            this.clearPolling()
+          }) 
+      }, 5000) 
+    },
+    clearPolling () {
+      this.isSimulating = false
+      if (this.intervalFunction) window.clearInterval(this.intervalFunction)
     }
   },
-
 }
 </script>
-
-<style lang="scss" scoped>
-.simulator {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  &__content {
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    border-radius: 5px;
-  }
-
-  &__setting,
-  &__result {
-    background: #253030;
-    height: 100%;
-    padding: 16px;
-    &-title {
-      font-weight: 600;
-      font-size: 14px;
-      color: #FFFFFF;
-      line-height: 20px;
-      margin-bottom: 16px;
-    }
-  }
-
-  &__setting {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    border-right: 1px solid #3B4343;
-    &-content {
-      flex: 1;
-      height: calc(100% - 36px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding-right: 12px;
-    }
-    &-action {
-      padding-top: 12px;
-      .btn-simulate {
-        width: 100%;
-      }
-    }
-    &-input {
-      &:not(:last-of-type) {
-        margin-bottom: 16px;
-      }
-      &:last-of-type {
-        margin-bottom: 21px;
-      }
-    }
-  }
-
-  &__result {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 70%;
-  }
-
-  &__result-content {
-    height: calc(100% - 36px);
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    overflow-y: auto;
-  }
-
-  &__result-item {
-    margin-bottom: 12px;
-    width: 100%;
-  }
-
-  .item {
-    &__label {
-      margin-bottom: 8px;
-      color: #AAAAAA;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    &__value {
-      color: #FFFFFF;
-      font-size: 14px;
-    }
-  }
-
-  &__default-message {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #999999;
-    font-size: 14px;
-  }
-
-  &__header {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 8px;
-
-    .btn-delete {
-      color: #CCC;
-      cursor: pointer;
-
-      &:hover {
-        color: $theme-color-primary;
-      }
-    }
-  }
-
-  &__title {
-    flex: 1;
-    margin: 0;
-    font-size:14px;
-    line-height: 22px;
-    color: #CCC;
-  }
-
-  &__content {
-    margin-bottom: 16px;
-    overflow-y: auto;
-
-    .empty-message {
-      padding: 8px 12px;
-      background-color: #1C292B;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #CCC;
-    }
-  }
-
-  /deep/ .empty-info-block {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-</style>

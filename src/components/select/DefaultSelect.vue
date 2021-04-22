@@ -6,7 +6,7 @@
     :no-data-text="$t('message.noData')"
     :no-match-text="$t('message.noMatchData')"
     :disabled="isDisabled"
-    :popper-append-to-body="false"
+    :popper-append-to-body="popperAppendToBody"
     :size="size"
     :multiple="multiple"
     :collapse-tags="collapseTags"
@@ -54,7 +54,8 @@ export default {
     collapseTags: {type: Boolean, default: false},
     filterable: {type: Boolean, default: false},
     filterMethod: {type: Boolean, default: false},
-    enableLazyLoading: {type: Boolean, default: false}
+    enableLazyLoading: {type: Boolean, default: false},
+    popperAppendToBody: {type: Boolean, default: false},
   },
   computed: {
     selectedValue: {
