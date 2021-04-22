@@ -12,14 +12,14 @@
         :placeholder="$t('miniApp.pleaseSelect')"
         :is-disabled="isProcessing"
         v-model="columnInfo.userInput"
-        :name="'category' + inputData.columnName"
+        :name="inputId + '-' + inputData.columnName"
         filterable
         class="input-field__select"
       />
       <div 
-        v-show="errors.has('category' + inputData.columnName)"
+        v-show="errors.has('simulator.' + inputId + '-' + inputData.columnName)"
         class="error-text"
-      >{{ errors.first('category' + inputData.columnName) }}</div>
+      >{{ errors.first('simulator.' + inputId + '-' + inputData.columnName) }}</div>
     </div>
   </div>
   <!--NUMERIC-->
@@ -33,7 +33,8 @@
         v-model.number="columnInfo.userInput"
         :is-disabled="isProcessing"
         :type="'Number'"
-        :name="'input' + inputData.columnName"
+        :name="inputId + '-' + inputData.columnName"
+        validate-scope="simulator"
       />
     </div>
   </div>
@@ -44,13 +45,19 @@
     <label class="input-field__label">{{ getDateTimeTitle }}</label>
     <div class="input-field__input">
       <el-date-picker
+        v-validate="'required'"
         v-model="columnInfo.userInput"
+        :name="inputId + '-' + 'dateTime'"
         :format="inputData.datetimeInfo.datePattern"
         :value-format="inputData.datetimeInfo.datePattern"
         :clearable="false"
         :picker-options="pickerOptions"
         type="datetime"
       />
+      <div 
+        v-show="errors.has('simulator.' + inputId + '-' + 'dateTime')"
+        class="error-text"
+      >{{ errors.first('simulator.' + inputId + '-' + 'dateTime') }}</div>
     </div>
   </div>
 </template>
@@ -61,6 +68,7 @@ import { searchColumnDefaultValue, searchNumericColumnValueRange } from '@/API/M
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -90,7 +98,8 @@ export default {
   },
   data () {
     return {
-      inputData: {}
+      inputData: {},
+      inputId: uuidv4()
     }
   },
   computed: {
