@@ -674,6 +674,7 @@
     "id": "ID",
     "createdInfo": "由 {name} 於 {time} 建立",
     "updatedInformation": "更新資訊",
+    "outputResult": "輸出結果",
     "sourceAndTarget": "資料來源 / 輸出",
     "sourceDataFrame": "來源資料表",
     "targetDataFrame": "輸出資料表",
