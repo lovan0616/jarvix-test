@@ -44,25 +44,46 @@
           class="simulator__default-message">
           {{ $t('miniApp.notYetSimulate') }}
         </div>
-        <spinner
-          v-else-if="isProcessing"
-          :title="$t('miniApp.simulating')"
-        />
-        <empty-info-block
-          v-else-if="isSimulateFailed"
-          :msg="failedMessage || $t('message.systemIsError')"
-        />
         <template v-else>
-          <div class="simulator__result-title">{{ $t('miniApp.simulationResult') }}</div>
-          <div class="simulator__result-content">
-            <div 
-              v-for="(result, index) in resultList"
-              :key="index"
-              class="simulator__result-item item">
-              <div class="item__label">{{ result.name }}</div>
-              <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
-            </div>
-          </div>
+          <el-tabs 
+            v-model="activeTabName"
+            class="simulator__result-tab"
+            type="card">
+            <el-tab-pane 
+              :label="$t('miniApp.simulationResult')" 
+              :name="$t('miniApp.simulationResult')">
+              <div
+                v-if="isSimulateFailed"
+                class="simulator__default-message">
+                {{ failedMessage || $t('message.systemIsError') }}
+              </div>
+              <spinner
+                v-else-if="isProcessing"
+                :title="$t('miniApp.simulating')"
+              />
+              <div 
+                v-else
+                class="simulator__result-panel">
+                <div 
+                  v-for="(result, index) in resultList"
+                  :key="index"
+                  class="simulator__result-card">
+                  <div class="item">
+                    <div class="item__label">{{ result.name }}</div>
+                    <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
+                  </div>  
+                </div>
+              </div>
+            </el-tab-pane>
+            <!-- 下次再加 -->
+            <!-- <el-tab-pane 
+              :label="$t('miniApp.savedRecord')" 
+              :name="$t('miniApp.savedRecord')">
+              <div class="simulator__record-panel">
+                {{ $t('miniApp.savedRecord') }}
+              </div>
+            </el-tab-pane> -->
+          </el-tabs>
         </template>
       </div>
     </section>
@@ -105,7 +126,8 @@ export default {
       resultList: null,
       isFetchInputFailed: false,
       isSimulateFailed: false,
-      failedMessage: null
+      failedMessage: null,
+      activeTabName: this.$t('miniApp.simulationResult')
     }
   },
   computed: {
@@ -176,5 +198,44 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.simulator {}
+.simulator {
+  &__result {
+    /deep/ .spinner-block {
+      flex: 1;
+    }
+  }
+
+  &__result-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 16px;
+    background: #475353;
+    border-radius: 5px;
+    overflow-y: auto;
+  }
+
+  .item {
+    min-height: 60px;
+    &:not(:last-child) {
+      margin-bottom: 24px;
+    }
+
+    &__label {
+      text-align: center;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 17px;
+      color: #AAAAAA;
+    }
+
+    &__value {
+      text-align: center;
+      font-size: 30px;
+      line-height: 42px;
+    }
+  }
+}
 </style>
