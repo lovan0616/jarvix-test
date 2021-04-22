@@ -209,7 +209,6 @@ export default {
           isInit: true
         }
       })
-      this.modelInfo[index].isInit = true
     },
     simulate () {
       this.$validator.validateAll('params-optimization').then(result => {

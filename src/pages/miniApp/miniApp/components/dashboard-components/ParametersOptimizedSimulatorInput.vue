@@ -1,5 +1,5 @@
 <template>
-  <!--CATEGORY or BOOLEAN-->
+  <!--CATEGORY-->
   <div 
     v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'" 
     class="input-field">
@@ -94,8 +94,8 @@
             v-model.number="columnInfo.userInput.min"
             :validate-scope="'params-optimization'"
             :is-disabled="isProcessing || disableInput"
-            :type="'text'"
             :name="'input-min-' + inputData.columnName"
+            type="text"
           />
           <el-tooltip
             class="tooltip-container"
@@ -126,8 +126,8 @@
               v-model.number="columnInfo.userInput.max"
               :validate-scope="'params-optimization'"
               :is-disabled="isProcessing || disableInput"
-              :type="'text'"
               :name="'input-max-' + inputData.columnName"
+              type="text"
             />
             <el-tooltip
               class="tooltip-container"
@@ -300,8 +300,7 @@ export default {
       inputData.columnName = this.columnInfo.originalName
 
       if(inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
-        inputData.valueList = columnInfo.fuzzySearchResult
-        inputData.valueList = inputData.valueList.map(element => ({
+        inputData.valueList = columnInfo.fuzzySearchResult.map(element => ({
           value: element,
           name: element
         }))
@@ -315,7 +314,7 @@ export default {
           start: columnInfo.start && this.customerTimeFormatter(columnInfo.start, 'MINUTE'),
           end: columnInfo.end && this.customerTimeFormatter(columnInfo.end, 'MINUTE')
         }
-        this.inputData.valueList = columnInfo
+        inputData.valueList = columnInfo
       } 
 
       this.$emit('done')
@@ -372,16 +371,13 @@ export default {
 
   &__input {
     flex: 1 1 110px;
-<<<<<<< HEAD
     position: relative;
-=======
     &.disabled {
       opacity: .5;
       /deep/ .error-text {
         visibility: hidden;
       }
     }
->>>>>>> feature/params-optimization-yaxis-setting
   }
 
   &__reminder {
@@ -390,7 +386,6 @@ export default {
     margin-top: 9px;
   }
 
-<<<<<<< HEAD
   .tooltip-container {
     position: absolute;
     bottom: 10px;
@@ -402,9 +397,6 @@ export default {
     margin-right: 12px;
   }
 
-  .el-input {
-    width: 100%;
-=======
   &__divider,
   /deep/ .el-range-separator {
     width: 22px;
@@ -412,7 +404,6 @@ export default {
     line-height: 40px;
     padding: 0;
     color: #ffffff;
->>>>>>> feature/params-optimization-yaxis-setting
   }
 
   .input-radio-group {
