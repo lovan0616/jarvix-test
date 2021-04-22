@@ -603,7 +603,7 @@ export default {
       let optionList = []
       
       // 元件本身已經設定警示線
-      this.componentData.anomalySettings.forEach(setting => {
+      this.componentData.anomalySettings && this.componentData.anomalySettings.forEach(setting => {
         optionList.push({
           comparisonOperator: this.convertOperator(setting.comparison),
           value: setting.value,

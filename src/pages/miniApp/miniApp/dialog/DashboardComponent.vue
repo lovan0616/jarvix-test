@@ -368,7 +368,7 @@ export default {
   mounted () {
     this.resetAnomalySetting()
     if (this.currentComponent.keyResultId) {
-      this.tempComponentAnomalySettings = JSON.parse(JSON.stringify(this.currentComponent.anomalySettings))
+      this.tempComponentAnomalySettings = JSON.parse(JSON.stringify(this.currentComponent.anomalySettings || []))
       if (this.currentComponent.anomalySettings && this.currentComponent.anomalySettings.length > 0) {
         this.anomalySetting.yAxis = {
           ...this.anomalySetting.yAxis,
