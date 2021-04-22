@@ -667,10 +667,11 @@ export default {
               name: this.$t('miniApp.modelSimulateComponent'),
               id: 'Simulator'
             },
-            {
-              name: this.$t('miniApp.parametersOptimizedSimulateComponent'),
-              id: 'ParametersOptimizedSimulator'
-            }
+            // 暫時不開放給使用者使用
+            // {
+            //   name: this.$t('miniApp.parametersOptimizedSimulateComponent'),
+            //   id: 'ParametersOptimizedSimulator'
+            // }
           ]
         },
         {
