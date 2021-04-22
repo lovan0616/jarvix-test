@@ -39,10 +39,10 @@
           </div>
         </div>
       </div>
-      <!-- 資料來源 -->
+      <!-- 資料的來源 / 輸出 -->
       <div class="info-block">
         <div class="info-block__title">
-          {{ $t('modelFlow.outputResult') }}
+          {{ $t('modelFlow.sourceAndTarget') }}
         </div>
         <div class="info-block__content">
           <div class="info__row">
@@ -50,7 +50,11 @@
             <div class="info__text">{{ flowInfo.targetDataSourceName }}</div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('editing.dataFrame') }}:</div>
+            <div class="info__label">{{ $t('modelFlow.sourceDataFrame') }}:</div>
+            <div class="info__text">{{ flowInfo.sourceDataFrameName }}</div>
+          </div>
+          <div class="info__row">
+            <div class="info__label">{{ $t('modelFlow.targetDataFrame') }}:</div>
             <div class="info__text">{{ flowInfo.targetDataFrameName }}</div>
           </div>
         </div>

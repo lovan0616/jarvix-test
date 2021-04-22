@@ -669,9 +669,12 @@
     "modelFlowNameId": "Flow Name / ID",
     "name": "Name",
     "id": "ID",
-    "createdInfo": "Flow {name} is created at {time}",
+    "createdInfo": "Created by {name} at {time}",
     "updatedInformation": "Update information",
     "outputResult": "Output result",
+    "sourceAndTarget": "Source / Target",
+    "sourceDataFrame": "Source Table",
+    "targetDataFrame": "Target Table",
     "deleteConfirmText": "Dataset will not be updated after removing the flow. Please choose a delete type",
     "function": "Function",
     "settingManagement": "Settings",
@@ -700,8 +703,8 @@
     "modelFlowUpdateStatus": {
       "temp": "No Update",
       "process": "Updating",
-      "enable": "Update Complete",
-      "complete": "Update Complete",
+      "enable": "Update Completed",
+      "complete": "Update Completed",
       "fail": "Update Failed"
     },
     "modelFlowLogStatus": {
