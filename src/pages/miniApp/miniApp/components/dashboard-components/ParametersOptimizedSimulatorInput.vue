@@ -1,5 +1,5 @@
 <template>
-  <!--CATEGORY or BOOLEAN-->
+  <!--CATEGORY-->
   <div 
     v-if="inputData.statsType === 'CATEGORY'" 
     class="input-field">
@@ -84,8 +84,8 @@
             v-validate="'required'"
             v-model.number="columnInfo.userInput.min"
             :is-disabled="isProcessing"
-            :type="'Number'"
             :name="'input-min-' + inputData.columnName"
+            type="Number"
           />
         </div>
         <template v-if="columnInfo.userInput.type === 'RANGE'">
@@ -97,8 +97,8 @@
               v-validate="'required'"
               v-model.number="columnInfo.userInput.max"
               :is-disabled="isProcessing"
-              :type="'Number'"
               :name="'input-max-' + inputData.columnName"
+              type="Number"
             />
           </div>
         </template>
@@ -167,11 +167,8 @@ export default {
       }) + ')'
     },
     pickerOptions () {
-      const vm = this
       return {
-        disabledDate (time) {
-          return time.getTime() > vm.inputData.datetimeInfo.end || time.getTime() < vm.inputData.datetimeInfo.start
-        }
+        disabledDate: time => time.getTime() > this.inputData.datetimeInfo.end || time.getTime() < this.inputData.datetimeInfo.start
       }
     }
   },
@@ -205,8 +202,7 @@ export default {
       inputData.columnName = this.columnInfo.originalName
 
       if(inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
-        inputData.valueList = columnInfo.fuzzySearchResult
-        inputData.valueList = inputData.valueList.map(element => ({
+        inputData.valueList = columnInfo.fuzzySearchResult.map(element => ({
           value: element,
           name: element
         }))
@@ -216,7 +212,7 @@ export default {
           ...this.columnInfo.userInput,
           ...columnInfo
         }
-        this.inputData.valueList = columnInfo
+        inputData.valueList = columnInfo
       } 
 
       this.$emit('done')
