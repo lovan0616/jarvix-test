@@ -1,7 +1,7 @@
 <template>
   <!--CATEGORY-->
   <div 
-    v-if="inputData.statsType === 'CATEGORY'" 
+    v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'" 
     class="input-field">
     <label class="input-field__label">{{ inputData.columnName }}</label>
     <div class="input-field__content-container">
@@ -9,6 +9,7 @@
         <div
           v-for="(option, index) in categoryOptionList"
           :key="index"
+          :class="{ 'disabled': disableInput }"
           class="input-radio-group"
         >
           <input
@@ -16,6 +17,7 @@
             v-model="columnInfo.userInput.type"
             :name="inputId + inputData.columnName"
             :value="option.type"
+            :disabled="disableInput"
             class="input-radio"
             type="radio"
           >
@@ -36,7 +38,7 @@
           :value="columnInfo.userInput.selectedList"
           :option-list="inputData.valueList"
           :placeholder="$t('miniApp.pleaseSelect')"
-          :is-disabled="isProcessing"
+          :is-disabled="isProcessing || disableInput"
           :name="'category' + inputData.columnName"
           filterable
           multiple
@@ -44,10 +46,13 @@
           @input="columnInfo.userInput.selectedList = $event"
         />
         <div 
-          v-show="errors.has('category' + inputData.columnName)"
+          v-show="errors.has('params-optimization.category' + inputData.columnName)"
           class="error-text"
-        >{{ errors.first('category' + inputData.columnName) }}</div>
+        >{{ errors.first('params-optimization.category' + inputData.columnName) }}</div>
       </div>
+      <div 
+        v-if="disableInput" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
     </div>
   </div>
   <!--NUMERIC-->
@@ -60,6 +65,7 @@
         <div
           v-for="(option, index) in numericOptionList"
           :key="index"
+          :class="{ 'disabled': disableInput }"
           class="input-radio-group"
         >
           <input
@@ -67,6 +73,7 @@
             v-model="columnInfo.userInput.type"
             :name="inputId + inputData.columnName"
             :value="option.type"
+            :disabled="disableInput"
             class="input-radio"
             type="radio"
           >
@@ -79,37 +86,105 @@
         </div>
       </div>
       <div class="input-field__input-group-container">
-        <div class="input-field__input">
+        <div 
+          :class="{ 'disabled': disableInput }" 
+          class="input-field__input">
           <input-verify
             v-validate="'required'"
             v-model.number="columnInfo.userInput.min"
-            :is-disabled="isProcessing"
+            :validate-scope="'params-optimization'"
+            :is-disabled="isProcessing || disableInput"
             :name="'input-min-' + inputData.columnName"
-            type="Number"
+            type="text"
           />
+          <el-tooltip
+            class="tooltip-container"
+            effect="dark" 
+            placement="bottom">
+            <div slot="content">{{ 
+              columnInfo.userInput.type === 'RANGE' 
+                ? $t('aggregation.min') + '：' + formatComma(columnInfo.userInput.min)
+                : $t('miniApp.numberRange', { 
+                  min: formatComma(columnInfo.userInput.min), 
+                  max: formatComma(columnInfo.userInput.max)
+                })
+            }}</div>
+            <svg-icon
+              class="icon"
+              icon-class="information-circle"/>
+          </el-tooltip>
         </div>
         <template v-if="columnInfo.userInput.type === 'RANGE'">
           <div class="input-field__divider">
             -
           </div>
-          <div class="input-field__input">
+          <div 
+            :class="{ 'disabled': disableInput }" 
+            class="input-field__input" >
             <input-verify
               v-validate="'required'"
               v-model.number="columnInfo.userInput.max"
-              :is-disabled="isProcessing"
+              :validate-scope="'params-optimization'"
+              :is-disabled="isProcessing || disableInput"
               :name="'input-max-' + inputData.columnName"
-              type="Number"
+              type="text"
             />
+            <el-tooltip
+              class="tooltip-container"
+              effect="dark" 
+              placement="bottom">
+              <div slot="content">{{ $t('aggregation.max') + '：' + formatComma(columnInfo.userInput.max) }}</div>
+              <svg-icon
+                class="icon"
+                icon-class="information-circle"/>
+            </el-tooltip>
           </div>
         </template>
       </div>
+      <div 
+        v-if="disableInput" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
+    </div>
+  </div>
+  <!--DATETIME-->
+  <div 
+    v-else-if="inputData.statsType === 'DATETIME'" 
+    class="input-field">
+    <label class="input-field__label">{{ inputData.columnName }}</label>
+    <div class="input-field__content-container">
+      <div class="input-field__input-group-container">
+        <el-date-picker
+          v-validate="'required'"
+          :disabled="isProcessing || disableInput"
+          :value="dateTimeRange"
+          :format="'yyyy-MM-dd HH:mm'"
+          :picker-options="dateTimePickerOptions"
+          :start-placeholder="$t('miniApp.startTime')"
+          :end-placeholder="$t('miniApp.endTime')"
+          :clearable="false"
+          :class="{ 'has-error': errors.first(inputId + 'dateTimeRange') }"
+          :name="[inputId + 'dateTimeRangeStart', inputId + 'dateTimeRangeEnd']"
+          :editable="false"
+          :value-format="'yyyy-MM-dd HH:mm'"
+          size="small"
+          type="datetimerange"
+          @input="updateDateTimeRange"
+        />
+      </div>
+      <div 
+        v-show="!disableInput && errors.has('params-optimization.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd')"
+        class="error-text"
+      >{{ errors.first('params-optimization.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd') }}</div>
+      <div 
+        v-if="disableInput" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
     </div>
   </div>
 </template>
 
 <script>
 import { dataValueSearch } from '@/API/DataSource'
-import { searchColumnDefaultValue, searchNumericColumnValueRange } from '@/API/Model'
+import { searchNumericColumnValueRange } from '@/API/Model'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
@@ -155,7 +230,11 @@ export default {
         { type: 'ALL', name: '全部' },
         { type: 'USE_ITEMS', name: '自訂使用項目' },
         { type: 'REMOVE_ITEMS', name: '自訂剔除項目' }
-      ]
+      ],
+      startTime: null,
+      endTime: null,
+      isValidStartTime: true,
+      isValidEndTime: true
     }
   },
   computed: {
@@ -166,9 +245,28 @@ export default {
         max: Math.round(this.inputData.valueList.max  * 100) / 100
       }) + ')'
     },
-    pickerOptions () {
+    dateTimePickerOptions () {
       return {
-        disabledDate: time => time.getTime() > this.inputData.datetimeInfo.end || time.getTime() < this.inputData.datetimeInfo.start
+        disabledDate: time => {
+          // 如果預設值為今天中午，則今天也會被 disable 掉，因此往前剪一天
+          return time.getTime() < this.startTime - 3600 * 1000 * 24 || time.getTime() > this.endTime
+        }
+      }
+    },
+    dateTimeRange () {
+      if (!this.startTime && !this.endTime) return []
+      return [this.columnInfo.userInput.start, this.columnInfo.userInput.end]
+    },
+    disableInput () {
+      if (!this.inputData.statsType) return
+      switch (this.inputData.statsType) {
+        case 'NUMERIC': 
+          return this.columnInfo.userInput.min === null || this.columnInfo.userInput.max === null
+        case 'DATETIME':
+          return this.columnInfo.userInput.start === null || this.columnInfo.userInput.end === null
+        case 'CATEGORY':
+        case 'BOOLEAN':
+          return !this.inputData.valueList || this.inputData.valueList.length === 0
       }
     }
   },
@@ -179,24 +277,24 @@ export default {
     this.configInputData()
   },
   methods: {
-    configInputData () {
-      Promise.all([
-        ...(this.columnInfo.statsType === 'NUMERIC' && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
-          restrictions: this.restrictions.length > 0 ? this.restrictions : null 
-        })]),
-        ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') && [this.searchValue(this.columnInfo.columnId, '')]),
-        searchColumnDefaultValue(this.modelId, this.columnInfo.columnId, {
-          restrictions: this.restrictions
-        })
-      ])
-        .then(([columnValueInfo, defaultValue]) => {
-          this.handleColumnValue(columnValueInfo, defaultValue)
-        })
-        .catch(() => {
-          this.$emit('failed')
-        })
+    fetchInputColumnInfo(statsType) {
+      switch (statsType) {
+        case 'NUMERIC':
+        case 'DATETIME':
+          return searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
+            restrictions: this.restrictions.length > 0 ? this.restrictions : null 
+          })
+        case 'CATEGORY':
+        case 'BOOLEAN':
+          return this.searchValue(this.columnInfo.columnId, '')
+      }
     },
-    async handleColumnValue (columnInfo, defaultValue) {
+    configInputData () {
+      this.fetchInputColumnInfo(this.columnInfo.statsType)
+        .then(columnValueInfo => this.handleColumnValue(columnValueInfo))
+        .catch(() => this.$emit('failed'))
+    },
+    async handleColumnValue (columnInfo) {
       const inputData = {}
       inputData.statsType = this.columnInfo.statsType
       inputData.columnName = this.columnInfo.originalName
@@ -207,10 +305,14 @@ export default {
           name: element
         }))
         this.columnInfo.userInput.selectedList = []
-      } else if (inputData.statsType === 'NUMERIC') {
+      } else if (inputData.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') {
+        this.startTime = columnInfo.start
+        this.endTime = columnInfo.end
         this.columnInfo.userInput = {
           ...this.columnInfo.userInput,
-          ...columnInfo
+          ...columnInfo,
+          start: columnInfo.start && this.customerTimeFormatter(columnInfo.start, 'MINUTE'),
+          end: columnInfo.end && this.customerTimeFormatter(columnInfo.end, 'MINUTE')
         }
         inputData.valueList = columnInfo
       } 
@@ -228,7 +330,14 @@ export default {
         size: 200,
         restrictions: this.restrictions.length > 0 ? this.restrictions : null
       })
-    }
+    },
+    updateDateTimeRange ([start, end]) {
+      this.columnInfo.userInput.start = start
+      this.columnInfo.userInput.end = end
+
+      this.isValidStartTime =  start >= this.customerTimeFormatter(this.startTime, 'MINUTE')
+      this.isValidEndTime =  end <= this.customerTimeFormatter(this.endime, 'MINUTE')
+    },
   }
 }
 </script>
@@ -262,38 +371,65 @@ export default {
 
   &__input {
     flex: 1 1 110px;
+    position: relative;
+    &.disabled {
+      opacity: .5;
+      /deep/ .error-text {
+        visibility: hidden;
+      }
+    }
   }
 
-  &__divider {
-    width: 25px;
-    text-align: center;
-    line-height: 40px;
+  &__reminder {
+    font-size: 12px;
+    color: #FF5C46;
+    margin-top: 9px;
+  }
+
+  .tooltip-container {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    color: #777777;
   }
 
   .input-radio-group:not(:last-of-type) {
     margin-right: 12px;
   }
-  
-  .el-input {
-    width: 100%;
+
+  &__divider,
+  /deep/ .el-range-separator {
+    width: 22px;
+    text-align: center;
+    line-height: 40px;
+    padding: 0;
+    color: #ffffff;
   }
 
-  /deep/ .el-input__inner {
-    padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
-    border-bottom: 1px solid #FFFFFF;
-    border-radius: 0;
-    background: transparent;
-    font-size: 16px;
-    &::placeholder {
-      color: #AAAAAA;
-      font-weight: normal;
-      font-size: 16px;
-    } 
+  .input-radio-group {
+    &:not(:last-of-type) {
+      margin-right: 12px;
+    }
+    &.disabled {
+      opacity: .5;
+    }
   }
 
   /deep/ .input-verify .input-verify-text {
     margin-bottom: 0;
     color: #ffffff;
+
+    /* Chrome, Safari, Edge, Opera */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    &[type=number] {
+      -moz-appearance: textfield;
+    }
   }
 
   /deep/ .input-error.error-text {
@@ -311,6 +447,54 @@ export default {
     .el-tag__close.el-icon-close {
       background-color: #2AD2E2;
     }
+  }
+
+  /deep/ .el-input {
+    width: 100%;
+    &__prefix {
+      display: none;
+    }
+
+    &__suffix {
+      right: -3px;
+    }
+
+    &__inner {
+      border: none;
+      border-radius: 0;
+      font-size: 16px;
+      padding-left: 0;
+      padding-right: 20px;
+      background-color: transparent;
+      color: $theme-text-color;
+      height: 40px;
+    }
+  }
+
+  /deep/ .el-date-editor--datetimerange.el-input__inner {
+    width: auto;
+    padding-right: 0;
+  }
+
+  /deep/ .el-range-editor.is-disabled .el-range-input {
+    opacity: .5;
+  }
+
+  /deep/ .el-range-editor .el-range__icon {
+    display: none;
+  }
+
+  /deep/ .el-range__close-icon {
+    display: none;
+  }
+
+  /deep/ .el-range-input {
+    width: 100px;
+    background: transparent;
+    padding: 0 !important;
+    font-size: 16px;
+    border-bottom: 1px solid #ffffff;
+    border-radius: 0;
   }
 }
 </style>

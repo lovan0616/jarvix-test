@@ -7,6 +7,7 @@
     <div class="input-field__input">
       <default-select 
         v-validate="'required'"
+        :popper-append-to-body="true"
         :option-list="inputData.valueList"
         :placeholder="$t('miniApp.pleaseSelect')"
         :is-disabled="isProcessing"
@@ -40,7 +41,7 @@
   <div
     v-else-if="inputData.statsType === 'DATETIME'"
     class="input-field">
-    <label class="input-field__label">{{ inputData.columnName }}</label>
+    <label class="input-field__label">{{ getDateTimeTitle }}</label>
     <div class="input-field__input">
       <el-date-picker
         v-model="columnInfo.userInput"
@@ -100,6 +101,10 @@ export default {
         max: Math.round(this.inputData.valueList.max  * 100) / 100
       }) + ')'
     },
+    getDateTimeTitle () {
+      if (!this.inputData.statsType || this.inputData.statsType !== 'DATETIME') return
+      return this.inputData.columnName + '(' + this.$t('miniApp.range') + ':' + this.customerTimeFormatter(this.inputData.datetimeInfo.start, 'SECOND') + ' - ' + this.customerTimeFormatter(this.inputData.datetimeInfo.end, 'SECOND') + ')'
+    },
     pickerOptions () {
       const vm = this
       return {
@@ -118,7 +123,7 @@ export default {
   methods: {
     configInputData () {
       Promise.all([
-        ...(this.columnInfo.statsType === 'NUMERIC' && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
+        ...((this.columnInfo.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
           restrictions: this.restrictions.length > 0 ? this.restrictions : null 
         })]),
         ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') && [this.searchValue(this.columnInfo.columnId, '')]),
@@ -151,7 +156,8 @@ export default {
       } else if (inputData.statsType === 'DATETIME') {
         this.columnInfo.userInput = defaultValue
         inputData.datetimeInfo = {
-          ...columnInfo.datetime,
+          start: columnInfo.start,
+          end: columnInfo.end,
           datePattern: 'yyyy-MM-dd hh:mm:ss' // 目前後端給的 datePattern 沒有用到，前端先暫定這種
         }
       }

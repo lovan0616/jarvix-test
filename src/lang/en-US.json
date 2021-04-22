@@ -1053,6 +1053,7 @@
     "savedRecord": "Saved Record",
     "startSimulating": "Start Simulation",
     "simulator": "Simulator",
+    "parametersOptimizedSimulator": "Optimization Component",
     "notYetSimulate": "Simulation not performed",
     "simulating": "Simulating",
     "optimalParameterComparison": "’s Optimal Parameters Comparison",
@@ -1084,7 +1085,17 @@
     "selectModel": "Select a model",
     "inputParamsCriteria": "Input Parameter Criteria",
     "outputParamsCriteria": "Output Result Criteria",
-    "outputResultSetting": "Output Result Setting"
+    "outputResultSetting": "Output Result Setting",
+    "numberRange": "Range: {min} - {max}",
+    "max": "Larger-the-Better",
+    "min": "Smaller-the-Better",
+    "riskLevel": "Risk Level",
+    "low": "Low",
+    "medium": "Medium",
+    "range": "range",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "noResultUnderCurrentRestrictions": "No result under current restrictions"
   },
   "clustering": {
     "cluster": "Cluster",
