@@ -64,11 +64,11 @@
               <div 
                 v-else
                 class="simulator__result-panel">
-                <div 
-                  v-for="(result, index) in resultList"
-                  :key="index"
-                  class="simulator__result-card">
-                  <div class="item">
+                <div class="simulator__result-card">
+                  <div 
+                    v-for="(result, index) in resultList"
+                    :key="index"
+                    class="item">
                     <div class="item__label">{{ result.name }}</div>
                     <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
                   </div>  
