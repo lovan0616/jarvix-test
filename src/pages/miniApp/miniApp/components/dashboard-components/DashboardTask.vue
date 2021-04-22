@@ -128,14 +128,14 @@
           :is-edit-mode="isEditMode"
           :restrictions="restrictions()"
           :model-setting="componentData.modelSetting"
-          :key="JSON.stringify(allFilterList)"
+          :key="taskId"
         />
         <simulator
           v-else-if="componentData.type === 'simulator'"
           :is-edit-mode="isEditMode"
           :restrictions="restrictions()"
           :model-setting="componentData.modelSetting"
-          :key="JSON.stringify(allFilterList)"
+          :key="taskId"
         />
         <div 
           v-else
@@ -180,6 +180,7 @@ import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
 import { sizeTable } from '@/utils/general'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'DashboardTask',
@@ -250,6 +251,7 @@ export default {
       tempFilteredKeyResultId: null,
       isInitializing: true,
       segmentation: null,
+      taskId: uuidv4(),
     }
   },
   computed: {
@@ -434,6 +436,9 @@ export default {
         this.deboucedAskQuestion()
       }
     },
+    allFilterList () {
+      this.taskId = uuidv4()
+    }
   },
   mounted () {
     if (this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
