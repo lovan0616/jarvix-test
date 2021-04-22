@@ -253,6 +253,11 @@ Validator.extend('letterSpace', function (value) {
   return /^[\u4e00-\u9fa5_a-zA-Z0-9\u3105-\u3129\u02CA\u02C7\u02CB\u02D9\s]*$/i.test(value) && !Number(value)
 })
 
+Validator.extend('letterDashUnderscore', function (value) {
+  // 含繁簡體、英文、數字及 '-', '_'
+  return /^[\u4e00-\u9fa5_a-zA-Z0-9\u002D\u005F\s]*$/i.test(value)
+})
+
 Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
   return Number(upperBoundValue) > Number(lowerBoundValue)
 }, {
@@ -333,6 +338,9 @@ Vue.use(VeeValidate, {
         letterSpace () {
           return i18n.t('message.formLetterSpaceEmpty')
         },
+        letterDashUnderscore () {
+          return i18n.t('message.formLetterDashUnderscore')
+        }, 
         validUpperBound () {
           return i18n.t('message.upperBoundShouldBeLargerThanLowerBound')
         },
@@ -382,6 +390,9 @@ Vue.use(VeeValidate, {
         },
         letterSpace () {
           return i18n.t('message.formLetterSpaceEmpty')
+        },
+        letterDashUnderscore () {
+          return i18n.t('message.formLetterDashUnderscore')
         },
         validUpperBound() {
           return i18n.t('message.upperBoundShouldBeLargerThanLowerBound')

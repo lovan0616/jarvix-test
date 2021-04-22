@@ -9,10 +9,10 @@
       class="input-verify-text"
     >
     <div
-      v-show="errors.has(name)"
+      v-show="errors.has(validateScope ? `${validateScope}.${name}` : name)"
       class="input-error error-text"
     >
-      {{ errors.first(name) }}
+      {{ errors.first(validateScope ? `${validateScope}.${name}` : name) }}
     </div>
     <slot name="action"/>
   </div>
@@ -42,6 +42,10 @@ export default {
       type: Boolean, 
       default: false
     },
+    validateScope: {
+      type: String,
+      default: ''
+    }
   },
   computed: {
     inputValue: {

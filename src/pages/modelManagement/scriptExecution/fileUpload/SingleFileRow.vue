@@ -19,13 +19,12 @@
       </div>
       <div class="file-status">
         <svg-icon
-          v-if="currntUploadStatus === uploadStatus.fail"
-          class="fail"
-          icon-class="alert"
+          v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail"
+          :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
+          :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
         />
         <a
           v-else
-          :disabled="currntUploadStatus === uploadStatus.uploading"
           class="link action-link"
           href="javascript:void(0)"
           @click="removeFile"
@@ -83,7 +82,7 @@ export default {
   },
   methods: {
     removeFile () {
-      this.$store.commit('dataManagement/removeUploadFile', this.index)
+      this.$store.commit('modelManagement/removeUploadModel', this.index)
     },
     cancelUpload () {
       if (typeof this.askCancelFunction === 'function') {

@@ -154,10 +154,16 @@ export function deleteDataFrameById (dataFrameId) {
  * @param {Boolean} hasAliasLimit - true: get one primary alias, false: get all alias
  * @param {Boolean} hasBlockClustering - whether to filter out clustering columns
  */
-export function getDataFrameColumnInfoById(dataFrameId, hasFeature = true, hasAliasLimit = true, hasBlockClustering = false) {
+export function getDataFrameColumnInfoById(dataFrameId, hasFeature = true, hasAliasLimit = true, hasBlockClustering = false, includePrimaryKey = true) {
   return request({
-    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}&hasAliasLimit=${hasAliasLimit}&hasBlockClustering=${hasBlockClustering}`,
-    method: 'GET'
+    url: `/dataColumn/dataFrame/${dataFrameId}`,
+    method: 'GET',
+    params: {
+      hasFeature,
+      hasAliasLimit,
+      hasBlockClustering,
+      includePrimaryKey
+    }
   })
 }
 

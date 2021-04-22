@@ -5,13 +5,13 @@
       :step="1"
     />
     <div class="dialog-body">
-      <div class="setting-block script-name-container">
+      <div class="setting-block flow-name-container">
         <input-block 
-          v-validate="`required|max:${max}`"
-          :label="$t('script.setScriptName')"
-          v-model="scriptName"
-          class="script-name-input"
-          name="scriptName"
+          v-validate="`required`"
+          :label="$t('modelFlow.upload.setFlowName')"
+          v-model="flowName"
+          class="flow-name-input"
+          name="flowName"
         />
       </div>
     </div>
@@ -30,12 +30,13 @@
   </div>
 </template>
 <script>
-import UploadProcessBlock from './fileUpload/UploadProcessBlock'
+import UploadProcessBlock from './components/UploadProcessBlock'
 import InputBlock from '@/components/InputBlock'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   inject: ['$validator'],
-  name: 'EditScriptName',
+  name: 'EditFlowName',
   components: {
     UploadProcessBlock,
     InputBlock
@@ -45,19 +46,21 @@ export default {
     }
   },
   computed: {
-    scriptName: {
+    ...mapState('modelFlowManagement', ['currentUploadFlowInfo']),
+    flowName: {
       get () {
-        return this.$store.state.dataManagement.currentUploadScriptName
+        return this.currentUploadFlowInfo.name || ''
       },
       set (value) {
-        this.$store.commit('dataManagement/updateScriptName', value)
+        this.updateCurrentUploadFlowInfo({
+          ...this.currentUploadFlowInfo,
+          name: value
+        })
       }
-    },
-    max () {
-      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {
+    ...mapMutations('modelFlowManagement', ['updateShowCreateFlowDialog', 'updateCurrentUploadFlowInfo']),
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
@@ -65,7 +68,7 @@ export default {
       })
     },
     cancel () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+      this.updateShowCreateFlowDialog(false)
     }
   }
 }
@@ -81,14 +84,14 @@ export default {
     border-radius: 5px;
     padding: 24px;
 
-    &.script-name-container {
+    &.flow-name-container {
       display: flex;
       align-items: center;
       justify-content: center;
       height: 50vh;
     }
 
-    .script-name-input {
+    .flow-name-input {
       width: 35%;
     }
   }

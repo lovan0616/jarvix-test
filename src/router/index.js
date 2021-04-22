@@ -342,6 +342,155 @@ const router = new Router({
                           }
                         }
                       ]
+                    },
+                    {
+                      path: 'model',
+                      component: () => import('@/pages/management/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          component: () => import('@/pages/modelManagement/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'ModelList' },
+                              name: 'ModelManagement',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'algo'
+                              }
+                            },
+                            {
+                              path: '/',
+                              name: 'ModelList',
+                              component: () => import('@/pages/modelManagement/ModelList'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', '/']
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          path: ':model_id',
+                          component: () => import('@/pages/modelManagement/Index'),
+                          /*  待優化：每次進頁面都要打兩次 API, 一次在 router beforeEach，一次在頁面的組件裡
+                           *  會需要先取得 ModelInfo 的原因是，要先知道模型是否被流程使用（inUse）
+                           *  才能在 SideNav 渲染前得知，重新上傳和參數設定的頁面是否要被鎖起來
+                           */
+                          beforeEnter: async (to, from, next) => {
+                            const modelId = to.params.model_id
+                            await store.dispatch('modelManagement/getModelInfo', modelId)
+                            next()
+                          },
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'ModelDetail' },
+                              name: 'ModelSetting',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'filter-setting'
+                              }
+                            },
+                            {
+                              path: 'detail',
+                              name: 'ModelDetail',
+                              component: () => import('@/pages/modelManagement/ModelDetail'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id']
+                              }
+                            },
+                            {
+                              path: 're-upload',
+                              name: 'ReUploadFile',
+                              component: () => import('@/pages/modelManagement/ReUploadFile'),
+                              beforeEnter: (to, from, next) => {
+                                store.state.modelManagement.currentModelInfo.inUse 
+                                  ? next(from)
+                                  : next()
+                              },
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse
+                              }
+                            },
+                            {
+                              path: 'config-setting',
+                              name: 'ConfigSetting',
+                              component: () => import('@/pages/modelManagement/ConfigSetting'),
+                              beforeEnter: (to, from, next) => {
+                                store.state.modelManagement.currentModelInfo.inUse 
+                                  ? next(from)
+                                  : next()
+                              },
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      path: 'model-flow',
+                      component: () => import('@/pages/management/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          component: () => import('@/pages/modelFlowManagement/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'FlowList' },
+                              name: 'ModelFlowManagement',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'algo-flow'
+                              }
+                            },
+                            {
+                              path: '/',
+                              name: 'FlowList',
+                              component: () => import('@/pages/modelFlowManagement/FlowList'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', '/']
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          path: ':flow_id',
+                          component: () => import('@/pages/modelFlowManagement/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              redirect: { name: 'FlowDetail' },
+                              name: 'FlowSetting',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'filter-setting'
+                              }
+                            },
+                            {
+                              path: 'detail',
+                              name: 'FlowDetail',
+                              component: () => import('@/pages/modelFlowManagement/FlowDetail'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id']
+                              }
+                            },
+                            {
+                              path: 'logs',
+                              name: 'FlowLogs',
+                              component: () => import('@/pages/modelFlowManagement/FlowLogs'),
+                              meta: {
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id']
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },
