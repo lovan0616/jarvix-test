@@ -193,7 +193,7 @@ export default {
       }
     },
     goToWarRoom () {
-      if (window.location.href.includes('https://sygps.sis.ai/account/2/group/2')) {
+      if (window.location.href.includes('https://sygps.sis.ai')) {
         this.$router.push({
           name: 'WarRoomList',
           params: {
