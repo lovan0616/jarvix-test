@@ -24,7 +24,8 @@
           <a
             :class="{
               'dropdown__link--selected': isSelectedItem(item.id),
-              'dropdown__link--point': hasBulletPoint
+              'dropdown__link--point': hasBulletPoint,
+              'dropdown__link--arrow': item.children
             }" 
             href="javascript:void(0);"
             class="dropdown__link"
@@ -32,6 +33,31 @@
           >
             {{ item.name }}
           </a>
+          <div
+            v-if="item.children"
+            class="dropdown__list-children"
+          >
+            <ul class="dropdown__list">
+              <li
+                v-for="children in item.children"
+                :key="children.id"
+                :class="{ 'dropdown__item--disabled': isLoading }"
+                class="dropdown__item"
+              >
+                <a
+                  :class="{
+                    'dropdown__link--selected': isSelectedItem(children.id),
+                    'dropdown__link--point': hasBulletPoint
+                  }" 
+                  href="javascript:void(0);"
+                  class="dropdown__link"
+                  @click="selectItem(children.id)"
+                >
+                  {{ children.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
         </li>
       </ul>
     </div>
@@ -104,12 +130,11 @@ export default {
 .dropdown {
   position: relative;
 
-  &__list-container {
+  &__list-container, &__list-children {
     position: absolute;
     top: 0;
     left: 100%;
     width: 207px;
-    
     visibility: hidden;
     background: #2B3839;
     border-radius: 5px;
@@ -120,6 +145,12 @@ export default {
     }
   }
 
+  &__list-children {
+    top: 0;
+    left: 100%;
+    width: auto;
+  }
+
   &__list {
     width: 100%;
     margin: 0;
@@ -127,6 +158,7 @@ export default {
   }
 
   &__item {
+    position: relative;
     list-style-type: none;
     &:not(:last-of-type) {
       border-bottom: 1px solid #394045;
@@ -135,6 +167,12 @@ export default {
     &--disabled {
       opacity: .3;
       cursor: wait;
+    }
+
+    &:hover {
+      .dropdown__list-children {
+        visibility: visible
+      }
     }
   }
 
@@ -156,6 +194,18 @@ export default {
         font-weight: bold;
         display: inline-block;
         padding: 0 6px;
+      }
+    }
+
+    &--arrow {
+      &::after {
+        position: absolute;
+        content: '';
+        top: calc(50% - 4px);
+        right: 8px;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-left: 4px solid #CCCCCC;
       }
     }
 

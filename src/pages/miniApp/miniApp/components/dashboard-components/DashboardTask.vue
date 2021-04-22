@@ -123,12 +123,19 @@
           :warning-module-setting="warningModuleSetting"
           :is-edit-mode="isEditMode"
         />
+        <parameters-optimized-simulator
+          v-else-if="componentData.type === 'parameters-optimized-simulator'"
+          :is-edit-mode="isEditMode"
+          :restrictions="restrictions()"
+          :model-setting="componentData.modelSetting"
+          :key="taskId"
+        />
         <simulator
           v-else-if="componentData.type === 'simulator'"
           :is-edit-mode="isEditMode"
           :restrictions="restrictions()"
           :model-setting="componentData.modelSetting"
-          :key="JSON.stringify(allFilterList)"
+          :key="taskId"
         />
         <div 
           v-else
@@ -167,11 +174,13 @@
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
 import AbnormalStatistics from './AbnormalStatistics'
+import ParametersOptimizedSimulator from './ParametersOptimizedSimulator'
 import Simulator from './Simulator'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
 import { sizeTable } from '@/utils/general'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'DashboardTask',
@@ -179,6 +188,7 @@ export default {
     DecideDialog,
     MonitorWarningList,
     AbnormalStatistics,
+    ParametersOptimizedSimulator,
     Simulator
   },
   props: {
@@ -241,12 +251,16 @@ export default {
       tempFilteredKeyResultId: null,
       isInitializing: true,
       segmentation: null,
+      taskId: uuidv4(),
     }
   },
   computed: {
     ...mapState('dataSource', ['algoConfig']),
     isIndependentComponent () {
-      return this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'abnormal-statistics' || this.componentData.type === 'simulator'
+      return this.componentData.type === 'monitor-warning-list' 
+        || this.componentData.type === 'abnormal-statistics' 
+        || this.componentData.type === 'simulator' 
+        || this.componentData.type === 'parameters-optimized-simulator'
     },
     shouldComponentBeFiltered () {
       if (this.isIndependentComponent) return false
@@ -422,6 +436,9 @@ export default {
         this.deboucedAskQuestion()
       }
     },
+    allFilterList () {
+      this.taskId = uuidv4()
+    }
   },
   mounted () {
     if (this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
@@ -773,6 +790,7 @@ $direction-span: ("col": 12, "row": 12);
     .header-right {
       display: flex;
       justify-content: flex-end;
+      z-index: 3;
       .component-property-box {
         display: flex;
         align-items: center;

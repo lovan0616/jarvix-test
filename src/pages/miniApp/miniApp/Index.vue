@@ -212,6 +212,7 @@
                   :data-list="componentTypeOptions"
                   :has-bullet-point="false"
                   trigger="hover"
+                  class="component-type-dropdown"
                   @select="createComponentType"
                 >
                   <template #display>
@@ -647,16 +648,30 @@ export default {
           id: 'MonitorWarning'
         },
         {
-          name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
-          id: 'UnhandledAbnormalStatistics'
-        },
-        {
-          name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
-          id: 'HandledAbnormalStatistics'
+          name: this.$t('miniApp.abnormalStatisticsComponent'),
+          children: [
+            {
+              name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
+              id: 'UnhandledAbnormalStatistics'
+            },
+            {
+              name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
+              id: 'HandledAbnormalStatistics'
+            }
+          ]
         },
         {
           name: this.$t('miniApp.simulateComponent'),
-          id: 'Simulator'
+          children: [
+            {
+              name: this.$t('miniApp.modelSimulateComponent'),
+              id: 'Simulator'
+            },
+            {
+              name: this.$t('miniApp.parametersOptimizedSimulateComponent'),
+              id: 'ParametersOptimizedSimulator'
+            }
+          ]
         },
         {
           name: this.$t('miniApp.specialIndexTypeComponent'),
@@ -1037,22 +1052,22 @@ export default {
       })
     },
     updateDashboardNameByDialog (newDashboardName) {
-        this.isProcessing = true
-        const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-        editedMiniApp.settings.editModeData.dashboards.forEach(board => {
-          if (board.id === this.currentDashboardId) board.name = newDashboardName
+      this.isProcessing = true
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards.forEach(board => {
+        if (board.id === this.currentDashboardId) board.name = newDashboardName
+      })
+      
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.miniApp = editedMiniApp
+          this.newDashboardName = newDashboardName
         })
-        
-        this.updateAppSetting(editedMiniApp)
-          .then(() => {
-            this.miniApp = editedMiniApp
-            this.newDashboardName = newDashboardName
-          })
-          .catch(() => {})
-          .finally(() => {
-            this.isShowUpdateDashboardNameDialog = false
-            this.isProcessing = false
-          })
+        .catch(() => {})
+        .finally(() => {
+          this.isShowUpdateDashboardNameDialog = false
+          this.isProcessing = false
+        })
     },
     deleteDashboard () {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
@@ -1249,7 +1264,7 @@ export default {
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
-     createDefaultComponent (componentType) {
+    createDefaultComponent (componentType) {
       this.isProcessing = true
       this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -1274,6 +1289,10 @@ export default {
     },
     createSimulatorComponent () {
       this.initComponent = this.componentTemplateFactory('simulator')
+      this.isShowCreateComponentDialog = true
+    },
+    createParametersOptimizedSimulatorComponent () {
+      this.initComponent = this.componentTemplateFactory('parameters-optimized-simulator')
       this.isShowCreateComponentDialog = true
     },
     createGeneralComponent () {
@@ -1442,13 +1461,13 @@ export default {
           },
         }),
         // 模擬器元件
-        ...(type === 'simulator' && {
+        ...((type === 'simulator' || type === 'parameters-optimized-simulator') && {
           isCreatedViaAsking: false,
           config: {
             ...generalConfig,
             // demo 因為有八個 Input，先設定六個列
             size: { row: 12, column: 12 },
-            diaplayedName: `${this.$t('miniApp.simulator')}`
+            diaplayedName: type === 'simulator' ? this.$t(`miniApp.simulator`) : this.$t(`miniApp.parametersOptimizedSimulator`)
           },
           modelSetting: {
             dataSourceId: null,
@@ -1754,6 +1773,9 @@ export default {
             font-weight: 600;
             font-size: 14px;
           }
+        }
+        .component-type-dropdown >>> .dropdown__list-container {
+          width: 160px;
         }
       }
     }

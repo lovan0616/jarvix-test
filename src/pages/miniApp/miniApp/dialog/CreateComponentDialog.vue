@@ -85,7 +85,7 @@
           :current-component="currentComponent"
         />
         <simulator-setting 
-          v-else-if="currentComponent.type === 'simulator'"
+          v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parameters-optimized-simulator'"
           :model-setting="currentComponent.modelSetting"
           :model-component-info="modelComponentInfo"
           :current-component="currentComponent"
@@ -402,10 +402,10 @@ export default {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowUpdatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowFontSizeOption () {
       return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
@@ -512,7 +512,7 @@ export default {
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
     // 所有可以不需透過問問句就能創建的元件類型
-    const isDirectAddableComponentTypes = ['formula', 'simulator']
+    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
     const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
     this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
@@ -528,7 +528,7 @@ export default {
       const validatePromises = []
 
       // 只取當前元件的欄位來驗證
-      // 避免把全欲的所有欄位都抓進來
+      // 避免把全域的所有欄位都抓進來
       const regex = /^create/
       for (let field in this.fields) {
         if (field.match(regex) && field.match(regex).length > 0) {
