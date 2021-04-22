@@ -227,7 +227,7 @@ export default {
                 }
               } else if (input.statsType === 'NUMERIC') { 
                 return {
-                  conditionType: null,
+                  conditionType: input.userInput.type,
                   dataColumnId: input.columnId,
                   items: null,
                   fixedValue: input.userInput.type === 'RANGE' ? null : input.userInput.min,
@@ -239,7 +239,7 @@ export default {
                 }
               } else if (input.statsType === 'DATETIME') {
                 return {
-                  conditionType: null,
+                  conditionType: 'RANGE',
                   dataColumnId: input.columnId,
                   items: null,
                   fixedValue: null,
