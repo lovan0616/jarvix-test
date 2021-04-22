@@ -1292,7 +1292,7 @@ export default {
       this.isShowCreateComponentDialog = true
     },
     createParametersOptimizedSimulatorComponent () {
-      this.initComponent = this.componentTemplateFactory('parametersOptimizedSimulator')
+      this.initComponent = this.componentTemplateFactory('parameters-optimized-simulator')
       this.isShowCreateComponentDialog = true
     },
     createGeneralComponent () {
@@ -1461,13 +1461,13 @@ export default {
           },
         }),
         // 模擬器元件
-        ...((type === 'simulator' || type === 'parametersOptimizedSimulator') && {
+        ...((type === 'simulator' || type === 'parameters-optimized-simulator') && {
           isCreatedViaAsking: false,
           config: {
             ...generalConfig,
             // demo 因為有八個 Input，先設定六個列
             size: { row: 12, column: 12 },
-            diaplayedName: this.$t(`miniApp.${type}`)
+            diaplayedName: type === 'simulator' ? this.$t(`miniApp.simulator`) : this.$t(`miniApp.parametersOptimizedSimulator`)
           },
           modelSetting: {
             dataSourceId: null,

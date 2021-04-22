@@ -124,7 +124,7 @@
           :is-edit-mode="isEditMode"
         />
         <parameters-optimized-simulator
-          v-else-if="componentData.type === 'parametersOptimizedSimulator'"
+          v-else-if="componentData.type === 'parameters-optimized-simulator'"
           :is-edit-mode="isEditMode"
           :restrictions="restrictions()"
           :model-setting="componentData.modelSetting"
@@ -258,7 +258,7 @@ export default {
       return this.componentData.type === 'monitor-warning-list' 
         || this.componentData.type === 'abnormal-statistics' 
         || this.componentData.type === 'simulator' 
-        || this.componentData.type === 'parametersOptimizedSimulator'
+        || this.componentData.type === 'parameters-optimized-simulator'
     },
     shouldComponentBeFiltered () {
       if (this.isIndependentComponent) return false
