@@ -199,7 +199,6 @@ export default {
     },
     simulate () {
       this.$validator.validateAll('params-optimization').then(result => {
-        console.log(result)
         if (!result) return
         this.isSimulateFailed = false
         this.isSimulating = true

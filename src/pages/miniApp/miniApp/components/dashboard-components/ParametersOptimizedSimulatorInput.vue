@@ -46,9 +46,9 @@
           @input="columnInfo.userInput.selectedList = $event"
         />
         <div 
-          v-show="errors.has('category' + inputData.columnName)"
+          v-show="errors.has('params-optimization.category' + inputData.columnName)"
           class="error-text"
-        >{{ errors.first('category' + inputData.columnName) }}</div>
+        >{{ errors.first('params-optimization.category' + inputData.columnName) }}</div>
       </div>
       <div 
         v-if="disableInput" 
@@ -146,6 +146,10 @@
           @input="updateDateTimeRange"
         />
       </div>
+      <div 
+        v-show="!disableInput && errors.has('params-optimization.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd')"
+        class="error-text"
+      >{{ errors.first('params-optimization.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd') }}</div>
       <div 
         v-if="disableInput" 
         class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
