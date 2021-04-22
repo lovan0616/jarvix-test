@@ -42,7 +42,7 @@
           class="input-radio-group"
         >
           <input
-            :id="option.type"
+            :id="inputId + option.type"
             :checked="riskProperty === option.type"
             :value="option.type"
             class="input-radio"
@@ -50,7 +50,7 @@
             @change="setRiskProperty(option.type)"
           >
           <label
-            :for="option.type"
+            :for="inputId + option.type"
             class="input-radio-label"
           >
             {{ option.name }}

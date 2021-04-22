@@ -1047,6 +1047,7 @@
     "savedRecord": "Saved Record",
     "startSimulating": "Start Simulation",
     "simulator": "Simulator",
+    "parametersOptimizedSimulator": "Optimization Component",
     "notYetSimulate": "Simulation not performed",
     "simulating": "Simulating",
     "optimalParameterComparison": "’s Optimal Parameters Comparison",

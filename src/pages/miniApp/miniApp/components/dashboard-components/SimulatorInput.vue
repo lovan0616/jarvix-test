@@ -7,6 +7,7 @@
     <div class="input-field__input">
       <default-select 
         v-validate="'required'"
+        :popper-append-to-body="true"
         :option-list="inputData.valueList"
         :placeholder="$t('miniApp.pleaseSelect')"
         :is-disabled="isProcessing"
