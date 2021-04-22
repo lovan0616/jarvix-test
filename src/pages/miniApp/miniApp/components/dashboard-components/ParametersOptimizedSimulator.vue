@@ -10,7 +10,10 @@
     <section 
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
-      <div class="simulator__setting-container">
+      <form 
+        class="simulator__setting-container" 
+        data-vv-scope="params-optimization" 
+        @submit.prevent="simulate">
         <div class="simulator__setting-container--top">
           <div class="simulator__setting">
             <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
@@ -57,12 +60,11 @@
         <div class="simulator__setting-container--bottom">
           <button
             :disabled="isSimulating"
-            type="button"
+            type="submit"
             class="btn-m btn-default btn-simulate"
-            @click="simulate"
           >{{ $t('miniApp.startSimulating') }}</button>
         </div>
-      </div>
+      </form>
       <div class="simulator__result">
         <div 
           v-if="!taskId" 
@@ -210,7 +212,7 @@ export default {
       this.modelInfo[index].isInit = true
     },
     simulate () {
-      this.$validator.validateAll().then(result => {
+      this.$validator.validateAll('params-optimization').then(result => {
         if (!result) return
         this.isSimulateFailed = false
         this.isSimulating = true
@@ -225,7 +227,7 @@ export default {
               expectType: output.expectType
             })),
             inputItems: this.modelInfo.map(input => {
-              if (input.statsType === 'CATEGORY') {
+              if (input.statsType === 'CATEGORY' || input.statsType === 'BOOLEAN') {
                 return {
                   conditionType: input.userInput.type,
                   dataColumnId: input.columnId,
@@ -233,7 +235,9 @@ export default {
                   fixedValue: null,
                   rangeMax: null,
                   rangeMin: null,
-                  statsType: input.statsType
+                  statsType: input.statsType,
+                  startTime: null,
+                  endTime: null
                 }
               } else if (input.statsType === 'NUMERIC') { 
                 return {
@@ -243,7 +247,21 @@ export default {
                   fixedValue: input.userInput.type === 'RANGE' ? null : input.userInput.min,
                   rangeMax: input.userInput.type === 'RANGE' ? input.userInput.max : null,
                   rangeMin: input.userInput.type === 'RANGE' ? input.userInput.min : null,
-                  statsType: input.statsType
+                  statsType: input.statsType,
+                  startTime: null,
+                  endTime: null
+                }
+              } else if (input.statsType === 'DATETIME') {
+                return {
+                  conditionType: 'RANGE',
+                  dataColumnId: input.columnId,
+                  items: null,
+                  fixedValue: null,
+                  rangeMax: null,
+                  rangeMin: null,
+                  statsType: input.statsType,
+                  startTime: this.customerTimeFormatter(input.userInput.start, 'SECOND'),
+                  endTime: this.customerTimeFormatter(input.userInput.end, 'SECOND')
                 }
               }
             }),

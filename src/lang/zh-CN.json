@@ -1094,7 +1094,11 @@
     "min": "望小",
     "riskLevel": "风险程度",
     "low": "低",
-    "medium": "中"
+    "medium": "中",
+    "range": "范围",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "noResultUnderCurrentRestrictions": "当前限制条件下无资料，请调整限制"
   },
   "alert": {
     "alertLogs": "示警纪录",

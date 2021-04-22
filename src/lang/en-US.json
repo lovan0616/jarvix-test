@@ -1084,7 +1084,11 @@
     "min": "Smaller-the-Better",
     "riskLevel": "Risk Level",
     "low": "Low",
-    "medium": "Medium"
+    "medium": "Medium",
+    "range": "range",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "noResultUnderCurrentRestrictions": "No result under current restrictions"
   },
   "clustering": {
     "cluster": "Cluster",
