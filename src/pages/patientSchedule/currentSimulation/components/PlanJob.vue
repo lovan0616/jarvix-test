@@ -78,7 +78,7 @@ export default {
             { title: 'equipmentNo', name: 'Equipment No.', width: '300' },
             { title: 'assistant', name: 'Assistant', width: '140' },
             { title: 'anesthetist', name: 'Anesthetist', width: '140' },
-            { title: 'noShowRecord', name: 'No Show Record', width: '180' }
+            { title: 'noShowProbability', name: 'No Show Probability', width: '200' }
           ]
         },
         "data": [
@@ -95,7 +95,8 @@ export default {
               "flexibility": "inpatient",
               "equipmentNo": "Sterilizers AB1\nDefibrillators X8",
               "assistant": "Jacob Tan\r",
-              "anesthetist": "Leo J."
+              "anesthetist": "Leo J.",
+              "noShowProbability": "High 90%"
             },
             {
               "sugeoryId": "YCCCCC999",
@@ -108,7 +109,7 @@ export default {
               "flexibility": "outpatient",
               "equipmentNo": "Sterilizers A19\nDefibrillators X2",
               "assistant": "Edward Z.\r",
-              "anesthetist": "Thomas T."
+              "noShowProbability": "High 100%"
             }
           ]),
          {
@@ -123,7 +124,7 @@ export default {
             "equipmentNo": "Anaesthetic\nDental drill",
             "assistant": "Edward Z.\r",
             "anesthetist": "H.W.L.\n",
-            "noShowRecord": ""
+            "noShowProbability": "Low 30%"
           },
           {
             "sugeoryId": "ACJKCC997",
@@ -137,7 +138,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Ashley B.",
             "anesthetist": "Caroline D.",
-            "noShowRecord": ""
+            "noShowProbability": "Low 30%"
           },
           {
             "sugeoryId": "ACJKCC998",
@@ -151,7 +152,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Emily F.",
             "anesthetist": "Rick D.",
-            "noShowRecord": ""
+            "noShowProbability": "Low 30%"
           },
           {
             "sugeoryId": "ACJKCC999",
@@ -165,7 +166,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Jackson S.",
             "anesthetist": "Rachel E.",
-            "noShowRecord": "3"
+            "noShowProbability": "High 90%"
           },
           {
             "sugeoryId": "ALJKCC234",
@@ -179,7 +180,7 @@ export default {
             "equipmentNo": "Breast Retractors\nBipolar Scissors",
             "assistant": "Patrick Z.\n",
             "anesthetist": "Betty Liu",
-            "noShowRecord": ""
+            "noShowProbability": "Medium 50%"
           },
           {
             "sugeoryId": "BCJKCC234",
@@ -193,7 +194,7 @@ export default {
             "equipmentNo": "Electrosurgery Unit",
             "assistant": "Paul E.",
             "anesthetist": "Caroline D.",
-            "noShowRecord": ""
+            "noShowProbability": "Medium 40%"
           },
           {
             "sugeoryId": "YCCCCC234",
@@ -207,7 +208,7 @@ export default {
             "equipmentNo": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
             "assistant": "Melody L.\r",
             "anesthetist": "Phillip F.\r",
-            "noShowRecord": ""
+            "noShowProbability": "High 90%"
           },
           {
             "sugeoryId": "YCJKCC234",
@@ -221,7 +222,7 @@ export default {
             "equipmentNo": "EKG machines XX5\r\n",
             "assistant": "Edward Z.\r",
             "anesthetist": "H.W.L.\n",
-            "noShowRecord": "1"
+            "noShowProbability": "Low 15%"
           },
           {
             "sugeoryId": "YCJKCC234",
@@ -235,7 +236,7 @@ export default {
             "equipmentNo": "Anaesthetic\nDental drill",
             "assistant": "Edward Z.\r",
             "anesthetist": "H.W.L.\n",
-            "noShowRecord": ""
+            "noShowProbability": "Medium 50%"
           },
           {
             "sugeoryId": "ZX9990122",
@@ -249,7 +250,7 @@ export default {
             "equipmentNo": "Stretcher XX10",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
-            "noShowRecord": "2"
+            "noShowProbability": "Low 10%"
           },
           {
             "sugeoryId": "ZX9990122",
@@ -263,7 +264,7 @@ export default {
             "equipmentNo": "Stretcher XX10",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
-            "noShowRecord": ""
+            "noShowProbability": "High 87%"
           },
           {
             "sugeoryId": "ZX9990123",
@@ -277,7 +278,7 @@ export default {
             "equipmentNo": "Stretcher XX11",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
-            "noShowRecord": ""
+            "noShowProbability": "Medium 55%"
           },
           {
             "sugeoryId": "ZX9990124",
@@ -291,7 +292,7 @@ export default {
             "equipmentNo": "Stretcher XX12",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
-            "noShowRecord": ""
+            "noShowProbability": "Low 13%"
           },
           {
             "sugeoryId": "ZX9990125",
@@ -305,7 +306,7 @@ export default {
             "equipmentNo": "Stretcher XX13",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
-            "noShowRecord": ""
+            "noShowProbability": "Low 21%"
           },
           {
             "sugeoryId": "ZX9990126",
@@ -319,7 +320,7 @@ export default {
             "equipmentNo": "Stretcher XX14",
             "assistant": "William H.\r",
             "anesthetist": "Anderson H.",
-            "noShowRecord": ""
+            "noShowProbability": "High 87%"
           },
           {
             "sugeoryId": "ZX9999873",
@@ -333,7 +334,7 @@ export default {
             "equipmentNo": "Utrata Capsulorhexis Forceps\nCaliper",
             "assistant": "Melody Tan",
             "anesthetist": "Ben L.\r",
-            "noShowRecord": "1"
+            "noShowProbability": "Medium 44%"
           },
           {
             "sugeoryId": "ZXX37533",
@@ -347,7 +348,7 @@ export default {
             "equipmentNo": "Diathermy forceps\nArtery forceps\nligature clamps",
             "assistant": "Jacob Tan\r",
             "anesthetist": "Phillip F.\r",
-            "noShowRecord": ""
+            "noShowProbability": "Medium 60%"
           },
           {
             "sugeoryId": "ZXXXX122",
@@ -361,7 +362,7 @@ export default {
             "equipmentNo": "Sterilizers AA1\nDefibrillators X2",
             "assistant": "Patrick W.\r\n",
             "anesthetist": "H.W.L.\r\n",
-            "noShowRecord": "3"
+            "noShowProbability": "Medium 65%"
           },
           {
             "sugeoryId": "ZXXXX133",
@@ -375,7 +376,7 @@ export default {
             "equipmentNo": "Surgical Lights\nSterilizers X123",
             "assistant": "Jacob Tan\r",
             "anesthetist": "Ben L.\r",
-            "noShowRecord": ""
+            "noShowProbability": "High 90%"
           },
           {
             "sugeoryId": "ZXXXX133",
@@ -389,7 +390,7 @@ export default {
             "equipmentNo": "Surgical Lights\nSterilizers X123",
             "assistant": "Jacob Tan\r",
             "anesthetist": "Ben L.\r",
-            "noShowRecord": ""
+            "noShowProbability": "Medium 45%"
           }
         ],
         "index": [

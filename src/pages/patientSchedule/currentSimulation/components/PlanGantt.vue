@@ -23,7 +23,7 @@
     <spinner v-if="isLoading"/>
     <v-gantt-chart
       v-else
-      :datas="$route.name.includes('OT') ? otGanttChartDataList : bedGanttChartDataList"
+      :datas="otGanttChartDataList"
       :cell-width="100"
       :cell-height="40"
       :title-height="56"
@@ -75,128 +75,6 @@ export default {
       isLoading: false,
       scale: 60,
       position: {},
-      bedGanttChartDataList: [
-        {
-          gtArray: [
-            {
-              "Room No.": "Room_1",
-              "type": "cleaning",
-              "start": "2021-03-01 08:30",
-              "end": "2021-03-01 09:15"
-            },
-            {
-              "Room No.": "Room_1",
-              "type": "stay",
-              "start": "2021-03-01 09:15",
-              "end": "2021-03-10 12:00",
-              "Room Type": "General Ward",
-              "Patient Name": "Jennie Tan",
-              "Paitent ID": "P1012345",
-              "Division": "Neurology\r",
-              "Attending Physician": "Lucas Lee",
-              "Nurse": "David L",
-              "Admission Date": "2021/3/1",
-              "Planned Discharged Date": "2021/3/3"
-            }
-          ],
-          name: 'Room_1'
-        },
-        {
-          gtArray: [
-            {
-              "Room No.": "Room_2",
-              "type": "block",
-              "start": "2021-03-01 08:30",
-              "end": "2021-03-01 10:30"
-            },
-            {
-              "Room No.": "Room_2",
-              "type": "cleaning",
-              "start": "2021-03-01 10:30",
-              "end": "2021-03-01 11:30"
-            },
-            {
-              "Room No.": "Room_2",
-              "type": "stay",
-              "start": "2021-03-01 11:30",
-              "end": "2021-03-03 11:30",
-              "Room Type": "Speical Ward",
-              "Patient Name": "James Ng",
-              "Paitent ID": "P8479502",
-              "Division": "Ophthalmology",
-              "Attending Physician": "Oliver Lim",
-              "Nurse": "Andrew Tan",
-              "Admission Date": "2021/3/1",
-              "Planned Discharged Date": "2021/3/3"
-            },
-          ],
-          name: 'Room_2'
-        },
-        {
-          gtArray: [
-            {
-              "Room No.": "Room_3",
-              "type": "stay",
-              "start": "2021-03-01 8:30",
-              "end": "2021-03-05 12:30",
-              "Room Type": "ICU",
-              "Patient Name": "Noah Lim\r",
-              "Paitent ID": "P1034859",
-              "Division": "Plastic Surgery\r",
-              "Attending Physician": "Kevin Wong",
-              "Nurse": "Patrick K.",
-              "Admission Date": "2021/3/1",
-              "Planned Discharged Date": "2021/3/5"
-            }
-          ],
-          name: 'Room_3'
-        },
-        {
-          gtArray: [
-            {
-              "Room No.": "Room_4",
-              "type": "stay",
-              "start": "2021-03-01 8:30",
-              "end": "2021-03-01 14:30",
-              "Room Type": "Deluxe Ward",
-              "Patient Name": "Davis Chua",
-              "Paitent ID": "P0039485\r",
-              "Division": "Orthopedics",
-              "Attending Physician": "Mason Tan",
-              "Nurse": "Connor Ong\r",
-              "Admission Date": "2021/2/28",
-              "Planned Discharged Date": "2021/3/1"
-            },
-            {
-              "Room No.": "Room_4",
-              "type": "cleaning",
-              "start": "2021-03-01 14:30",
-              "end": "2021-03-01 15:30"
-            },
-            {
-              "Room No.": "Room_4",
-              "type": "turnover",
-              "start": "2021-03-01 15:30",
-              "end": "2021-03-01 16:30"
-            },
-            {
-              "Room No.": "Room_4",
-              "type": "stay",
-              "start": "2021-03-01 16:30",
-              "end": "2021-03-05 16:30",
-              "Room Type": "General Ward",
-              "Patient Name": "Angela Koh",
-              "Paitent ID": "P2495839",
-              "Division": "Nephrology",
-              "Attending Physician": "Joseph Wong",
-              "Nurse": "Catherine Lim\r",
-              "Admission Date": "2021/3/1",
-              "Planned Discharged Date": "2021/3/5"
-            },
-          ],
-          name: 'Room_4'
-        }
-      ],
       otGanttChartDataList: [
         {
           gtArray: [
@@ -215,6 +93,7 @@ export default {
               "Equipment No.": "Sterilizers AA1\nDefibrillators X2",
               "Assistant": "Patrick W.\r\n",
               "Anesthetist": "H.W.L.\r\n",
+              "noShowProbability": "Low"
             },
             {
               "name": "Room_1",
@@ -237,6 +116,7 @@ export default {
               "Equipment No.": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
               "Assistant": "Melody L.\r",
               "Anesthetist": "Phillip F.\r",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_1",
@@ -265,6 +145,7 @@ export default {
               "Equipment No.": "Surgical Lights\nSterilizers X123",
               "Assistant": "Jacob Tan\r",
               "Anesthetist": "Ben L.\r",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_1",
@@ -287,6 +168,7 @@ export default {
               "Equipment No.": "EKG machines XX5\r\n",
               "Assistant": "Edward Z.\r",
               "Anesthetist": "H.W.L.\n",
+              "noShowProbability": "High"
             },
           ],
           name : 'Room_1'
@@ -296,7 +178,7 @@ export default {
             {
               "name": "Room_2",
               "type": "surgery",
-              "start": "2021-03-01 07:00",
+              "start": "2021-03-01 07:30",
               "end": "2021-03-01 10:00",
               "sugeoryId": "ZXXXX133",
               "patient": "Dan M.",
@@ -308,6 +190,7 @@ export default {
               "Equipment No.": "Surgical Lights\nSterilizers X123",
               "Assistant": "Jacob Tan\r",
               "Anesthetist": "Ben L.\r",
+              "noShowProbability": "Low"
             },
             {
               "name": "Room_2",
@@ -329,7 +212,8 @@ export default {
               "priority": 3,
               "Equipment No.": "EKG machines XX5\r\n",
               "Assistant": "Edward Z.\r",
-              "Anesthetist": "H.W.L.\n"
+              "Anesthetist": "H.W.L.\n",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_2",
@@ -345,7 +229,8 @@ export default {
               "priority": 3,
               "Equipment No.": "Anaesthetic\nDental drill",
               "Assistant": "Edward Z.\r",
-              "Anesthetist": "H.W.L.\n"
+              "Anesthetist": "H.W.L.\n",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_2",
@@ -367,7 +252,8 @@ export default {
               "priority": 1,
               "Equipment No.": "Breast Retractors\nBipolar Scissors",
               "Assistant": "Patrick Z.\n",
-              "Anesthetist": "Betty Liu"
+              "Anesthetist": "Betty Liu",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_2",
@@ -389,7 +275,8 @@ export default {
               "priority": 2,
               "Equipment No.": "Utrata Capsulorhexis Forceps\nCaliper",
               "Assistant": "Melody Tan",
-              "Anesthetist": "Ben L.\r"
+              "Anesthetist": "Ben L.\r",
+              "noShowProbability": "High"
             },
             {
               "name": "Room_2",
@@ -405,7 +292,7 @@ export default {
             {
               "name": "Room_3",
               "type": "surgery",
-              "start": "2021-03-01 07:00",
+              "start": "2021-03-01 07:30",
               "end": "2021-03-01 12:00",
               "sugeoryId": "ZX9990122",
               "patient": "Melissa R1",
@@ -417,6 +304,7 @@ export default {
               "Equipment No.": "Stretcher XX10",
               "Assistant": "William H.\r",
               "Anesthetist": "Anderson H.",
+              "noShowProbability": "Low"
             },
             {
               "name": "Room_3",
@@ -439,6 +327,7 @@ export default {
               "Equipment No.": "Stretcher XX11",
               "Assistant": "William H.\r",
               "Anesthetist": "Anderson H.",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_3",
@@ -461,6 +350,7 @@ export default {
               "Equipment No.": "Stretcher XX12",
               "Assistant": "William H.\r",
               "Anesthetist": "Anderson H.",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_3",
@@ -483,6 +373,7 @@ export default {
               "Equipment No.": "Stretcher XX13",
               "Assistant": "William H.\r",
               "Anesthetist": "Anderson H.",
+              "noShowProbability": "High"
             },
           ],
           name: 'Room_3'
@@ -492,7 +383,7 @@ export default {
             {
               "name": "Room_4",
               "type": "surgery",
-              "start": "2021-03-01 06:30",
+              "start": "2021-03-01 07:30",
               "end": "2021-03-01 11:00",
               "sugeoryId": "ZXX37533",
               "patient": "Charles W.",
@@ -504,6 +395,7 @@ export default {
               "Equipment No.": "Diathermy forceps\nArtery forceps\nligature clamps",
               "Assistant": "Jacob Tan\r",
               "Anesthetist": "Phillip F.\r",
+              "noShowProbability": "Low"
             },
             {
               "name": "Room_4",
@@ -526,6 +418,7 @@ export default {
               "Equipment No.": "Electrosurgery Unit",
               "Assistant": "Paul E.",
               "Anesthetist": "Caroline D.",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_4",
@@ -548,6 +441,7 @@ export default {
               "Equipment No.": "Electrosurgery Unit",
               "Assistant": "Ashley B.",
               "Anesthetist": "Caroline D.",
+              "noShowProbability": "Medium"
             },
             {
               "name": "Room_4",
@@ -570,6 +464,7 @@ export default {
               "Equipment No.": "Electrosurgery Unit",
               "Assistant": "Emily F.",
               "Anesthetist": "Rick D.",
+              "noShowProbability": "High"
             },
             {
               "name": "Room_4",
@@ -626,7 +521,8 @@ export default {
         "priority": 1,
         "Equipment No.": "Surgical Lights\nSterilizers X123",
         "Assistant": "Jacob Tan\r",
-        "Anesthetist": "Ben L.\r"
+        "Anesthetist": "Ben L.\r",
+        "noShowProbability": "Low 5%"
       })
     }
   },

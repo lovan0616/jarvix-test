@@ -18,6 +18,7 @@
         <div>Type: {{ item.type }}</div>
         <div>Start: {{ item.start }}</div>
         <div>End: {{ item.end }}</div>
+        <div v-if="item.noShowProbability">No Show Probability: {{ item.noShowProbability }}</div>
       </div>
     </div>
   </el-popover>
