@@ -12,7 +12,7 @@
         </div>
         <div class="setting-block__warning">
           <svg-icon icon-class="data-explanation" />
-          {{ $t('modelFlow.upload.reminder') }}
+          {{ $t('modelFlow.upload.reminder') }} 
         </div>
         <div class="setting-block__content">
           <div class="select-wrapper">
@@ -343,9 +343,9 @@ export default {
     },
     isSelectableSourceDataframe (frame) {
       // 來源資料表：
-      // 必須為資料庫連線且至少更新過一次、
+      // 必須為資料庫連線且至少更新過一次、crontabType 要是 UPDATE
       // 並且不得為其他 model script 產出來的表 (用 table name 判斷)
-      return frame.hasPrimaryKey && !frame.name.startsWith('sc_')
+      return frame.hasPrimaryKey && !frame.name.startsWith('sc_') && frame.crontabType === 'UPDATE'
     }
   }
 }
