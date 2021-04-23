@@ -636,6 +636,7 @@
     "modelFile": "Model File",
     "inputParameters": "Input Parameter",
     "paramNameDuplicated": "Parameter name duplicated.",
+    "outputColumnNameDuplicated": "Output column name duplicated.",
     "parameterDataType": "Parameter Data Type",
     "parameterDataName": "Parameter Name",
     "outputParameters": "Output Parameter",

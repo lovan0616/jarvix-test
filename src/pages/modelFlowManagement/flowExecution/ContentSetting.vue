@@ -12,7 +12,7 @@
         </div>
         <div class="setting-block__warning">
           <svg-icon icon-class="data-explanation" />
-          {{ $t('modelFlow.upload.reminder') }}
+          {{ $t('modelFlow.upload.reminder') }} 
         </div>
         <div class="setting-block__content">
           <div class="select-wrapper">
@@ -122,7 +122,7 @@
             type="text"
           />
           <div class="setting-block__subtitle">
-            {{ $t('modelFlow.upload.outputFrameName') }}
+            {{ $t('modelFlow.upload.outputColumnName') }}
           </div>
           <output-column-setting-card
             v-for="(output, index) in ioArgs.output"
@@ -160,6 +160,7 @@ import { getModelList, getModelInfo } from '@/API/Model'
 import { statsTypeOptionList } from '@/utils/general'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ContentSetting',
@@ -201,6 +202,9 @@ export default {
   computed: {
     ...mapState('modelFlowManagement', ['currentUploadFlowInfo']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
+    outputColumnNames () {
+      return this.ioArgs.output.map(item => item.originalName)
+    }
   },
   mounted () {
     this.fetchData()
@@ -328,6 +332,17 @@ export default {
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+
+        // output 欄位名稱不能重複
+        if (this.hasDuplicatedElements(this.outputColumnNames)) {
+          return Message({
+            message: this.$t('model.outputColumnNameDuplicated'),
+            type: 'warning',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+
         this.updateCurrentUploadFlowInfo({
           ...this.currentUploadFlowInfo,
           ioArgs: {
@@ -343,9 +358,9 @@ export default {
     },
     isSelectableSourceDataframe (frame) {
       // 來源資料表：
-      // 必須為資料庫連線且至少更新過一次、
+      // 必須為資料庫連線且至少更新過一次、crontabType 要是 UPDATE
       // 並且不得為其他 model script 產出來的表 (用 table name 判斷)
-      return frame.hasPrimaryKey && !frame.name.startsWith('sc_')
+      return frame.hasPrimaryKey && !frame.name.startsWith('sc_') && frame.crontabType === 'UPDATE'
     }
   }
 }

@@ -639,6 +639,7 @@
     "modelFile": "模型档案",
     "inputParameters": "Input 参数",
     "paramNameDuplicated": "参数名称重复",
+    "outputColumnNameDuplicated": "Output 栏位名称重复",
     "parameterDataType": "参数资料类型",
     "parameterDataName": "参数名称",
     "outputParameters": "Output 参数",
