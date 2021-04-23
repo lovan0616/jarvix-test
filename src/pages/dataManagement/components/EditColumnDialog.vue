@@ -197,6 +197,7 @@
                     v-if="!column.isClustering"
                     v-model="tempRowInfo.columnStatsType"
                     :option-list="typeOptionList(column.statsTypeOptionList)"
+                    :is-disabled="isTableGeneratedByFlow"
                     class="tag-select input"
                   />
                   <default-select
@@ -352,6 +353,10 @@ export default {
         name: isOrdinal ? this.$t('editing.isOrdinal') : this.$t('editing.isNotOrdinal'),
         value: isOrdinal
       }))
+    },
+    isTableGeneratedByFlow () {
+      // script 產生的表，不允許改變欄位型別
+      return this.tableInfo.name.startsWith('sc_')
     }
   },
   mounted () {

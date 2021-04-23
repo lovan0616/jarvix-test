@@ -39,7 +39,7 @@ export default {
     flowActions () {
       return [
         { title: 'modelFlow.immediatelyUpdate', dialogName: 'manulUpdate', disabled: this.isFlowUpdating },
-        { title: 'modelFlow.deleteModelFlow', dialogName: 'deleteModelFlow' }
+        { title: 'modelFlow.deleteModelFlow', dialogName: 'deleteModelFlow', disabled: this.isFlowUpdating }
       ]
     }
   }
