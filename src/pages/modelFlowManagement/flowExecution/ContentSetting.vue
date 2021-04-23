@@ -122,7 +122,7 @@
             type="text"
           />
           <div class="setting-block__subtitle">
-            {{ $t('modelFlow.upload.outputFrameName') }}
+            {{ $t('modelFlow.upload.outputColumnName') }}
           </div>
           <output-column-setting-card
             v-for="(output, index) in ioArgs.output"
