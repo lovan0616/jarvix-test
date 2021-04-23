@@ -118,7 +118,7 @@ export default {
         { title: 'equipmentNo', name: 'Equipment No', width: 300 },
         { title: 'assistant', name: 'Assistant', width: 180 },
         { title: 'anesthetist', name: 'Anesthetist', width: 180 },
-        { title: 'noShowRecord', name: 'No Show Record', width: 180 }
+        { title: 'noShowProbability', name: 'No Show Probability', width: 200 }
       ]
     }
   },
@@ -154,7 +154,7 @@ export default {
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
-          "noShowRecord": ""
+          "noShowProbability": "High 90%"
         },
         {
           "id": 2,
@@ -169,7 +169,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Ashley B.",
           "anesthetist": "Caroline D.",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 45%"
         },
         {
           "id": 3,
@@ -184,7 +184,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Emily F.",
           "anesthetist": "Rick D.",
-          "noShowRecord": ""
+          "noShowProbability": "Low 30%"
         },
         {
           "id": 4,
@@ -199,7 +199,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Jackson S.",
           "anesthetist": "Rachel E.",
-          "noShowRecord": "3"
+          "noShowProbability": "High 90%"
         },
         {
           "id": 5,
@@ -214,7 +214,7 @@ export default {
           "equipmentNo": "Breast Retractors\nBipolar Scissors",
           "assistant": "Patrick Z.\n",
           "anesthetist": "Betty Liu",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 50%"
         },
         {
           "id": 6,
@@ -229,7 +229,7 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Paul E.",
           "anesthetist": "Caroline D.",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 40%"
         },
         {
           "id": 7,
@@ -244,7 +244,7 @@ export default {
           "equipmentNo": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
           "assistant": "Melody L.\r",
           "anesthetist": "Phillip F.\r",
-          "noShowRecord": ""
+          "noShowProbability": "High 90%"
         },
         {
           "id": 8,
@@ -259,7 +259,7 @@ export default {
           "equipmentNo": "EKG machines XX5\r\n",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
-          "noShowRecord": "1"
+          "noShowProbability": "Low 15%"
         },
         {
           "id": 9,
@@ -274,7 +274,7 @@ export default {
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 50%"
         },
         {
           "id": 10,
@@ -289,7 +289,7 @@ export default {
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": "2"
+          "noShowProbability": "Low 10%"
         },
         {
           "id": 11,
@@ -304,7 +304,7 @@ export default {
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "High 87%"
         },
         {
           "id": 12,
@@ -319,7 +319,7 @@ export default {
           "equipmentNo": "Stretcher XX11",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 55%"
         },
         {
           "id": 13,
@@ -334,7 +334,7 @@ export default {
           "equipmentNo": "Stretcher XX12",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "Low 13%"
         },
         {
           "id": 14,
@@ -349,7 +349,7 @@ export default {
           "equipmentNo": "Stretcher XX13",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "Low 21%"
         },
         {
           "id": 15,
@@ -364,7 +364,7 @@ export default {
           "equipmentNo": "Stretcher XX14",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "High 87%"
         },
         {
           "id": 16,
@@ -379,7 +379,7 @@ export default {
           "equipmentNo": "Utrata Capsulorhexis Forceps\nCaliper",
           "assistant": "Melody Tan",
           "anesthetist": "Ben L.\r",
-          "noShowRecord": "1"
+          "noShowProbability": "Medium 44%"
         },
         {
           "id": 17,
@@ -394,7 +394,7 @@ export default {
           "equipmentNo": "Diathermy forceps\nArtery forceps\nligature clamps",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Phillip F.\r",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 60%"
         },
         {
           "id": 18,
@@ -409,7 +409,7 @@ export default {
           "equipmentNo": "Sterilizers AA1\nDefibrillators X2",
           "assistant": "Patrick W.\r\n",
           "anesthetist": "H.W.L.\r\n",
-          "noShowRecord": "3"
+          "noShowProbability": "Medium 65%"
         },
         {
           "id": 19,
@@ -424,7 +424,7 @@ export default {
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r",
-          "noShowRecord": ""
+          "noShowProbability": "High 90%"
         },
         {
           "id": 20,
@@ -439,7 +439,7 @@ export default {
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 45%"
         }
       ]
       this.tmpJobData = mockData
@@ -481,7 +481,7 @@ export default {
           "equipmentNo": "Sterilizers A19\nDefibrillators X2",
           "assistant": "Edward Z.\r",
           "anesthetist": "Thomas T.",
-          "noShowRecord": ""
+          "noShowProbability": ""
         },
         {
           "id": 99,
@@ -496,7 +496,7 @@ export default {
           "equipmentNo": "Sterilizers AB1\nDefibrillators X8",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Leo J.",
-          "noShowRecord": "2"
+          "noShowProbability": "2"
         }
       ])
       this.$emit('insert')
