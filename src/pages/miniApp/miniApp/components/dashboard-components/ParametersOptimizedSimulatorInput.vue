@@ -103,10 +103,10 @@
             placement="bottom">
             <div slot="content">{{ 
               columnInfo.userInput.type === 'RANGE' 
-                ? $t('aggregation.min') + '：' + formatComma(columnInfo.userInput.min)
+                ? $t('aggregation.min') + '：' + formatComma(tempInputValueRange.min)
                 : $t('miniApp.numberRange', { 
-                  min: formatComma(columnInfo.userInput.min), 
-                  max: formatComma(columnInfo.userInput.max)
+                  min: formatComma(tempInputValueRange.min), 
+                  max: formatComma(tempInputValueRange.max)
                 })
             }}</div>
             <svg-icon
@@ -133,7 +133,7 @@
               class="tooltip-container"
               effect="dark" 
               placement="bottom">
-              <div slot="content">{{ $t('aggregation.max') + '：' + formatComma(columnInfo.userInput.max) }}</div>
+              <div slot="content">{{ $t('aggregation.max') + '：' + formatComma(tempInputValueRange.max) }}</div>
               <svg-icon
                 class="icon"
                 icon-class="information-circle"/>
@@ -231,8 +231,10 @@ export default {
         { type: 'USE_ITEMS', name: '自訂使用項目' },
         { type: 'REMOVE_ITEMS', name: '自訂剔除項目' }
       ],
-      startTime: null,
-      endTime: null,
+      tempInputValueRange: {
+        min: null,
+        max: null,
+      },
       isValidStartTime: true,
       isValidEndTime: true
     }
@@ -249,12 +251,12 @@ export default {
       return {
         disabledDate: time => {
           // 如果預設值為今天中午，則今天也會被 disable 掉，因此往前剪一天
-          return time.getTime() < this.startTime - 3600 * 1000 * 24 || time.getTime() > this.endTime
+          return time.getTime() < this.tempInputValueRange.min - 3600 * 1000 * 24 || time.getTime() > this.tempInputValueRange.max
         }
       }
     },
     dateTimeRange () {
-      if (!this.startTime && !this.endTime) return []
+      if (!this.tempInputValueRange.min && !this.tempInputValueRange.max) return []
       return [this.columnInfo.userInput.start, this.columnInfo.userInput.end]
     },
     disableInput () {
@@ -306,8 +308,10 @@ export default {
         }))
         this.columnInfo.userInput.selectedList = []
       } else if (inputData.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') {
-        this.startTime = columnInfo.start
-        this.endTime = columnInfo.end
+        this.tempInputValueRange = {
+          min: columnInfo.start || columnInfo.min,
+          max: columnInfo.end || columnInfo.max
+        }
         this.columnInfo.userInput = {
           ...this.columnInfo.userInput,
           ...columnInfo,
@@ -316,6 +320,7 @@ export default {
         }
         inputData.valueList = columnInfo
       } 
+
 
       this.$emit('done')
       this.inputData = {
@@ -335,8 +340,8 @@ export default {
       this.columnInfo.userInput.start = start
       this.columnInfo.userInput.end = end
 
-      this.isValidStartTime =  start >= this.customerTimeFormatter(this.startTime, 'MINUTE')
-      this.isValidEndTime =  end <= this.customerTimeFormatter(this.endime, 'MINUTE')
+      this.isValidStartTime =  start >= this.customerTimeFormatter(this.tempInputValueRange.min, 'MINUTE')
+      this.isValidEndTime =  end <= this.customerTimeFormatter(this.tempInputValueRange.max, 'MINUTE')
     },
   }
 }
