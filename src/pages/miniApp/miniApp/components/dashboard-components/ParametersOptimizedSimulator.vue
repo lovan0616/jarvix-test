@@ -11,8 +11,8 @@
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
       <form 
+        :data-vv-scope="`params-optimization-${simulatorId}`" 
         class="simulator__setting-container" 
-        data-vv-scope="params-optimization" 
         @submit.prevent="simulate">
         <div class="simulator__setting-container--top">
           <div class="simulator__setting">
@@ -25,6 +25,7 @@
                 :column-info="columnInfo"
                 :model-id="modelSetting.modelId"
                 :key="index + '-' + columnInfo.columnId"
+                :simulator-id="simulatorId"
                 class="simulator__setting-input"
                 @done="updateColumnInfoState(index)"
                 @failed="handleFetchInputFailed"
@@ -120,6 +121,7 @@ import SimulatorResultCard from './SimulatorResultCard'
 import ParametersOptimizedSimulatorInput from './ParametersOptimizedSimulatorInput'
 import ParametersOptimizedSimulatorOutput from './ParametersOptimizedSimulatorOutput'
 import { getModelInfo, createParamOptimizationTask, getParamOptimizationResult } from '@/API/Model'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -161,7 +163,8 @@ export default {
       failedMessage: null,
       intervalFunction: null,
       simulatorResults: [],
-      activeTabName: this.$t('miniApp.simulationResult')
+      activeTabName: this.$t('miniApp.simulationResult'),
+      simulatorId: uuidv4()
     }
   },
   computed: {
@@ -211,7 +214,7 @@ export default {
       })
     },
     simulate () {
-      this.$validator.validateAll('params-optimization').then(result => {
+      this.$validator.validateAll(`params-optimization-${this.simulatorId}`).then(result => {
         if (!result) return
         this.isSimulateFailed = false
         this.isSimulating = true

@@ -17,9 +17,9 @@
         class="input-field__select"
       />
       <div 
-        v-show="errors.has('simulator.' + inputId + '-' + inputData.columnName)"
+        v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName)"
         class="error-text"
-      >{{ errors.first('simulator.' + inputId + '-' + inputData.columnName) }}</div>
+      >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName) }}</div>
     </div>
   </div>
   <!--NUMERIC-->
@@ -34,7 +34,7 @@
         :is-disabled="isProcessing"
         :type="'Number'"
         :name="inputId + '-' + inputData.columnName"
-        validate-scope="simulator"
+        :validate-scope="'simulator-' + simulatorId"
       />
     </div>
   </div>
@@ -55,9 +55,9 @@
         type="datetime"
       />
       <div 
-        v-show="errors.has('simulator.' + inputId + '-' + 'dateTime')"
+        v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime')"
         class="error-text"
-      >{{ errors.first('simulator.' + inputId + '-' + 'dateTime') }}</div>
+      >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime') }}</div>
     </div>
   </div>
 </template>
@@ -94,6 +94,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => ([])
+    },
+    simulatorId: {
+      type: String,
+      required: true
     }
   },
   data () {

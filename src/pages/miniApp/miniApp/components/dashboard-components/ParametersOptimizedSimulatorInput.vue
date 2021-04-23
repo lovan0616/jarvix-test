@@ -46,9 +46,9 @@
           @input="columnInfo.userInput.selectedList = $event"
         />
         <div 
-          v-show="errors.has('params-optimization.category' + inputData.columnName)"
+          v-show="errors.has(`params-optimization-${simulatorId}.category${inputData.columnName}`)"
           class="error-text"
-        >{{ errors.first('params-optimization.category' + inputData.columnName) }}</div>
+        >{{ errors.first(`params-optimization-${simulatorId}.category${inputData.columnName}`) }}</div>
       </div>
       <div 
         v-if="disableInput" 
@@ -90,14 +90,16 @@
           :class="{ 'disabled': disableInput }" 
           class="input-field__input">
           <input-verify
-            v-validate="'required'"
+            v-validate="minValueRules"
+            ref="minValue"
             v-model.number="columnInfo.userInput.min"
-            :validate-scope="'params-optimization'"
+            :validate-scope="'params-optimization-' + simulatorId"
             :is-disabled="isProcessing || disableInput"
             :name="'input-min-' + inputData.columnName"
             type="text"
           />
           <el-tooltip
+            :disabled="disableInput"
             class="tooltip-container"
             effect="dark" 
             placement="bottom">
@@ -122,14 +124,16 @@
             :class="{ 'disabled': disableInput }" 
             class="input-field__input" >
             <input-verify
-              v-validate="'required'"
+              v-validate="maxValueRules"
+              ref="maxValue"
               v-model.number="columnInfo.userInput.max"
-              :validate-scope="'params-optimization'"
+              :validate-scope="'params-optimization-' + simulatorId"
               :is-disabled="isProcessing || disableInput"
               :name="'input-max-' + inputData.columnName"
               type="text"
             />
             <el-tooltip
+              :disabled="disableInput"
               class="tooltip-container"
               effect="dark" 
               placement="bottom">
@@ -172,9 +176,9 @@
         />
       </div>
       <div 
-        v-show="!disableInput && errors.has('params-optimization.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd')"
+        v-show="!disableInput && errors.has('params-optimization-' + simulatorId + '.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd')"
         class="error-text"
-      >{{ errors.first('params-optimization.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd') }}</div>
+      >{{ errors.first('params-optimization-' + simulatorId + '.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd') }}</div>
       <div 
         v-if="disableInput" 
         class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
@@ -216,6 +220,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => ([])
+    },
+    simulatorId: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -270,6 +278,26 @@ export default {
         case 'BOOLEAN':
           return !this.inputData.valueList || this.inputData.valueList.length === 0
       }
+    },
+    maxValueRules () {
+      if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC' || this.columnInfo.userInput.type === 'ALL') return
+      const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
+      if (
+        (this.columnInfo.userInput.min !== '' && decimalRegex.test(this.columnInfo.userInput.min))
+        && this.columnInfo.userInput.max !== ''
+      ) return `decimal|max_value:${this.tempInputValueRange.max}|min_value:${this.columnInfo.userInput.min}`
+      if (this.columnInfo.userInput.max !== '') return `decimal|max_value:${this.tempInputValueRange.max}`
+      return 'required'
+    },
+    minValueRules () {
+      if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC') return
+      const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
+      if (
+        (this.columnInfo.userInput.max !== '' && decimalRegex.test(this.columnInfo.userInput.max))
+        && this.columnInfo.userInput.min !== ''
+      ) return `decimal|min_value:${this.tempInputValueRange.min}|max_value:${this.columnInfo.userInput.max}`
+      if (this.columnInfo.userInput.min !== '') return `decimal|min_value:${this.tempInputValueRange.min}`    
+      return 'required'
     }
   },
   watch: {
