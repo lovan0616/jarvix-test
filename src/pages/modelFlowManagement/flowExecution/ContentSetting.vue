@@ -160,6 +160,7 @@ import { getModelList, getModelInfo } from '@/API/Model'
 import { statsTypeOptionList } from '@/utils/general'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ContentSetting',
@@ -201,6 +202,9 @@ export default {
   computed: {
     ...mapState('modelFlowManagement', ['currentUploadFlowInfo']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
+    outputColumnNames () {
+      return this.ioArgs.output.map(item => item.originalName)
+    }
   },
   mounted () {
     this.fetchData()
@@ -328,6 +332,17 @@ export default {
     next () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+
+        // output 欄位名稱不能重複
+        if (this.hasDuplicatedElements(this.outputColumnNames)) {
+          return Message({
+            message: this.$t('model.outputColumnNameDuplicated'),
+            type: 'warning',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+
         this.updateCurrentUploadFlowInfo({
           ...this.currentUploadFlowInfo,
           ioArgs: {

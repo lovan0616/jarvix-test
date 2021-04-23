@@ -100,6 +100,9 @@ export default {
         name: type,
         value: type
       }))
+    },
+    modelColumnNames () {
+      return this.columnList.map(item => item.modelColumnName)
     }
   },
   mounted () {
@@ -129,9 +132,8 @@ export default {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
 
-        // 檢查欄位名稱是否重複
-        const modelColumnNameSet = this.columnList.reduce((acc, cur) => acc.add(cur.modelColumnName), new Set())
-        if (modelColumnNameSet.size < this.columnList.length) {
+        // 欄位名稱不能重複
+        if (this.hasDuplicatedElements(this.modelColumnNames)) {
           return Message({
             message: this.$t('model.paramNameDuplicated'),
             type: 'warning',
