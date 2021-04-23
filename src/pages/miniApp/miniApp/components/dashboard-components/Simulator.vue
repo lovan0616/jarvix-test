@@ -11,8 +11,8 @@
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
       <form 
-        class="simulator__setting-container" 
-        data-vv-scope="simulator"
+        :data-vv-scope="'simulator-' + simulatorId" 
+        class="simulator__setting-container"
         @submit.prevent="simulate"
       >
         <div class="simulator__setting-container--top">
@@ -26,6 +26,7 @@
                 :column-info="columnInfo"
                 :model-id="modelSetting.modelId"
                 :key="index + '-' + columnInfo.columnId"
+                :simulator-id="simulatorId"
                 class="simulator__setting-input"
                 @done="updateColumnInfoState(index)"
                 @failed="handleFetchInputFailed"
@@ -98,6 +99,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SimulatorInput from './SimulatorInput'
 import { modelSimulate } from '@/API/Model'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -130,7 +132,8 @@ export default {
       isFetchInputFailed: false,
       isSimulateFailed: false,
       failedMessage: null,
-      activeTabName: this.$t('miniApp.simulationResult')
+      activeTabName: this.$t('miniApp.simulationResult'),
+      simulatorId: uuidv4()
     }
   },
   computed: {
@@ -170,7 +173,7 @@ export default {
       this.modelInfo[index].isInit = true
     },
     simulate () {
-      this.$validator.validateAll('simulator').then(result => {
+      this.$validator.validateAll(`simulator-${this.simulatorId}`).then(result => {
         if (!result) return
         this.isSimulateFailed = false
         this.isProcessing = true
