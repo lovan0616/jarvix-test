@@ -481,7 +481,7 @@ export default {
           "equipmentNo": "Sterilizers A19\nDefibrillators X2",
           "assistant": "Edward Z.\r",
           "anesthetist": "Thomas T.",
-          "noShowProbability": ""
+          "noShowProbability": "Low 10%"
         },
         {
           "id": 99,
@@ -496,7 +496,7 @@ export default {
           "equipmentNo": "Sterilizers AB1\nDefibrillators X8",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Leo J.",
-          "noShowProbability": "2"
+          "noShowProbability": "Low 10%"
         }
       ])
       this.$emit('insert')
