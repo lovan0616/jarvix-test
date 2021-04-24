@@ -55,6 +55,10 @@
             <div class="setting-block__title">{{ $t('batchLoad.updateContent') }}</div>
             <div class="input-field">
               <div class="input-field__label">{{ $t('batchLoad.updateMode') }}</div>
+              <div class="input-field__warning">
+                <svg-icon icon-class="data-explanation" />
+                {{ $t('batchLoad.reimportReminder') }}
+              </div>
               <div class="input-field__input-wrapper">
                 <div
                   v-for="mode in updateTypeList"
@@ -623,6 +627,11 @@ export default {
       &__label {
         font-size: 14px;
         color: #CCCCCC;
+      }
+
+      &__warning {
+        font-size: 13px;
+        color: var(--color-warning);
       }
 
       &__select,

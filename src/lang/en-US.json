@@ -794,7 +794,8 @@
       "minus": "Dash(-)：Represents a timeframe. E.g. 8-12 for 8:00, 9:00, 10:00, 11:00, 12:00.",
       "slash": "Forward Slash with Number(/n)：n is a number, meaning dividing the timeframe by desired interval. E.g. */5 means execute once every 5 minutes."
     },
-    "checkDatarowDeletable": "Check if any datarow is deleted."
+    "checkDatarowDeletable": "Check if any datarow is deleted.",
+    "reimportReminder": "Reimporting data will cause the deletion of the bounded flow."
   },
   "fileDataUpdate": {
     "updateData": "Update Data",
