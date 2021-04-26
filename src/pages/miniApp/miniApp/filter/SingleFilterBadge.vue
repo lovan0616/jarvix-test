@@ -326,7 +326,7 @@ export default {
   },
   mounted () {
     this.filter = JSON.parse(JSON.stringify(this.initialFilter))
-    this.fetchData()
+    if (!this.isSingleChoiceFilter || (this.isSingleChoiceFilter && this.isNeedUpdate)) this.fetchData()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {

@@ -57,7 +57,7 @@ export default {
   data () {
     return {
       filterList: [],
-      filterSetInitList: {},
+      filterSetInitList: {}, // 用來儲存 filter set 各組 init 狀態
       isShowSeletor: false,
       isFilterListNeedUpdate: false,
       hasFilterSetNeedInit: false
@@ -76,24 +76,29 @@ export default {
     // 控制項有階層，且創立完後需要給定預設值，所以須額外處理
     this.filterList = this.initialFilterList.map((filterSet, setIndex) => {
       // 確認當前組是否剛被創出來，需要給 filter 預設值
-      this.filterSetInitList[`${setIndex}`] = filterSet.some(filter => filter.dataValues.length > 0)
+      this.filterSetInitList[`${setIndex}`] = false
       return filterSet.map((filter, index) => ({ 
         ...filter,
         // 階層情況下，filter 需戴上前面所有 filter 的 restriction，因此由左至右每次只處理一個 filter 
-        isNeedUpdate: index === 0 && filter.dataValues.length === 0,
+        isNeedUpdate: index === 0,
         // 給定處理狀態，如果有 filter 在處理中，其以後的 filter 都需押處理中
         isProcessing: true,
         filterId: uuidv4()
       }))
     })
+
     // 如果有剛創完的控制項須給定預設值時，代表設定完成後，filtet list 需傳出去更新
     this.isFilterListNeedUpdate = !Object.keys(this.filterSetInitList).every(filterSet => this.filterSetInitList[filterSet])
+
     // 如果有需要初始化的控制項，需在完成後告知外層，Dashboard 初始化狀態才會改變，讓 task 展開問問題流程
     this.hasFilterSetNeedInit = this.isFilterListNeedUpdate
   },
   methods: {
     updateFilter (updatedFilter, filterSetIndex, filterIndex) {
-      // 可能遇到階層，所以需要先確認當前更新的 filter 是否為該組最後一個
+      // 更新該 filter set 的狀態
+      this.filterSetInitList[`${filterSetIndex}`] = false
+
+      // 可能遇到階層，所以需要先確認當前更新的 filter 是否為該 filter set 最後一個
       const isLastFilterInSet = filterIndex === this.filterList[filterSetIndex].length - 1
 
       // 更新 filter 中的狀態，並存到隸屬的組中
@@ -115,25 +120,26 @@ export default {
       // 更新 filter 清單資料
       this.$set(this.filterList, filterSetIndex, updatedFilterSet)
 
-      // 只有當前更新的 filter 為該組最後一個時，才考慮將更新後的 filter list 全部傳出去更新
-      if (isLastFilterInSet) {
-        if (this.isFilterListNeedUpdate) {
-          const updatedFilterList = this.filterList.map(filterSet => {
-            // 把只在這層使用的暫用資料刪除
-            return filterSet.map(filter => {
-              filter.isNeedInit = false
-              const { isProcessing, isNeedUpdate, isNeedInit, ...otherData } = filter
-              return otherData
-            })
+      // 如果當前的 filter 為該 filter set 最後一個，則更新 filter set 狀態
+      if (isLastFilterInSet) this.filterSetInitList[`${filterSetIndex}`] = true
+
+      // 等所有 filter set 都更新完成後，才將更新後的 filter list 全部傳出去更新
+      if (this.isFilterListNeedUpdate && Object.keys(this.filterSetInitList).every(filterSet => this.filterSetInitList[filterSet])) {
+        const updatedFilterList = this.filterList.map(filterSet => {
+          // 把只在這層使用的暫用資料刪除
+          return filterSet.map(filter => {
+            filter.isNeedInit = false
+            const { isProcessing, isNeedUpdate, isNeedInit, ...otherData } = filter
+            return otherData
           })
-          this.isFilterListNeedUpdate = false
-          this.$emit('updateFilter', updatedFilterList)
-          if (this.hasFilterSetNeedInit) {
-            this.hasFilterSetNeedInit = false
-            this.$emit('updateInit', true)
-          }
-          return
+        })
+        this.isFilterListNeedUpdate = false
+        this.$emit('updateFilter', updatedFilterList)
+        if (this.hasFilterSetNeedInit) {
+          this.hasFilterSetNeedInit = false
+          this.$emit('updateInit', true)
         }
+        return
       }
     },
     removeFilter (filterSetIndex, filterIndex) {
