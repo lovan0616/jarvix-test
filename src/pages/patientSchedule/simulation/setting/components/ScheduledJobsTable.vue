@@ -88,7 +88,7 @@ export default {
         end: 0
       },
       jobTableHeaderList: [
-        { title: 'sugeoryId', name: 'Sugeory Id', width: 180 },
+        { title: 'surgeryId', name: 'Surgery Id', width: 180 },
         { title: 'patient', name: 'Patient', width: 180 },
         { title: 'patientID', name: 'Patient ID', width: 180 },
         { title: 'surgeon', name: 'Surgeon', width: 180 },

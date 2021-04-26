@@ -26,14 +26,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-for="(col, index) in dataset.columns.titles"
-        :key="index"
-        :prop="col.title"
-        :label="col.name"
-        :width="col.width"
-        :min-width="minColumnWidth"
-      />
-      <el-table-column
         label="Priority"
         width="120"
       >
@@ -41,6 +33,14 @@
           {{ priortyOptions[dataset.data[prorityColumn.$index].priority - 1].label }}
         </template>
       </el-table-column>
+      <el-table-column
+        v-for="(col, index) in dataset.columns.titles"
+        :key="index"
+        :prop="col.title"
+        :label="col.name"
+        :width="col.width"
+        :min-width="minColumnWidth"
+      />
       <el-table-column
         v-if="selection"
         fixed="right"
