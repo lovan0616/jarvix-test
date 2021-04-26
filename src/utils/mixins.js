@@ -611,6 +611,7 @@ Vue.mixin({
         case 'DATETIME':
           return filter.start && filter.end
         case 'CATEGORY':
+        case 'BOOLEAN':
           return filter.dataValues.length > 0
         default:
           return false
