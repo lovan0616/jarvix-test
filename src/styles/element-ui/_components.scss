@@ -402,7 +402,8 @@
   /deep/ .el-select__tags {
     max-width: unset !important;
     max-height: 70px;
-    overflow: overlay;
+    overflow: auto;
+    overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
     background-color: #141C1D;
 
     &::-webkit-scrollbar-track {

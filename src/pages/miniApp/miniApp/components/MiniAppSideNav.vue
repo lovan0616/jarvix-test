@@ -132,7 +132,8 @@ export default {
     }
   }
   .item-wrapper {
-    overflow: overlay;
+    overflow: auto;
+    overflow: overlay;  // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
     flex: 1;
     margin: 0;
     padding: 0;
