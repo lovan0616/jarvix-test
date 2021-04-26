@@ -622,7 +622,7 @@ Vue.mixin({
         !settingData.activate
         || !settingData.conditions
         || settingData.conditions.length === 0
-      ) return []
+      ) return Promise.resolve([])
 
       const appConditionIds = settingData.conditions.map(item => item.id)
       const conditionIdSet = new Set(appConditionIds)
