@@ -682,8 +682,9 @@ export default {
 
   &__display {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    // display: flex;
+    // flex-direction: column;
+
     &--disabled {
       .number,
       .chart {
@@ -804,11 +805,13 @@ export default {
     display: flex;
     flex-direction: column;
     height: 680px;
-    flex: 1;
+    // flex: 1;
 
     &__container {
       flex: 1;
       display: flex;
+      min-height: 0;
+
       &:not(:last-of-type) {
         margin-bottom: 20px;
       }
