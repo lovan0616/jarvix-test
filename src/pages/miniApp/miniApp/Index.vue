@@ -1819,7 +1819,8 @@ export default {
   &__dashboard {
     &-components {
       height: calc(100vh - 56px - 20px - 50px);
-      overflow: overlay;
+      overflow: auto;
+      overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
       &:after {
         content: '';
         display: block;

@@ -418,7 +418,8 @@ export default {
       }
     }
     &-condition {
-      overflow: overlay;
+      overflow: auto;
+      overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
       height: 0;
       flex: 1;
       .title {
