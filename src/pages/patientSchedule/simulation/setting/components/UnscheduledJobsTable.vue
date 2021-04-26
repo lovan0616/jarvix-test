@@ -108,7 +108,7 @@ export default {
         itemPerPage: 20
       },
       jobTableHeaderList: [
-        { title: 'sugeoryId', name: 'Sugeory Id', width: 180 },
+        { title: 'surgeryId', name: 'Surgery Id', width: 180 },
         { title: 'patient', name: 'Patient', width: 180 },
         { title: 'patientID', name: 'Patient ID', width: 180 },
         { title: 'surgeon', name: 'Surgeon', width: 180 },
@@ -143,11 +143,11 @@ export default {
       const mockData = [
         {
           "id": 1,
-          "sugeoryId": "ACJKCC235",
+          "surgeryId": "ACJKCC235",
           "patient": "Markin Lee",
           "patientID": "ABC12749500556",
           "surgeon": "Daniel K",
-          "surgeryType": "Dental restorations",
+          "surgeryType": "Arthroscopy",
           "date": "2021/3/1",
           "priority": "3",
           "flexibility": "inpatient",
@@ -158,7 +158,7 @@ export default {
         },
         {
           "id": 2,
-          "sugeoryId": "ACJKCC997",
+          "surgeryId": "ACJKCC997",
           "patient": "Patricia Ng",
           "patientID": "AXC12749502283",
           "surgeon": "Andrew C.",
@@ -173,7 +173,7 @@ export default {
         },
         {
           "id": 3,
-          "sugeoryId": "ACJKCC998",
+          "surgeryId": "ACJKCC998",
           "patient": "Laura N",
           "patientID": "AXC12749502284",
           "surgeon": "Howard C.",
@@ -188,7 +188,7 @@ export default {
         },
         {
           "id": 4,
-          "sugeoryId": "ACJKCC999",
+          "surgeryId": "ACJKCC999",
           "patient": "Sharon W.",
           "patientID": "AXC12749502285",
           "surgeon": "Andrew C.",
@@ -203,7 +203,7 @@ export default {
         },
         {
           "id": 5,
-          "sugeoryId": "ALJKCC234",
+          "surgeryId": "ALJKCC234",
           "patient": "James H.",
           "patientID": "AXC12749500987",
           "surgeon": "Jeffery W.",
@@ -218,7 +218,7 @@ export default {
         },
         {
           "id": 6,
-          "sugeoryId": "BCJKCC234",
+          "surgeryId": "BCJKCC234",
           "patient": "Susan I.",
           "patientID": "AXC12749501851",
           "surgeon": "Wilson L.",
@@ -233,7 +233,7 @@ export default {
         },
         {
           "id": 7,
-          "sugeoryId": "YCCCCC234",
+          "surgeryId": "YCCCCC234",
           "patient": "K.F. Lin",
           "patientID": "AXC1274950 MR. A",
           "surgeon": "Jeffery W.",
@@ -248,7 +248,7 @@ export default {
         },
         {
           "id": 8,
-          "sugeoryId": "YCJKCC234",
+          "surgeryId": "YCJKCC234",
           "patient": "Mark K.",
           "patientID": "AXC12749500885",
           "surgeon": "Yvonne Z.",
@@ -263,11 +263,11 @@ export default {
         },
         {
           "id": 9,
-          "sugeoryId": "YCJKCC234",
+          "surgeryId": "YCJKCC234",
           "patient": "Mark V.",
           "patientID": "AXC12749500555",
           "surgeon": "Daniel K",
-          "surgeryType": "Dental restorations",
+          "surgeryType": "Arthroscopy",
           "date": "2021/3/1",
           "priority": "3",
           "flexibility": "inpatient",
@@ -278,7 +278,7 @@ export default {
         },
         {
           "id": 10,
-          "sugeoryId": "ZX9990122",
+          "surgeryId": "ZX9990122",
           "patient": "Melissa R.",
           "patientID": "BXC12749500225",
           "surgeon": "Yvonne Z",
@@ -293,7 +293,7 @@ export default {
         },
         {
           "id": 11,
-          "sugeoryId": "ZX9990122",
+          "surgeryId": "ZX9990122",
           "patient": "Melissa R1",
           "patientID": "BXC12274950000",
           "surgeon": "Yvonne Z",
@@ -308,7 +308,7 @@ export default {
         },
         {
           "id": 12,
-          "sugeoryId": "ZX9990123",
+          "surgeryId": "ZX9990123",
           "patient": "Melissa R2",
           "patientID": "BXC12274950001",
           "surgeon": "Jeffery W.",
@@ -323,7 +323,7 @@ export default {
         },
         {
           "id": 13,
-          "sugeoryId": "ZX9990124",
+          "surgeryId": "ZX9990124",
           "patient": "Melissa R3",
           "patientID": "BXC12274950002",
           "surgeon": "Kate U.H.",
@@ -338,7 +338,7 @@ export default {
         },
         {
           "id": 14,
-          "sugeoryId": "ZX9990125",
+          "surgeryId": "ZX9990125",
           "patient": "Melissa R4",
           "patientID": "BXC12274950003",
           "surgeon": "Yvonne Tan",
@@ -353,7 +353,7 @@ export default {
         },
         {
           "id": 15,
-          "sugeoryId": "ZX9990126",
+          "surgeryId": "ZX9990126",
           "patient": "Melissa R.R.",
           "patientID": "BXC12274950004",
           "surgeon": "Yvonne K",
@@ -368,7 +368,7 @@ export default {
         },
         {
           "id": 16,
-          "sugeoryId": "ZX9999873",
+          "surgeryId": "ZX9999873",
           "patient": "Leo Koh",
           "patientID": "AXC12749501419",
           "surgeon": "John K.\r",
@@ -383,7 +383,7 @@ export default {
         },
         {
           "id": 17,
-          "sugeoryId": "ZXX37533",
+          "surgeryId": "ZXX37533",
           "patient": "Charles W.",
           "patientID": "ABC12749500557",
           "surgeon": "John S.\r",
@@ -398,7 +398,7 @@ export default {
         },
         {
           "id": 18,
-          "sugeoryId": "ZXXXX122",
+          "surgeryId": "ZXXXX122",
           "patient": "Alice L\r",
           "patientID": "AXC12749500333\r",
           "surgeon": "John K.\r",
@@ -413,7 +413,7 @@ export default {
         },
         {
           "id": 19,
-          "sugeoryId": "ZXXXX133",
+          "surgeryId": "ZXXXX133",
           "patient": "Dan M.",
           "patientID": "AXC12749500111",
           "surgeon": "Kate U.H.",
@@ -428,7 +428,7 @@ export default {
         },
         {
           "id": 20,
-          "sugeoryId": "ZXXXX133",
+          "surgeryId": "ZXXXX133",
           "patient": "Dan M.",
           "patientID": "AXC12749500123",
           "surgeon": "KKK",
@@ -470,7 +470,7 @@ export default {
       this.jobData.data.unshift(...[
         {
           "id": 98,
-          "sugeoryId": "YCCCCC999",
+          "surgeryId": "YCCCCC999",
           "patient": "M.K.",
           "patientID": "BXC12749500222",
           "surgeon": "Wilson L.",
@@ -485,7 +485,7 @@ export default {
         },
         {
           "id": 99,
-          "sugeoryId": "ZXXXX999\r",
+          "surgeryId": "ZXXXX999\r",
           "patient": "Alison W.",
           "patientID": "BXC12749500123",
           "surgeon": "John S.\r",
