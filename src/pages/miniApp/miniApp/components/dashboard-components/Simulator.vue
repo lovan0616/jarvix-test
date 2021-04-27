@@ -213,7 +213,9 @@ export default {
   }
 
   &__result-card {
-    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
     width: 100%;
     padding: 16px;
     background: #475353;
@@ -222,7 +224,11 @@ export default {
   }
 
   .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     min-height: 60px;
+    width: 100%;
     &:not(:last-child) {
       margin-bottom: 24px;
     }

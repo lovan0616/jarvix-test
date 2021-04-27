@@ -238,18 +238,22 @@ export default {
   .el-input {
     width: 100%;
   }
-  /deep/ .el-input__inner {
-    padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
-    border-bottom: 1px solid #FFFFFF;
-    border-radius: 0;
-    background: transparent;
-    font-size: 16px;
-    &::placeholder {
-      color: #AAAAAA;
-      font-weight: normal;
+
+  /deep/ .sy-select.theme-dark {
+    .el-input__inner {
+      padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
+      border-bottom: 1px solid #FFFFFF;
+      border-radius: 0;
+      background: transparent;
       font-size: 16px;
-    } 
+      &::placeholder {
+        color: #AAAAAA;
+        font-weight: normal;
+        font-size: 16px;
+      } 
+    }
   }
+
   /deep/ .el-select {
     width: 100%;
   }
@@ -262,6 +266,14 @@ export default {
   /deep/ .input-error.error-text {
     position: unset;
     bottom: -17px;
+  }
+
+  /deep/ .el-date-editor .el-input__inner {
+    background-color: transparent;
+    border-radius: 0;
+    border-bottom: 1px solid #FFFFFF;
+    font-size: 16px;
+    padding: 0 !important; // 為了蓋掉 element-ui 樣式
   }
 }
 </style>
