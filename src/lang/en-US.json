@@ -1119,7 +1119,8 @@
     "range": "range",
     "startTime": "Start Time",
     "endTime": "End Time",
-    "noResultUnderCurrentRestrictions": "No result under current restrictions"
+    "noResultUnderCurrentRestrictions": "No result under current restrictions",
+    "noResultCheckFilterAndDataSource": "No reference data, please check the filter conditions or original data"
   },
   "alert": {
     "alertLogs": "Alert Record",
