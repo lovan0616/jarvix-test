@@ -177,7 +177,8 @@
     "noPeriodicResult": "No cycle found",
     "numericShouldBeBetween": "Number should be between {min} and {max}",
     "updateLicenseSuccess": "Successfully saved. Help you update it immediately！",
-    "sendResetPasswordEmail": "Mail Sent Successfully！"
+    "sendResetPasswordEmail": "Mail Sent Successfully！",
+    "modelNotFoundPleaseReset": "Cannot find the model, please reset it"
   },
   "guiding": {
     "prevStep": "Prev Step",
