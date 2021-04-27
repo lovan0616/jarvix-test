@@ -75,7 +75,7 @@
                     class="item">
                     <div class="item__label">{{ result.name }}</div>
                     <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
-                  </div> 
+                  </div>  
                 </div>
               </div>
             </el-tab-pane>
