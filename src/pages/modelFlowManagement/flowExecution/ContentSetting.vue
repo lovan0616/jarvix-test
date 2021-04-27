@@ -256,16 +256,14 @@ export default {
           if (this.dataFrameOptionList.length > 0 ) {
             this.sourceDataframeId = this.dataFrameOptionList[0].value
             this.fetchDataColumnList()
+          } else {
+            this.clearInputSettings()
           }
         })
         .finally(() => this.isLoadingDataFrame = false)
     },
     fetchDataColumnList () {
-      // 切換資料表時，清除已經選擇的資料欄位
-      this.ioArgs.input.forEach(item => {
-        if (item.columnId) item.columnId = null
-      })
-
+      this.clearInputSettings()
       this.isLoadingDataColumn = true
       const hasFeature = true
       const hasAliasLimit = true
@@ -308,6 +306,12 @@ export default {
       this.dataFrameOptionList = []
       this.dataColumnOptionList = []
       this.columnList = []
+    },
+    clearInputSettings () {
+      // 切換資料表時，清除已經選擇的資料欄位
+      this.ioArgs.input.forEach(item => {
+        if (item.columnId) item.columnId = null
+      })
     },
     getStatsType (statsType) {
       return this.statsTypeOptionList.filter(element => statsType === element.value)[0].name
