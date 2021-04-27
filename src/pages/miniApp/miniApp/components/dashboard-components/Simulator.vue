@@ -75,7 +75,7 @@
                     class="item">
                     <div class="item__label">{{ result.name }}</div>
                     <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
-                  </div>  
+                  </div> 
                 </div>
               </div>
             </el-tab-pane>
@@ -212,7 +212,9 @@ export default {
   }
 
   &__result-card {
-    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
     width: 100%;
     padding: 16px;
     background: #475353;
@@ -221,7 +223,11 @@ export default {
   }
 
   .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     min-height: 60px;
+    width: 100%;
     &:not(:last-child) {
       margin-bottom: 24px;
     }
