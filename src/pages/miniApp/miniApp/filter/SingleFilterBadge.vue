@@ -257,10 +257,16 @@ export default {
   },
   computed: {
     upperBoundRules () {
-      return 'required|decimal|validUpperBound:lowerBound'
+      let minLabel = this.tempFilter.start === '' || isNaN(this.tempFilter.start)
+        ? this.$t('message.lowerBound')
+        : this.tempFilter.start
+      return `required|decimal|min_value:${minLabel}`
     },
     lowerBoundRules () {
-      return 'required|decimal|validLowerBound:upperBound'
+      let maxLabel = this.tempFilter.end === '' || isNaN(this.tempFilter.end)
+        ? this.$t('message.upperBound')
+        : this.tempFilter.end
+      return `required|decimal|max_value:${maxLabel}`
     },
     displayName () {
       if (this.isFailed) return this.filter.columnName + ': ' + this.$t('miniApp.fetchDataFailed')
