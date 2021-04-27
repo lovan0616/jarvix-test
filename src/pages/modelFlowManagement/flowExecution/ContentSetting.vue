@@ -80,7 +80,7 @@
           {{ $t('modelFlow.upload.inputSetting') }}
         </div>
         <spinner 
-          v-if="isProcessing"
+          v-if="isLoadingModel"
           :title="$t('editing.loading')"
           class="spinner-container"
           size="30"
@@ -104,7 +104,7 @@
           {{ $t('modelFlow.upload.outputSetting') }}
         </div>
         <spinner 
-          v-if="isProcessing"
+          v-if="isLoadingModel"
           :title="$t('editing.loading')"
           class="spinner-container"
           size="30"
@@ -140,6 +140,7 @@
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
         <button 
+          :disabled="isLoading"
           class="btn btn-default"
           @click="next"
         >
@@ -176,7 +177,8 @@ export default {
     return {
       isLoadingDataSource: false,
       isLoadingDataFrame: false,
-      isProcessing: false,
+      isLoadingDataColumn: false,
+      isLoadingModel: false,
       statsTypeOptionList,
       modelId: null,
       sourceDataSourceId: null,
@@ -204,6 +206,12 @@ export default {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
     outputColumnNames () {
       return this.ioArgs.output.map(item => item.originalName)
+    },
+    isLoading () {
+      return this.isLoadingDataSource
+        || this.isLoadingDataFrame
+        || this.isLoadingDataColumn
+        || this.isLoadingModel
     }
   },
   mounted () {
@@ -229,9 +237,7 @@ export default {
                 value: source.id
               }
             })
-        }).finally(() => {
-          this.isLoadingDataSource = false
-        })
+        }).finally(() => this.isLoadingDataSource = false)
     },
     fetchDataFrameList () {
       this.isLoadingDataFrame = true
@@ -255,6 +261,12 @@ export default {
         .finally(() => this.isLoadingDataFrame = false)
     },
     fetchDataColumnList () {
+      // 切換資料表時，清除已經選擇的資料欄位
+      this.ioArgs.input.forEach(item => {
+        if (item.columnId) item.columnId = null
+      })
+
+      this.isLoadingDataColumn = true
       const hasFeature = true
       const hasAliasLimit = true
       const hasBlockClustering = false
@@ -269,6 +281,7 @@ export default {
             }
           })
         })
+        .finally(() => this.isLoadingDataColumn = false)
     },
     fetchModelList () {
       // 取過且已經取到最後一頁
@@ -300,7 +313,7 @@ export default {
       return this.statsTypeOptionList.filter(element => statsType === element.value)[0].name
     },
     modelChangedHandler () {
-      this.isProcessing = true
+      this.isLoadingModel = true
       // 模型更動要把 IO 全部更新
       getModelInfo(this.modelId)
         .then(({ioArgs}) => {
@@ -323,13 +336,15 @@ export default {
             })
           }
         }).finally(() => {
-          this.isProcessing = false
+          this.isLoadingModel = false
         })
     },
     cancel () {
       this.updateShowCreateFlowDialog(false)
     },
     next () {
+      if (this.isLoading) return
+
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
 
