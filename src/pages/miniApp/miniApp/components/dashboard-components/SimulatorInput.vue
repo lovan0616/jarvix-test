@@ -58,6 +58,7 @@
         :value-format="inputData.datetimeInfo.datePattern"
         :clearable="false"
         :picker-options="pickerOptions"
+        :disabled="isProcessing"
         type="datetime"
       />
       <div 
