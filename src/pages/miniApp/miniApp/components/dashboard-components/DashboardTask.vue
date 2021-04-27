@@ -793,8 +793,8 @@ export default {
         })
         if (availableControllers.length === 0) break
       }
-      return questionWordList.reduce((acc, cur) => {
-        acc += cur.word
+      return questionWordList.reduce((acc, cur, index) => {
+        acc += `${index === 0 ? '' : ' '}${cur.word}`
         return acc
       }, '')
     },

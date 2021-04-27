@@ -95,11 +95,11 @@ export default {
   },
   methods: {
     updateFilter (updatedFilter, filterSetIndex, filterIndex) {
-      // 更新該 filter set 的狀態
-      this.filterSetInitList[`${filterSetIndex}`] = false
-
       // 可能遇到階層，所以需要先確認當前更新的 filter 是否為該 filter set 最後一個
       const isLastFilterInSet = filterIndex === this.filterList[filterSetIndex].length - 1
+
+      // 如果當前的 filter 為該 filter set 最後一個，則更新 filter set 狀態
+      this.filterSetInitList[`${filterSetIndex}`] = isLastFilterInSet
 
       // 更新 filter 中的狀態，並存到隸屬的組中
       let updatedFilterSet = this.filterList[filterSetIndex].map((filter, index) => {
@@ -120,16 +120,12 @@ export default {
       // 更新 filter 清單資料
       this.$set(this.filterList, filterSetIndex, updatedFilterSet)
 
-      // 如果當前的 filter 為該 filter set 最後一個，則更新 filter set 狀態
-      if (isLastFilterInSet) this.filterSetInitList[`${filterSetIndex}`] = true
-
       // 等所有 filter set 都更新完成後，才將更新後的 filter list 全部傳出去更新
       if (this.isFilterListNeedUpdate && Object.keys(this.filterSetInitList).every(filterSet => this.filterSetInitList[filterSet])) {
         const updatedFilterList = this.filterList.map(filterSet => {
           // 把只在這層使用的暫用資料刪除
           return filterSet.map(filter => {
-            filter.isNeedInit = false
-            const { isProcessing, isNeedUpdate, isNeedInit, ...otherData } = filter
+            const { isProcessing, isNeedUpdate, ...otherData } = filter
             return otherData
           })
         })
@@ -176,7 +172,7 @@ export default {
       this.$emit('updateFilter', updatedFilterList.map(filterSet => {
         return filterSet.map(filter => {
           // 把只在這層使用的暫用資料刪除
-          const { isProcessing, isNeedUpdate, isNeedInit, ...otherData } = filter
+          const { isProcessing, isNeedUpdate, ...otherData } = filter
           return otherData
         })
       }))
