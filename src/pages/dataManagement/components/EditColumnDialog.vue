@@ -130,7 +130,7 @@
                   <span :class="{'is-modified': column.name.isModified}">
                     {{ column.name.primaryAlias }}
                     <svg-icon
-                      v-show="column.originalName !== column.name.primaryAlias"
+                      v-show="column.originalName && column.originalName !== column.name.primaryAlias"
                       icon-class="information-circle"
                       class="name-info-icon" />
                   </span>
