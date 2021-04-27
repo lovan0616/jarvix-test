@@ -20,6 +20,9 @@
         v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName)"
         class="error-text"
       >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName) }}</div>
+      <div 
+        v-if="isEmptyData" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
     </div>
   </div>
   <!--NUMERIC-->
@@ -29,13 +32,16 @@
     <label class="input-field__label">{{ getNumericTitle }}</label>
     <div class="input-field__input">
       <input-verify
-        v-validate="'required'"
+        v-validate="'required|decimal'"
         v-model.number="columnInfo.userInput"
         :is-disabled="isProcessing"
-        :type="'Number'"
         :name="inputId + '-' + inputData.columnName"
         :validate-scope="'simulator-' + simulatorId"
+        type="text"
       />
+      <div 
+        v-if="isEmptyData" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
     </div>
   </div>
   <!-- DATETIME -->
@@ -52,12 +58,16 @@
         :value-format="inputData.datetimeInfo.datePattern"
         :clearable="false"
         :picker-options="pickerOptions"
+        :disabled="isProcessing"
         type="datetime"
       />
       <div 
         v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime')"
         class="error-text"
       >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime') }}</div>
+      <div 
+        v-if="isEmptyData" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
     </div>
   </div>
 </template>
@@ -109,6 +119,7 @@ export default {
   computed: {
     getNumericTitle () {
       if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC') return
+      if (this.isEmptyData) return this.inputData.columnName
       return this.inputData.columnName + '(' + this.$t('miniApp.minAndMax', { 
         min: Math.round(this.inputData.valueList.min * 100) / 100, 
         max: Math.round(this.inputData.valueList.max  * 100) / 100
@@ -116,6 +127,7 @@ export default {
     },
     getDateTimeTitle () {
       if (!this.inputData.statsType || this.inputData.statsType !== 'DATETIME') return
+      if (this.isEmptyData) return this.inputData.columnName
       return this.inputData.columnName + '(' + this.$t('miniApp.range') + ':' + this.customerTimeFormatter(this.inputData.datetimeInfo.start, 'SECOND') + ' - ' + this.customerTimeFormatter(this.inputData.datetimeInfo.end, 'SECOND') + ')'
     },
     pickerOptions () {
@@ -124,6 +136,18 @@ export default {
         disabledDate (time) {
           return time.getTime() > vm.inputData.datetimeInfo.end || time.getTime() < vm.inputData.datetimeInfo.start
         }
+      }
+    },
+    isEmptyData () {
+      if (!this.inputData.statsType) return false
+      switch (this.inputData.statsType) {
+        case 'NUMERIC': 
+          return this.inputData.valueList.min === null || this.inputData.valueList.max === null
+        case 'DATETIME':
+          return this.inputData.datetimeInfo.start === null || this.inputData.datetimeInfo.end === null
+        case 'CATEGORY':
+        case 'BOOLEAN':
+          return !this.inputData.valueList || this.inputData.valueList.length === 0
       }
     }
   },
@@ -202,6 +226,11 @@ export default {
     font-size: 14px;
   }
 
+  &__reminder {
+    font-size: 12px;
+    color: #FFDF6F;
+  }
+
   /deep/ .el-select-dropdown {
     width: 100%;
   }
@@ -231,6 +260,7 @@ export default {
   }
 
   /deep/ .input-error.error-text {
+    position: unset;
     bottom: -17px;
   }
 }

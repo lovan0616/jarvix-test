@@ -1127,7 +1127,8 @@
     "range": "范围",
     "startTime": "开始时间",
     "endTime": "结束时间",
-    "noResultUnderCurrentRestrictions": "当前限制条件下无资料，请调整限制"
+    "noResultUnderCurrentRestrictions": "当前限制条件下无资料，请调整限制",
+    "noResultCheckFilterAndDataSource": "无参考资料，请确认筛选条件或原始资料"
   },
   "alert": {
     "alertLogs": "示警纪录",
