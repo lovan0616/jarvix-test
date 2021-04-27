@@ -756,9 +756,9 @@ export default {
           }
           
           this.initFilters()
-          // 確認當前 Dashboard 有無控制項是剛被創完需被設定預設值
-          // 有的話 component 應等待控制項更新完成後帶上新 reestriction 問問題
-          this.isCurrentDashboardInit = !this.controlColumnValueInfoList.some(controlSet => controlSet.some(control => control.dataValues.length === 0))
+          
+          // 如果有控制項，或當前 Dashboard 有控制項是剛被創完需被設定預設值時，應等待控制項更新完成後帶上新 reestriction 問問題
+          this.isCurrentDashboardInit = this.controlColumnValueInfoList.length === 0
         })
         .catch(() => {})
         .finally(() => this.isLoading = false )
@@ -1143,6 +1143,7 @@ export default {
       this.isShowWarningModule = false
       this.currentDashboardId = dashboardId
       this.initFilters()
+      this.isCurrentDashboardInit = this.controlColumnValueInfoList.length === 0
       this.newDashboardName = dashboardName || this.currentDashboard.name
     },
     saveCreatedFilter (filterList) {

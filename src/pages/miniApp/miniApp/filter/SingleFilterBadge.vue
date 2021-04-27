@@ -326,7 +326,7 @@ export default {
   },
   mounted () {
     this.filter = JSON.parse(JSON.stringify(this.initialFilter))
-    this.fetchData()
+    if (!this.isSingleChoiceFilter || (this.isSingleChoiceFilter && this.isNeedUpdate)) this.fetchData()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
@@ -584,6 +584,7 @@ export default {
     border-radius: 5px;
     overflow: hidden;
     filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+    z-index: 1;
   }
 
   /*透過透明度隱藏預設的結果顯示，但仍保留點擊時要能被開啟的功能*/
