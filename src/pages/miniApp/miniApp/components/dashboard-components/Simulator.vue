@@ -4,11 +4,11 @@
       v-if="isLoading" 
     />
     <empty-info-block
-      v-else-if="isFetchInputFailed"
-      :msg="$t('message.systemIsError')"
+      v-else-if="isFetchInputFailed || isModelDepreciated"
+      :msg="isFetchInputFailed ? $t('message.systemIsError') : $t('message.modelNotFoundPleaseReset')"
     />
     <section 
-      v-show="!isLoading && !isFetchInputFailed" 
+      v-show="!isLoading && !isFetchInputFailed && !isModelDepreciated" 
       class="simulator__content">
       <form 
         :data-vv-scope="'simulator-' + simulatorId" 
@@ -120,7 +120,7 @@ export default {
     },
     modelSetting: {
       type: Object,
-      required: true
+      default: () => ({})
     }
   },
   data () {
@@ -130,6 +130,7 @@ export default {
       modelInfo: null,
       resultList: null,
       isFetchInputFailed: false,
+      isModelDepreciated: false,
       isSimulateFailed: false,
       failedMessage: null,
       activeTabName: this.$t('miniApp.simulationResult'),
@@ -150,7 +151,7 @@ export default {
     }
   },
   mounted () {
-    this.getModelInfo()
+    this.modelSetting.modelId ? this.getModelInfo() : this.isModelDepreciated = true
   },
   methods: {
     getModelInfo () {
