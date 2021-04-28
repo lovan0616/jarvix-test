@@ -211,6 +211,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.info-block {
+  .info__text {
+    width: 100%;
+    max-height: 500px;
+    overflow: auto;
+  }
+}
 .model-delete-dialog {
   >>> .dialog-content-wrapper > .content {
     color: #FFF;
