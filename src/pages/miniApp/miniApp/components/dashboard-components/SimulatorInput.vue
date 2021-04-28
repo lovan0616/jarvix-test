@@ -190,7 +190,7 @@ export default {
         this.columnInfo.userInput = defaultValue
       } else if (inputData.statsType === 'NUMERIC') {
         this.columnInfo.userInput = defaultValue
-        this.inputData.valueList = columnInfo
+        inputData.valueList = columnInfo
       } else if (inputData.statsType === 'DATETIME') {
         this.columnInfo.userInput = defaultValue
         inputData.datetimeInfo = {
@@ -201,10 +201,7 @@ export default {
       }
 
       this.$emit('done')
-      this.inputData = {
-        ...this.inputData,
-        ...inputData
-      }
+      this.inputData = inputData
     },
     searchValue (columnId, searchString) {
       return dataValueSearch(columnId, {
