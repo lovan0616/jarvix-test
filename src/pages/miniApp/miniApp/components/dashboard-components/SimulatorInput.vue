@@ -58,7 +58,8 @@
         :value-format="inputData.datetimeInfo.datePattern"
         :clearable="false"
         :picker-options="pickerOptions"
-        :disabled="isProcessing"
+        :disabled="isProcessing || isEmptyData"
+        :editable="false"
         type="datetime"
       />
       <div 
@@ -195,7 +196,7 @@ export default {
         inputData.datetimeInfo = {
           start: columnInfo.start,
           end: columnInfo.end,
-          datePattern: 'yyyy-MM-dd hh:mm:ss' // 目前後端給的 datePattern 沒有用到，前端先暫定這種
+          datePattern: 'yyyy-MM-dd HH:mm:ss' // 目前後端給的 datePattern 沒有用到，前端先暫定這種
         }
       }
 
