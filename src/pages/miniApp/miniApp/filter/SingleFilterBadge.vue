@@ -265,7 +265,7 @@ export default {
       return `required|decimal|min_value:${minLabel}`
     },
     lowerBoundRules () {
-      let maxLabel = this.tempFilter.end !== 0 (!this.tempFilter.end || isNaN(this.tempFilter.end))
+      let maxLabel = this.tempFilter.end !== 0 && (!this.tempFilter.end || isNaN(this.tempFilter.end))
         ? this.$t('message.upperBound')
         : this.tempFilter.end
       return `required|decimal|max_value:${maxLabel}`
