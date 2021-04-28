@@ -208,6 +208,11 @@ export default {
         if (!this.isReUpload) {
           formData.append('groupId', this.currentGroupId)
           formData.append('userId', this.userId)
+        } else {
+          // 重新上傳檔案時，要告訴後端開啟新資料夾存放這些檔案
+          // 目前做法是，第一支檔案 createDirectory 為 true
+          // 其餘檔案 createDirectory 為 false，將直接加進當前資料夾
+          formData.append('createDirectory', i === 0)
         }
         this.formDataList.push({
           data: formData,
@@ -284,17 +289,24 @@ export default {
       // 更新狀態
       this.currntUploadStatus = uploadStatus.uploading
       try {
-        const waitingFileList = [...this.formDataList]
         this.progress = 50
-        if (waitingFileList.length > 0) {
-          const data = Array.from(waitingFileList, formData => {
+        if (!this.formDataList.length) return
+
+        // 上傳第一個檔案，開新的資料夾存放檔案
+        const firstFile = this.formDataList[0]
+        await reUploadModel(this.currentModelId, firstFile.data)
+
+        // 上傳剩餘檔案
+        if (this.formDataList.length > 1) {
+          const restFiles = this.formDataList.slice(1, this.formDataList.length)
+          const data = Array.from(restFiles, formData => {
             return reUploadModel(this.currentModelId, formData.data)
           })
           await Promise.all(data)
-          this.progress = 100
-          this.currntUploadStatus = uploadStatus.success
-          this.formDataList.forEach(form => form.status = uploadStatus.success)
         }
+        this.progress = 100
+        this.currntUploadStatus = uploadStatus.success
+        this.formDataList.forEach(form => form.status = uploadStatus.success)
       } catch (e) {
         this.progress = 0
         this.currntUploadStatus = uploadStatus.fail
