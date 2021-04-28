@@ -45,7 +45,12 @@
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('model.fileInfo') }}:</div>
-            <div class="info__text">{{ modelInfo.modelNames.join(', ') }}</div>
+            <div class="info__text">
+              <div
+                v-for="(name, index) in displayModelNames"
+                :key="index"
+              >{{ name }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -146,12 +151,16 @@ export default {
       isShowDeleteDialog: false,
       isShowRenameDialog: false,
       editedName: '',
-      modelInfo: {}
+      modelInfo: {},
+      mainScriptName: 'main.py'
     }
   },
   computed: {
     modelId () {
       return this.$route.params['model_id']
+    },
+    displayModelNames () {
+      return this.modelInfo.modelNames.slice().sort(item => item === this.mainScriptName ? -1 : 0)
     }
   },
   mounted () {
