@@ -330,7 +330,7 @@ Vue.use(VeeValidate, {
           return i18n.t('message.formValueOverMin', { min: value })
         },
         max_value(field, value) {
-          return i18n.t('message.formValueOverMax', { max: value })
+          return i18n.t('message.formValueUnderMax', { max: value })
         },
         requireOneNumeric (field) {
           return i18n.t('message.formNumericeOverOne')
@@ -389,7 +389,7 @@ Vue.use(VeeValidate, {
           return i18n.t('message.formValueOverMin', { min: value })
         },
         max_value(field, value) {
-          return i18n.t('message.formValueOverMax', { max: value })
+          return i18n.t('message.formValueUnderMax', { max: value })
         },
         requireOneNumeric (field) {
           return i18n.t('message.formNumericeOverOne')

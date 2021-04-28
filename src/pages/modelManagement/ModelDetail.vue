@@ -45,7 +45,7 @@
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('model.fileInfo') }}:</div>
-            <div class="info__text">
+            <div class="info__text model-name-area">
               <div
                 v-for="(name, index) in displayModelNames"
                 :key="index"
@@ -212,7 +212,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .info-block {
-  .info__text {
+  .info__text.model-name-area {
     width: 100%;
     max-height: 500px;
     overflow: auto;
