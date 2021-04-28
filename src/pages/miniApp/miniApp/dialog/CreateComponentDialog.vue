@@ -134,13 +134,13 @@
                 :option-list="dashboardOptions"
                 :placeholder="$t('miniApp.selectDashboard')"
                 class="setting__block-select"
-                name="createrelatedDashboard"
+                name="createRelatedDashboard"
                 @change="updateRelatedDashboard"
               />
               <div 
-                v-show="errors.has('createrelatedDashboard')"
+                v-show="errors.has('createRelatedDashboard')"
                 class="error-text"
-              >{{ errors.first('createrelatedDashboard') }}</div>
+              >{{ errors.first('createRelatedDashboard') }}</div>
             </div>
           </div>
         </div>
@@ -203,13 +203,13 @@
                   :option-list="categoryColumnOptions"
                   :placeholder="$t('miniApp.chooseColumn')"
                   class="setting__block-select"
-                  name="createtriggerColumn"
+                  name="createTriggerColumn"
                   @change="updateTriggerColumnInfo"
                 />
                 <div 
-                  v-show="errors.has('createtriggerColumn')"
+                  v-show="errors.has('createTriggerColumn')"
                   class="error-text"
-                >{{ errors.first('createtriggerColumn') }}</div>
+                >{{ errors.first('createTriggerColumn') }}</div>
               </div>
               <div class="setting__block-select-field">
                 <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
@@ -219,13 +219,13 @@
                   :option-list="dashboardOptions"
                   :placeholder="$t('miniApp.chooseDashboard')"
                   class="setting__block-select"
-                  name="createcolumnRelatedDashboard"
+                  name="createColumnRelatedDashboard"
                   @change="updateTableRelatedDashboard"
                 />
                 <div 
-                  v-show="errors.has('createcolumnRelatedDashboard')"
+                  v-show="errors.has('createColumnRelatedDashboard')"
                   class="error-text"
-                >{{ errors.first('createcolumnRelatedDashboard') }}</div>
+                >{{ errors.first('createColumnRelatedDashboard') }}</div>
               </div>
             </template>
           </div>
@@ -255,12 +255,12 @@
                 :option-list="updateFrequency"
                 :placeholder="$t('miniApp.chooseUpdateFrequency')"
                 class="setting__block-select"
-                name="createupdateFrequency"
+                name="createUpdateFrequency"
               />
               <div 
-                v-show="errors.has('createupdateFrequency')"
+                v-show="errors.has('createUpdateFrequency')"
                 class="error-text"
-              >{{ errors.first('createupdateFrequency') }}</div>
+              >{{ errors.first('createUpdateFrequency') }}</div>
             </div>
           </div>
         </div>
