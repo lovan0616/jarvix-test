@@ -254,7 +254,8 @@ export default {
       isShowFilterPanel: false,
       tempFilter: {},
       relativeDatetimeOptions: ['unset', 'today', '6hour', '3hour', '1hour'],
-      isFailed: false
+      isFailed: false,
+      isFirstInit: true
     }
   },
   computed: {
@@ -325,8 +326,8 @@ export default {
     isNeedUpdate (val) {
       if (!val) return
       if (this.isShowFilterPanel) this.toggleFilterPanel()
-      // 父層 filter 改變時，先清空此曾選擇的 data value
-      this.filter.dataValues = []
+      // 第一次 init 後，如果父層 filter 改變時，需要先清空之前選擇的選項
+      if (!this.isFirstInit) this.filter.dataValues = []
       this.fetchData()
     }
   },
@@ -346,6 +347,7 @@ export default {
     async fetchData () {
       this.isLoading = true
       this.$emit('update:isProcessing', true)
+      if (this.isFirstInit) this.isFirstInit = false
       try {
         if (this.filter.statsType === 'RELATIVEDATETIME') return this.getRelativeDatetimeOption()
         if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
