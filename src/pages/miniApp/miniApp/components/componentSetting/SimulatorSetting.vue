@@ -280,6 +280,7 @@ export default {
         .then(modelList => {
           this.modelOptionList = modelList.models.map(model => ({
             ...model,
+            name: `${model.name} (ID: ${model.id})`,
             value: model.id
           }))
           this.$emit('update:isLoading', false)
