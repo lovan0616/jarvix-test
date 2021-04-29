@@ -482,7 +482,7 @@ export default {
       this.$emit('removeFilter')
     },
     restrictions () {
-      const currentFilterIndex = this.filterSet.findIndex(filter => filter.columnId === this.initialFilter.columnId)
+      const currentFilterIndex = this.filterSet.findIndex(filter => filter.filterId === this.initialFilter.filterId)
       const restrictions = this.filterSet
         .slice(0, currentFilterIndex)
         .filter(filter => this.checkShouldApplyMiniAppFilter(filter))
