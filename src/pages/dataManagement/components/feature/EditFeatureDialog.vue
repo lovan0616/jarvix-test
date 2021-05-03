@@ -346,7 +346,7 @@ export default {
   },
   mounted () {
     if (this.editFeatureInfo) {
-      this.isUpdate = true
+      this.isUpdateMode = true
       this.featureInfo = JSON.parse(JSON.stringify(this.editFeatureInfo))
       this.featureFormula[this.featureInfo.type] = JSON.parse(this.editFeatureInfo.description)
       this.getDataFrameColumnInfo(this.featureInfo.dataFrameId)
