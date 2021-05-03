@@ -253,6 +253,7 @@ export default {
   computed: {
     ...mapState('userManagement', ['license']),
     ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('dataSource', ['dataSourceList']),
     reachLicenseFileSizeLimit () {
       return this.license.currentDataStorageSize >= this.license.maxDataStorageSize && this.license.maxDataStorageSize !== -1
     },
@@ -428,6 +429,8 @@ export default {
       this.dataList = orderBy(this.dataList, [name], [order])
     },
     updateDataTable () {
+      let dataIsExist = this.dataSourceList.filter(data => data.id === this.currentDataSourceId)
+      if(dataIsExist.length === 0) this.$router.push({ name:'DataSourceList' })
       return getDataFrameById(this.currentDataSourceId, true).then(response => {
         // 因為 ETL 會預建立 data frame，如果未執行預處理 data frame 會處於 pending 狀態，在這邊需要過濾掉
         this.dataList = response.filter(element => element.state !== 'Temp').map(element => {
