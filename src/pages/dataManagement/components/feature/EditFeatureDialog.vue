@@ -431,6 +431,7 @@ export default {
           }
           if(this.featureInfo.type === 'NUMERIC') this.featureInfo.timeScope = null
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
+          this.isProcessing = true
           promise.then(() => {
             Message({
               message: this.$t('message.saveSuccess'),
