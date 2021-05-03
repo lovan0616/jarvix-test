@@ -257,7 +257,7 @@
           @click="saveFeature"
         >
           <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
-          <span v-else-if="isUpdate">{{ $t('button.save') }}</span>
+          <span v-else-if="isUpdateMode">{{ $t('button.save') }}</span>
           <span v-else>{{ $t('button.create') }}</span>
         </button>
       </div>
@@ -300,7 +300,7 @@ export default {
   data () {
     return {
       isProcessing: false,
-      isUpdate: false,
+      isUpdateMode: false,
       dataFrameList: [],
       dataSourceId: parseInt(this.$route.params.id),
       featureInfo: {
