@@ -51,7 +51,7 @@
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('modelFlow.sourceDataFrame') }}:</div>
-            <div class="info__text">{{ flowInfo.sourceDataFrameName }}</div>
+            <div class="info__text">{{ flowInfo.sourceDataFrameName || '-' }}</div>
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('modelFlow.targetDataFrame') }}:</div>
@@ -84,7 +84,7 @@
             :key="index"
             class="table-row">
             <div class="info__text info__cell">{{ item.modelColumnName }}({{ item.columnStatsType }})</div>
-            <div class="info__text info__cell">{{ item.dataColumnName }}</div>
+            <div class="info__text info__cell">{{ item.dataColumnName || '-' }}</div>
           </div>
         </div>
       </div>
