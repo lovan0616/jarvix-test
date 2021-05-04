@@ -711,7 +711,8 @@
       "process": "執行中",
       "enable": "執行成功",
       "fail": "執行失敗",
-      "warn": "執行失敗"
+      "warn": "執行失敗",
+      "disable": "無法使用"
     },
     "modelFlowLogStatus": {
       "complete": "成功",

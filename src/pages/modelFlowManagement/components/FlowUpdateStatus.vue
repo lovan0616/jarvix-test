@@ -37,11 +37,8 @@ export default {
         case 'Fail':
         case 'Warn':
           return this.flowInfo.targetDataFrameUpdatedAt && this.timeToDateTime(this.flowInfo.targetDataFrameUpdatedAt)
-        case 'Temp':
-        case 'Process':
-          return null
         default:
-          return '-'
+          return null
       }
     },
     flowUpdateStatus () {
@@ -51,6 +48,7 @@ export default {
         case 'Fail':
         case 'Temp':
         case 'Process':
+        case 'Disable':
           return this.$t(`modelFlow.modelFlowUpdateStatus.${(this.flowInfo.targetDataFrameStatusType).toLowerCase()}`)
         default:
           return this.flowInfo.targetDataFrameStatusType

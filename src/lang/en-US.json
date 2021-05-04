@@ -708,7 +708,8 @@
       "process": "Updating",
       "enable": "Update Completed",
       "complete": "Update Completed",
-      "fail": "Update Failed"
+      "fail": "Update Failed",
+      "disable": "Disabled"
     },
     "modelFlowLogStatus": {
       "complete": "Success",

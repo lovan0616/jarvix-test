@@ -47,7 +47,7 @@
         <div class="info-block__content">
           <div class="info__row">
             <div class="info__label">{{ $t('editing.dataSource') }}:</div>
-            <div class="info__text">{{ flowInfo.targetDataSourceName }}</div>
+            <div class="info__text">{{ flowInfo.targetDataSourceName || '-' }}</div>
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('modelFlow.sourceDataFrame') }}:</div>
@@ -55,7 +55,7 @@
           </div>
           <div class="info__row">
             <div class="info__label">{{ $t('modelFlow.targetDataFrame') }}:</div>
-            <div class="info__text">{{ flowInfo.targetDataFrameName }}</div>
+            <div class="info__text">{{ flowInfo.targetDataFrameName || '-' }}</div>
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@
             :key="index"
             class="table-row">
             <div class="info__text info__cell">{{ item.modelColumnName }}({{ item.columnStatsType }})</div>
-            <div class="info__text info__cell">{{ item.dataColumnName }}</div>
+            <div class="info__text info__cell">{{ item.dataColumnName || '-' }}</div>
           </div>
         </div>
       </div>

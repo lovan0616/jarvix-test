@@ -39,21 +39,24 @@
       </div>
       <div class="flow-card__list">
         <div class="flow-label">{{ $t('modelFlow.outputResult') }}：</div>
-        <div class="flow-text-wrapper">
-          <svg-icon 
-            icon-class="data-source"
-            class="icon" /> 
-          <div
-            class="flow-text flow-text--underline"
-            @click="goToDataSourcePage"
-          >{{ flowInfo.targetDataSource }}</div>
-        </div>
-        <div class="flow-text-wrapper">
-          <svg-icon 
-            icon-class="table"
-            class="icon" /> 
-          <div class="flow-text">{{ flowInfo.targetDataFrameName }}</div>
-        </div> 
+        <template v-if="flowInfo.targetDataSource">
+          <div class="flow-text-wrapper">
+            <svg-icon
+              icon-class="data-source"
+              class="icon" />
+            <div
+              class="flow-text flow-text--underline"
+              @click="goToDataSourcePage"
+            >{{ flowInfo.targetDataSource }}</div>
+          </div>
+          <div class="flow-text-wrapper">
+            <svg-icon
+              icon-class="table"
+              class="icon" />
+            <div class="flow-text">{{ flowInfo.targetDataFrameName }}</div>
+          </div>
+        </template>
+        <template v-else>-</template>
       </div>
     </div>
   </div>
