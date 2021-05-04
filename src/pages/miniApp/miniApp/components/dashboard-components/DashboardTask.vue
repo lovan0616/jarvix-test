@@ -25,7 +25,7 @@
           <div class="header-right">
             <div class="component-property-box" >
               <el-tooltip
-                v-if="componentData.config.relatedDashboard" 
+                v-if="componentData.config.hasRelatedDashboard" 
                 :content="displayedRelatedDashboard"
               >
                 <div
