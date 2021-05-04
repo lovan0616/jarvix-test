@@ -295,6 +295,21 @@ const router = new Router({
                             {
                               path: '/',
                               name: 'DataFileList',
+                              beforeEnter: (to, from, next) => {
+                                const dataSourceList = store.getters['dataSource/dataSourceList']
+                                const dataIsExist = dataSourceList.filter(data => data.id === to.params.id)
+                                const {id, ...resParams} = to.params
+                                if(dataIsExist.length === 0) {
+                                  Message({
+                                    message: i18n.t('errorMessage.SYERR0017'),
+                                    type: 'error',
+                                    duration: 3 * 1000,
+                                    showClose: true
+                                  })
+                                  next({ name:'DataSourceList', params: resParams })
+                                }
+                                next()
+                              },
                               component: () => import('@/pages/dataManagement/DataFileList'),
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'datasource', ':id'],
