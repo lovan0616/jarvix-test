@@ -167,12 +167,10 @@ export default {
       background-color: rgba(50, 58, 58, 0.95);
       padding: 24px;
       border-radius: 5px;
+      margin-right: 0;
 
       &:not(:last-of-type) {
         margin-bottom: 12px;
-      }
-      &:last-of-type {
-        margin-right: 40px;
       }
     }
   }
