@@ -265,7 +265,7 @@
       },
       "machineResult": {
         "preWorkTime": "前置時間",
-        "produceTime": "製作時間",
+        "produceTime": "製程時間",
         "changeLineTime": "換線時間",
         "arriveTime": "抵達時間",
         "checkinTime": "登入時間",
@@ -321,7 +321,7 @@
       "jobSchedule": "排程計畫",
       "jobDeliver": "交付計畫",
       "ganttChart": "甘特圖",
-      "ganttInfo": "機台（工單可以追蹤時段連結 / 維護保養時間 / 前置＆換線時間 / 製作時間）",
+      "ganttInfo": "機台（工單可以追蹤時段連結 / 維護保養時間 / 前置＆換線時間 / 製程時間）",
       "noPlan": "目前沒有計畫",
       "reSimulate": "重新模擬",
       "open": "開啟內容",

@@ -150,7 +150,7 @@
         </section>
       </div>
       <default-button
-        class="save-btn save-btn--large"
+        class="save-btn"
         @click="saveSetting"
       >
         {{ $t('schedule.setting.save') }}
@@ -553,8 +553,7 @@ export default {
       }
     }
   }
-  .save-btn--large {
-    width: 217px;
+  .save-btn{
     height: 40px;
     margin-top: 16px;
     border-radius: 6px;

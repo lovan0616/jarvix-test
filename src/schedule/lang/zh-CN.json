@@ -265,7 +265,7 @@
       },
       "machineResult": {
         "preWorkTime": "前置时间",
-        "produceTime": "制作时间",
+        "produceTime": "制程时间",
         "changeLineTime": "换线时间",
         "arriveTime": "抵达时间",
         "checkinTime": "登入时间",
@@ -321,7 +321,7 @@
       "jobSchedule": "排程计画",
       "jobDeliver": "交付计画",
       "ganttChart": "甘特图",
-      "ganttInfo": "机台（工单可以追踪时段连结 / 维护保养时间 / 前置＆换线时间 / 制作时间）",
+      "ganttInfo": "机台（工单可以追踪时段连结 / 维护保养时间 / 前置＆换线时间 / 制程时间）",
       "noPlan": "目前没有计画",
       "reSimulate": "重新模拟",
       "open": "开启内容",

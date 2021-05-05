@@ -70,11 +70,11 @@ export default {
       tabs: [
         {
           type: 'order',
-          name: this.$t('schedule.schedule.jobSchedule')
+          name: this.$t('schedule.schedule.jobDeliver')
         },
         {
           type: 'machine',
-          name: this.$t('schedule.schedule.jobDeliver')
+          name: this.$t('schedule.schedule.jobSchedule')
         }
       ],
       orderTableHeaderList: [
