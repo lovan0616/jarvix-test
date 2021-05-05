@@ -171,6 +171,9 @@ export default {
       &:not(:last-of-type) {
         margin-bottom: 12px;
       }
+      &:last-of-type {
+        margin-right: 40px;
+      }
     }
   }
 }
