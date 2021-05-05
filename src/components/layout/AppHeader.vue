@@ -20,7 +20,15 @@
     </div>
     <div class="header__container">
       <div class="header__root">
+        <div 
+          v-if="$route.meta.isModule" 
+          class="header__back-arrow"
+          @click="$router.push({ name: 'ScheduleProjectList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }})"
+        >
+          <svg-icon icon-class="arrow-left"/>
+        </div>
         <a
+          v-else
           :class="logoType === 'ASE' ? 'ase_logo' : ''"
           class="header__logo" 
           @click="directToHomePage"
@@ -154,7 +162,12 @@ export default {
     align-items: center;
     justify-content: space-between;
   }
-
+  &__back-arrow {
+    cursor: pointer;
+    .svg-icon {
+      color: $theme-color-primary;
+    }
+  }
   &__logo {
     height: 32px;
     cursor: pointer;

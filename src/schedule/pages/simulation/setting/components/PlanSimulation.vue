@@ -31,8 +31,15 @@ export default {
 
 <style lang="scss" scoped>
 .plan-simulation {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   .unscheduled-jobs-table {
+    flex: 1;
     margin-bottom: 24px;
+  }
+  .scheduled-jobs-table {
+    flex: 1;
   }
 
   hr {

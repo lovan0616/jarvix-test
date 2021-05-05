@@ -2,7 +2,7 @@
   <div class="dropdown">
     <el-cascader
       v-model="editedColumnInfo.statsType"
-      :is-disabled="isReviewMode"
+      :disabled="isReviewMode"
       :show-all-levels="false" 
       :options="cascaderStatsTypeOptions"
       :props="{ expandTrigger: 'hover', label: 'name', children: 'pattern' }"

@@ -1,9 +1,9 @@
 import { newPlan, reSimulate, checkSimulationProgress, cancelSimulationPlan, deleteSimulatedSolution } from '@/schedule/API/Simulation'
-import { dataSync, checkDataSyncProgress, cancelDataSync } from '@/schedule/API/DataSynchronization'
 
 export default {
-  newPlan ({ state }) {
+  newPlan ({ state, rootState }) {
     return newPlan({
+      projectId: rootState.scheduleSetting.scheduleProjectId,
       orders: state.scheduledJobs,
       solutions: state.solutions
     })
@@ -23,13 +23,13 @@ export default {
   deleteSimulatedSolution ({ state }, solutionId) {
     return deleteSimulatedSolution(state.planId, solutionId)
   },
-  dataSync (state) {
-    return dataSync()
-  },
-  checkDataSyncProgress (state) {
-    return checkDataSyncProgress()
-  },
-  cancelDataSync (state) {
-    return cancelDataSync()
+  resetSimulationProgress ({ commit }) {
+    commit('setSolutions', [])
+    commit('setPlanId', null)
+    commit('setSimulationResult', {
+      completedSolutionIds: [],
+      failedSolutionIds: [],
+      inProgressIds: []
+    })
   }
 }

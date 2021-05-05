@@ -29,6 +29,32 @@
       "open": "開啟內容",
       "close": "收起內容"
     },
+    "project": {
+      "project": "子專案",
+      "projectManagement": "子專案管理",
+      "createProject": "新增子專案",
+      "projectName": "子專案名稱",
+      "pleaseEnterProjectName": "請輸入子專案名稱",
+      "bindDataSource": "綁定資料源",
+      "existingDataSource": "現有資料源",
+      "createDataSource": "新增資料源",
+      "pleaseEnterDataSourceName": "請輸入資料源名稱",
+      "relationManagement": "資料綁定",
+      "dataManagement": "重新綁定",
+      "renameProject": "重新命名子專案",
+      "successfullyRenamed": "成功重新命名子專案",
+      "successfullyCreateDataSource": "成功新增子專案",
+      "notYetBindingWithDataSource": "目前無綁定資料源",
+      "confirmDeleteProject": "確定刪除排程專案「{name}」？",
+      "dataSourceBindingManagement": "資料綁定管理",
+      "chooseDataSource": "選擇資料源",
+      "dataSourceName": "資料源名稱",
+      "chooseDataFrame": "選擇資料表",
+      "dataFrameName": "資料表名稱",
+      "orderOrJobInfo": "訂單 / 工單資訊",
+      "bind": "綁定",
+      "projectNotExist": "不存在此排程專案"
+    },
     "setting": {
       "title": "基本設定",
       "init": "排程初始設定",
@@ -55,17 +81,135 @@
       "ofr": "達交率",
       "cycleTime": "生產週期",
       "utilization": "稼動率",
-      "syncUrl": "工單列表連線 URL",
-      "dataRenewal": "資料更新設定",
       "save": "儲存",
       "extraConstraintSetting": "額外限制條件設定",
+      "extraConstraintCapacityConstraint": "產能限制",
+      "extraConstraintSjp": "特定時段與特定產品",
+      "extraConstraintJig": "治具限制",
+      "extraConstraintJigStorage": "治具庫存",
+      "extraConstraintHoj": "工單上下游關係",
+      "extraConstraintTransferTime": "轉換時間",
       "commonDataSetting": "共用資料設定",
+      "commonDataOrder": "訂單資訊",
+      "commonDataProcess": "製程資訊",
+      "commonDataSetupTime": "產品系統對應換線時間",
+      "commonDataEquipment": "機台資訊",
+      "commonDataGroup": "產品系列對應表",
       "updateFiles": "更新檔案",
       "uploadFile": "上傳檔案",
       "fileName": "檔案名稱",
       "uploadAllMessage": "檔案之間具有關聯性，所有檔案都需重新上傳",
       "noFileSelected": "未選擇檔案",
-      "updatedDate": "更新日期"
+      "updatedDate": "更新日期",
+      "equipmentInfoIsUnbound": "尚未綁定機台資訊"
+    },
+    "helper": {
+      "fileName": "檔案名稱",
+      "columnName": "欄位名稱",
+      "columnDescription": "欄位說明",
+      "statsType": "資料型態",
+      "order": {
+        "Job": "此工單的編號（客戶填寫）",
+        "Order": "訂單的編號（客戶填寫）",
+        "Product": "需要生產的產品名稱",
+        "Quantity": "這張工單/訂單需要生產的產品生產數量",
+        "Priority": "這張工單訂單所對應的優先級（1對應特急件/2對應急件/3對應普通件）",
+        "Deadline": "這張工單/訂單的交期，若無交期限制則可填入當年度最後一天"
+      },
+      "equipment": {
+        "Operation": "生產過程中的程序",
+        "Equipment": "設備的編號/名稱，同一台設備無法同時出現在一個站點以上",
+        "Stage": "進行生產過程的站點",
+        "Position": "機台所在的位置，可填入廠區名稱/亦或是同廠區中的樓層"
+      },
+      "process": {
+        "Equipment": "用以進行工序的機台編號/名稱",
+        "Operation": "生產過程中的程序",
+        "Product": "需要生產的產品名稱",
+        "Material": "需要生產的產品所需的物料",
+        "Time": "生產所需要的時間（時間單位為秒）",
+        "Lot": "一個批次生產幾個產品",
+        "OPOrder": "此工序是此產品的第幾道工序"
+      },
+      "group": {
+        "Group": "產品系列的編碼",
+        "Product": "需要生產的產品名稱"
+      },
+      "setupTime": {
+        "Stage": "進行生產過程的站點",
+        "UpperGroup": "換線進行的方式是由上輪群體換到下輪群體",
+        "LowerGroup": "換線進行的方式是由上輪群體換到下輪群體",
+        "Time": "由上輪群體換線到下輪群體需要的時間（時間單位為分鐘）"
+      },
+      "capacityConstraint" : {
+        "Capacity": "產品生產數量（此為上限值）",
+        "Stage": "進行生產過程的站點 ",
+        "StartTime": "開始的時間點",
+        "EndTime": "結束的時間點"
+      },
+      "sjp": {
+        "Group": "產品系列的編碼",
+        "StartTime": "開始的時間點",
+        "EndTime": "結束的時間點"
+      },
+      "jig": {
+        "Group": "產品系列的編碼",
+        "Stage": "進行生產過程的站點",
+        "OPOrder": "此工序是此產品的第幾道工序",
+        "Jig": "生產所需使用的治具名稱/編碼"
+      },
+      "jigStorage": {
+        "Jig": "生產所需使用的治具名稱/編碼",
+        "Count": "目前治具所閒置數量"
+      },
+      "hoj": {
+        "UpperJob": "上游工單編號",
+        "LowerJob": "下游工單編號"
+      },
+      "transferTime": {
+        "Source": "來源設備的編號/名稱",
+        "Destination": "目的設備的編號/名稱",
+        "TransferTime": "轉移時間（時間單位為分鐘）"
+      }
+    },
+    "binding": {
+      "check": "檢查",
+      "bind": "綁定",
+      "rebind": "重新綁定",
+      "globalSetting": "全域設定",
+      "checkedResultSummary": "資料共 {0} 筆，可使用 {1} 筆，不可使用 {2} 筆",
+      "failedRow": "資料列發生錯誤",
+      "bindingReminding": "部分資料列發生錯誤，建議修正後重新導入。若您仍然選擇綁定資料表，錯誤的資料在進行生產排程模擬時會被忽略。",
+      "columnName": "欄位名稱",
+      "failedBecauseOfEmpty": "空值錯誤",
+      "failedBecauseOfEmptyDesc": "未輸入任何內容",
+      "failedBecauseOfRef": "參照錯誤",
+      "failedBecauseOfRefDesc": "資料值無相關對應",
+      "failedBecauseOfType": "型別錯誤",
+      "failedBecauseOfTypeDesc": "資料值型別錯誤",
+      "failedRowCount": "總計 {0} 筆資料錯誤",
+      "datumIndexes": "資料列位置",
+      "allOrderDataIsValid": "訂單綁定資料表檢查完成，全數資料列皆符合格式，將繼續綁定",
+      "allRawdataDataIsValid": "共同資料綁定資料表檢查完成，全數資料列皆符合格式，將繼續綁定",
+      "allConstraintsDataIsValid": "額外限制資料檢查完成，全數資料格式正確",
+      "pleaseSelectOrder": "請選擇訂單資料表",
+      "pleaseSelectRawdata": "共用資料設定需同時綁定",
+      "pleaseSelectConstraint": "請選擇額外限制資料表",
+      "orderNotBeingBound": "當前無綁定訂單資料",
+      "rawdataNotBeingBound": "當前無綁定共同資料",
+      "constraintNotBeingBound": "額外限制資料檢查完成，資料格式錯誤",
+      "successfullyBindOrder": "訂單資料已綁定",
+      "successfullyUnbindOrder": "訂單資料已解除綁定",
+      "successfullyBindRawdata": "共同資料已綁定",
+      "successfullyUnbindRawdata": "共同資料已解除綁定",
+      "successfullyBindConstraints": "額外限制資料已綁定",
+      "successfullyUnbindConstraint": "額外限制資料已解除綁定",
+      "successfullyRebindDataSource": "已綁定至新資料源 {datasource}。資料表需重新綁定。",
+      "alreadyBoundToCertainDataSource": "已綁定於資料源 {datasource}",
+      "confirmToBind": "仍然綁定",
+      "unbind": "解除",
+      "pleaseSelectDataFrames": "請勾選資料表",
+      "select": "勾選"
     },
     "simulation":{
       "title": "排程計畫模擬",
@@ -104,6 +248,7 @@
       "count": "數量",
       "dayCount": "天數",
       "percentage": "百分比",
+      "notAllowedSimulation": "訂單或共同資料未完成綁定，尚不能進行模擬",
       "orderResult": {
         "orderId": "訂單",
         "order": "訂單編號",
@@ -163,12 +308,6 @@
         "day": "日",
         "halfDay": "半日",
         "viewScale": "觀看維度"
-      },
-      "dataSync": {
-        "title": "同步提醒",
-        "description": "工單同步後，所有排程工單需重新選擇。",
-        "askSynchronizing": "請求同步中, 請稍候...",
-        "synchronizing": "同步中..."
       }
     },
     "schedule":{
@@ -195,6 +334,7 @@
       "networkError": "網路連線發生錯誤，請檢查連線，稍後再試",
       "fileRequiredInAllFiled": "所有欄位皆需上傳檔案",
       "emptyExcludedPeriod": "機台排除時段未填",
+      "emptyExcludeEquipment": "排除機台未填",
       "emptySyncURL": "連線 URL 未填",
       "duplicatedExcludedEquipment": "排除機台重複填入",
       "duplicatedKPI": "KPI 值重複"

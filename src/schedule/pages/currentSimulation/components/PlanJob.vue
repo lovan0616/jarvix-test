@@ -46,6 +46,7 @@
 import PaginationTable from '@/schedule/components/table/PaginationTable'
 import { getOrderPlanResult, getMachinePlanResult } from '@/schedule/API/Plan'
 import i18n from '@/lang/index.js'
+import { mapState } from 'vuex'
 
 const completedLabel = i18n.t('schedule.simulation.table.completed')
 const uncompletedLabel = i18n.t('schedule.simulation.table.uncompleted')
@@ -114,6 +115,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
     isDataAvailable () {
       return (this.resultType === 'order' && this.jobData) || (this.resultType === 'machine' && this.machineData)
     }
@@ -130,7 +132,7 @@ export default {
     fetchOrderPlanResult (page = 0, size = 20, resetPagination = false) {
       this.isProcessing = true
       if (resetPagination) this.isLoading = true
-      getOrderPlanResult(page, size)
+      getOrderPlanResult(this.scheduleProjectId, page, size)
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
           if (!res.data) return
@@ -154,7 +156,7 @@ export default {
     fetchMachinePlanResult (page = 0, size = 20, resetPagination = false) {
       this.isProcessing = true
       if (resetPagination) this.isLoading = true
-      getMachinePlanResult(page, size)
+      getMachinePlanResult(this.scheduleProjectId, page, size)
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
           this.machineData = {

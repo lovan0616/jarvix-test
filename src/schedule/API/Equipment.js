@@ -1,8 +1,11 @@
 import request from '@/schedule/utils/publicRequest.js'
 
-export function getEquipments () {
+export function getEquipments (projectId) {
   return request({
     url: '/equipment/list',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      projectId
+    }
   })
 }

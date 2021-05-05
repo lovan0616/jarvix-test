@@ -19,7 +19,8 @@
     "warRoom": "War Room",
     "application": "Application",
     "modelManagement": "Model Management",
-    "modelFlowManagement": "Flow Management"
+    "modelFlowManagement": "Flow Management",
+    "schedule": "Schedule"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -38,7 +39,6 @@
     "dataSourceList": "List",
     "dataFileManagement": "Data Set",
     "dataFileList": "List",
-    "schedule": "Schedule",
     "preferences": "Settings",
     "updateLicense": "Update License",
     "modelManagement": "Model Management",
@@ -331,6 +331,7 @@
     "createDate": "Create Date",
     "updateDate": "Modified Date",
     "confirmDeleteDataSourceOrNot": "Deleting this data set will affect the bounded data sets . Are you sure you want to delete?",
+    "creator": "Creator",
     "sourceOfData": "Data Source",
     "uploadUser": "Uploader",
     "status": "Status",

@@ -70,7 +70,7 @@
 import PlanJob from './components/PlanJob'
 import PlanGantt from './components/PlanGantt'
 import { getPlanInfo, getPlanKPI, getLastSolution } from '@/schedule/API/Plan'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'CurrentSimulation',
@@ -95,18 +95,25 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState('scheduleSetting', ['scheduleProjectId'])
+  },
   mounted () {
     this.fetchData()
+  },
+  created () {
+    this.setCurrentProjectId(Number(this.$route.params.schedule_project_id))
   },
   beforeDestroy () {
     this.updateScheduledJobs([])
   },
   methods: {
     ...mapMutations('simulation', ['updateScheduledJobs']),
+    ...mapMutations('scheduleSetting', ['setCurrentProjectId']),
     async fetchData () {
       this.isLoading = true
-      this.planInfo = await getPlanInfo()
-      getPlanKPI().then(res => {
+      this.planInfo = await getPlanInfo(this.scheduleProjectId)
+      getPlanKPI(this.scheduleProjectId).then(res => {
         this.KPIInfo = res
         this.KPIInfo.ofr = Math.ceil(this.KPIInfo.ofr * 100)
         this.KPIInfo.utilization = Math.ceil(this.KPIInfo.utilization * 100)
@@ -120,7 +127,7 @@ export default {
     reSimulate () {
       this.isLoadingLastSolution = true
       const fetchDefaultSetting = this.$store.dispatch('scheduleSetting/getSetting')
-      const fetchLastSolutionSetting = getLastSolution()
+      const fetchLastSolutionSetting = getLastSolution(this.scheduleProjectId)
 
       Promise.all([fetchDefaultSetting, fetchLastSolutionSetting])
         .then(([defaultSetting, lastSolution]) => {

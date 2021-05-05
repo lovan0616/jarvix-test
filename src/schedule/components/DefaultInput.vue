@@ -1,22 +1,31 @@
 <template>
-  <el-input
-    v-model.trim="inputValue"
-    :placeholder="placeholder"
-    :type="type"
-    size="small"
-  >
-    <template slot="prepend">
-      <slot name="prepend" />
-    </template>
-    <template slot="append">
-      <slot name="append" />
-    </template>
-  </el-input>
+  <div class="default-input">
+    <el-input
+      v-model.trim="inputValue"
+      :placeholder="placeholder"
+      :type="type"
+      size="small"
+    >
+      <template slot="prepend">
+        <slot name="prepend" />
+      </template>
+      <template slot="append">
+        <slot name="append" />
+      </template>
+    </el-input>
+    <div
+      v-show="errors.has(name)"
+      class="input-error error-text"
+    >
+      {{ errors.first(name) }}
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'DefaultInput',
+  inject: ['$validator'],
   props: {
     value: {
       type: String,
@@ -27,6 +36,10 @@ export default {
       default: 'text'
     },
     placeholder: {
+      type: String,
+      default: ''
+    },
+    name: {
       type: String,
       default: ''
     }
@@ -65,5 +78,13 @@ export default {
   color: var(--color-text);
   border: 0;
   background-color: transparent;
+}
+.default-input {
+  position: relative;
+  .input-error {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 2px);
+  }
 }
 </style>

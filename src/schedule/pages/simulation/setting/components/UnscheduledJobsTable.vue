@@ -29,6 +29,7 @@
         </default-input>
       </div>
       <default-button
+        size="m"
         class="search-btn"
         type="outline"
         @click="searchJobData"
@@ -37,13 +38,7 @@
       </default-button>
       <div class="header__button">
         <default-button
-          class="sync-btn"
-          type="outline"
-          @click="dataSync"
-        >
-          {{ $t('schedule.simulation.syncData') }}
-        </default-button>
-        <default-button
+          size="m"
           class="add-btn"
           type="outline"
           @click="addItem"
@@ -54,17 +49,13 @@
       </div>
     </div>
     <div
-      v-if="isLoading || !jobData"
+      v-if="isLoading"
       class="empty-dialog"
     >
-      <spinner v-if="jobData" />
-      <span
-        v-else
-        class="empty-block__text"
-      > {{ $t('schedule.table.noData') }} </span>
+      <spinner v-if="isLoading" />
     </div>
     <job-selection-pagination-table
-      v-if="jobData"
+      v-else-if="jobData"
       :dataset="jobData"
       :layout="'unscheduled'"
       :is-processing="isProcessing"
@@ -74,18 +65,19 @@
       @change-check="updateSelectedData"
       @change-page="updatePage"
     />
-    <data-sync-dialog
-      v-if="isShowDataSyncDialog"
-      @closeDialog="closeDataSyncDialog"
-      @confirmDataSync="confirmDataSync"
-      @dataSyncCompletion="dataSyncCompletion"
-    />
+    <div
+      v-else
+      class="empty-dialog"
+    >
+      <span
+        class="empty-block__text"
+      > {{ $t('schedule.table.noData') }} </span>
+    </div>
   </div>
 </template>
 
 <script>
 import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
-import DataSyncDialog from './DataSyncDialog'
 import { getOrderList } from '@/schedule/API/Order'
 import { mapState, mapMutations } from 'vuex'
 
@@ -93,13 +85,11 @@ export default {
   name: 'UnscheduledJobsTable',
   components: {
     JobSelectionPaginationTable,
-    DataSyncDialog
   },
   data () {
     return {
       isLoading: false,
       isProcessing: false,
-      isShowDataSyncDialog: false,
       jobSearchNumber: null,
       tmpJobData: null,
       jobData: null,
@@ -114,14 +104,15 @@ export default {
       jobTableHeaderList: [
         { title: 'job', name: this.$t('schedule.simulation.table.job'), width: '' },
         { title: 'order', name: this.$t('schedule.simulation.table.order'), width: '' },
-        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '202' },
+        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '' },
         { title: 'deadline', name: this.$t('schedule.simulation.table.deadline'), width: '120' },
         { title: 'quantity', name: this.$t('schedule.simulation.table.quantity'), width: '120' }
       ]
     }
   },
   computed: {
-    ...mapState('simulation', ['scheduledJobs'])
+    ...mapState('simulation', ['scheduledJobs']),
+    ...mapState('scheduleSetting', ['scheduleProjectId'])
   },
   watch: {
     scheduledJobs: {
@@ -141,6 +132,7 @@ export default {
     fetchJobData (page = 0, size = 20, jobSearchNumber = null, resetPagination = false) {
       this.isProcessing = true
       getOrderList({
+        projectId: this.scheduleProjectId,
         page,
         size,
         orderNumber: jobSearchNumber,
@@ -177,9 +169,6 @@ export default {
     searchJobData () {
       this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
     },
-    dataSync () {
-      this.isShowDataSyncDialog = true
-    },
     addItem () {
       this.selectedData.forEach(data => { data.isScheduled = true })
       this.selectedData = this.selectedData.sort((first, second) => first.id - second.id)
@@ -197,18 +186,6 @@ export default {
     updatePage (page) {
       this.fetchJobData(page - 1, this.pagination.itemPerPage, this.jobSearchNumber)
     },
-    closeDataSyncDialog () {
-      this.isShowDataSyncDialog = false
-    },
-    confirmDataSync () {
-      this.isShowDataSyncDialog = false
-    },
-    dataSyncCompletion () {
-      this.closeDataSyncDialog()
-      this.updateScheduledJobs([])
-      this.selectedData = []
-      this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
-    }
   }
 }
 </script>
@@ -218,7 +195,7 @@ export default {
 
   .header {
     position: relative;
-    padding: 0px 14px;
+    padding: 0 0 0 14px;
     margin-bottom: 12px;
     display: flex;
     flex-direction: row;
@@ -262,7 +239,7 @@ export default {
       }
 
       /deep/ .el-range-input {
-        width: 80px;
+        width: 90px;
 
         &:last-of-type {
           margin-left: 5px;
