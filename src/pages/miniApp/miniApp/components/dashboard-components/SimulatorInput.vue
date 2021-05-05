@@ -7,18 +7,22 @@
     <div class="input-field__input">
       <default-select 
         v-validate="'required'"
+        :popper-append-to-body="true"
         :option-list="inputData.valueList"
         :placeholder="$t('miniApp.pleaseSelect')"
         :is-disabled="isProcessing"
         v-model="columnInfo.userInput"
-        :name="'category' + inputData.columnName"
+        :name="inputId + '-' + inputData.columnName"
         filterable
         class="input-field__select"
       />
       <div 
-        v-show="errors.has('category' + inputData.columnName)"
+        v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName)"
         class="error-text"
-      >{{ errors.first('category' + inputData.columnName) }}</div>
+      >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName) }}</div>
+      <div 
+        v-if="isEmptyData" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
     </div>
   </div>
   <!--NUMERIC-->
@@ -28,39 +32,54 @@
     <label class="input-field__label">{{ getNumericTitle }}</label>
     <div class="input-field__input">
       <input-verify
-        v-validate="'required'"
+        v-validate="'required|decimal'"
         v-model.number="columnInfo.userInput"
         :is-disabled="isProcessing"
-        :type="'Number'"
-        :name="'input' + inputData.columnName"
+        :name="inputId + '-' + inputData.columnName"
+        :validate-scope="'simulator-' + simulatorId"
+        type="text"
       />
+      <div 
+        v-if="isEmptyData" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
     </div>
   </div>
   <!-- DATETIME -->
   <div
     v-else-if="inputData.statsType === 'DATETIME'"
     class="input-field">
-    <label class="input-field__label">{{ inputData.columnName }}</label>
+    <label class="input-field__label">{{ getDateTimeTitle }}</label>
     <div class="input-field__input">
       <el-date-picker
+        v-validate="'required'"
         v-model="columnInfo.userInput"
+        :name="inputId + '-' + 'dateTime'"
         :format="inputData.datetimeInfo.datePattern"
         :value-format="inputData.datetimeInfo.datePattern"
         :clearable="false"
         :picker-options="pickerOptions"
+        :disabled="isProcessing || isEmptyData"
+        :editable="false"
         type="datetime"
       />
+      <div 
+        v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime')"
+        class="error-text"
+      >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime') }}</div>
+      <div 
+        v-if="isEmptyData" 
+        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
-import { searchColumnDefaultValue } from '@/API/Script'
-import { getColumnAliasInfoById } from '@/API/Alias'
+import { dataValueSearch } from '@/API/DataSource'
+import { searchColumnDefaultValue, searchNumericColumnValueRange } from '@/API/Model'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -79,27 +98,38 @@ export default {
       type: Boolean,
       default: false
     },
-    scriptId: {
+    modelId: {
       type: Number,
       required: true
     },
     restrictions: {
       type: Array,
       default: () => ([])
+    },
+    simulatorId: {
+      type: String,
+      required: true
     }
   },
   data () {
     return {
-      inputData: {}
+      inputData: {},
+      inputId: uuidv4()
     }
   },
   computed: {
     getNumericTitle () {
       if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC') return
+      if (this.isEmptyData) return this.inputData.columnName
       return this.inputData.columnName + '(' + this.$t('miniApp.minAndMax', { 
         min: Math.round(this.inputData.valueList.min * 100) / 100, 
         max: Math.round(this.inputData.valueList.max  * 100) / 100
       }) + ')'
+    },
+    getDateTimeTitle () {
+      if (!this.inputData.statsType || this.inputData.statsType !== 'DATETIME') return
+      if (this.isEmptyData) return this.inputData.columnName
+      return this.inputData.columnName + '(' + this.$t('miniApp.range') + ':' + this.customerTimeFormatter(this.inputData.datetimeInfo.start, 'SECOND') + ' - ' + this.customerTimeFormatter(this.inputData.datetimeInfo.end, 'SECOND') + ')'
     },
     pickerOptions () {
       const vm = this
@@ -108,27 +138,39 @@ export default {
           return time.getTime() > vm.inputData.datetimeInfo.end || time.getTime() < vm.inputData.datetimeInfo.start
         }
       }
+    },
+    isEmptyData () {
+      if (!this.inputData.statsType) return false
+      switch (this.inputData.statsType) {
+        case 'NUMERIC': 
+          return this.inputData.valueList.min === null || this.inputData.valueList.max === null
+        case 'DATETIME':
+          return this.inputData.datetimeInfo.start === null || this.inputData.datetimeInfo.end === null
+        case 'CATEGORY':
+        case 'BOOLEAN':
+          return !this.inputData.valueList || this.inputData.valueList.length === 0
+      }
     }
   },
   watch: {
     
   },
   mounted () {
-    this.getInputListInfo()
+    this.configInputData()
   },
   methods: {
-    getInputListInfo () {
-      this.isLoading = true
+    configInputData () {
       Promise.all([
-        getDataColumnValue(this.columnInfo.columnId),
-        getColumnAliasInfoById(this.columnInfo.columnId),
-        searchColumnDefaultValue(this.scriptId, this.columnInfo.columnId, {
+        ...((this.columnInfo.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
+          restrictions: this.restrictions.length > 0 ? this.restrictions : null 
+        })]),
+        ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') && [this.searchValue(this.columnInfo.columnId, '')]),
+        searchColumnDefaultValue(this.modelId, this.columnInfo.columnId, {
           restrictions: this.restrictions
         })
       ])
-        .then(([columnValueInfo, columnAliasInfo, defaultValue]) => {
+        .then(([columnValueInfo, defaultValue]) => {
           this.handleColumnValue(columnValueInfo, defaultValue)
-          this.inputData.columnName = columnAliasInfo[0].dataValue
         })
         .catch(() => {
           this.$emit('failed')
@@ -136,20 +178,11 @@ export default {
     },
     async handleColumnValue (columnInfo, defaultValue) {
       const inputData = {}
-      inputData.statsType = columnInfo.type
+      inputData.statsType = this.columnInfo.statsType
+      inputData.columnName = this.columnInfo.originalName
 
-      if(inputData.statsType === 'CATEGORY') {
-        /// CATEGORY 值超過 200 筆時候會回傳 null
-        if(!inputData.valueList) {
-          try {
-            const response = await this.searchValue(this.columnInfo.columnId, '')
-            inputData.valueList = response.fuzzySearchResult
-          } catch (e) {
-            this.$emit('failed', e.message || this.$t('message.systemIsError'))
-          }
-        } else {
-          inputData.valueList = inputData.valueList.map(value => value.displayColumnValue)
-        }
+      if(inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
+        inputData.valueList = columnInfo.fuzzySearchResult
         inputData.valueList = inputData.valueList.map(element => ({
           value: element,
           name: element
@@ -157,32 +190,25 @@ export default {
         this.columnInfo.userInput = defaultValue
       } else if (inputData.statsType === 'NUMERIC') {
         this.columnInfo.userInput = defaultValue
-        this.inputData.valueList = columnInfo.numeric
-      } else if (inputData.statsType === 'BOOLEAN') {
-        this.columnInfo.userInput = defaultValue
-        if (columnInfo['bool']) {
-          inputData.valueList = columnInfo['bool'].map(item => ({ value: item, name: item }))
-        }
+        inputData.valueList = columnInfo
       } else if (inputData.statsType === 'DATETIME') {
         this.columnInfo.userInput = defaultValue
         inputData.datetimeInfo = {
-          ...columnInfo.datetime,
-          datePattern: 'yyyy-MM-dd hh:mm:ss' // 目前後端給的 datePattern 沒有用到，前端先暫定這種
+          start: columnInfo.start,
+          end: columnInfo.end,
+          datePattern: 'yyyy-MM-dd HH:mm:ss' // 目前後端給的 datePattern 沒有用到，前端先暫定這種
         }
       }
 
       this.$emit('done')
-      this.inputData = {
-        ...this.inputData,
-        ...inputData
-      }
+      this.inputData = inputData
     },
     searchValue (columnId, searchString) {
       return dataValueSearch(columnId, {
         page: 0,
         searchString,
         size: 200,
-        restrictions: null
+        restrictions: this.restrictions.length > 0 ? this.restrictions : null
       })
     },
   },
@@ -198,6 +224,11 @@ export default {
     font-size: 14px;
   }
 
+  &__reminder {
+    font-size: 12px;
+    color: #FFDF6F;
+  }
+
   /deep/ .el-select-dropdown {
     width: 100%;
   }
@@ -205,18 +236,22 @@ export default {
   .el-input {
     width: 100%;
   }
-  /deep/ .el-input__inner {
-    padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
-    border-bottom: 1px solid #FFFFFF;
-    border-radius: 0;
-    background: transparent;
-    font-size: 16px;
-    &::placeholder {
-      color: #AAAAAA;
-      font-weight: normal;
+
+  /deep/ .sy-select.theme-dark {
+    .el-input__inner {
+      padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
+      border-bottom: 1px solid #FFFFFF;
+      border-radius: 0;
+      background: transparent;
       font-size: 16px;
-    } 
+      &::placeholder {
+        color: #AAAAAA;
+        font-weight: normal;
+        font-size: 16px;
+      } 
+    }
   }
+
   /deep/ .el-select {
     width: 100%;
   }
@@ -226,8 +261,17 @@ export default {
     color: #ffffff;
   }
 
-  /deep/ .input-error .error-text {
+  /deep/ .input-error.error-text {
+    position: unset;
     bottom: -17px;
+  }
+
+  /deep/ .el-date-editor .el-input__inner {
+    background-color: transparent;
+    border-radius: 0;
+    border-bottom: 1px solid #FFFFFF;
+    font-size: 16px;
+    padding: 0 !important; // 為了蓋掉 element-ui 樣式
   }
 }
 </style>

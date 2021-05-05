@@ -133,7 +133,7 @@
               class="icon"
             />
           </template>
-          <span v-else>{{ data[headInfo.value] }}</span>
+          <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value]) : data[headInfo.value] }}</span>
         </div>
       </div>
     </div>
@@ -282,11 +282,12 @@ export default {
       let order = this.sortStatus[name] > 0 ? 'asc' : 'desc'
       this.$emit('update:dataList', orderBy(this.dataList, [name], [order]))
     },
-    linkTo (link, id) {
+    linkTo (link, id) { 
+      let paramKey = link.paramName || 'id'
       this.$router.push({
         name: link.name,
         params: {
-          id
+          [paramKey]: id
         }
       })
     },
@@ -308,6 +309,7 @@ export default {
           case 'YYYY-MM-DD':
             return this.timeToDate(value)
           case 'YYYY-MM-DD HH:mm':
+          default: 
             return this.timeToDateTime(value)
         }
       } else {

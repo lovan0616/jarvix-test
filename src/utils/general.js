@@ -90,8 +90,7 @@ export const uploadStatus = {
 
 export const importType = {
   LOCAL: 'import_file',
-  REMOTE: 'import_database',
-  SCRIPT: 'import_script'
+  REMOTE: 'import_database'
 }
 
 export const statsTypeList = ['CATEGORY', 'NUMERIC', 'BOOLEAN', 'DATETIME']

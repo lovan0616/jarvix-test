@@ -50,6 +50,7 @@
 }
 
 .input-radio-group {
+  position: relative;
   display: inline-block;
 
   &:not(:last-of-type) {

@@ -89,7 +89,6 @@
       </router-link>
       <router-link 
         :to="{name: 'Simulation'}"
-        
         class="nav-item"
       >
         {{ $t('schedule.header.simulate') }}
@@ -168,6 +167,9 @@ export default {
       if (this.license.maxUser !== 1) {
         settingList.push({icon: 'userManage', title: 'nav.groupUserManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/users`})
       }
+
+      settingList.push({icon: 'algo', title: 'nav.modelManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model`})
+      settingList.push({icon: 'algo-flow', title: 'nav.modelFlowManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model-flow`})
       return settingList
     }
   },

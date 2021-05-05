@@ -29,7 +29,7 @@
         </button>
         <button
           v-else
-          :disabled="!isAddable"
+          :disabled="!isAddable || isLoading || isFailed"
           class="btn btn-default"
           @click="createComponent"
         >
@@ -83,6 +83,14 @@
           :formula-component-info="formulaComponentInfo"
           :current-component="currentComponent"
         />
+        <simulator-setting 
+          v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parameters-optimized-simulator'"
+          :model-setting="currentComponent.modelSetting"
+          :model-component-info="modelComponentInfo"
+          :current-component="currentComponent"
+          :is-loading.sync="isLoading"
+          :is-failed.sync="isFailed"
+        />
       </div>
       <div
         class="dialog__content--right">
@@ -97,7 +105,7 @@
             <input-verify
               v-validate="'required'"
               v-model="currentComponent.config.diaplayedName"
-              name="componentDisplayName"
+              name="createComponentDisplayName"
             />
           </div>
         </div>
@@ -126,13 +134,13 @@
                 :option-list="dashboardOptions"
                 :placeholder="$t('miniApp.selectDashboard')"
                 class="setting__block-select"
-                name="relatedDashboard"
+                name="createRelatedDashboard"
                 @change="updateRelatedDashboard"
               />
               <div 
-                v-show="errors.has('relatedDashboard')"
+                v-show="errors.has('createRelatedDashboard')"
                 class="error-text"
-              >{{ errors.first('relatedDashboard') }}</div>
+              >{{ errors.first('createRelatedDashboard') }}</div>
             </div>
           </div>
         </div>
@@ -195,13 +203,13 @@
                   :option-list="categoryColumnOptions"
                   :placeholder="$t('miniApp.chooseColumn')"
                   class="setting__block-select"
-                  name="triggerColumn"
+                  name="createTriggerColumn"
                   @change="updateTriggerColumnInfo"
                 />
                 <div 
-                  v-show="errors.has('triggerColumn')"
+                  v-show="errors.has('createTriggerColumn')"
                   class="error-text"
-                >{{ errors.first('triggerColumn') }}</div>
+                >{{ errors.first('createTriggerColumn') }}</div>
               </div>
               <div class="setting__block-select-field">
                 <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
@@ -211,13 +219,13 @@
                   :option-list="dashboardOptions"
                   :placeholder="$t('miniApp.chooseDashboard')"
                   class="setting__block-select"
-                  name="columnRelatedDashboard"
+                  name="createColumnRelatedDashboard"
                   @change="updateTableRelatedDashboard"
                 />
                 <div 
-                  v-show="errors.has('columnRelatedDashboard')"
+                  v-show="errors.has('createColumnRelatedDashboard')"
                   class="error-text"
-                >{{ errors.first('columnRelatedDashboard') }}</div>
+                >{{ errors.first('createColumnRelatedDashboard') }}</div>
               </div>
             </template>
           </div>
@@ -247,12 +255,12 @@
                 :option-list="updateFrequency"
                 :placeholder="$t('miniApp.chooseUpdateFrequency')"
                 class="setting__block-select"
-                name="updateFrequency"
+                name="createUpdateFrequency"
               />
               <div 
-                v-show="errors.has('updateFrequency')"
+                v-show="errors.has('createUpdateFrequency')"
                 class="error-text"
-              >{{ errors.first('updateFrequency') }}</div>
+              >{{ errors.first('createUpdateFrequency') }}</div>
             </div>
           </div>
         </div>
@@ -308,6 +316,7 @@
 <script>
 import DataFrameMenu from '@/components/select/DataFrameMenu'
 import FormulaSetting from '../components/componentSetting/FormulaSetting'
+import SimulatorSetting from '../components/componentSetting/SimulatorSetting'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
@@ -322,6 +331,7 @@ export default {
   components: {
     DataFrameMenu,
     FormulaSetting,
+    SimulatorSetting,
     DefaultSelect,
     AskBlock,
     ResultDisplay,
@@ -350,6 +360,7 @@ export default {
     return {
       isAddable: null,
       isLoading: false,
+      isFailed: false,
       currentComponent: null,
       selectedTriggerColumn: null,
       relatedDashboardTemplate: {
@@ -375,7 +386,8 @@ export default {
           name: this.$t('miniApp.mini')
         }
       ],
-      formulaComponentInfo: {}
+      formulaComponentInfo: {},
+      modelComponentInfo: {}
     }
   },
   computed: {
@@ -389,10 +401,10 @@ export default {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowUpdatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowFontSizeOption () {
       return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
@@ -499,7 +511,7 @@ export default {
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
     // 所有可以不需透過問問句就能創建的元件類型
-    const isDirectAddableComponentTypes = ['formula']
+    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
     const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
     this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
@@ -512,8 +524,7 @@ export default {
   },
   methods: {
     createComponent () {
-      this.$validator.validateAll()
-      .then(valid => {
+      this.$validator.validateAll().then(valid => {
         if (!valid) return
         this.$emit('create', {
           ...this.currentComponent,
@@ -527,7 +538,8 @@ export default {
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
           // 公式元件需補上一般問問句會取得的資料
-          ...this.formulaComponentInfo
+          ...this.formulaComponentInfo,
+          ...this.modelComponentInfo
         })
       })
     },
@@ -540,7 +552,8 @@ export default {
         if (!valid) return
         this.$emit('updateSetting', {
           ...this.currentComponent,
-          ...this.formulaComponentInfo
+          ...this.formulaComponentInfo,
+          ...this.modelComponentInfo
         })
       })
     },

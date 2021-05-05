@@ -52,13 +52,12 @@
 
   .dialog-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
 
     .dialog-button-block {
       display: flex;
       justify-content: flex-end;
-      flex: 1;
 
       .btn {
         &:not(:last-child) {

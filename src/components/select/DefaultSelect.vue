@@ -6,7 +6,7 @@
     :no-data-text="$t('message.noData')"
     :no-match-text="$t('message.noMatchData')"
     :disabled="isDisabled"
-    :popper-append-to-body="false"
+    :popper-append-to-body="popperAppendToBody"
     :size="size"
     :multiple="multiple"
     :collapse-tags="collapseTags"
@@ -28,13 +28,22 @@
         name="option-content"
       />
     </el-option>
+    <observer
+      v-if="enableLazyLoading"
+      :options="observerOptions"
+      @intersect="$emit('intersect')"
+    />
   </el-select>
 </template>
 
 <script>
+import Observer from '@/components/Observer'
 
 export default {
   name: 'DefaultSelect',
+  components: {
+    Observer
+  },
   props: {
     value: { type: [String, Number, Boolean, Array], default: undefined },
     optionList: { type: Array, default: () => [] },
@@ -44,7 +53,9 @@ export default {
     multiple: {type: Boolean, default: false},
     collapseTags: {type: Boolean, default: false},
     filterable: {type: Boolean, default: false},
-    filterMethod: {type: Boolean, default: false}
+    filterMethod: {type: Boolean, default: false},
+    enableLazyLoading: {type: Boolean, default: false},
+    popperAppendToBody: {type: Boolean, default: false},
   },
   computed: {
     selectedValue: {
@@ -55,6 +66,13 @@ export default {
         // 選取前後值一致則不更新
         if (value === this.value) return
         this.$emit('input', value)
+      }
+    },
+    observerOptions () {
+      return {
+        rootClassName: '.el-select-dropdown__wrap',
+        rootMargin: 0,
+        threshold: 0,
       }
     }
   },

@@ -11,7 +11,7 @@
         @change="fileImport($event.target.files)"
       >
       <upload-block
-        v-if="uploadFileList.length === 0"
+        v-if="uploadModelList.length === 0"
         :bottom-message="$t('editing.clickToSelectFiles')"
         :drag-enter="dragEnter"
         class="empty-upload-block"
@@ -26,9 +26,9 @@
           class="upload-remark">
           <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
           <div
-            v-for="(msg, index) in $t('script.scriptLimit')"
+            v-for="(msg, index) in $t('model.upload.modelLimit')"
             :key="index"
-          >{{ Number(index) + 1 }}. {{ $t(`script.scriptLimit.${index}`, {mainScriptName}) }}</div>
+          >{{ Number(index) + 1 }}. {{ $t(`model.upload.modelLimit.${index}`, {mainScriptName}) }}</div>
         </div>
       </upload-block>
       <div 
@@ -40,19 +40,18 @@
         @dragleave="toggleDragEnter(false)"
       >
         <file-list-block
-          v-if="uploadFileList.length > 0"
+          v-if="uploadModelList.length > 0"
           :drag-enter="dragEnter"
-          :title="$t('editing.canUpload')"
-          :file-list="uploadFileList"
+          :file-list="uploadModelList"
           :progress="progress"
           :currnt-upload-status="currntUploadStatus"
         />
         <div 
-          v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
+          v-if="uploadModelList.length > 0 && currntUploadStatus === uploadStatus.wait"
           class="file-chosen-info"
         >
           <span class="file-chosen-remark">
-            {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, size: byteToMB(totalTransmitDataAmount)}) }}
+            {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadModelList.length, size: byteToMB(totalTransmitDataAmount)}) }}
           </span>
           <button 
             class="btn-m btn-secondary btn-has-icon"
@@ -61,18 +60,30 @@
             <svg-icon 
               icon-class="file-plus" 
               class="icon"/>
-            {{ fileCountLimit > 1 ? $t('editing.addFile') : $t('fileDataUpdate.reChoose') }}
+            {{ $t('editing.addFile') }}
           </button>
         </div>
       </div>
     </div>
     <div class="dialog-footer">
+      <div
+        v-if="uploadStatusInfo"
+        class="dialog-status-block status">
+        <svg-icon 
+          :icon-class="uploadStatusInfo.icon"
+          :class="[`status-${currntUploadStatus}`]"
+          class="status-icon"
+        />
+        <div 
+          :class="[`status-${currntUploadStatus}`]"
+          class="status-title">{{ uploadStatusInfo.title }}</div>
+      </div>
       <div class="dialog-button-block">
         <span 
           v-if="currntUploadStatus === uploadStatus.uploading" 
           class="uploading-reminding">{{ $t('editing.uploading') }}</span>
         <button 
-          v-if="currntUploadStatus === uploadStatus.wait || currntUploadStatus === uploadStatus.fail"
+          v-if="!isReUpload && (currntUploadStatus === uploadStatus.wait || currntUploadStatus === uploadStatus.fail)"
           class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
@@ -80,15 +91,15 @@
           v-if="currntUploadStatus === uploadStatus.wait" 
           name="additionalButton"/>
         <button 
-          v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
+          v-if="uploadModelList.length > 0 && currntUploadStatus === uploadStatus.wait"
           class="btn btn-default"
-          @click="fileUpload"
+          @click="isReUpload ? fileReUpload() : fileUpload()"
         >
           <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
           <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"/>{{ $t('button.uploading') }}</span>
         </button>
         <button
-          v-if="currntUploadStatus === uploadStatus.fail"
+          v-if="currntUploadStatus === uploadStatus.fail || currntUploadStatus === uploadStatus.success"
           class="btn btn-outline"
           type="button"
           @click="prev"
@@ -104,7 +115,7 @@ import UploadProcessBlock from './UploadProcessBlock'
 import { uploadStatus } from '@/utils/general'
 import { Message } from 'element-ui'
 import { mapState, mapMutations } from 'vuex'
-import { scriptUpload } from '@/API/Script'
+import { uploadModel, reUploadModel } from '@/API/Model'
 
 export default {
   name: 'FileUpload',
@@ -114,9 +125,9 @@ export default {
     UploadProcessBlock
   },
   props: {
-    fileCountLimit: {
-      type: Number,
-      required: true
+    isReUpload: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -133,18 +144,40 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
-    ...mapState('userManagement', ['license']),
+    ...mapState('userManagement', ['userId']),
+    ...mapState('modelManagement', ['currentUploadModelName', 'uploadModelList']),
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
+    currentModelId () {
+      return this.$route.params['model_id']
+    },
     // 總資料傳輸量
     totalTransmitDataAmount () {
-      return this.uploadFileList.reduce((acc, cur) => acc + cur.size, 0)
+      return this.uploadModelList.reduce((acc, cur) => acc + cur.size, 0)
+    },
+    uploadStatusInfo () {
+      switch (this.currntUploadStatus) {
+        case this.uploadStatus.success:
+          return {
+            title: this.$t('model.upload.succeedUpload'),
+            icon: 'checked'
+          }
+        case this.uploadStatus.fail:
+          return {
+            title: this.$t('model.upload.failedUpload'),
+            icon: 'alert'
+          }
+        default:
+          return null
+      }
     }
   },
+  destroyed () {
+    this.updateUploadModelList([])
+  },
   methods: {
-    ...mapMutations('dataManagement', ['updateCurrentUploadScriptInfo']),
+    ...mapMutations('modelManagement', ['updateUploadModelList', 'updateCurrentUploadModelInfo']),
     dropFiles (event) {
       if (!event.dataTransfer.files) return
       const files = Array.from(event.dataTransfer.files)
@@ -164,21 +197,6 @@ export default {
     fileImport (files) {
       // 有選到檔案才執行
       if (files) {
-        // 資料更新一次只能選一個檔案
-        if(this.fileCountLimit === 1) {
-          this.$store.commit('dataManagement/updateUploadFileList', [])
-        }
-        // 判斷數量是否超過限制
-        if (files.length + this.uploadFileList.length > this.fileCountLimit) {
-          Message({
-            message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
-            type: 'warning',
-            duration: 3 * 1000,
-            showClose: true
-          })
-
-          return false
-        }
         this.updateFileList(files)
       }
     },
@@ -186,34 +204,47 @@ export default {
     updateFileList (inputFileList) {
       for (let i = 0; i < inputFileList.length; i++) {
         let formData = new FormData()
-        formData.append('script', inputFileList[i])
+        formData.append('model', inputFileList[i])
+        if (!this.isReUpload) {
+          formData.append('groupId', this.currentGroupId)
+          formData.append('userId', this.userId)
+        } else {
+          // 重新上傳檔案時，要告訴後端開啟新資料夾存放這些檔案
+          // 目前做法是，第一支檔案 createDirectory 為 true
+          // 其餘檔案 createDirectory 為 false，將直接加進當前資料夾
+          formData.append('createDirectory', i === 0)
+        }
         this.formDataList.push({
           data: formData,
           size: inputFileList[i].size,
-          dataSourceId: this.currentUploadInfo.dataSourceId,
           groupId: this.currentGroupId,
           fileFullName: inputFileList[i].name,
+          status: uploadStatus.wait,
           id: new Date().getTime() + i
         })
       }
       
-      this.$store.commit('dataManagement/updateUploadFileList', this.formDataList)
+      this.updateUploadModelList(this.formDataList)
     },
-    async fileUpload () {
-      // 先檢查上傳檔案內是否包含 main.py
+    hasMainPy () {
       const hasMainPy = this.formDataList.findIndex(element => {
         return element.fileFullName === this.mainScriptName
       })
 
       if (hasMainPy === -1) {
         Message({
-          message: this.$t('script.lackOfMainScript', {mainScriptName: this.mainScriptName}),
+          message: this.$t('model.upload.lackOfMainScript', {mainScriptName: this.mainScriptName}),
           type: 'warning',
           duration: 3 * 1000,
           showClose: true
         })
         return false
       }
+      return true
+    },
+    async fileUpload () {
+      // 先檢查上傳檔案內是否包含 main.py
+      if (!this.hasMainPy()) return
 
       // 更新狀態
       this.currntUploadStatus = uploadStatus.uploading
@@ -221,37 +252,70 @@ export default {
         // 先上傳第一筆檔案，換取 script id
         const waitingFileList = [...this.formDataList]
         const firstFormData = waitingFileList.shift().data
-        const scriptName = this.$store.state.dataManagement.currentUploadScriptName
+        const modelName = this.currentUploadModelName
       /**
        * 注意！
-       * 目前後端只會拿第一筆的 scriptName 去更新
+       * 目前後端只會拿第一筆的 id, name 去更新
        */
-        if (scriptName !== null) {
-          firstFormData.append('scriptName', scriptName)
+        if (modelName !== null) {
+          firstFormData.append('name', modelName)
         }
         // 上傳檔案
-        const { scriptId } = await scriptUpload(firstFormData)
+        const { modelId } = await uploadModel(firstFormData)
         this.progress = 50
         // 上傳剩餘檔案
         if (waitingFileList.length > 0) {
           const data = Array.from(waitingFileList, formData => {
-            formData.data.append('scriptId', scriptId)
-            return scriptUpload(formData.data)
+            formData.data.append('id', modelId)
+            formData.data.append('name', modelName)
+            return uploadModel(formData.data)
           })
           await Promise.all(data)
           this.progress = 100
         }
         // 存取 script id，於設定 input / output 時附上
-        this.updateCurrentUploadScriptInfo({ scriptId: scriptId })
+        this.updateCurrentUploadModelInfo({ modelId: modelId })
         this.$nextTick(() => this.$emit('next'))
       } catch (e) {
         this.progress = 0
         this.currntUploadStatus = uploadStatus.fail
+        this.formDataList.forEach(form => form.status = uploadStatus.fail)
+      }
+    },
+    async fileReUpload () {
+      // 先檢查上傳檔案內是否包含 main.py
+      if (!this.hasMainPy()) return
+      
+      // 更新狀態
+      this.currntUploadStatus = uploadStatus.uploading
+      try {
+        this.progress = 50
+        if (!this.formDataList.length) return
+
+        // 上傳第一個檔案，開新的資料夾存放檔案
+        const firstFile = this.formDataList[0]
+        await reUploadModel(this.currentModelId, firstFile.data)
+
+        // 上傳剩餘檔案
+        if (this.formDataList.length > 1) {
+          const restFiles = this.formDataList.slice(1, this.formDataList.length)
+          const data = Array.from(restFiles, formData => {
+            return reUploadModel(this.currentModelId, formData.data)
+          })
+          await Promise.all(data)
+        }
+        this.progress = 100
+        this.currntUploadStatus = uploadStatus.success
+        this.formDataList.forEach(form => form.status = uploadStatus.success)
+      } catch (e) {
+        this.progress = 0
+        this.currntUploadStatus = uploadStatus.fail
+        this.formDataList.forEach(form => form.status = uploadStatus.fail)
       }
     },
     prev () {
       // 清空上傳檔案
-      this.$store.commit('dataManagement/updateUploadFileList', [])
+      this.updateUploadModelList([])
       this.formDataList = []
       this.progress = 0
       this.currntUploadStatus = uploadStatus.wait
@@ -326,6 +390,42 @@ export default {
     line-height: 17px;
     letter-spacing: 0.5px;
     color: $theme-color-warning;
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .dialog-button-block {
+      display: flex;
+      justify-content: flex-end;
+
+      .btn {
+        &:not(:last-child) {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .dialog-status-block {
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+      font-size: 13px;
+
+      .status-icon {
+        margin-right: 6px;
+      }
+
+      .status-fail {
+        color: #FF5C46; 
+      }
+
+      .status-success {
+        color: #2FECB3; 
+      }
+    }
   }
 }
 </style>

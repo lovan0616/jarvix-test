@@ -212,6 +212,7 @@
                   :data-list="componentTypeOptions"
                   :has-bullet-point="false"
                   trigger="hover"
+                  class="component-type-dropdown"
                   @select="createComponentType"
                 >
                   <template #display>
@@ -440,28 +441,6 @@
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
     />
-    <writing-dialog
-      v-if="isShowCreateSimulatorDialog"
-      :title="$t('miniApp.selectScript')"
-      :button="$t('button.build')"
-      :show-both="true"
-      :is-loading="isProcessing"
-      @closeDialog="isShowCreateSimulatorDialog = false"
-      @confirmBtn="createSimulator"
-    >
-      <div class="mini-app__dialog-select-wrapper">
-        <default-select 
-          :option-list="scriptOptionList"
-          :placeholder="$t('miniApp.selectScript')"
-          :is-disabled="isProcessing"
-          v-model="simulatorScriptInfo.id"
-          filterable
-          class="mini-app__dialog-select"
-          name="scriptId"
-          @change="updateSimulatorScriptInfo"
-        />
-      </div>
-    </writing-dialog>
     <component-to-alert-condition-dialog
       v-if="isShowCreateWarningCriteriaDialog"
       :component-data="componentToWarningCriteriaData"
@@ -502,7 +481,6 @@ import ComponentToAlertConditionDialog from './dialog/ComponentToAlertConditionD
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
-import { getScriptList } from '@/API/Script'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState } from 'vuex'
 
@@ -565,12 +543,7 @@ export default {
       filterCreationDialogTitle: null,
       draggedContext: { index: -1, futureIndex: -1 },
       isCurrentDashboardInit: false,
-      isShowCreateSimulatorDialog: false,
       scriptOptionList: [],
-      simulatorScriptInfo: {
-        id: null,
-        name: null
-      },
       initComponent: null,
       isMiniAppCompiled: false
     }
@@ -670,16 +643,31 @@ export default {
           id: 'MonitorWarning'
         },
         {
-          name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
-          id: 'UnhandledAbnormalStatistics'
-        },
-        {
-          name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
-          id: 'HandledAbnormalStatistics'
+          name: this.$t('miniApp.abnormalStatisticsComponent'),
+          children: [
+            {
+              name: this.$t('miniApp.unhandledAbnormalStatisticsComponent'),
+              id: 'UnhandledAbnormalStatistics'
+            },
+            {
+              name: this.$t('miniApp.handledAbnormalStatisticsComponent'),
+              id: 'HandledAbnormalStatistics'
+            }
+          ]
         },
         {
           name: this.$t('miniApp.simulateComponent'),
-          id: 'Simulator'
+          children: [
+            {
+              name: this.$t('miniApp.modelSimulateComponent'),
+              id: 'Simulator'
+            },
+            // 暫時不開放給使用者使用
+            // {
+            //   name: this.$t('miniApp.parametersOptimizedSimulateComponent'),
+            //   id: 'ParametersOptimizedSimulator'
+            // }
+          ]
         },
         {
           name: this.$t('miniApp.specialIndexTypeComponent'),
@@ -768,9 +756,9 @@ export default {
           }
           
           this.initFilters()
-          // 確認當前 Dashboard 有無控制項是剛被創完需被設定預設值
-          // 有的話 component 應等待控制項更新完成後帶上新 reestriction 問問題
-          this.isCurrentDashboardInit = !this.controlColumnValueInfoList.some(controlSet => controlSet.some(control => control.dataValues.length === 0))
+          
+          // 如果有控制項，或當前 Dashboard 有控制項是剛被創完需被設定預設值時，應等待控制項更新完成後帶上新 reestriction 問問題
+          this.isCurrentDashboardInit = this.controlColumnValueInfoList.length === 0
         })
         .catch(() => {})
         .finally(() => this.isLoading = false )
@@ -1060,22 +1048,22 @@ export default {
       })
     },
     updateDashboardNameByDialog (newDashboardName) {
-        this.isProcessing = true
-        const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-        editedMiniApp.settings.editModeData.dashboards.forEach(board => {
-          if (board.id === this.currentDashboardId) board.name = newDashboardName
+      this.isProcessing = true
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards.forEach(board => {
+        if (board.id === this.currentDashboardId) board.name = newDashboardName
+      })
+      
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.miniApp = editedMiniApp
+          this.newDashboardName = newDashboardName
         })
-        
-        this.updateAppSetting(editedMiniApp)
-          .then(() => {
-            this.miniApp = editedMiniApp
-            this.newDashboardName = newDashboardName
-          })
-          .catch(() => {})
-          .finally(() => {
-            this.isShowUpdateDashboardNameDialog = false
-            this.isProcessing = false
-          })
+        .catch(() => {})
+        .finally(() => {
+          this.isShowUpdateDashboardNameDialog = false
+          this.isProcessing = false
+        })
     },
     deleteDashboard () {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
@@ -1155,6 +1143,7 @@ export default {
       this.isShowWarningModule = false
       this.currentDashboardId = dashboardId
       this.initFilters()
+      this.isCurrentDashboardInit = this.controlColumnValueInfoList.length === 0
       this.newDashboardName = dashboardName || this.currentDashboard.name
     },
     saveCreatedFilter (filterList) {
@@ -1272,7 +1261,7 @@ export default {
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
-     createDefaultComponent (componentType) {
+    createDefaultComponent (componentType) {
       this.isProcessing = true
       this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -1296,46 +1285,12 @@ export default {
       this.createDefaultComponent('handled-abnormal-statistics')
     },
     createSimulatorComponent () {
-      this.isShowCreateSimulatorDialog = true
-      this.isProcessing = true
-      getScriptList(this.$route.params.group_id)
-        .then(response => {
-          this.scriptOptionList = response.scriptIdAndName.map((script, index) => {
-            if (index === 0) {
-              this.simulatorScriptInfo.id = script.scriptId
-              this.simulatorScriptInfo.name = script.scriptName
-            }
-            return {
-              name: script.scriptName,
-              value: script.scriptId
-            }
-          })
-        })
-        .finally(() => { this.isProcessing = false })
+      this.initComponent = this.componentTemplateFactory('simulator')
+      this.isShowCreateComponentDialog = true
     },
-    updateSimulatorScriptInfo (scriptId) {
-      this.simulatorScriptInfo.name = this.scriptOptionList.find(script => script.value === scriptId).name
-    },
-    createSimulator () {
-      this.$validator.validateAll().then(isValidate => {
-        if (!isValidate) return
-        this.isProcessing = true
-        const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
-        updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
-          if (board.id === this.currentDashboardId) {
-            board.components.push(this.componentTemplateFactory('simulator'))
-          }
-        })
-
-        this.updateAppSetting(updatedMiniAppData)
-          .then(() => { 
-            this.miniApp = updatedMiniAppData 
-            this.isShowCreateSimulatorDialog = false
-            this.simulatorScriptInfo.name = null
-            this.simulatorScriptInfo.id = null
-          })
-          .finally(() => this.isProcessing = false)
-      })
+    createParametersOptimizedSimulatorComponent () {
+      this.initComponent = this.componentTemplateFactory('parameters-optimized-simulator')
+      this.isShowCreateComponentDialog = true
     },
     createGeneralComponent () {
       this.initComponent = this.componentTemplateFactory()
@@ -1498,16 +1453,20 @@ export default {
           },
         }),
         // 模擬器元件
-        ...(type === 'simulator' && {
-          init: true,
+        ...((type === 'simulator' || type === 'parameters-optimized-simulator') && {
           isCreatedViaAsking: false,
-          scriptId: this.simulatorScriptInfo.id,
           config: {
             ...generalConfig,
             // demo 因為有八個 Input，先設定六個列
             size: { row: 12, column: 12 },
-            diaplayedName: `${this.$t('miniApp.simulator')} (${this.simulatorScriptInfo.name})`
+            diaplayedName: type === 'simulator' ? this.$t(`miniApp.simulator`) : this.$t(`miniApp.parametersOptimizedSimulator`)
           },
+          modelSetting: {
+            dataSourceId: null,
+            dataFrameId: null,
+            modelId: null,
+            inputList: []
+          }
         }),
         // 特殊數值行元件
         ...(type === 'formula' && {
@@ -1812,6 +1771,9 @@ export default {
             font-weight: 600;
             font-size: 14px;
           }
+        }
+        .component-type-dropdown >>> .dropdown__list-container {
+          width: 160px;
         }
       }
     }

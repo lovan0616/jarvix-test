@@ -1,23 +1,17 @@
 <template>
   <div class="card">
-    <div
-      v-if="columnList.length > 1"
-      :class="{ 'disabled': isProcessing || isLoading }"
-      class="card__delete-icon"
-      @click="removeColumn">
-      <svg-icon 
-        icon-class="delete" 
-        class="icon"/>
-    </div>
+    <svg-icon 
+      icon-class="sort" 
+      class="card__sort-icon"/>
     <div class="input-field">
-      <label class="input-field__label">{{ $t('script.columnDataType') }}</label>
+      <label class="input-field__label">{{ $t('model.upload.columnDataType') }}</label>
       <div class="input-field__input">
         <default-select 
           v-validate="'required'"
           :option-list="dataTypeOptionList"
           :placeholder="$t('batchLoad.chooseColumn')"
           :is-disabled="isProcessing || isLoading"
-          v-model="columnInfo.dataType"
+          v-model="columnInfo.statsType"
           :name="'select' + columnInfo.id"
           filterable
           class="input-field__select"
@@ -30,12 +24,23 @@
       </div>
     </div>
     <div class="input-field">
-      <label class="input-field__label">{{ $t('script.columnDataName') }}</label>
+      <label class="input-field__label">{{ $t('model.upload.columnDataName') }}</label>
       <input-verify
-        v-model.trim="columnInfo.primaryAlias"
-        :placeholder="$t('editing.inputCategoryName')"
+        v-validate="`required|letterDashUnderscore|max:${max}`"
+        v-model.trim="columnInfo.modelColumnName"
+        :placeholder="$t('editing.pleaseEnterName')"
+        :name="'input' + columnInfo.id"
         type="text"
       />
+    </div>
+    <div
+      v-if="columnList.length > 1"
+      :class="{ 'disabled': isProcessing || isLoading }"
+      class="card__delete-icon"
+      @click="removeColumn">
+      <svg-icon 
+        icon-class="delete" 
+        class="icon"/>
     </div>
   </div>
 </template>
@@ -45,7 +50,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import InputVerify from '@/components/InputVerify'
 
 export default {
-  name: 'OutputColumnSettingCard',
+  name: 'ModelColumnSettingCard',
   inject: ['$validator'],
   components: {
     DefaultSelect,
@@ -73,6 +78,11 @@ export default {
       default: false
     }
   },
+  computed: {
+    max () {
+      return this.$store.getters['validation/fieldCommonMaxLength']
+    }
+  },
   methods: {
     removeColumn () {
       if (this.isProcessing || this.isLoading) return
@@ -84,18 +94,30 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  padding: 16px;
+  padding: 18px;
   border-radius: 8px;
   background-color: rgba(72, 84, 84, .95);
   margin-bottom: 15px;
   position: relative;
   display: flex;
+  align-items: center;
+  cursor: move;
+
+  &__sort-icon {
+    margin-right: 24px;
+    font-size: 32px;
+    color: #8F9595;
+  }
 
   &__delete-icon {
     position: absolute;
     top: 16px;
     right: 16px;
     cursor: pointer;
+
+    &:hover {
+      color: $theme-color-primary;
+    }
 
     &.disabled {
       opacity: .7;
@@ -107,6 +129,10 @@ export default {
     &:not(:last-of-type) {
       margin-right: 16px;
     }
+
+    .error-text {
+      position: absolute;
+    }
   }
 
   /deep/ .input-verify .input-verify-text {
@@ -114,6 +140,7 @@ export default {
   }
 
   /deep/ .input-verify .input-error {
+    position: absolute;
     bottom: 0;
     top: 100%;
   }

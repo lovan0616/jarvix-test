@@ -638,6 +638,9 @@ Vue.mixin({
           }, [])
           return appConditions
         })
+    },
+    hasDuplicatedElements (array) {
+      return new Set(array).size < array.length
     }
   }
 })
