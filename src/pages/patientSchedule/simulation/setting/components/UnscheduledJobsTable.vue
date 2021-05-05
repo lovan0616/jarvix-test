@@ -108,7 +108,7 @@ export default {
         itemPerPage: 20
       },
       jobTableHeaderList: [
-        { title: 'sugeoryId', name: 'Sugeory Id', width: 180 },
+        { title: 'surgeryId', name: 'Surgery Id', width: 180 },
         { title: 'patient', name: 'Patient', width: 180 },
         { title: 'patientID', name: 'Patient ID', width: 180 },
         { title: 'surgeon', name: 'Surgeon', width: 180 },
@@ -118,7 +118,7 @@ export default {
         { title: 'equipmentNo', name: 'Equipment No', width: 300 },
         { title: 'assistant', name: 'Assistant', width: 180 },
         { title: 'anesthetist', name: 'Anesthetist', width: 180 },
-        { title: 'noShowRecord', name: 'No Show Record', width: 180 }
+        { title: 'noShowProbability', name: 'No Show Probability', width: 200 }
       ]
     }
   },
@@ -143,22 +143,22 @@ export default {
       const mockData = [
         {
           "id": 1,
-          "sugeoryId": "ACJKCC235",
+          "surgeryId": "ACJKCC235",
           "patient": "Markin Lee",
           "patientID": "ABC12749500556",
           "surgeon": "Daniel K",
-          "surgeryType": "Dental restorations",
+          "surgeryType": "Arthroscopy",
           "date": "2021/3/1",
           "priority": "3",
           "flexibility": "inpatient",
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
-          "noShowRecord": ""
+          "noShowProbability": "High 90%"
         },
         {
           "id": 2,
-          "sugeoryId": "ACJKCC997",
+          "surgeryId": "ACJKCC997",
           "patient": "Patricia Ng",
           "patientID": "AXC12749502283",
           "surgeon": "Andrew C.",
@@ -169,11 +169,11 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Ashley B.",
           "anesthetist": "Caroline D.",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 45%"
         },
         {
           "id": 3,
-          "sugeoryId": "ACJKCC998",
+          "surgeryId": "ACJKCC998",
           "patient": "Laura N",
           "patientID": "AXC12749502284",
           "surgeon": "Howard C.",
@@ -184,11 +184,11 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Emily F.",
           "anesthetist": "Rick D.",
-          "noShowRecord": ""
+          "noShowProbability": "Low 30%"
         },
         {
           "id": 4,
-          "sugeoryId": "ACJKCC999",
+          "surgeryId": "ACJKCC999",
           "patient": "Sharon W.",
           "patientID": "AXC12749502285",
           "surgeon": "Andrew C.",
@@ -199,11 +199,11 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Jackson S.",
           "anesthetist": "Rachel E.",
-          "noShowRecord": "3"
+          "noShowProbability": "High 90%"
         },
         {
           "id": 5,
-          "sugeoryId": "ALJKCC234",
+          "surgeryId": "ALJKCC234",
           "patient": "James H.",
           "patientID": "AXC12749500987",
           "surgeon": "Jeffery W.",
@@ -214,11 +214,11 @@ export default {
           "equipmentNo": "Breast Retractors\nBipolar Scissors",
           "assistant": "Patrick Z.\n",
           "anesthetist": "Betty Liu",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 50%"
         },
         {
           "id": 6,
-          "sugeoryId": "BCJKCC234",
+          "surgeryId": "BCJKCC234",
           "patient": "Susan I.",
           "patientID": "AXC12749501851",
           "surgeon": "Wilson L.",
@@ -229,11 +229,11 @@ export default {
           "equipmentNo": "Electrosurgery Unit",
           "assistant": "Paul E.",
           "anesthetist": "Caroline D.",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 40%"
         },
         {
           "id": 7,
-          "sugeoryId": "YCCCCC234",
+          "surgeryId": "YCCCCC234",
           "patient": "K.F. Lin",
           "patientID": "AXC1274950 MR. A",
           "surgeon": "Jeffery W.",
@@ -244,11 +244,11 @@ export default {
           "equipmentNo": "Sterilizers AA2\nEKG machines 23\nSurgical Lights\nStretcher XX3",
           "assistant": "Melody L.\r",
           "anesthetist": "Phillip F.\r",
-          "noShowRecord": ""
+          "noShowProbability": "High 90%"
         },
         {
           "id": 8,
-          "sugeoryId": "YCJKCC234",
+          "surgeryId": "YCJKCC234",
           "patient": "Mark K.",
           "patientID": "AXC12749500885",
           "surgeon": "Yvonne Z.",
@@ -259,26 +259,26 @@ export default {
           "equipmentNo": "EKG machines XX5\r\n",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
-          "noShowRecord": "1"
+          "noShowProbability": "Low 15%"
         },
         {
           "id": 9,
-          "sugeoryId": "YCJKCC234",
+          "surgeryId": "YCJKCC234",
           "patient": "Mark V.",
           "patientID": "AXC12749500555",
           "surgeon": "Daniel K",
-          "surgeryType": "Dental restorations",
+          "surgeryType": "Arthroscopy",
           "date": "2021/3/1",
           "priority": "3",
           "flexibility": "inpatient",
           "equipmentNo": "Anaesthetic\nDental drill",
           "assistant": "Edward Z.\r",
           "anesthetist": "H.W.L.\n",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 50%"
         },
         {
           "id": 10,
-          "sugeoryId": "ZX9990122",
+          "surgeryId": "ZX9990122",
           "patient": "Melissa R.",
           "patientID": "BXC12749500225",
           "surgeon": "Yvonne Z",
@@ -289,11 +289,11 @@ export default {
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": "2"
+          "noShowProbability": "Low 10%"
         },
         {
           "id": 11,
-          "sugeoryId": "ZX9990122",
+          "surgeryId": "ZX9990122",
           "patient": "Melissa R1",
           "patientID": "BXC12274950000",
           "surgeon": "Yvonne Z",
@@ -304,11 +304,11 @@ export default {
           "equipmentNo": "Stretcher XX10",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "High 87%"
         },
         {
           "id": 12,
-          "sugeoryId": "ZX9990123",
+          "surgeryId": "ZX9990123",
           "patient": "Melissa R2",
           "patientID": "BXC12274950001",
           "surgeon": "Jeffery W.",
@@ -319,11 +319,11 @@ export default {
           "equipmentNo": "Stretcher XX11",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 55%"
         },
         {
           "id": 13,
-          "sugeoryId": "ZX9990124",
+          "surgeryId": "ZX9990124",
           "patient": "Melissa R3",
           "patientID": "BXC12274950002",
           "surgeon": "Kate U.H.",
@@ -334,11 +334,11 @@ export default {
           "equipmentNo": "Stretcher XX12",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "Low 13%"
         },
         {
           "id": 14,
-          "sugeoryId": "ZX9990125",
+          "surgeryId": "ZX9990125",
           "patient": "Melissa R4",
           "patientID": "BXC12274950003",
           "surgeon": "Yvonne Tan",
@@ -349,11 +349,11 @@ export default {
           "equipmentNo": "Stretcher XX13",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "Low 21%"
         },
         {
           "id": 15,
-          "sugeoryId": "ZX9990126",
+          "surgeryId": "ZX9990126",
           "patient": "Melissa R.R.",
           "patientID": "BXC12274950004",
           "surgeon": "Yvonne K",
@@ -364,11 +364,11 @@ export default {
           "equipmentNo": "Stretcher XX14",
           "assistant": "William H.\r",
           "anesthetist": "Anderson H.",
-          "noShowRecord": ""
+          "noShowProbability": "High 87%"
         },
         {
           "id": 16,
-          "sugeoryId": "ZX9999873",
+          "surgeryId": "ZX9999873",
           "patient": "Leo Koh",
           "patientID": "AXC12749501419",
           "surgeon": "John K.\r",
@@ -379,11 +379,11 @@ export default {
           "equipmentNo": "Utrata Capsulorhexis Forceps\nCaliper",
           "assistant": "Melody Tan",
           "anesthetist": "Ben L.\r",
-          "noShowRecord": "1"
+          "noShowProbability": "Medium 44%"
         },
         {
           "id": 17,
-          "sugeoryId": "ZXX37533",
+          "surgeryId": "ZXX37533",
           "patient": "Charles W.",
           "patientID": "ABC12749500557",
           "surgeon": "John S.\r",
@@ -394,11 +394,11 @@ export default {
           "equipmentNo": "Diathermy forceps\nArtery forceps\nligature clamps",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Phillip F.\r",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 60%"
         },
         {
           "id": 18,
-          "sugeoryId": "ZXXXX122",
+          "surgeryId": "ZXXXX122",
           "patient": "Alice L\r",
           "patientID": "AXC12749500333\r",
           "surgeon": "John K.\r",
@@ -409,11 +409,11 @@ export default {
           "equipmentNo": "Sterilizers AA1\nDefibrillators X2",
           "assistant": "Patrick W.\r\n",
           "anesthetist": "H.W.L.\r\n",
-          "noShowRecord": "3"
+          "noShowProbability": "Medium 65%"
         },
         {
           "id": 19,
-          "sugeoryId": "ZXXXX133",
+          "surgeryId": "ZXXXX133",
           "patient": "Dan M.",
           "patientID": "AXC12749500111",
           "surgeon": "Kate U.H.",
@@ -424,11 +424,11 @@ export default {
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r",
-          "noShowRecord": ""
+          "noShowProbability": "High 90%"
         },
         {
           "id": 20,
-          "sugeoryId": "ZXXXX133",
+          "surgeryId": "ZXXXX133",
           "patient": "Dan M.",
           "patientID": "AXC12749500123",
           "surgeon": "KKK",
@@ -439,7 +439,7 @@ export default {
           "equipmentNo": "Surgical Lights\nSterilizers X123",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Ben L.\r",
-          "noShowRecord": ""
+          "noShowProbability": "Medium 45%"
         }
       ]
       this.tmpJobData = mockData
@@ -470,7 +470,7 @@ export default {
       this.jobData.data.unshift(...[
         {
           "id": 98,
-          "sugeoryId": "YCCCCC999",
+          "surgeryId": "YCCCCC999",
           "patient": "M.K.",
           "patientID": "BXC12749500222",
           "surgeon": "Wilson L.",
@@ -481,11 +481,11 @@ export default {
           "equipmentNo": "Sterilizers A19\nDefibrillators X2",
           "assistant": "Edward Z.\r",
           "anesthetist": "Thomas T.",
-          "noShowRecord": ""
+          "noShowProbability": "Low 10%"
         },
         {
           "id": 99,
-          "sugeoryId": "ZXXXX999\r",
+          "surgeryId": "ZXXXX999\r",
           "patient": "Alison W.",
           "patientID": "BXC12749500123",
           "surgeon": "John S.\r",
@@ -496,7 +496,7 @@ export default {
           "equipmentNo": "Sterilizers AB1\nDefibrillators X8",
           "assistant": "Jacob Tan\r",
           "anesthetist": "Leo J.",
-          "noShowRecord": "2"
+          "noShowProbability": "Low 10%"
         }
       ])
       this.$emit('insert')
