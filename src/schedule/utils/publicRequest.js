@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
-import router from '../router'
+import router from '../../router'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 

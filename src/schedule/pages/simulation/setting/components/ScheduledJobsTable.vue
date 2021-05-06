@@ -20,6 +20,7 @@
         </default-input>
       </div>
       <default-button
+        size="m"
         class="search-btn"
         type="outline"
         @click="updateJobData"
@@ -28,6 +29,7 @@
       </default-button>
       <div class="header__button">
         <default-button
+          size="m"
           class="add-btn"
           type="outline"
           @click="removeItem"
@@ -88,7 +90,7 @@ export default {
       jobTableHeaderList: [
         { title: 'job', name: this.$t('schedule.simulation.table.job'), width: '' },
         { title: 'order', name: this.$t('schedule.simulation.table.order'), width: '' },
-        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '202' },
+        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '' },
         { title: 'deadline', name: this.$t('schedule.simulation.table.deadline'), width: '120' },
         { title: 'quantity', name: this.$t('schedule.simulation.table.quantity'), width: '120' }
       ]
@@ -177,7 +179,7 @@ export default {
 .scheduled-jobs-table {
   .header {
     position: relative;
-    padding: 0px 14px;
+    padding: 0 0 0 14px;
     margin-bottom: 12px;
     display: flex;
     flex-direction: row;

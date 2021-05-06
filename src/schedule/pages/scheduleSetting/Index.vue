@@ -148,27 +148,6 @@
           </h3>
           <kpi-setting :setting="settingInfo.kpiSetting" />
         </section>
-        <section
-          v-if="!solutionSequence"
-          class="body__block body__block--url"
-        >
-          <h3 class="block__title">
-            {{ $t('schedule.setting.dataRenewal') }}
-          </h3>
-          <div class="block__form">
-            <div class="form__item">
-              <div class="form__label">
-                *{{ $t('schedule.setting.syncUrl') }}
-              </div>
-              <div class="form__content">
-                <default-input
-                  v-model="settingInfo.syncUrl"
-                  class="sync-url__input"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
       <default-button
         class="save-btn save-btn--large"
@@ -177,7 +156,7 @@
         {{ $t('schedule.setting.save') }}
       </default-button>
     </div>
-    <!-- 共用資料設定 -->
+    <!-- 額外限制條件設定 -->
     <div
       v-if="!solutionSequence"
       class="setting setting--constraint"
@@ -188,22 +167,18 @@
         </h2>
       </div>
       <div class="setting__body">
-        <div class="file">
-          <spinner v-if="isFetchingAdvanceSetting" />
-          <div
-            v-for="file in constraintSetting"
-            v-else
-            :key="file.id"
-          >
-            <single-constraint-file
-              :file-data="file"
-              @uploaded="fetchFiles"
-            />
-          </div>
+        <spinner v-if="isFetchingAdvanceSetting" />
+        <div
+          v-for="file in files.constraint"
+          v-else
+          :key="file.code"
+          class="file"
+        >
+          <single-constraint-file :file-data="file"/>
         </div>
       </div>
     </div>
-    <!-- 額外限制條件設定 -->
+    <!-- 共用資料設定 -->
     <div
       v-if="!solutionSequence"
       class="setting setting--common"
@@ -212,33 +187,18 @@
         <h2 class="header__title">
           {{ $t('schedule.setting.commonDataSetting') }}
         </h2>
-        <div class="header__action">
-          <default-button
-            :is-disabled="isFetchingAdvanceSetting"
-            @click="openUploadFileDialog"
-          >
-            {{ $t('schedule.setting.updateFiles') }}
-          </default-button>
-        </div>
       </div>
       <div class="setting__body">
-        <div class="file">
-          <spinner v-if="isFetchingAdvanceSetting" />
-          <div
-            v-for="file in commonDataSetting"
-            v-else
-            :key="file.id"
-          >
-            <single-common-file :file-data="file" />
-          </div>
+        <spinner v-if="isFetchingAdvanceSetting" />
+        <div
+          v-for="file in files.raw_data"
+          v-else
+          :key="file.code"
+          class="file"
+        >
+          <single-common-file :file-data="file" />
         </div>
       </div>
-      <file-upload-dialog
-        v-if="isShowUploadFileDialog"
-        :file-data="commonDataSetting"
-        @uploaded="fetchFiles"
-        @close="closeUploadFileDialog"
-      />
     </div>
   </div>
 </template>
@@ -248,11 +208,10 @@ import OrderUpload from './components/OrderUpload'
 import ShiftSetting from './components/shiftSetting/ShiftSetting'
 import ExcludeSetting from './components/excludeSetting/ExcludeSetting'
 import KpiSetting from './components/kpiSetting/KpiSetting'
-import FileUploadDialog from './components/commonDataSetting/FileUploadDialog'
 import SingleConstraintFile from './components/constraintSetting/SingleConstraintFile'
 import SingleCommonFile from './components/commonDataSetting/SingleCommonFile'
 import ExceptionTimeSetting from '@/schedule/pages/simulation/setting/components/ExceptionTimeSetting'
-import { getUploadFileList } from '@/schedule/API/Setting'
+import { fetchDataBoundStatus } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
@@ -265,7 +224,6 @@ export default {
     ExcludeSetting,
     KpiSetting,
     ExceptionTimeSetting,
-    FileUploadDialog,
     SingleConstraintFile,
     SingleCommonFile
   },
@@ -280,10 +238,10 @@ export default {
       isLoading: false,
       settingInfo: {},
       equipments: [],
-      isShowUploadFileDialog: false,
-      constraintSetting: [],
-      commonDataSetting: [],
-      publicPath: process.env.BASE_URL,
+      files: {
+        raw_data: [],
+        constraint: []
+      },
       isFetchingAdvanceSetting: false,
       collapseAll: {
         // 後台設定預設展開區塊，模擬頁面預設收合區塊
@@ -299,6 +257,7 @@ export default {
   },
   computed: {
     ...mapState('simulation', ['solutions', 'planId']),
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
     isShowOrderUpload () {
       return localStorage.getItem('isShowOrderUpload') === 'true'
     }
@@ -317,42 +276,33 @@ export default {
 
     this.fetchFiles()
 
-    const fetchSetting = this.$store.dispatch('scheduleSetting/getSetting')
-    const fetchEquipments = this.$store.dispatch('scheduleSetting/getEquipments')
-    this.isLoading = true
-
-    Promise.all([fetchSetting, fetchEquipments]).then(res => {
-      const prevSetting = res[0]
-      const equipments = res[1]
-
+    this.$store.dispatch('scheduleSetting/getSetting').then(prevSetting => {
       // 拿到先前設定
-      this.settingInfo = { ...prevSetting }
+      this.settingInfo = { ...prevSetting, projectId: this.scheduleProjectId }
       delete this.settingInfo.worktimes.weekList
-
-      // 拿到設備列表
-      this.equipments = equipments.map(e => ({ value: e.id, label: e.name }))
-
-      this.$store.commit('scheduleSetting/setEquipments', this.equipments)
       this.$store.commit('scheduleSetting/updateSetting', this.settingInfo)
-
-      this.isLoading = false
-    }).catch(() => {})
+    })
+    this.$store.dispatch('scheduleSetting/getEquipments')
+      .then(equipments => {
+        // 拿到設備列表
+        this.equipments = equipments.map(item => ({ value: item, label: item }))
+        this.$store.commit('scheduleSetting/setEquipments', this.equipments)
+      })
+      .catch(() => {})
   },
   methods: {
     fetchFiles () {
       this.isFetchingAdvanceSetting = true
-      return getUploadFileList()
-        .then(res => {
-          this.constraintSetting = res.constraint
-          this.commonDataSetting = res.rawdata
+      fetchDataBoundStatus(this.scheduleProjectId)
+        .then(files => {
+          files.forEach(file => {
+            const category = file.category
+            if (file.category === 'RAW_DATA' || file.category === 'CONSTRAINT') {
+              this.files[category.toLowerCase()].push(file)
+            }
+          })
           this.isFetchingAdvanceSetting = false
         })
-    },
-    openUploadFileDialog () {
-      this.isShowUploadFileDialog = true
-    },
-    closeUploadFileDialog () {
-      this.isShowUploadFileDialog = false
     },
     saveSetting () {
       // 表單驗證
@@ -383,21 +333,18 @@ export default {
       }
 
       this.isLoading = true
-      this.settingInfo.excludeEquipments.forEach(equipment => {
-        // 補上機台名稱
-        if (!equipment.equipmentName) {
-          equipment.equipmentName = this.equipments.find(option => option.value === equipment.equipmentId).label
-        }
-      })
-      this.$store.dispatch('scheduleSetting/setSetting', this.settingInfo).then(res => {
+      const copiedSetting = { ...this.settingInfo }
+      this.$store.dispatch('scheduleSetting/setSetting', copiedSetting).then(() => {
         Message({
           message: this.$t('schedule.successMessage.settingSaved'),
           type: 'success',
           duration: 3 * 1000,
           showClose: true
         })
-        this.$store.commit('scheduleSetting/updateSetting', this.settingInfo)
-      }).finally(() => {
+        this.$store.commit('scheduleSetting/updateSetting', copiedSetting)
+      })
+      .catch(() => {})
+      .finally(() => {
         this.isLoading = false
       })
     },
@@ -549,10 +496,12 @@ export default {
         background: rgba(0, 0, 0, 0.55);
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
         border-radius: 8px;
+        &:not(:last-child) {
+          margin-bottom: 16px;
+        }
         &__item {
           width: 100%;
           padding: 24px;
-          margin-bottom: 16px;
           border-radius: 8px;
           display: flex;
           justify-content: space-between;
@@ -575,11 +524,20 @@ export default {
         }
 
         &__item-name {
-          margin-right: 131px;
+          flex: 3;
           width: 245px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          &.is-empty {
+            color: #AAA;
+          }
+        }
+        &__item-date {
+          flex: 2;
+          &.is-empty {
+            color: #AAA;
+          }
         }
 
         &__item-button-block {

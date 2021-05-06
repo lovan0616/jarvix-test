@@ -29,6 +29,32 @@
       "open": "开启内容",
       "close": "收起内容"
     },
+    "project": {
+      "project": "子专案",
+      "projectManagement": "子专案管理",
+      "createProject": "新增子专案",
+      "projectName": "子专案名称",
+      "pleaseEnterProjectName": "请输入子专案名称",
+      "bindDataSource": "绑定资料源",
+      "existingDataSource": "现有资料源",
+      "createDataSource": "新增资料源",
+      "pleaseEnterDataSourceName": "请输入资料源名称",
+      "relationManagement": "资料绑定",
+      "dataManagement": "重新绑定",
+      "renameProject": "重新命名子专案",
+      "successfullyRenamed": "成功重新命名子专案",
+      "successfullyCreateDataSource": "成功新增子专案",
+      "notYetBindingWithDataSource": "目前无绑定资料源",
+      "confirmDeleteProject": "确定删除排程专案「{name}」？ ",
+      "dataSourceBindingManagement": "资料绑定管理",
+      "chooseDataSource": "选择资料源",
+      "dataSourceName": "资料源名称",
+      "chooseDataFrame": "选择资料表",
+      "dataFrameName": "资料表名称",
+      "orderOrJobInfo": "订单 / 工单资讯",
+      "bind": "绑定",
+      "projectNotExist": "不存在此排程专案"
+    },
     "setting": {
       "title": "基本设定",
       "init": "排程初始设定",
@@ -55,17 +81,135 @@
       "ofr": "达交率",
       "cycleTime": "生产周期",
       "utilization": "稼动率",
-      "syncUrl": "工单列表连线URL",
-      "dataRenewal": "资料更新设定",
       "save": "储存",
       "extraConstraintSetting": "额外限制条件设定",
+      "extraConstraintCapacityConstraint": "产能限制",
+      "extraConstraintSjp": "特定时段与特定产品",
+      "extraConstraintJig": "治具限制",
+      "extraConstraintJigStorage": "治具库存",
+      "extraConstraintHoj": "工单上下游关系",
+      "extraConstraintTransferTime": "转换时间",
       "commonDataSetting": "共用资料设定",
+      "commonDataOrder": "订单资讯",
+      "commonDataProcess": "制程资讯",
+      "commonDataSetupTime": "产品系统对应换线时间",
+      "commonDataEquipment": "机台资讯",
+      "commonDataGroup": "产品系列对应表",
       "updateFiles": "更新档案",
       "uploadFile": "上传档案",
       "fileName": "档案名称",
       "uploadAllMessage": "档案之间具有关联性，所有档案都需重新上传",
       "noFileSelected": "未选择档案",
-      "updatedDate": "更新日期"
+      "updatedDate": "更新日期",
+      "equipmentInfoIsUnbound": "尚未绑定机台资讯"
+    },
+    "helper": {
+      "fileName": "档案名称",
+      "columnName": "栏位名称",
+      "columnDescription": "栏位说明",
+      "dataType": "资料型态",
+      "order": {
+        "Job": "此工单的编号（客户填写）",
+        "Order": "订单的编号（客户填写）",
+        "Product": "需要生产的产品名称",
+        "Quantity": "这张工单/订单需要生产的产品生产数量",
+        "Priority": "这张工单订单所对应的优先级（1对应特急件/2对应急件/3对应普通件）",
+        "Deadline": "这张工单/订单的交期，若无交期限制则可填入当年度最后一天"
+      },
+      "equipment": {
+        "Operation": "生产过程中的程序",
+        "Equipment": "设备的编号/名称，同一台设备无法同时出现在一个站点以上",
+        "Stage": "进行生产过程的站点",
+        "Position": "机台所在的位置，可填入厂区名称/亦或是同厂区中的楼层"
+      },
+      "process": {
+        "Equipment": "用以进行工序的机台编号/名称",
+        "Operation": "生产过程中的程序",
+        "Product": "需要生产的产品名称",
+        "Material": "需要生产的产品所需的物料",
+        "Time": "生产所需要的时间（时间单位为秒）",
+        "Lot": "一个批次生产几个产品",
+        "OPOrder": "此工序是此产品的第几道工序"
+      },
+      "group": {
+        "Group": "产品系列的编码",
+        "Product": "需要生产的产品名称"
+      },
+      "setupTime": {
+        "Stage": "进行生产过程的站点",
+        "UpperGroup": "换线进行的方式是由上轮群体换到下轮群体",
+        "LowerGroup": "换线进行的方式是由上轮群体换到下轮群体",
+        "Time": "由上轮群体换线到下轮群体需要的时间（时间单位为分钟）"
+      },
+      "capacityConstraint" : {
+        "Capacity": "产品生产数量（此为上限值）",
+        "Stage": "进行生产过程的站点 ",
+        "StartTime": "开始的时间点",
+        "EndTime": "结束的时间点"
+      },
+      "sjp": {
+        "Group": "产品系列的编码",
+        "StartTime": "开始的时间点",
+        "EndTime": "结束的时间点"
+      },
+      "jig": {
+        "Group": "产品系列的编码",
+        "Stage": "进行生产过程的站点",
+        "OPOrder": "此工序是此产品的第几道工序",
+        "Jig": "生产所需使用的治具名称/编码"
+      },
+      "jigStorage": {
+        "Jig": "生产所需使用的治具名称/编码",
+        "Count": "目前治具所闲置数量"
+      },
+      "hoj": {
+        "UpperJob": "上游工单编号",
+        "LowerJob": "下游工单编号"
+      },
+      "transferTime": {
+        "Source": "来源设备的编号/名称",
+        "Destination": "目的设备的编号/名称",
+        "TransferTime": "转移时间（时间单位为分钟）"
+      }
+    },
+    "binding": {
+      "check": "检查",
+      "bind": "绑定",
+      "rebind": "重新绑定",
+      "globalSetting": "全域设定",
+      "checkedResultSummary": "资料共 {0} 笔，可使用 {1} 笔，不可使用 {2} 笔",
+      "failedRow": "资料列发生错误",
+      "bindingReminding": "部分资料列发生错误，建议修正后重新导入。若您仍然选择绑定资料表，错误的资料在进行生产排程模拟时会被忽略。",
+      "columnName": "栏位名称",
+      "failedBecauseOfEmpty": "空值错误",
+      "failedBecauseOfEmptyDesc": "未输入任何内容",
+      "failedBecauseOfRef": "参照错误",
+      "failedBecauseOfRefDesc": "资料值无相关对应",
+      "failedBecauseOfType": "型别错误",
+      "failedBecauseOfTypeDesc": "资料值型别错误",
+      "failedRowCount": "总计 {0} 笔资料错误",
+      "datumIndexes": "资料列位置",
+      "allOrderDataIsValid": "订单绑定资料表检查完成，全数资料列皆符合格式，将继续绑定",
+      "allRawdataDataIsValid": "共同资料绑定资料表检查完成，全数资料列皆符合格式，将继续绑定",
+      "allConstraintsDataIsValid": "额外限制资料检查完成，全数资料格式正确",
+      "pleaseSelectOrder": "请选择订单资料表",
+      "pleaseSelectRawdata": "共用资料设定需同时绑定",
+      "pleaseSelectConstraint": "请选择额外限制资料表",
+      "orderNotBeingBound": "当前无绑定订单资料",
+      "rawdataNotBeingBound": "当前无绑定共同资料",
+      "constraintNotBeingBound": "额外限制资料检查完成，资料格式错误",
+      "successfullyBindOrder": "订单资料已绑定",
+      "successfullyUnbindOrder": "订单资料已解除绑定",
+      "successfullyBindRawdata": "共同资料已绑定",
+      "successfullyUnbindRawdata": "共同资料已解除绑定",
+      "successfullyBindConstraints": "额外限制资料已绑定",
+      "successfullyUnbindConstraint": "额外限制资料已解除绑定",
+      "successfullyRebindDataSource": "已绑定至新资料源 {datasource}。资料表需重新绑定。",
+      "alreadyBoundToCertainDataSource": "已绑定于资料源 {datasource}",
+      "confirmToBind": "仍然绑定",
+      "unbind": "解除",
+      "pleaseSelectDataFrames": "请勾选资料表",
+      "select": "勾选"
     },
     "simulation":{
       "title": "排程计画模拟",
@@ -104,6 +248,7 @@
       "count": "数量",
       "dayCount": "天数",
       "percentage": "百分比",
+      "notAllowedSimulation": "订单或共同资料未完成绑定，尚不能进行模拟",
       "orderResult": {
         "orderId": "订单",
         "order": "订单编号",
@@ -163,12 +308,6 @@
         "day": "日",
         "halfDay": "半日",
         "viewScale": "观看维度"
-      },
-      "dataSync": {
-        "title": "同步提醒",
-        "description": "工单同步后，所有排程工单需重新选择。",
-        "askSynchronizing": "请求同步中, 请稍候...",
-        "synchronizing": "同步中..."
       }
     },
     "schedule":{
@@ -195,6 +334,7 @@
       "networkError": "网路连线发生错误，请检查连线，稍后再试",
       "fileRequiredInAllFiled": "所有栏位皆需上传档案",
       "emptyExcludedPeriod": "机台排除时段未填",
+      "emptyExcludeEquipment": "排除机台未填",
       "emptySyncURL": "连线 URL 未填",
       "duplicatedExcludedEquipment": "排除机台重复填入",
       "duplicatedKPI": "KPI 值重复"

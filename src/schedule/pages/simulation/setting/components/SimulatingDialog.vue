@@ -73,6 +73,7 @@ export default {
                   duration: 3 * 1000,
                   showClose: true
                 })
+                this.$store.commit('simulation/setPlanId', null)
                 this.$emit('cancel')
                 return
               }

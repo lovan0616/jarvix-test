@@ -2,14 +2,14 @@ import { getSetting, setSetting, downloadCurrentSetting } from '@/schedule/API/S
 import { getEquipments } from '@/schedule/API/Equipment'
 
 export default {
-  getSetting () {
-    return getSetting()
+  getSetting ({ state }) {
+    return getSetting(state.scheduleProjectId)
   },
   setSetting ({ rootState }, settings) {
     return setSetting(settings)
   },
-  getEquipments () {
-    return getEquipments()
+  getEquipments ({ state }) {
+    return getEquipments(state.scheduleProjectId)
   },
   downloadCurrentSetting ({ state }, fileId) {
     return downloadCurrentSetting(fileId)

@@ -19,7 +19,8 @@
     "warRoom": "战情室",
     "application": "应用程式",
     "modelManagement": "模型管理",
-    "modelFlowManagement": "流程管理"
+    "modelFlowManagement": "流程管理",
+    "schedule": "生产排程"
   },
   "sideNav": {
     "functionList": "功能选单",
@@ -38,7 +39,6 @@
     "dataSourceList": "数据源列表",
     "dataFileManagement": "数据表管理",
     "dataFileList": "数据表列表",
-    "schedule": "生产排程",
     "preferences": "个人设定",
     "updateLicense": "更新产品金钥",
     "modelManagement": "模型管理",
@@ -331,6 +331,7 @@
     "createDate": "建立日期",
     "updateDate": "修改日期",
     "confirmDeleteDataSourceOrNot": "资料删除后将立即影响正在与此资料绑定的应用或功能运作，您确认要继续删除？",
+    "creator": "建立者",
     "sourceOfData": "数据来源",
     "uploadUser": "上传者",
     "status": "状态",
