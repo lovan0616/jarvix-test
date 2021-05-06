@@ -22,7 +22,7 @@
           <model-column-setting-card
             v-for="column in columnList"
             :column-info="column"
-            :data-type-option-list="availableStatsTypeOptionList"
+            :data-type-option-list="statsTypeOptionList"
             :column-list="columnList"
             :key="column.id"
             @updateDataColumn="updateDataColumn($event, column.id)"
@@ -85,10 +85,6 @@ export default {
     ...mapState('modelManagement', ['currentUploadModelInfo']),
     modelColumnNames () {
       return this.columnList.map(item => item.modelColumnName)
-    },
-    availableStatsTypeOptionList () {
-      const availableStatsTypeSet = new Set(['CATEGORY', 'NUMERIC'])
-      return statsTypeOptionList.filter(statsType => availableStatsTypeSet.has(statsType.value))
     }
   },
   mounted () {

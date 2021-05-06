@@ -61,7 +61,7 @@
           <model-column-setting-card
             v-for="(column, index) in tempArgs.output"
             :column-info="column"
-            :data-type-option-list="statsTypeOptionList"
+            :data-type-option-list="outputStatsTypeOptionList"
             :column-list="tempArgs.output"
             :key="`output-${column.id}`"
             @updateDataColumn="updateDataColumn($event, column.id, tempArgs.output)"
@@ -127,6 +127,10 @@ export default {
     },
     isArgsTouched () {
       return JSON.stringify(this.tempArgs) !== JSON.stringify(this.modelInfo.ioArgs)
+    },
+    outputStatsTypeOptionList () {
+      const availableStatsTypeSet = new Set(['CATEGORY', 'NUMERIC'])
+      return statsTypeOptionList.filter(statsType => availableStatsTypeSet.has(statsType.value))
     }
   },
   mounted () {
