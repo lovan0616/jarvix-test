@@ -10,6 +10,7 @@ export default {
     userEmail: '',
     accountList: [],
     groupList: [],
+    groupId: null,
     permission: [],
     license: null,
     isAdmin: false
