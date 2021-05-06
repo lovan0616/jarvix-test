@@ -14,6 +14,7 @@ export default {
     currentQuestionInfo: null,
     currentQuestionId: null,
     currentQuestionDataFrameId: null,
+    isManuallyTriggeredAskQuestion: false,
     algoConfig: {
       clustering: {
         '@type': 'ClusterAlgoConfig',
