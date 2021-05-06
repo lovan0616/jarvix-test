@@ -571,6 +571,7 @@ export default {
     border-radius: 50%;
     background: #A7A7A7;
     cursor: pointer;
+    z-index: 1;
   }
 
   &__delete-icon {
