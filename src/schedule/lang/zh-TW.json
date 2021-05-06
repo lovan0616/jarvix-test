@@ -275,7 +275,7 @@
         "factorySite": "廠房編號",
         "job": "工單號",
         "material": "材料編號",
-        "operation": "營運編號",
+        "operation": "工序",
         "order": "訂單編號",
         "product": "產品編號",
         "stage": "階段",

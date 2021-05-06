@@ -14,7 +14,7 @@
           <span class="single-machine__label">{{ $t('schedule.setting.excludedMachine') }}</span>
           <default-select
             v-model="equipment.equipment"
-            :options="equipments"
+            :options="equipmentOptions"
             filterable
           />
         </template>
@@ -43,15 +43,23 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-    <default-button
-      v-if="equipments.length > 0"
-      type="secondary"
-      class="save-btn"
-      @click="addEquipment"
-    >
-      <i class="el-icon-plus" />
-      {{ $t('schedule.setting.addEquipment') }}
-    </default-button>
+    <template v-if="equipments.length > 0">
+      <default-button
+        :is-disabled="!isAddable"
+        type="secondary"
+        class="save-btn"
+        @click="addEquipment"
+      >
+        <i class="el-icon-plus" />
+        {{ $t('schedule.setting.addEquipment') }}
+      </default-button>
+      <span 
+        v-show="!isAddable" 
+        class="reminding">
+        <i class="el-icon-warning-outline" />
+        機台已滿
+      </span>
+    </template>
     <div 
       v-else 
       class="empty-block">{{ $t('schedule.setting.equipmentInfoIsUnbound') }}</div>
@@ -93,7 +101,13 @@ export default {
   },
   computed: {
     selectedEquipments () {
-      return this.excludedEquipment.map(e => e.equipmentId)
+      return this.excludedEquipment.map(e => e.equipment)
+    },
+    equipmentOptions () {
+      return this.equipments.map(e => ({ value: e, label: e }))
+    },
+    isAddable () {
+      return this.equipments.length > this.excludedEquipment.length
     }
   },
   watch: {
@@ -112,13 +126,15 @@ export default {
       this.excludedEquipment[equipmentIndex].reasons.push({ ...this.defaultExcludedVal })
     },
     addEquipment () {
+      if (!this.isAddable) return
+
       // 找出第一個不重複的 equipment
       const selectedIds = this.excludedEquipment.map(item => item.equipment)
-      const eq = this.equipments.find(item => !selectedIds.includes(item.value))
+      const eq = this.equipments.find(item => !selectedIds.includes(item))
 
       if (!eq) return
       this.excludedEquipment.push({
-        equipment: eq.value,
+        equipment: eq,
         reasons: [{ ...this.defaultExcludedVal }]
       })
       this.activeCollapseItems.push(eq.value)
@@ -134,11 +150,6 @@ export default {
 .excluded-setting {
   width: 100%;
   /deep/ .el-collapse-item {
-    &__header {
-      .default-select {
-        padding-bottom: 12px;
-      }
-    }
     &__content {
       margin-top: 8px;
     }
@@ -176,5 +187,9 @@ export default {
 }
 .save-btn {
   margin-top: 16px;
+}
+
+/deep/ .default-select {
+  padding-bottom: 0;
 }
 </style>

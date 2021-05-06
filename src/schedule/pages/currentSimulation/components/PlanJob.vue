@@ -104,7 +104,6 @@ export default {
         { title: 'order', name: this.$t('schedule.simulation.machineResult.order'), width: '160' },
         { title: 'product', name: this.$t('schedule.simulation.machineResult.product'), width: '160' },
         { title: 'stage', name: this.$t('schedule.simulation.machineResult.stage') },
-
         { title: 'task', name: this.$t('schedule.simulation.machineResult.task') }
       ],
       priortyOptions: [

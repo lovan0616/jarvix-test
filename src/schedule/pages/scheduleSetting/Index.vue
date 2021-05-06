@@ -285,8 +285,8 @@ export default {
     this.$store.dispatch('scheduleSetting/getEquipments')
       .then(equipments => {
         // 拿到設備列表
-        this.equipments = equipments.map(item => ({ value: item, label: item }))
-        this.$store.commit('scheduleSetting/setEquipments', this.equipments)
+        this.equipments = equipments
+        this.$store.commit('scheduleSetting/setEquipments', equipments)
       })
       .catch(() => {})
   },
@@ -436,13 +436,7 @@ export default {
           .block__title {
             .reminding {
               margin-left: 8px;
-              font-size: 12px;
             }
-          }
-        }
-        &--kpi {
-          .reminding {
-            color: var(--color-warning);
           }
         }
         .block__title {
@@ -557,6 +551,11 @@ export default {
     height: 40px;
     margin-top: 16px;
     border-radius: 6px;
+  }
+  /deep/ .reminding {
+    color: var(--color-warning);
+    font-size: 12px;
+    font-weight: bold;
   }
 }
 </style>

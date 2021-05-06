@@ -275,7 +275,7 @@
         "factorySite": "厂房编号",
         "job": "工单号",
         "material": "材料编号",
-        "operation": "营运编号",
+        "operation": "工序",
         "order": "订单编号",
         "product": "产品编号",
         "stage": "阶段",
