@@ -20,7 +20,7 @@
       v-else-if="hasError"
       class="empty-block"
     >
-      <span class="empty-block__text">發生錯誤</span>
+      <span class="empty-block__text">{{ $t('schedule.base.hasError') }}</span>
     </div>
     <v-gantt-chart
       v-else
