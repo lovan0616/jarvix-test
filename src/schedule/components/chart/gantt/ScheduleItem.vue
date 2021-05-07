@@ -33,6 +33,15 @@
           <div class="job__detail-info-row">
             {{ $t('schedule.simulation.machineResult.produceTime') }}：{{ getHoursDiff(item.startTime, item.endTime) }}
           </div>
+          <div class="job__detail-info-row">
+            {{ $t('schedule.simulation.machineResult.checkinTime') }}：{{ item.checkinTime }}
+          </div>
+          <div class="job__detail-info-row">
+            {{ $t('schedule.simulation.machineResult.checkoutTime') }}：{{ item.checkoutTime }}
+          </div>
+          <div class="job__detail-info-row">
+            {{ $t('schedule.simulation.machineResult.product') }}：{{ item.product }}
+          </div>
         </template>
       </div>
     </div>

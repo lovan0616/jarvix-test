@@ -2,7 +2,7 @@
   <div class="default-select">
     <el-select
       v-model="selectedValue"
-      :placeholder="$t('schedule.base.pleaseSelect')"
+      :placeholder="placeholder || $t('schedule.base.pleaseSelect')"
       :filterable="filterable"
       popper-class="ss-select"
     >
@@ -42,6 +42,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    placeholder: {
+      type: String,
+      default: null
     }
   },
   computed: {
