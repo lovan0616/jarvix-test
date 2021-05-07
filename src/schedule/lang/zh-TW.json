@@ -27,7 +27,9 @@
       "hour": "時",
       "minute": "分",
       "open": "開啟內容",
-      "close": "收起內容"
+      "close": "收起內容",
+      "hasError": "發生錯誤",
+      "noAvailableEquipmentToExclude": "機台已滿"
     },
     "project": {
       "project": "子專案",
@@ -101,7 +103,9 @@
       "uploadAllMessage": "檔案之間具有關聯性，所有檔案都需重新上傳",
       "noFileSelected": "未選擇檔案",
       "updatedDate": "更新日期",
-      "equipmentInfoIsUnbound": "尚未綁定機台資訊"
+      "equipmentInfoIsUnbound": "尚未綁定機台資訊",
+      "allEquipment": "全部機台",
+      "allOperation": "全部工序"
     },
     "helper": {
       "fileName": "檔案名稱",
@@ -265,7 +269,7 @@
       },
       "machineResult": {
         "preWorkTime": "前置時間",
-        "produceTime": "製作時間",
+        "produceTime": "製程時間",
         "changeLineTime": "換線時間",
         "arriveTime": "抵達時間",
         "checkinTime": "登入時間",
@@ -275,7 +279,7 @@
         "factorySite": "廠房編號",
         "job": "工單號",
         "material": "材料編號",
-        "operation": "營運編號",
+        "operation": "工序",
         "order": "訂單編號",
         "product": "產品編號",
         "stage": "階段",
@@ -321,7 +325,7 @@
       "jobSchedule": "排程計畫",
       "jobDeliver": "交付計畫",
       "ganttChart": "甘特圖",
-      "ganttInfo": "機台（工單可以追蹤時段連結 / 維護保養時間 / 前置＆換線時間 / 製作時間）",
+      "ganttInfo": "機台（工單可以追蹤時段連結 / 維護保養時間 / 前置＆換線時間 / 製程時間）",
       "noPlan": "目前沒有計畫",
       "reSimulate": "重新模擬",
       "open": "開啟內容",
