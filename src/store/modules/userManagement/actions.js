@@ -150,7 +150,7 @@ export default {
   switchGroupById({ dispatch, commit }, { accountId, groupId, dataSourceId, dataFrameId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
-    commit('setGroupId', groupId)
+    // commit('setGroupId', groupId)
     return switchGroup({ accountId, groupId })
       .then(() => dispatch('getUserInfo', groupId))
       .then(() => {
@@ -166,10 +166,10 @@ export default {
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   },
-  async switchLangUpdateUserGroupList({ commit, state }) {
-    const userInfo = await getPermission(state.groupId)
+  async switchLangUpdateUserGroupList({ commit, getters }) {
+    const userInfo = await getPermission(getters.getCurrentGroupId)
     const defaultAccount = userInfo.accountList.find(account => account.isDefault)
-    commit('switchLangSetGroupList', {
+    commit('setGroupList', {
       groupList: defaultAccount.groupList
     })
   }

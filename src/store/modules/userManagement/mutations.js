@@ -8,11 +8,8 @@ export default {
     state.permission = data.permission
     state.isAdmin = data.isAdmin
   },
-  switchLangSetGroupList (state, data) {
+  setGroupList (state, data) {
     state.groupList = data.groupList
-  },
-  setGroupId (state, data) {
-    state.groupId = data
   },
   setLicenseInfo (state, data) {
     state.license = data
