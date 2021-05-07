@@ -57,7 +57,7 @@
         v-show="!isAddable" 
         class="reminding">
         <i class="el-icon-warning-outline" />
-        機台已滿
+        {{ $t('schedule.base.noAvailableEquipmentToExclude') }}
       </span>
     </template>
     <div 

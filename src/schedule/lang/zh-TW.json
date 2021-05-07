@@ -28,7 +28,8 @@
       "minute": "分",
       "open": "開啟內容",
       "close": "收起內容",
-      "hasError": "發生錯誤"
+      "hasError": "發生錯誤",
+      "noAvailableEquipmentToExclude": "機台已滿"
     },
     "project": {
       "project": "子專案",

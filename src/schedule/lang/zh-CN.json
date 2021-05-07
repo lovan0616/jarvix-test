@@ -28,7 +28,8 @@
       "minute": "分",
       "open": "开启内容",
       "close": "收起内容",
-      "hasError": "发生错误"
+      "hasError": "发生错误",
+      "noAvailableEquipmentToExclude": "机台已满"
     },
     "project": {
       "project": "子专案",
