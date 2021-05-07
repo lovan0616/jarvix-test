@@ -27,7 +27,8 @@
       "hour": "时",
       "minute": "分",
       "open": "开启内容",
-      "close": "收起内容"
+      "close": "收起内容",
+      "hasError": "发生错误"
     },
     "project": {
       "project": "子专案",
@@ -101,7 +102,9 @@
       "uploadAllMessage": "档案之间具有关联性，所有档案都需重新上传",
       "noFileSelected": "未选择档案",
       "updatedDate": "更新日期",
-      "equipmentInfoIsUnbound": "尚未绑定机台资讯"
+      "equipmentInfoIsUnbound": "尚未绑定机台资讯",
+      "allEquipment": "全部机台",
+      "allOperation": "全部工序"
     },
     "helper": {
       "fileName": "档案名称",

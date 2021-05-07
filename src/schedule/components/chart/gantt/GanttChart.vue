@@ -1,5 +1,9 @@
 <template>
-  <div class="gantt__wrapper">
+  <div
+    id="my-gantt"
+    :style="ganttInitialHeight && { height: ganttInitialHeight + 'px'}"
+    class="gantt-wrapper"
+  >
     <div
       v-if="isLoading"
       class="empty-block"
@@ -30,7 +34,6 @@
       :title-width="168"
       :scale="scale"
       :scroll-to-postion="position"
-      :style="ganttInitialHeight && { height: ganttInitialHeight + 'px'}"
       class="schedule-gantt-chart"
       @scroll-left="scrollToLeft"
     >
@@ -126,12 +129,12 @@ export default {
       return this.$route.name === 'SimulationResult'
     },
     equipmentsOptions () {
-      const all = { value: null, label: '全部機台' }
+      const all = { value: null, label: this.$t('schedule.setting.allEquipment') }
       const equipmentOptinos = this.equipments.map(item => ({ value: item, label: item }))
       return [all, ...equipmentOptinos]
     },
     operationOptions () {
-      const all = { value: null, label: '全部工序' }
+      const all = { value: null, label: this.$t('schedule.setting.allOperation') }
       const operationOptinos = this.operations.map(item => ({ value: item, label: item }))
       return [all, ...operationOptinos]
     },
@@ -215,10 +218,7 @@ export default {
           restData.forEach(item => {
             // 如果此排除機台有參與任何工序，則將此排除事件安插進該資料列當中
             // 所以如果此排除機台有參與五個工序，這個排除事件就會在甘特圖上出現五次
-            const attendingRows = rowValues.filter(value => {
-              // console.log(value)
-              return value.equipment === item.equipment
-            })
+            const attendingRows = rowValues.filter(value => value.equipment === item.equipment)
             if (attendingRows.length > 0) {
               attendingRows.forEach(row => {
                 row.gtArray.push({
@@ -228,7 +228,7 @@ export default {
                 })
               })
             } else {
-              // 如果此排除機台在此次模擬當中，沒有做參與任何工序，就另外呈現在最下方
+              // 如果此排除機台在此次模擬當中，沒有參與任何工序，就另外呈現在最下方
               // 使用「機台」作為甘特圖每條 row 的 key
               const rowKey = item.equipment
               if (!tempChartList[rowKey]) {
@@ -279,7 +279,7 @@ export default {
           this.isLoading = false
 
           this.$nextTick(() => {
-            // 抓取甘特圖初始高度，主要是避免之後操作 filter 時由於甘特圖高度變小而畫面 scroll
+            // 抓取整個組件初始高度，主要是避免之後操作 filter 時由於甘特圖高度變小而畫面位移
             const ganttDom = document.getElementById('my-gantt')
             if (ganttDom) this.ganttInitialHeight = ganttDom.offsetHeight
           })
@@ -303,7 +303,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.gantt__wrapper {
+.gantt-wrapper {
   .empty-block {
     display: flex;
     flex-direction: column;
@@ -326,6 +326,9 @@ export default {
   .gantt-leftbar-wrapper, .gantt-header-title {
     width: $label-width !important;
   }
+  .gantt-leftbar {
+    min-height: 100px;
+  }
   .gantt-scroll-x {
     margin-left: $label-width !important;
     width: calc(100% - #{$label-width}) !important;
@@ -335,11 +338,24 @@ export default {
   }
   .gantt-container {
     width: 100% !important;
-    // max-height: 500px;
+    max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
     .gantt-timeline {
       margin-left: -30px !important;
+    }
+    .gantt-blocks {
+      height: 100% !important;
+      .gantt-block:only-child {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100px;
+        width: calc(100vw - 430px); // 讓 no data 維持在可視區域
+        &::before {
+          content: 'No Data';
+        }
+      }
     }
   }
   .gantt-scroll-y {

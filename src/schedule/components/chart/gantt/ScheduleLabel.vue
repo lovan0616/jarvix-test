@@ -3,12 +3,7 @@
     :style="{height: cellHeight + 'px', lineHeight: cellHeight + 'px'}"
     class="schedule-label"
   >
-    <span 
-      v-if="info.operation" 
-      class="schedule-label__name">{{ info.operation }}</span>
-    <span 
-      v-else 
-      class="schedule-label__name">{{ $t(`schedule.setting.${info.reason}`) }}</span>
+    <span class="schedule-label__name">{{ info.operation || null }}</span>
     <span class="schedule-label__name">{{ info.equipment }}</span>
   </div>
 </template>
