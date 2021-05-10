@@ -218,6 +218,7 @@ export default {
   },
   methods: {
     ...mapMutations('chatBot', ['clearCopiedColumnName']),
+    ...mapMutations('dataSource', ['setIsManuallyTriggeredAskQuestion']),
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()
@@ -313,6 +314,9 @@ export default {
         if(correctCount >= 2) this.$store.commit('result/updateIsModelResult', true)
         else this.$store.commit('result/updateIsModelResult', false)
         /* For demo */
+      } else {
+        // 手動觸發問問題
+        this.setIsManuallyTriggeredAskQuestion(true)
       }
       this.hideHistory()
       this.closeHelper()

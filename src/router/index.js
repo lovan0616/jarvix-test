@@ -294,7 +294,22 @@ const router = new Router({
                             },
                             {
                               path: '/',
-                              name: 'DataFileList',
+                              name: 'DataFileList',      
+                              beforeEnter: (to, from, next) => {
+                                const dataSourceList = store.getters['dataSource/dataSourceList']
+                                const {id, ...resParams} = to.params
+                                const dataSourceExist = dataSourceList.some(data => data.id === Number(id))
+                                if(!dataSourceExist) {
+                                  Message({
+                                    message: i18n.t('message.dataSourceNotExist'),
+                                    type: 'error',
+                                    duration: 3 * 1000,
+                                    showClose: true
+                                  })
+                                  next({ name:'DataSourceList', params: resParams })
+                                }
+                                next()
+                              },              
                               component: () => import('@/pages/dataManagement/DataFileList'),
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'datasource', ':id'],
@@ -680,6 +695,7 @@ router.beforeEach(async (to, from, next) => {
       showClose: true
     })
   }
+
   next()
 })
 

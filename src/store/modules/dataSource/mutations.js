@@ -20,6 +20,9 @@ export default {
   setAppQuestion (state, data) {
     state.appQuestion = data
   },
+  setIsManuallyTriggeredAskQuestion (state, data) {
+    state.isManuallyTriggeredAskQuestion = data
+  },
   setHistoryQuestionList (state, data) {
     state.historyQuestionList = data
   },
