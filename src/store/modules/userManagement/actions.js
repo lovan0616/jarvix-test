@@ -166,7 +166,7 @@ export default {
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   },
-  async switchLangUpdateUserGroupList({ commit, getters }) {
+  async updateUserGroupList({ commit, getters }) {
     const userInfo = await getPermission(getters.getCurrentGroupId)
     const defaultAccount = userInfo.accountList.find(account => account.isDefault)
     commit('setGroupList', {

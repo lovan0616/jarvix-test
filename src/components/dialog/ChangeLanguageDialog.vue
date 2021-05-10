@@ -74,7 +74,7 @@ export default {
       updateLocale(this.selectedLanguage)
         .then(() => {
           this.$store.commit('setting/setLocale', this.selectedLanguage)
-          this.$store.dispatch('userManagement/switchLangUpdateUserGroupList')
+          this.$store.dispatch('userManagement/updateUserGroupList')
           this.$store.commit('chatBot/clearConversation')
           this.$store.dispatch('chatBot/updateChatConversation')
         })
