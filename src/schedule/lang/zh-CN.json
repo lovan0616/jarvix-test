@@ -27,7 +27,9 @@
       "hour": "时",
       "minute": "分",
       "open": "开启内容",
-      "close": "收起内容"
+      "close": "收起内容",
+      "hasError": "发生错误",
+      "noAvailableEquipmentToExclude": "机台已满"
     },
     "project": {
       "project": "子专案",
@@ -101,7 +103,9 @@
       "uploadAllMessage": "档案之间具有关联性，所有档案都需重新上传",
       "noFileSelected": "未选择档案",
       "updatedDate": "更新日期",
-      "equipmentInfoIsUnbound": "尚未绑定机台资讯"
+      "equipmentInfoIsUnbound": "尚未绑定机台资讯",
+      "allEquipment": "全部机台",
+      "allOperation": "全部工序"
     },
     "helper": {
       "fileName": "档案名称",
@@ -265,7 +269,7 @@
       },
       "machineResult": {
         "preWorkTime": "前置时间",
-        "produceTime": "制作时间",
+        "produceTime": "制程时间",
         "changeLineTime": "换线时间",
         "arriveTime": "抵达时间",
         "checkinTime": "登入时间",
@@ -275,7 +279,7 @@
         "factorySite": "厂房编号",
         "job": "工单号",
         "material": "材料编号",
-        "operation": "营运编号",
+        "operation": "工序",
         "order": "订单编号",
         "product": "产品编号",
         "stage": "阶段",
@@ -321,7 +325,7 @@
       "jobSchedule": "排程计画",
       "jobDeliver": "交付计画",
       "ganttChart": "甘特图",
-      "ganttInfo": "机台（工单可以追踪时段连结 / 维护保养时间 / 前置＆换线时间 / 制作时间）",
+      "ganttInfo": "机台（工单可以追踪时段连结 / 维护保养时间 / 前置＆换线时间 / 制程时间）",
       "noPlan": "目前没有计画",
       "reSimulate": "重新模拟",
       "open": "开启内容",

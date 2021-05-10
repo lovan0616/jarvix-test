@@ -1,9 +1,10 @@
 <template>
   <div
     :style="{height: cellHeight + 'px', lineHeight: cellHeight + 'px'}"
-    class="eqip-name"
+    class="schedule-label"
   >
-    {{ info.name }}
+    <span class="schedule-label__name">{{ info.operation || null }}</span>
+    <span class="schedule-label__name">{{ info.equipment }}</span>
   </div>
 </template>
 <script>
@@ -22,7 +23,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.eqip-name {
-  text-align: center;
+.schedule-label {
+  display: flex;
+  &__name {
+    flex: 1;
+    text-align: center;
+  }
 }
 </style>

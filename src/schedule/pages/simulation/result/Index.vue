@@ -87,52 +87,10 @@
               />
             </div>
           </div>
-          <spinner
-            v-if="isLoadingGantt"
-            size="20"
-          />
-          <div
-            v-else-if="isJobEmpty"
-            class="empty-block"
-          >
-            <span
-              class="empty-block__text"
-            > {{ $t('schedule.table.noData') }}
-            </span>
-          </div>
-          <v-gantt-chart
-            v-else
-            :start-time="startTime"
-            :end-time="endTime"
-            :datas="ganttChartDataList"
-            :cell-width="100"
-            :cell-height="40"
-            :title-height="56"
-            :title-width="168"
+          <gantt-chart
+            :current-solution-id="currentSolutionId"
             :scale="scale"
-            :scroll-to-postion="position"
-            class="schedule-gantt-chart"
-            @scroll-left="scrollToLeft"
-          >
-            <template v-slot:block="{ data, item }">
-              <schedule-item
-                :item="item"
-                :display-time="scale"
-                :searched-order-id="searchedOrderId"
-                @search-order="searchOrder"
-                @cancel-search-order="cancelSearchOrder"
-              />
-            </template>
-            <template v-slot:left="{data}">
-              <schedule-label
-                :info="data"
-                :cell-height="40"
-              />
-            </template>
-            <template v-slot:title>
-              {{ $t('schedule.simulation.scheduleResult.equipmentId') }}
-            </template>
-          </v-gantt-chart>
+          />
         </template>
       </div>
     </div>
@@ -164,26 +122,22 @@
 
 <script>
 import PaginationTable from '@/schedule/components/table/PaginationTable'
-import { getOrderSimulateResult, getMachineSimulateResult, getMachineExcludeList, getKpiResult, adoptionSolution } from '@/schedule/API/Simulation'
-import ScheduleItem from './components/ScheduleItem'
-import ScheduleLabel from './components/ScheduleLabel'
+import { getOrderSimulateResult, getMachineSimulateResult, getKpiResult, adoptionSolution } from '@/schedule/API/Simulation'
 import BarChart from '@/schedule/components/chart/BarChart'
-import moment from 'moment'
+import GanttChart from '@/schedule/components/chart/gantt/GanttChart'
 import { mapState } from 'vuex'
 
 export default {
   name: 'SimulationResult',
   components: {
     PaginationTable,
-    ScheduleItem,
-    ScheduleLabel,
-    BarChart
+    BarChart,
+    GanttChart
   },
   data () {
     return {
       isLoading: true,
       isLoadingKpiResult: false,
-      isLoadingGantt: true,
       isProcessing: false,
       isSubmitting: false,
       isJobEmpty: false,
@@ -192,15 +146,7 @@ export default {
       currentSolutionId: null,
       orderData: {},
       machineData: {},
-      ganttChartDataList: [],
-      startTime: null,
-      endTime: null,
-      timeLines: [{
-        time: null,
-        color: '#1eb8c7'
-      }],
       scale: 60,
-      position: {},
       tabs: [
         {
           type: 'order',
@@ -338,75 +284,6 @@ export default {
           this.isProcessing = false
         })
     },
-    fetchGanttChartData () {
-      this.ganttChartDataList = []
-
-      const getOperationInfo = getMachineSimulateResult(this.planId, this.currentSolutionId, 0, 0, true)
-      const getExcludeInfo = getMachineExcludeList(this.planId, this.currentSolutionId)
-
-      Promise.all([getOperationInfo, getExcludeInfo])
-        .then(([operateData, restData]) => {
-          if (operateData.length === 0) {
-            this.isLoadingGantt = false
-            this.isJobEmpty = true
-            return
-          }
-          const tempChartList = {}
-          let startTime
-          let endTime
-
-          // 整理排除時段的資料
-          restData = restData.reduce((acc, cur) => {
-            const restSchedule = cur.reasons.map(reason => ({
-              ...reason,
-              equipmentId: cur.equipmentId
-            }))
-            acc.push(...restSchedule)
-            return acc
-          }, [])
-
-          // 結合正常和排除時段的資料
-          const schedule = [...operateData, ...restData]
-
-          schedule.forEach(item => {
-            if (!tempChartList[item.equipment]) {
-              tempChartList[item.equipment] = {}
-              tempChartList[item.equipment].gtArray = [{
-                ...item,
-                start: item.startTime || item.startDatetime,
-                end: item.endTime || item.endDatetime
-              }]
-              tempChartList[item.equipment].name = item.equipment
-            } else {
-              tempChartList[item.equipment].gtArray.push({
-                ...item,
-                start: item.startTime || item.startDatetime,
-                end: item.endTime || item.endDatetime
-              })
-            }
-
-            const currentStartTime = moment(item.startTime || item.startDatetime)
-            const currentEndTime = moment(item.endTime || item.endDatetime)
-
-            // 找出最早和最晚時間
-            if (!startTime || !endTime) {
-              startTime = currentStartTime
-              endTime = currentEndTime
-            } else {
-              if (currentStartTime.diff(startTime) < 0) startTime = currentStartTime
-              if (currentEndTime.diff(endTime) > 0) endTime = currentEndTime
-            }
-          })
-
-          this.startTime = startTime.format('YYYY-MM-DD HH:mm:ss')
-          this.endTime = endTime.format('YYYY-MM-DD HH:mm:ss')
-
-          for (const equipmentId in tempChartList) {
-            this.ganttChartDataList.push(tempChartList[equipmentId])
-          }
-          this.isLoadingGantt = false
-        })
-    },
     fetchKpiResult () {
       this.isLoadingKpiResult = true
       getKpiResult(this.planId)
@@ -446,9 +323,6 @@ export default {
       if (this.resultType === 'order') return this.fetchOrderSimulateResult(page - 1, 20, false)
       if (this.resultType === 'machine') return this.fetchMachineSimulateResult(page - 1, 20, false)
     },
-    scrollToLeft (value) {
-      this.position = { x: value }
-    },
     adoptPlan () {
       this.isSubmitting = true
       adoptionSolution(this.planId, this.currentSolutionId)
@@ -464,12 +338,6 @@ export default {
       // 從模擬結果返回模擬設定，會清除當前任何模擬進度
       this.$store.commit('simulation/setPlanId', null)
       this.$router.push({ name: 'SimulationSetting' })
-    },
-    searchOrder (orderId) {
-      this.searchedOrderId = orderId
-    },
-    cancelSearchOrder () {
-      this.searchedOrderId = null
     },
     isSolutionFailed (solutionId) {
       return this.$store.state.simulation.simulationResult.failedSolutionIds.includes(solutionId)
@@ -673,15 +541,6 @@ export default {
     }
   }
 
-  /deep/ .gantt-container {
-    width: 100% !important;
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    .gantt-timeline {
-      margin-left: -30px !important;
-    }
-  }
 
   /deep/ .el-tabs {
     width: 100%;
@@ -726,12 +585,4 @@ export default {
   }
 }
 
-.empty-block {
-  text-align: center;
-  &__text {
-    font-size: 12px;
-    line-height: 60px;
-    color: var(--color-text-gray);
-  }
-}
 </style>

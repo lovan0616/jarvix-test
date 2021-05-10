@@ -81,7 +81,7 @@ export function getMachineSimulateResult (planId, solutionId, page, size, fetchA
   })
 }
 
-export function getMachineExcludeList (planId, solutionId) {
+export function getMachineSimulateExcludeList (planId, solutionId) {
   return request({
     url: `/simulation/plan/${planId}/solution/${solutionId}/excludeEquipment/list`,
     method: 'GET'

@@ -226,7 +226,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { getDateTimeColumns } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputVerify from '@/components/InputVerify'
@@ -324,7 +324,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId', 'isManuallyTriggeredAskQuestion']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
       return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
@@ -359,10 +359,11 @@ export default {
     }
   },
   watch: {
-    appQuestion (question) {
-      if (!question) return
+    isManuallyTriggeredAskQuestion (isTriggered) {
+      if (!isTriggered) return
       this.resetComponent()
-      this.askQuestion(question)
+      this.askQuestion(this.appQuestion)
+      this.setIsManuallyTriggeredAskQuestion(false)
     }
   },
   mounted () {
@@ -382,6 +383,7 @@ export default {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
+    ...mapMutations('dataSource', ['setIsManuallyTriggeredAskQuestion']),
     checkIsTextTypeAvailable (transcript) {
       // 以下需確保問句中只帶有一個 category 欄位
       const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
