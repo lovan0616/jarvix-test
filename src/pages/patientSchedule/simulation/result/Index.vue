@@ -99,7 +99,7 @@
 
 <script>
 import PaginationTable from '@/schedule/components/table/PaginationTable'
-import { getMachineSimulateResult, getMachineExcludeList } from '@/schedule/API/Simulation'
+import { getMachineSimulateResult, getMachineSimulateExcludeList } from '@/schedule/API/Simulation'
 import ScheduleItem from './components/ScheduleItem'
 import ScheduleLabel from './components/ScheduleLabel'
 import BarChart from './components/BarChart'
@@ -242,7 +242,7 @@ export default {
       this.ganttChartDataList = []
 
       const getOperationInfo = getMachineSimulateResult(this.planId, this.currentSolutionId, 0, 0, true)
-      const getExcludeInfo = getMachineExcludeList(this.planId, this.currentSolutionId)
+      const getExcludeInfo = getMachineSimulateExcludeList(this.planId, this.currentSolutionId)
 
       Promise.all([getOperationInfo, getExcludeInfo])
         .then(([operateData, restData]) => {

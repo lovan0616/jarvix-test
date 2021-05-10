@@ -603,7 +603,7 @@ export default {
 
     &--description {
       font-size: 14px;
-      line-height: 18px;
+      line-height: 30px;
       color: var(--color-text-light);
     }
   }
@@ -611,14 +611,19 @@ export default {
   &__select {
     flex: 1;
     text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 
     &--label {
       font-size: 14px;
       line-height: 18px;
+      margin-right: 12px;
     }
 
-    &--input {
+    &--input.default-select {
       width: 96px;
+      padding-bottom: 0;
 
       /deep/ .el-input .el-input__inner {
         height: 30px;
