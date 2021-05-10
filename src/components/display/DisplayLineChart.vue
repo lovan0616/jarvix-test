@@ -476,7 +476,6 @@ export default {
       return config
     },
     colorList () {
-      if (this.hasPagination) return color12
       switch (this.series.length) {
         case 1:
           return colorOnly1
