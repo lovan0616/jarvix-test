@@ -290,6 +290,7 @@ export default {
         || this.componentData.type === 'monitor-warning-list'
         || this.componentData.type === 'simulator'
         || this.componentData.type === 'formula'
+        || this.componentData.type === 'parameters-optimized-simulator'
         || this.yAxisControls.length === 0
         || this.componentNumericColumns.length === 0
       ) return false
@@ -302,6 +303,7 @@ export default {
       })
     },
     componentNumericColumns () {
+      if (!this.componentData.dataColumns) return []
       return this.componentData.dataColumns.filter(column => column.statsType === 'NUMERIC') || []
     },
     keyResultId () {
