@@ -88,7 +88,6 @@ import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/
 import {
   colorOnly1,
   colorOnly2,
-  color5,
   color12,
   gridDefault,
   xAxisDefault,
@@ -481,10 +480,6 @@ export default {
           return colorOnly1
         case 2:
           return colorOnly2
-        case 3:
-        case 4:
-        case 5:
-          return color5
         default:
           return color12
       }
