@@ -17,7 +17,7 @@
             v-model="columnInfo.userInput.type"
             :name="inputId + inputData.columnName"
             :value="option.type"
-            :disabled="disableInput"
+            :disabled="disableInput || isProcessing"
             class="input-radio"
             type="radio"
           >
@@ -73,7 +73,7 @@
             v-model="columnInfo.userInput.type"
             :name="inputId + inputData.columnName"
             :value="option.type"
-            :disabled="disableInput"
+            :disabled="disableInput || isProcessing"
             class="input-radio"
             type="radio"
           >

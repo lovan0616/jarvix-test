@@ -16,6 +16,7 @@
             v-model="criteriaInfo.expectType"
             :value="option.type"
             :name="inputId + criteriaInfo.expectType"
+            :disabled="isProcessing"
             class="input-radio"
             type="radio"
           >
@@ -45,6 +46,7 @@
             :id="inputId + option.type"
             :checked="riskProperty === option.type"
             :value="option.type"
+            :disabled="isProcessing"
             class="input-radio"
             type="radio"
             @change="setRiskProperty(option.type)"
