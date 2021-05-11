@@ -162,7 +162,8 @@ export default {
     configInputData () {
       Promise.all([
         ...((this.columnInfo.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
-          restrictions: this.restrictions.length > 0 ? this.restrictions : null 
+          // restrictions: this.restrictions.length > 0 ? this.restrictions : null 
+          restrictions: null 
         })]),
         ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') && [this.searchValue(this.columnInfo.columnId, '')]),
         searchColumnDefaultValue(this.modelId, this.columnInfo.columnId, {
@@ -208,7 +209,8 @@ export default {
         page: 0,
         searchString,
         size: 200,
-        restrictions: this.restrictions.length > 0 ? this.restrictions : null
+        // restrictions: this.restrictions.length > 0 ? this.restrictions : null
+        restrictions: null
       })
     },
   },
