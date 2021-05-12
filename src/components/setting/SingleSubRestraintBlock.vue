@@ -337,12 +337,14 @@ export default {
       } else {
         dataValueSearch(this.columnId, { searchString: this.queryString })
           .then(({fuzzySearchResult}) => {
-            this.valueList = fuzzySearchResult.map(element => {
+            this.tempValueList = fuzzySearchResult.map(element => {
               return {
                 value: element,
                 name: element
               }
             })
+
+            this.valueList = [...this.tempValueList]
             // 將首次 remote search 拿回的 valueList 暫存起來供之後使用
             if (!this.queryString) {
               this.tempAliasList = JSON.parse(JSON.stringify(this.valueList))
