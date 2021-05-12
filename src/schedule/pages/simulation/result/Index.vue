@@ -392,6 +392,7 @@ export default {
           flex-direction: column;
           padding: 24px;
           border-left: 1px solid var(--color-border);
+          overflow: auto;
           .spinner {
             height: calc(100% - 40px)
           }
