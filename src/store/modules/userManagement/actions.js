@@ -164,5 +164,12 @@ export default {
         return dispatch('dataSource/getDataSourceList', { dataSourceId, dataFrameId }, { root: true })
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
+  },
+  async getUserGroupList({ commit, getters }) {
+    const userInfo = await getPermission(getters.getCurrentGroupId)
+    const defaultAccount = userInfo.accountList.find(account => account.isDefault)
+    commit('setGroupList', {
+      groupList: defaultAccount.groupList
+    })
   }
 }

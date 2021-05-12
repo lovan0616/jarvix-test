@@ -8,6 +8,9 @@ export default {
     state.permission = data.permission
     state.isAdmin = data.isAdmin
   },
+  setGroupList (state, data) {
+    state.groupList = data.groupList
+  },
   setLicenseInfo (state, data) {
     state.license = data
   },
