@@ -62,7 +62,8 @@ const router = new Router({
                   name: 'UpdateLicense',
                   meta: {
                     layers: ['account/:account_id', 'management'],
-                    permission: ['account_create_group']
+                    permission: ['account_create_group', 'renew_license'],
+                    isMatchAllPermissions: true
                   }
                 },
                 {
@@ -380,7 +381,8 @@ const router = new Router({
                               name: 'ModelList',
                               component: () => import('@/pages/modelManagement/ModelList'),
                               meta: {
-                                layers: ['account/:account_id', 'group', ':group_id', 'model', '/']
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', '/'],
+                                permission: ['model']
                               }
                             }
                           ]
@@ -412,7 +414,8 @@ const router = new Router({
                               name: 'ModelDetail',
                               component: () => import('@/pages/modelManagement/ModelDetail'),
                               meta: {
-                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id']
+                                layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
+                                permission: ['model']
                               }
                             },
                             {
@@ -426,7 +429,8 @@ const router = new Router({
                               },
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
-                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse,
+                                permission: ['model']
                               }
                             },
                             {
@@ -440,7 +444,8 @@ const router = new Router({
                               },
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model', ':model_id'],
-                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse
+                                isLocked: (store) => store.state.modelManagement.currentModelInfo.inUse,
+                                permission: ['model']
                               }
                             }
                           ]
@@ -469,8 +474,9 @@ const router = new Router({
                               name: 'FlowList',
                               component: () => import('@/pages/modelFlowManagement/FlowList'),
                               meta: {
-                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', '/']
-                              }
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', '/'],
+                                permission: ['flow']
+                              },
                             }
                           ]
                         },
@@ -492,7 +498,8 @@ const router = new Router({
                               name: 'FlowDetail',
                               component: () => import('@/pages/modelFlowManagement/FlowDetail'),
                               meta: {
-                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id']
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id'],
+                                permission: ['flow']
                               }
                             },
                             {
@@ -500,7 +507,8 @@ const router = new Router({
                               name: 'FlowLogs',
                               component: () => import('@/pages/modelFlowManagement/FlowLogs'),
                               meta: {
-                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id']
+                                layers: ['account/:account_id', 'group', ':group_id', 'model-flow', ':flow_id'],
+                                permission: ['flow']
                               }
                             }
                           ]
@@ -685,7 +693,7 @@ router.beforeEach(async (to, from, next) => {
   // 確認 account 和 group 權限都符合
   const hasPermission = store.getters['userManagement/hasPermission']
   for (let i = 0; i < to.matched.length; i++) {
-    if (!to.matched[i].meta || !to.matched[i].meta.permission || hasPermission(to.matched[i].meta.permission)) continue
+    if (!to.matched[i].meta || !to.matched[i].meta.permission || hasPermission(to.matched[i].meta.permission, to.matched[i].meta.isMatchAllPermissions)) continue
 
     next(from.path)
     return Message({

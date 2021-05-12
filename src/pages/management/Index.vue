@@ -79,7 +79,7 @@ export default {
 
             // 顯示模組子功能列表
           } else {
-            if (navItem.meta.isHiddenNav || (navItem.meta.permission && !this.hasPermission(navItem.meta.permission))) return
+            if (navItem.meta.isHiddenNav || (navItem.meta.permission && !this.hasPermission(navItem.meta.permission, navItem.meta.isMatchAllPermissions))) return
 
             this.nav[selectedMainNavIndex].subNav.push({
               title: this.$t('sideNav.' + this.lowercaseFirstLetter(navItem.name)),
