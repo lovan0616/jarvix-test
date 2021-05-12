@@ -187,8 +187,13 @@ export default {
         settingList.push({icon: 'userManage', title: 'nav.groupUserManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/users`})
       }
 
-      settingList.push({icon: 'algo', title: 'nav.modelManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model`})
-      settingList.push({icon: 'algo-flow', title: 'nav.modelFlowManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model-flow`})
+      if (this.hasPermission(['model'])) {
+        settingList.push({icon: 'algo', title: 'nav.modelManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model`})
+      }
+      
+      if (this.hasPermission(['flow'])) {
+        settingList.push({icon: 'algo-flow', title: 'nav.modelFlowManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model-flow`})
+      }
       return settingList
     }
   },

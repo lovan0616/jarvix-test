@@ -1,10 +1,14 @@
 export default {
-  hasPermission: state => permissionCode => {
+  hasPermission: state => (permissionCode, isMatchAllPermissions = false) => {
     const userPermission = new Set(state.permission)
     // validate single permission
     if (typeof permissionCode === 'string') return userPermission.has(permissionCode)
     // validate a list of permission
-    return permissionCode.some(permission => userPermission.has(permission))
+    if (isMatchAllPermissions) {
+      return permissionCode.every(permission => userPermission.has(permission))
+    } else {
+      return permissionCode.some(permission => userPermission.has(permission))
+    }
   },
   getCurrentAccountInfo: state => {
     const defaultAccount = state.accountList.find(account => account.isDefault)
