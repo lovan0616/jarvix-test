@@ -96,7 +96,7 @@
             :validate-scope="'params-optimization-' + simulatorId"
             :is-disabled="isProcessing || disableInput"
             :name="'input-min-' + inputData.columnName"
-            type="number"
+            type="text"
           />
           <el-tooltip
             :disabled="disableInput"
