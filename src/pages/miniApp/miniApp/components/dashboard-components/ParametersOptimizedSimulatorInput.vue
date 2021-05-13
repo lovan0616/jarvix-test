@@ -92,11 +92,11 @@
           <input-verify
             v-validate="minValueRules"
             ref="minValue"
-            v-model.number="columnInfo.userInput.min"
+            v-model="columnInfo.userInput.min"
             :validate-scope="'params-optimization-' + simulatorId"
             :is-disabled="isProcessing || disableInput"
             :name="'input-min-' + inputData.columnName"
-            type="text"
+            type="number"
           />
           <el-tooltip
             :disabled="disableInput"
