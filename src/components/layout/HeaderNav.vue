@@ -161,7 +161,7 @@ export default {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
     isShowSchedule () {
-      return localStorage.getItem('isShowScheduleModule') === 'true' || (this.getCurrentAccountId === 11 && window.location.hostname === 'jarvix.sis.ai')
+      return localStorage.getItem('isShowScheduleModule') === 'true'
     },
     // isShowFunctionDescription () {
     //   return this.$store.state.setting.locale.includes('zh')

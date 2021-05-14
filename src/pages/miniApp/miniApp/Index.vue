@@ -662,11 +662,10 @@ export default {
               name: this.$t('miniApp.modelSimulateComponent'),
               id: 'Simulator'
             },
-            // 暫時不開放給使用者使用
-            // {
-            //   name: this.$t('miniApp.parametersOptimizedSimulateComponent'),
-            //   id: 'ParametersOptimizedSimulator'
-            // }
+            {
+              name: this.$t('miniApp.parametersOptimizedSimulateComponent'),
+              id: 'ParametersOptimizedSimulator'
+            }
           ]
         },
         {
@@ -1916,6 +1915,8 @@ export default {
   }
 
   &__dashboard-control {
+    position: relative;
+    z-index: 1;
     display: flex;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
@@ -1943,6 +1944,8 @@ export default {
   }
 
   &__dashboard-components {
+    position: relative;
+    z-index: 0;
     margin-right: 4px;
     .warning-icon {
       color: #FF5C46;

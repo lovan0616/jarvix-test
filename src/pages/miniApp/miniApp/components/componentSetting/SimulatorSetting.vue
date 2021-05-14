@@ -189,6 +189,10 @@ export default {
       type: Boolean,
       default: false
     },
+    currentComponentType: {
+      type: String,
+      required: true
+    }
   },
   data () {
     return {
@@ -276,7 +280,9 @@ export default {
       })
     },
     getModelList () {
-      getModelList(this.getCurrentGroupId, 0, 99999)
+      // 參數最佳化組件目前只能支援輸出是單一一個 numeric 的模型
+      const enableParamOpt = this.currentComponentType === 'parameters-optimized-simulator'
+      getModelList(this.getCurrentGroupId, 0, 99999, enableParamOpt)
         .then(modelList => {
           this.modelOptionList = modelList.models.map(model => ({
             ...model,

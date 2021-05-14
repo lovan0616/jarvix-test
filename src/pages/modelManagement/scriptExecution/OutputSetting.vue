@@ -21,7 +21,7 @@
           <model-column-setting-card
             v-for="column in columnList"
             :column-info="column"
-            :data-type-option-list="statsTypeOptionList"
+            :data-type-option-list="availableStatsTypeOptionList"
             :column-list="columnList"
             :key="column.id"
             :is-processing="isProcessing"
@@ -103,6 +103,10 @@ export default {
     },
     modelColumnNames () {
       return this.columnList.map(item => item.modelColumnName)
+    },
+    availableStatsTypeOptionList () {
+      const availableStatsTypeSet = new Set(['CATEGORY', 'NUMERIC'])
+      return statsTypeOptionList.filter(statsType => availableStatsTypeSet.has(statsType.value))
     }
   },
   mounted () {

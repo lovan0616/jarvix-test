@@ -17,7 +17,7 @@
             v-model="columnInfo.userInput.type"
             :name="inputId + inputData.columnName"
             :value="option.type"
-            :disabled="disableInput"
+            :disabled="disableInput || isProcessing"
             class="input-radio"
             type="radio"
           >
@@ -73,7 +73,7 @@
             v-model="columnInfo.userInput.type"
             :name="inputId + inputData.columnName"
             :value="option.type"
-            :disabled="disableInput"
+            :disabled="disableInput || isProcessing"
             class="input-radio"
             type="radio"
           >
@@ -92,7 +92,7 @@
           <input-verify
             v-validate="minValueRules"
             ref="minValue"
-            v-model.number="columnInfo.userInput.min"
+            v-model="columnInfo.userInput.min"
             :validate-scope="'params-optimization-' + simulatorId"
             :is-disabled="isProcessing || disableInput"
             :name="'input-min-' + inputData.columnName"

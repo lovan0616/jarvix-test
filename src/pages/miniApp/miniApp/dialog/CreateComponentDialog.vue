@@ -87,7 +87,7 @@
           v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parameters-optimized-simulator'"
           :model-setting="currentComponent.modelSetting"
           :model-component-info="modelComponentInfo"
-          :current-component="currentComponent"
+          :current-component-type="currentComponent.type"
           :is-loading.sync="isLoading"
           :is-failed.sync="isFailed"
         />
