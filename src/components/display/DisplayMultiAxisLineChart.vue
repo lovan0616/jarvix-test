@@ -50,6 +50,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
+import chartVariable from '@/styles/chart/variables.scss'
 import { getDrillDownTool } from '@/components/display/common/addons'
 import {
   colorOnly1,
@@ -194,6 +195,10 @@ export default {
           ...config.yAxis,
           type: 'value',
           name: axis.display_name,
+          nameTextStyle: {
+            color: chartVariable['textColor'],
+            align: index % 2 === 0 ? 'left' : 'right'
+          },
           offset: Math.floor(index / 2) * 35,
           axisLine: {
             lineStyle: {
