@@ -70,7 +70,7 @@
         <div 
           v-if="!taskId" 
           class="simulator__default-message">
-          {{ $t('miniApp.notYetSimulate') }}
+          {{ failedMessage || $t('miniApp.notYetSimulate') }}
         </div>
         <template v-else>
           <el-tabs 

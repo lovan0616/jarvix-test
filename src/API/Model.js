@@ -6,13 +6,14 @@ import request from '@/utils/publicRequest'
  * @query {Number} page - pagination page
  * @query {Number} size - pagination item per page
  */
- export function getModelList(groupId, page = 0, size = 20) {
+export function getModelList(groupId, page = 0, size = 20, enableParamOpt = false) {
   return request({
     url: `/models?groupId=${groupId}`,
     method: 'GET',
     params: {
       page,
-      size
+      size,
+      enableParamOpt
     }
   })
 }
