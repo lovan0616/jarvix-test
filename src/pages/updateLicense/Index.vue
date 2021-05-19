@@ -24,22 +24,6 @@
             class="error-text"
           >{{ errors.first('newLicense') }}</div>
         </div>
-        <div class="license-info__input-block">
-          <h2 class="license-info__title">{{ $t('updateLicense.publicKey') }}</h2>
-          <textarea
-            v-validate="`required`"
-            v-model.trim="licenseInfo.newPublicKey"
-            :placeholder="$t('updateLicense.placeholder') + $t('updateLicense.publicKey')"
-            :disabled="isLoading"
-            class="license-info__input"
-            rows="5"
-            name="newPublicKey"
-          />
-          <div
-            v-show="errors.has('newPublicKey')"
-            class="error-text"
-          >{{ errors.first('newPublicKey') }}</div>
-        </div>
         <div class="license-info__button-block">
           <button 
             :class="isLoading ? 'btn-has-icon' : ''"
@@ -69,10 +53,8 @@ export default {
   data () {
     return {
       licenseInfo: {
-        newLicense: null,
-        newPublicKey: null
+        newLicense: null
       },
-      newLicense: null,
       isLoading: false
     }
   },
