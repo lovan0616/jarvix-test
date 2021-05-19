@@ -2765,8 +2765,8 @@
     "unlimited": "Unlimited"
   },
   "updateLicense": {
-    "newKey": "New License Key",
-    "placeholder": "Please enter new license key."
+    "licenseKey": "New License Key",
+    "placeholder": "Please enter "
   },
   "dataType": {
     "numeric": "Numeric",

@@ -2801,7 +2801,6 @@
   },
   "updateLicense": {
     "licenseKey": "新产品金钥（license）",
-    "publicKey": "新公开金钥（public key）",
     "placeholder": "请输入"
   },
   "dataType": {
