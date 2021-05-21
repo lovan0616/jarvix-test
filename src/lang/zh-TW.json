@@ -1196,7 +1196,7 @@
     "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "自定義欄位或來自關聯資料表的欄位，無法儲存為標籤欄位。",
     "createClusteringColumn": "新增標籤欄位",
     "clusteringColumnName": "標籤欄位名稱",
-    "outlier": "離群",
+    "outlier": "outlier",
     "piecesOfData": "{amount} 筆資料",
     "buildingClusteringColumn": "欄位建置中，建置完成即可使用。",
     "buildingClusteringColumnSuccess": "標籤欄位「{columnName}」建置成功。",
