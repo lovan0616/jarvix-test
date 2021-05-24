@@ -1,26 +1,38 @@
 <template>
-  <div class="plan-gantt gantt">
+  <div
+    class="plan-gantt gantt"
+    :class="{'is-collapsed': isCollapsed}"
+  >
     <div class="gantt__header">
       <h3 class="gantt__title">
         {{ $t('schedule.schedule.ganttChart') }}
       </h3>
-    </div>
-    <div class="gantt__info">
-      <span class="gantt__info--description">
-        {{ $t('schedule.schedule.ganttInfo') }}
-      </span>
-      <div class="gantt__select">
-        <span class="gantt__select--label">
-          {{ $t('schedule.simulation.scheduleResult.viewScale') }}
-        </span>
-        <default-select
-          v-model="scale"
-          :options="scaleList"
-          class="gantt__select--input"
-        />
+      <div
+        class="collapse-controller"
+        @click="isCollapsed = !isCollapsed"
+      >
+        {{ isCollapsed ? $t('schedule.base.open') : $t('schedule.base.close') }}
+        <i class="icon el-icon-arrow-down" />
       </div>
     </div>
-    <gantt-chart :scale="scale" />
+    <div class="gantt__content">
+      <div class="gantt__info">
+        <span class="gantt__info--description">
+          {{ $t('schedule.schedule.ganttInfo') }}
+        </span>
+        <div class="gantt__select">
+          <span class="gantt__select--label">
+            {{ $t('schedule.simulation.scheduleResult.viewScale') }}
+          </span>
+          <default-select
+            v-model="scale"
+            :options="scaleList"
+            class="gantt__select--input"
+          />
+        </div>
+      </div>
+      <gantt-chart :scale="scale" />
+    </div>
   </div>
 </template>
 
@@ -36,6 +48,7 @@ export default {
     return {
       isLoading: true,
       isJobEmpty: false,
+      isCollapsed: false,
       scale: 60,
     }
   },
@@ -74,22 +87,35 @@ export default {
 
 <style lang="scss" scoped>
 .gantt {
+  &.is-collapsed {
+    .gantt__content {
+      max-height: 0;
+      opacity: 0;
+    }
+    .icon {
+      transform: rotate(180deg);
+    }
+  }
+
   &__header {
     position: relative;
     display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: space-between;
-    padding: 0 14px;
+    padding: 0 0 0 14px;
     margin-bottom: 12px;
-    cursor: pointer;
+  }
+
+  &__content {
+    transition: opacity .2s ease, max-height .3s ease;
+    max-height: 1000px; // 這邊設定這麼高，只是為了一定要給一個值 transition 才有效果
+    opacity: 1;
+    overflow: hidden;
   }
 
   &__title {
     font-size: 18px;
     line-height: 22px;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0;
 
     &:before {
       content: "";
@@ -138,6 +164,14 @@ export default {
         color: var(--color-text-light);
         font-weight: bold;
       }
+    }
+  }
+
+  .collapse-controller {
+    cursor: pointer;
+    font-size: 14px;
+    .icon {
+      transition: transform .3s ease;
     }
   }
 

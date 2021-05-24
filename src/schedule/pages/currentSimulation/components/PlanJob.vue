@@ -1,44 +1,52 @@
 <template>
   <div
     class="plan-job job"
+    :class="{'is-collapsed': isCollapsed}"
   >
-    <div
-      class="job__header"
-    >
+    <div class="job__header">
       <h3 class="job__title">
         {{ $t('schedule.schedule.jobInfo') }}
       </h3>
+      <div
+        class="collapse-controller"
+        @click="isCollapsed = !isCollapsed"
+      >
+        {{ isCollapsed ? $t('schedule.base.open') : $t('schedule.base.close') }}
+        <i class="icon el-icon-arrow-down" />
+      </div>
     </div>
-    <el-tabs
-      :value="resultType"
-      class="job__tabs schedule-tab"
-      type="card"
-      @tab-click="switchTab($event.name)"
-    >
-      <el-tab-pane
-        v-for="tab in tabs"
-        :key="tab.type"
-        :label="tab.name"
-        :name="tab.type"
+    <div class="job__content">
+      <el-tabs
+        :value="resultType"
+        class="job__tabs schedule-tab"
+        type="card"
+        @tab-click="switchTab($event.name)"
+      >
+        <el-tab-pane
+          v-for="tab in tabs"
+          :key="tab.type"
+          :label="tab.name"
+          :name="tab.type"
+        />
+      </el-tabs>
+      <div
+        v-if="isLoading"
+        class="empty-block"
+      >
+        <spinner />
+      </div>
+      <pagination-table
+        v-if="isDataAvailable"
+        :is-processing="isProcessing"
+        :pagination-info="pagination"
+        :column-width="'180'"
+        :max-height="'600'"
+        :dataset="resultType === 'order' ? jobData : machineData"
+        fixed-index
+        class="job__table"
+        @change-page="updatePage"
       />
-    </el-tabs>
-    <div
-      v-if="isLoading"
-      class="empty-block"
-    >
-      <spinner />
     </div>
-    <pagination-table
-      v-if="isDataAvailable"
-      :is-processing="isProcessing"
-      :pagination-info="pagination"
-      :column-width="'180'"
-      :max-height="'600'"
-      :dataset="resultType === 'order' ? jobData : machineData"
-      fixed-index
-      class="job__table"
-      @change-page="updatePage"
-    />
   </div>
 </template>
 
@@ -60,6 +68,7 @@ export default {
     return {
       isLoading: false,
       isProcessing: false,
+      isCollapsed: false,
       resultType: 'order',
       jobData: null,
       machineData: null,
@@ -187,16 +196,35 @@ export default {
 .job {
   margin-bottom: 24px;
 
+  &.is-collapsed {
+    .job__content {
+      max-height: 0;
+      opacity: 0;
+    }
+    .icon {
+      transform: rotate(180deg);
+    }
+  }
+
   &__header {
+    display: flex;
+    justify-content: space-between;
     position: relative;
-    padding: 0 14px;
+    padding: 0 0 0 14px;
     margin-bottom: 12px;
+  }
+
+  &__content {
+    transition: opacity .2s ease, max-height .3s ease;
+    max-height: 1000px; // 這邊設定這麼高，只是為了一定要給一個值 transition 才有效果
+    opacity: 1;
+    overflow: hidden;
   }
 
   &__title {
     font-size: 18px;
     line-height: 22px;
-    margin: 0 30px 0 0;
+    margin: 0;
 
     &::before {
       content: "";
@@ -238,6 +266,14 @@ export default {
     height: 249px;
     background: var(--color-bg-gray);
     border-radius: 8px;
+  }
+
+  .collapse-controller {
+    cursor: pointer;
+    font-size: 14px;
+    .icon {
+      transition: transform .3s ease;
+    }
   }
 }
 </style>
