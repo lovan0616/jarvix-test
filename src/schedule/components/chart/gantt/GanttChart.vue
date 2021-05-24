@@ -37,7 +37,7 @@
       class="schedule-gantt-chart"
       @scroll-left="scrollToLeft"
     >
-      <template v-slot:block="{ data, item }">
+      <template v-slot:block="{ item }">
         <schedule-item
           :item="item"
           :display-time="scale"
@@ -138,13 +138,17 @@ export default {
       const operationOptinos = this.operations.map(item => ({ value: item, label: item }))
       return [all, ...operationOptinos]
     },
+    filters () {
+      const equipmentFilter = item => item.equipment === this.selectedEquipment
+      const operationFilter = item => item.operation === this.selectedOperation
+      return [
+        ...(Boolean(this.selectedEquipment) && [equipmentFilter]),
+        ...(Boolean(this.selectedOperation) && [operationFilter]),
+      ]
+    },
     filteredGanttChartDataList () {
-      return this.ganttChartDataList.filter(item => {
-        if (this.selectedEquipment && this.selectedOperation) return item.equipment === this.selectedEquipment && item.operation === this.selectedOperation
-        if (this.selectedEquipment) return item.equipment === this.selectedEquipment
-        if (this.selectedOperation) return item.operation === this.selectedOperation
-        return true
-      })
+      // 甘特圖上 filters 功能
+      return this.filters.reduce((d, f) => d.filter(f) , this.ganttChartDataList)
     }
   },
   mounted () {
