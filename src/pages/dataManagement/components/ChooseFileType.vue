@@ -70,13 +70,7 @@ export default {
           icon: 'db-connection',
           title: this.$t('editing.remoteConnection'),
           description: this.$t('editing.remoteConnectionDescription')
-        },
-        ...(this.hasPermission('app') ? [{
-          type: importType.SCRIPT,
-          icon: 'script',
-          title: this.$t('editing.runScript'),
-          description: this.$t('editing.runScriptDescription')
-        }] : [])
+        }
       ]
     } 
   },
