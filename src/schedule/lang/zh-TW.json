@@ -238,6 +238,7 @@
       "scheduledJobs": "本次排程@:schedule.simulation.job",
       "searchJobs": "搜尋@:schedule.simulation.job編號",
       "searchOrders": "搜尋訂單",
+      "searchJobOrOrder": "搜尋工單 / 訂單",
       "selectedJobsCount": "目前已選入 {count} 筆@:schedule.simulation.job",
       "selectJobs": "選擇@:schedule.simulation.job",
       "startDatetime": "排程起始時間",
@@ -358,7 +359,8 @@
       "confirm": "確認",
       "cancel": "取消",
       "confirmDataSync": "確認同步",
-      "sent": "送出",
+      "send": "送出",
+      "reset": "重設",
       "selectAll": "全選",
       "simulateNewPlan":"模擬新計畫"
     },

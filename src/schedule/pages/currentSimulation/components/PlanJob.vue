@@ -1,7 +1,7 @@
 <template>
   <div
-    class="plan-job job"
     :class="{'is-collapsed': isCollapsed}"
+    class="plan-job job"
   >
     <div class="job__header">
       <h3 class="job__title">
@@ -63,6 +63,12 @@ export default {
   name: 'PlanJob',
   components: {
     PaginationTable
+  },
+  props: {
+    searchString: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {
@@ -140,7 +146,12 @@ export default {
     fetchOrderPlanResult (page = 0, size = 20, resetPagination = false) {
       this.isProcessing = true
       if (resetPagination) this.isLoading = true
-      getOrderPlanResult(this.scheduleProjectId, page, size)
+      getOrderPlanResult({
+          projectId: this.scheduleProjectId,
+          page,
+          size,
+          keyword: this.searchString
+        })
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
           if (!res.data) return
@@ -164,7 +175,12 @@ export default {
     fetchMachinePlanResult (page = 0, size = 20, resetPagination = false) {
       this.isProcessing = true
       if (resetPagination) this.isLoading = true
-      getMachinePlanResult(this.scheduleProjectId, page, size)
+      getMachinePlanResult({
+        projectId: this.scheduleProjectId,
+        page,
+        size,
+        keyword: this.searchString
+      })
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
           this.machineData = {
@@ -216,7 +232,7 @@ export default {
 
   &__content {
     transition: opacity .2s ease, max-height .3s ease;
-    max-height: 1000px; // 這邊設定這麼高，只是為了一定要給一個值 transition 才有效果
+    max-height: 2000px; // 這邊設定這麼高，只是為了一定要給一個值 transition 才有效果
     opacity: 1;
     overflow: hidden;
   }

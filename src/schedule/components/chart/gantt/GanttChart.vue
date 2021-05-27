@@ -99,6 +99,10 @@ export default {
     scale: {
       type: Number,
       default: 60
+    },
+    searchString: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -163,7 +167,13 @@ export default {
 
       const getOperationInfo = this.isSimulating
         ? getMachineSimulateResult(this.planId, this.currentSolutionId, 0, 0, true)
-        : getMachinePlanResult(this.scheduleProjectId, 0, 0, true)
+        : getMachinePlanResult({
+            projectId: this.scheduleProjectId,
+            page: 0,
+            size: 20,
+            fetchAll: true,
+            keyword: this.searchString
+          })
       const getExcludeInfo = this.isSimulating
         ? getMachineSimulateExcludeList(this.planId, this.currentSolutionId)
         : getMachinePlanExcludeList(this.scheduleProjectId)

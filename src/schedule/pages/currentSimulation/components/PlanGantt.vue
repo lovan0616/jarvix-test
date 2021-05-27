@@ -1,7 +1,7 @@
 <template>
   <div
-    class="plan-gantt gantt"
     :class="{'is-collapsed': isCollapsed}"
+    class="plan-gantt gantt"
   >
     <div class="gantt__header">
       <h3 class="gantt__title">
@@ -31,7 +31,10 @@
           />
         </div>
       </div>
-      <gantt-chart :scale="scale" />
+      <gantt-chart
+        :scale="scale"
+        :search-string="searchString"
+      />
     </div>
   </div>
 </template>
@@ -43,6 +46,12 @@ export default {
   name: 'PlanGantt',
   components: {
     GanttChart
+  },
+  props: {
+    searchString: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {

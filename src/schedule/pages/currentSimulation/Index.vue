@@ -1,10 +1,12 @@
 
 <template>
-  <div
-    class="current-simulation"
-  >
+  <div class="current-simulation">
     <h2 class="header">
       {{ $t('schedule.schedule.title') }}
+      <ticket-filter
+        v-show="!isLoading"
+        @search="searchString = $event"
+      />
     </h2>
     <default-button
       v-if="planInfo.planId"
@@ -22,14 +24,7 @@
         <h3 class="KPI__title">
           {{ $t('schedule.schedule.planKPI') }}
         </h3>
-        <spinner
-          v-if="isLoading"
-          size="20"
-        />
-        <div
-          v-else
-          class="KPI__info"
-        >
+        <div class="KPI__info">
           <span class="KPI__info--item">
             {{ $t('schedule.schedule.dateRange') }} {{ KPIInfo.timeRange }}
           </span>
@@ -44,8 +39,14 @@
           </span>
         </div>
       </div>
-      <plan-job />
-      <plan-gantt />
+      <plan-job
+        :key="`planJob-${searchString}`"
+        :search-string="searchString"
+      />
+      <plan-gantt
+        :key="`planGantt-${searchString}`"
+        :search-string="searchString"
+      />
     </div>
     <div
       v-else
@@ -69,6 +70,7 @@
 <script>
 import PlanJob from './components/PlanJob'
 import PlanGantt from './components/PlanGantt'
+import TicketFilter from '@/schedule/components/TicketFilter'
 import { getPlanInfo, getPlanKPI, getLastSolution } from '@/schedule/API/Plan'
 import { mapMutations, mapState } from 'vuex'
 
@@ -76,11 +78,12 @@ export default {
   name: 'CurrentSimulation',
   components: {
     PlanJob,
-    PlanGantt
+    PlanGantt,
+    TicketFilter
   },
   data () {
     return {
-      isLoading: false,
+      isLoading: true,
       isLoadingLastSolution: false,
       planInfo: {
         planId: null,
@@ -92,11 +95,12 @@ export default {
         ofr: 0,
         utilization: 0,
         timeRange: ''
-      }
+      },
+      searchString: ''
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['scheduleProjectId'])
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
   },
   mounted () {
     this.fetchData()
@@ -145,10 +149,16 @@ export default {
 .current-simulation {
   position: relative;
   padding: 24px;
+  height: 100%;
+  overflow: auto;
+  overflow: overlay;
 
   .header {
-    display: inline-block;
+    display: inline-flex;
     margin: 0 0 12px 0;
+    .filter {
+      margin-left: 16px;
+    }
   }
 
   .simulate-btn {
