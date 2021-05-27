@@ -229,7 +229,6 @@
     "remoteConnection": "数据库导入",
     "remoteConnectionDescription": "直接读取您的数据库数据<br>并进行数据复制和创建",
     "runScript": "资料表演算",
-    "runScriptDescription": "使用系统的资料进行演算处理并建置出新的资料表",
     "confirmDeleteForeign": "确认删除此关联吗？",
     "chooseDataSource": "请选择数据源",
     "allDataFrames": "全部数据表",
