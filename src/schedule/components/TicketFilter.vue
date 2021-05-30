@@ -19,8 +19,7 @@
         v-show="isFocus"
         class="filter__input-options"
       >
-        <spinner v-if="isSearching" />
-        <template v-else-if="options.length > 0">
+        <template v-if="options.length > 0">
           <li
             v-for="option in options"
             :key="option"
@@ -29,11 +28,18 @@
           >
             {{ option }}
           </li>
+          <observer
+            v-if="!reachLastPage || isSearching"
+            :options="observerOptions"
+            @intersect="fetchOptions(++paginationInfo.currentPage)"
+          >
+            <spinner size="24" />
+          </observer>
         </template>
         <div
           v-else
           class="option is-empty">
-          查無結果
+          {{ $t('schedule.base.noData') }}
         </div>
       </ul>
     </div>
@@ -50,26 +56,53 @@
 <script>
 import { keywordSearch } from '@/schedule/API/Plan'
 import { mapState } from 'vuex'
+import Observer from '@/components/Observer'
 
 export default {
   name: 'TicketFilter',
+  components: {
+    Observer
+  },
   data () {
     return {
       isSearching: true,
       isFocus: false,
+      isSelectByClick: false,
       btnText: 'send', // send, reset
       keyword: '',
       options: [],
       defaultOptions: [], // 將第一頁選項暫存在本地
-      debounceTimer: null
+      debounceTimer: null,
+      paginationInfo: {
+        currentPage: 0,
+        itemPerPage: 0,
+        totalItems: 0,
+        totalPages: 0
+      }
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['scheduleProjectId'])
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
+    observerOptions () {
+      return {
+        rootClassName: '.filter__input-options',
+        rootMargin: 0,
+        threshold: 0,
+      }
+    },
+    reachLastPage () {
+      return this.paginationInfo.currentPage >= this.paginationInfo.totalPages - 1
+    }
   },
   watch: {
     keyword (keyword) {
       if (this.isSearching) return
+      // 如果是直接點 options，就不用再去 fetch 選項
+      if (this.isSelectByClick) {
+        // 還原狀態
+        this.isSelectByClick = false
+        return
+      }
       if (!keyword) {
         this.options = this.defaultOptions
         this.btnText = 'reset'
@@ -77,8 +110,9 @@ export default {
       }
       this.clearTimer()
       this.btnText = 'send'
+      this.paginationInfo.currentPage = 0
       this.debounceTimer = setTimeout(() => {
-        this.fetchOptions(keyword)
+        this.fetchOptions()
       }, 200)
     }
   },
@@ -86,24 +120,30 @@ export default {
     this.fetchOptions()
   },
   methods: {
-    fetchOptions (keyword = '') {
+    fetchOptions (page = 0) {
       this.isSearching = true
       keywordSearch({
         projectId: this.scheduleProjectId,
-        page: 0,
+        page,
         size: 200,
-        keyword
+        keyword: this.keyword
       })
-      .then(options => {
+      .then(({ data: newOptions, pagination }) => {
         if (this.defaultOptions.length === 0) {
-          this.defaultOptions = options
+          this.defaultOptions = newOptions
         }
-        this.options = options
+        if (pagination.currentPage === 0) {
+          this.options = newOptions
+        } else {
+          this.options = [ ...this.options, ...newOptions ]
+        }
+        this.paginationInfo = pagination
       })
       .catch(() => {})
       .finally(() => this.isSearching = false)
     },
     onClickOption (option) {
+      this.isSelectByClick = true
       this.keyword = option
       this.closeDopdown()
     },
@@ -149,12 +189,13 @@ export default {
       background-color: #303435;
       margin: 0;
       padding: 0;
-      max-height: 400px;
+      max-height: 320px;
       width: 100%;
       overflow: auto;
       font-size: 14px;
       list-style: none;
       z-index: 4;
+      box-shadow: 0px 4px 12px rgba(73, 128, 132, 0.48);
   
       .option {
         padding: 0 20px;

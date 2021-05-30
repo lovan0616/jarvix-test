@@ -14,7 +14,7 @@
       v-else-if="isJobEmpty"
       class="empty-block"
     >
-      <span class="empty-block__text">{{ $t('schedule.table.noData') }}</span>
+      <span class="empty-block__text">{{ $t('schedule.base.noData') }}</span>
     </div>
     <div
       v-else-if="hasError"

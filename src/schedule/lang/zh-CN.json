@@ -29,7 +29,8 @@
       "open": "开启内容",
       "close": "收起内容",
       "hasError": "发生错误",
-      "noAvailableEquipmentToExclude": "机台已满"
+      "noAvailableEquipmentToExclude": "机台已满",
+      "noData": "暂无资料"
     },
     "project": {
       "project": "子专案",
@@ -363,9 +364,6 @@
       "reset": "重设",
       "selectAll": "全选",
       "simulateNewPlan":"模拟新计画"
-    },
-    "table": {
-      "noData": "无资料"
     }
   }
 }
