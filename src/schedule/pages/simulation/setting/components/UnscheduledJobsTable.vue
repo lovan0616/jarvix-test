@@ -34,7 +34,7 @@
         type="outline"
         @click="searchJobData"
       >
-        {{ $t('schedule.button.sent') }}
+        {{ $t('schedule.button.send') }}
       </default-button>
       <div class="header__button">
         <default-button
@@ -71,7 +71,7 @@
     >
       <span
         class="empty-block__text"
-      > {{ $t('schedule.table.noData') }} </span>
+      > {{ $t('schedule.base.noData') }} </span>
     </div>
   </div>
 </template>

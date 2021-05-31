@@ -29,7 +29,8 @@
       "open": "开启内容",
       "close": "收起内容",
       "hasError": "发生错误",
-      "noAvailableEquipmentToExclude": "机台已满"
+      "noAvailableEquipmentToExclude": "机台已满",
+      "noData": "暂无资料"
     },
     "project": {
       "project": "子专案",
@@ -238,6 +239,7 @@
       "scheduledJobs": "本次排程@:schedule.simulation.job",
       "searchJobs": "搜寻@:schedule.simulation.job编号",
       "searchOrders": "搜寻订单",
+      "searchJobOrOrder": "搜寻工单 / 订单",
       "selectedJobsCount": "目前已选入 {count} 笔@:schedule.simulation.job",
       "selectJobs": "选择@:schedule.simulation.job",
       "startDatetime": "排程起始时间",
@@ -358,12 +360,10 @@
       "confirm": "确认",
       "cancel": "取消",
       "confirmDataSync": "确认同步",
-      "sent": "送出",
+      "send": "送出",
+      "reset": "重设",
       "selectAll": "全选",
       "simulateNewPlan":"模拟新计画"
-    },
-    "table": {
-      "noData": "无资料"
     }
   }
 }
