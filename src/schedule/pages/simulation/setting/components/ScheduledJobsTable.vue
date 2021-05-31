@@ -25,7 +25,7 @@
         type="outline"
         @click="updateJobData"
       >
-        {{ $t('schedule.button.sent') }}
+        {{ $t('schedule.button.send') }}
       </default-button>
       <div class="header__button">
         <default-button

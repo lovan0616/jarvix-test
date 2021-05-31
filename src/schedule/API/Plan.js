@@ -20,7 +20,7 @@ export function getPlanKPI (projectId) {
   })
 }
 
-export function getOrderPlanResult (projectId, page, size, fetchAll = false) {
+export function getOrderPlanResult ({ projectId, page, size, fetchAll = false, keyword = '' }) {
   return request({
     url: '/plan/result/general/list',
     method: 'GET',
@@ -28,12 +28,13 @@ export function getOrderPlanResult (projectId, page, size, fetchAll = false) {
       projectId,
       page,
       size,
-      fetchAll
+      fetchAll,
+      keyword
     }
   })
 }
 
-export function getMachinePlanResult (projectId, page, size, fetchAll = false) {
+export function getMachinePlanResult ({ projectId, page = 0, size = 0, fetchAll = false, keyword = '' }) {
   return request({
     url: '/plan/result/detail/list',
     method: 'GET',
@@ -41,7 +42,8 @@ export function getMachinePlanResult (projectId, page, size, fetchAll = false) {
       projectId,
       page,
       size,
-      fetchAll
+      fetchAll,
+      keyword
     }
   })
 }
@@ -62,6 +64,19 @@ export function getLastSolution (projectId) {
     method: 'GET',
     params: {
       projectId
+    }
+  })
+}
+
+export function keywordSearch ({ projectId, page = 0, size = 200, keyword }) {
+  return request({
+    url: '/plan/result/keywordSearch',
+    method: 'GET',
+    params: {
+      projectId,
+      page,
+      size,
+      keyword
     }
   })
 }

@@ -10,7 +10,7 @@
       >
         <span
           class="empty-block__text"
-        > {{ $t('schedule.table.noData') }}
+        > {{ $t('schedule.base.noData') }}
         </span>
       </div>
       <v-echart
