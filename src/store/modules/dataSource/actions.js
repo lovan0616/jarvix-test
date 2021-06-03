@@ -268,7 +268,10 @@ export default {
     if (state.dataFrameId === "all" || hasCurrentDataFrame) return
 
     // 如果 dataFrame 被刪掉則恢復預設 all
-    return dispatch('changeDataFrameById', 'all')
+    getDataSourceList().then(res => {
+      commit('setDataSourceList', res)
+      return dispatch('changeDataFrameById', 'all')
+    })
   },
   triggerColumnDataCalculation({ state, getters }) {
     const restrictions = getters.filterRestrictionList
