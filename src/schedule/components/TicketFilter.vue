@@ -29,12 +29,10 @@
             {{ option }}
           </li>
           <observer
-            v-if="!reachLastPage || isSearching"
+            v-if="!reachLastPage"
             :options="observerOptions"
             @intersect="fetchOptions(++paginationInfo.currentPage)"
-          >
-            <spinner size="24" />
-          </observer>
+          />
         </template>
         <div
           v-else
