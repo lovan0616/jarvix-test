@@ -20,33 +20,42 @@
       v-if="planInfo.planId"
       class="simulation-content"
     >
-      <div class="plan-KPI KPI">
-        <h3 class="KPI__title">
-          {{ $t('schedule.schedule.planKPI') }}
-        </h3>
-        <div class="KPI__info">
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.dateRange') }} {{ KPIInfo.timeRange }}
-          </span>
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.capacity') }} {{ KPIInfo.capacity }}個
-          </span>
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.ofr') }} {{ KPIInfo.ofr }}％
-          </span>
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.utilization') }} {{ KPIInfo.utilization }}％
-          </span>
+      <template
+        v-if="isYKSchedule"
+      >
+        <iframe src='https://view.officeapps.live.com/op/embed.aspx?src=http://www.learningaboutelectronics.com/Articles/Example.xlsx' width='100%' height='565px' frameborder='0'></iframe>
+      </template>
+      <template
+        v-else
+      >
+        <div class="plan-KPI KPI">
+          <h3 class="KPI__title">
+            {{ $t('schedule.schedule.planKPI') }}
+          </h3>
+          <div class="KPI__info">
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.dateRange') }} {{ KPIInfo.timeRange }}
+            </span>
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.capacity') }} {{ KPIInfo.capacity }}個
+            </span>
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.ofr') }} {{ KPIInfo.ofr }}％
+            </span>
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.utilization') }} {{ KPIInfo.utilization }}％
+            </span>
+          </div>
         </div>
-      </div>
-      <plan-job
-        :key="`planJob-${searchString}`"
-        :search-string="searchString"
-      />
-      <plan-gantt
-        :key="`planGantt-${searchString}`"
-        :search-string="searchString"
-      />
+        <plan-job
+          :key="`planJob-${searchString}`"
+          :search-string="searchString"
+        />
+        <plan-gantt
+          :key="`planGantt-${searchString}`"
+          :search-string="searchString"
+        />
+      </template>
     </div>
     <div
       v-else
@@ -72,7 +81,7 @@ import PlanJob from './components/PlanJob'
 import PlanGantt from './components/PlanGantt'
 import TicketFilter from '@/schedule/components/TicketFilter'
 import { getPlanInfo, getPlanKPI, getLastSolution } from '@/schedule/API/Plan'
-import { mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'CurrentSimulation',
@@ -100,7 +109,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapState('scheduleSetting', ['scheduleProjectId', 'isYKSchedule'])
   },
   mounted () {
     this.fetchData()

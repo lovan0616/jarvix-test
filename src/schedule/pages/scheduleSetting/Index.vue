@@ -115,7 +115,10 @@
             />
           </div>
         </section>
-        <section class="body__block body__block--equipment">
+        <section
+          v-if="!isYKSchedule"
+          class="body__block body__block--equipment"
+        >
           <h3 class="block__title">
             {{ $t('schedule.setting.machine') }}
             <i
@@ -136,8 +139,8 @@
           </div>
         </section>
         <section
-          v-if="settingInfo.kpiSetting"
           class="body__block body__block--kpi"
+          v-if="settingInfo.kpiSetting && !isYKSchedule"
         >
           <h3 class="block__title">
             {{ $t('schedule.setting.simulationKPI') }}
@@ -213,7 +216,7 @@ import SingleCommonFile from './components/commonDataSetting/SingleCommonFile'
 import ExceptionTimeSetting from '@/schedule/pages/simulation/setting/components/ExceptionTimeSetting'
 import { fetchDataBoundStatus } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 
 export default {
@@ -258,6 +261,7 @@ export default {
   computed: {
     ...mapState('simulation', ['solutions', 'planId']),
     ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
     isShowOrderUpload () {
       return localStorage.getItem('isShowOrderUpload') === 'true'
     }

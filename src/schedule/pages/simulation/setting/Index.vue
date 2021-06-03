@@ -18,6 +18,7 @@
         <div class="step__title">
           STEP.2 {{ $t('schedule.simulation.solutionSetting') }}
           <default-button
+             v-show="!(isYKSchedule && solutions.length > 0)"
             class="add-btn"
             type="outline"
             @click="onClickAddSolution"
@@ -121,7 +122,7 @@ import PlanSimulation from './components/PlanSimulation'
 import SimulatingDialog from './components/SimulatingDialog'
 import moment from 'moment'
 import { fetchDataBoundStatus } from '@/schedule/API/Project'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 import { Message } from 'element-ui'
 
@@ -147,6 +148,7 @@ export default {
   computed: {
     ...mapState('scheduleSetting', ['defaultSetting', 'scheduleProjectId']),
     ...mapState('simulation', ['solutions', 'scheduledJobs', 'planId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
     displaySelectedJobCounter () {
       return this.scheduledJobs.length > 0
         ? this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length })
