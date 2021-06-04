@@ -4,7 +4,7 @@
     <h2 class="header">
       {{ $t('schedule.schedule.title') }}
       <ticket-filter
-        v-show="!isLoading"
+        v-show="!isLoading && planInfo.planId"
         @search="searchString = $event"
       />
     </h2>
