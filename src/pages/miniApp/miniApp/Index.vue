@@ -1637,6 +1637,8 @@ export default {
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
+    overflow: auto;
+    overflow: overlay;
     min-width: 0;
     &-header {
       position: relative;
@@ -1779,7 +1781,8 @@ export default {
   }
   &__dashboard {
     &-components {
-      height: calc(100vh - 56px - 20px - 50px);
+      flex: 1;
+      height: 100%;
       overflow: auto;
       overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
       &:after {
