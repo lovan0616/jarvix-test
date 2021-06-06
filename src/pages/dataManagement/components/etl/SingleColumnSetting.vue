@@ -10,7 +10,7 @@
           for="">{{ $t('etl.dataType') }}</label>
         <div class="setting-cascader-container">
           <el-cascader
-            v-model="editColumnInfo.statsType"
+            v-model="columnStatsType"
             :disabled="isReviewMode"
             :show-all-levels="false"
             :options="cascaderStatsTypeOptions"
@@ -18,7 +18,6 @@
             filterable
             popper-class="setting-cascader__popper"
             class="sy-select theme-dark setting-cascader"
-            @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
           >
             <template #default="{ node, data }">
               <svg-icon
@@ -29,7 +28,7 @@
             </template>
           </el-cascader>
           <svg-icon 
-            :icon-class="getStatsTypeIcon(editColumnInfo.statsType[0])"
+            :icon-class="getStatsTypeIcon(editColumnInfo.statsType)"
             class="setting-cascader-icon" />
         </div>
       </div>
@@ -113,7 +112,7 @@
               class="arrow-icon"/>
             <default-select
               v-if="editColumnInfo.statsType === 'BOOLEAN'"
-              :option-list="booleanOptionList"
+              :option-list="replaceTypeOptionList"
               v-model="replaceValue.newValue"
             />
             <input-verify
@@ -211,12 +210,40 @@ export default {
       stringReplaceObject: null,
       errorDefaultObject: null,
       replaceId: 0,
-      statsTypeList,
-      originalStatsType: ''
+      statsTypeList
     }
   },
   computed: {
     ...mapState('dataManagement', ['datetimePatterns']),
+    columnStatsType: {
+      get () {
+        // 因應 cascader 的資料型態, 需轉成 Array
+        return this.editColumnInfo.statsType === 'DATETIME' ? 
+          [this.editColumnInfo.statsType, this.editColumnInfo.datetimePatterns[0]] :
+          [this.editColumnInfo.statsType]
+      },
+      set (value) {
+        this.editColumnInfo.statsType = value[0]
+
+        switch (value[0]) {
+          case 'NUMERIC':
+            this.editColumnInfo.targetDataType = 'FLOAT'
+            break
+          case 'CATEGORY':
+            this.editColumnInfo.targetDataType = 'STRING'
+            break
+          case 'DATETIME':
+            // 因應 cascader 的資料型態是 Array, 值會長這樣 ['DATETIME', 'Y M D']
+            this.editColumnInfo.targetDataType = 'DATETIME'
+            this.editColumnInfo.datetimePatterns = [value[1]]
+            break
+          case 'BOOLEAN':
+            this.editColumnInfo.targetDataType = 'BOOLEAN'
+            break
+        }
+        this.cleanReplacements()
+      }
+    },
     statsTypeOptions () {
       return statsTypeOptionList.filter((option) => {
         return this.editColumnInfo.originalStatsType === 'BOOLEAN'
@@ -274,42 +301,28 @@ export default {
     }
   },
   mounted () {
-    this.editColumnInfo.values = this.editColumnInfo.values.map(element => {
-      return {
-        ...element,
-        id: this.replaceId++
-      }
-    })
-    this.editColumnInfo.values.forEach(element => {
-      if (element.type === 'MISSING_VALUE' && element.value === null) {
-        this.nullReplaceObject = element
-      } else if (element.type === 'MISSING_VALUE' && element.value === '') {
-        this.stringReplaceObject = element
-      } else if (element.type === 'ERROR_DEFAULT_VALUE' && element.value === null) {
-        this.errorDefaultObject = element
-      }
-    })
-    // 因應 cascader 的資料型態, 需轉成 Array
-    this.originalStatsType = this.stateTypeConverter(this.columnInfo.statsType)
-    this.editColumnInfo.statsType = this.originalStatsType
+    this.columnInfoInit()
   },
-  methods: {stateTypeConverter (type) {
-      let statsType = JSON.parse(JSON.stringify(type))
-      if (statsType === 'DATETIME') statsType = ['DATETIME', this.columnInfo.datetimePatterns[0]]
-      else statsType = [statsType]
-      return statsType
-    },
-    columnInfoFormatter (cascaderColumnInfo) {
-      const tempColumnInfo = JSON.parse(JSON.stringify(cascaderColumnInfo))
-      tempColumnInfo.statsType = cascaderColumnInfo.statsType[0]
-      tempColumnInfo.datetimePatterns = cascaderColumnInfo.statsType[0] === 'DATETIME' 
-        ? [cascaderColumnInfo.statsType[1]]
-        : []
-      return tempColumnInfo
+  methods: {
+    columnInfoInit () {
+      this.editColumnInfo.values = this.editColumnInfo.values.map(element => {
+        let newColumnInfo = {
+          ...element,
+          id: this.replaceId++
+        }
+
+        if (element.type === 'MISSING_VALUE' && element.value === null) {
+          this.nullReplaceObject = newColumnInfo
+        } else if (element.type === 'MISSING_VALUE' && element.value === '') {
+          this.stringReplaceObject = newColumnInfo
+        } else if (element.type === 'ERROR_DEFAULT_VALUE' && element.value === null) {
+          this.errorDefaultObject = newColumnInfo
+        }
+        return newColumnInfo
+      })   
     },
     getStatsTypeIcon (statesType) {
-      const currentStatesType = Array.isArray(statesType) ? statesType[0] : statesType
-      switch (currentStatesType) {
+      switch (statesType) {
         case 'CATEGORY':
           return 'character-a'
         case 'NUMERIC':
@@ -326,7 +339,7 @@ export default {
       this.editColumnInfo.values.push({
         ...this.replaceValueObjest,
         id: this.replaceId++,
-        newValue: this.editColumnInfo.statsType === 'BOOLEAN' ? true : null
+        newValue: null
       })
     },
     removeReplaceValue (index) {
@@ -350,7 +363,7 @@ export default {
           //   el.newValue = this.summaryData.data[1].data[numTypes]
           // }
         })
-        this.$emit('updateInfo', this.columnInfoFormatter(this.editColumnInfo))
+        this.$emit('updateInfo', this.editColumnInfo)
 
         Message({
           message: this.$t('message.etlSettingTempSave'),
@@ -362,42 +375,19 @@ export default {
         this.$emit('back')
       })
     },
-    changeStatsType (column, targetStatsType) {
-      column.statsType = targetStatsType
-      switch (targetStatsType[0]) {
-        case 'NUMERIC':
-          column.targetDataType = 'FLOAT'
-          break
-        case 'CATEGORY':
-          column.targetDataType = 'STRING'
-          break
-        case 'DATETIME':
-          column.targetDataType = 'DATETIME'
-          break
-        case 'BOOLEAN':
-          column.targetDataType = 'BOOLEAN'
-          break
-      }
-      this.cleanReplacements()
-    },
     reset () {
       this.editColumnInfo.hasChanged = false
       this.editColumnInfo.statsType = this.editColumnInfo.originalStatsType
-      this.editColumnInfo.statsType = this.originalStatsType
+      this.editColumnInfo.datetimePatterns = [...this.columnInfo.datetimePatterns]
       this.editColumnInfo.targetDataType = this.editColumnInfo.originalDataType
-      this.cleanReplacements()
 
-      this.updateSetting(this.columnInfoFormatter(this.editColumnInfo))
+      this.cleanReplacements()
     },
     cleanReplacements () {
       this.editColumnInfo.values = this.editColumnInfo.values.filter(el => el.type !== 'VALUE_REPLACEMENT')
-      this.editColumnInfo.values.forEach(function (el) { el.newValue = null })
-    },
-    updateSetting (info) {
-      this.$store.commit('dataManagement/updateReplaceValue', {
-        tableIndex: this.currentTableIndex,
-        columnIndex: info.index,
-        info
+      this.editColumnInfo.values.forEach(el => {
+        el.newValue = null
+        delete el.customValue
       })
     }
   },
