@@ -231,13 +231,13 @@ export default {
       inputData: {},
       inputId: uuidv4(),
       numericOptionList: [
-        { type: 'RANGE', name: '範圍' },
-        { type: 'FIXED', name: '定值' }
+        { type: 'RANGE', name: this.$t('columnSummary.range') },
+        { type: 'FIXED', name: this.$t('columnSummary.const') }
       ],
       categoryOptionList: [
-        { type: 'ALL', name: '全部' },
-        { type: 'USE_ITEMS', name: '自訂使用項目' },
-        { type: 'REMOVE_ITEMS', name: '自訂剔除項目' }
+        { type: 'ALL', name: this.$t('miniApp.all') },
+        { type: 'USE_ITEMS', name: this.$t('miniApp.inclusiveItems') },
+        { type: 'REMOVE_ITEMS', name: this.$t('miniApp.exclusiveItems') }
       ],
       tempInputValueRange: {
         min: null,
