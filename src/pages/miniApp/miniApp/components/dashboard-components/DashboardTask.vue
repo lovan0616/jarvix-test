@@ -389,7 +389,8 @@ export default {
         }),
         ...(this.componentData.segmentation.denotation === 'STABILITY' && {
           'height': 'calc(100% - 80px)',
-        })
+        }),
+        'minHeight': '200px'
       }
     },
     componentSettingOptions () {
@@ -955,7 +956,9 @@ $direction-span: ("col": 12, "row": 12);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: auto;
+    overflow: overlay;
+    height: 100%;
     /deep/ .task,
     /deep/ .task-component {
       position: relative;

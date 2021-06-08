@@ -146,8 +146,9 @@ export default {
   data: () => {
     return {
       isShowMenu: false,
-      filterText: '',
-      availableDataSourceList: []
+      searchText: '',
+      // 存放當前展開的 ds index
+      expandDataSourceIndex: []
     }
   },
   computed: {
@@ -169,6 +170,51 @@ export default {
       return this.dataFrameId === 'all'
         ? 'data-source' 
         : 'table'
+    },
+    filterText: {
+      get () {
+        return this.searchText
+      },
+      set (val) {
+        this.searchText = val
+        if (val === '') {
+          this.initDatasourceExpand()
+        } else {
+          this.availableDataSourceList.forEach((dataSource, index) => {
+            let showDataFrames = dataSource.dataFrames.some(dataFrame => dataFrame.name.toLowerCase().includes(val))
+            if (showDataFrames) {
+              this.expandDataSourceIndex.push(index)
+            }
+          })
+        }
+      }
+    },
+    availableDataSourceList () {
+      const defaultOption = {
+        name: this.$t('editing.allDataFrames'),
+        id: 'all'
+      }
+
+      return this.dataSourceList.filter(dataSource => {
+        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
+      }).map((dataSource, index) => {
+        let showDataSource = true
+        let showDataFrames = true
+        if (this.filterText !== '') {
+          showDataSource = dataSource.name.toLowerCase().includes(this.filterText)
+          showDataFrames = dataSource.dataFrames.some(dataFrame => dataFrame.primaryAlias.toLowerCase().includes(this.filterText))
+        }
+
+        return {
+          ...dataSource,
+          isShow: this.filterText === '' ? true : (showDataSource || showDataFrames),
+          isExpanded: this.expandDataSourceIndex.includes(index),
+          dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
+            acc.push({ name: cur.primaryAlias, id: cur.id })
+            return acc
+          }, [defaultOption])
+        }
+      })
     },
     dataFrameMenuTitle () {
       if (this.selectedDataName) return this.selectedDataName
@@ -214,42 +260,15 @@ export default {
       return this.availableDataSourceList.some(item => item.isShow)
     }
   },
-  watch: {
-    filterText (newVal, oldVal) {
-      if (newVal === oldVal) return
-      this.filterMenu()
-    },
-    dataSourceList () {
-      this.getMenuList()
-    }
-  },
   mounted () {
-    this.getMenuList()
+    this.initDatasourceExpand()
   },
   methods: {
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
-    getMenuList () {
-      const defaultOption = {
-        name: this.$t('editing.allDataFrames'),
-        id: 'all'
-      }
-      let buildDataSourceList = this.dataSourceList.filter(dataSource => {
-        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
-      })
-
-      this.availableDataSourceList = buildDataSourceList.map(dataSource => {
-        const existingDataSource = this.availableDataSourceList.find(item => item.id === dataSource.id)
-        return {
-          ...dataSource,
-          isShow: existingDataSource ? existingDataSource.isShow : true,
-          isExpanded: existingDataSource ? existingDataSource.isExpanded : false,
-          dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
-            acc.push({ name: cur.primaryAlias, id: cur.id })
-            return acc
-          }, [defaultOption])
-        }
-      })
+    initDatasourceExpand () {
+      let currentDataSourceIndex = this.availableDataSourceList.findIndex(element => element.id === this.dataSourceId)
+      this.expandDataSourceIndex = [currentDataSourceIndex]
     },
     handleSelect (dataSourceIndex, dataFrameIndex) {
       let selectInfo = {
@@ -297,31 +316,17 @@ export default {
     closeHelper () {
       this.$store.commit('updateAskHelperStatus', false)
     },
-    filterMenu () {
-      if (!this.filterText) return this.resetMenu()
-
-      const loweredText = this.filterText
-      this.availableDataSourceList.forEach(dataSource => {
-        const showDataSource = dataSource.name.toLowerCase().includes(loweredText)
-        const showDataFrames = dataSource.dataFrames.some(dataFrame => dataFrame.name.toLowerCase().includes(loweredText))
-
-        dataSource.isShow = showDataSource || showDataFrames
-        dataSource.isExpanded = showDataFrames
-      })
-    },
-    resetMenu () {
-      this.availableDataSourceList.forEach(item => {
-        item.isShow = true
-        item.isExpanded = this.dataSourceId === item.id
-      })
-    },
     toggleDataSource (targetIndex) {
       if (this.filterText) {
-        this.availableDataSourceList[targetIndex].isExpanded = !this.availableDataSourceList[targetIndex].isExpanded
+        let expandIndex = this.expandDataSourceIndex.findIndex(el => el === targetIndex)
+        if (expandIndex > -1) {
+          this.expandDataSourceIndex.splice(expandIndex, 1)
+        } else {
+          this.expandDataSourceIndex.push(expandIndex)
+        }
       } else {
         // accordian 模式
-        const alreadyExpanded = this.availableDataSourceList[targetIndex].isExpanded
-        this.availableDataSourceList.forEach((item, index) => item.isExpanded = !alreadyExpanded && targetIndex === index)
+        this.expandDataSourceIndex = this.expandDataSourceIndex.includes(targetIndex) ? [] : [targetIndex]
       }
     }
   }
