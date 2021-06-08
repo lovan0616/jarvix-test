@@ -1192,7 +1192,7 @@
     "cluster": "群體",
     "dataOverview": "資料概況",
     "clusteringAnalysis": "分群分析",
-    "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",
+    "saveClusteringResultAsColumn": "保存為自訂欄位",
     "clusteringNumberSetting": "設定分群數量",
     "clusteringNumber": "分群數量",
     "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "自定義欄位或來自關聯資料表的欄位，無法儲存為標籤欄位。",
