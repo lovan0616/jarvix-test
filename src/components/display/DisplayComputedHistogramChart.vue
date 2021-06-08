@@ -30,9 +30,17 @@
       :feature-information="dataset.featureInformation"
       class="feature-information"
     />
+    <insight-description-block
+      v-if="dataset.descriptions"
+      :title="$t('resultDescription.dataInsight')"
+      :message-list="dataset.descriptions"
+      icon-name="len-with-line-chart"
+      class="description-block"
+    />
   </div>
 </template>
 <script>
+import InsightDescriptionBlock from './InsightDescriptionBlock'
 import FeatureInformationBlock from './FeatureInformationBlock'
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
@@ -71,7 +79,8 @@ let histogramChartConfig = {
 export default {
   name: 'DisplayComputedHistogramChart',
   components: {
-    FeatureInformationBlock
+    FeatureInformationBlock,
+    InsightDescriptionBlock
   },
   props: {
     dataset: {

@@ -490,11 +490,14 @@ export default {
           })
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
           this.fetchData()
-          this.deleteFinish()
           this.checkIfReachFileSizeLimit()
-          // 如果為全域當前的 datasource，需要更新 store 中 dataframe 資料
-          if (selectedDataSourceId !== this.storedDataSourceId) return
-          this.$store.dispatch('dataSource/updateDataFrameList')
+          // 為了智能分析的資料源選單重新取
+          this.$store.dispatch('dataSource/getDataSourceList', {}).then(() => {
+            this.deleteFinish()
+            // 如果為全域當前的 datasource，需要更新 store 中 dataframe 資料
+            if (selectedDataSourceId !== this.storedDataSourceId) return
+            this.$store.dispatch('dataSource/updateDataFrameList')
+          })
         })
         .catch(() => {
           this.deleteFinish()
