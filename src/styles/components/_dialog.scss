@@ -145,11 +145,69 @@
       font-weight: 600;
       font-size: 18px;
       line-height: 1;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
 
       &__description {
         font-size: 14px;
         color: #CCC;
+      }
+    }
+
+    .input-block.name {
+      width: 50%;
+    }
+
+    .block-header {
+      margin-bottom: 12px;
+      padding: 0 24px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #CCCCCC;
+
+      .cell {
+        display: inline-block;
+        width: 40%;
+
+        &:not(:last-child) {
+          width: calc(40% + 30px);
+        }
+      }
+    }
+
+    .block-list {
+      width: 100%;
+      padding: 16px 24px;
+      background: rgba(72, 84, 84, 0.95);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      &:not(:last-of-type) {
+        margin-bottom: 8px;
+      }
+    }
+
+    .list {
+      &__label {
+        width: 40%;
+      }
+
+      &__icon {
+        width: 30px;
+        color: #BBBBBB;
+      }
+
+      &__value {
+        width: 50%;
+
+        .input-verify .input-verify-text {
+          margin-bottom: 0;
+        }
+      
+        .input-verify .input-error {
+          position: absolute;
+          bottom: 0;
+          top: 100%;
+        }
       }
     }
 

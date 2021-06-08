@@ -14,8 +14,36 @@
           <input-block
             v-validate="`required|max:${max}`"
             v-model="columnPrimaryAlias"
+            :placeholder="$t('editing.pleaseEnterName')"
             name="columnPrimaryAlias"
           />
+        </div>
+      </div>
+      <div class="feature-block">
+        <div class="block-title">{{ $t('clustering.clusteringNameSetting') }}</div>
+        <div class="block-header">
+          <div class="cell">{{ $t('clustering.clusteringName') }}</div>
+          <div class="cell">{{ $t('clustering.customName') }}</div>
+        </div>
+        <div 
+          v-for="(input, index) in labelSettingList" 
+          :key="input + '-' + index" 
+          class="block-list list">
+          <div class="list__label">{{ `cluster${input.clusterIndex}` }}</div>
+          <svg-icon 
+            icon-class="go-right" 
+            class="list__icon"/>
+          <div class="list__value">
+            <div class="input-field__input-box">
+              <input-verify
+                v-validate="`required|max:${max}`"
+                v-model.trim="input.customValue"
+                :placeholder="$t('editing.pleaseEnterName')"
+                :name="'input' + index"
+                type="text"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div class="button-block">
@@ -42,12 +70,14 @@ import { saveClusteringColumn } from '@/API/DataSource'
 import { Message } from 'element-ui'
 import { mapState, mapGetters } from 'vuex'
 import InputBlock from '@/components/InputBlock'
+import InputVerify from '@/components/InputVerify'
 
 export default {
   name: 'SaveClusteringDialog',
   inject: ['$validator'],
   components: {
-    InputBlock
+    InputBlock,
+    InputVerify
   },
   props: {
     resultId: {
@@ -61,16 +91,27 @@ export default {
   },
   data () {
     return {
+      isProcessing: false,
       columnPrimaryAlias: '',
-      isProcessing: false
+      labelSettingList: []
     }
   },
   computed: {
+    ...mapState('dataSource', ['algoConfig']),
     ...mapState('userManagement', ['userId']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'getCurrentGroupName']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
+    },
+    clusteringCount () {
+      return this.algoConfig.clustering.clusteringCount
     }
+  },
+  mounted () {
+    this.labelSettingList = Array.from(Array(this.clusteringCount).fill({}), (element, idx) => ({
+      clusterIndex: ++idx,
+      customValue: `cluster${idx}`
+    }))
   },
   methods: {
     save () {
@@ -81,7 +122,8 @@ export default {
           this.isProcessing = true
           saveClusteringColumn({
             primaryAlias: this.columnPrimaryAlias,
-            askResultId: this.resultId
+            askResultId: this.resultId,
+            labelSettings: this.labelSettingList
           }).then(({ taskId }) => {
               Message({
                 message: this.$t('clustering.buildingClusteringColumn'),
