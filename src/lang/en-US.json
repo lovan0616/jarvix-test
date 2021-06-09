@@ -1189,7 +1189,7 @@
     "cluster": "Cluster",
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
-    "saveClusteringResultAsColumn": "Save clustering result as a new column",
+    "saveClusteringResultAsColumn": "Save clustering result as a custom column",
     "clusteringNumberSetting": "Set Number of Cluster",
     "clusteringNumber": "Number of Cluster",
     "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "Feature columns or columns coming from any joined table cannot be saved as a new column.",
