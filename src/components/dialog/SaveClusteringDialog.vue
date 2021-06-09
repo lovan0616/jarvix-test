@@ -2,7 +2,7 @@
   <div class="edit-feature-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">
-        {{ $t('clustering.createClusteringColumn') }}
+        {{ $t('clustering.createCustomColumn') }}
       </div>
       <div class="feature-block">
         <div class="block-title">{{ $t('editing.tableName') }}</div>
