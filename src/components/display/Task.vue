@@ -87,6 +87,7 @@
 <script>
 import MonitorSettingDialog from '@/pages/pinboard/components/MonitorSettingDialog'
 import { formatComponentTitle } from '@/components/display/common/addons'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'Task',
@@ -194,6 +195,7 @@ export default {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
   },
   methods: {
+    ...mapMutations('dataSource', ['setClusteringInfo', 'resetClusteringInfo']),
     fetchData (page = 0) {
       return new Promise((resolve, reject) => {
         window.clearTimeout(this.timeoutFunction)
@@ -264,6 +266,16 @@ export default {
               }
               // 判斷是否為 圖表
               if (responseData.dataset) {
+                // 分群分析
+                if (responseData.dataset.columns && responseData.dataset.outliersBuckets) {
+                  this.setClusteringInfo({
+                    clusterList: responseData.dataset.columns,
+                    hasOutlier: responseData.dataset.outliersBuckets.length > 0
+                  })
+                } else {
+                  this.resetClusteringInfo()
+                }
+
                 // 如果拿到的資料為空陣列 表示這一頁已經是最後一頁了。或是 total 為 0 代表 pie chart 沒有資料
                 if (responseData.dataset.data === null || responseData.dataset.data && (responseData.dataset.data.length === 0 || responseData.total === 0)) {
                   this.loading = false

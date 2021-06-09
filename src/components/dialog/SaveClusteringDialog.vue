@@ -29,7 +29,7 @@
           v-for="(input, index) in labelSettingList" 
           :key="input + '-' + index" 
           class="block-list list">
-          <div class="list__label">{{ `cluster${input.clusterIndex}` }}</div>
+          <div class="list__label">{{ labelList[index] }}</div>
           <svg-icon 
             icon-class="go-right" 
             class="list__icon"/>
@@ -93,29 +93,32 @@ export default {
     return {
       isProcessing: false,
       columnPrimaryAlias: '',
+      labelList: [],
       labelSettingList: []
     }
   },
   computed: {
-    ...mapState('dataSource', ['algoConfig']),
+    ...mapState('dataSource', ['algoConfig', 'clusteringInfo']),
     ...mapState('userManagement', ['userId']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'getCurrentGroupName']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
-    },
-    clusteringCount () {
-      return this.algoConfig.clustering.clusteringCount
     }
   },
   mounted () {
-    this.labelSettingList = Array.from(Array(this.clusteringCount).fill({}), (element, idx) => ({
-      clusterIndex: ++idx,
-      customValue: `cluster${idx}`
-    }))
+    this.labelSettingList = [
+      ...this.clusteringInfo.hasOutlier ? [{ clusterIndex: 0, customValue: 'outlier' }] : [],
+      ...Array.from(this.clusteringInfo.clusterList, (element, idx) => ({
+        clusterIndex: idx + 1,
+        customValue: element
+      }))
+    ]
+
+    this.labelList = this.labelSettingList.map(element => element.customValue)
   },
   methods: {
     save () {
-      this.$validator.validate('columnPrimaryAlias')
+      this.$validator.validate()
         .then(isValid => {
           if (!isValid) return
 
