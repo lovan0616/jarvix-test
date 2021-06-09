@@ -98,7 +98,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['algoConfig', 'clusteringInfo']),
+    ...mapState('dataSource', ['clusteringInfo']),
     ...mapState('userManagement', ['userId']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'getCurrentGroupName']),
     max () {
