@@ -365,10 +365,17 @@ export default {
             let displayedValue = cur
             // 計算上限值
             if (index === 3 && typeof cur === 'number') displayedValue = dataset[i][2] + cur
+<<<<<<< HEAD
             if (index === 4 && i !== 0) {
               // 注意！圖表上為了線可以連結在一起所以額外塞值進正常值，在這邊要把它拿掉
               if (this.isAnomalyTwoNumericDependence && dataset[i][5] !== null) displayedValue = ''
               // 如果為 null 則留空
+=======
+            if (index === 4) {
+              // 注意！圖表上為了線可以連結在一起所以額外塞值進正常值，在這邊要把它拿掉
+              if (this.isAnomalyTwoNumericDependence && dataset[i][5] !== null) displayedValue = ''
+               // 如果為 null 則留空
+>>>>>>> fix DisplayLineConfidentialIntervalChart data display/download
               if (cur === null) displayedValue = ''
             }
             // 如果為 null 則留空
@@ -396,7 +403,11 @@ export default {
                 // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
                 element = element.map((item, index) => (index === 0 || item === null) ? item : item + this.yAxisOffsetValue)
                 // 注意！圖表上為了線可以連結在一起所以額外塞值進正常值，在這邊要把它拿掉
+<<<<<<< HEAD
                 element[4] = this.isAnomalyTwoNumericDependence && element[5] !== null ? null : element[4]
+=======
+                element[4] = this.isAnomalyTwoNumericDependence && element[5] !== null ? null  : element[4]
+>>>>>>> fix DisplayLineConfidentialIntervalChart data display/download
                 return element
               })
               if (this.hasPagination && this.canDownloadCsv) return this.addCSVDownloadTask(this.appQuestion + this.$t('denotation.anomalyAnalysis'), this.componentId)
