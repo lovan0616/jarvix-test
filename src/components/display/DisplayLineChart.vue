@@ -584,7 +584,7 @@ export default {
             display_name: this.title.xAxis[0].display_name,
             start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
             end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
-            ...(!this.dataset.timeStampList && {
+            ...(this.dataset.timeStampList && {
               start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
               end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
               timeScope: this.dataset.timeScope
