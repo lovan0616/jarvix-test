@@ -231,18 +231,18 @@ export default {
         if (!isValidate) return
 
         // Reconstruct restraints
-          let updatedRestraint
-          if(this.tempRestraintList.length > 1){
-            updatedRestraint = {
-              type: 'compound',
-              restraints: this.tempRestraintList
-            }
-          } else if(this.tempRestraintList.length === 1) {
-            [updatedRestraint] = this.tempRestraintList
-          } else {
-            updatedRestraint = {}
+        let updatedRestraint
+        if (this.tempRestraintList.length > 1) {
+          updatedRestraint = {
+            type: 'compound',
+            restraints: this.tempRestraintList
           }
-          this.$emit('updated:restraint', updatedRestraint)
+        } else if (this.tempRestraintList.length === 1) {
+          [updatedRestraint] = this.tempRestraintList
+        } else {
+          updatedRestraint = {}
+        }
+        this.$emit('updated:restraint', updatedRestraint)
       })
     }
   },

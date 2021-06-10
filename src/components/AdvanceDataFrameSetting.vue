@@ -261,7 +261,7 @@ export default {
     updateRestraint (updatedRestraint) {
       this.currentEditedFilter[this.currentEditedRestraintIndex] = JSON.parse(JSON.stringify(updatedRestraint))
       this.currentEditedRestraint = JSON.parse(JSON.stringify(updatedRestraint))
-      if(this.currentEditedFilterIndex > this.tempFilterList.length - 1) {
+      if (this.currentEditedFilterIndex > this.tempFilterList.length - 1) {
         // 表示為新加入的 restriction
         let newRestriction = {
           status: true,
