@@ -196,9 +196,8 @@ export default {
         source.push([
           value, 
           this.adjustValueWithOffsetValue(this.standardLine[index]),
-          this.adjustValueWithOffsetValue(this.lowerBoundList[index]), 
+          this.adjustValueWithOffsetValue(this.lowerBoundList[index]),
           this.toUpperBoundIntervalList[index],
-          //this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
           // 2N 異常需要把原始資料點連起來，因此要使用原始資料
           this.adjustValueWithOffsetValue(this.isAnomalyTwoNumericDependence ? this.dataset.data[index] : this.actualDataList.validDataList[index]),
           this.adjustValueWithOffsetValue(this.actualDataList.invalidDataList[index])
