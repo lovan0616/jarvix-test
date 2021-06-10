@@ -109,7 +109,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('scheduleSetting', ['scheduleProjectId', 'isYKSchedule'])
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule'])
   },
   mounted () {
     this.fetchData()
