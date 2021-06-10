@@ -576,28 +576,21 @@ export default {
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
 
-        if (this.dataset.timeStampList)
-          return {
-            type: 'range',
-            properties: {
-              dc_id: this.title.xAxis[0].dc_id,
-              data_type: this.title.xAxis[0].data_type,
-              display_name: this.title.xAxis[0].display_name,
+        return {
+          type: 'range',
+          properties: {
+            dc_id: this.title.xAxis[0].dc_id,
+            data_type: this.title.xAxis[0].data_type,
+            display_name: this.title.xAxis[0].display_name,
+            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
+            ...(this.dataset.timeStampList && {
               start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
               end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
               timeScope: this.dataset.timeScope
-            }
+            })
           }
-        return {
-            type: 'range',
-            properties: {
-              dc_id: this.title.xAxis[0].dc_id,
-              data_type: this.title.xAxis[0].data_type,
-              display_name: this.title.xAxis[0].display_name,
-              start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
-              end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
-            }
-          }
+        }
       })
     },
     saveFilter () {
