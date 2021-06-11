@@ -1194,7 +1194,7 @@
     "clusteringNumber": "Number of Cluster",
     "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "Feature columns or columns coming from any joined table cannot be saved as a new column.",
     "createCustomColumn": "New Clustering Field",
-    "clusteringColumnName": "Clustering Column Name",
+    "clusteringColumnName": "Column Name",
     "clusteringNameSetting": "Cluster Label Settings",
     "clusteringName": "Cluster",
     "customName": "Cluster Name",

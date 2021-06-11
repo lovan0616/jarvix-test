@@ -1197,7 +1197,7 @@
     "clusteringNumber": "分群數量",
     "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "自定義欄位或來自關聯資料表的欄位，無法儲存為標籤欄位。",
     "createCustomColumn": "新增自訂欄位",
-    "clusteringColumnName": "標籤欄位名稱",
+    "clusteringColumnName": "欄位名稱",
     "clusteringNameSetting": "分群名稱設定",
     "clusteringName": "分群名稱",
     "customName": "自訂名稱",

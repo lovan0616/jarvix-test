@@ -272,8 +272,6 @@ export default {
                     clusterList: responseData.dataset.columns,
                     hasOutlier: responseData.dataset.outliersBuckets.length > 0
                   })
-                } else {
-                  this.resetClusteringInfo()
                 }
 
                 // 如果拿到的資料為空陣列 表示這一頁已經是最後一頁了。或是 total 為 0 代表 pie chart 沒有資料
