@@ -58,6 +58,7 @@
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SortingDialog from './components/SortingDialog'
 import EmptyPinboard from './components/EmptyPinboard'
+import { isEnOrEnum } from '@/utils/general'
 
 export default {
   name: 'PagePinboard',
@@ -184,7 +185,9 @@ export default {
               currentResult.restrictions = componentResponse.restrictions
               currentResult.layout = this.getLayout(componentResponse.layout)
               currentResult.segmentationPayload = componentResponse.segmentationPayload
-              currentResult.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.matchedWord, '')
+              currentResult.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => {
+                return isEnOrEnum(acc.slice(-1)) || isEnOrEnum(cur[0]) ? `${acc} ${cur.matchedWord}` : acc + cur.matchedWord
+              }, '')
               currentData.dataframeName = componentResponse.transcript
                 ? componentResponse.transcript.dataFrame ? componentResponse.transcript.dataFrame.dataFrameAlias : componentResponse.transcript.dataframe.alias 
                 : componentResponse.dataframeName
