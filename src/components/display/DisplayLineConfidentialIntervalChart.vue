@@ -354,6 +354,10 @@ export default {
 
       // 準備原始資料
       config.toolbox.feature.dataView.optionToContent = (opt) => {
+        if (this.hasPagination) {
+          this.$el.addEventListener('click', this.controlPagination, false)
+        }
+
         let dataset = opt.dataset[0].source
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
@@ -361,7 +365,7 @@ export default {
             let displayedValue = cur
             // 計算上限值
             if (index === 3 && typeof cur === 'number') displayedValue = dataset[i][2] + cur
-            if (index === 4) {
+            if (index === 4 && i !== 0) {
               // 注意！圖表上為了線可以連結在一起所以額外塞值進正常值，在這邊要把它拿掉
               if (this.isAnomalyTwoNumericDependence && dataset[i][5] !== null) displayedValue = ''
                // 如果為 null 則留空
@@ -447,6 +451,15 @@ export default {
           }
         }
       })
+    },
+    controlPagination () {
+      let exportBtn = document.getElementById('export-btn')
+      if (exportBtn) {
+        this.showPagination = false
+      } else {
+        this.showPagination = true
+        this.$el.removeEventListener('click', this.controlPagination, false)
+      }
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
