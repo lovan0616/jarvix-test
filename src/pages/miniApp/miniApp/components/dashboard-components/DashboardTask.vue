@@ -147,7 +147,7 @@
           <spinner v-if="isProcessing"/>
           <no-result
             v-else-if="isAskQuestionFailed"
-            :message="'問句沒有適合的結果'"
+            :message="$t('miniApp.noSuitableResult')"
             class="no-result"
           />
           <task
@@ -183,7 +183,6 @@
 </template>
 
 <script>
-import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
 import AbnormalStatistics from './AbnormalStatistics'
@@ -200,7 +199,6 @@ import { v4 as uuidv4 } from 'uuid'
 export default {
   name: 'DashboardTask',
   components: {
-    EmptyInfoBlock,
     DecideDialog,
     MonitorWarningList,
     AbnormalStatistics,

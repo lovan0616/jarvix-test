@@ -1130,7 +1130,8 @@
     "startTime": "Start Time",
     "endTime": "End Time",
     "noResultUnderCurrentRestrictions": "No result under current restrictions",
-    "noResultCheckFilterAndDataSource": "No reference data, please check the filter conditions or original data"
+    "noResultCheckFilterAndDataSource": "No reference data, please check the filter conditions or original data",
+    "noSuitableResult": "No Suitable Result"
   },
   "alert": {
     "alertLogs": "Alert Record",

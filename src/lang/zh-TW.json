@@ -1133,7 +1133,8 @@
     "startTime": "開始時間",
     "endTime": "結束時間",
     "noResultUnderCurrentRestrictions": "當前限制條件下無資料，請調整限制",
-    "noResultCheckFilterAndDataSource": "無參考資料，請確認篩選條件或原始資料"
+    "noResultCheckFilterAndDataSource": "無參考資料，請確認篩選條件或原始資料",
+    "noSuitableResult": "問句沒有適合的結果"
   },
   "alert": {
     "alertLogs": "示警紀錄",
