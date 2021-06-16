@@ -145,6 +145,11 @@
           v-else
           class="component__item-content chart">
           <spinner v-if="isProcessing"/>
+          <no-result
+            v-else-if="isAskQuestionFailed"
+            :message="'問句沒有適合的結果'"
+            class="no-result"
+          />
           <task
             v-else
             :custom-chart-style="dynamicComponentStyle"
@@ -178,6 +183,7 @@
 </template>
 
 <script>
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
 import AbnormalStatistics from './AbnormalStatistics'
@@ -194,6 +200,7 @@ import { v4 as uuidv4 } from 'uuid'
 export default {
   name: 'DashboardTask',
   components: {
+    EmptyInfoBlock,
     DecideDialog,
     MonitorWarningList,
     AbnormalStatistics,
@@ -258,6 +265,7 @@ export default {
         'height': '100%'
       },
       isProcessing: false,
+      isAskQuestionFailed: false,
       tempFilteredKeyResultId: null,
       isInitializing: true,
       segmentation: null,
@@ -460,7 +468,7 @@ export default {
       deep: true,
       handler (controls) {
         if (this.isIndependentComponent) return 
-        if (controls.length === 0 || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
+        if (controls.length === 0 || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion(true)
       }
     },
     'componentData.config.size' ({ row: newRow }, { row: oldRow }) {
@@ -490,10 +498,17 @@ export default {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
-    deboucedAskQuestion (question) {
+    deboucedAskQuestion (isNeededAskQuestion) {
       // 避免在極短時間內，因 filter/controller 變動而多次觸發 askQuestion
       // Ex: 當外層 initFilters 的情境
       window.clearTimeout(this.debouncedAskFunction)
+      /* 跳過 askQuestion 步驟
+       * 但在場上有 YAxisController 且會被影響的 component 仍要從頭問問句
+       * */
+      if (!isNeededAskQuestion && !this.shouldComponentYAxisBeControlled && this.componentData.segmentation) {
+        this.debouncedAskFunction = window.setTimeout(this.askResult, 0)
+        return
+      }
       this.debouncedAskFunction = window.setTimeout(this.askQuestion, 0)
     },
     askQuestion (question = this.controllerMutatedQuestion() || this.componentData.question) {
@@ -506,6 +521,7 @@ export default {
       this.periodSec = 200
       this.isEmptyData = false
       this.componentComplementaryInfo = null
+      this.isAskQuestionFailed = false
 
       // 透過公式創建元件需使用不同方式取得 result
       if (this.componentData.type === 'formula') return this.getFormulaResult()
@@ -520,36 +536,45 @@ export default {
       }).then(response => {
         let questionId = response.questionId
         let segmentationList = response.segmentationList
-        // TODO 處理 NO_ANSWER
-        if (segmentationList.length === 1) {
-          this.segmentation = segmentationList[0]
-          // 確認是否為趨勢類型問題
-          const isTrendQuestion = segmentationList[0].denotation === 'TREND'
-          let dateTimeColumn = segmentationList[0].transcript.subjectList.find(subject => subject.dateTime)
-          this.$store.dispatch('chatBot/askResult', {
-            algoConfig: this.componentData.algoConfig || null,
-            questionId,
-            segmentation: segmentationList[0],
-            restrictions: this.restrictions(),
-            selectedColumnList: null,
-            isFilter: true,
-            ...(isTrendQuestion && {
-              displayConfig: {
-                histogramBarSize: null,
-                sortOrders: dateTimeColumn ? [
-                  {
-                    dataColumnId: dateTimeColumn.dateTime.dataColumn.dataColumnId,
-                    sortType: 'DESC'
-                  }
-                ] : []
-              }
-            })
-          }).then(res => {
-            this.getComponentV2(res.resultId)
-          }).catch(error => {this.isProcessing = false})
+
+        // 處理 NO_ANSWER, 多個結果
+        if (segmentationList[0].denotation === 'NO_ANSWER' || segmentationList.length > 1) {
+          this.isAskQuestionFailed = true
+          this.isProcessing = false
+          return 
         }
-        // TODO 無結果和多個結果
+
+        if (segmentationList.length === 1) {
+          this.askResult(segmentationList[0], questionId)
+        }
       }).catch(error => { this.isProcessing = false })
+    },
+    askResult (segmentation = this.componentData.segmentation, questionId = this.componentData.questionId) {
+      this.segmentation = segmentation
+      // 確認是否為趨勢類型問題
+      const isTrendQuestion = segmentation.denotation === 'TREND'
+      let dateTimeColumn = segmentation.transcript.subjectList.find(subject => subject.dateTime)
+      return this.$store.dispatch('chatBot/askResult', {
+        algoConfig: this.componentData.algoConfig || null,
+        questionId,
+        segmentation: segmentation,
+        restrictions: this.restrictions(),
+        selectedColumnList: null,
+        isFilter: true,
+        ...(isTrendQuestion && {
+          displayConfig: {
+            histogramBarSize: null,
+            sortOrders: dateTimeColumn ? [
+              {
+                dataColumnId: dateTimeColumn.dateTime.dataColumn.dataColumnId,
+                sortType: 'DESC'
+              }
+            ] : []
+          }
+        })
+      }).then(res => {
+        this.getComponentV2(res.resultId)
+      }).catch(error => {this.isProcessing = false})
     },
     getFormulaResult () {
       askFormulaResult({
@@ -971,6 +996,12 @@ $direction-span: ("col": 12, "row": 12);
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+    }
+
+    .no-result {
+      position: relative;
+      top: unset;
+      transform: unset;
     }
 
     &.index {
