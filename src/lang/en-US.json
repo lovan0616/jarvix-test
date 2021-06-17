@@ -2607,7 +2607,7 @@
     "PossessionToken": "Connective Word",
     "ChangeToken": "Other Vocabulary",
     "DataColumnToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datacolumn recognized as {matchedWord}",
-    "ColumnSetToken": "From {dataFrame}'s {matchedWord}",
+    "ColumnSetToken": "From {dataFrame}'s @:segmentationToken.ColumnSet recognized as {matchedWord}",
     "DataValueToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datavalue recognized as {matchedWord}",
     "DatarowToken": "From {dataFrame}'s @:segmentationToken.Datarow",
     "ElseToken": "Other Vocabulary",

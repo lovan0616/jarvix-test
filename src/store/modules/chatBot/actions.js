@@ -1,6 +1,5 @@
 import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
-import i18n from '@/lang/index.js'
 
 export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {

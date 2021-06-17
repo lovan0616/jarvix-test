@@ -59,7 +59,7 @@
                   </template>
                 </span>
                 <span
-                  v-else-if="segmentation.type === 'DATA_ROW'"
+                  v-else-if="segmentation.type === 'DATA_ROW' || segmentation.type === 'COLUMN_SET'"
                 >
                   {{ $t(`segmentationToken.${segmentation.type}`) }}
                 </span>

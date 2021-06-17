@@ -2618,7 +2618,7 @@
     "PossessionToken": "連接詞",
     "ChangeToken": "其他詞彙",
     "DataColumnToken": "來自{dataFrame}的{dataColumn}@:segmentationToken.Datacolumn，辨識為{matchedWord}",
-    "ColumnSetToken": "來自{dataFrame}的{matchedWord}",
+    "ColumnSetToken": "來自{dataFrame}的@:segmentationToken.ColumnSet，辨識為{matchedWord}",
     "DataValueToken": "來自{dataFrame}的{dataColumn}@:segmentationToken.Datavalue，辨識為{matchedWord}",
     "DatarowToken": "來自{dataFrame}的@:segmentationToken.Datarow",
     "ElseToken": "其他詞彙",
