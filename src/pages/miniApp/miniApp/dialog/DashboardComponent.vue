@@ -452,7 +452,7 @@ export default {
           // 多個結果
           this.$store.commit('dataSource/setAppQuestion', null)
           this.$store.commit('dataSource/setCurrentQuestionId', response.questionId)
-          this.layout = 'MultiResultV2'
+          this.layout = 'MultiResult'
           this.resultInfo = {...response, question: question}
           this.$emit('update:isLoading', false)
           this.$emit('update:isAddable', null)

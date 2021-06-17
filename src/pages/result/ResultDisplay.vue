@@ -258,7 +258,7 @@ export default {
             })
           } else {
             // 多個結果
-            this.layout = 'MultiResultV2'
+            this.layout = 'MultiResult'
             this.resultInfo = {...response, question: data.question}
             this.isLoading = false
             this.setRelatedQuestions()

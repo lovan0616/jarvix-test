@@ -73,7 +73,6 @@ import GeneralResult from '@/components/resultBoard/GeneralResult'
 import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
 import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
-import MultiResultV2 from '@/components/resultBoard/MultiResultV2'
 import DataPreviewLayout from '@/components/resultBoard/DataPreviewLayout'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
@@ -185,7 +184,6 @@ Vue.component(GeneralResult.name, GeneralResult)
 Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
-Vue.component(MultiResultV2.name, MultiResultV2)
 Vue.component(DataPreviewLayout.name, DataPreviewLayout)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
