@@ -8,14 +8,24 @@
         @search="searchString = $event"
       />
     </h2>
-    <default-button
-      v-if="planInfo.planId"
-      :loading="isLoadingLastSolution"
-      class="simulate-btn"
-      @click="reSimulate"
-    >
-      {{ $t('schedule.schedule.reSimulate') }}
-    </default-button>
+    <div class="button-block">
+      <default-button
+        v-if="planInfo.planId && isYKSchedule"
+        :loading="isLoadingLastSolution"
+        class="simulate-btn"
+        @click="downloadSimulation"
+      >
+        {{ $t('schedule.schedule.downloadPlan') }}
+      </default-button>
+      <default-button
+        v-if="planInfo.planId"
+        :loading="isLoadingLastSolution"
+        class="simulate-btn"
+        @click="reSimulate"
+      >
+        {{ $t('schedule.schedule.reSimulate') }}
+      </default-button>
+    </div>
     <div
       v-if="planInfo.planId"
       class="simulation-content"
@@ -80,7 +90,7 @@
 import PlanJob from './components/PlanJob'
 import PlanGantt from './components/PlanGantt'
 import TicketFilter from '@/schedule/components/TicketFilter'
-import { getPlanInfo, getPlanKPI, getLastSolution } from '@/schedule/API/Plan'
+import { getPlanInfo, getPlanKPI, getLastSolution, planExcelDownload } from '@/schedule/API/Plan'
 import { mapMutations, mapState, mapGetters } from 'vuex'
 
 export default {
@@ -105,7 +115,8 @@ export default {
         utilization: 0,
         timeRange: ''
       },
-      searchString: ''
+      searchString: '',
+      excelURL: null,
     }
   },
   computed: {
@@ -127,6 +138,7 @@ export default {
     async fetchData () {
       this.isLoading = true
       this.planInfo = await getPlanInfo(this.scheduleProjectId)
+      this.excelURL = await planExcelDownload(this.scheduleProjectId)
       getPlanKPI(this.scheduleProjectId).then(res => {
         this.KPIInfo = res
         this.KPIInfo.ofr = Math.ceil(this.KPIInfo.ofr * 100)
@@ -137,6 +149,9 @@ export default {
     },
     simulateNewPlan () {
       this.$router.push({ name: 'SimulationSetting' })
+    },
+    downloadSimulation () {
+
     },
     reSimulate () {
       this.isLoadingLastSolution = true
@@ -171,7 +186,7 @@ export default {
     }
   }
 
-  .simulate-btn {
+  .button-block {
     position: absolute;
     top: 24px;
     right: 24px;

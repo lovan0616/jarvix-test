@@ -79,7 +79,7 @@
 <script>
 import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
 import { getOrderList } from '@/schedule/API/Order'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'UnscheduledJobsTable',
@@ -101,18 +101,39 @@ export default {
         totalItems: 0,
         itemPerPage: 20
       },
-      jobTableHeaderList: [
+      normalTableHeaderList: [
         { title: 'job', name: this.$t('schedule.simulation.table.job'), width: '' },
         { title: 'order', name: this.$t('schedule.simulation.table.order'), width: '' },
         { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '' },
         { title: 'deadline', name: this.$t('schedule.simulation.table.deadline'), width: '120' },
         { title: 'quantity', name: this.$t('schedule.simulation.table.quantity'), width: '120' }
+      ],
+      yukiTableHeaderList: [
+        { title: 'id', name: 'ID', width: '' },
+        { title: 'order', name: this.$t('schedule.simulation.yukiTable.order'), width: '' },
+        { title: 'job', name: this.$t('schedule.simulation.yukiTable.job'), width: '' },
+        { title: 'product', name: this.$t('schedule.simulation.yukiTable.product'), width: '' },
+        { title: 'quantity', name: this.$t('schedule.simulation.yukiTable.quantity'), width: '' },
+        { title: 'priority', name: this.$t('schedule.simulation.yukiTable.priority'), width: '' },
+        { title: 'deadline', name: this.$t('schedule.simulation.yukiTable.deadline'), width: '' },
+        { title: 'shortName', name: this.$t('schedule.simulation.yukiTable.shortName'), width: '' },
+        { title: 'shoeName', name: this.$t('schedule.simulation.yukiTable.shoeName'), width: '' },
+        { title: 'bottom', name: this.$t('schedule.simulation.yukiTable.bottom'), width: '' },
+        { title: 'head', name: this.$t('schedule.simulation.yukiTable.head'), width: '' },
+        { title: 'aDate', name: this.$t('schedule.simulation.yukiTable.aDate'), width: '' },
+        { title: 'bDate', name: this.$t('schedule.simulation.yukiTable.bDate'), width: '' },
+        { title: 't4Date', name: this.$t('schedule.simulation.yukiTable.t4Date'), width: '' },
+        { title: 'ps', name: this.$t('schedule.simulation.yukiTable.ps'), width: '' }
       ]
     }
   },
   computed: {
     ...mapState('simulation', ['scheduledJobs']),
-    ...mapState('scheduleSetting', ['scheduleProjectId'])
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
+    jobTableHeaderList () {
+      return this.isYKSchedule ? this.yukiTableHeaderList : this.normalTableHeaderList
+    }
   },
   watch: {
     scheduledJobs: {

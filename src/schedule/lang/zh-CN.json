@@ -303,6 +303,22 @@
         "completed": "已结案",
         "uncompleted": "未结案"
       },
+      "yukiTable": {
+        "order": "订单编号",
+        "job": "工单",
+        "product": "产品名称",
+        "quantity": "数量",
+        "priority": "重要性",
+        "deadline": "订单结案日",
+        "shortName": "短制令",
+        "shoeName": "鞋型款式名称",
+        "bottom": "大底",
+        "head": "楦头",
+        "aDate": "面材入厂日",
+        "bDate": "底材入场时间",
+        "t4Date": "T4完成日",
+        "ps": "注记"
+      },
       "scheduleResult": {
         "equipmentId": "设备编号",
         "jobNo": "工单编号",
@@ -330,6 +346,7 @@
       "ganttInfo": "机台（工单可以追踪时段连结 / 维护保养时间 / 前置＆换线时间 / 制程时间）",
       "noPlan": "目前没有计画",
       "reSimulate": "重新模拟",
+      "downloadPlan": "下载排程计划",
       "open": "开启内容",
       "close": "收起内容"
     },
