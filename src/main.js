@@ -67,7 +67,6 @@ import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
 import SyTable from './components/table/SyTable.vue'
 import PreviewDataSource from './components/PreviewDataSource.vue'
 import ResultBoard from '@/components/resultBoard/ResultBoard'
-import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import GeneralResult from '@/components/resultBoard/GeneralResult'
 import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
@@ -113,7 +112,6 @@ import InsightTable from '@/components/display/InsightTable'
 import SelectedRegion from '@/components/display/SelectedRegion'
 import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
-import PreviewResultBoard from '@/components/PreviewResultBoard'
 import TrendRootCause from '@/components/display/TrendRootCause'
 import TrendRootCauseOEDemo from '@/components/display/TrendRootCauseOEDemo'
 import RootCauseItem from '@/components/display/RootCauseItem'
@@ -178,7 +176,6 @@ Vue.component(SyTable.name, SyTable)
 Vue.component(RootCauseInfo.name, RootCauseInfo)
 Vue.component(InsightTable.name, InsightTable)
 Vue.component(ResultBoard.name, ResultBoard)
-Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(GeneralResult.name, GeneralResult)
 Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
@@ -221,7 +218,6 @@ Vue.component(DisplayCorrelationFeatures.name, DisplayCorrelationFeatures)
 Vue.component(SelectedRegion.name, SelectedRegion)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
-Vue.component(PreviewResultBoard.name, PreviewResultBoard)
 Vue.component(TrendRootCause.name, TrendRootCause)
 Vue.component(TrendRootCauseOEDemo.name, TrendRootCauseOEDemo)
 Vue.component(RootCauseItem.name, RootCauseItem)

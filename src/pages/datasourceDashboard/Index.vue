@@ -4,31 +4,18 @@
       :key="dataSourceId"
       mode="display"
     />
-    <quick-start
-      v-if="quickStartQuestionList && quickStartQuestionList.length > 0"
-      :question-list="quickStartQuestionList"
-    />
   </div>
 </template>
 
 <script>
-import QuickStart from './components/QuickStart'
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'PageIndex',
-  components: {
-    QuickStart
-  },
   data () {
     return {
-      isLoading: false,
-      quickStartQuestionList: []
+      isLoading: false
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
-    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -36,34 +23,10 @@ export default {
       return this.$store.state.dataSource.dataFrameId
     }
   },
-  watch: {
-    dataFrameId (newValue) {
-      this.quickStartQuestionList = []
-      if (newValue) this.getQuickQuestionList()
-    },
-    askCondition: {
-      deep: true,
-      handler (newValue, oldValue) {
-        if (
-          // 初次開啟設定時不觸發
-          (oldValue.isInit === false && oldValue.columnList === null) 
-          // 切換 dataframe 清空設定時不觸發
-          || newValue.isInit === false
-        ) return
-        this.getQuickQuestionList()
-      }
-    }
-  },
   created() {
     if (this.dataSourceId !== null) {
       let { dataSourceId, dataFrameId } = this.$route.query
       if (!dataSourceId || !dataFrameId) this.updateUrl()
-    }
-  },
-  mounted () {
-    // 變更 dataSource 從其他頁回到首頁的時候，如果是 null 代表如果是直接進首頁的話，會藉由 watch 觸發
-    if (this.dataSourceId !== null) {
-      this.getQuickQuestionList()
     }
   },
   methods: {
@@ -91,18 +54,8 @@ export default {
           ...(this.dataSourceId && { 
             dataSourceId: this.dataSourceId,
             dataFrameId: this.dataFrameId
-          }),
+          })
         }
-      })
-    },
-    getQuickQuestionList () {
-      this.isLoading = true
-      this.$store.dispatch('chatBot/getQuickStartQuestion', this.dataSourceId)
-      .then(response => {
-        this.quickStartQuestionList = response
-        this.isLoading = false
-      }).catch(() => {
-        this.isLoading = false
       })
     }
   },

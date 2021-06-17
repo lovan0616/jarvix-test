@@ -63,9 +63,6 @@ export default {
     ...mapState('userManagement', ['isAdmin']),
     ...mapState('setting', ['isSmtpConnected'])
   },
-  mounted () {
-    this.$store.commit('chatBot/clearConversation')
-  },
   methods: {
     ...mapActions('userManagement', ['getUserInfo']),
     ...mapMutations('setting', ['updateToken', 'updateTokenTimestamp']),

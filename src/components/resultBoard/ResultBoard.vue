@@ -13,7 +13,7 @@
             :title="segmentationPayload.question"
             :segmentation="segmentationPayload"
           />
-          <question-name-v2
+          <question-name
             v-else
             :question-segmentation="segmentationPayload"
             class="result-board__header"
@@ -158,7 +158,7 @@
 </template>
 <script>
 import ResultBoardHeader from './ResultBoardHeader'
-import QuestionNameV2 from './QuestionNameV2'
+import QuestionName from './QuestionName'
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
@@ -176,7 +176,7 @@ export default {
   name: 'ResultBoard',
   components: {
     ResultBoardHeader,
-    QuestionNameV2,
+    QuestionName,
     PinboardDialog,
     ShareDialog,
     DecideDialog,

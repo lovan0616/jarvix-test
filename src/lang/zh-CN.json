@@ -853,12 +853,7 @@
     "columnUnit": "栏位单位"
   },
   "bot": {
-    "welcomeMessage": "Hello, 今天想分析什么样的数据？",
-    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage 可以试试从这些问题开始：",
-    "defaultResponse": "已分析完成，您可能有兴趣的关联问题：",
-    "finish": "已分析完成",
     "multiplePossibilities": "很抱歉，经系统分析后，发现词汇具有多重意义，请参考以下项目：",
-    "similarQuestionDescription": "很抱歉，系统没有找到对应问题的栏位或数据，但有相关词意的栏位，请参考以下项目：",
     "previewDataSource": "查看数据源",
     "closeDataSource": "关闭数据源",
     "openDataFrameSetting": "开启进阶设定",
@@ -2521,7 +2516,6 @@
     "summaryReport": "摘要报告",
     "importantFeatureChanging": "重要因素变化比较",
     "analysisProcessing": "分析处理中",
-    "quickStart": "常用问题",
     "clearAllFilter": "清除所有条件",
     "closeFilter": "关闭条件",
     "currentChosenData": "目前所选择的数据",

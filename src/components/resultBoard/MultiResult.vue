@@ -12,7 +12,7 @@
           class="single-question"
           @click="askQuestion(singleQuestion, index)"
         >
-          <question-name-v2
+          <question-name
             :question-segmentation="singleQuestion"
           />
           <svg-icon 
@@ -104,12 +104,12 @@
   </div>
 </template>
 <script>
-import QuestionNameV2 from './QuestionNameV2'
+import QuestionName from './QuestionName'
 
 export default {
   name: 'MultiResult',
   components: {
-    QuestionNameV2
+    QuestionName
   },
   props: {
     resultInfo: {

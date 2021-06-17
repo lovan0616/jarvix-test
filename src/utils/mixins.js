@@ -315,8 +315,6 @@ Vue.mixin({
           return 'DisplayPivotTable'
         case 'world_map':
           return 'DisplayWorldMap'
-        case 'title':
-          return 'ResultBoardHeader'
         case 'basic_info':
           return 'InsightTable'
         case 'feature_importance':

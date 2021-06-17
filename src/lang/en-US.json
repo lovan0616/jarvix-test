@@ -850,12 +850,7 @@
     "columnUnit": "Column Unit"
   },
   "bot": {
-    "welcomeMessage": "Hi, what would you like to analyze today?",
-    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage You can start asking these questions:",
-    "defaultResponse": "Completed. You may be interested:",
-    "finish": "Completed",
     "multiplePossibilities": "Sorry, your search matched multiple results. Did you mean: ",
-    "similarQuestionDescription": "Sorry, your search matched multiple results. Did you mean:",
     "previewDataSource": "View Data Source",
     "closeDataSource": "Close Data Source",
     "openDataFrameSetting": "Open Basic Data Frame Setting",
@@ -2510,7 +2505,6 @@
     "summaryReport": "Summary Report",
     "importantFeatureChanging": "Comparison of changes in important factors",
     "analysisProcessing": "Analyzing",
-    "quickStart": "Common Questions",
     "clearAllFilter": "Clear All Filters",
     "closeFilter": "Close Condition",
     "currentChosenData": "Currently selected data",

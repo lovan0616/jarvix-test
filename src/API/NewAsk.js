@@ -98,22 +98,6 @@ export function getHistoryQuestionList(dataSourceId, dataFrameId) {
 }
 
 /**
- * get quick start question
- */
-export function getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList = null) {
-  return request({
-    url: `/ask/quickQuestionList/search`,
-    method: 'POST',
-    data: {
-      dataSourceId, 
-      dataFrameId,
-      restrictions,
-      selectedColumnList
-    }
-  })
-}
-
-/**
  * add table to memory
  * @param {Number} accountId
  * @param {Number} dataFrameId,

@@ -152,8 +152,6 @@ export default {
     fetchApiAsk (data) {
       this.clearLayout()
       this.isLoading = true
-      this.$store.commit('chatBot/addUserConversation', data.question)
-      this.$store.commit('chatBot/updateAnalyzeStatus', true)
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
       document.title = `JarviX-${data.question}`
 
@@ -179,7 +177,6 @@ export default {
           this.getComponentV2(res.resultId)
         }).catch(() => {
           this.isLoading = false
-          this.$store.commit('chatBot/updateAnalyzeStatus', false)
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
         return

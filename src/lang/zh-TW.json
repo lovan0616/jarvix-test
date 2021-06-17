@@ -853,12 +853,7 @@
     "columnUnit": "欄位單位"
   },
   "bot": {
-    "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
-    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage 可以試試從這些問題開始：",
-    "defaultResponse": "已分析完成，您可能有興趣的關聯問題：",
-    "finish": "已分析完成",
     "multiplePossibilities": "很抱歉，經系統分析後，發現詞彙具有多重意義，請參考以下項目：",
-    "similarQuestionDescription": "很抱歉，系統沒有找到對應問題的欄位或資料，但有相關詞意的欄位，請參考以下項目：",
     "previewDataSource": "查看資料源",
     "closeDataSource": "關閉資料源",
     "openDataFrameSetting": "開啟進階設定",
@@ -2521,7 +2516,6 @@
     "summaryReport": "摘要報告",
     "importantFeatureChanging": "重要因素變化比較",
     "analysisProcessing": "分析處理中",
-    "quickStart": "常用問題",
     "clearAllFilter": "清除所有條件",
     "closeFilter": "關閉條件",
     "currentChosenData": "目前所選擇的資料",

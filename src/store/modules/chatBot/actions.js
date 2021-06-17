@@ -1,4 +1,4 @@
-import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
+import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 
@@ -43,30 +43,9 @@ export default {
   getComponentData ({dispatch}, data) {
     return getComponentData(data)
   },
-  getQuickStartQuestion({ rootState, rootGetters }, dataSourceIdData) {
-    const dataSourceId = rootState.dataSource.dataSourceId || dataSourceIdData
-    const dataFrameId = rootGetters['dataSource/currentDataFrameId']
-    const selectedColumnList = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
-    const restrictions = rootGetters['dataSource/filterRestrictionList']
-    return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList)
-  },
   cancelRequest ({state}) {
     if (state.askCancelToken) {
       state.askCancelToken.cancel('cancel')
-    }
-  },
-  async updateChatConversation({ dispatch, commit, state, rootState }) {
-    commit('updateAnalyzeStatus', true)
-    try {
-      const response = await dispatch('getQuickStartQuestion', rootState.dataSource.dataSourceId)
-      commit('updateAnalyzeStatus', false)
-      commit('addSystemConversation',
-        response.length > 0
-          ? { text: i18n.t('bot.welcomeMessageWithSuggestions'), options: response }
-          : { text: i18n.t('bot.welcomeMessage') }
-      )
-    } catch (error) {
-      commit('updateAnalyzeStatus', false)
     }
   },
   openAskInMemory ({rootGetters, rootState}) {
