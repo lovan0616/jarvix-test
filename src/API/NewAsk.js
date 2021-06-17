@@ -98,21 +98,6 @@ export function getHistoryQuestionList(dataSourceId, dataFrameId) {
 }
 
 /**
- * get related question
- * @param resultId
- */
-export function getRelatedQuestionList(resultId, dataSourceId) {
-  return request({
-    url: `/ask/relatedQuestionList`,
-    method: 'POST',
-    data: {
-      resultId,
-      dataSourceId
-    }
-  })
-}
-
-/**
  * get quick start question
  */
 export function getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList = null) {

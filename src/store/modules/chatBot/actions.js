@@ -1,4 +1,4 @@
-import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
+import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 
@@ -42,9 +42,6 @@ export default {
   },
   getComponentData ({dispatch}, data) {
     return getComponentData(data)
-  },
-  getRelatedQuestionList({rootState}, resultId) {
-    return getRelatedQuestionList(resultId, rootState.dataSource.dataSourceId)
   },
   getQuickStartQuestion({ rootState, rootGetters }, dataSourceIdData) {
     const dataSourceId = rootState.dataSource.dataSourceId || dataSourceIdData

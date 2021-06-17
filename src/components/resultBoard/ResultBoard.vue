@@ -122,15 +122,6 @@
       <slot name="PageResultBoardBody"/>
       <slot name="RootCauseResultBoardBody"/>
     </div>
-    <div 
-      v-if="$slots.RelatedQuestions"
-      class="related-question-block"
-    >
-      <div class="block-title">{{ $t('resultDescription.relatedQuestion') }}</div>
-      <div class="related-question-list">
-        <slot name="RelatedQuestions"/>
-      </div>
-    </div>
 
     <writing-dialog
       v-if="isShowShare"
@@ -543,39 +534,4 @@ export default {
     margin-right: 11px;
   }
 }
-.related-question-block {
-  background-color: rgba(0, 0, 0, 0.35);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  padding: 28px 28px 4px;
-
-  .block-title {
-    font-size: 24px;
-    line-height: 32px;
-    margin-bottom: 18px;
-  }
-
-  .related-question-list {
-    display: flex;
-    flex-wrap: wrap;
-  }
-}
 </style>
-<style lang="scss">
-.related-question-list {
-  .result-board {
-    width: 32%;
-
-    &::before {
-      content: '';
-      width: 100%;
-      height: 5px;
-      background-color: #4DE2F0;
-      border-radius: 5px 5px 0px 0px;
-    }
-
-    &:not(:nth-child(3n)) {
-      margin-right: 2%;
-    }
-  }
-}

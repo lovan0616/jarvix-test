@@ -29,19 +29,6 @@
       mode="display"
       @fetch-new-components-list="getComponentV2"
     />
-    <div
-      v-if="relatedQuestionList.length > 0" 
-      class="related-question-block">
-      <div class="block-title">{{ $t('editing.relatedQuestion') }}</div>
-      <div class="related-question-list">
-        <preview-result-board 
-          v-for="(relatedQuestion, index) in relatedQuestionList"
-          :key="index"
-          :question-info="relatedQuestion"
-          class="result-board"
-        />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -64,9 +51,7 @@ export default {
       resultInfo: null,
       restrictInfo: [],
       timeStamp: this.$route.query.stamp,
-      relatedQuestionList: [],
       timeoutFunction: null,
-      addConversationTimeout: null,
       segmentationInfo: {
         question: null,
         unknownToken: [],
@@ -136,7 +121,6 @@ export default {
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
-    if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
     this.$store.commit('result/updateCurrentResultId', null)
     document.title = 'JarviX'
   },
@@ -156,7 +140,6 @@ export default {
       this.layout = null
       this.resultInfo = null
       this.restrictInfo = []
-      this.relatedQuestionList = []
       this.segmentationPayload = null
       this.currentQuestionDataFrameId = null
       this.transcript = null
@@ -194,7 +177,6 @@ export default {
             return
           }
           this.getComponentV2(res.resultId)
-          // this.getRelatedQuestion(res.resultId)
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
@@ -218,7 +200,6 @@ export default {
                 this.layout = 'PreviewDataSource'
                 this.resultInfo = null
                 this.isLoading = false
-                this.setRelatedQuestions()
                 return false
               }
               case 'NO_ANSWER': {
@@ -229,7 +210,6 @@ export default {
                   description: segmentation.errorMessage
                 }
                 this.isLoading = false
-                this.setRelatedQuestions()
                 return false
               }
             }
@@ -252,7 +232,6 @@ export default {
                 return
               }
               this.getComponentV2(res.resultId)
-              // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
               if (error.message !== 'cancel') this.isLoading = false
             })
@@ -261,19 +240,12 @@ export default {
             this.layout = 'MultiResult'
             this.resultInfo = {...response, question: data.question}
             this.isLoading = false
-            this.setRelatedQuestions()
           }
         }).catch((error) => {
           // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
           if (error.message !== 'cancel') this.isLoading = false
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
-    },
-    setRelatedQuestions (options = []) {
-      this.$store.commit('chatBot/addSystemConversation', {
-        text: this.$t('bot.finish'), options
-      })
-      this.$store.commit('chatBot/updateAnalyzeStatus', false)
     },
     setEmptyLayout (res) {
       this.layout = 'EmptyResult'
@@ -334,23 +306,6 @@ export default {
           }
         })
     },
-    getRelatedQuestion (id) {
-      this.$store.dispatch('chatBot/getRelatedQuestionList', id).then(response => {
-        this.$nextTick(() => {
-          this.addConversationTimeout = window.setTimeout(() => {
-            this.$store.commit('chatBot/addSystemConversation', {
-              text: response.length > 0 ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
-            })
-            this.$store.commit('chatBot/updateAnalyzeStatus', false)
-          }, 2000)
-        })
-      }).catch(() => {
-        this.$store.commit('chatBot/addSystemConversation', {
-          text: this.$t('bot.finish'), options: []
-        })
-        this.$store.commit('chatBot/updateAnalyzeStatus', false)
-      })
-    },
     segmentationAnalysisV2 (payloadInfo) {
       // this.segmentationInfo.nlpToken = payloadInfo.sentence.filter(element => {
       //   return element.isMatchedByNlp || element.isSynonym
@@ -394,24 +349,6 @@ export default {
       font-size: 18px;
       line-height: 26px;
       margin-bottom: 12px;
-    }
-  }
-
-  .related-question-block {
-    background-color: var(--color-bg-5);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-    border-radius: 8px;
-    padding: 28px 28px 4px;
-
-    .block-title {
-      font-size: 24px;
-      line-height: 32px;
-      margin-bottom: 18px;
-    }
-
-    .related-question-list {
-      display: flex;
-      flex-wrap: wrap;
     }
   }
 }
