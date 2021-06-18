@@ -228,16 +228,31 @@
           </span>
           <!-- 暫時放這 -->
           <span v-else-if="headInfo.value === 'createMethodLabel'">
-            {{ data[headInfo.value] }} <a
+            {{ data[headInfo.value] }} 
+            <a
               v-if="data.joinCount > 1"
               :disabled="isInProcess(data) || isPending(data) || calculateId === data.id"
               class="link" 
               href="javascript:void(0);"
               @click="calculateMeta(data)"
-            ><svg-icon
-              v-show="calculateId === data.id"
-              icon-class="spinner"
-            />{{ $t('editing.reCalculateMeta') }}</a>
+            >
+              <svg-icon
+                v-show="calculateId === data.id"
+                icon-class="spinner"
+              />{{ $t('editing.reCalculateMeta') }}
+            </a>
+            <a
+              v-if="data.enabledManualUpdate && data.lastImportType === 'REIMPORT'"
+              :disabled="updateId === data.id"
+              class="link" 
+              href="javascript:void(0);"
+              @click="updateImmediately(data)"
+            >
+              <svg-icon
+                v-show="updateId === data.id"
+                icon-class="spinner"
+              />{{ $t('button.updateImmediately') }}
+            </a>
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -250,7 +265,8 @@ import UploadBlock from '@/components/UploadBlock'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { mapGetters } from 'vuex'
-import { reCalculateMetaData } from '@/API/DataSource'
+import { reCalculateMetaData, triggerUpdateData } from '@/API/DataSource'
+import { Message } from 'element-ui'
 
 /**
  * Data table 可傳入屬性
@@ -324,7 +340,8 @@ export default {
   data () {
     return {
       sortStatus: null,
-      calculateId: null
+      calculateId: null,
+      updateId: null
     }
   },
   computed: {
@@ -542,6 +559,20 @@ export default {
       // 重新計算 meta
       reCalculateMetaData(this.calculateId).then(() => {
         this.calculateId = null
+        this.$emit('fetch')
+      })
+    },
+    updateImmediately ({id}) {
+      if (this.updateId === id) return false
+      this.updateId = id
+      return triggerUpdateData(id).then(() => {
+        Message({
+          message: this.$t('batchLoad.startUpdate'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+        this.updateId = null
         this.$emit('fetch')
       })
     }
