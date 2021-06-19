@@ -240,6 +240,7 @@
       "searchJobs": "搜尋@:schedule.simulation.job編號",
       "searchOrders": "搜尋訂單",
       "searchJobOrOrder": "搜尋工單 / 訂單",
+      "selectAll": "選擇全部工單/訂單",
       "selectedJobsCount": "目前已選入 {count} 筆@:schedule.simulation.job",
       "selectJobs": "選擇@:schedule.simulation.job",
       "startDatetime": "排程起始時間",

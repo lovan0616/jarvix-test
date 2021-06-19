@@ -4,7 +4,7 @@
   >
     <div class="header">
       <h3 class="header__title">
-        {{ $t('schedule.simulation.unscheduledJobs') }}
+        {{ selectAll ? $t('schedule.simulation.scheduledJobs') : $t('schedule.simulation.unscheduledJobs') }}
       </h3>
       <span class="header__date"> {{ $t('schedule.simulation.jobsDueDate') }} </span>
       <default-date-picker
@@ -37,7 +37,19 @@
         {{ $t('schedule.button.send') }}
       </default-button>
       <div class="header__button">
+        <label class="header__select">
+          <div class="checkbox-label">
+            <input
+              v-model="selectAll"
+              :value="true"
+              type="checkbox"
+            >
+            <div class="checkbox-square"/>
+          </div>
+          <span>{{ selectAll ? $t('schedule.simulation.selectedJobsCount', {count: pagination.totalItems}) : $t('schedule.simulation.selectAll') }}</span>
+        </label>
         <default-button
+          v-show="!selectAll"
           size="m"
           class="add-btn"
           type="outline"
@@ -61,7 +73,7 @@
       :is-processing="isProcessing"
       :pagination-info="pagination"
       fixed-index
-      selection
+      :selection="!selectAll"
       @change-check="updateSelectedData"
       @change-page="updatePage"
     />
@@ -90,49 +102,44 @@ export default {
     return {
       isLoading: false,
       isProcessing: false,
-      jobSearchNumber: null,
       tmpJobData: null,
       jobData: null,
       selectedData: [],
-      period: [],
       pagination: {
         currentPage: 0,
         totalPages: 0,
         totalItems: 0,
         itemPerPage: 20
-      },
-      normalTableHeaderList: [
-        { title: 'job', name: this.$t('schedule.simulation.table.job'), width: '' },
-        { title: 'order', name: this.$t('schedule.simulation.table.order'), width: '' },
-        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '' },
-        { title: 'deadline', name: this.$t('schedule.simulation.table.deadline'), width: '120' },
-        { title: 'quantity', name: this.$t('schedule.simulation.table.quantity'), width: '120' }
-      ],
-      yukiTableHeaderList: [
-        { title: 'id', name: 'ID', width: '' },
-        { title: 'order', name: this.$t('schedule.simulation.yukiTable.order'), width: '' },
-        { title: 'job', name: this.$t('schedule.simulation.yukiTable.job'), width: '' },
-        { title: 'product', name: this.$t('schedule.simulation.yukiTable.product'), width: '' },
-        { title: 'quantity', name: this.$t('schedule.simulation.yukiTable.quantity'), width: '' },
-        { title: 'priority', name: this.$t('schedule.simulation.yukiTable.priority'), width: '' },
-        { title: 'deadline', name: this.$t('schedule.simulation.yukiTable.deadline'), width: '' },
-        { title: 'shortName', name: this.$t('schedule.simulation.yukiTable.shortName'), width: '' },
-        { title: 'shoeName', name: this.$t('schedule.simulation.yukiTable.shoeName'), width: '' },
-        { title: 'bottom', name: this.$t('schedule.simulation.yukiTable.bottom'), width: '' },
-        { title: 'head', name: this.$t('schedule.simulation.yukiTable.head'), width: '' },
-        { title: 'aDate', name: this.$t('schedule.simulation.yukiTable.aDate'), width: '' },
-        { title: 'bDate', name: this.$t('schedule.simulation.yukiTable.bDate'), width: '' },
-        { title: 't4Date', name: this.$t('schedule.simulation.yukiTable.t4Date'), width: '' },
-        { title: 'ps', name: this.$t('schedule.simulation.yukiTable.ps'), width: '' }
-      ]
+      }
     }
   },
   computed: {
-    ...mapState('simulation', ['scheduledJobs']),
+    ...mapState('simulation', ['scheduledJobs', 'selectAllOrders', 'orderPeriod', 'searchOrderNumber']),
     ...mapState('scheduleSetting', ['scheduleProjectId']),
-    ...mapGetters('scheduleSetting', ['isYKSchedule']),
-    jobTableHeaderList () {
-      return this.isYKSchedule ? this.yukiTableHeaderList : this.normalTableHeaderList
+    ...mapGetters('scheduleSetting', ['isYKSchedule', 'jobTableHeaderList']),
+    selectAll: {
+      get () {
+        return this.selectAllOrders
+      },
+      set (val) {
+        this.setSelectAllOrders(val)
+      }
+    },
+    jobSearchNumber: {
+      get () {
+        return this.searchOrderNumber
+      },
+      set (val) {
+        this.setSearchOrderNumber(val)
+      }
+    },
+    period: {
+      get () {
+        return this.orderPeriod
+      },
+      set (val) {
+        this.setOrderPeriod(val)
+      }
     }
   },
   watch: {
@@ -149,7 +156,7 @@ export default {
     this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
   },
   methods: {
-    ...mapMutations('simulation', ['updateScheduledJobs']),
+    ...mapMutations('simulation', ['updateScheduledJobs', 'setOrderPeriod', 'setSelectAllOrders', 'setSearchOrderNumber', 'setSearchOrderCount']),
     fetchJobData (page = 0, size = 20, jobSearchNumber = null, resetPagination = false) {
       this.isProcessing = true
       getOrderList({
@@ -161,6 +168,7 @@ export default {
         endDate: this.period && this.period.length > 0 ? this.period[1] : null
       }).then(res => {
         if (resetPagination) this.pagination = res.pagination
+        this.setSearchOrderCount(res.pagination.totalItems || 0)
         this.tmpJobData = res.data
         this.updateJobData(res.data)
         this.isLoading = false
@@ -292,11 +300,27 @@ export default {
     }
 
     &__button {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
       flex: 1;
       text-align: right;
 
       .sync-btn {
         margin-right: 12px;
+      }
+    }
+
+    &__select {
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      font-size: 12px;
+      margin-right: 8px;
+      cursor: pointer;
+
+      .checkbox-label {
+        margin-right: 8px;
       }
     }
   }

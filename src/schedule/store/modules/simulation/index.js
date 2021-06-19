@@ -11,7 +11,11 @@ export default {
       completedSolutionIds: [],
       failedSolutionIds: [],
       inProgressIds: []
-    }
+    },
+    searchOrderNumber: null,
+    orderPeriod: [],
+    selectAllOrders: false,
+    searchOrderCount: 0
   },
   mutations,
   actions

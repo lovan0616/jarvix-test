@@ -4,6 +4,7 @@
     <h2 class="header">
       {{ $t('schedule.schedule.title') }}
       <ticket-filter
+        v-if="!isYKSchedule"
         v-show="!isLoading && planInfo.planId"
         @search="searchString = $event"
       />
@@ -33,7 +34,12 @@
       <template
         v-if="isYKSchedule"
       >
-        <iframe src='https://view.officeapps.live.com/op/embed.aspx?src=http://www.learningaboutelectronics.com/Articles/Example.xlsx' width='100%' height='565px' frameborder='0'></iframe>
+        <iframe
+          :src="`https://view.officeapps.live.com/op/embed.aspx?src=${excelURL}`"
+          width="100%"
+          height="565px"
+          frameborder="0"
+        ></iframe>
       </template>
       <template
         v-else
@@ -90,7 +96,7 @@
 import PlanJob from './components/PlanJob'
 import PlanGantt from './components/PlanGantt'
 import TicketFilter from '@/schedule/components/TicketFilter'
-import { getPlanInfo, getPlanKPI, getLastSolution, planExcelDownload } from '@/schedule/API/Plan'
+import { getPlanInfo, getPlanKPI, getLastSolution } from '@/schedule/API/Plan'
 import { mapMutations, mapState, mapGetters } from 'vuex'
 
 export default {
@@ -116,7 +122,7 @@ export default {
         timeRange: ''
       },
       searchString: '',
-      excelURL: null,
+      excelURL: `${window.env.SCHEDULE_API_ROOT_URL}/plan/result/excelFile?projectId=${this.$route.params.schedule_project_id}`,
     }
   },
   computed: {
@@ -138,7 +144,6 @@ export default {
     async fetchData () {
       this.isLoading = true
       this.planInfo = await getPlanInfo(this.scheduleProjectId)
-      this.excelURL = await planExcelDownload(this.scheduleProjectId)
       getPlanKPI(this.scheduleProjectId).then(res => {
         this.KPIInfo = res
         this.KPIInfo.ofr = Math.ceil(this.KPIInfo.ofr * 100)
@@ -151,7 +156,16 @@ export default {
       this.$router.push({ name: 'SimulationSetting' })
     },
     downloadSimulation () {
-
+      let link = document.createElement('a')
+        if (link.download !== undefined) {
+          // Browsers that support HTML5 download attribute
+          link.setAttribute('href', this.excelURL)
+          link.setAttribute('download', 'plan.xlsx')
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
     },
     reSimulate () {
       this.isLoadingLastSolution = true

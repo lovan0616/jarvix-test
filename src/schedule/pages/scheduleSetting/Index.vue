@@ -139,8 +139,8 @@
           </div>
         </section>
         <section
-          class="body__block body__block--kpi"
           v-if="settingInfo.kpiSetting && !isYKSchedule"
+          class="body__block body__block--kpi"
         >
           <h3 class="block__title">
             {{ $t('schedule.setting.simulationKPI') }}

@@ -47,7 +47,7 @@ export default {
     }
 
     // 建立新模擬計畫
-    this.$store.dispatch('simulation/newPlan')
+    this.$store.dispatch(this.isYKSchedule ? 'simulation/yukiNewPlan' : 'simulation/newPlan')
       .then(({ planId, solutions }) => {
         this.$store.commit('simulation/setPlanId', planId)
         this.$store.commit('simulation/setSolutions', solutions.map(solution => ({ ...this.defaultSetting, ...solution, simulated: true, valid: true })))
@@ -93,7 +93,7 @@ export default {
               })))
 
               if (this.isYKSchedule) {
-                adoptionSolution(planId, simulationResult.completedSolutionIds[0])
+                adoptionSolution(this.planId, simulationResult.completedSolutionIds[0])
                 .then(() => {
                   this.$store.commit('simulation/setPlanId', null)
                   this.$store.commit('simulation/setSolutions', [])

@@ -240,6 +240,7 @@
       "searchJobs": "搜寻@:schedule.simulation.job编号",
       "searchOrders": "搜寻订单",
       "searchJobOrOrder": "搜寻工单 / 订单",
+      "selectAll": "选择全部工单/订单",
       "selectedJobsCount": "目前已选入 {count} 笔@:schedule.simulation.job",
       "selectJobs": "选择@:schedule.simulation.job",
       "startDatetime": "排程起始时间",
