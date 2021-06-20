@@ -177,7 +177,11 @@
           :key="file.code"
           class="file"
         >
-          <single-constraint-file :file-data="file"/>
+          <!-- 鈺齊只需要轉換時間 -->
+          <single-constraint-file
+            v-show="!isYKSchedule || file.code === 'transfer_time'"
+            :file-data="file"
+          />
         </div>
       </div>
     </div>

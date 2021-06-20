@@ -123,6 +123,10 @@ export default {
       },
       set (val) {
         this.setSelectAllOrders(val)
+        if (val) {
+          this.updateScheduledJobs([])
+          this.selectedData = []
+        }
       }
     },
     jobSearchNumber: {
