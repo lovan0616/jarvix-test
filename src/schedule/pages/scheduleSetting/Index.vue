@@ -66,6 +66,7 @@
                   format="yyyy/MM/dd"
                   value-format="yyyy/MM/dd"
                   type="date"
+                  :picker-options="pickerOptions"
                 />
               </div>
             </div>
@@ -93,7 +94,7 @@
             />
           </div>
           <div
-            v-if="solutionSequence"
+            v-if="solutionSequence && !isYKSchedule"
             class="block__form"
           >
             <exception-time-setting
@@ -258,6 +259,11 @@ export default {
       scheduleStartDatePickerOptions: {
         disabledDate (time) {
           return time.getTime() < Date.now()
+        }
+      },
+      pickerOptions: {
+        disabledDate: (time) => {
+          return this.isYKSchedule ? time.getFullYear() < 2021 : false
         }
       }
     }

@@ -157,11 +157,12 @@ export default {
     ...mapState('userManagement', ['userName', 'license', 'groupList']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     ...mapState('scheduleSetting', ['scheduleProjects']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
     isShowSchedule () {
-      return localStorage.getItem('isShowScheduleModule') === 'true'
+      return localStorage.getItem('isShowScheduleModule') === 'true' || this.isYKSchedule
     },
     // isShowFunctionDescription () {
     //   return this.$store.state.setting.locale.includes('zh')

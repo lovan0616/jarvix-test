@@ -122,7 +122,7 @@ export default {
         timeRange: ''
       },
       searchString: '',
-      excelURL: `${window.env.SCHEDULE_API_ROOT_URL}plan/result/excelFile?projectId=${this.$route.params.schedule_project_id}`,
+      excelURL: `${window.env.SCHEDULE_API_ROOT_URL}plan/result/excelFile?projectId=${this.$route.params.schedule_project_id}`
     }
   },
   computed: {
