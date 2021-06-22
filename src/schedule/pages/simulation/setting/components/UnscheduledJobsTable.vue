@@ -18,7 +18,7 @@
       <div class="header__search">
         <default-input
           v-model="jobSearchNumber"
-          :placeholder="$t('schedule.simulation.searchJobs')"
+          :placeholder="isYKSchedule ? $t('schedule.simulation.searchYKJobs') : $t('schedule.simulation.searchJobs')"
           type="text"
           class="header__search--input"
         >

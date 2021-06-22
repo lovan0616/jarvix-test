@@ -239,6 +239,7 @@
       "removeSelectedJobs": "@:schedule.base.remove项目",
       "scheduledJobs": "本次排程@:schedule.simulation.job",
       "searchJobs": "搜寻@:schedule.simulation.job编号",
+      "searchYKJobs": "搜寻制令",
       "searchOrders": "搜寻订单",
       "searchJobOrOrder": "搜寻工单 / 订单",
       "selectAll": "选择全部工单/订单",
