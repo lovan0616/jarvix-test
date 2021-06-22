@@ -6,7 +6,7 @@
       <h3 class="header__title">
         {{ selectAll ? $t('schedule.simulation.scheduledJobs') : $t('schedule.simulation.unscheduledJobs') }}
       </h3>
-      <span class="header__date"> {{ $t('schedule.simulation.jobsDueDate') }} </span>
+      <span class="header__date"> {{ isYKSchedule ? $t('schedule.simulation.yukiJobDueDate') : $t('schedule.simulation.jobsDueDate') }} </span>
       <default-date-picker
         v-model="period"
         :clearable="true"
@@ -104,6 +104,7 @@ export default {
       isProcessing: false,
       tmpJobData: null,
       jobData: null,
+      period: [],
       selectedData: [],
       pagination: {
         currentPage: 0,
@@ -136,14 +137,6 @@ export default {
       set (val) {
         this.setSearchOrderNumber(val)
       }
-    },
-    period: {
-      get () {
-        return this.orderPeriod
-      },
-      set (val) {
-        this.setOrderPeriod(val)
-      }
     }
   },
   watch: {
@@ -154,6 +147,9 @@ export default {
       immediate: true,
       deep: true
     }
+  },
+  destroyed () {
+    this.setOrderPeriod([])
   },
   mounted () {
     this.isLoading = true
@@ -168,8 +164,8 @@ export default {
         page,
         size,
         orderNumber: jobSearchNumber,
-        startDate: this.period && this.period.length > 0 ? this.period[0] : null,
-        endDate: this.period && this.period.length > 0 ? this.period[1] : null
+        startDate: this.orderPeriod && this.orderPeriod.length > 0 ? this.orderPeriod[0] : null,
+        endDate: this.orderPeriod && this.orderPeriod.length > 0 ? this.orderPeriod[1] : null
       }).then(res => {
         if (resetPagination) this.pagination = res.pagination
         this.setSearchOrderCount(res.pagination.totalItems || 0)
@@ -200,6 +196,7 @@ export default {
       }
     },
     searchJobData () {
+      this.setOrderPeriod(this.period)
       this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
     },
     addItem () {
