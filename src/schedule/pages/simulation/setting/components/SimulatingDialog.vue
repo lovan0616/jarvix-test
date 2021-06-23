@@ -17,8 +17,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import { adoptionSolution } from '@/schedule/API/Simulation'
 
 export default {
   name: '',
@@ -29,7 +30,8 @@ export default {
   },
   computed: {
     ...mapState('simulation', ['planId', 'solutions', 'scheduledJobs']),
-    ...mapState('scheduleSetting', ['defaultSetting'])
+    ...mapState('scheduleSetting', ['defaultSetting']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule'])
   },
   mounted () {
     // 重新模擬部分方案
@@ -37,7 +39,7 @@ export default {
       this.$store.dispatch('simulation/reSimulate')
         .then(({ solutions }) => {
           this.$store.commit('simulation/setSolutions', solutions.map(solution => ({ ...this.defaultSetting, ...solution, simulated: true, valid: true })))
-          this.checkStatus()
+          this.checkStatus(this.planId)
         }).catch(() => {
           this.$emit('cancel')
         })
@@ -45,11 +47,11 @@ export default {
     }
 
     // 建立新模擬計畫
-    this.$store.dispatch('simulation/newPlan')
+    this.$store.dispatch(this.isYKSchedule ? 'simulation/yukiNewPlan' : 'simulation/newPlan')
       .then(({ planId, solutions }) => {
         this.$store.commit('simulation/setPlanId', planId)
         this.$store.commit('simulation/setSolutions', solutions.map(solution => ({ ...this.defaultSetting, ...solution, simulated: true, valid: true })))
-        this.checkStatus()
+        this.checkStatus(planId)
       }).catch(() => {
         this.$emit('cancel')
       })
@@ -67,14 +69,7 @@ export default {
 
               // 全部方案失敗 -> 關掉跳窗回到模擬設定
               if (simulationResult.completedSolutionIds.length === 0) {
-                Message({
-                  message: this.$t('schedule.simulation.simulationFailed'),
-                  type: 'warning',
-                  duration: 3 * 1000,
-                  showClose: true
-                })
-                this.$store.commit('simulation/setPlanId', null)
-                this.$emit('cancel')
+                this.simulateFail()
                 return
               }
 
@@ -96,8 +91,23 @@ export default {
                 ...s,
                 simulated: true
               })))
-              this.$router.push({ name: 'SimulationResult' })
+
+              if (this.isYKSchedule) {
+                adoptionSolution(this.planId, simulationResult.completedSolutionIds[0])
+                .then(() => {
+                  this.$store.commit('simulation/setPlanId', null)
+                  this.$store.commit('simulation/setSolutions', [])
+                  this.$store.commit('simulation/updateScheduledJobs', [])
+                  this.$router.push({ name: 'CurrentSimulation' })
+                }).catch(() => {
+                  this.simulateFail()
+                })
+              } else {
+                this.$router.push({ name: 'SimulationResult' })
+              }
             }
+          }).catch(() => {
+            this.simulateFail()
           })
       }, 5 * 1000)
     },
@@ -107,6 +117,16 @@ export default {
       this.$store.dispatch('simulation/cancelSimulationPlan')
         .then(() => {})
         .catch(() => {})
+    },
+    simulateFail () {
+      Message({
+        message: this.$t('schedule.simulation.simulationFailed'),
+        type: 'warning',
+        duration: 3 * 1000,
+        showClose: true
+      })
+      this.$store.commit('simulation/setPlanId', null)
+      this.$emit('cancel')
     }
   }
 }

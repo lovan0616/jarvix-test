@@ -9,7 +9,7 @@
     <el-table
       ref="multipleTable"
       v-bind="tableProps"
-      :empty-text="$t('schedule.table.noData')"
+      :empty-text="$t('schedule.base.noData')"
       class="ss-table"
       style="width: 100%;"
       cell-class-name="schedule-table-cell"

@@ -4,12 +4,12 @@
   >
     <div class="header">
       <h3 class="header__title">
-        {{ $t('schedule.simulation.scheduledJobs') }}
+        {{ $t('schedule.simulation.scheduledJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }}
       </h3>
       <div class="header__search">
         <default-input
           v-model="searchJobNumber"
-          :placeholder="$t('schedule.simulation.searchJobs')"
+          :placeholder="isYKSchedule ? $t('schedule.simulation.searchYKJobs') : $t('schedule.simulation.searchJobs')"
           type="text"
           class="header__search--input"
         >
@@ -57,14 +57,14 @@
         class="empty-dialog__icon"
         src="@/schedule/icons/empty.svg"
       >
-      <span class="empty-dialog__text"> {{ $t('schedule.simulation.table.notChosenJobs') }} </span>
+      <span class="empty-dialog__text"> {{ $t('schedule.simulation.noSelectedJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }} </span>
     </div>
   </div>
 </template>
 
 <script>
 import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'ScheduledJobsTable',
@@ -86,18 +86,12 @@ export default {
       sliceInfo: {
         start: 0,
         end: 0
-      },
-      jobTableHeaderList: [
-        { title: 'job', name: this.$t('schedule.simulation.table.job'), width: '' },
-        { title: 'order', name: this.$t('schedule.simulation.table.order'), width: '' },
-        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '' },
-        { title: 'deadline', name: this.$t('schedule.simulation.table.deadline'), width: '120' },
-        { title: 'quantity', name: this.$t('schedule.simulation.table.quantity'), width: '120' }
-      ]
+      }
     }
   },
   computed: {
     ...mapState('simulation', ['scheduledJobs']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule', 'jobTableHeaderList']),
     jobData () {
       this.scheduledJobs.forEach(job => {
         if (this.selectedData.find(data => data.id === job.id) === undefined) { job.isChecked = false }
