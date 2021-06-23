@@ -48,6 +48,7 @@
         :title="$t('editing.confirmDeleteBelowGroupOrNot')"
         :content="selectedGroup.groupName"
         :type="'delete'"
+        :is-processing="isProcessing"
         @closeDialog="cancelDelete"
         @confirmBtn="deleteGroup"
       />
@@ -83,7 +84,8 @@ export default {
       groupList: [],
       selectedGroup: {},
       showConfirmDeleteDialog: false,
-      showConfirmEnterGroupDialog: false
+      showConfirmEnterGroupDialog: false,
+      isProcessing: false
     }
   },
   computed: {
@@ -140,6 +142,7 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     deleteGroup (data) {
+      this.isProcessing = true
       // 如果刪掉使用者當前 account 的 default group 則需要切換至新的 group
       const isDeleteCurrentGroup = this.getCurrentGroupId === this.selectedGroup.groupId
       deleteGroup(this.selectedGroup.groupId)
@@ -153,6 +156,8 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
+        }).finally(() => {
+          this.isProcessing = false
         })
     },
     showCreateButton () {
