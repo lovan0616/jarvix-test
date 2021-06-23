@@ -6,7 +6,7 @@ export default {
   },
   // 鈺齊排程
   isYKSchedule () {
-    return window.location.hostname === 'jarvix.sp1.sis.ai' || window.location.hostname === 'jarvix.synergiesai.cn'
+    return window.location.hostname === 'jarvix.sp1.sis.ai' || window.location.hostname === 'jarvix.synergiesai.cn' || window.location.hostname === 'jarvix-pub.sp1.sis.ai'
   },
   jobTableHeaderList (state, getters) {
     return getters.isYKSchedule ? [
