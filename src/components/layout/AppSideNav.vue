@@ -159,6 +159,7 @@
       <change-language-dialog
         v-show="isShowLanguage"
         @closeDialog="isShowLanguage = false"
+        @submit="handleLanguageDialogSubmit"
       />
       <decide-dialog
         v-if="isShowLogout"
@@ -309,6 +310,10 @@ export default {
           })
         })
         .finally(() => this.isLoading = false)
+    },
+    handleLanguageDialogSubmit() {
+      this.isShowLanguage = false;
+      this.updateSideNavStatus(false);
     }
   }
 }

@@ -58,7 +58,7 @@ export default {
     this.selectedLanguage = this.locale
   },
   methods: {
-    changeLang () {
+    async changeLang () {
       if (this.selectedLanguage === this.locale) {
         this.$emit('closeDialog')
         return
@@ -71,18 +71,16 @@ export default {
         return
       }
       this.isLoading = true
-      updateLocale(this.selectedLanguage)
-        .then(() => {
-          this.$store.commit('setting/setLocale', this.selectedLanguage)
-          this.$store.dispatch('userManagement/getUserGroupList')
-          this.$store.commit('chatBot/clearConversation')
-          this.$store.dispatch('chatBot/updateChatConversation')
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.$emit('closeDialog')
-          this.isLoading = false
-        })
+      try {
+        await updateLocale(this.selectedLanguage)
+        this.$store.commit('setting/setLocale', this.selectedLanguage)
+        this.$store.dispatch('userManagement/getUserGroupList')
+        this.$store.commit('chatBot/clearConversation')
+        this.$store.dispatch('chatBot/updateChatConversation')
+      } finally {
+        this.isLoading = false
+        this.$emit('submit')
+      }
     },
     langOnSelected (item) {
       this.selectedLanguage = item
