@@ -284,32 +284,34 @@ export default {
         }))
         .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
     },
-    switchAccount (accountId) {
+    async switchAccount (accountId) {
       this.isLoading = true
-      this.switchAccountById({ accountId })
-        .then(() => {
-          if (this.groupList.length === 0) {
-            return this.$router.push({ 
-              name: 'PageGrouplessGuidance',
-              params: { 'account_id': accountId }
-            })
-          } 
-
-          this.$router.push({
-            name: 'PageIndex', 
-            params: { 
-              account_id: accountId, 
-              group_id: this.getCurrentGroupId 
-            },
-            query: {
-              ...(this.dataSourceId && { 
-                dataSourceId: this.dataSourceId,
-                dataFrameId: this.dataFrameId
-              })
-            }
+      try {
+        await this.switchAccountById({ accountId })
+        if (this.groupList.length === 0) {
+          return this.$router.push({ 
+            name: 'PageGrouplessGuidance',
+            params: { 'account_id': accountId }
           })
+        } 
+
+        this.$router.push({
+          name: 'PageIndex', 
+          params: { 
+            account_id: accountId, 
+            group_id: this.getCurrentGroupId 
+          },
+          query: {
+            ...(this.dataSourceId && { 
+              dataSourceId: this.dataSourceId,
+              dataFrameId: this.dataFrameId
+            })
+          }
         })
-        .finally(() => this.isLoading = false)
+      } finally {
+        this.isLoading = false
+        this.updateSideNavStatus(false)
+      }
     },
     handleLanguageDialogSubmit() {
       this.isShowLanguage = false;
