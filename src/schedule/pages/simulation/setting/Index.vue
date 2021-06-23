@@ -3,7 +3,7 @@
     <div class="page__side-nav">
       <div class="step step--choose-job">
         <div class="step__title">
-          STEP.1 {{ $t('schedule.simulation.selectJobs') }}
+          STEP.1 {{ $t('schedule.simulation.selectJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }}
         </div>
         <div class="step__content">
           <div

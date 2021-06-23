@@ -245,7 +245,7 @@
       "searchJobOrOrder": "搜尋工單 / 訂單",
       "selectAll": "選擇全部工單/訂單",
       "selectedJobsCount": "目前已選入 {count} 筆{job}",
-      "selectJobs": "選擇@:schedule.simulation.job",
+      "selectJobs": "選擇{job}",
       "startDatetime": "排程起始時間",
       "changeAlert":"異動提醒",
       "changeAlertContent":"工單異動後，所有方案需重新演算。",

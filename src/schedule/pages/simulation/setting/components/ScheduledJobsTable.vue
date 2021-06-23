@@ -57,7 +57,7 @@
         class="empty-dialog__icon"
         src="@/schedule/icons/empty.svg"
       >
-      <span class="empty-dialog__text"> {{ $t('schedule.simulation.table.notChosenJobs') }} </span>
+      <span class="empty-dialog__text"> {{ $t('schedule.simulation.noSelectedJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }} </span>
     </div>
   </div>
 </template>
