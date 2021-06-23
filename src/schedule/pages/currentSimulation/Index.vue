@@ -4,49 +4,74 @@
     <h2 class="header">
       {{ $t('schedule.schedule.title') }}
       <ticket-filter
+        v-if="!isYKSchedule"
         v-show="!isLoading && planInfo.planId"
         @search="searchString = $event"
       />
     </h2>
-    <default-button
-      v-if="planInfo.planId"
-      :loading="isLoadingLastSolution"
-      class="simulate-btn"
-      @click="reSimulate"
-    >
-      {{ $t('schedule.schedule.reSimulate') }}
-    </default-button>
+    <div class="button-block">
+      <default-button
+        v-if="planInfo.planId && isYKSchedule"
+        :loading="isLoadingLastSolution"
+        class="simulate-btn"
+        @click="downloadSimulation"
+      >
+        {{ $t('schedule.schedule.downloadPlan') }}
+      </default-button>
+      <default-button
+        v-if="planInfo.planId"
+        :loading="isLoadingLastSolution"
+        class="simulate-btn"
+        @click="reSimulate"
+      >
+        {{ $t('schedule.schedule.reSimulate') }}
+      </default-button>
+    </div>
     <div
       v-if="planInfo.planId"
-      class="simulation-content"
+      :class="isYKSchedule ? 'iframe-container' : 'simulation-content'"
     >
-      <div class="plan-KPI KPI">
-        <h3 class="KPI__title">
-          {{ $t('schedule.schedule.planKPI') }}
-        </h3>
-        <div class="KPI__info">
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.dateRange') }} {{ KPIInfo.timeRange }}
-          </span>
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.capacity') }} {{ KPIInfo.capacity }}個
-          </span>
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.ofr') }} {{ KPIInfo.ofr }}％
-          </span>
-          <span class="KPI__info--item">
-            {{ $t('schedule.schedule.utilization') }} {{ KPIInfo.utilization }}％
-          </span>
+      <template
+        v-if="isYKSchedule"
+      >
+        <iframe
+          :src="`https://view.officeapps.live.com/op/embed.aspx?src=${excelURL}`"
+          width="100%"
+          height="100%"
+          frameborder="0"
+        ></iframe>
+      </template>
+      <template
+        v-else
+      >
+        <div class="plan-KPI KPI">
+          <h3 class="KPI__title">
+            {{ $t('schedule.schedule.planKPI') }}
+          </h3>
+          <div class="KPI__info">
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.dateRange') }} {{ KPIInfo.timeRange }}
+            </span>
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.capacity') }} {{ KPIInfo.capacity }}個
+            </span>
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.ofr') }} {{ KPIInfo.ofr }}％
+            </span>
+            <span class="KPI__info--item">
+              {{ $t('schedule.schedule.utilization') }} {{ KPIInfo.utilization }}％
+            </span>
+          </div>
         </div>
-      </div>
-      <plan-job
-        :key="`planJob-${searchString}`"
-        :search-string="searchString"
-      />
-      <plan-gantt
-        :key="`planGantt-${searchString}`"
-        :search-string="searchString"
-      />
+        <plan-job
+          :key="`planJob-${searchString}`"
+          :search-string="searchString"
+        />
+        <plan-gantt
+          :key="`planGantt-${searchString}`"
+          :search-string="searchString"
+        />
+      </template>
     </div>
     <div
       v-else
@@ -72,7 +97,7 @@ import PlanJob from './components/PlanJob'
 import PlanGantt from './components/PlanGantt'
 import TicketFilter from '@/schedule/components/TicketFilter'
 import { getPlanInfo, getPlanKPI, getLastSolution } from '@/schedule/API/Plan'
-import { mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'CurrentSimulation',
@@ -96,11 +121,13 @@ export default {
         utilization: 0,
         timeRange: ''
       },
-      searchString: ''
+      searchString: '',
+      excelURL: `${window.env.SCHEDULE_API_ROOT_URL}plan/result/excelFile?projectId=${this.$route.params.schedule_project_id}`
     }
   },
   computed: {
     ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule'])
   },
   mounted () {
     this.fetchData()
@@ -127,6 +154,18 @@ export default {
     },
     simulateNewPlan () {
       this.$router.push({ name: 'SimulationSetting' })
+    },
+    downloadSimulation () {
+      let link = document.createElement('a')
+        if (link.download !== undefined) {
+          // Browsers that support HTML5 download attribute
+          link.setAttribute('href', this.excelURL)
+          link.setAttribute('download', 'plan.xlsx')
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
     },
     reSimulate () {
       this.isLoadingLastSolution = true
@@ -161,7 +200,11 @@ export default {
     }
   }
 
-  .simulate-btn {
+  .iframe-container {
+    height: 78vh;
+  }
+
+  .button-block {
     position: absolute;
     top: 24px;
     right: 24px;

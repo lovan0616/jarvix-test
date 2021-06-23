@@ -34,7 +34,7 @@
         :min-width="minColumnWidth"
       />
       <el-table-column
-        v-if="layout === 'unscheduled'"
+        v-if="layout === 'unscheduled' && !isYKSchedule"
         :label="$t('schedule.simulation.table.priority')"
         width="120"
       >
@@ -43,7 +43,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="layout === 'scheduled'"
+        v-if="layout === 'scheduled' && !isYKSchedule"
         :label="$t('schedule.simulation.table.priority')"
         width="120"
       >
@@ -101,6 +101,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'JobSelectionPaginationTable',
   props: {
@@ -166,6 +168,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
     tableProps () {
       const tableProps = { ...this.$props, data: this.dataset.data }
       if (!this.$props.maxHeight) {

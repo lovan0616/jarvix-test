@@ -24,5 +24,17 @@ export default {
   },
   setSimulationResult (state, result) {
     state.simulationResult = result
+  },
+  setSearchOrderNumber (state, orderNumber) {
+    state.searchOrderNumber = orderNumber
+  },
+  setOrderPeriod (state, period) {
+    state.orderPeriod = period
+  },
+  setSelectAllOrders (state, selected) {
+    state.selectAllOrders = selected
+  },
+  setSearchOrderCount (state, count) {
+    state.searchOrderCount = count
   }
 }

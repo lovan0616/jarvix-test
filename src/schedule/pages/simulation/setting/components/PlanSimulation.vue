@@ -7,6 +7,7 @@
     />
     <hr>
     <scheduled-jobs-table
+      v-show="!selectAllOrders"
       class="scheduled-jobs-table"
     />
   </div>
@@ -15,13 +16,16 @@
 <script>
 import UnscheduledJobsTable from './UnscheduledJobsTable'
 import ScheduledJobsTable from './ScheduledJobsTable'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'PlanSimulation',
   components: {
     UnscheduledJobsTable,
     ScheduledJobsTable
+  },
+  computed: {
+    ...mapState('simulation', ['selectAllOrders']),
   },
   methods: {
     ...mapMutations('simulation', ['updateScheduledJobs'])

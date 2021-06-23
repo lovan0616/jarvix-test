@@ -4,9 +4,9 @@
   >
     <div class="header">
       <h3 class="header__title">
-        {{ $t('schedule.simulation.unscheduledJobs') }}
+        {{ selectAll ? $t('schedule.simulation.scheduledJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) : $t('schedule.simulation.unscheduledJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }}
       </h3>
-      <span class="header__date"> {{ $t('schedule.simulation.jobsDueDate') }} </span>
+      <span class="header__date"> {{ isYKSchedule ? $t('schedule.simulation.yukiJobDueDate') : $t('schedule.simulation.jobsDueDate') }} </span>
       <default-date-picker
         v-model="period"
         :clearable="true"
@@ -18,7 +18,7 @@
       <div class="header__search">
         <default-input
           v-model="jobSearchNumber"
-          :placeholder="$t('schedule.simulation.searchJobs')"
+          :placeholder="isYKSchedule ? $t('schedule.simulation.searchYKJobs') : $t('schedule.simulation.searchJobs')"
           type="text"
           class="header__search--input"
         >
@@ -37,7 +37,19 @@
         {{ $t('schedule.button.send') }}
       </default-button>
       <div class="header__button">
+        <label class="header__select">
+          <div class="checkbox-label">
+            <input
+              v-model="selectAll"
+              :value="true"
+              type="checkbox"
+            >
+            <div class="checkbox-square"/>
+          </div>
+          <span>{{ selectAll ? $t('schedule.simulation.selectedJobsCount', {count: pagination.totalItems, job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) : $t('schedule.simulation.selectAll') }}</span>
+        </label>
         <default-button
+          v-show="!selectAll"
           size="m"
           class="add-btn"
           type="outline"
@@ -61,7 +73,7 @@
       :is-processing="isProcessing"
       :pagination-info="pagination"
       fixed-index
-      selection
+      :selection="!selectAll"
       @change-check="updateSelectedData"
       @change-page="updatePage"
     />
@@ -79,7 +91,7 @@
 <script>
 import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
 import { getOrderList } from '@/schedule/API/Order'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'UnscheduledJobsTable',
@@ -90,29 +102,42 @@ export default {
     return {
       isLoading: false,
       isProcessing: false,
-      jobSearchNumber: null,
       tmpJobData: null,
       jobData: null,
-      selectedData: [],
       period: [],
+      selectedData: [],
       pagination: {
         currentPage: 0,
         totalPages: 0,
         totalItems: 0,
         itemPerPage: 20
-      },
-      jobTableHeaderList: [
-        { title: 'job', name: this.$t('schedule.simulation.table.job'), width: '' },
-        { title: 'order', name: this.$t('schedule.simulation.table.order'), width: '' },
-        { title: 'product', name: this.$t('schedule.simulation.table.product'), width: '' },
-        { title: 'deadline', name: this.$t('schedule.simulation.table.deadline'), width: '120' },
-        { title: 'quantity', name: this.$t('schedule.simulation.table.quantity'), width: '120' }
-      ]
+      }
     }
   },
   computed: {
-    ...mapState('simulation', ['scheduledJobs']),
-    ...mapState('scheduleSetting', ['scheduleProjectId'])
+    ...mapState('simulation', ['scheduledJobs', 'selectAllOrders', 'orderPeriod', 'searchOrderNumber']),
+    ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule', 'jobTableHeaderList']),
+    selectAll: {
+      get () {
+        return this.selectAllOrders
+      },
+      set (val) {
+        this.setSelectAllOrders(val)
+        if (val) {
+          this.updateScheduledJobs([])
+          this.selectedData = []
+        }
+      }
+    },
+    jobSearchNumber: {
+      get () {
+        return this.searchOrderNumber
+      },
+      set (val) {
+        this.setSearchOrderNumber(val)
+      }
+    }
   },
   watch: {
     scheduledJobs: {
@@ -123,12 +148,15 @@ export default {
       deep: true
     }
   },
+  destroyed () {
+    this.setOrderPeriod([])
+  },
   mounted () {
     this.isLoading = true
     this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
   },
   methods: {
-    ...mapMutations('simulation', ['updateScheduledJobs']),
+    ...mapMutations('simulation', ['updateScheduledJobs', 'setOrderPeriod', 'setSelectAllOrders', 'setSearchOrderNumber', 'setSearchOrderCount']),
     fetchJobData (page = 0, size = 20, jobSearchNumber = null, resetPagination = false) {
       this.isProcessing = true
       getOrderList({
@@ -136,10 +164,11 @@ export default {
         page,
         size,
         orderNumber: jobSearchNumber,
-        startDate: this.period && this.period.length > 0 ? this.period[0] : null,
-        endDate: this.period && this.period.length > 0 ? this.period[1] : null
+        startDate: this.orderPeriod && this.orderPeriod.length > 0 ? this.orderPeriod[0] : null,
+        endDate: this.orderPeriod && this.orderPeriod.length > 0 ? this.orderPeriod[1] : null
       }).then(res => {
         if (resetPagination) this.pagination = res.pagination
+        this.setSearchOrderCount(res.pagination.totalItems || 0)
         this.tmpJobData = res.data
         this.updateJobData(res.data)
         this.isLoading = false
@@ -167,6 +196,7 @@ export default {
       }
     },
     searchJobData () {
+      this.setOrderPeriod(this.period)
       this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
     },
     addItem () {
@@ -271,11 +301,27 @@ export default {
     }
 
     &__button {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
       flex: 1;
       text-align: right;
 
       .sync-btn {
         margin-right: 12px;
+      }
+    }
+
+    &__select {
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      font-size: 12px;
+      margin-right: 8px;
+      cursor: pointer;
+
+      .checkbox-label {
+        margin-right: 8px;
       }
     }
   }

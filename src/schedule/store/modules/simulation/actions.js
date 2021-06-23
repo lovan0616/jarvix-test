@@ -8,6 +8,22 @@ export default {
       solutions: state.solutions
     })
   },
+  yukiNewPlan ({ state, rootState }) {
+    return newPlan({
+      projectId: rootState.scheduleSetting.scheduleProjectId,
+      orders: state.scheduledJobs,
+      solutions: state.solutions,
+      allOrder: state.selectAllOrders,
+      ...(state.searchOrderNumber ? {
+        orderNumber: state.searchOrderNumber
+      } : ''),
+      ...(state.orderPeriod.length > 0 ? {
+        startDate: state.orderPeriod[0],
+        endDate: state.orderPeriod[1]
+      } : ''),
+      returnOrders: false
+    })
+  },
   checkSimulationProgress ({ state }) {
     return checkSimulationProgress(state.planId)
   },

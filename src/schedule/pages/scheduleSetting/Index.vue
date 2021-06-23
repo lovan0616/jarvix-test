@@ -66,6 +66,7 @@
                   format="yyyy/MM/dd"
                   value-format="yyyy/MM/dd"
                   type="date"
+                  :picker-options="pickerOptions"
                 />
               </div>
             </div>
@@ -93,7 +94,7 @@
             />
           </div>
           <div
-            v-if="solutionSequence"
+            v-if="solutionSequence && !isYKSchedule"
             class="block__form"
           >
             <exception-time-setting
@@ -115,7 +116,10 @@
             />
           </div>
         </section>
-        <section class="body__block body__block--equipment">
+        <section
+          v-if="!isYKSchedule"
+          class="body__block body__block--equipment"
+        >
           <h3 class="block__title">
             {{ $t('schedule.setting.machine') }}
             <i
@@ -136,7 +140,7 @@
           </div>
         </section>
         <section
-          v-if="settingInfo.kpiSetting"
+          v-if="settingInfo.kpiSetting && !isYKSchedule"
           class="body__block body__block--kpi"
         >
           <h3 class="block__title">
@@ -174,7 +178,11 @@
           :key="file.code"
           class="file"
         >
-          <single-constraint-file :file-data="file"/>
+          <!-- 鈺齊只需要轉換時間 -->
+          <single-constraint-file
+            v-show="!isYKSchedule || file.code === 'transfer_time'"
+            :file-data="file"
+          />
         </div>
       </div>
     </div>
@@ -213,7 +221,7 @@ import SingleCommonFile from './components/commonDataSetting/SingleCommonFile'
 import ExceptionTimeSetting from '@/schedule/pages/simulation/setting/components/ExceptionTimeSetting'
 import { fetchDataBoundStatus } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 
 export default {
@@ -252,12 +260,18 @@ export default {
         disabledDate (time) {
           return time.getTime() < Date.now()
         }
+      },
+      pickerOptions: {
+        disabledDate: (time) => {
+          return this.isYKSchedule ? time.getFullYear() < 2021 : false
+        }
       }
     }
   },
   computed: {
     ...mapState('simulation', ['solutions', 'planId']),
     ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
     isShowOrderUpload () {
       return localStorage.getItem('isShowOrderUpload') === 'true'
     }

@@ -17,6 +17,9 @@
           :deletable="true"
           :value="[period.startDatetime, period.endDatetime]"
           :picker-options="pickerOptions"
+          :type="isYKSchedule ? 'daterange' : 'datetimerange'"
+          :format="isYKSchedule ? 'yyyy/MM/dd' : 'yyyy/MM/dd HH:mm'"
+          :value-format="isYKSchedule ? 'yyyy/MM/dd' : 'yyyy/MM/dd HH:mm'"
           @input="changePeriod($event, index)"
           @delete="deletePeriod(index)"
         />
@@ -37,6 +40,7 @@
 
 <script>
 import moment from 'moment'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ExceptionTimeSetting',
@@ -70,6 +74,9 @@ export default {
         }
       }
     }
+  },
+  computed: {
+    ...mapGetters('scheduleSetting', ['isYKSchedule'])
   },
   methods: {
     addPeriod (index) {

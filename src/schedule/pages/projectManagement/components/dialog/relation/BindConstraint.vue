@@ -45,41 +45,45 @@
         :key="file.id"
         class="form-field"
       >
-        <span class="field-label">{{ $t(`schedule.setting.extraConstraint${snakeToPascal(file.code)}`) }}</span>
-        <spinner 
-          v-if="isLoadingDataFrames" 
-          :title="$t('editing.dataDownloading')"
-          class="dataframe-loading-spinner" 
-          size="10"/>
-        <default-select
-          v-else
-          v-model="formData[file.code].dataframeId"
-          :options="options"
-        />
-        <binding-checked-info
-          v-if="resultHandler.hasError(checkedResult, file.code)"
-          :info="checkedResult[file.code]"
-          @bind="bind"
-        />
+        <template
+          v-if="!isYKSchedule || file.code === 'transfer_time'"
+        >
+          <span class="field-label">{{ $t(`schedule.setting.extraConstraint${snakeToPascal(file.code)}`) }}</span>
+          <spinner 
+            v-if="isLoadingDataFrames" 
+            :title="$t('editing.dataDownloading')"
+            class="dataframe-loading-spinner" 
+            size="10"/>
+          <default-select
+            v-else
+            v-model="formData[file.code].dataframeId"
+            :options="options"
+          />
+          <binding-checked-info
+            v-if="resultHandler.hasError(checkedResult, file.code)"
+            :info="checkedResult[file.code]"
+            @bind="bind"
+          />
 
-        <label 
-          :class="{'checkbox--active': formData[file.code].isSelected}"
-          class="checkbox">
-          <div class="checkbox-label">
-            <input
-              v-model="formData[file.code].isSelected"
-              type="checkbox"
-            >
-            <div class="checkbox-square"/>
-          </div>
-        </label>
+          <label 
+            :class="{'checkbox--active': formData[file.code].isSelected}"
+            class="checkbox">
+            <div class="checkbox-label">
+              <input
+                v-model="formData[file.code].isSelected"
+                type="checkbox"
+              >
+              <div class="checkbox-square"/>
+            </div>
+          </label>
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { checkConstraints, bindConstraints, unbindConstraint } from '@/schedule/API/Bind'
 import { Message } from 'element-ui'
 import { snakeToCamel, snakeToPascal } from '@/schedule/utils/mixins'
@@ -125,6 +129,7 @@ export default {
   },
   computed: {
     ...mapState('scheduleSetting', ['scheduleProjectId']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
     validConstraints () {
       // 有選值、有勾選的 constraints
       return Object.keys(this.formData)

@@ -3,7 +3,7 @@
     <div class="page__side-nav">
       <div class="step step--choose-job">
         <div class="step__title">
-          STEP.1 {{ $t('schedule.simulation.selectJobs') }}
+          STEP.1 {{ $t('schedule.simulation.selectJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }}
         </div>
         <div class="step__content">
           <div
@@ -18,6 +18,7 @@
         <div class="step__title">
           STEP.2 {{ $t('schedule.simulation.solutionSetting') }}
           <default-button
+            v-show="!(isYKSchedule && solutions.length > 0)"
             class="add-btn"
             type="outline"
             @click="onClickAddSolution"
@@ -67,7 +68,7 @@
       </div>
       <div class="step step--start-simulate">
         <default-button
-          :disabled="scheduledJobs.length === 0 || solutions.length === 0 || hasInvalidSolution || !allowSimulation"
+          :disabled="(scheduledJobs.length === 0 && !selectAllOrders) || solutions.length === 0 || hasInvalidSolution || !allowSimulation"
           :show-spinner="isSimulatingDialogOpen"
           @click="startSimulation"
         >
@@ -121,7 +122,7 @@ import PlanSimulation from './components/PlanSimulation'
 import SimulatingDialog from './components/SimulatingDialog'
 import moment from 'moment'
 import { fetchDataBoundStatus } from '@/schedule/API/Project'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 import { Message } from 'element-ui'
 
@@ -146,11 +147,16 @@ export default {
   },
   computed: {
     ...mapState('scheduleSetting', ['defaultSetting', 'scheduleProjectId']),
-    ...mapState('simulation', ['solutions', 'scheduledJobs', 'planId']),
+    ...mapState('simulation', ['solutions', 'scheduledJobs', 'planId', 'selectAllOrders', 'searchOrderCount']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule']),
     displaySelectedJobCounter () {
-      return this.scheduledJobs.length > 0
-        ? this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length })
-        : this.$t('schedule.simulation.noSelectedJobs')
+      if (this.selectAllOrders)  {
+        return this.$t('schedule.simulation.selectedJobsCount', { count: this.searchOrderCount, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
+      } else if (this.scheduledJobs.length > 0) {
+        return this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
+      } else {
+        return this.$t('schedule.simulation.noSelectedJobs', {job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
+      }
     },
     hasInvalidSolution () {
       return this.solutions.some(s => !s.valid)
