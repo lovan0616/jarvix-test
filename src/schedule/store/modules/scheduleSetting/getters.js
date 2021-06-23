@@ -5,8 +5,8 @@ export default {
     return state.scheduleProjects.find(item => item.id === state.scheduleProjectId)
   },
   // 鈺齊排程
-  isYKSchedule () {
-    return window.location.hostname === 'jarvix.sp1.sis.ai' || window.location.hostname === 'jarvix.synergiesai.cn'
+  isYKSchedule (state, getters, rootState, rootGetters) {
+    return window.location.hostname === 'jarvix.sp1.sis.ai' || (window.location.hostname === 'jarvix.synergiesai.cn' && rootGetters['userManagement/getCurrentAccountId'] === 8)
   },
   jobTableHeaderList (state, getters) {
     return getters.isYKSchedule ? [
