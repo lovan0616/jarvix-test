@@ -29,7 +29,7 @@
     </div>
     <div
       v-if="planInfo.planId"
-      class="simulation-content"
+      :class="isYKSchedule ? 'iframe-container' : 'simulation-content'"
     >
       <template
         v-if="isYKSchedule"
@@ -37,7 +37,7 @@
         <iframe
           :src="`https://view.officeapps.live.com/op/embed.aspx?src=${excelURL}`"
           width="100%"
-          height="565px"
+          height="100%"
           frameborder="0"
         ></iframe>
       </template>
@@ -198,6 +198,10 @@ export default {
     .filter {
       margin-left: 16px;
     }
+  }
+
+  .iframe-container {
+    height: 78vh;
   }
 
   .button-block {
