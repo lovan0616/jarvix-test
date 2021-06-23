@@ -151,11 +151,11 @@ export default {
     ...mapGetters('scheduleSetting', ['isYKSchedule']),
     displaySelectedJobCounter () {
       if (this.selectAllOrders)  {
-        return this.$t('schedule.simulation.selectedJobsCount', { count: this.searchOrderCount })
+        return this.$t('schedule.simulation.selectedJobsCount', { count: this.searchOrderCount, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
       } else if (this.scheduledJobs.length > 0) {
-        return this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length })
+        return this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
       } else {
-        return this.$t('schedule.simulation.noSelectedJobs')
+        return this.$t('schedule.simulation.noSelectedJobs', {job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
       }
     },
     hasInvalidSolution () {

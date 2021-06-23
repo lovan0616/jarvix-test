@@ -4,7 +4,7 @@
   >
     <div class="header">
       <h3 class="header__title">
-        {{ $t('schedule.simulation.scheduledJobs') }}
+        {{ $t('schedule.simulation.scheduledJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }}
       </h3>
       <div class="header__search">
         <default-input

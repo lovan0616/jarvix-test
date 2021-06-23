@@ -4,7 +4,7 @@
   >
     <div class="header">
       <h3 class="header__title">
-        {{ selectAll ? $t('schedule.simulation.scheduledJobs') : $t('schedule.simulation.unscheduledJobs') }}
+        {{ selectAll ? $t('schedule.simulation.scheduledJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) : $t('schedule.simulation.unscheduledJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }}
       </h3>
       <span class="header__date"> {{ isYKSchedule ? $t('schedule.simulation.yukiJobDueDate') : $t('schedule.simulation.jobsDueDate') }} </span>
       <default-date-picker
@@ -46,7 +46,7 @@
             >
             <div class="checkbox-square"/>
           </div>
-          <span>{{ selectAll ? $t('schedule.simulation.selectedJobsCount', {count: pagination.totalItems}) : $t('schedule.simulation.selectAll') }}</span>
+          <span>{{ selectAll ? $t('schedule.simulation.selectedJobsCount', {count: pagination.totalItems, job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) : $t('schedule.simulation.selectAll') }}</span>
         </label>
         <default-button
           v-show="!selectAll"

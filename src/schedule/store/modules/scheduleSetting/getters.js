@@ -41,7 +41,6 @@ export default {
       { title: 'planEnd', name: i18n.t('schedule.simulation.yukiTable.planEnd'), width: '' },
       { title: 'sum', name: i18n.t('schedule.simulation.yukiTable.sum'), width: '' },
       { title: 'cutQuantity', name: i18n.t('schedule.simulation.yukiTable.cutQuantity'), width: '' },
-      { title: 'sum', name: i18n.t('schedule.simulation.yukiTable.sum'), width: '' },
       { title: 'boxes', name: i18n.t('schedule.simulation.yukiTable.boxes'), width: '' },
       { title: 'receiptPlace', name: i18n.t('schedule.simulation.yukiTable.receiptPlace'), width: '' },
       { title: 'deliveryPlace', name: i18n.t('schedule.simulation.yukiTable.deliveryPlace'), width: '' },
