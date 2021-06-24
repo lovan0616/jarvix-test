@@ -44,6 +44,13 @@ export default {
     state.algoConfig.standardLineType = 'MEDIAN'
     state.algoConfig.stddevTimes = 3
   },
+  setClusteringInfo (state, data) {
+    state.clusteringInfo = data
+  },
+  resetClusteringInfo (state) {
+    state.clusterList = []
+    state.hasOutlier = false
+  },
   setFilterList (state, data) {
     if (data.length === 0) return false
     // 判斷要從哪邊開始取代新的

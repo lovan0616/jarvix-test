@@ -164,6 +164,7 @@ export default {
       this.isHistogramBinSetting = false
       this.intent = null
       this.$store.commit('dataSource/resetAlgoConfig')
+      this.$store.commit('dataSource/resetClusteringInfo')
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {

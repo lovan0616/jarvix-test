@@ -37,6 +37,10 @@ export default {
         '@type': 'FormulaAlgoConfig'
       },
     },
+    clusteringInfo: {
+      clusterList: [],
+      hasOutlier: false
+    },
     historyQuestionList: [],
     filterList: [],
     dataFrameId: null,
