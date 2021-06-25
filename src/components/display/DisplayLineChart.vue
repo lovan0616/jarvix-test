@@ -264,7 +264,7 @@ export default {
       config.tooltip.position = function(point) {
         return [point[0] + 10, Math.max(point[1] - 80, 0)]
       }
-      config.tooltip.transitionDuration = 0.1
+      config.tooltip.transitionDuration = 0
 
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
