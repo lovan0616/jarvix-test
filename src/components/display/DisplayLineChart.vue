@@ -261,10 +261,14 @@ export default {
 
       // 移除 null 值
       config.tooltip.formatter = this.tooltipFormatter
+      config.tooltip.position = function(point) {
+        return [point[0] + 10, Math.max(point[1] - 80, 0)]
+      }
+      config.tooltip.transitionDuration = 0.1
 
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.tooltip.extraCssText = "height:200px;overflow:auto;"
+      config.tooltip.extraCssText = "max-height:200px;overflow:auto;"
       config.tooltip.enterable = true
 
       // 只有一個分類
