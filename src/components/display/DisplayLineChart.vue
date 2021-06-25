@@ -197,7 +197,11 @@ export default {
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true
+      showPagination: true,
+      orderBy: {
+        target: 'value', // TODO 綁定資料
+        direction: 'desc'
+      }
     }
   },
   computed: {
@@ -256,16 +260,8 @@ export default {
       }
 
       // 移除 null 值
-      config.tooltip.formatter = (datas) => {
-        let res = datas[0].name + '<br/>'
-        for (let i = 0, length = datas.length; i < length; i++) {
-          let componentIndex = datas[i].componentIndex + 1
-          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined) continue
-          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
-        }
-        return res
-      }
+      config.tooltip.formatter = this.tooltipFormatter
+
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
       // 只有一個分類
@@ -595,6 +591,29 @@ export default {
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
+    },
+    tooltipFormatter(datas) {
+      const orderTarget = (this.orderBy && this.orderBy.target) || 'value'
+      const orderDirection = (this.orderBy && this.orderBy.direction) || 'desc'
+      const tooltipResult = datas.filter((item) => {
+        const componentIndex = item.componentIndex + 1
+        return !(item.value[componentIndex] === null || item.value[componentIndex] === undefined)
+      })
+      .map((item) => {
+        const componentIndex = item.componentIndex + 1
+        return {
+          marker: item.marker ? item.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${item.color.colorStops[0].color};"></span>`,
+          key: item.seriesName,
+          value: item.value[componentIndex]
+        }
+      }).sort((a, b) => {
+        if (orderTarget === 'key') { return a.key.localeCompare(b.key)}
+        else if (orderTarget === 'value') { return a.value - b.value }
+      })
+      if (orderDirection === 'desc') tooltipResult.reverse()
+      return `${datas[0].name}<br/>${tooltipResult.reduce((str, item) => {
+        return str += item.marker + item.key + '：' + item.value + '<br/>'
+      }, '')}`
     }
   }
 }
