@@ -351,7 +351,6 @@
     "emptyResultDescription": "您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用系統建議語句",
     "preview": "預覽",
     "result": "結果",
-    "relatedQuestion": "關聯問題",
     "comparisonCategory": "比較類",
     "languageSetting": "語言設定: 繁中",
     "sureLogout": "您確認要登出帳號？",
@@ -853,12 +852,7 @@
     "columnUnit": "欄位單位"
   },
   "bot": {
-    "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
-    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage 可以試試從這些問題開始：",
-    "defaultResponse": "已分析完成，您可能有興趣的關聯問題：",
-    "finish": "已分析完成",
     "multiplePossibilities": "很抱歉，經系統分析後，發現詞彙具有多重意義，請參考以下項目：",
-    "similarQuestionDescription": "很抱歉，系統沒有找到對應問題的欄位或資料，但有相關詞意的欄位，請參考以下項目：",
     "previewDataSource": "查看資料源",
     "closeDataSource": "關閉資料源",
     "openDataFrameSetting": "開啟進階設定",
@@ -1132,7 +1126,8 @@
     "startTime": "開始時間",
     "endTime": "結束時間",
     "noResultUnderCurrentRestrictions": "當前限制條件下無資料，請調整限制",
-    "noResultCheckFilterAndDataSource": "無參考資料，請確認篩選條件或原始資料"
+    "noResultCheckFilterAndDataSource": "無參考資料，請確認篩選條件或原始資料",
+    "noSuitableResult": "問句沒有適合的結果"
   },
   "alert": {
     "alertLogs": "示警紀錄",
@@ -2519,12 +2514,10 @@
     "notCorrelated": "零相關",
     "correlationRange": "數值範圍 {min} - {max} 之內為高關聯度欄位(至多顯示五筆)",
     "noStrongCorrelationColumns": "目前沒有找到任何高關聯度欄位",
-    "relatedQuestion": "關聯問題",
     "basicInfo": "基本資料",
     "summaryReport": "摘要報告",
     "importantFeatureChanging": "重要因素變化比較",
     "analysisProcessing": "分析處理中",
-    "quickStart": "常用問題",
     "clearAllFilter": "清除所有條件",
     "closeFilter": "關閉條件",
     "currentChosenData": "目前所選擇的資料",
@@ -2627,7 +2620,7 @@
     "PossessionToken": "連接詞",
     "ChangeToken": "其他詞彙",
     "DataColumnToken": "來自{dataFrame}的{dataColumn}@:segmentationToken.Datacolumn，辨識為{matchedWord}",
-    "ColumnSetToken": "來自{dataFrame}的{matchedWord}",
+    "ColumnSetToken": "來自{dataFrame}的@:segmentationToken.ColumnSet，辨識為{matchedWord}",
     "DataValueToken": "來自{dataFrame}的{dataColumn}@:segmentationToken.Datavalue，辨識為{matchedWord}",
     "DatarowToken": "來自{dataFrame}的@:segmentationToken.Datarow",
     "ElseToken": "其他詞彙",

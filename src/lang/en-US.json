@@ -351,7 +351,6 @@
     "emptyResultDescription": "Unable to find relevant information. Please ask differently or utilize recommended questions.",
     "preview": "Preview",
     "result": "Result",
-    "relatedQuestion": "Related Question",
     "comparisonCategory": "Comparison",
     "languageSetting": "Language Setting: English",
     "sureLogout": "Are you sure you want to log out of your account?",
@@ -850,12 +849,7 @@
     "columnUnit": "Column Unit"
   },
   "bot": {
-    "welcomeMessage": "Hi, what would you like to analyze today?",
-    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage You can start asking these questions:",
-    "defaultResponse": "Completed. You may be interested:",
-    "finish": "Completed",
     "multiplePossibilities": "Sorry, your search matched multiple results. Did you mean: ",
-    "similarQuestionDescription": "Sorry, your search matched multiple results. Did you mean:",
     "previewDataSource": "View Data Source",
     "closeDataSource": "Close Data Source",
     "openDataFrameSetting": "Open Basic Data Frame Setting",
@@ -1129,7 +1123,8 @@
     "startTime": "Start Time",
     "endTime": "End Time",
     "noResultUnderCurrentRestrictions": "No result under current restrictions",
-    "noResultCheckFilterAndDataSource": "No reference data, please check the filter conditions or original data"
+    "noResultCheckFilterAndDataSource": "No reference data, please check the filter conditions or original data",
+    "noSuitableResult": "No Suitable Result"
   },
   "alert": {
     "alertLogs": "Alert Record",
@@ -2508,12 +2503,10 @@
     "notCorrelated": "Neutral",
     "correlationRange": "The value range {min}-{max} is the high correlation field (up to five rows are displayed)",
     "noStrongCorrelationColumns": "Cannot find any highly correlated field.",
-    "relatedQuestion": "Related Question",
     "basicInfo": "Basic Information",
     "summaryReport": "Summary Report",
     "importantFeatureChanging": "Comparison of changes in important factors",
     "analysisProcessing": "Analyzing",
-    "quickStart": "Common Questions",
     "clearAllFilter": "Clear All Filters",
     "closeFilter": "Close Condition",
     "currentChosenData": "Currently selected data",
@@ -2616,7 +2609,7 @@
     "PossessionToken": "Connective Word",
     "ChangeToken": "Other Vocabulary",
     "DataColumnToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datacolumn recognized as {matchedWord}",
-    "ColumnSetToken": "From {dataFrame}'s {matchedWord}",
+    "ColumnSetToken": "From {dataFrame}'s @:segmentationToken.ColumnSet recognized as {matchedWord}",
     "DataValueToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datavalue recognized as {matchedWord}",
     "DatarowToken": "From {dataFrame}'s @:segmentationToken.Datarow",
     "ElseToken": "Other Vocabulary",

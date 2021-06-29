@@ -75,8 +75,6 @@ export default {
         .then(() => {
           this.$store.commit('setting/setLocale', this.selectedLanguage)
           this.$store.dispatch('userManagement/getUserGroupList')
-          this.$store.commit('chatBot/clearConversation')
-          this.$store.dispatch('chatBot/updateChatConversation')
         })
         .catch(() => {})
         .finally(() => {

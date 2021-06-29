@@ -127,7 +127,6 @@ export default {
     // 更新 DataFrame 資料
     commit('setDataFrameId', dataFrameId)
     return co(function* () {
-      yield dispatch('chatBot/updateChatConversation', false, { root: true })
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo', true)
       yield dispatch('getDataSourceDataValue', true)
@@ -135,8 +134,6 @@ export default {
     })
   },
   clearChatbot({ dispatch, commit, state }) {
-    // 清空對話紀錄
-    commit('chatBot/clearConversation', null, { root: true })
     // 清空篩選條件 
     dispatch('clearAllFilter')
     // 清除 question id
@@ -145,8 +142,6 @@ export default {
     commit('chatBot/updateIsUseAlgorithm', false, { root: true })
   },
   handleEmptyDataSource ({ dispatch, commit }) {
-    commit('chatBot/clearConversation', null, {root: true})
-    commit('chatBot/updateAnalyzeStatus', false, {root: true})
     dispatch('clearAllFilter')
     commit('clearCurrentQuestionId')
     commit('chatBot/updateIsUseAlgorithm', false, {root: true})
