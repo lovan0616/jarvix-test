@@ -152,25 +152,37 @@
           class="setting-block"
         >
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-          <div
-            v-for="option in updateCronSettingOptionList"
-            :key="option.mode"
-            class="input-radio-group cron-seletor"
-          >
-            <input
+          <div class="timeZone">
+            <p class="group-title">{{ $t('common.timezone') }}</p>
+            <default-select 
               v-validate="'required'"
-              :id="option.mode.toLowerCase()"
-              :checked="option.mode === columnInfo.mode"
-              :value="option.mode"
-              v-model="columnInfo.mode"
-              name="mode"
-              class="input-radio"
-              type="radio"
+              v-model="timeZoneId"
+              :option-list="timeZoneList"
+              class="input-field__select"
+            />
+          </div>
+          <div class="cycle-setting">
+            <p class="group-title">{{ $t('batchLoad.cycleSetting') }}</p>
+            <div
+              v-for="option in updateCronSettingOptionList"
+              :key="option.mode"
+              class="input-radio-group cron-seletor"
             >
-            <label
-              :for="option.mode.toLowerCase()"
-              class="input-radio-label"
-            >{{ option.name }}</label>
+              <input
+                v-validate="'required'"
+                :id="option.mode.toLowerCase()"
+                :checked="option.mode === columnInfo.mode"
+                :value="option.mode"
+                v-model="columnInfo.mode"
+                name="mode"
+                class="input-radio"
+                type="radio"
+              >
+              <label
+                :for="option.mode.toLowerCase()"
+                class="input-radio-label"
+              >{{ option.name }}</label>
+            </div>
           </div>
           <div 
             v-show="errors.has('mode')"
@@ -178,7 +190,7 @@
           >{{ errors.first('mode') }}</div>
           <div 
             v-if="columnInfo.mode === 'BASIC'" 
-            class="input-field">
+            class="input-field -basic">
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
@@ -257,6 +269,7 @@ import {
   triggerUpdateData
 } from '@/API/DataSource'
 import { Message } from 'element-ui'
+import rawTimeZone from '@/utils/timeZone'
 
 export default {
   name: 'EditBatchLoadDialog',
@@ -399,7 +412,8 @@ export default {
       },
       isLoading: false,
       isProcessing: false,
-      hasError: false
+      hasError: false,
+      timeZoneId: 0,
     }
   },
   computed: {
@@ -431,7 +445,15 @@ export default {
     },
     composedAdvancedCronSetting () {
       return this.cronSettingValueAdvanced.reduce((acc, cur, index, arr) => acc + cur.value + (index === arr.length - 1 ? '' : ' '), '')
-    }
+    },
+    timeZoneList() {
+      return rawTimeZone.map((item, i) => {
+        return {
+          value: i,
+          name: `(${item.GMT}) ${item.zone[this.$i18n.locale]}`
+        }
+      })
+    },
   },
   mounted () {
     this.getBatchSetting()
@@ -443,6 +465,16 @@ export default {
         .then(({ crontabConfigContent, primaryKeys }) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
+          if (crontabConfigContent && crontabConfigContent.timeZone) {
+            // 還原 timeZone
+            this.timeZoneId = rawTimeZone.map((time) => time.area).indexOf(crontabConfigContent.timeZone)
+          } else {
+            // 用當地 timeZone
+            const timeZoneOffset = new Date().getTimezoneOffset()
+            const GMTOffset = `GMT${timeZoneOffset > 0 ? '-' : '+'}${Math.abs(timeZoneOffset / 60)}:00`
+            this.timeZoneId = rawTimeZone.map((time) => time.GMT).indexOf(GMTOffset)
+          }
+
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
 
@@ -490,7 +522,8 @@ export default {
         type: this.columnInfo.type,
         mode: this.columnInfo.mode,
         updateDateColumn: this.columnInfo.updateDateColumn,
-        deletable: this.columnInfo.deletable === null ? false : this.columnInfo.deletable
+        deletable: this.columnInfo.deletable === null ? false : this.columnInfo.deletable,
+        timeZone: rawTimeZone[this.timeZoneId].area
       }
     },
     setSetting () {
@@ -615,6 +648,14 @@ export default {
     .input-field {
       display: flex;
       flex-direction: column;
+      &.-basic {
+        .input-field__input {
+          width: 50%;
+          .el-select {
+            width: 100%;
+          }
+        }
+      }
 
       &:not(:last-of-type) {
         margin-bottom: 24px;
@@ -727,6 +768,14 @@ export default {
     }
   }
 
+  .timeZone {
+    width: 50%;
+    margin-bottom: 16px;
+    .el-select {
+      width: 100%;
+    }
+  }
+
   .button {
     &__block {
       display: flex;
@@ -747,6 +796,28 @@ export default {
     .el-tag__close.el-icon-close {
       background-color: #2AD2E2;
     }
+  }
+
+  .cycle-setting {
+    display: flex;
+    flex-wrap: wrap;
+    .group-title {
+      flex: 0 0 100%;
+    }
+    .cron-seletor {
+      flex: 0 0 auto;
+    }
+  }
+
+  .group-title {
+    font-family: PingFang TC;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.01em;
+    color: #CCCCCC;
+    margin: 0;
   }
 }
 </style>
