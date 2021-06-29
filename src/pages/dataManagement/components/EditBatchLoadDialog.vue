@@ -154,12 +154,7 @@
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
           <div class="timeZone">
             <p class="group-title">{{ $t('common.timezone') }}</p>
-            <default-select 
-              v-validate="'required'"
-              v-model="timeZoneId"
-              :option-list="timeZoneList"
-              class="input-field__select"
-            />
+            <time-zone-select :current-id.sync="timeZoneId" />
           </div>
           <div class="cycle-setting">
             <p class="group-title">{{ $t('batchLoad.cycleSetting') }}</p>
@@ -259,6 +254,7 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
+import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
 import InputBlock from '@/components/InputBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { 
@@ -278,7 +274,8 @@ export default {
     DefaultSelect,
     InputBlock,
     DefaultMultiSelect,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    TimeZoneSelect
   },
   props: {
     dataFrameInfo: {
@@ -445,14 +442,6 @@ export default {
     },
     composedAdvancedCronSetting () {
       return this.cronSettingValueAdvanced.reduce((acc, cur, index, arr) => acc + cur.value + (index === arr.length - 1 ? '' : ' '), '')
-    },
-    timeZoneList() {
-      return rawTimeZone.map((item, i) => {
-        return {
-          value: i,
-          name: `(${item.GMT}) ${item.zone[this.$i18n.locale]}`
-        }
-      })
     },
   },
   mounted () {
@@ -771,7 +760,7 @@ export default {
   .timeZone {
     width: 50%;
     margin-bottom: 16px;
-    .el-select {
+    /deep/ .el-select {
       width: 100%;
     }
   }
