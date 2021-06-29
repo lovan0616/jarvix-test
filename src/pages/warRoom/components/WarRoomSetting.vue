@@ -116,9 +116,9 @@
             @remove-tag="removeTag"
             @change="listChange">
             <el-option
-              v-for="item in alertUserIdList"
+              v-for="(item, i) in alertUserIdList"
               :disabled="!hasRemovePermission(item.value)"
-              :key="item.value"
+              :key="`${i}-${item.value}`"
               :label="item.name"
               :value="item.value"/>
           </el-select>
