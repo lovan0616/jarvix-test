@@ -33,6 +33,12 @@
         </div>
         <div class="war-room-setting__block">
           <div class="war-room-setting__block-title">
+            {{ $t('common.timezone') }}
+          </div>
+          <time-zone-select :current-id.sync="timeZoneId" />
+        </div>
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.timeIntervalConstraint') }}
             <el-switch
               v-model="warRoomData.displayDateRangeSwitch"
@@ -158,6 +164,7 @@
 <script>
 import { getGroupMemberList } from '@/API/Group'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
@@ -165,13 +172,15 @@ import {
   updateWarRoomSetting,
   deleteWarRoom
 } from '@/API/WarRoom'
+import timeZoneList, {getLocalGMTZone} from '@/utils/timeZone'
 
 export default {
   name: 'WarRoomSetting',
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    DecideDialog
+    DecideDialog,
+    TimeZoneSelect
   },
   props: {
     configData: {
@@ -183,7 +192,8 @@ export default {
         displayDateRangeSwitch: false,
         publishName: null,
         recentTimeIntervalAmount: null,
-        recentTimeIntervalUnit: null
+        recentTimeIntervalUnit: null,
+        timeZone: timeZoneList[timeZoneList.map((time) => time.GMT).indexOf(getLocalGMTZone())].area
       })
     }
   },
@@ -209,7 +219,10 @@ export default {
           firstDayOfWeek: 1
         }
       },
-      isShowDeleteWarRoom: false
+      isShowDeleteWarRoom: false,
+      timeZoneId: this.configData && this.configData.timeZone
+        ? timeZoneList.map((time) => time.area).indexOf(this.configData.timeZone) 
+        : 0,
     }
   },
   computed: {
@@ -227,6 +240,11 @@ export default {
       
       // 如果沒有選擇預設則為自訂區間
       return 'others'
+    }
+  },
+  watch: {
+    timeZoneId(val) {
+      this.warRoomData.timeZone = timeZoneList[val].area
     }
   },
   mounted () {

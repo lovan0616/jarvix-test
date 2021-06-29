@@ -290,6 +290,7 @@ import {
   unpublishWarRoom,
   updateWarRoomLayout
 } from '@/API/WarRoom'
+import timeZoneList, {getLocalGMTZone} from '@/utils/timeZone'
 
 export default {
   name: 'WarRoom',
@@ -395,6 +396,9 @@ export default {
         .then(([warRoomData, warRoomPoolData]) => {
           const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = warRoomData
           this.warRoomConfig = config
+          if (this.warRoomConfig && !this.warRoomConfig.timeZone) {
+            this.warRoomConfig.timeZone = timeZoneList[timeZoneList.map((time) => time.GMT).indexOf(getLocalGMTZone())].area
+          }
           this.chartComponent = this.sortComponents(diagramTypeComponents)
           this.numberComponent = this.sortComponents(indexTypeComponents)
           this.warRoomBasicInfo = warRoomBasicInfo
