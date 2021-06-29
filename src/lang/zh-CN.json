@@ -351,7 +351,6 @@
     "emptyResultDescription": "您所输入的问题，无法找到相关联的数据进行分析，请重新输入语句搜寻，或使用系统建议语句",
     "preview": "预览",
     "result": "结果",
-    "relatedQuestion": "关联问题",
     "comparisonCategory": "比较类",
     "languageSetting": "语言设定: 简中",
     "sureLogout": "您确认要登出帐号？",
@@ -854,12 +853,7 @@
     "columnUnit": "栏位单位"
   },
   "bot": {
-    "welcomeMessage": "Hello, 今天想分析什么样的数据？",
-    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage 可以试试从这些问题开始：",
-    "defaultResponse": "已分析完成，您可能有兴趣的关联问题：",
-    "finish": "已分析完成",
     "multiplePossibilities": "很抱歉，经系统分析后，发现词汇具有多重意义，请参考以下项目：",
-    "similarQuestionDescription": "很抱歉，系统没有找到对应问题的栏位或数据，但有相关词意的栏位，请参考以下项目：",
     "previewDataSource": "查看数据源",
     "closeDataSource": "关闭数据源",
     "openDataFrameSetting": "开启进阶设定",
@@ -1133,7 +1127,8 @@
     "startTime": "开始时间",
     "endTime": "结束时间",
     "noResultUnderCurrentRestrictions": "当前限制条件下无资料，请调整限制",
-    "noResultCheckFilterAndDataSource": "无参考资料，请确认筛选条件或原始资料"
+    "noResultCheckFilterAndDataSource": "无参考资料，请确认筛选条件或原始资料",
+    "noSuitableResult": "问句没有适合的结果"
   },
   "alert": {
     "alertLogs": "示警纪录",
@@ -2520,12 +2515,10 @@
     "notCorrelated": "零相关",
     "correlationRange": "数值范围 {min} - {max} 之内为高关联度栏位(至多显示五笔)",
     "noStrongCorrelationColumns": "目前没有找到任何高关联度栏位",
-    "relatedQuestion": "关联问题",
     "basicInfo": "基本数据",
     "summaryReport": "摘要报告",
     "importantFeatureChanging": "重要因素变化比较",
     "analysisProcessing": "分析处理中",
-    "quickStart": "常用问题",
     "clearAllFilter": "清除所有条件",
     "closeFilter": "关闭条件",
     "currentChosenData": "目前所选择的数据",
@@ -2628,7 +2621,7 @@
     "PossessionToken": "连接词",
     "ChangeToken": "其他词汇",
     "DataColumnToken": "来自{dataFrame}的{dataColumn}@:segmentationToken.Datacolumn，辨识为{matchedWord}",
-    "ColumnSetToken": "来自{dataFrame}的{matchedWord}",
+    "ColumnSetToken": "来自{dataFrame}的@:segmentationToken.ColumnSet，辨识为{matchedWord}",
     "DataValueToken": "来自{dataFrame}的{dataColumn}@:segmentationToken.Datavalue，辨识为{matchedWord}",
     "DatarowToken": "来自{dataFrame}的@:segmentationToken.Datarow",
     "ElseToken": "其他词汇",

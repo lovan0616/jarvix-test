@@ -44,7 +44,6 @@
 </template>
 <script>
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
-import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
 import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
 import AskCondition from '@/components/AskCondition'
@@ -55,7 +54,6 @@ export default {
   name: 'HomeLayout',
   components: {
     ChatRoomBlock,
-    ChatBotBtn,
     PreviewDataSource,
     AdvanceDataFrameSetting,
     AskCondition,

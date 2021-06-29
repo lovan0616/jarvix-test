@@ -7,13 +7,6 @@
     :is-war-room-addable="isWarRoomAddable"
     @refresh="refreshPinboardData"
   >
-    <template slot="PageResultBoardHeader">
-      <task
-        :key="resultInfo.title[0]"
-        :component-id="resultInfo.title[0]"
-        intend="title"
-      />
-    </template>
     <root-cause-board-body slot="RootCauseResultBoardBody">
       <template slot="RootCauseDescription">
         <task
