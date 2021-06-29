@@ -154,7 +154,11 @@
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
           <div class="timeZone">
             <p class="group-title">{{ $t('common.timezone') }}</p>
-            <time-zone-select :current-id.sync="timeZoneId" />
+            <time-zone-select 
+              v-validate="'required'" 
+              :current-id.sync="timeZoneId"
+              name="timeZoneId"
+            />
           </div>
           <div class="cycle-setting">
             <p class="group-title">{{ $t('batchLoad.cycleSetting') }}</p>
@@ -265,7 +269,7 @@ import {
   triggerUpdateData
 } from '@/API/DataSource'
 import { Message } from 'element-ui'
-import rawTimeZone from '@/utils/timeZone'
+import timeZoneList, {getLocalGMTZone} from '@/utils/timeZone'
 
 export default {
   name: 'EditBatchLoadDialog',
@@ -456,12 +460,10 @@ export default {
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           if (crontabConfigContent && crontabConfigContent.timeZone) {
             // 還原 timeZone
-            this.timeZoneId = rawTimeZone.map((time) => time.area).indexOf(crontabConfigContent.timeZone)
+            this.timeZoneId = timeZoneList.map((time) => time.area).indexOf(crontabConfigContent.timeZone)
           } else {
             // 用當地 timeZone
-            const timeZoneOffset = new Date().getTimezoneOffset()
-            const GMTOffset = `GMT${timeZoneOffset > 0 ? '-' : '+'}${Math.abs(timeZoneOffset / 60)}:00`
-            this.timeZoneId = rawTimeZone.map((time) => time.GMT).indexOf(GMTOffset)
+            this.timeZoneId = timeZoneList.map((time) => time.GMT).indexOf(getLocalGMTZone())
           }
 
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
@@ -512,7 +514,7 @@ export default {
         mode: this.columnInfo.mode,
         updateDateColumn: this.columnInfo.updateDateColumn,
         deletable: this.columnInfo.deletable === null ? false : this.columnInfo.deletable,
-        timeZone: rawTimeZone[this.timeZoneId].area
+        timeZone: timeZoneList[this.timeZoneId].area
       }
     },
     setSetting () {

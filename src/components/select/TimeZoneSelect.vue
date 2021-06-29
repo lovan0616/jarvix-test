@@ -1,6 +1,5 @@
 <template>
   <default-select 
-    v-validate="'required'"
     v-model="timeZoneId"
     :option-list="timeZoneList"
     class="timezone-select"
@@ -9,7 +8,7 @@
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
-import rawTimeZone from '@/utils/timeZone'
+import timeZoneList from '@/utils/timeZone'
 
 export default {
   components: {DefaultSelect},
@@ -21,7 +20,7 @@ export default {
   },
   computed: {
     timeZoneList() {
-      return rawTimeZone.map((item, i) => {
+      return timeZoneList.map((item, i) => {
         return {
           value: i,
           name: `(${item.GMT}) ${item.zone[this.$i18n.locale]}`

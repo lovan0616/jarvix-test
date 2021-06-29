@@ -1,4 +1,4 @@
-export default [
+const timeZoneList = [
   {
     "area": "GMT",
     "zone" : {
@@ -257,3 +257,11 @@ export default [
     "GMT": "GMT-1:00"
   }
 ]
+
+export default timeZoneList
+
+export const getLocalGMTZone = () => {
+  const timeZoneOffset = new Date().getTimezoneOffset()
+  const GMTOffset = `GMT${timeZoneOffset > 0 ? '-' : '+'}${Math.abs(timeZoneOffset / 60)}:00`
+  return GMTOffset
+}
