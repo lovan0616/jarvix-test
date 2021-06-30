@@ -7,6 +7,12 @@
         <router-view />
       </transition>
     </main>
+
+    <el-backtop target=".wrapper">
+      <div>
+      置頂
+    </div>
+    </el-backtop>
   </div>
 </template>
 <script>
