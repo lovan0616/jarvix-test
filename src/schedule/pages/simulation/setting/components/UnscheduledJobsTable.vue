@@ -37,7 +37,10 @@
         {{ $t('schedule.button.send') }}
       </default-button>
       <div class="header__button">
-        <label class="header__select">
+        <label
+          v-if="isYKSchedule"
+          class="header__select"
+        >
           <div class="checkbox-label">
             <input
               v-model="selectAll"
@@ -72,8 +75,8 @@
       :layout="'unscheduled'"
       :is-processing="isProcessing"
       :pagination-info="pagination"
-      fixed-index
       :selection="!selectAll"
+      fixed-index
       @change-check="updateSelectedData"
       @change-page="updatePage"
     />
