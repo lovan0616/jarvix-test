@@ -880,7 +880,7 @@
     "chooseUpdateFrequency": "choose update frequency",
     "chooseTimeInterval": "Date range",
     "timeIntervalConstraint": "Date range restriction",
-    "everyMinute": "Every minute",
+    "everyMinute": "Every minute | Every {number} minutes",
     "everyHour": "Every hour",
     "everyDay": "Every day",
     "everyWeek": "Every week",
