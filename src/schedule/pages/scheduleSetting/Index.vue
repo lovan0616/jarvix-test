@@ -63,10 +63,10 @@
               <div class="form__content">
                 <default-date-picker
                   v-model="settingInfo.scheduleStartDate"
+                  :picker-options="pickerOptions"
                   format="yyyy/MM/dd"
                   value-format="yyyy/MM/dd"
                   type="date"
-                  :picker-options="pickerOptions"
                 />
               </div>
             </div>
