@@ -11,7 +11,7 @@ const timeZoneList = [
     "area": "UTC",
     "zone" : {
       "zh-TW": "全球座標時間",
-      "zh-CN": "全球座标时间",
+      "zh-CN": "全球标准时间",
       "en-US": "Universal Coordinated",
     },
     "GMT": "GMT+0:00"
@@ -19,7 +19,7 @@ const timeZoneList = [
     "area": "ECT",
     "zone" : {
       "zh-TW": "歐洲中央時間",
-      "zh-CN": "欧洲中央时间",
+      "zh-CN": "欧洲中部时间",
       "en-US": "European Central",
     },
     "GMT": "GMT+1:00"
@@ -35,7 +35,7 @@ const timeZoneList = [
     "area": "ART",
     "zone" : {
       "zh-TW": "(阿拉伯)埃及標準時間",
-      "zh-CN": "(阿拉伯)埃及标准时间",
+      "zh-CN": "（阿拉伯）埃及标准时间",
       "en-US": "(Arabic) Egypt Standard",
     },
     "GMT": "GMT+2:00"
@@ -83,7 +83,7 @@ const timeZoneList = [
     "area": "BST",
     "zone" : {
       "zh-TW": "孟加拉標準時間",
-      "zh-CN": "孟加拉标准时间",
+      "zh-CN": "孟加拉国标准时间",
       "en-US": "Bangladesh Standard",
     },
     "GMT": "GMT+6:00"
@@ -99,7 +99,7 @@ const timeZoneList = [
     "area": "CTT",
     "zone" : {
       "zh-TW": "中國標準時間",
-      "zh-CN": "中国标准时间",
+      "zh-CN": "中国台湾时间",
       "en-US": "China Taiwan",
     },
     "GMT": "GMT+8:00"
@@ -115,7 +115,7 @@ const timeZoneList = [
     "area": "ACT",
     "zone" : {
       "zh-TW": "澳洲中央時間",
-      "zh-CN": "澳洲中央时间",
+      "zh-CN": "澳大利亚中部时间",
       "en-US": "Australia Central",
     },
     "GMT": "GMT+9:30"
@@ -123,7 +123,7 @@ const timeZoneList = [
     "area": "AET",
     "zone" : {
       "zh-TW": "東澳時間",
-      "zh-CN": "东澳时间",
+      "zh-CN": "澳大利亚东部时间",
       "en-US": "Australia Eastern",
     },
     "GMT": "GMT+10:00"
@@ -131,7 +131,7 @@ const timeZoneList = [
     "area": "SST",
     "zone" : {
       "zh-TW": "索羅門標準時間",
-      "zh-CN": "索罗门标准时间",
+      "zh-CN": "所罗门标准时间",
       "en-US": "Solomon Standard",
     },
     "GMT": "GMT+11:00"
@@ -139,7 +139,7 @@ const timeZoneList = [
     "area": "NST",
     "zone" : {
       "zh-TW": "紐西蘭標準時間",
-      "zh-CN": "纽西兰标准时间",
+      "zh-CN": "新西兰标准时间",
       "en-US": "New Zealand Standard",
     },
     "GMT": "GMT+12:00"
@@ -179,7 +179,7 @@ const timeZoneList = [
     "area": "PNT",
     "zone" : {
       "zh-TW": "鳳凰城標準時間",
-      "zh-CN": "凤凰城标准时间",
+      "zh-CN": "菲尼克斯标准时间",
       "en-US": "Phoenix Standard",
     },
     "GMT": "GMT-7:00"
@@ -187,7 +187,7 @@ const timeZoneList = [
     "area": "MST",
     "zone" : {
       "zh-TW": "山區標準時間",
-      "zh-CN": "山区标准时间",
+      "zh-CN": "西部山脉标准时间",
       "en-US": "Mountain Standard",
     },
     "GMT": "GMT-7:00"
@@ -195,7 +195,7 @@ const timeZoneList = [
     "area": "CST",
     "zone" : {
       "zh-TW": "中央標準時間",
-      "zh-CN": "中央标准时间",
+      "zh-CN": "中部标准时间",
       "en-US": "Central Standard",
     },
     "GMT": "GMT-6:00"
@@ -211,7 +211,7 @@ const timeZoneList = [
     "area": "IET",
     "zone" : {
       "zh-TW": "印地安那州東部標準時間",
-      "zh-CN": "印地安那州东部标准时间",
+      "zh-CN": "印第安那东部标准时间",
       "en-US": "Indiana Eastern Standard",
     },
     "GMT": "GMT-5:00"
@@ -219,7 +219,7 @@ const timeZoneList = [
     "area": "PRT",
     "zone" : {
       "zh-TW": "波多黎各及美國維京島時間",
-      "zh-CN": "波多黎各及美国维京岛时间",
+      "zh-CN": "波多黎各和美属维尔京群岛时间",
       "en-US": "Puerto Rico and US Virgin Islands",
     },
     "GMT": "GMT-4:00"
