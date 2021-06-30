@@ -274,6 +274,7 @@
 </template>
 
 <script>
+import moment from 'moment-timezone';
 import ComponentSetting from './components/ComponentSetting'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
@@ -290,7 +291,6 @@ import {
   unpublishWarRoom,
   updateWarRoomLayout
 } from '@/API/WarRoom'
-import timeZoneList, {getLocalGMTZone} from '@/utils/timeZone'
 
 export default {
   name: 'WarRoom',
@@ -397,7 +397,7 @@ export default {
           const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = warRoomData
           this.warRoomConfig = config
           if (this.warRoomConfig && !this.warRoomConfig.timeZone) {
-            this.warRoomConfig.timeZone = timeZoneList[timeZoneList.map((time) => time.GMT).indexOf(getLocalGMTZone())].area
+            this.warRoomConfig.timeZone = moment.tz.guess()
           }
           this.chartComponent = this.sortComponents(diagramTypeComponents)
           this.numberComponent = this.sortComponents(indexTypeComponents)

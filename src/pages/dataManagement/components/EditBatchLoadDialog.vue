@@ -155,7 +155,7 @@
           <div class="timeZone">
             <p class="group-title">{{ $t('common.timezone') }}</p>
             <time-zone-select 
-              v-validate="'required'" 
+              v-validate="'require'"
               :current-id.sync="timeZoneId"
               name="timeZoneId"
             />
@@ -256,6 +256,7 @@
 </template>
 
 <script>
+import moment from 'moment-timezone';
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
@@ -269,7 +270,6 @@ import {
   triggerUpdateData
 } from '@/API/DataSource'
 import { Message } from 'element-ui'
-import timeZoneList, {getLocalGMTZone} from '@/utils/timeZone'
 
 export default {
   name: 'EditBatchLoadDialog',
@@ -414,7 +414,7 @@ export default {
       isLoading: false,
       isProcessing: false,
       hasError: false,
-      timeZoneId: 0,
+      timeZoneId: moment.tz.guess(),
     }
   },
   computed: {
@@ -460,10 +460,10 @@ export default {
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           if (crontabConfigContent && crontabConfigContent.timeZone) {
             // 還原 timeZone
-            this.timeZoneId = timeZoneList.map((time) => time.area).indexOf(crontabConfigContent.timeZone)
+            this.timeZoneId = crontabConfigContent.timeZone
           } else {
             // 用當地 timeZone
-            this.timeZoneId = timeZoneList.map((time) => time.GMT).indexOf(getLocalGMTZone())
+            this.timeZoneId = moment.tz.guess()
           }
 
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
@@ -514,7 +514,7 @@ export default {
         mode: this.columnInfo.mode,
         updateDateColumn: this.columnInfo.updateDateColumn,
         deletable: this.columnInfo.deletable === null ? false : this.columnInfo.deletable,
-        timeZone: timeZoneList[this.timeZoneId].area
+        timeZone: this.timeZoneId
       }
     },
     setSetting () {

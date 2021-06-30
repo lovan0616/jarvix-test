@@ -8,7 +8,7 @@
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
-import timeZoneList from '@/utils/timeZone'
+import moment from 'moment-timezone'
 
 export default {
   components: {DefaultSelect},
@@ -20,10 +20,10 @@ export default {
   },
   computed: {
     timeZoneList() {
-      return timeZoneList.map((item, i) => {
+      return moment.tz.names().map((item) => {
         return {
-          value: i,
-          name: `(${item.GMT}) ${item.zone[this.$i18n.locale]}`
+          value: item,
+          name: item
         }
       })
     },

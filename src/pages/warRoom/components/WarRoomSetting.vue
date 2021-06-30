@@ -35,7 +35,11 @@
           <div class="war-room-setting__block-title">
             {{ $t('common.timezone') }}
           </div>
-          <time-zone-select :current-id.sync="timeZoneId" />
+          <time-zone-select 
+            v-validate="'require'"
+            :current-id.sync="timeZoneId" 
+            name="timeZoneId"
+          />
         </div>
         <div class="war-room-setting__block">
           <div class="war-room-setting__block-title">
@@ -162,6 +166,7 @@
 </template>
 
 <script>
+import moment from 'moment-timezone';
 import { getGroupMemberList } from '@/API/Group'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
@@ -172,7 +177,6 @@ import {
   updateWarRoomSetting,
   deleteWarRoom
 } from '@/API/WarRoom'
-import timeZoneList, {getLocalGMTZone} from '@/utils/timeZone'
 
 export default {
   name: 'WarRoomSetting',
@@ -193,11 +197,18 @@ export default {
         publishName: null,
         recentTimeIntervalAmount: null,
         recentTimeIntervalUnit: null,
-        timeZone: timeZoneList[timeZoneList.map((time) => time.GMT).indexOf(getLocalGMTZone())].area
+        timeZone: moment.tz.guess()
       })
     }
   },
   data () {
+    const timeZoneId = (this.configData
+      && this.configData.timeZone
+      && moment.tz.names().includes(this.configData.timeZone)
+    )
+      ? this.configData.timeZone
+      : moment.tz.guess()
+
     return {
       warRoomData: null,
       isLoading: false,
@@ -220,9 +231,7 @@ export default {
         }
       },
       isShowDeleteWarRoom: false,
-      timeZoneId: this.configData && this.configData.timeZone
-        ? timeZoneList.map((time) => time.area).indexOf(this.configData.timeZone) 
-        : 0,
+      timeZoneId,
     }
   },
   computed: {
@@ -244,7 +253,7 @@ export default {
   },
   watch: {
     timeZoneId(val) {
-      this.warRoomData.timeZone = timeZoneList[val].area
+      this.warRoomData.timeZone = val
     }
   },
   mounted () {
