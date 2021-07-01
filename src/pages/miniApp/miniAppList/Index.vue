@@ -66,6 +66,16 @@
           />
         </label>
       </div>
+      <div class="dialog__input-block">
+        <label class="dialog__label">
+          {{ $t('common.timezone') }}
+          <time-zone-select 
+            v-validate="'require'"
+            :current-id.sync="timeZoneId" 
+            name="timeZoneId"
+          />
+        </label>
+      </div>
       <div class="dialog__icons-block">
         <label class="dialog__label">
           {{ $t('miniApp.chooseIcon') }}
@@ -123,18 +133,23 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import moment from 'moment-timezone';
 import SingleMiniAppCard from './components/SingleMiniAppCard'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
+import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
 import { Message } from 'element-ui'
 import { 
+  getMiniAppInfo,
   getMiniAppList,
   createApp,
   updateAppSetting,
   deleteMiniApp
 } from '@/API/MiniApp'
+import { updateAlertTimeZone } from '@/API/Alert'
 
 export default {
   name: 'MiniAppList',
@@ -144,7 +159,8 @@ export default {
     DecideDialog,
     WritingDialog,
     EmptyInfoBlock,
-    InputVerify
+    InputVerify,
+    TimeZoneSelect
   },
   data () {
     return {
@@ -196,7 +212,8 @@ export default {
         'feature',
         'key',
         'len-with-line-chart'
-      ]
+      ],
+      timeZoneId: moment.tz.guess(),
     }
   },
   computed: {
@@ -225,8 +242,14 @@ export default {
         if (!isValidate) return
         this.isProcessing = true
         const editInfo = this.tempEditInfo
+
         // 編輯模式下的名稱預設為 app 名稱
         editInfo.settings.editModeData.displayedName = editInfo.name
+
+        // 設定 timezone
+        editInfo.settings.editModeData.timeZone = this.timeZoneId
+
+        // 送出 API
         createApp({
           ...editInfo,
           groupId: this.groupId
@@ -264,23 +287,47 @@ export default {
       this.holdMiniAppInfo(this.miniAppInfoTemplate)
       this.isShowEdit = true
     },
-    confirmEdit () {
-      this.$validator.validateAll().then(isValidate => {
+    async confirmEdit () {
+      try {
+        const isValidate = await this.$validator.validateAll()
         if (!isValidate) return
         this.isProcessing = true
-        updateAppSetting(this.tempEditInfo.id, this.tempEditInfo)
-          .then(() => {
-            Message({
-              message: this.$t('message.editNameSuccess'),
-              type: 'success',
-              duration: 3 * 1000,
-              showClose: true
-            })
-            this.isShowEdit = false
-            this.fetchData()
-          })
-          .finally(() => { this.isProcessing = false })
-      })
+
+        // 取得 App 內的示警條件列表
+        const miniAppInfo = await getMiniAppInfo(this.tempEditInfo.id)
+        let appWarningConditions = miniAppInfo && JSON.parse(JSON.stringify(miniAppInfo.settings.editModeData.warningModule.conditions))
+
+        // 更新示警條件 timezone & 更新 App 設定
+        const updateConfig = {
+          "conditionIds": appWarningConditions.map((item) => item.id),
+          "groupId": this.groupId,
+          "timeZone": this.timeZoneId
+        }
+
+        // 更新 APP timezone
+        this.tempEditInfo.settings = JSON.parse(JSON.stringify(miniAppInfo.settings))
+        this.tempEditInfo.settings.editModeData.timeZone = this.timeZoneId
+
+        // 送出更新
+        await axios.all([
+          updateAlertTimeZone(updateConfig),
+          updateAppSetting(this.tempEditInfo.id, this.tempEditInfo)
+        ])
+
+        // 呼叫彈出視窗
+        Message({
+          message: this.$t('message.editNameSuccess'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+
+        // 關閉視窗及更新資料
+        this.isShowEdit = false
+        this.fetchData()
+      } finally {
+        this.isProcessing = false
+      }
     },
     confirmDelete () {
       this.isProcessing = true
@@ -361,13 +408,17 @@ export default {
     .dialog-select-text {
       margin-bottom: 24px;
     }
-    .input-verify-text {
+    .input-verify-text, .el-select {
       margin-bottom: 26px;
     }
 
     .input-error {
       bottom: 9px;
     }
+  }
+
+  /deep/ .el-select {
+    display: block;
   }
 
   .dialog {

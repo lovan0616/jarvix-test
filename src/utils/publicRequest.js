@@ -51,8 +51,8 @@ service.interceptors.response.use(
     if (response.headers['content-type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') return { data: response.data }
     if (!response.data.error && response.headers['content-type'] === 'application/octet-stream;charset=utf-8') return { data: response.data }
     const res = response.data
-    // 特殊情況 光電展 response 無 meta
-    if (res.success && !res.meta) return res.data
+    if (res.success && !res.meta) return res.data // 特殊情況 光電展 response 無 meta
+    if (res.success && !res.data) return res.success // 特殊情況 PATCH:/alert/conditions/timezone response 無 data
     if (res.success) return res.meta.pagination ? {...res.data, ...res.meta} : res.data
 
     // rollbar 留存
