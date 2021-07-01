@@ -458,14 +458,11 @@ export default {
         .then(({ crontabConfigContent, primaryKeys }) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
-          if (crontabConfigContent && crontabConfigContent.timeZone) {
-            // 還原 timeZone
-            this.timeZoneId = crontabConfigContent.timeZone
-          } else {
-            // 用當地 timeZone
-            this.timeZoneId = moment.tz.guess()
-          }
-
+          this.timeZoneId = (crontabConfigContent
+            && crontabConfigContent.timeZone
+            && moment.tz.names().includes(crontabConfigContent.timeZone))
+            ? crontabConfigContent.timeZone // 還原 timeZone
+            : moment.tz.guess() // 用當地 timeZone
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
 
