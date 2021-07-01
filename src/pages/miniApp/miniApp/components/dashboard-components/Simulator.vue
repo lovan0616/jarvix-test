@@ -74,7 +74,10 @@
                     :key="index"
                     class="item">
                     <div class="item__label">{{ result.name }}</div>
-                    <div class="item__value">{{ isNaN(roundNumber(result.value, 3)) ? result.value : roundNumber(result.value, 3) }}</div>
+                    <div
+                      class="item__value"
+                      v-html="isNaN(roundNumber(result.value, 3)) ? lineBreak(result.value) : roundNumber(result.value, 3)"
+                    />
                   </div>  
                 </div>
               </div>
