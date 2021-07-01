@@ -391,23 +391,23 @@ export default {
         basicScheduleList: [
           {
             value: '* * * * *',
-            name: this.$t('warRoom.everyMinute', { number: 1 })
+            name: this.$tc('warRoom.everyMinute', 1)
           },
           {
             value: '*/5 * * * *',
-            name: this.$t('warRoom.everyMinute', { number: 5 })
+            name: this.$tc('warRoom.everyMinute',5, { number: 5 })
           },
           {
             value: '*/15 * * * *',
-            name: this.$t('warRoom.everyMinute', { number: 15 })
+            name: this.$tc('warRoom.everyMinute',15, { number: 15 })
           },
           {
             value: '*/30 * * * *',
-            name: this.$t('warRoom.everyMinute', { number: 30 })
+            name: this.$tc('warRoom.everyMinute',30, { number: 30 })
           },
           {
             value: '*/45 * * * *',
-            name: this.$t('warRoom.everyMinute', { number: 45 })
+            name: this.$tc('warRoom.everyMinute',45, { number: 45 })
           },
           {
             value: '0 * * * *',
