@@ -188,7 +188,7 @@ export default {
           ioArgs: this.tempArgs
         })
         .then(() => {
-          this.modelInfo.ioArgs = this.tempArgs
+          this.modelInfo.ioArgs = JSON.parse(JSON.stringify(this.tempArgs))
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
