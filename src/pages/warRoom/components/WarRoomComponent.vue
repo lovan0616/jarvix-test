@@ -23,15 +23,6 @@
     <template v-else>
       <div class="card__header">
         <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
-        <div
-          v-if="isAboveUpperBound || isBelowLowerBound"
-          class="card__message"
-        >
-          <svg-icon
-            :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
-            class="icon"/>
-          {{ isAboveUpperBound ? $t('warRoom.reachedUpperBound') : $t('warRoom.reachedLowerBound') }}
-        </div>
       </div>
       <div class="card__body">
         <component
@@ -60,6 +51,15 @@
           :is-show-label-data="true"
           class="card__body-data"
         />
+        <div
+          v-if="isAboveUpperBound || isBelowLowerBound"
+          class="card__message"
+        >
+          <svg-icon
+            :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
+            class="icon"/>
+          {{ isAboveUpperBound ? $t('warRoom.reachedUpperBound') : $t('warRoom.reachedLowerBound') }}
+        </div>
       </div>
       <div
         v-if="timeInterval"
@@ -388,10 +388,12 @@ export default {
   }
 
   &__body {
+    display: flex;
     flex: 1;
   }
 
   &__body-data {
+    flex: 1;
     height: 100%;
   }
 
