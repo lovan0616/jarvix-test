@@ -374,7 +374,8 @@ export default {
     isSelectableSourceDataframe (frame) {
       // 來源資料表：
       // 不得為其他 model script 產出來的表 (用 table name 判斷)
-      return !frame.name.startsWith('sc_')
+      // 不得為 join table 後的表 (joinCount > 1 為 join table)
+      return !frame.name.startsWith('sc_') && !(frame.joinCount > 1)
     }
   }
 }
