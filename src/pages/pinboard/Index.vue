@@ -9,8 +9,8 @@
     </main>
 
     <el-backtop target=".wrapper">
-      <div>
-      置頂
+      <div class="backtop-content">
+        <svg-icon icon-class="chevron-up-solid"/>
     </div>
     </el-backtop>
   </div>
@@ -26,5 +26,9 @@ export default {
 .main {
   padding: 32px 24px 64px 24px;
   min-height: calc(100vh - #{$header-height});
+}
+
+.backtop-content {
+  color: #2AD2E2;
 }
 </style>
