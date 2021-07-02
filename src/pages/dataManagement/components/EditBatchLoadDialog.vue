@@ -415,6 +415,7 @@ export default {
       isProcessing: false,
       hasError: false,
       timeZoneId: moment.tz.guess(),
+      timeZoneCache: moment.tz.guess(),
     }
   },
   computed: {
@@ -442,6 +443,10 @@ export default {
       if (this.columnInfo.mode === 'BASIC') {
         if (this.cronSettingValueBasic !== this.originalColumnInfo.cron) return true
       }
+
+      // compare timezone
+      if (this.timeZoneId !== this.timeZoneCache) return true
+
       return false
     },
     composedAdvancedCronSetting () {
@@ -463,6 +468,7 @@ export default {
             && moment.tz.names().includes(crontabConfigContent.timeZone))
             ? crontabConfigContent.timeZone // 還原 timeZone
             : moment.tz.guess() // 用當地 timeZone
+          this.timeZoneCache = this.timeZoneId
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
 
