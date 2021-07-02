@@ -268,7 +268,7 @@ export default {
     return {
       questionInfo: null,
       resultInfo: null,
-      layout: '',
+      layout: null,
       timeoutFunction: null,
       totalSec: 50,
       periodSec: 200,
@@ -403,7 +403,7 @@ export default {
       this.totalSec = 50
       this.periodSec = 200
       this.resultInfo = null
-      this.layout = ''
+      this.layout = null
       this.isShowAnomalySetting = false
       this.$store.dispatch('chatBot/askQuestion', {
         question,
@@ -417,7 +417,10 @@ export default {
         let segmentationList = response.segmentationList
         
         // 無結果
-        if (segmentationList[0].denotation === 'NO_ANSWER') {
+        const emptyResultDenotationList = ['NO_ANSWER', 'DIFFERENCE', 'CORRELATION_EXPLORATION', 'ROOT_CAUSE', 'PROFILE']
+        const hasEmptyResultDenotation = (el) => el === segmentationList[0].denotation
+
+        if (emptyResultDenotationList.some(hasEmptyResultDenotation)) {
           this.segmentation = segmentationList[0]
           this.$store.commit('result/updateCurrentResultInfo', null)
           this.layout = 'EmptyResult'
