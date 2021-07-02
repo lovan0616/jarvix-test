@@ -77,7 +77,7 @@ export default {
   .file-list {
     background: rgba(50, 58, 58, 0.95);
     border-radius: 4px;
-    max-height: 280px;
+    max-height: 420px;
     overflow: auto;
     padding: 24px;
     &.droppable {
