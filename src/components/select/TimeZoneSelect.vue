@@ -2,6 +2,7 @@
   <default-select 
     v-model="timeZoneId"
     :option-list="timeZoneList"
+    :filterable="true"
     class="timezone-select"
   />
 </template>

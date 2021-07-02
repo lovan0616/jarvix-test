@@ -415,5 +415,9 @@ export default {
       font-weight: 600;
     }
   }
+
+  /deep/ .el-select {
+    width: 100%;
+  }
 }
 </style>
