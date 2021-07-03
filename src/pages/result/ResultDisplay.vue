@@ -27,7 +27,7 @@
       :is-war-room-addable="isWarRoomAddable"
       :is-histogram-bin-setting="isHistogramBinSetting"
       mode="display"
-      @fetch-new-components-list="getComponentV2"
+      @fetch-new-components-list="getComponent"
     />
   </div>
 </template>
@@ -175,7 +175,7 @@ export default {
             this.setEmptyLayout(res)
             return
           }
-          this.getComponentV2(res.resultId)
+          this.getComponent(res.resultId)
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
@@ -229,7 +229,7 @@ export default {
                 this.setEmptyLayout(res)
                 return
               }
-              this.getComponentV2(res.resultId)
+              this.getComponent(res.resultId)
             }).catch((error) => {
               if (error.message !== 'cancel') this.isLoading = false
             })
@@ -253,7 +253,7 @@ export default {
       }
       this.isLoading = false
     },
-    getComponentV2 (resultId) {
+    getComponent (resultId) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
@@ -261,7 +261,7 @@ export default {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponentV2(resultId)
+                this.getComponent(resultId)
               }, this.totalSec)
 
               // request 間隔最多三秒
@@ -278,7 +278,7 @@ export default {
               this.intent = componentResponse.intent
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
-              this.segmentationAnalysisV2(componentResponse.segmentationPayload)
+              this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.transcript = componentResponse.transcript
               this.isWarRoomAddable = componentResponse.isWarRoomAddable
               this.isHistogramBinSetting = componentResponse.isHistogramIntervalSetting
@@ -304,7 +304,7 @@ export default {
           }
         })
     },
-    segmentationAnalysisV2 (payloadInfo) {
+    segmentationAnalysis (payloadInfo) {
       // this.segmentationInfo.nlpToken = payloadInfo.sentence.filter(element => {
       //   return element.isMatchedByNlp || element.isSynonym
       // })

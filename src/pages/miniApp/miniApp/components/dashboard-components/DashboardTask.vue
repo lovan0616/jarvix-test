@@ -266,7 +266,6 @@ export default {
       isAskQuestionFailed: false,
       tempFilteredKeyResultId: null,
       isInitializing: true,
-      segmentation: null,
       enableAlert: false,
       componentComplementaryInfo: null,
       taskId: uuidv4(),
@@ -496,6 +495,14 @@ export default {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
+    /**
+     * 上下兼容
+     * 某些舊資料的 segmenation 資訊短缺，得重新取
+     */
+    checkHasCorrectSegmentation (segmentation) {
+      if (!Array.isArray(segmentation.sentence)) return false
+      return Object.keys(segmentation.sentence[0]).length > 4
+    },
     deboucedAskQuestion (isNeededAskQuestion) {
       // 避免在極短時間內，因 filter/controller 變動而多次觸發 askQuestion
       // Ex: 當外層 initFilters 的情境
@@ -503,7 +510,7 @@ export default {
       /* 跳過 askQuestion 步驟
        * 但在場上有 YAxisController 且會被影響的 component 仍要從頭問問句
        * */
-      if (!isNeededAskQuestion && !this.shouldComponentYAxisBeControlled && this.componentData.segmentation) {
+      if (!isNeededAskQuestion && !this.shouldComponentYAxisBeControlled && this.checkHasCorrectSegmentation(this.componentData.segmentation)) {
         this.debouncedAskFunction = window.setTimeout(this.askResult, 0)
         return
       }
@@ -548,7 +555,6 @@ export default {
       }).catch(error => { this.isProcessing = false })
     },
     askResult (segmentation = this.componentData.segmentation, questionId = this.componentData.questionId) {
-      this.segmentation = segmentation
       // 確認是否為趨勢類型問題
       const isTrendQuestion = segmentation.denotation === 'TREND'
       let dateTimeColumn = segmentation.transcript.subjectList.find(subject => subject.dateTime)
@@ -571,7 +577,7 @@ export default {
           }
         })
       }).then(res => {
-        this.getComponentV2(res.resultId)
+        this.getComponent(res.resultId)
       }).catch(error => {this.isProcessing = false})
     },
     getFormulaResult () {
@@ -585,17 +591,17 @@ export default {
         restrictions: this.restrictions(),
         isFilter: true
       })
-      .then(resultInfo => this.getComponentV2(resultInfo.resultId))
+      .then(resultInfo => this.getComponent(resultInfo.resultId))
       .catch(error => { this.isProcessing = false })
     },
-    getComponentV2 (resultId) {
+    getComponent (resultId) {
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponentV2(resultId)
+                this.getComponent(resultId)
               }, this.totalSec)
 
               this.totalSec += this.periodSec
