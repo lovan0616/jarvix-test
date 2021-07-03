@@ -376,7 +376,12 @@ export default {
           ...formatAnomalySetting(this.tempComponentAnomalySettings)
         }
       }
-      this.askQuestion(this.currentComponent.question)
+      // 假如已經有完整的舊有問句資訊，就不需要重新再問
+      if (this.checkHasCorrectSegmentation(this.currentComponent.segmentation)) {
+        this.askResult(this.currentComponent.segmentation, this.currentQuestionId.questionId)
+      } else {
+        this.askQuestion(this.currentComponent.question)
+      }
     }
   },
   destroyed () {
@@ -384,6 +389,14 @@ export default {
   },
   methods: {
     ...mapMutations('dataSource', ['setIsManuallyTriggeredAskQuestion']),
+    /**
+     * 上下兼容
+     * 某些舊資料的 segmenation 資訊短缺，得重新取
+     */
+    checkHasCorrectSegmentation (segmentation) {
+      if (!Array.isArray(segmentation.sentence)) return false
+      return Object.keys(segmentation.sentence[0]).length > 4
+    },
     checkIsTextTypeAvailable (transcript) {
       // 以下需確保問句中只帶有一個 category 欄位
       const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
@@ -446,7 +459,7 @@ export default {
               }
               return this.askResult(null, questionId)
             })
-            .then(res => this.getComponentV2(res.resultId))
+            .then(res => this.getComponent(res.resultId))
             .catch((error) => {})
         } else {
           // 多個結果
@@ -495,10 +508,10 @@ export default {
           }
         })
       })
-      .then(res => this.getComponentV2(res.resultId))
+      .then(res => this.getComponent(res.resultId))
       .catch(error => {})
     },
-    getComponentV2 (resultId) {
+    getComponent (resultId) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
@@ -506,7 +519,7 @@ export default {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponentV2(resultId)
+                this.getComponent(resultId)
               }, this.totalSec)
               this.totalSec += this.periodSec
               this.periodSec = this.totalSec
@@ -527,7 +540,7 @@ export default {
               this.$store.commit('result/updateCurrentResultInfo', {
                 keyResultId: componentResponse.componentIds.key_result[0],
                 dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
-                segmentation: componentResponse.segmentationPayload,
+                segmentation: this.segmentation,
                 question: this.composeComponentQuestion(componentResponse.segmentationPayload.sentence),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
