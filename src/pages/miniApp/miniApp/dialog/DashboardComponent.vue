@@ -8,6 +8,12 @@
     />
     <template v-else-if="isShowKeyResultContent">
       <!-- 有 key result -->
+      <unknown-info-block
+        v-if="segmentationInfo.unknownToken.length > 0 && computedKeyResultId"
+        :segmentation-info="segmentationInfo"
+        @close="closeUnknowInfoBlock"
+      />
+
       <div 
         v-if="computedKeyResultId" 
         class="key-result__content">
@@ -228,6 +234,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { getDateTimeColumns } from '@/API/DataSource'
+import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputVerify from '@/components/InputVerify'
 import { algoConfig } from '@/utils/general'
@@ -240,7 +247,8 @@ export default {
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    InputVerify
+    InputVerify,
+    UnknownInfoBlock
   },
   props: {
     currentComponent: {
@@ -405,6 +413,7 @@ export default {
       this.resultInfo = null
       this.layout = ''
       this.isShowAnomalySetting = false
+      this.closeUnknowInfoBlock();
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
@@ -450,7 +459,7 @@ export default {
             .catch((error) => {})
         } else {
           // 多個結果
-          this.$store.commit('dataSource/setAppQuestion', null)
+          // this.$store.commit('dataSource/setAppQuestion', null)
           this.$store.commit('dataSource/setCurrentQuestionId', response.questionId)
           this.layout = 'MultiResult'
           this.resultInfo = {...response, question: question}
@@ -534,6 +543,14 @@ export default {
                 dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
                 dateTimeColumn: this.mainDateColumn
               })
+              // 比照智能分析ResultDisplay，過濾出紀錄parser無法判斷字詞的物件，裝進unknownToken陣列中，以此判斷是否顯示unknow-info-block
+              this.segmentationInfo.unknownToken = componentResponse.segmentationPayload.sentence.filter(
+                element => {
+                  return element.type === "UNKNOWN";
+                }
+              );
+              this.segmentationInfo.question = this.appQuestion;
+
             
               if (this.isNeededDisplaySetting) {
                 this.currentComponent.algoConfig = this.currentComponent.algoConfig || this.algoConfig[componentResponse.intent.toLowerCase()]
@@ -747,6 +764,14 @@ export default {
         }
       }
     },
+    closeUnknowInfoBlock() {
+      this.segmentationInfo = {
+        question: null,
+        unknownToken: [],
+        nlpToken: []
+      };
+    }
+
   }
 }
 </script>

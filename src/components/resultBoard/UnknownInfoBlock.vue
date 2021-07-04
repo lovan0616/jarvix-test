@@ -30,7 +30,7 @@
 </template>
 <script>
 export default {
-  name: 'UnkonwnInfoBlock',
+  name: 'UnknownInfoBlock',
   props: {
     segmentationInfo: {
       type: Object,
