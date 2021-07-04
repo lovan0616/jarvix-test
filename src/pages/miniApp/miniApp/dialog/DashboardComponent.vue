@@ -378,7 +378,7 @@ export default {
       }
       // 假如已經有完整的舊有問句資訊，就不需要重新再問
       if (this.checkHasCorrectSegmentation(this.currentComponent.segmentation)) {
-        this.askResult(this.currentComponent.segmentation, this.currentQuestionId.questionId)
+        this.askResult(this.currentComponent.segmentation, this.currentComponent.questionId)
       } else {
         this.askQuestion(this.currentComponent.question)
       }
