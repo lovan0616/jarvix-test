@@ -23,7 +23,6 @@ import {
   Checkbox,
   Input,
   Select,
-  OptionGroup,
   Option,
   Table,
   Autocomplete,
@@ -148,7 +147,6 @@ Vue.use(InputNumber)
 Vue.use(Checkbox)
 Vue.use(Input)
 Vue.use(Select)
-Vue.use(OptionGroup)
 Vue.use(Option)
 Vue.use(Table)
 Vue.use(TableColumn)
