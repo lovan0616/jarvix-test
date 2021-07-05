@@ -3,6 +3,7 @@
     v-model="timeZoneId"
     :option-list="timeZoneList"
     :filterable="true"
+    :popper-append-to-body="true"
     class="timezone-select"
   />
 </template>
