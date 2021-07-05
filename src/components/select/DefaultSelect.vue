@@ -16,39 +16,18 @@
     style="text-align:left;"
     @change="$emit('change', $event)"
   >
-    <template v-if="optionListType === 'array'">
-      <el-option
-        v-for="(option, index) in optionList"
-        :key="option.value"
-        :label="option.name"
-        :value="option.value"
-      >
-        <slot 
-          :option="option"
-          :index="index"
-          name="option-content"
-        />
-      </el-option>
-    </template>
-    <template v-else>
-      <el-option-group
-        v-for="(optionGroup, groupKey) in optionList"
-        :key="groupKey"
-        :label="groupKey">
-        <el-option
-          v-for="(option, optionIndex) in optionGroup"
-          :key="`${groupKey}/${option}`"
-          :label="option"
-          :value="`${groupKey}/${option}`"
-        >
-          <slot 
-            :option="option"
-            :index="optionIndex"
-            name="option-content"
-          />
-        </el-option>
-      </el-option-group>
-    </template>
+    <el-option
+      v-for="(option, index) in optionList"
+      :key="option.value"
+      :label="option.name"
+      :value="option.value"
+    >
+      <slot 
+        :option="option"
+        :index="index"
+        name="option-content"
+      />
+    </el-option>
     <observer
       v-if="enableLazyLoading"
       :options="observerOptions"
@@ -67,7 +46,7 @@ export default {
   },
   props: {
     value: { type: [String, Number, Boolean, Array], default: undefined },
-    optionList: { type: [Array, Object], default: () => [] },
+    optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' },
     isDisabled: {type: Boolean, default: false},
     size: { type: String, default: '' },
@@ -95,9 +74,6 @@ export default {
         rootMargin: 0,
         threshold: 0,
       }
-    },
-    optionListType() {
-      return Array.isArray(this.optionList) ? 'array' : typeof this.optionList
     }
   },
   methods: {
