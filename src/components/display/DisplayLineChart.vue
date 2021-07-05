@@ -602,25 +602,22 @@ export default {
     tooltipFormatter(datas) {
       const orderTarget = (this.orderBy && this.orderBy.target) || 'value'
       const orderDirection = (this.orderBy && this.orderBy.direction) || 'desc'
-      const tooltipResult = datas.filter((item) => {
-        const componentIndex = item.componentIndex + 1
-        return !(item.value[componentIndex] === null || item.value[componentIndex] === undefined)
-      })
-      .map((item) => {
-        const componentIndex = item.componentIndex + 1
-        return {
-          marker: item.marker ? item.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${item.color.colorStops[0].color};"></span>`,
-          key: item.seriesName,
-          value: item.value[componentIndex]
+
+      return datas.sort((a, b) => {
+        const targetA = orderDirection === 'desc' ? a : b
+        const targetB = orderDirection === 'desc' ? b : a
+        if (orderTarget === 'key') { return targetB.seriesName.localeCompare(targetA.seriesName)}
+        else if (orderTarget === 'value') {
+          return targetB.value[targetB.componentIndex + 1] - targetA.value[targetA.componentIndex + 1]
         }
-      }).sort((a, b) => {
-        if (orderTarget === 'key') { return a.key.localeCompare(b.key)}
-        else if (orderTarget === 'value') { return a.value - b.value }
-      })
-      if (orderDirection === 'desc') tooltipResult.reverse()
-      return `${datas[0].name}<br/>${tooltipResult.reduce((str, item) => {
-        return str += item.marker + item.key + '：' + item.value + '<br/>'
-      }, '')}`
+      }).reduce((str, item) => {
+        const componentIndex = item.componentIndex + 1
+        const marker = item.marker ? item.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${item.color.colorStops[0].color};"></span>`
+        if (item.value[componentIndex] !== null && item.value[componentIndex] !== undefined) {
+          return str += marker + item.seriesName + '：' + item.value[componentIndex] + '<br/>'
+        }
+        return str
+      }, `${datas[0].name}<br/>`)
     }
   }
 }
