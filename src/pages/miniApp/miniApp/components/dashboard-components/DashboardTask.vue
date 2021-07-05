@@ -500,6 +500,7 @@ export default {
      * 某些舊資料的 segmenation 資訊短缺，得重新取
      */
     checkHasCorrectSegmentation (segmentation) {
+      if (!segmentation) return false
       if (!Array.isArray(segmentation.sentence)) return false
       return Object.keys(segmentation.sentence[0]).length > 4
     },
