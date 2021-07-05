@@ -1,6 +1,7 @@
 import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
+import moment from 'moment-timezone'
 
 export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
@@ -22,7 +23,8 @@ export default {
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList'],
-      language: data.language || state.parserLanguage
+      language: data.language || state.parserLanguage,
+      timeZone: moment.tz.guess()
     }
 
     return askQuestion(askCondition, cancelToken)
