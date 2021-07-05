@@ -261,8 +261,13 @@ export default {
 
       // 移除 null 值
       config.tooltip.formatter = this.tooltipFormatter
-      config.tooltip.position = function(point) {
-        return [point[0] + 10, Math.max(point[1] - 80, 0)]
+      config.tooltip.position = function(pos, params, dom, rect, size){
+        return {
+          top: Math.max(pos[1] - 80, 0),
+          left: ['left', 'right'][+(pos[0] < size.viewSize[0] / 2)] === 'left'
+          ? pos[0] - (size.contentSize[0] + 20)
+          : pos[0] + 20
+        }
       }
       config.tooltip.transitionDuration = 0
 
