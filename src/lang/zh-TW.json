@@ -1127,7 +1127,10 @@
     "endTime": "結束時間",
     "noResultUnderCurrentRestrictions": "當前限制條件下無資料，請調整限制",
     "noResultCheckFilterAndDataSource": "無參考資料，請確認篩選條件或原始資料",
-    "noSuitableResult": "問句沒有適合的結果"
+    "noSuitableResult": "問句沒有適合的結果",
+    "yAxisControllerColumns": "Y 軸控制器欄位選項",
+    "filterConditions": "篩選條件項目",
+    "conditionRelations": "階層關係由上至下"
   },
   "alert": {
     "alertLogs": "示警紀錄",
