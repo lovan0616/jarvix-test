@@ -65,12 +65,12 @@
               <div class="card__wrapper">
                 <div class="card__wrapper-title">
                   <div class="card__wrapper-title--left">
-                    篩選條件項目
+                    {{ $t('miniApp.filterConditions') }}
                   </div>
                   <div 
                     v-if="isHierarchicalFilter" 
                     class="card__wrapper-title--right">
-                    *階層關係由上至下
+                    *{{ $t('miniApp.conditionRelations') }}
                   </div>
                 </div>
                 <single-column-card
@@ -98,7 +98,7 @@
             <div 
               v-else 
               class="input-field">
-              <label class="input-field__label">Y 軸控制器欄位選項</label>
+              <label class="input-field__label">{{ $t('miniapp.yAxisControllerColumns') }}</label>
               <div class="input-field__input">
                 <default-multi-select
                   v-validate="'required'"
@@ -256,6 +256,7 @@ export default {
       // 清空原資料
       this.filterInfoList = []
       this.dataColumnOptionList = []
+      this.yAxisControllerList = []
       const hasFeatureColumn = true
       // 補 dataframe 名稱
       const dataFrameName = this.dataFrameOptionList.find(dataFrame => dataFrame.value === dataFrameId).name
