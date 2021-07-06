@@ -1127,7 +1127,10 @@
     "endTime": "结束时间",
     "noResultUnderCurrentRestrictions": "当前限制条件下无资料，请调整限制",
     "noResultCheckFilterAndDataSource": "无参考资料，请确认筛选条件或原始资料",
-    "noSuitableResult": "问句没有适合的结果"
+    "noSuitableResult": "问句没有适合的结果",
+    "yAxisControllerColumns": "Y 轴控制器栏位选项",
+    "filterConditions": "筛选条件项目",
+    "conditionRelations": "阶层关系由上至下"
   },
   "alert": {
     "alertLogs": "示警纪录",

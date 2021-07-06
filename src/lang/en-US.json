@@ -1124,7 +1124,10 @@
     "endTime": "End Time",
     "noResultUnderCurrentRestrictions": "No result under current restrictions",
     "noResultCheckFilterAndDataSource": "No reference data, please check the filter conditions or original data",
-    "noSuitableResult": "No Suitable Result"
+    "noSuitableResult": "No Suitable Result",
+    "yAxisControllerColumns": "Y-axis Controller Columns",
+    "filterConditions": "Filter Conditions",
+    "conditionRelations": "Hierarchical relationship is from top to bottom."
   },
   "alert": {
     "alertLogs": "Alert Record",
