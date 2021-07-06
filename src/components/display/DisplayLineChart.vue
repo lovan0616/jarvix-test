@@ -197,7 +197,11 @@ export default {
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true
+      showPagination: true,
+      orderBy: {
+        target: 'value', // TODO 綁定資料
+        direction: 'desc'
+      }
     }
   },
   computed: {
@@ -256,18 +260,22 @@ export default {
       }
 
       // 移除 null 值
-      config.tooltip.formatter = (datas) => {
-        let res = datas[0].name + '<br/>'
-        for (let i = 0, length = datas.length; i < length; i++) {
-          let componentIndex = datas[i].componentIndex + 1
-          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined) continue
-          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
+      config.tooltip.formatter = this.tooltipFormatter
+      config.tooltip.position = function(pos, params, dom, rect, size){
+        return {
+          top: Math.max(pos[1] - 80, 0),
+          left: ['left', 'right'][+(pos[0] < size.viewSize[0] / 2)] === 'left'
+          ? pos[0] - (size.contentSize[0] + 20)
+          : pos[0] + 20
         }
-        return res
       }
+      config.tooltip.transitionDuration = 0
+
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
+      config.tooltip.extraCssText = "max-height:200px;overflow:auto;"
+      config.tooltip.enterable = true
+
       // 只有一個分類
       if (this.dataset.columns.length === 1) {
         config.toolbox.feature.magicType.type = ['line', 'bar']
@@ -595,6 +603,26 @@ export default {
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
+    },
+    tooltipFormatter(datas) {
+      const orderTarget = (this.orderBy && this.orderBy.target) || 'value'
+      const orderDirection = (this.orderBy && this.orderBy.direction) || 'desc'
+
+      return datas.sort((a, b) => {
+        const targetA = orderDirection === 'desc' ? a : b
+        const targetB = orderDirection === 'desc' ? b : a
+        if (orderTarget === 'key') { return targetB.seriesName.localeCompare(targetA.seriesName)}
+        else if (orderTarget === 'value') {
+          return targetB.value[targetB.componentIndex + 1] - targetA.value[targetA.componentIndex + 1]
+        }
+      }).reduce((str, item) => {
+        const componentIndex = item.componentIndex + 1
+        const marker = item.marker ? item.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${item.color.colorStops[0].color};"></span>`
+        if (item.value[componentIndex] !== null && item.value[componentIndex] !== undefined) {
+          return str += marker + item.seriesName + '：' + item.value[componentIndex] + '<br/>'
+        }
+        return str
+      }, `${datas[0].name}<br/>`)
     }
   }
 }
