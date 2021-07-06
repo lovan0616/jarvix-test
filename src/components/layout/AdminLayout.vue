@@ -28,6 +28,7 @@
       <change-language-dialog
         v-show="isShowLanguage"
         @closeDialog="isShowLanguage = false"
+        @submit="isShowLanguage = false"
       />
     </div>
   </div>
