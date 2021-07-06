@@ -161,6 +161,7 @@ export default {
         const sliceIndex = this.featureList.findIndex(item => item.dataColumnId === this.deleteFeatureId)
         this.featureList.splice(sliceIndex, 1)
         this.isShowDelete = false
+        this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
       }).finally(() => {
         this.isProcessing = false
       })

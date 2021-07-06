@@ -188,7 +188,7 @@ export default {
       getDataFrameColumnInfoById(dataFrameId)
         .then(data => {
           const formatedColumnList = data.map(newColumn => {
-            const existingColumn = existingColumnList.find(oldColumn => oldColumn.id === newColumn.id)
+            const existingColumn = Array.isArray(existingColumnList) && existingColumnList.find(oldColumn => oldColumn.id === newColumn.id)
             return {
               ...newColumn,
               isSelected: existingColumn ? existingColumn.isSelected : true
