@@ -3,51 +3,66 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('editing.builtInfo') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="dialog-header-block">
         <div class="data-frame-name">
           {{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}
         </div>
       </div>
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="spinner-container"
         size="50"
       />
-      <div 
+      <div
         v-else
         class="dialog-content-block info__list"
       >
         <div class="info__item">
-          <div class="info__title">{{ $t('editing.sourceOfData') }}</div>
-          <div class="info__description">{{ createdInfo.host }}</div>
+          <div class="info__title">
+            {{ $t('editing.sourceOfData') }}
+          </div>
+          <div class="info__description">
+            {{ createdInfo.host }}
+          </div>
         </div>
         <div class="info__item">
-          <div class="info__title">{{ $t('editing.databaseType') }}</div>
-          <div class="info__description">{{ createdInfo.type }}</div>
+          <div class="info__title">
+            {{ $t('editing.databaseType') }}
+          </div>
+          <div class="info__description">
+            {{ createdInfo.type }}
+          </div>
         </div>
         <div class="info__item">
-          <div class="info__title">{{ $t('editing.createWay') }}</div>
-          <div class="info__description">{{ createdInfo.sql ? $t('editing.useSqlScript') : $t('editing.copyTableFromDatabase') }}</div>
+          <div class="info__title">
+            {{ $t('editing.createWay') }}
+          </div>
+          <div class="info__description">
+            {{ createdInfo.sql ? $t('editing.useSqlScript') : $t('editing.copyTableFromDatabase') }}
+          </div>
         </div>
         <div
           v-if="createdInfo.sql"
           class="info__item"
         >
-          <div class="info__title">{{ $t('editing.SQLSyntax') }}</div>
+          <div class="info__title">
+            {{ $t('editing.SQLSyntax') }}
+          </div>
           <div class="info__sql sql">
-            <textarea 
-              ref="SQL" 
+            <textarea
+              ref="SQL"
               :value="createdInfo.sql"
               :style="getTextAreaHeight"
               class="info__description info__sql--code"
-              readonly/>
+              readonly
+            />
             <button
               class="btn btn-secondary info__sql--btn"
               @click="copySQL"

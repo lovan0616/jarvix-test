@@ -1,7 +1,9 @@
 <template>
   <div class="group-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('sideNav.groupUserList') }}</h1>
+      <h1 class="title">
+        {{ $t('sideNav.groupUserList') }}
+      </h1>
     </div>
     <div class="table-board">
       <div class="board-title-row">
@@ -13,31 +15,35 @@
           >
             <svg-icon
               icon-class="user-plus"
-              class="icon"/>{{ $t('button.addNewMember') }}
+              class="icon"
+            />{{ $t('button.addNewMember') }}
           </router-link>
         </div>
       </div>
       <crud-table
         :headers="tableHeaders"
         :data-list.sync="userList"
-        :empty-message="this.$t('message.noMember')"
+        :empty-message="$t('message.noMember')"
         :loading="isLoading"
       >
-        <template v-slot:roleZhName>
+        <template #roleZhName>
           <role-desc-pop
-            manage-type="group" />
+            manage-type="group"
+          />
         </template>
-        <template v-slot:action="{ data }">
+        <template #action="{ data }">
           <a
             :disabled="!hasChangeRolePermission(data)"
             href="javascript:void(0)"
             class="link action-link"
-            @click="showChangeRole(data)">{{ $t('userManagement.updateRole') }}</a>
+            @click="showChangeRole(data)"
+          >{{ $t('userManagement.updateRole') }}</a>
           <a
             :disabled="!hasDeletePermission(data)"
             href="javascript:void(0)"
             class="link action-link"
-            @click="confirmDelete(data)">{{ $t('button.remove') }}</a>
+            @click="confirmDelete(data)"
+          >{{ $t('button.remove') }}</a>
         </template>
       </crud-table>
       <writing-dialog
@@ -53,16 +59,18 @@
           <div class="label">
             {{ $t('editing.groupRolePermission') }}
             <span class="tooltip-container">
-              <svg-icon 
-                icon-class="information-circle" 
-                class="icon" />
+              <svg-icon
+                icon-class="information-circle"
+                class="icon"
+              />
               <div class="tooltip">
                 <role-desc-pop
-                  manage-type="group" />
+                  manage-type="group"
+                />
               </div>
             </span>
           </div>
-          <default-select 
+          <default-select
             v-model="currentUserRoleId"
             :option-list="roleOptions"
             class="input group-role-select"
@@ -71,7 +79,7 @@
       </writing-dialog>
       <decide-dialog
         v-if="showConfirmDeleteDialog"
-        :title="this.$t('editing.confirmDeleteProjectUserText')"
+        :title="$t('editing.confirmDeleteProjectUserText')"
         :type="'delete'"
         @closeDialog="closeDelete"
         @confirmBtn="deleteGroupUser"
@@ -216,10 +224,10 @@ export default {
               showClose: true
             })
           }
-          
+
           // 處理將自己從當前 group 刪除的情況: 切換群組
           if (Number(this.currentGroupId) !== Number(this.getCurrentGroupId)) {
-            this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
+            this.$router.push({ name: 'PageIndex', params: { group_id: this.getCurrentGroupId } })
             // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
             const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
             return Message({
@@ -229,7 +237,7 @@ export default {
               showClose: true
             })
           }
-          
+
           this.fetchData(this.currentGroupId)
           this.closeDelete()
         })
@@ -252,13 +260,13 @@ export default {
       const currentUser = this.userList.find(user => user.id === this.userId)
       // 最高原則為: account_owner 一定為 group_owner, 且 group_owner 至少有一個
       // 使用者沒有在該群組內, 且使用者為 account_owner 時，可以有 更改和刪除 的權限
-      if(!currentUser) {
+      if (!currentUser) {
         const isCurrentAccountOnwer = this.getCurrentAccountInfo.role === 'account_owner'
         return this.canEditList && !this.isOnlyOneOwner(data) && !isAccountOnwer && isCurrentAccountOnwer
       }
       // 使用者在該群組內, 是 group_owner 時可以有更改權限
       const isGroupOnwer = currentUser.role === 'group_owner'
-      return this.canEditList && !this.isOnlyOneOwner(data) && isGroupOnwer &&!isAccountOnwer
+      return this.canEditList && !this.isOnlyOneOwner(data) && isGroupOnwer && !isAccountOnwer
     },
     showChangeRole (user) {
       if (!this.hasChangeRolePermission(user)) return
@@ -294,7 +302,7 @@ export default {
         .finally(() => {
           this.isProcessing = false
         })
-    },
+    }
   }
 }
 </script>

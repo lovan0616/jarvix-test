@@ -1,6 +1,6 @@
 import store from '../store'
 
-export function compileMiniApp(appData = {}) {
+export function compileMiniApp (appData = {}) {
   const updatedAppData = JSON.parse(JSON.stringify(appData))
   let { editModeData, viewModeData } = updatedAppData.settings
 
@@ -23,7 +23,7 @@ export function compileMiniApp(appData = {}) {
 }
 
 // 更新單一模式的資料
-function compileModeData(modeData) {
+function compileModeData (modeData) {
   const updatedModeData = JSON.parse(JSON.stringify(modeData))
   let isDataChanged = false
 
@@ -66,7 +66,7 @@ function compileModeData(modeData) {
 }
 
 // Basic Check：至少要符合這些基本條件才需要進行向下兼容
-function checkHasMetMinimumCriteria(modeData) {
+function checkHasMetMinimumCriteria (modeData) {
   // 至少有一個 dashboard
   const hasDashboard = modeData.dashboards.length > 0
   if (!hasDashboard) return false
@@ -85,7 +85,7 @@ function checkHasMetMinimumCriteria(modeData) {
   * @param { updateFunction } - 指定更新的函示
   * @param { settingData } - 更新函式接受的參數
   */
-function updateDashboardsComponentSetting(dashboards, updateFunction, settingData, getSettingDataFunction) {
+function updateDashboardsComponentSetting (dashboards, updateFunction, settingData, getSettingDataFunction) {
   return dashboards.map(dashboard => ({
     ...dashboard,
     components: dashboard.components.map(component => updateFunction(component, settingData, getSettingDataFunction))
@@ -93,14 +93,14 @@ function updateDashboardsComponentSetting(dashboards, updateFunction, settingDat
 }
 
 // 在單一元件中新增屬性和屬性值
-function addComponentProperties(component, data = {}, getDataFunction) {
+function addComponentProperties (component, data = {}, getDataFunction) {
   return {
     ...component,
     ...data,
     ...(getDataFunction && getDataFunction(component))
   }
 }
-function convertToColumnRelationComponent(component) {
+function convertToColumnRelationComponent (component) {
   if (!component.config.hasOwnProperty('hasColumnRelatedDashboard')) return component
   const updatedComponent = JSON.parse(JSON.stringify(component))
 

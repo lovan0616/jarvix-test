@@ -28,30 +28,37 @@
         element-loading-background="rgba(15, 20, 20, .8)"
         class="sy-table"
         height="100%"
-        style="width: 100%">
-        <div slot="empty">{{ $t('alert.emptyLogs') }}</div>
+        style="width: 100%"
+      >
+        <div slot="empty">
+          {{ $t('alert.emptyLogs') }}
+        </div>
         <el-table-column
           :label="$t('alert.alertLogCreateTime')"
           prop="createDate"
-          width="180">
+          width="180"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.createDate | convertTimeStamp }}</span>
-          </template>  
+          </template>
         </el-table-column>
         <el-table-column
           :label="$t('alert.alertName')"
-          prop="conditionName"/>
+          prop="conditionName"
+        />
         <el-table-column
           :label="$t('alert.alertLogMessage')"
-          prop="conditionMetMessage">
+          prop="conditionMetMessage"
+        >
           <template slot-scope="scope">
-            <span v-html="scope.row.conditionMetMessage"/>
+            <span v-html="scope.row.conditionMetMessage" />
           </template>
         </el-table-column>
         <el-table-column
           :label="$t('alert.state')"
           prop="active"
-          width="120">
+          width="120"
+        >
           <template slot-scope="scope">
             <custom-dropdown-select
               :data-list="stateOptions"
@@ -60,15 +67,17 @@
               @select="updateLogActiveness(scope.row, $event)"
             >
               <template #display>
-                <div 
-                  :class="scope.row.active ? 'button--active' : 'button--inactive'" 
-                  class="button">
+                <div
+                  :class="scope.row.active ? 'button--active' : 'button--inactive'"
+                  class="button"
+                >
                   <span class="button-label">
                     {{ scope.row.active ? $t('alert.finished') : $t('alert.unfinished') }}
                   </span>
-                  <svg-icon 
-                    icon-class="triangle" 
-                    class="icon-triangle"/>
+                  <svg-icon
+                    icon-class="triangle"
+                    class="icon-triangle"
+                  />
                 </div>
               </template>
             </custom-dropdown-select>
@@ -77,25 +86,29 @@
         <el-table-column
           :label="$t('miniApp.monitorLogUpdateTime')"
           prop="updateDate"
-          width="180">
+          width="180"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.updateDate | convertTimeStamp }}</span>
-          </template>  
+          </template>
         </el-table-column>
         <el-table-column
           :label="$t('miniApp.goToDashboard')"
           prop="relatedDashboardId"
-          width="120">
+          width="120"
+        >
           <template slot-scope="scope">
             <a
               v-if="scope.row.relatedDashboardId"
-              class="link" 
-              @click.stop="goToCertainDashboard(scope.row.relatedDashboardId, scope.row)">
+              class="link"
+              @click.stop="goToCertainDashboard(scope.row.relatedDashboardId, scope.row)"
+            >
               {{ $t('miniApp.link') }}
             </a>
-            <span 
-              v-else 
-              class="reminding">{{ $t('miniApp.notBeingSet') }}</span>
+            <span
+              v-else
+              class="reminding"
+            >{{ $t('miniApp.notBeingSet') }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -130,7 +143,7 @@ export default {
     setting: {
       type: Object,
       default: () => {}
-    },
+    }
   },
   data () {
     return {
@@ -150,7 +163,7 @@ export default {
         createdTimeRangeValue: []
       },
       appAciveConditions: []
-    }    
+    }
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -159,12 +172,12 @@ export default {
         {
           name: this.$t('alert.finished'),
           value: 'active',
-          id: true,
+          id: true
         },
         {
           name: this.$t('alert.unfinished'),
           value: 'inactive',
-          id: false,
+          id: false
         }
       ]
     },
@@ -207,13 +220,13 @@ export default {
         conditionIds: this.appAciveConditions,
         page,
         groupId: this.getCurrentGroupId,
-        ...(this.filterSetting.activenessValue !== null && {active: this.filterSetting.activenessValue === 'active'}),
+        ...(this.filterSetting.activenessValue !== null && { active: this.filterSetting.activenessValue === 'active' }),
         ...(this.timeFilterSelected && {
           // 資料庫 log 時間均為 UTC+0, 前端使用 convertTimeStamp 轉換後會變為 UTC+8
           // 這邊送進 time filter 需再調整為 UTC+0
           startTime: moment(new Date(this.filterSetting.createdTimeRangeValue[0])),
           endTime: moment(new Date(this.filterSetting.createdTimeRangeValue[1]))
-        }),
+        })
       }).then(response => {
         this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
@@ -229,8 +242,8 @@ export default {
     },
     updateLogActiveness (logData, isActive) {
       if (logData.active === isActive) return
-      patchAlertLogActiveness(logData.conditionMetLogId, { "active" : isActive })
-        .then(() => logData.active = !logData.active) 
+      patchAlertLogActiveness(logData.conditionMetLogId, { active: isActive })
+        .then(() => logData.active = !logData.active)
         .catch(() => {})
     },
     changePage (pageNumber) {
@@ -249,7 +262,7 @@ export default {
                 dataType: monitoredDateRange[0].dataType,
                 end: monitoredDateRange[0].end,
                 start: monitoredDateRange[0].start,
-                statsType: monitoredDateRange[0].statsType,
+                statsType: monitoredDateRange[0].statsType
               }
             })
           ]
@@ -385,5 +398,5 @@ export default {
     }
   }
 }
-  
+
 </style>

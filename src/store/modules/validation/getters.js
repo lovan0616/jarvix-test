@@ -1,7 +1,7 @@
 export default {
   fieldCommonMaxLength: (state, getters, rootState) => {
     const locale = rootState.setting.locale
-    switch(locale) {
+    switch (locale) {
       case 'zh-TW':
       case 'zh-CN':
         return state.fieldCommonMaxLengthZh

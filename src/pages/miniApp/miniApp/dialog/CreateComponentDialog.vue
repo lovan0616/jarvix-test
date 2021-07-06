@@ -4,7 +4,8 @@
       <div class="nav--left">
         <div
           class="icon-arrow"
-          @click="$emit('close')">
+          @click="$emit('close')"
+        >
           <svg-icon icon-class="arrow-left" />
         </div>
         {{ currentComponent.init ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
@@ -40,9 +41,10 @@
     <div class="dialog__content">
       <div class="dialog__content--left">
         <template v-if="isCreatedViaAsking">
-          <div 
-            v-if="!currentComponent.init" 
-            class="search-bar">
+          <div
+            v-if="!currentComponent.init"
+            class="search-bar"
+          >
             <data-frame-menu
               :redirect-on-change="false"
               :is-show-preview-entry="true"
@@ -62,28 +64,29 @@
             @setDiagram="currentComponent.diagram = $event"
           />
           <transition name="fast-fade-in">
-            <section 
+            <section
               v-if="isShowPreviewDataSource"
-              class="preview-datasource">
+              class="preview-datasource"
+            >
               <preview-data-source
                 :is-previewing="true"
                 mode="popup"
               />
-              <a 
-                href="javascript:void(0)" 
+              <a
+                href="javascript:void(0)"
                 class="preview-datasource__close-btn"
                 @click="closePreviewDataSource"
-              ><svg-icon icon-class="close"/></a>
+              ><svg-icon icon-class="close" /></a>
             </section>
           </transition>
         </template>
-        <formula-setting 
+        <formula-setting
           v-else-if="currentComponent.type === 'formula'"
           :formula-setting="currentComponent.formulaSetting"
           :formula-component-info="formulaComponentInfo"
           :current-component="currentComponent"
         />
-        <simulator-setting 
+        <simulator-setting
           v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parameters-optimized-simulator'"
           :model-setting="currentComponent.modelSetting"
           :model-component-info="modelComponentInfo"
@@ -93,15 +96,18 @@
         />
       </div>
       <div
-        class="dialog__content--right">
+        class="dialog__content--right"
+      >
         <div class="setting__header">
-          <svg-icon icon-class="filter-setting"/>
+          <svg-icon icon-class="filter-setting" />
           {{ $t('miniApp.componentSetting') }}
         </div>
         <!-- Title Setting -->
         <div class="setting__content">
           <div class="setting__block">
-            <div class="setting__label-block">{{ $t('miniApp.componentName') }}</div>
+            <div class="setting__label-block">
+              {{ $t('miniApp.componentName') }}
+            </div>
             <input-verify
               v-validate="'required'"
               v-model="currentComponent.config.diaplayedName"
@@ -110,9 +116,10 @@
           </div>
         </div>
         <!--Related dashboard of current component-->
-        <div 
-          v-if="isShowRelatedOption" 
-          class="setting__content">
+        <div
+          v-if="isShowRelatedOption"
+          class="setting__content"
+        >
           <div class="setting__block">
             <div class="setting__label-block">
               {{ $t('miniApp.selectDashboard') }}
@@ -128,7 +135,7 @@
               v-if="currentComponent.config.hasRelatedDashboard"
               class="setting__block-select-field"
             >
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :value="currentComponent.config.relatedDashboard.id"
                 :option-list="dashboardOptions"
@@ -137,10 +144,12 @@
                 name="createRelatedDashboard"
                 @change="updateRelatedDashboard"
               />
-              <div 
+              <div
                 v-show="errors.has('createRelatedDashboard')"
                 class="error-text"
-              >{{ errors.first('createRelatedDashboard') }}</div>
+              >
+                {{ errors.first('createRelatedDashboard') }}
+              </div>
             </div>
           </div>
         </div>
@@ -197,7 +206,7 @@
                 class="setting__block-select-field"
               >
                 <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
-                <default-select 
+                <default-select
                   v-validate="'required'"
                   v-model="selectedTriggerColumn"
                   :option-list="categoryColumnOptions"
@@ -206,10 +215,12 @@
                   name="createTriggerColumn"
                   @change="updateTriggerColumnInfo"
                 />
-                <div 
+                <div
                   v-show="errors.has('createTriggerColumn')"
                   class="error-text"
-                >{{ errors.first('createTriggerColumn') }}</div>
+                >
+                  {{ errors.first('createTriggerColumn') }}
+                </div>
               </div>
               <div class="setting__block-select-field">
                 <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
@@ -222,18 +233,21 @@
                   name="createColumnRelatedDashboard"
                   @change="updateTableRelatedDashboard"
                 />
-                <div 
+                <div
                   v-show="errors.has('createColumnRelatedDashboard')"
                   class="error-text"
-                >{{ errors.first('createColumnRelatedDashboard') }}</div>
+                >
+                  {{ errors.first('createColumnRelatedDashboard') }}
+                </div>
               </div>
             </template>
           </div>
         </div>
         <!--Update frequency-->
-        <div 
-          v-if="isShowUpdatedOption" 
-          class="setting__content">
+        <div
+          v-if="isShowUpdatedOption"
+          class="setting__content"
+        >
           <div class="setting__block">
             <div class="setting__label-block">
               {{ $t('miniApp.updateFrequency') }}
@@ -249,7 +263,7 @@
               v-if="currentComponent.config.isAutoRefresh"
               class="setting__block-select-field"
             >
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 v-model="currentComponent.config.refreshFrequency"
                 :option-list="updateFrequency"
@@ -257,22 +271,25 @@
                 class="setting__block-select"
                 name="createUpdateFrequency"
               />
-              <div 
+              <div
                 v-show="errors.has('createUpdateFrequency')"
                 class="error-text"
-              >{{ errors.first('createUpdateFrequency') }}</div>
+              >
+                {{ errors.first('createUpdateFrequency') }}
+              </div>
             </div>
           </div>
         </div>
         <!--Index type component font size setting-->
-        <div 
-          v-if="isShowFontSizeOption" 
-          class="setting__content">
+        <div
+          v-if="isShowFontSizeOption"
+          class="setting__content"
+        >
           <div class="setting__block">
             <div class="setting__label-block">
               {{ $t('miniApp.fontSizeSetting') }}
             </div>
-            <default-select 
+            <default-select
               v-model="currentComponent.config.fontSize"
               :option-list="indexSizeOptionList"
               :placeholder="$t('miniApp.chooseColumnSize')"
@@ -288,7 +305,7 @@
             </div>
             <div class="setting__block-select-field">
               <label class="setting__block-select-label">{{ $t('miniApp.columnSpan') }}</label>
-              <default-select 
+              <default-select
                 v-model.number="currentComponent.config.size.column"
                 :option-list="columnSpanOption"
                 :placeholder="$t('miniApp.chooseColumnSize')"
@@ -298,7 +315,7 @@
             </div>
             <div class="setting__block-select-field">
               <label class="setting__block-select-label">{{ $t('miniApp.rowSpan') }}</label>
-              <default-select 
+              <default-select
                 v-model.number="currentComponent.config.size.row"
                 :option-list="rowSpanOption"
                 :placeholder="$t('miniApp.chooseRowSize')"
@@ -469,10 +486,10 @@ export default {
         const isExist = acc.findIndex(item => item.dataColumnId === cur.categoryDataColumnList[0].dataColumnId) > -1
         return isExist ? acc : acc.concat(
           ...cur.categoryDataColumnList.map(item => ({
-          ...item,
-          value: item.dataColumnId,
-          name: item.dataColumnAlias
-        })))
+            ...item,
+            value: item.dataColumnId,
+            name: item.dataColumnAlias
+          })))
       }, [])
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseColumn')))
       return options
@@ -545,7 +562,7 @@ export default {
     },
     isParameterComparisonTypeComponent (componentName) {
       const regex = new RegExp(this.$t('miniApp.optimalParameterComparison'), 'g')
-      return componentName.match(regex);
+      return componentName.match(regex)
     },
     saveComponent () {
       this.$validator.validateAll().then(valid => {
@@ -561,7 +578,7 @@ export default {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     },
     updateRefreshFrequency (isTurnedOn) {
-      if(isTurnedOn) return
+      if (isTurnedOn) return
       const { refreshFrequency } = JSON.parse(JSON.stringify(this.initialCurrentComponent.config))
 
       // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
@@ -607,7 +624,7 @@ export default {
       this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo = column
     },
     setAlgoConfig (intent) {
-      this.currentComponent['algoConfig'] = this.algoConfig[intent.toLowerCase()]
+      this.currentComponent.algoConfig = this.algoConfig[intent.toLowerCase()]
     },
     async updateTriggerTarget (triggerTarget) {
       this.currentComponent.config.tableRelationInfo.triggerTarget = triggerTarget
@@ -624,8 +641,8 @@ export default {
     updateTableRelatedDashboard (selectedDashboardId) {
       const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
       triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId = selectedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId = selectedDashboardId
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -672,7 +689,7 @@ export default {
     overflow: auto;
     overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
     display: flex;
-    
+
     &--left {
       position: relative;
       flex: 1;

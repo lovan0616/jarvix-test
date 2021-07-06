@@ -1,9 +1,9 @@
 <template>
   <div class="chat-room">
     <div class="chat-room__header select-group">
-      <data-frame-menu class="select-group__select"/>
+      <data-frame-menu class="select-group__select" />
     </div>
-    <ask-block/>
+    <ask-block />
   </div>
 </template>
 <script>
@@ -34,12 +34,12 @@ export default {
 
   .select-group {
     width: $basic-df-setting-width;
-    
+
     &__select {
       width: calc(100% - 24px);
       height: 40px;
       display: flex;
-      
+
       >>> .el-input .el-input__inner {
         height: 40px;
         line-height: 40px;

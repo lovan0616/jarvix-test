@@ -11,13 +11,14 @@
     <spinner
       v-if="isLoading"
     />
-    <form 
+    <form
       v-else
       class="setting-form"
     >
       <div class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.enableMonitoring') }}</label>
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.enableMonitoring') }}</label>
         <ToggleButton
           v-model="settingInfo.status"
           :title="$t('monitorSetting.enableMonitoring')"
@@ -25,20 +26,22 @@
         />
       </div>
       <div class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.autoRefresh') }}</label>
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.autoRefresh') }}</label>
         <ToggleButton
           v-model="settingInfo.isAutoRefresh"
           :title="$t('monitorSetting.autoRefresh')"
           name="autoRefresh"
         />
-      </div> 
+      </div>
       <div class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.monitorColumn') }}</label>
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.monitorColumn') }}</label>
         <div class="info-block__input-block">
           <default-select
-            v-validate="'required'" 
+            v-validate="'required'"
             :class="{'has-error': errors.has('monitorColumnList')}"
             v-model="settingInfo.monitorColumnId"
             :option-list="monitorColumnList"
@@ -48,15 +51,18 @@
           <div
             v-if="errors.has('monitorColumnList')"
             class="error-text"
-          >{{ errors.first('monitorColumnList') }}</div>
+          >
+            {{ errors.first('monitorColumnList') }}
+          </div>
         </div>
       </div>
       <div class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.dateColumn') }}</label>
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.dateColumn') }}</label>
         <div class="info-block__input-block">
           <default-select
-            v-validate="'required'" 
+            v-validate="'required'"
             :class="{'has-error': errors.has('dateColumnList')}"
             v-model="settingInfo.dateColumnId"
             :option-list="dateColumnList"
@@ -66,14 +72,18 @@
           <div
             v-if="errors.has('dateColumnList')"
             class="error-text"
-          >{{ errors.first('dateColumnList') }}</div>
+          >
+            {{ errors.first('dateColumnList') }}
+          </div>
         </div>
       </div>
-      <div 
+      <div
         :class="{'has-error': errors.has('monitorTimeScope')}"
-        class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.timeScope') }}</label>
+        class="info-block"
+      >
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.timeScope') }}</label>
         <input-verify
           v-validate="'required|numeric'"
           v-model="settingInfo.timeScope"
@@ -83,11 +93,12 @@
         />
       </div>
       <div class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.timeScopeUnit') }}</label>
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.timeScopeUnit') }}</label>
         <div class="info-block__input-block">
           <default-select
-            v-validate="'required'" 
+            v-validate="'required'"
             :class="{'has-error': errors.has('timeScopeUnit')}"
             v-model="settingInfo.timeScopeUnit"
             :option-list="timeScopeUnitOptionList"
@@ -97,15 +108,18 @@
           <div
             v-if="errors.has('timeScopeUnit')"
             class="error-text"
-          >{{ errors.first('timeScopeUnit') }}</div>
+          >
+            {{ errors.first('timeScopeUnit') }}
+          </div>
         </div>
       </div>
       <div class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.aggregationType') }}</label>
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.aggregationType') }}</label>
         <div class="info-block__input-block">
           <default-select
-            v-validate="'required'" 
+            v-validate="'required'"
             :class="{'has-error': errors.has('aggregation')}"
             v-model="settingInfo.aggregation"
             :option-list="aggregationOptionList"
@@ -115,14 +129,18 @@
           <div
             v-if="errors.has('aggregation')"
             class="error-text"
-          >{{ errors.first('aggregation') }}</div>
+          >
+            {{ errors.first('aggregation') }}
+          </div>
         </div>
       </div>
-      <div 
-        :class="{'has-error': errors.has('monitorThreshold')}" 
-        class="info-block">
-        <label 
-          class="info-block__label">{{ $t('monitorSetting.monitorThreshold') }}</label>
+      <div
+        :class="{'has-error': errors.has('monitorThreshold')}"
+        class="info-block"
+      >
+        <label
+          class="info-block__label"
+        >{{ $t('monitorSetting.monitorThreshold') }}</label>
         <input-verify
           v-validate="'required'"
           v-model="settingInfo.threshold.max"
@@ -145,10 +163,9 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 
-
 export default {
   inject: ['$validator'],
-  name: "MonitorSettingDialog",
+  name: 'MonitorSettingDialog',
   components: {
     WritingDialog,
     InputVerify,
@@ -204,23 +221,23 @@ export default {
   methods: {
     getInitData () {
       Promise.all([this.getDataFrameColumnInfo(), this.getMonitorSettingInfo()])
-      .finally(() => {
-        this.isLoading = false
-      })
+        .finally(() => {
+          this.isLoading = false
+        })
     },
     getDataFrameColumnInfo () {
       return getDataFrameColumnInfoById(this.dataFrameId, true, true).then(response => {
         response.forEach(column => {
           let columnName = column.aliasList.length > 0 ? column.aliasList[0] : column.name
 
-          if(column.statsType === 'NUMERIC') {
+          if (column.statsType === 'NUMERIC') {
             this.monitorColumnList.push({
               value: column.id,
               name: columnName
             })
           }
 
-          if(column.dataType === 'DATETIME') {
+          if (column.dataType === 'DATETIME') {
             this.dateColumnList.push({
               value: column.id,
               name: columnName
@@ -229,26 +246,26 @@ export default {
         })
       })
     },
-    getMonitorSettingInfo() {
+    getMonitorSettingInfo () {
       return getMonitorSetting(this.componentId).then(response => {
-        if(response.id === null) {
+        if (response.id === null) {
           this.settingInfo.componentId = this.componentId
           this.settingInfo.userIdList.push(this.userId)
         } else {
-          this.settingInfo = {...response}
+          this.settingInfo = { ...response }
         }
-        this.settingInfo.status = this.settingInfo.status === 'Enable' ? true : false
+        this.settingInfo.status = this.settingInfo.status === 'Enable'
       })
     },
     monitorSetting () {
       this.$validator.validateAll().then(isValidated => {
-        if(!isValidated) return
+        if (!isValidated) return
 
         let currentInfo = Object.assign({}, this.settingInfo)
         currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
 
         let promise
-        if(currentInfo.id === null) {
+        if (currentInfo.id === null) {
           promise = newMonitorSetting(currentInfo)
         } else {
           promise = updateMonitorSetting(currentInfo)

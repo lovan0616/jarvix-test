@@ -1,5 +1,5 @@
 <template>
-  <el-select 
+  <el-select
     :class="['sy-select', `theme-${theme}`]"
     v-model="value"
     :placeholder="placeholder"

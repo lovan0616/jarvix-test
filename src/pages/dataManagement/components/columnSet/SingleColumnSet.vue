@@ -1,48 +1,60 @@
 <template>
   <div class="single-edit-region">
     <div class="button-block">
-      <button 
-        v-if="!columnSet.id && isEditing" 
+      <button
+        v-if="!columnSet.id && isEditing"
         :disabled="isProcessing"
         type="button"
         class="btn btn-default btn-save"
         @click="saveColumnSet"
-      >{{ $t('button.build') }}</button>
-      <button 
-        v-if="isEditing" 
+      >
+        {{ $t('button.build') }}
+      </button>
+      <button
+        v-if="isEditing"
         :class="columnSet.id ? 'btn-secondary' : 'btn-outline'"
         :disabled="isProcessing"
         type="button"
         class="btn btn-delete"
         @click="removeColumnSet"
-      >{{ columnSet.id ? (isProcessing ? $t('button.processing') : $t('button.delete')) : $t('button.cancel') }}</button>
-      <button 
-        v-if="!isEditing" 
+      >
+        {{ columnSet.id ? (isProcessing ? $t('button.processing') : $t('button.delete')) : $t('button.cancel') }}
+      </button>
+      <button
+        v-if="!isEditing"
         type="button"
         class="btn btn-outline"
         @click="toggleIsEditing()"
-      >{{ $t('button.edit') }}</button>
-      <button 
-        v-if="columnSet.id && isEditing" 
+      >
+        {{ $t('button.edit') }}
+      </button>
+      <button
+        v-if="columnSet.id && isEditing"
         type="button"
         class="btn btn-outline"
         @click="toggleIsEditing()"
-      >{{ $t('button.close') }}</button>
+      >
+        {{ $t('button.close') }}
+      </button>
     </div>
     <div
-      v-if="!isEditing">
+      v-if="!isEditing"
+    >
       <el-tooltip
         :content="columnSet.primaryAlias"
         placement="bottom"
       >
-        <div class="region-title">{{ columnSet.primaryAlias }}</div>
+        <div class="region-title">
+          {{ columnSet.primaryAlias }}
+        </div>
       </el-tooltip>
     </div>
     <template v-else>
       <div class="input-block">
-        <label 
-          for="" 
-          class="label">*{{ $t('editing.columnSetName') }}</label>
+        <label
+          for=""
+          class="label"
+        >*{{ $t('editing.columnSetName') }}</label>
         <input-block
           v-validate="`required|max:${max}`"
           v-if="!columnSet.id"
@@ -52,70 +64,94 @@
         />
         <div
           v-else
-        >{{ columnSet.primaryAlias }}</div>
+        >
+          {{ columnSet.primaryAlias }}
+        </div>
       </div>
       <div class="select-container">
         <div class="select-block">
-          <div class="block-title">{{ $t('editing.notSelect') }}</div>
+          <div class="block-title">
+            {{ $t('editing.notSelect') }}
+          </div>
           <div class="option-list-block">
             <draggable
               :disabled="isProcessing"
               :list="columnOptionList"
               :group="draggableGroupName"
-              class="list-group">
-              <div 
+              class="list-group"
+            >
+              <div
                 v-for="(column, index) in columnOptionList"
                 :key="column.id"
                 class="single-option"
               >
-                <div class="info name">{{ column.name }}</div>
-                <div class="info alias">{{ column.primaryAlias }}</div>
+                <div class="info name">
+                  {{ column.name }}
+                </div>
+                <div class="info alias">
+                  {{ column.primaryAlias }}
+                </div>
                 <button
                   :disabled="isProcessing"
                   class="btn-m btn-default btn-select"
                   @click="selectColumn(index)"
-                >{{ $t('button.select') }}</button>
+                >
+                  {{ $t('button.select') }}
+                </button>
               </div>
-            </draggable>            
+            </draggable>
           </div>
         </div>
         <div class="icon-block">
-          <svg-icon 
-            icon-class="go-right" 
-            class="arrow-icon"/>
-          <svg-icon 
-            icon-class="go-right" 
-            class="arrow-icon left"/>
+          <svg-icon
+            icon-class="go-right"
+            class="arrow-icon"
+          />
+          <svg-icon
+            icon-class="go-right"
+            class="arrow-icon left"
+          />
         </div>
         <div class="select-block">
-          <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
+          <div class="block-title">
+            {{ $t('editing.alreadySelect') }}
+          </div>
           <div class="option-list-block">
             <draggable
               :disabled="isProcessing"
-              :value="columnSet.dataColumnList" 
+              :value="columnSet.dataColumnList"
               :group="selectedListGroup"
               class="list-group"
-              @change="updateSelectedList">
-              <div 
+              @change="updateSelectedList"
+            >
+              <div
                 v-for="(column, index) in columnSet.dataColumnList"
                 :key="column.id"
                 :class="{ 'disabled': columnSet.id && columnSet.dataColumnList.length <= 1 }"
                 class="single-option"
               >
-                <div class="info name">{{ column.name }}</div>
-                <div class="info alias">{{ column.primaryAlias }}</div>
+                <div class="info name">
+                  {{ column.name }}
+                </div>
+                <div class="info alias">
+                  {{ column.primaryAlias }}
+                </div>
                 <button
                   v-if="!(columnSet.id && columnSet.dataColumnList.length <= 1)"
                   :disabled="isProcessing"
                   class="btn-m btn-secondary btn-select"
                   @click="cancelSelect(index)"
-                >{{ $t('button.cancel') }}</button>
+                >
+                  {{ $t('button.cancel') }}
+                </button>
               </div>
               <div
                 v-if="columnSet.dataColumnList.length === 0"
                 slot="footer"
                 class="empty-select"
-              >{{ $t('editing.selectYet') }}</div>
+              >
+                {{ $t('editing.selectYet') }}
+              </div>
             </draggable>
           </div>
         </div>
@@ -124,7 +160,7 @@
   </div>
 </template>
 <script>
-import draggable from 'vuedraggable';
+import draggable from 'vuedraggable'
 import { createColumnSet, deleteColumnSet, updateColumnSet } from '@/API/ColumnSet'
 import inputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
@@ -167,7 +203,7 @@ export default {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
     selectedListGroup () {
-      const isPullable =  !(this.columnSet.id && this.columnSet.dataColumnList.length <= 1)
+      const isPullable = !(this.columnSet.id && this.columnSet.dataColumnList.length <= 1)
       // put 限定接受當前 dataset 來的 column
       return { name: this.draggableGroupName, pull: isPullable, put: this.draggableGroupName }
     },
@@ -196,7 +232,7 @@ export default {
         columnOptionList = columnOptionList.filter(element => {
           return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.dataColumnId) === -1
         })
-      } 
+      }
       this.columnOptionList = columnOptionList
     },
     updateColumnSetColumn (columnSetId, columnList) {
@@ -204,7 +240,7 @@ export default {
       return updateColumnSet(columnSetId, {
         dataFrameId: this.columnSet.dataFrameId,
         columnSetColumnList: columnList.map((column, index) => (
-          { 
+          {
             columnId: column.dataColumnId,
             sequence: index + 1
           }
@@ -223,9 +259,8 @@ export default {
     async selectColumn (index) {
       if (this.columnSet.id) {
         const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
-        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
-        catch(e) { return }
-      } 
+        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } catch (e) { return }
+      }
       this.columnSet.dataColumnList.push(this.columnOptionList[index])
       this.columnOptionList.splice(index, 1)
     },
@@ -233,8 +268,7 @@ export default {
       if (this.columnSet.id) {
         const newColumnList = [...this.columnSet.dataColumnList]
         newColumnList.splice(index, 1)
-        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
-        catch(e) { return }
+        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } catch (e) { return }
       }
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
       this.columnOptionList.push(cancelColumnInfo)
@@ -266,7 +300,7 @@ export default {
           primaryAlias: this.columnSet.primaryAlias,
           dataFrameId: this.columnSet.dataFrameId,
           dataColumnIdList: this.columnSet.dataColumnList.map((column, index) => (
-            { 
+            {
               columnId: column.dataColumnId,
               sequence: index + 1
             }
@@ -281,7 +315,7 @@ export default {
           this.columnSet.id = response.id
           this.toggleIsEditing()
         })
-        .finally(() => this.isProcessing = false)
+          .finally(() => this.isProcessing = false)
       })
     },
     removeColumnSet () {
@@ -296,7 +330,7 @@ export default {
           })
           this.$emit('remove')
         })
-        .finally(() => this.isProcessing = false)
+          .finally(() => this.isProcessing = false)
       } else {
         this.$emit('remove')
       }
@@ -304,7 +338,7 @@ export default {
     toggleIsEditing () {
       this.isEditing = !this.isEditing
     },
-    async updateDataSetOrder (oldIndex, newIndex) {  
+    async updateDataSetOrder (oldIndex, newIndex) {
       if (this.columnSet.id) {
         const newColumnList = [...this.columnSet.dataColumnList]
         const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
@@ -334,13 +368,13 @@ export default {
           }
           this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
         }
-      } catch(e) {
-        return  
+      } catch (e) {
+        return
       } finally {
         this.isProcessing = false
       }
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

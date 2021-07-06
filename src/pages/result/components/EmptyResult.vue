@@ -1,11 +1,16 @@
 <template>
   <div class="empty-result">
-    <div class="empty-result-title">{{ resultInfo && resultInfo.title ? resultInfo.title : this.$t('editing.emptyResult') }}</div>
-    <div class="empty-result-sub-title">{{ resultInfo && resultInfo.description ? resultInfo.description : this.$t('editing.emptyResultDescription') }}</div>
-    <div 
+    <div class="empty-result-title">
+      {{ resultInfo && resultInfo.title ? resultInfo.title : $t('editing.emptyResult') }}
+    </div>
+    <div class="empty-result-sub-title">
+      {{ resultInfo && resultInfo.description ? resultInfo.description : $t('editing.emptyResultDescription') }}
+    </div>
+    <div
       v-if="resultInfo && resultInfo.unknown && resultInfo.unknown.length > 0"
       class="empty-result-unknown-detail"
-    >{{ $t('editing.systemUnknownDescription') }}
+    >
+      {{ $t('editing.systemUnknownDescription') }}
       <span
         v-for="(unknownText, index) in resultInfo.unknown"
         :key="index"
@@ -20,7 +25,7 @@ export default {
     resultInfo: {
       type: Object,
       default: () => {
-        return { 
+        return {
           title: null,
           description: null,
           unknown: null

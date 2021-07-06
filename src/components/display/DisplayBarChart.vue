@@ -24,18 +24,22 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div 
+          <div
             v-if="singleType.type === 'enum'"
             class="filter-description"
           >
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
-            <div 
+            <div class="column-name">
+              {{ singleType.properties.display_name }} =
+            </div>
+            <div
               v-for="(singleData, propertiesIndex) in singleType.properties.display_datavalues"
               :key="'enum-' + propertiesIndex"
               class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.display_datavalues.length - 1">、</span></div>
+            >
+              {{ singleData }}<span v-show="propertiesIndex !== singleType.properties.display_datavalues.length - 1">、</span>
+            </div>
           </div>
-          <div 
+          <div
             v-if="singleType.type === 'range'"
             class="region-description"
           >
@@ -102,7 +106,7 @@ export default {
       }
     },
     addons: { type: [Object, Array], default: () => ([]) },
-    height: {type: String, default: '420px'},
+    height: { type: String, default: '420px' },
     canDownloadCsv: {
       type: Boolean,
       default: false
@@ -135,7 +139,7 @@ export default {
   data () {
     echartAddon.mapping({
       'seriesItem:bar': {
-        'large': true
+        large: true
       },
       'color:10': {},
       'grid:default': {},
@@ -314,9 +318,9 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { 
+            formatter (value) {
               let num = value.data[colIndex + 1]
-              return labelFormatter(num, maxValue[colIndex]) 
+              return labelFormatter(num, maxValue[colIndex])
             }
           }
         })
@@ -337,8 +341,8 @@ export default {
     },
     brushRegionSelected (params) {
       if (
-        (this.currentChartType === 'bar' && params.batch[0].selected[0].dataIndex.length === 0)
-        || (this.currentChartType === 'line' && params.batch[0].areas.length === 0)
+        (this.currentChartType === 'bar' && params.batch[0].selected[0].dataIndex.length === 0) ||
+        (this.currentChartType === 'line' && params.batch[0].areas.length === 0)
       ) return this.selectedData = []
 
       // 垂直方向 drill down
@@ -366,11 +370,11 @@ export default {
           const allDataValueIndexs = params.batch[0].areas.reduce((accIndexs, curAreaElement) => {
             const [startIndex, endIndex] = curAreaElement.coordRange
             // 補足始末間的連續數值
-            accIndexs.push(...[...Array(endIndex - startIndex + 1).keys()].map(i =>  i + startIndex))
+            accIndexs.push(...[...Array(endIndex - startIndex + 1).keys()].map(i => i + startIndex))
             return accIndexs
           }, [])
           // 只取不重複的 index 升冪排序
-          dataValueIndexs  = [...new Set(allDataValueIndexs)].sort((a, b) => a - b)
+          dataValueIndexs = [...new Set(allDataValueIndexs)].sort((a, b) => a - b)
         }
 
         this.selectedData = [{

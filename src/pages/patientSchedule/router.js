@@ -27,7 +27,7 @@ const routes = [
           {
             path: 'result',
             name: 'DemoOTSimulationResult',
-            component: () => import('@/pages/patientSchedule/simulation/result/Index'),
+            component: () => import('@/pages/patientSchedule/simulation/result/Index')
           }
         ]
       }
@@ -42,7 +42,7 @@ const routes = [
         path: 'current-simulation',
         name: 'DemoCurrentBedSimulation',
         component: () => import('@/pages/patientSchedule/currentSimulation/Index')
-      },
+      }
     ]
   }
 ]

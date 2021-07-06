@@ -1,6 +1,8 @@
 <template>
   <div class="choose-connection">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="1"
     />
@@ -8,29 +10,33 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="spinner-container"
         size="50"
       />
-      <div 
+      <div
         v-else
         class="connection-list-block"
       >
         <div class="title-block-container">
-          <div class="block-title">{{ $t('etl.connectionHistory') }}</div>
-          <button 
+          <div class="block-title">
+            {{ $t('etl.connectionHistory') }}
+          </div>
+          <button
             class="btn-m btn-outline"
             @click="createConnection"
-          >{{ $t('etl.newConnectionSetting') }}</button>
+          >
+            {{ $t('etl.newConnectionSetting') }}
+          </button>
         </div>
         <div class="connection-list">
           <empty-info-block
             v-if="connectionList.length === 0"
             :msg="$t('etl.emptyConnectionHistory')"
           />
-          <div 
+          <div
             v-for="(connection, index) in connectionList"
             v-else
             :key="connection.id"
@@ -41,52 +47,70 @@
               v-if="currentTestId === connection.id"
               class="connection__mask connection__mask--active"
             >
-              <spinner 
+              <spinner
                 :title="$t('button.connecting')"
                 class="connection__mask__spinner"
                 size="20"
               />
-              <button 
+              <button
                 class="btn btn-outline connection__mask__btn"
                 @click.stop="cancelConnection"
-              >{{ $t('button.cancelConnect') }}</button>
+              >
+                {{ $t('button.cancelConnect') }}
+              </button>
             </div>
             <div
               v-else-if="currentTestId"
               class="connection__mask"
             />
-            <div class="connection-title">{{ connection.name }}</div>
+            <div class="connection-title">
+              {{ connection.name }}
+            </div>
             <div class="conneciton-info-block">
               <div class="conneciton-info">
-                <div class="connection-label">{{ $t('editing.loginAccount') }}:</div>{{ connection.account }}
+                <div class="connection-label">
+                  {{ $t('editing.loginAccount') }}:
+                </div>{{ connection.account }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Schema:</div>{{ connection.schema }}
+                <div class="connection-label">
+                  Schema:
+                </div>{{ connection.schema }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">{{ $t('editing.databaseType') }}:</div>{{ connection.databaseType }}
+                <div class="connection-label">
+                  {{ $t('editing.databaseType') }}:
+                </div>{{ connection.databaseType }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Host:</div>{{ connection.host }}
+                <div class="connection-label">
+                  Host:
+                </div>{{ connection.host }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">{{ connection.databaseType === 'ORACLE' ? 'SID' : 'Database' }}:</div>{{ connection.database }}
+                <div class="connection-label">
+                  {{ connection.databaseType === 'ORACLE' ? 'SID' : 'Database' }}:
+                </div>{{ connection.database }}
               </div>
-              <div 
+              <div
                 v-if="connection.port"
                 class="conneciton-info"
               >
-                <div class="connection-label">Port:</div>{{ connection.port }}
+                <div class="connection-label">
+                  Port:
+                </div>{{ connection.port }}
               </div>
-              <div 
+              <div
                 v-if="connection.instanceName !== null && connection.instanceName !== ''"
                 class="conneciton-info"
               >
-                <div class="connection-label">Instance:</div>{{ connection.instanceName }}
+                <div class="connection-label">
+                  Instance:
+                </div>{{ connection.instanceName }}
               </div>
             </div>
             <a
-              href="javascript:void(0);" 
+              href="javascript:void(0);"
               class="link action-link"
               @click.stop="editConnection(connection)"
             >
@@ -97,7 +121,7 @@
               class="conneciton__delete"
               @click.stop="currentDeleteIndex=index"
             >
-              <svg-icon icon-class="delete"/>
+              <svg-icon icon-class="delete" />
             </a>
             <tooltip-dialog
               v-if="index === currentDeleteIndex"
@@ -112,14 +136,18 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           class="btn btn-outline"
           @click="prevStep"
-        >{{ $t('button.prevStep') }}</button>
+        >
+          {{ $t('button.prevStep') }}
+        </button>
       </div>
     </div>
   </div>
@@ -178,8 +206,8 @@ export default {
         this.$store.commit('dataManagement/updateCurrentConnectionDB', this.connectionList.find(element => element.id === id).databaseType)
         this.$emit('next', id)
       }).catch((response) => {
-        if(response.message === 'cancel request') {
-            Message({
+        if (response.message === 'cancel request') {
+          Message({
             message: this.$t('message.connectionInterrupted'),
             type: 'warning',
             duration: 3 * 1000,
@@ -221,12 +249,12 @@ export default {
       })
       this.currentDeleteIndex = null
     },
-    cancelConnection (){
+    cancelConnection () {
       if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction( 'cancel' )
+        this.askCancelFunction('cancel')
       }
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -9,11 +9,11 @@ export default {
     state.uploadFileList[data.index].tabDetail = data.tabDetail
   },
   updateUploadFileStatus (state, data) {
-    const {index, status, ...fileInfo} = data
+    const { index, status, ...fileInfo } = data
     state.uploadFileList[index].status = status
     // 預設選第一個 tab
     if (fileInfo.tabDetails.length > 0) fileInfo.tabDetail = fileInfo.tabDetails[0]
-    state.uploadFileList[index] = {...state.uploadFileList[index], ...fileInfo}
+    state.uploadFileList[index] = { ...state.uploadFileList[index], ...fileInfo }
   },
   removeUploadFile (state, data) {
     state.uploadFileList.splice(data, 1)
@@ -93,14 +93,14 @@ export default {
     state.etlTableList[state.currentTableIndex].distributedColumnName = data
   },
   updateReplaceValue (state, data) {
-    let {tableIndex, columnIndex, info} = data
+    let { tableIndex, columnIndex, info } = data
     Vue.set(state.etlTableList[tableIndex].columns, columnIndex, info)
   },
   clearEtlTableList (state, data) {
     state.etlTableList = []
   },
   chooseColumn (state, data) {
-    let {dataFrameIndex, columnIndex} = data
+    let { dataFrameIndex, columnIndex } = data
     let column = state.etlTableList[dataFrameIndex].columns[columnIndex]
     column.active = !column.active
   },
@@ -111,7 +111,7 @@ export default {
     state.currentColumnIndex = index
   },
   updateSummaryInfo (state, data) {
-    let {tableIndex, columnIndex, dataSummary} = data
+    let { tableIndex, columnIndex, dataSummary } = data
     Vue.set(state.etlTableList[tableIndex].columns[columnIndex], 'dataSummary', dataSummary)
   },
   updateDatetimePatterns (state, data) {

@@ -1,8 +1,10 @@
 <template>
   <div class="result-board-title">
     <div class="board-name">
-      <div class="question-mark">Q</div>
-      <div 
+      <div class="question-mark">
+        Q
+      </div>
+      <div
         v-if="segmentation.segmentation && segmentation.segmentation.length"
         class="question-name"
       >
@@ -12,10 +14,12 @@
           :token-info="tokenInfo"
         />
       </div>
-      <div 
+      <div
         v-else
         class="question-name"
-      >{{ title }}</div>
+      >
+        {{ title }}
+      </div>
     </div>
   </div>
 </template>

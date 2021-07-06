@@ -22,9 +22,6 @@
 @import './common/animation';
 @import './common/layout';
 
-@import './element-ui/components';
-@import './element-ui/date-picker';
-@import './element-ui/el-pagination';
 
 // page
 @import './pages/data-management';
@@ -43,12 +40,6 @@
 @import './element-ui/element-variables';
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
-@import '~element-ui/packages/theme-chalk/src/autocomplete.scss';
-@import '~element-ui/packages/theme-chalk/src/loading.scss';
-@import '~element-ui/packages/theme-chalk/src/option.scss';
-@import '~element-ui/packages/theme-chalk/src/table.scss';
-@import '~element-ui/packages/theme-chalk/src/table-column.scss';
-
 /* 改變 字體路徑 必須 */
 $--font-path: '../assets/fonts/Open_Sans';
 @import './common/fonts/OpenSans';
@@ -65,6 +56,9 @@ $--font-path: '../assets/fonts/Oswald';
 @import './components/cascader';
 @import './components/simulator';
 
+@import './element-ui/components';
+@import './element-ui/date-picker';
+@import './element-ui/el-pagination';
 /* chart */
 @import './chart/insights';
 

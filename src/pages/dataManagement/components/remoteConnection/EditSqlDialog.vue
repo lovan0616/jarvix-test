@@ -1,16 +1,18 @@
 <template>
-  <confirm-dialog 
+  <confirm-dialog
     :title="$t('remoteConnection.sqlCreateTable')"
     class="edit-sql-dialog"
     @close="cancel"
   >
-    <div 
-      slot="dialogBody" 
-      class="content">
+    <div
+      slot="dialogBody"
+      class="content"
+    >
       <div class="table-name-block dialog-input-block">
-        <label 
-          for="tableName" 
-          class="dialog-input-label">{{ $t('remoteConnection.dataFrameName') }}</label>
+        <label
+          for="tableName"
+          class="dialog-input-label"
+        >{{ $t('remoteConnection.dataFrameName') }}</label>
         <input-verify
           v-validate="`required|max:${max}`"
           v-model.trim="editSqlInfo.creatingSqlName"
@@ -19,14 +21,14 @@
         />
       </div>
       <div class="sql-content-block dialog-input-block">
-        <label 
+        <label
           for="sqlContnet"
           class="dialog-input-label"
         >{{ $t('remoteConnection.sql') }}</label>
-        <textarea 
-          v-validate="`required`" 
+        <textarea
+          v-validate="`required`"
           id="sqlContnet"
-          v-model.trim="editSqlInfo.creatingSql" 
+          v-model.trim="editSqlInfo.creatingSql"
           rows="5"
           label="SQL"
           class="sql-content-input"
@@ -35,24 +37,29 @@
         <div
           v-show="errors.has('sqlContnet')"
           class="error-text"
-        >{{ errors.first('sqlContnet') }}</div>
+        >
+          {{ errors.first('sqlContnet') }}
+        </div>
       </div>
     </div>
-    <template 
-      slot="dialogFooter" 
-      class="dialog-btn-block">
-      <button 
-        type="button" 
+    <template
+      slot="dialogFooter"
+      class="dialog-btn-block"
+    >
+      <button
+        type="button"
         class="btn btn-outline"
         @click="cancel"
-      >{{ $t('button.cancel') }}</button>
-      <button 
-        :disabled="isProcessing" 
+      >
+        {{ $t('button.cancel') }}
+      </button>
+      <button
+        :disabled="isProcessing"
         type="button"
         class="btn btn-default"
         @click="confirm"
       >
-        <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.testConnecting') }}</span>
+        <span v-if="isProcessing"><svg-icon icon-class="spinner" />{{ $t('button.testConnecting') }}</span>
         <span v-else>{{ $t('button.confirm') }}</span>
       </button>
     </template>
@@ -116,8 +123,8 @@ export default {
     confirm () {
       this.$validator.validateAll().then(result => {
         if (!result) return
-        if (this.editIndex === null && (this.tableList.some(element => element === this.editSqlInfo.creatingSqlName)
-        || this.sqlTableList.some(element => element.creatingSqlName === this.editSqlInfo.creatingSqlName))) {
+        if (this.editIndex === null && (this.tableList.some(element => element === this.editSqlInfo.creatingSqlName) ||
+        this.sqlTableList.some(element => element.creatingSqlName === this.editSqlInfo.creatingSqlName))) {
           Message({
             message: this.$t('remoteConnection.tableNameDuplicate'),
             type: 'warning',
@@ -138,7 +145,7 @@ export default {
     cancel () {
       this.$emit('cancel')
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

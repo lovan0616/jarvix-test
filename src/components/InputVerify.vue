@@ -14,7 +14,7 @@
     >
       {{ errors.first(validateScope ? `${validateScope}.${name}` : name) }}
     </div>
-    <slot name="action"/>
+    <slot name="action" />
   </div>
 </template>
 <script>
@@ -39,7 +39,7 @@ export default {
       default: ''
     },
     isDisabled: {
-      type: Boolean, 
+      type: Boolean,
       default: false
     },
     validateScope: {

@@ -150,7 +150,7 @@ export default {
             // bar start
             this.displayFloat(this.dataset.indexList[index]),
             // bar end
-            this.displayFloat(this.dataset.indexList[index+1]),
+            this.displayFloat(this.dataset.indexList[index + 1]),
             element
           ]
         })
@@ -197,7 +197,7 @@ export default {
           '</tr>'
         for (let i = 0; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
-            <td>${ this.formatComma(dataset[i][0]) } ~ ${ this.formatComma(dataset[i][1]) }</td><td>${ this.formatComma(dataset[i][2]) }</td>
+            <td>${this.formatComma(dataset[i][0])} ~ ${this.formatComma(dataset[i][1])}</td><td>${this.formatComma(dataset[i][2])}</td>
           </tr>`
         }
         table += '</tbody></table>'
@@ -215,12 +215,12 @@ export default {
       })
 
       // set histogram xAxis
-      chartAddon.xAxis = {...chartAddon.xAxis, ...histogramConfig.xAxis}
+      chartAddon.xAxis = { ...chartAddon.xAxis, ...histogramConfig.xAxis }
       chartAddon.xAxis.interval = interval
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
-      chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
+      chartAddon.yAxis = { ...chartAddon.yAxis, ...histogramConfig.yAxis }
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
       // let labelInterval = Math.floor(dataLength / 15)
       // let labelCount = 0
@@ -244,7 +244,7 @@ export default {
         }
       }
       histogramConfig.chartData.renderItem = this.renderItem
-      histogramConfig.chartData.data = chartData 
+      histogramConfig.chartData.data = chartData
       const labelFormatter = this.chartLabelFormatter
       const maxValue = Math.max(...this.dataset.data)
       chartAddon.series = [{
@@ -260,7 +260,7 @@ export default {
         })
       }]
       // 常態檢定分佈圖
-      if(this.isNormalityTestChart) {
+      if (this.isNormalityTestChart) {
         histogramConfig.chartData.itemStyle.color = chartVariable['chartColorList-1']
         chartAddon.series.push({
           type: 'line',
@@ -270,13 +270,13 @@ export default {
           data: this.lineChartAxisTick.map(tick => this.calculateProbability(this.dataset.featureInformation.mean, this.dataset.featureInformation.sigma, tick)),
           tooltip: {
             show: false
-          }, 
+          },
           itemStyle: {
             color: '#FF9559'
           }
         })
       }
-      
+
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
       let customMarkLine = this.title.yAxis[0].markLine || []
@@ -356,7 +356,7 @@ export default {
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
-  },
+  }
 }
 </script>
 

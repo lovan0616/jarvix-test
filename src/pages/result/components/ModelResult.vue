@@ -2,46 +2,61 @@
   <div class="model-result result-board">
     <div class="board-header">
       <div class="board-name">
-        <div class="question-mark">Q</div>
-        <div class="question-name">{{ appQuestion }}</div>
+        <div class="question-mark">
+          Q
+        </div>
+        <div class="question-name">
+          {{ appQuestion }}
+        </div>
       </div>
       <button
         class="btn-m btn-default save-button"
       >
-        <svg-icon 
-          :icon-class="isDownloading ? 'spinner' : 'download'" 
-          class="icon"/>
+        <svg-icon
+          :icon-class="isDownloading ? 'spinner' : 'download'"
+          class="icon"
+        />
         {{ $t('button.save') }}
         <div class="save-popup">
-          <div 
-            class="popup-box" 
-            @click.stop="isShowSaveModelDialog = true">
-            <div class="popup-text">儲存運算模型</div>
+          <div
+            class="popup-box"
+            @click.stop="isShowSaveModelDialog = true"
+          >
+            <div class="popup-text">
+              儲存運算模型
+            </div>
           </div>
 
           <div class="popup-box border-line">
-            <div class="popup-text">儲存結果參數</div>
+            <div class="popup-text">
+              儲存結果參數
+            </div>
           </div>
         </div>
       </button>
     </div>
     <div class="result-board-body">
       <div class="accuracy-block">
-        <div class="block-title">預測準確率</div>
+        <div class="block-title">
+          預測準確率
+        </div>
         <spinner
           v-if="isLoading"
           class="task-spinner"
         />
-        <div 
+        <div
           v-else
-          class="accuracy-precision">
+          class="accuracy-precision"
+        >
           {{ accuracyPrecision }}
           <span class="unit-icon">%</span>
         </div>
       </div>
       <div class="charts-block">
         <div class="accuracy-chart">
-          <div class="block-title">成交預測率</div>
+          <div class="block-title">
+            成交預測率
+          </div>
           <spinner
             v-if="isLoading"
             class="task-spinner"
@@ -55,7 +70,9 @@
           />
         </div>
         <div class="feature-chart">
-          <div class="block-title">影響因子</div>
+          <div class="block-title">
+            影響因子
+          </div>
           <spinner
             v-if="isLoading"
             class="task-spinner"
@@ -77,11 +94,11 @@
       @closeDialog="closeDialog"
       @confirmBtn="saveModelResult"
     >
-      <input 
+      <input
         v-validate="`required`"
         ref="model-name"
-        :value="`predicting_model`" 
-        type="text" 
+        :value="`predicting_model`"
+        type="text"
         class="input "
       >
     </writing-dialog>
@@ -104,7 +121,7 @@ export default {
     resultInfo: {
       type: Object,
       default: () => {
-        return { 
+        return {
           title: null,
           description: null,
           unknown: null
@@ -119,57 +136,57 @@ export default {
       isShowSaveModelDialog: false,
       accuracyPrecision: 77,
       accuracyDataset: {
-        columns: ["百分比"],
+        columns: ['百分比'],
         data: [[32], [92]],
-        display_columns: ["預測率"],
-        display_index: [["成交"], ["沒有成交"]],
-        index: [["成交"], ["沒有成交"]],
+        display_columns: ['預測率'],
+        display_index: [['成交'], ['沒有成交']],
+        index: [['成交'], ['沒有成交']]
       },
       accuracyTitle: {
         xAxis: [
           {
-            data_type: "string",
+            data_type: 'string',
             dc_id: 92483,
-            dc_name: "c2",
-            display_name: "成交",
+            dc_name: 'c2',
+            display_name: '成交',
             drillable: true,
             is_feature: null,
             lowerLimit: null,
             operator: null,
-            stats_type: "category",
+            stats_type: 'category',
             upperLimit: null
           },
           {
-            data_type: "string",
+            data_type: 'string',
             dc_id: 92483,
-            dc_name: "c2",
-            display_name: "沒有成交",
+            dc_name: 'c2',
+            display_name: '沒有成交',
             drillable: true,
             is_feature: null,
             lowerLimit: null,
             operator: null,
-            stats_type: "category",
+            stats_type: 'category',
             upperLimit: null
           }
         ],
         yAxis: [
           {
-            data_type: "string",
+            data_type: 'string',
             dc_id: 92483,
-            dc_name: "c2",
-            display_name: "百分比",
+            dc_name: 'c2',
+            display_name: '百分比',
             drillable: true,
             is_feature: null,
             lowerLimit: null,
             operator: null,
-            stats_type: "category",
+            stats_type: 'category',
             upperLimit: null
           },
           {
             data_type: null,
             dc_id: null,
             dc_name: null,
-            display_name: "百分比",
+            display_name: '百分比',
             drillable: true,
             is_feature: null,
             lowerLimit: null,
@@ -180,38 +197,38 @@ export default {
         ]
       },
       featureDataset: {
-        columns: ["欄位項目"],
+        columns: ['欄位項目'],
         data: [[0.28], [0.27], [0.14], [0.08], [0.06]],
-        display_columns: ["關係值"],
-        display_index: [["有無折扣_無折扣"], ["業務人員職稱_專員"], ["業務人員性別_女"], ["業務人員職稱_主任"], ["客戶產業類別_金融投顧及保險業"]],
-        index: [["有無折扣_無折扣"], ["業務人員職稱_專員"], ["業務人員性別_女"], ["業務人員職稱_主任"], ["客戶產業類別_金融投顧及保險業"]]
+        display_columns: ['關係值'],
+        display_index: [['有無折扣_無折扣'], ['業務人員職稱_專員'], ['業務人員性別_女'], ['業務人員職稱_主任'], ['客戶產業類別_金融投顧及保險業']],
+        index: [['有無折扣_無折扣'], ['業務人員職稱_專員'], ['業務人員性別_女'], ['業務人員職稱_主任'], ['客戶產業類別_金融投顧及保險業']]
       },
       featureTitle: {
         xAxis: [
           {
-            data_type: "string",
+            data_type: 'string',
             dc_id: 92483,
-            dc_name: "c2",
-            display_name: "",
+            dc_name: 'c2',
+            display_name: '',
             drillable: true,
             is_feature: null,
             lowerLimit: null,
             operator: null,
-            stats_type: "category",
+            stats_type: 'category',
             upperLimit: null
           }
         ],
         yAxis: [
           {
-            data_type: "string",
+            data_type: 'string',
             dc_id: 92483,
-            dc_name: "c2",
-            display_name: "",
+            dc_name: 'c2',
+            display_name: '',
             drillable: true,
             is_feature: null,
             lowerLimit: null,
             operator: null,
-            stats_type: "category",
+            stats_type: 'category',
             upperLimit: null
           }
         ]
@@ -307,7 +324,7 @@ export default {
         }
       }
     }
-    
+
     .save-popup {
       visibility: hidden;
       width: 130px;
@@ -328,7 +345,7 @@ export default {
         height: 0px;
         border-bottom: 10px solid #233131;
         border-left: 10px solid transparent;
-        border-right: 10px solid transparent; 
+        border-right: 10px solid transparent;
       }
 
       .popup-box {
@@ -345,7 +362,7 @@ export default {
 
       .border-line {
         border-top: 1px solid #384545;
-        border-bottom: 1px solid #384545; 
+        border-bottom: 1px solid #384545;
       }
 
       .popup-text {

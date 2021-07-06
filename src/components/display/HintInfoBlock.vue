@@ -8,10 +8,9 @@
       :key="index"
       class="hint-info"
     >
-      <span class="hint-info__title"><svg-icon icon-class="lamp"/> {{ $t('resultDescription.prompt') }}:</span> {{ msg }}
+      <span class="hint-info__title"><svg-icon icon-class="lamp" /> {{ $t('resultDescription.prompt') }}:</span> {{ msg }}
     </div>
   </div>
-  
 </template>
 <script>
 export default {

@@ -1,6 +1,6 @@
 <template>
   <nav class="nav-header">
-    <section 
+    <section
       v-if="$route.params.group_id && !$route.meta.isModule"
       class="nav-left"
     >
@@ -16,12 +16,15 @@
             trigger="hover"
             @select="switchGroup($event)"
           >
-            <template v-slot:display>
+            <template #display>
               <div class="switch">
-                <div class="switch__text">{{ groupName }}</div>
-                <svg-icon 
-                  icon-class="dropdown" 
-                  class="icon switch__icon"/>
+                <div class="switch__text">
+                  {{ groupName }}
+                </div>
+                <svg-icon
+                  icon-class="dropdown"
+                  class="icon switch__icon"
+                />
               </div>
             </template>
           </custom-dropdown-select>
@@ -38,25 +41,32 @@
         </button>
       </div>
       <template v-if="groupList.length > 0">
-        <router-link 
+        <router-link
           :class="{ 'active': $route.name === 'PageIndex' }"
           :to="{ name: 'PageIndex' }"
-          class="nav-item" 
-          exact>{{ $t('nav.index') }}</router-link>
+          class="nav-item"
+          exact
+        >
+          {{ $t('nav.index') }}
+        </router-link>
         <!-- FIXME for poc/foxconn_molding -->
-        <router-link 
-          v-if="isShowAlgorithmBtn" 
-          :to="{ name: 'PageAlgorithmList' }" 
-          class="nav-item">{{ $t('nav.algorithm') }}</router-link>
+        <router-link
+          v-if="isShowAlgorithmBtn"
+          :to="{ name: 'PageAlgorithmList' }"
+          class="nav-item"
+        >
+          {{ $t('nav.algorithm') }}
+        </router-link>
         <div
           v-if="groupId"
           class="nav-item nav-item-dropdown nav-set"
         >
           <div class="nav-set-flex">
             <div>{{ $t('nav.projectManagement') }}</div>
-            <svg-icon 
-              icon-class="dropdown" 
-              class="icon nav-dropdown-icon is-rotate"/>
+            <svg-icon
+              icon-class="dropdown"
+              class="icon nav-dropdown-icon is-rotate"
+            />
           </div>
           <dropdown-select
             :bar-data="settingData"
@@ -64,41 +74,53 @@
             @switchDialogName="switchDialogName"
           />
         </div>
-        <router-link 
-          :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
-          class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
+        <router-link
+          :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}"
+          class="nav-item"
+        >
+          {{ $t('nav.projectPinboard') }}
+        </router-link>
         <router-link
           v-if="hasPermission('war_room')"
-          :to="{ name: 'WarRoomList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
-          class="nav-item">{{ $t('nav.warRoom') }}</router-link>
+          :to="{ name: 'WarRoomList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }"
+          class="nav-item"
+        >
+          {{ $t('nav.warRoom') }}
+        </router-link>
         <router-link
           v-if="hasPermission('app')"
-          :to="{name: 'MiniAppList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
-          class="nav-item">{{ $t('nav.application') }}</router-link>
+          :to="{name: 'MiniAppList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}"
+          class="nav-item"
+        >
+          {{ $t('nav.application') }}
+        </router-link>
         <router-link
           v-if="isShowSchedule"
-          :to="{ name: 'ScheduleProjectList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
-          class="nav-item">{{ $t('nav.schedule') }}</router-link>
+          :to="{ name: 'ScheduleProjectList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }"
+          class="nav-item"
+        >
+          {{ $t('nav.schedule') }}
+        </router-link>
       </template>
     </section>
     <section
       v-if="$route.meta.isModule === 'Schedule'"
       class="nav-left"
     >
-      <project-switcher v-if="scheduleProjects.length > 0"/>
-      <router-link 
+      <project-switcher v-if="scheduleProjects.length > 0" />
+      <router-link
         :to="{name: 'CurrentSimulation'}"
         class="nav-item"
       >
         {{ $t('schedule.header.schedule') }}
       </router-link>
-      <router-link 
+      <router-link
         :to="{name: 'Simulation'}"
         class="nav-item"
       >
         {{ $t('schedule.header.simulate') }}
       </router-link>
-      <router-link 
+      <router-link
         :to="{name: 'ScheduleSetting'}"
         class="nav-item"
       >
@@ -106,13 +128,13 @@
       </router-link>
     </section>
     <section class="nav-right">
-      <task-notifier v-if="!$route.meta.isModule"/>
+      <task-notifier v-if="!$route.meta.isModule" />
       <div
         v-if="$route.meta.isModule === 'Schedule'"
         class="nav-item nav-function"
         @click="openScheduleHelper"
       >
-        <svg-icon icon-class="description"/>
+        <svg-icon icon-class="description" />
         <span>{{ $t('nav.helper') }}</span>
       </div>
       <!-- <router-link
@@ -120,8 +142,8 @@
         :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
         class="nav-item nav-function"
       >
-        <svg-icon 
-          icon-class="description" 
+        <svg-icon
+          icon-class="description"
           class="icon icon-description"/>
         {{ $t('nav.helper') }}
       </router-link>-->
@@ -149,7 +171,7 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
+      isLoading: false
     }
   },
   computed: {
@@ -180,20 +202,20 @@ export default {
       const settingList = []
       const { account_id: queryAccountId, group_id: queryGroupId } = this.$route.params
       if (this.hasPermission(['group_read_user', 'group_read_data'])) {
-        settingList.push({icon: 'database', title: 'nav.dataManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/datasource`})
+        settingList.push({ icon: 'database', title: 'nav.dataManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/datasource` })
       }
-  
+
       // 個人版 隱藏成員管理選項
       if (this.license.maxUser !== 1) {
-        settingList.push({icon: 'userManage', title: 'nav.groupUserManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/users`})
+        settingList.push({ icon: 'userManage', title: 'nav.groupUserManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/users` })
       }
 
       if (this.hasPermission(['model'])) {
-        settingList.push({icon: 'algo', title: 'nav.modelManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model`})
+        settingList.push({ icon: 'algo', title: 'nav.modelManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model` })
       }
-      
+
       if (this.hasPermission(['flow'])) {
-        settingList.push({icon: 'algo-flow', title: 'nav.modelFlowManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model-flow`})
+        settingList.push({ icon: 'algo-flow', title: 'nav.modelFlowManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/model-flow` })
       }
       return settingList
     }
@@ -218,14 +240,14 @@ export default {
         groupId
       })
         .then(() => {
-          this.$router.push({ 
+          this.$router.push({
             name: 'PageIndex',
             params: {
-              'account_id': this.$route.params.account_id,
-              'group_id': groupId
+              account_id: this.$route.params.account_id,
+              group_id: groupId
             },
             query: {
-              ...(this.dataSourceId && { 
+              ...(this.dataSourceId && {
                 dataSourceId: this.dataSourceId,
                 dataFrameId: this.dataFrameId
               })
@@ -243,12 +265,12 @@ export default {
           id: group.groupId,
           name: group.groupName
         }))
-        .sort((groupOne, groupTwo) => (groupOne.name.toLowerCase() > groupTwo.name.toLowerCase()) ? 1 : -1) 
+        .sort((groupOne, groupTwo) => (groupOne.name.toLowerCase() > groupTwo.name.toLowerCase()) ? 1 : -1)
     },
     openScheduleHelper () {
       this.$store.commit('scheduleSetting/setIsShowScheduleHelper', true)
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

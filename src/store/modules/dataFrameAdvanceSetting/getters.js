@@ -1,5 +1,5 @@
 export default {
-  selectedColumnList(state) {
+  selectedColumnList (state) {
     if (state.columnList === null) return null
     // 如果全部欄位都有選
     if (!state.columnList.some(element => !element.isSelected)) return null
@@ -8,11 +8,11 @@ export default {
       return acc
     }, [])
   },
-  askCondition(state, getters, rootState) {
+  askCondition (state, getters, rootState) {
     return {
       isInit: state.isInit,
       columnList: state.columnList,
-      filterList: rootState['dataSource']['filterList']
+      filterList: rootState.dataSource.filterList
     }
   }
 }

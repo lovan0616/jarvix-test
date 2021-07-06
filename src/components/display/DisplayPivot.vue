@@ -1,16 +1,20 @@
 <template>
   <div class="display-pivot-table">
     <div class="button-block">
-      <button 
+      <button
         v-show="!isShowChart"
         class="btn btn-default"
         @click="showChart"
-      >{{ $t('resultDescription.displayChart') }}</button>
-      <button 
+      >
+        {{ $t('resultDescription.displayChart') }}
+      </button>
+      <button
         v-show="isShowChart"
         class="btn btn-default"
         @click="showData"
-      >{{ $t('resultDescription.displayData') }}</button>
+      >
+        {{ $t('resultDescription.displayData') }}
+      </button>
     </div>
     <pivot-table
       :data="Object.freeze(dataset)"
@@ -31,15 +35,22 @@
       :is-show-chart="isShowChart"
     >
       <!-- Optional slots can be used for formatting table headers and values, see documentation below -->
-      <template 
-        slot="value" 
-        slot-scope="{ value }">
-        <div 
-          v-if="value == 0" 
-          class="empty-content">--</div>
-        <div 
-          v-else 
-          class="td-content">{{ roundDecimal(value, 3) }}</div>
+      <template
+        slot="value"
+        slot-scope="{ value }"
+      >
+        <div
+          v-if="value == 0"
+          class="empty-content"
+        >
+          --
+        </div>
+        <div
+          v-else
+          class="td-content"
+        >
+          {{ roundDecimal(value, 3) }}
+        </div>
       </template>
     </pivot-table>
   </div>

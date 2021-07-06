@@ -24,18 +24,22 @@
           :key="index"
         >
           <template v-if="dataset.timeStampList">
-            <div 
+            <div
               v-if="singleType.type === 'enum'"
               class="filter-description"
             >
-              <div class="column-name">{{ singleType.properties.display_name }} =</div>
-              <div 
+              <div class="column-name">
+                {{ singleType.properties.display_name }} =
+              </div>
+              <div
                 v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
                 :key="'enum-' + propertiesIndex"
                 class="single-filter"
-              >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
+              >
+                {{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span>
+              </div>
             </div>
-            <div 
+            <div
               v-if="singleType.type === 'range'"
               class="region-description"
             >
@@ -51,8 +55,8 @@
           <template v-else>
             {{ $t('resultDescription.area') + (index + 1) }}:
             {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {
-              start: roundNumber(singleType.properties.start), 
-              end: roundNumber(singleType.properties.end) 
+              start: roundNumber(singleType.properties.start),
+              end: roundNumber(singleType.properties.end)
             }) }}
           </template>
         </div>
@@ -182,12 +186,12 @@ export default {
     formula: {
       type: Array,
       default: null
-    },
+    }
   },
   data () {
     echartAddon.mapping({
       'seriesItem:line': {
-        'large': true
+        large: true
       },
       'grid:default': {},
       'yAxis:default': {}
@@ -312,9 +316,9 @@ export default {
       } else if (upperLimit !== null || lowerLimit !== null) {
         // markline
         config.series[0].markLine = monitorMarkLine([upperLimit, lowerLimit, ...customMarkLine])
-        
+
         // 找出 Y 的最大、最小值
-        if(this.dataset.data[0].length === 1) {
+        if (this.dataset.data[0].length === 1) {
           // 找出 Y 的最大、最小值
           let maxY = this.dataset.data[0][0]
           let minY = this.dataset.data[0][0]
@@ -381,11 +385,11 @@ export default {
           //     }]
           //   }]
           // }
-        } 
+        }
         /* 註解部分是處理多條線的上下限問題
          * 但 chart 的 label 會因為使用 visualMap 的關係
          * 沒辦法應映每條線而有不同的 label 顏色
-         * 目前只有加上兩條 mark line 
+         * 目前只有加上兩條 mark line
          * 待找到分別設定多條線的 label 顏色後再使用 visualMap
         */
         // else {
@@ -411,7 +415,7 @@ export default {
         //   }
         // }
       }
-        
+
       if (this.isShowCoefficients && this.coefficients) {
         let lineData = []
         let expression = ''
@@ -558,9 +562,9 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { 
+            formatter (value) {
               let num = value.data[colIndex + 1]
-              return labelFormatter(num, maxValue[colIndex]) 
+              return labelFormatter(num, maxValue[colIndex])
             }
           }
         })

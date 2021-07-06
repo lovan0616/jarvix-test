@@ -253,7 +253,7 @@ export default {
         simulated: false,
         overtimes: [],
         leavetimes: [],
-        valid: true,
+        valid: true
       })
     },
     async onClickRemoveSolution (index, solutionId) {

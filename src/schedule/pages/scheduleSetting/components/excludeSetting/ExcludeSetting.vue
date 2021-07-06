@@ -53,16 +53,20 @@
         <i class="el-icon-plus" />
         {{ $t('schedule.setting.addEquipment') }}
       </default-button>
-      <span 
-        v-show="!isAddable" 
-        class="reminding">
+      <span
+        v-show="!isAddable"
+        class="reminding"
+      >
         <i class="el-icon-warning-outline" />
         {{ $t('schedule.base.noAvailableEquipmentToExclude') }}
       </span>
     </template>
-    <div 
-      v-else 
-      class="empty-block">{{ $t('schedule.setting.equipmentInfoIsUnbound') }}</div>
+    <div
+      v-else
+      class="empty-block"
+    >
+      {{ $t('schedule.setting.equipmentInfoIsUnbound') }}
+    </div>
   </div>
 </template>
 

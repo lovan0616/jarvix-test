@@ -1,18 +1,21 @@
 <template>
-  <div 
+  <div
     :class="{'droppable': dragEnter}"
     class="upload-block"
     @click="clickBlock"
   >
     <div class="upload-text-container">
-      <svg-icon 
-        icon-class="file-plus" 
-        class="upload-icon"/>
-      <div 
+      <svg-icon
+        icon-class="file-plus"
+        class="upload-icon"
+      />
+      <div
         v-if="bottomMessage"
         class="upload-message bottom"
-      >{{ bottomMessage }}</div>
-      <slot name="uploadLimit"/>
+      >
+        {{ bottomMessage }}
+      </div>
+      <slot name="uploadLimit" />
     </div>
   </div>
 </template>

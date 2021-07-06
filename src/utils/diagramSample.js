@@ -152,9 +152,9 @@ export default {
       series: {
         type: 'sankey',
         data: [
-          {name: 'a'},
-          {name: 'b'},
-          {name: 'c'}
+          { name: 'a' },
+          { name: 'b' },
+          { name: 'c' }
         ],
         links: [
           {
@@ -181,7 +181,7 @@ export default {
         {
           type: 'graph',
           data: [
-            {name: '節點1'}
+            { name: '節點1' }
           ],
           links: [
             {

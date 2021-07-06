@@ -1,14 +1,15 @@
 <template>
   <div class="file-upload-dialog full-page-dialog">
     <div class="dialog-container">
-      <transition 
-        name="fade" 
-        mode="out-in">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <choose-file-type
           v-if="currentUploadInfo.type === null"
         />
         <local-file-upload-flow
-          v-else-if="currentUploadInfo.type === importType.LOCAL" 
+          v-else-if="currentUploadInfo.type === importType.LOCAL"
           head
         />
         <remote-connection-flow
@@ -34,7 +35,7 @@ export default {
   data () {
     return {
       importType
-    } 
+    }
   },
   computed: {
     currentUploadInfo () {
@@ -53,7 +54,7 @@ export default {
     this.$store.commit('dataManagement/clearEtlTableList')
   },
   methods: {
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -1,10 +1,12 @@
 <template>
   <div class="file-list-block">
     <div class="block-title-row">
-      <div class="block-title">{{ title }}</div>
-      <slot name="fileListTitle"/>
+      <div class="block-title">
+        {{ title }}
+      </div>
+      <slot name="fileListTitle" />
     </div>
-    <div 
+    <div
       :class="[{fail: type === 'fail'}, {'droppable': dragEnter}]"
       class="file-list"
     >

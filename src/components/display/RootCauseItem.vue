@@ -4,7 +4,7 @@
       <display-line-chart
         v-if="chartType === 'line'"
         v-bind="chartData"
-        height="280px" 
+        height="280px"
       />
       <display-bar-chart
         v-else
@@ -27,7 +27,7 @@ export default {
     DisplayBarChart
   },
   props: {
-    text: {type: String, default: ''},
+    text: { type: String, default: '' },
     chartType: {
       type: String,
       default: 'bar',
@@ -35,7 +35,7 @@ export default {
         return ['bar', 'line'].indexOf(value) !== -1
       }
     },
-    chartData: {type: Object, default: () => ({})}
+    chartData: { type: Object, default: () => ({}) }
   }
 }
 </script>

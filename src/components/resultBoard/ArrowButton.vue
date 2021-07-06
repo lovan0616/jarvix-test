@@ -1,12 +1,14 @@
 <template>
-  <div 
+  <div
     :class="{down: isVertical}"
     :style="{right: `${right}px`}"
     class="arrow-block"
   >
-    <div class="arrow"/>
-    <div class="arrow"/>
-    <div class="tool-tip">{{ this.$t('resultDescription.more') }}</div>
+    <div class="arrow" />
+    <div class="arrow" />
+    <div class="tool-tip">
+      {{ $t('resultDescription.more') }}
+    </div>
   </div>
 </template>
 <script>

@@ -5,14 +5,16 @@
         {{ $t(`schedule.setting.commonData${snakeToPascal(fileData.code)}`) }}
       </div>
       <div class="file__item-description">
-        <div 
-          :class="isEmpty(fileData.name)" 
-          class="file__item-name">
+        <div
+          :class="isEmpty(fileData.name)"
+          class="file__item-name"
+        >
           {{ $t('schedule.setting.fileName') }}：{{ fileData.name || $t('schedule.setting.noFileSelected') }}
         </div>
-        <div 
-          :class="isEmpty(fileData.updateDate)" 
-          class="file__item-date">
+        <div
+          :class="isEmpty(fileData.updateDate)"
+          class="file__item-date"
+        >
           {{ $t('schedule.setting.updatedDate') }}：{{ fileData.updateDate | convertTimeStamp }}
         </div>
       </div>

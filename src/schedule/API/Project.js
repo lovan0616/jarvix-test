@@ -32,7 +32,7 @@ export function fetchProjectList (groupId) {
  */
 export function postProjectWithDatasource (data) {
   return request({
-    url: `/project/create/withDatasource`,
+    url: '/project/create/withDatasource',
     method: 'POST',
     data
   })
@@ -46,7 +46,7 @@ export function postProjectWithDatasource (data) {
  */
 export function postProjectNewDatasource (data) {
   return request({
-    url: `/project/create/newDatasource`,
+    url: '/project/create/newDatasource',
     method: 'POST',
     data
   })
@@ -59,7 +59,7 @@ export function postProjectNewDatasource (data) {
  */
 export function renameProject (data) {
   return request({
-    url: `/project/rename`,
+    url: '/project/rename',
     method: 'POST',
     data
   })

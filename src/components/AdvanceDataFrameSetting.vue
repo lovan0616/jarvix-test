@@ -1,9 +1,10 @@
 <template>
   <div class="setting__wrapper">
-    <span 
-      class="setting__close-icon" 
-      @click="closeAdvanceDataFrameSetting">
-      <svg-icon icon-class="close"/>
+    <span
+      class="setting__close-icon"
+      @click="closeAdvanceDataFrameSetting"
+    >
+      <svg-icon icon-class="close" />
     </span>
     <el-collapse
       v-if="step === 1"
@@ -17,9 +18,10 @@
       >
         <template slot="title">
           <div class="setting__collapse-title">
-            <svg-icon 
-              icon-class="column" 
-              class="setting__collapse-title-icon setting__collapse-title-icon--light-blue" />
+            <svg-icon
+              icon-class="column"
+              class="setting__collapse-title-icon setting__collapse-title-icon--light-blue"
+            />
             {{ $t('dataFrameAdvanceSetting.columnList') + '(' + columnListSelectedStatus + ')' }}
           </div>
         </template>
@@ -30,15 +32,16 @@
           @columnAdded="addColumnList"
         />
       </el-collapse-item>
-      <el-collapse-item 
+      <el-collapse-item
         :disabled="activeCollapseName === 'filter'"
         name="filter"
       >
         <template slot="title">
           <div class="setting__collapse-title">
-            <svg-icon 
-              icon-class="filter" 
-              class="setting__collapse-title-icon setting__collapse-title-icon--dark-blue" />
+            <svg-icon
+              icon-class="filter"
+              class="setting__collapse-title-icon setting__collapse-title-icon--dark-blue"
+            />
             {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + filterListStatus + ')' }}
             <join-logic-hints
               :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
@@ -46,15 +49,15 @@
             />
           </div>
         </template>
-        <filter-info 
+        <filter-info
           :temp-filter-list.sync="tempFilterList"
           class="setting__filter-block--bottom"
           @addRestriction="addRestriction"
-          @editRestriction="editRestriction" 
+          @editRestriction="editRestriction"
         />
       </el-collapse-item>
     </el-collapse>
-    <filter-restriction-setting 
+    <filter-restriction-setting
       v-else-if="step === 2"
       :restriction="currentEditedFilter"
       @edit-restraint="editRestraint"
@@ -63,7 +66,7 @@
       @prev="prevStep"
       @next="nextStep"
     />
-    <filter-restraint-setting 
+    <filter-restraint-setting
       v-else-if="step === 3"
       :restraint="currentEditedRestraint"
       @updated:restraint="updateRestraint"
@@ -77,7 +80,9 @@
         type="button"
         class="btn btn-default"
         @click="saveFilter"
-      >{{ $t('button.update') }}</button>
+      >
+        {{ $t('button.update') }}
+      </button>
     </div>
   </div>
 </template>
@@ -148,8 +153,8 @@ export default {
     filterList (newList, oldList) {
       this.tempFilterList = JSON.parse(JSON.stringify(newList))
     },
-    '$route.query.dataFrameId'(newValue, oldValue) {
-      if (!newValue || !oldValue|| Number(newValue) === Number(oldValue)) return
+    '$route.query.dataFrameId' (newValue, oldValue) {
+      if (!newValue || !oldValue || Number(newValue) === Number(oldValue)) return
       this.closeAdvanceDataFrameSetting()
     },
     shouldAdvanceDataFrameSettingRefetchDataColumn: {
@@ -176,7 +181,7 @@ export default {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit', 'setDisplaySection']),
     fetchDataColumns (dataFrameId, existingColumnList = []) {
       this.isLoading = true
-      
+
       // fetch existing list from store
       if (this.isInit) {
         this.tempColumnList = JSON.parse(JSON.stringify(this.columnList))
@@ -275,7 +280,7 @@ export default {
       this.saveFilter()
       this.prevStep()
     }
-  },
+  }
 }
 </script>
 
@@ -330,7 +335,7 @@ export default {
       &--top {
         flex: 6 6 400px;
       }
-      
+
       &--bottom {
         flex: 4 4 250px;
       }
@@ -432,6 +437,6 @@ export default {
     &__arrow {
       display: none;
     }
-  } 
+  }
 }
 </style>

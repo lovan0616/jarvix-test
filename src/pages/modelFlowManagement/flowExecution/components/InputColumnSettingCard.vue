@@ -9,10 +9,11 @@
     <div class="input-field">
       <label class="input-field__label ">{{ $t('modelFlow.upload.referencedColumn') }}</label>
       <div class="input-field__input">
-        <svg-icon 
-          icon-class="go-right" 
-          class="icon"/>
-        <default-select 
+        <svg-icon
+          icon-class="go-right"
+          class="icon"
+        />
+        <default-select
           v-validate="'required'"
           :option-list="sameStatsTypeDataColumnOptionList"
           :placeholder="placeholder"
@@ -22,10 +23,12 @@
           filterable
           class="input-field__select"
         />
-        <div 
+        <div
           v-show="errors.has('select' + columnInfo.id)"
           class="error-text"
-        >{{ errors.first('select' + columnInfo.id) }}</div>
+        >
+          {{ errors.first('select' + columnInfo.id) }}
+        </div>
       </div>
     </div>
   </div>

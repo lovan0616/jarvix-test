@@ -1,23 +1,27 @@
 <template>
   <div class="dialog-box">
-    <div 
-      class="dialog-inner-box" 
-      @click.stop>
+    <div
+      class="dialog-inner-box"
+      @click.stop
+    >
       <div @click="closeDialog">
-        <svg-icon 
-          :class="{ 'disabled': isLoading }" 
+        <svg-icon
+          :class="{ 'disabled': isLoading }"
           icon-class="close"
           class="icon dialog-close"
         />
       </div>
-      <div class="dialog-select-text">{{ title }}</div>
-      <slot/>
+      <div class="dialog-select-text">
+        {{ title }}
+      </div>
+      <slot />
       <div class="dialog-select-flex">
         <button
           v-if="showBoth"
           :disabled="isLoading"
           class="btn btn-outline dialog-select-cancel"
-          @click="closeDialog">
+          @click="closeDialog"
+        >
           {{ $t('button.cancel') }}
         </button>
         <button
@@ -25,7 +29,7 @@
           class="btn btn-default dialog-change"
           @click="confirmBtn"
         >
-          <span v-if="isLoading"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-if="isLoading"><svg-icon icon-class="spinner" />{{ $t('button.processing') }}</span>
           <span v-else>{{ button }}</span>
         </button>
       </div>
@@ -62,7 +66,6 @@ export default {
     opacity: 0.8;
   }
 }
-
 
 .dialog-select-text {
   font-size: 24px;

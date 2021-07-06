@@ -16,18 +16,22 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div 
+          <div
             v-if="singleType.type === 'enum'"
             class="filter-description"
           >
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
-            <div 
+            <div class="column-name">
+              {{ singleType.properties.display_name }} =
+            </div>
+            <div
               v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
               :key="'enum-' + propertiesIndex"
               class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
+            >
+              {{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span>
+            </div>
           </div>
-          <div 
+          <div
             v-if="singleType.type === 'range'"
             class="region-description"
           >
@@ -55,7 +59,7 @@ let boxPlotChartConfig = {
     type: 'boxplot',
     data: [],
     itemStyle: {
-      color: chartVariable['lightestChartColor']
+      color: chartVariable.lightestChartColor
     },
     tooltip: {
       formatter (param) {
@@ -108,7 +112,7 @@ export default {
     },
     chartOption () {
       let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
-      chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
+      chartAddon.xAxis = { ...chartAddon.xAxis, ...boxPlotChartConfig.xAxis }
       chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
@@ -154,7 +158,7 @@ export default {
           for (let j = 0; j < dataset.length; j++) {
             table += `<td>${dataset[j][i]}</<td>`
           }
-          table += `</tr>`
+          table += '</tr>'
         }
         table += '</tbody></table>'
         return table
@@ -239,6 +243,6 @@ export default {
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
-  },
+  }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <el-select 
+  <el-select
     v-model="selectedValues"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
@@ -27,7 +27,7 @@ export default {
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' },
     filterable: { type: Boolean, default: false },
-    isDisabled: {type: Boolean, default: false}
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     selectedValues: {

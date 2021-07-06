@@ -1,6 +1,6 @@
 <template>
   <div class="abnormal-statistics">
-    <spinner 
+    <spinner
       v-if="isLoading"
       class="list__spinner"
       size="50"
@@ -8,7 +8,8 @@
     <display-index-info
       v-else
       :dataset="{data: [logCount]}"
-      :custom-chart-style="indexComponentStyle" />
+      :custom-chart-style="indexComponentStyle"
+    />
   </div>
 </template>
 
@@ -42,7 +43,7 @@ export default {
     },
     isEditMode: {
       type: Boolean,
-      default: false,
+      default: false
     }
   },
   data () {
@@ -65,7 +66,7 @@ export default {
     indexComponentStyle () {
       return {
         ...this.sizeTable[this.conponentConfig.fontSize || 'middle'],
-        'color': this.textColor
+        color: this.textColor
       }
     }
   },
@@ -93,11 +94,11 @@ export default {
         })
         .catch(() => this.isLoading = false)
     },
-    fetchData () {  
+    fetchData () {
       this.isLoading = true
-      getAlertLogsCount({ 
-        conditionIds: this.appAciveConditions, 
-        groupId: this.getCurrentGroupId, 
+      getAlertLogsCount({
+        conditionIds: this.appAciveConditions,
+        groupId: this.getCurrentGroupId,
         active: this.isGetHandledComponentCount,
         startTime: this.filterTime.start,
         endTime: this.filterTime.end

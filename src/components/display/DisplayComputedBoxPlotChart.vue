@@ -20,7 +20,7 @@ let boxPlotChartConfig = {
     type: 'boxplot',
     data: [],
     itemStyle: {
-      color: chartVariable['lightestChartColor']
+      color: chartVariable.lightestChartColor
     }
   },
   outlier: {
@@ -85,7 +85,7 @@ export default {
       let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
       let boxPlotConfig = JSON.parse(JSON.stringify(boxPlotChartConfig))
 
-      chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotConfig.xAxis}
+      chartAddon.xAxis = { ...chartAddon.xAxis, ...boxPlotConfig.xAxis }
       chartAddon.tooltip.trigger = boxPlotConfig.tooltip.trigger
       chartAddon.tooltip.formatter = (param) => {
         if (param.componentSubType === 'boxplot') {
@@ -154,7 +154,7 @@ export default {
           for (let j = 0; j < dataset.length; j++) {
             table += `<td>${dataset[j][i]}</<td>`
           }
-          table += `</tr>`
+          table += '</tr>'
         }
         table += '</tbody></table>'
         return table

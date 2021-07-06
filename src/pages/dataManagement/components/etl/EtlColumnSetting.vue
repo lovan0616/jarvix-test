@@ -2,11 +2,12 @@
   <div class="etl-column-setting">
     <div class="section column-header">
       <div class="title">
-        <svg-icon 
-          icon-class="arrow-right" 
-          class="icon"/>
-        <a 
-          href="javascript:void(0)" 
+        <svg-icon
+          icon-class="arrow-right"
+          class="icon"
+        />
+        <a
+          href="javascript:void(0)"
           class="link"
           @click="$emit('close')"
         >{{ $t('etl.backToDataFrame') }}</a>
@@ -27,12 +28,14 @@
       />
     </div>
     <div class="section column-summary">
-      <div class="title">{{ $t('etl.dataSummary') }}</div>
+      <div class="title">
+        {{ $t('etl.dataSummary') }}
+      </div>
       <data-column-summary
         v-if="Object.keys(currentTableSummary[currentColumnIndex]).length > 1"
         :summary-data="currentTableSummary[currentColumnIndex]"
       />
-      <spinner 
+      <spinner
         v-else
         :title="$t('etl.dataCalculate')"
         class="spinner-conatiner"
@@ -55,7 +58,7 @@ export default {
     isReviewMode: {
       type: Boolean,
       default: false
-    },
+    }
   },
   data () {
     return {
@@ -101,7 +104,7 @@ export default {
         info
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

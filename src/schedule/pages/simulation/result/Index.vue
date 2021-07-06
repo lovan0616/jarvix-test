@@ -36,7 +36,7 @@
             {{ $t('schedule.simulation.title') }}
           </h2>
           <default-button @click="backToSetting">
-            {{ this.$t('schedule.simulation.backToSetting') }}
+            {{ $t('schedule.simulation.backToSetting') }}
           </default-button>
           <default-button
             class="adopt-button"
@@ -541,7 +541,6 @@ export default {
       }
     }
   }
-
 
   /deep/ .el-tabs {
     width: 100%;

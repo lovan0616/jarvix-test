@@ -4,9 +4,9 @@ import request from '@/utils/publicRequest'
  * 取得 mini app 列表
  * @param {String} id - mini app ID
  */
-export function getMiniAppList(groupId) {
+export function getMiniAppList (groupId) {
   return request({
-    url: `/app/list`,
+    url: '/app/list',
     method: 'GET',
     params: {
       groupId
@@ -18,7 +18,7 @@ export function getMiniAppList(groupId) {
  * 取得 mini app 內容
  * @param {String} id - mini app ID
  */
-export function getMiniAppInfo(id) {
+export function getMiniAppInfo (id) {
   return request({
     url: `/app/${id}`,
     method: 'GET'
@@ -29,7 +29,7 @@ export function getMiniAppInfo(id) {
  * 刪除 mini app
  * @param {String} id - mini app ID
  */
-export function deleteMiniApp(id) {
+export function deleteMiniApp (id) {
   return request({
     url: `/app/${id}`,
     method: 'DELETE'
@@ -40,9 +40,9 @@ export function deleteMiniApp(id) {
  * 建立 mini app
  * @param {Object} data - mini app 資訊
  */
-export function createApp(data) {
+export function createApp (data) {
   return request({
-    url: `/app/create`,
+    url: '/app/create',
     method: 'POST',
     data
   })
@@ -53,7 +53,7 @@ export function createApp(data) {
  * @param {String} id - mini app ID
  * @param {Object} data - mini app 資訊
  */
-export function updateAppSetting(id, data) {
+export function updateAppSetting (id, data) {
   return request({
     url: `/app/${id}`,
     method: 'PATCH',
@@ -66,7 +66,7 @@ export function updateAppSetting(id, data) {
  * @param {String} id - mini app ID
  * @param {Object} data - mini app 資訊
  */
-export function updateAppName(id, data) {
+export function updateAppName (id, data) {
   return request({
     url: `/app/${id}/name`,
     method: 'PATCH',

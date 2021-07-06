@@ -3,26 +3,30 @@
     <div class="wrapper">
       <img
         v-if="logoType === 'SyGPS'"
-        src="@/assets/images/logo_white.svg" 
-        alt="logo" 
-        class="page-logo-img">
+        src="@/assets/images/logo_white.svg"
+        alt="logo"
+        class="page-logo-img"
+      >
       <img
         v-else-if="logoType === 'ASE'"
-        src="@/assets/images/ase-logo.png" 
+        src="@/assets/images/ase-logo.png"
         alt="logo"
-        class="page-logo-img">
+        class="page-logo-img"
+      >
       <img
         v-else
-        src="@/assets/images/logo-text.svg" 
-        alt="logo" 
-        class="page-logo-img">
+        src="@/assets/images/logo-text.svg"
+        alt="logo"
+        class="page-logo-img"
+      >
       <main class="main">
-        <div class="bg"/>
-        <slot/>
+        <div class="bg" />
+        <slot />
       </main>
-      <div 
-        class="language-setting" 
-        @click="showChangeLanguageDialog">
+      <div
+        class="language-setting"
+        @click="showChangeLanguageDialog"
+      >
         <svg-icon icon-class="language" />
         <span>{{ $t('editing.languageSetting') }}</span>
       </div>
@@ -36,7 +40,7 @@
 </template>
 <script>
 import AppHeader from './AppHeader'
-import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
+import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog'
 
 export default {
   name: 'PageLayout',

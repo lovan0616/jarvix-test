@@ -1,5 +1,7 @@
 <template>
-  <div class="tool-tip">{{ content }}</div>
+  <div class="tool-tip">
+    {{ content }}
+  </div>
 </template>
 <script>
 export default {

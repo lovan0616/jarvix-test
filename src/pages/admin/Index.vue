@@ -44,7 +44,7 @@ import ResetPasswordInfoDialog from './components/ResetPasswordInfoDialog'
 import { getAccountList } from '@/API/Admin'
 import { getAccountUsers } from '@/API/User'
 import { mapState } from 'vuex'
-import DefaultSelect from '@/components/select/DefaultSelect.vue';
+import DefaultSelect from '@/components/select/DefaultSelect.vue'
 import DataTable from '@/components/table/DataTable'
 import InputBlock from '@/components/InputBlock'
 

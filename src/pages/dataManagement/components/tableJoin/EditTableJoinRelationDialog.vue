@@ -1,24 +1,28 @@
 <template>
   <div class="edit-table-join-relation-dialog full-page-dialog">
     <div class="dialog-container">
-      <div class="dialog-title">{{ $t('editing.foreignTable') }}
-        <a 
-          href="javascript:void(0)" 
+      <div class="dialog-title">
+        {{ $t('editing.foreignTable') }}
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="button-block">
-        <button 
-          :disabled="isLoading || reachLimit" 
+        <button
+          :disabled="isLoading || reachLimit"
           type="button"
           class="btn btn-secondary btn-has-icon"
           @click="addJoinTable"
-        ><svg-icon 
-          icon-class="plus" 
-          class="icon"/>{{ $t('button.newForeign') }}</button>
+        >
+          <svg-icon
+            icon-class="plus"
+            class="icon"
+          />{{ $t('button.newForeign') }}
+        </button>
       </div>
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="spinner-container"
@@ -111,7 +115,7 @@ export default {
             this.joinTableList = res.reduce((acc, cur) => {
               const selectedDataFrame = this.dataFrameList.find(dataFrame => dataFrame.id === cur.dataFrameId)
               if (!selectedDataFrame) return acc
-              acc.push({...cur, state: selectedDataFrame.state})
+              acc.push({ ...cur, state: selectedDataFrame.state })
               return acc
             }, [])
           }
@@ -125,14 +129,14 @@ export default {
       this.joinTableList.forEach((table, index) => {
         const selectedDataFrame = this.dataFrameList.find(dataFrame => dataFrame.id === table.dataFrameId)
         if (table.state !== selectedDataFrame.state) {
-          this.$set(this.joinTableList, index, {...table, state: selectedDataFrame.state})
+          this.$set(this.joinTableList, index, { ...table, state: selectedDataFrame.state })
         }
       })
     },
     dataFrameOptionList () {
       return this.dataFrameList.reduce((acc, cur) => {
         if (cur.state !== 'Enable' || cur.joinCount > 1) return acc
-        acc.push({...cur, name: cur.primaryAlias})
+        acc.push({ ...cur, name: cur.primaryAlias })
         return acc
       }, [])
     },
@@ -157,7 +161,7 @@ export default {
         showClose: true
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

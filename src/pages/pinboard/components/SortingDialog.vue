@@ -1,31 +1,36 @@
 <template>
   <div class="sorting-dialog full-page-dialog">
     <div class="dialog-container">
-      <div class="dialog-title">{{ $t('editing.sortSetting') }}
-        <a 
-          href="javascript:void(0)" 
+      <div class="dialog-title">
+        {{ $t('editing.sortSetting') }}
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <hint-info-block
         :msg-list="[$t('editing.dragAndSort')]"
         inline
       />
       <draggable
-        v-model="sortedList">
+        v-model="sortedList"
+      >
         <div
           v-for="(singleBoard, index) in sortedList"
           :key="index"
-          class="sorting-dialog__board-list">
-          <span 
-            class="sorting-dialog__board-list__question">
+          class="sorting-dialog__board-list"
+        >
+          <span
+            class="sorting-dialog__board-list__question"
+          >
             {{ singleBoard.question }}</span>
-          <svg-icon 
+          <svg-icon
             icon-class="vector"
-            class="sorting-dialog__board-list__icon"/>
+            class="sorting-dialog__board-list__icon"
+          />
         </div>
-      </draggable> 
+      </draggable>
     </div>
   </div>
 </template>
@@ -36,18 +41,18 @@ import draggable from 'vuedraggable'
 
 export default {
   name: 'SortingDialog',
-	components: {
+  components: {
     HintInfoBlock,
     draggable
   },
   props: {
-    boardList: { 
+    boardList: {
       type: Array,
       default: () => []
     }
   },
   data () {
-    return { 
+    return {
       tmpList: [],
       sortedList: []
     }
@@ -66,19 +71,19 @@ export default {
   },
   updated () {
     this.sortedList.forEach((element, index) => {
-      element.sequence =  ++index
+      element.sequence = ++index
     })
     this.$store.dispatch('pinboard/sortPinboard', this.sortedList).then(() => {
     })
   },
-	methods: {
-		closeDialog () {
+  methods: {
+    closeDialog () {
       let isSorted = this.tmpList.some((element, index) => {
         return element.id !== this.sortedList[index].id
       })
       this.$emit('close', isSorted)
     }
-	}
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -92,7 +97,6 @@ export default {
     justify-content: space-between;
     align-items: center;
     cursor: move;
-
 
     &__question {
       display: block;

@@ -3,15 +3,17 @@
     class="tooltip-dialog"
     @click.stop
   >
-    <div class="tooltip__message">{{ msg }}</div>
+    <div class="tooltip__message">
+      {{ msg }}
+    </div>
     <div class="tooltip__buttons">
-      <a 
-        href="javascript:void(0)" 
+      <a
+        href="javascript:void(0)"
         class="link tooltip__link"
         @click.stop="cancel"
       >{{ $t('button.cancel') }}</a>
-      <a 
-        href="javascript:void(0)" 
+      <a
+        href="javascript:void(0)"
         class="link tooltip__link"
         @click.stop="confirm"
       >{{ $t('button.confirm') }}</a>
@@ -22,9 +24,10 @@
 export default {
   name: 'TooltipDialog',
   props: {
-    msg: { 
+    msg: {
       type: String,
-      default: ''}
+      default: ''
+    }
   },
   methods: {
     cancel () {
@@ -64,7 +67,7 @@ export default {
       }
     }
   }
-  
+
   .button-block {
     text-align: center;
 

@@ -16,18 +16,22 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div 
+          <div
             v-if="singleType.type === 'enum'"
             class="filter-description"
           >
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
-            <div 
+            <div class="column-name">
+              {{ singleType.properties.display_name }} =
+            </div>
+            <div
               v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
               :key="'enum-' + propertiesIndex"
               class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
+            >
+              {{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span>
+            </div>
           </div>
-          <div 
+          <div
             v-if="singleType.type === 'range'"
             class="region-description"
           >
@@ -91,7 +95,7 @@ export default {
       }
     },
     addons: { type: [Object, Array], default: () => ([]) },
-    height: {type: String, default: '420px'},
+    height: { type: String, default: '420px' },
     isParallel: {
       type: Boolean,
       default: false

@@ -1,26 +1,32 @@
 <template>
   <div class="single-sub-restraint">
     <div class="single-sub-restraint__header">
-      <h2 class="single-sub-restraint__title">{{ subRestraint.properties.display_name }}</h2>
+      <h2 class="single-sub-restraint__title">
+        {{ subRestraint.properties.display_name }}
+      </h2>
       <div
         class="btn-delete"
         @click="deleteSubRestraint"
       >
         <svg-icon
-          icon-class="delete"/>
+          icon-class="delete"
+        />
       </div>
     </div>
     <spinner
-      v-if="isLoading"/>
-    <div 
+      v-if="isLoading"
+    />
+    <div
       v-else-if="statsType === 'NUMERIC'"
-      class="single-sub-restraint__content">
+      class="single-sub-restraint__content"
+    >
       <div class="numeric-block">
-        <div 
-          :class="{'has-error': errors.has(index + '-' + 'upperBound')}" 
-          class="numeric-block__item item">
+        <div
+          :class="{'has-error': errors.has(index + '-' + 'upperBound')}"
+          class="numeric-block__item item"
+        >
           <div class="item__input-block">
-            <label class="item__label"> 
+            <label class="item__label">
               {{ $t('message.upperBound') }}
             </label>
             <input
@@ -32,16 +38,19 @@
               class="input item__input"
             >
           </div>
-          <div 
+          <div
             v-show="errors.has(index + '-' + 'upperBound')"
             class="error-text"
-          >{{ errors.first(index + '-' + 'upperBound') }}</div>
+          >
+            {{ errors.first(index + '-' + 'upperBound') }}
+          </div>
         </div>
-        <div 
-          :class="{'has-error': errors.has(index + '-' + 'lowerBound')}" 
-          class="item">
+        <div
+          :class="{'has-error': errors.has(index + '-' + 'lowerBound')}"
+          class="item"
+        >
           <div class="item__input-block">
-            <label class="item__label"> 
+            <label class="item__label">
               {{ $t('message.lowerBound') }}
             </label>
             <input
@@ -53,26 +62,30 @@
               class="input item__input"
             >
           </div>
-          <div 
+          <div
             v-show="errors.has(index + '-' + 'lowerBound')"
             class="error-text"
-          >{{ errors.first(index + '-' + 'lowerBound') }}</div>
+          >
+            {{ errors.first(index + '-' + 'lowerBound') }}
+          </div>
         </div>
       </div>
     </div>
-    <div 
+    <div
       v-else-if="statsType === 'DATETIME'"
-      class="single-sub-restraint__content">
+      class="single-sub-restraint__content"
+    >
       <div class="datetime-block">
-        <div 
-          :class="{'has-error': errors.has(index + '-' + 'datetimeLowerBound')}" 
-          class="item">
+        <div
+          :class="{'has-error': errors.has(index + '-' + 'datetimeLowerBound')}"
+          class="item"
+        >
           <div class="item__input-block">
-            <label class="item__label"> 
+            <label class="item__label">
               {{ $t('dataFrameAdvanceSetting.start') }}
             </label>
             <!-- value-format 不要使用 timestamp, 會有時區問題
-              Datepicker saving wrong date to v-model 
+              Datepicker saving wrong date to v-model
               https://github.com/ElemeFE/element/issues/3814
             -->
             <el-date-picker
@@ -83,23 +96,27 @@
               :type="getDatePickerOptions(subRestraint.properties.timeScope).type"
               :format="getDatePickerOptions(subRestraint.properties.timeScope).format"
               :value-format="subRestraint.properties.timeScope === 'WEEK' ? '' : 'yyyy-MM-dd HH:mm:ss'"
-              class="date-picker" 
-              @change="handleWeekStart"/>
+              class="date-picker"
+              @change="handleWeekStart"
+            />
           </div>
-          <div 
+          <div
             v-show="errors.has(index + '-' + 'datetimeLowerBound')"
             class="error-text"
-          >{{ errors.first(index + '-' + 'datetimeLowerBound') }}</div>
+          >
+            {{ errors.first(index + '-' + 'datetimeLowerBound') }}
+          </div>
         </div>
-        <div 
-          :class="{'has-error': errors.has(index + '-' + 'datetimeUpperBound')}" 
-          class="datetime-block__item item">
+        <div
+          :class="{'has-error': errors.has(index + '-' + 'datetimeUpperBound')}"
+          class="datetime-block__item item"
+        >
           <div class="item__input-block">
-            <label class="item__label"> 
+            <label class="item__label">
               {{ $t('dataFrameAdvanceSetting.end') }}
             </label>
             <!-- value-format 不要使用 timestamp, 會有時區問題
-              Datepicker saving wrong date to v-model 
+              Datepicker saving wrong date to v-model
               https://github.com/ElemeFE/element/issues/3814
             -->
             <el-date-picker
@@ -112,21 +129,26 @@
               :format="getDatePickerOptions(subRestraint.properties.timeScope).format"
               :value-format="subRestraint.properties.timeScope === 'WEEK' ? '' : 'yyyy-MM-dd HH:mm:ss'"
               class="date-picker"
-              @change="handleWeekEnd"/>
+              @change="handleWeekEnd"
+            />
           </div>
-          <div 
+          <div
             v-show="errors.has(index + '-' + 'datetimeUpperBound')"
             class="error-text"
-          >{{ errors.first(index + '-' + 'datetimeUpperBound') }}</div>
+          >
+            {{ errors.first(index + '-' + 'datetimeUpperBound') }}
+          </div>
         </div>
       </div>
     </div>
-    <div 
+    <div
       v-else-if="statsType === 'BOOLEAN'"
-      class="single-sub-restraint__content boolean-block">
-      <div 
-        v-if="!valueList" 
-        class="empty-message">
+      class="single-sub-restraint__content boolean-block"
+    >
+      <div
+        v-if="!valueList"
+        class="empty-message"
+      >
         {{ $t('editing.emptyKey') }}
       </div>
       <template v-show="valueList">
@@ -150,18 +172,22 @@
             class="input-radio-label"
           >{{ option }}</label>
         </div>
-        <div 
+        <div
           v-show="errors.has(index + '-' + 'boolean')"
           class="error-text"
-        >{{ errors.first(index + '-' + 'boolean') }}</div>
+        >
+          {{ errors.first(index + '-' + 'boolean') }}
+        </div>
       </template>
     </div>
-    <div 
+    <div
       v-else-if="statsType === 'CATEGORY'"
-      class="single-sub-restraint__content category-block">
-      <div 
-        v-if="!valueList" 
-        class="empty-message">
+      class="single-sub-restraint__content category-block"
+    >
+      <div
+        v-if="!valueList"
+        class="empty-message"
+      >
         {{ $t('editing.emptyKey') }}
       </div>
       <el-select
@@ -193,11 +219,15 @@
           :value="item.value"
         />
       </el-select>
-      <div class="warning-text">{{ $t('editing.onlyPrefixMatching') }}</div>
-      <div 
+      <div class="warning-text">
+        {{ $t('editing.onlyPrefixMatching') }}
+      </div>
+      <div
         v-show="errors.has(index + '-' + 'select')"
         class="error-text"
-      >{{ errors.first(index + '-' + 'select') }}</div>
+      >
+        {{ errors.first(index + '-' + 'select') }}
+      </div>
     </div>
   </div>
 </template>
@@ -209,7 +239,7 @@ import { mapState } from 'vuex'
 
 export default {
   inject: ['$validator'],
-  name: "SingleSubRestraintBlock",
+  name: 'SingleSubRestraintBlock',
   components: {
     DefaultSelect
   },
@@ -234,7 +264,7 @@ export default {
       selectedList: [],
       valueList: [],
       tempValueList: [],
-      tempAliasList:[],
+      tempAliasList: [],
       statsType: null,
       queryString: '',
       searchTimer: null,
@@ -242,7 +272,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataFrameAdvanceSetting', ['columnList']), 
+    ...mapState('dataFrameAdvanceSetting', ['columnList']),
     upperBoundRules () {
       return 'required|decimal|validUpperBound:lowerBound'
     },
@@ -262,17 +292,17 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      this.columnId = this.subRestraint.properties['dc_id']
+      this.columnId = this.subRestraint.properties.dc_id
       getDataColumnValue(this.columnId).then(response => {
         this.statsType = response.type
         this.valueList = this.statsType === 'BOOLEAN'
-          ? response['bool']
+          ? response.bool
           : response[this.statsType.toLowerCase()]
 
-        if(this.statsType === 'CATEGORY') {
+        if (this.statsType === 'CATEGORY') {
           this.selectedList = JSON.parse(JSON.stringify(this.subRestraint.properties.display_datavalues))
           // CATEGORY 值超過 200 筆時候會回傳 null，因此需要由後端做 value search
-          if(!this.valueList) {
+          if (!this.valueList) {
             this.isCategoryValueSearch = true
             this.searchValue()
           } else {
@@ -298,8 +328,8 @@ export default {
         } else if (this.statsType === 'DATETIME') {
           // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
           this.valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
-          if(this.subRestraint.properties.start && this.subRestraint.properties.end) {
-            return 
+          if (this.subRestraint.properties.start && this.subRestraint.properties.end) {
+
           } else {
             this.subRestraint.properties.start = this.customerTimeFormatter(this.valueList.start, 'SECOND')
             this.subRestraint.properties.end = this.customerTimeFormatter(this.valueList.end, 'SECOND')
@@ -319,7 +349,7 @@ export default {
       this.subRestraint.properties.datavalues = [option]
       this.subRestraint.properties.display_datavalues = [option]
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       this.queryString = query
       this.isSearching = true
       clearTimeout(this.searchTimer)
@@ -329,14 +359,14 @@ export default {
     },
     searchValue () {
       // category value 如果一開始有值，表示資料筆數小於 200，不需用後端的 search
-      if(!this.isCategoryValueSearch) {
+      if (!this.isCategoryValueSearch) {
         // 這裡字串比對用 startsWith 是為了和後端一致
         this.valueList = this.tempAliasList
           .filter(element => !this.queryString || element.name.startsWith(this.queryString))
         this.isSearching = false
       } else {
         dataValueSearch(this.columnId, { searchString: this.queryString })
-          .then(({fuzzySearchResult}) => {
+          .then(({ fuzzySearchResult }) => {
             this.tempValueList = fuzzySearchResult.map(element => {
               return {
                 value: element,
@@ -356,7 +386,7 @@ export default {
       }
     },
     updateDataValue (value) {
-      /* 使用中文輸入法時，按 enter 剛好會也會觸發到滑鼠左鍵的點擊，讓選項誤選 
+      /* 使用中文輸入法時，按 enter 剛好會也會觸發到滑鼠左鍵的點擊，讓選項誤選
        * 這時時候 keyPress 不會有值，keyDown 則會回傳 229
       */
       if (event.keyCode === 13 || event.keyCode === 229) return
@@ -364,37 +394,37 @@ export default {
       // TODO:每次都要重新取值，有點沒效率
       this.subRestraint.properties.datavalues = []
       this.tempValueList.forEach(item => {
-        if(value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
+        if (value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
       })
       this.subRestraint.properties.display_datavalues = value
     },
     deleteSubRestraint () {
       this.$emit('delete')
     },
-    /* timePicker 單位是 week 時，不能使用 value-format 
+    /* timePicker 單位是 week 時，不能使用 value-format
      * https://github.com/ElemeFE/element/issues/8783
     */
     handleWeekStart (time) {
-      if(this.subRestraint.properties.timeScope !== 'WEEK') return
+      if (this.subRestraint.properties.timeScope !== 'WEEK') return
       this.subRestraint.properties.start = time.getTime()
     },
     handleWeekEnd (time) {
-      if(this.subRestraint.properties.timeScope !== 'WEEK') return
+      if (this.subRestraint.properties.timeScope !== 'WEEK') return
       this.subRestraint.properties.end = time.getTime()
     },
     disabledDueDate (time) {
       return time.getTime() < new Date(this.subRestraint.properties.start).getTime()
     },
-    onSelectfocused() {
+    onSelectfocused () {
       this.$refs.fuzzySearchSelect.$refs.input.blur = () => {
         // 因 el-select blur 監聽回調失效，改成監聽 focus 事件
         // 使用 setTimeout 在選單關閉之後再 assign 新值避免閃爍
         setTimeout(() => {
           if (this.tempAliasList.length > 0) this.valueList = this.tempAliasList
         }, 100)
-      };
-    },
-  },
+      }
+    }
+  }
 
 }
 </script>
@@ -456,7 +486,7 @@ export default {
           margin-bottom: 26px;
         }
       }
-      
+
       &__input-block {
         display: flex;
         flex-direction: row;
@@ -498,7 +528,7 @@ export default {
     }
 
     /deep/ .el-input__suffix {
-      .el-input__icon {      
+      .el-input__icon {
         line-height: 30px;
       }
     }
@@ -611,8 +641,8 @@ export default {
             }
           }
         }
-      } 
-      
+      }
+
     }
 
     .checkbox-label {

@@ -1,24 +1,30 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">{{ isPersonalPinboard ? $t('editing.pinboard') : $t('editing.projectPinboard') }}</h1>
-    <div 
+    <h1 class="page-title">
+      {{ isPersonalPinboard ? $t('editing.pinboard') : $t('editing.projectPinboard') }}
+    </h1>
+    <div
       v-if="boardName"
       class="bread-crumb-block"
     >
-      <router-link 
+      <router-link
         :to="{name: prevPage}"
         class="page root"
-      >{{ $t('editing.allCategory') }}</router-link>
+      >
+        {{ $t('editing.allCategory') }}
+      </router-link>
       <span class="divider">/</span>
       <span class="page">{{ boardName }}</span>
       <a
         v-if="isSortable"
         class="sort-btn"
         href="javascript:void(0)"
-        @click="isShowSortingDialog=true">
+        @click="isShowSortingDialog=true"
+      >
         <svg-icon
           icon-class="vector"
-          class="icon"/> {{ $t('button.sortSetting') }}
+          class="icon"
+        /> {{ $t('button.sortSetting') }}
       </a>
     </div>
     <sorting-dialog
@@ -79,14 +85,14 @@ export default {
   },
   computed: {
     pinboardList () {
-      return this.isPersonalPinboard 
+      return this.isPersonalPinboard
         ? this.$store.state.pinboard.pinboardList
         : this.$store.state.pinboard.groupPinboardList
     },
     pinboardInfo () {
-      return this.isPersonalPinboard 
-       ? this.$store.state.pinboard.pinboardInfo
-       : this.$store.state.pinboard.groupPinboardInfo
+      return this.isPersonalPinboard
+        ? this.$store.state.pinboard.pinboardInfo
+        : this.$store.state.pinboard.groupPinboardInfo
     },
     availableList () {
       return this.boardList.filter(element => !element.isDeleted)
@@ -189,7 +195,7 @@ export default {
                 return isEnOrEnum(acc.slice(-1)) || isEnOrEnum(cur[0]) ? `${acc} ${cur.matchedWord}` : acc + cur.matchedWord
               }, '')
               currentData.dataframeName = componentResponse.transcript
-                ? componentResponse.transcript.dataFrame ? componentResponse.transcript.dataFrame.dataFrameAlias : componentResponse.transcript.dataframe.alias 
+                ? componentResponse.transcript.dataFrame ? componentResponse.transcript.dataFrame.dataFrameAlias : componentResponse.transcript.dataframe.alias
                 : componentResponse.dataframeName
               currentData.dataColumnMap = componentResponse.dataColumnMap
               currentData.selectedColumns = componentResponse.selectedColumns
@@ -221,15 +227,14 @@ export default {
     },
     closeSortingDialog (isSorted) {
       this.isShowSortingDialog = false
-      if(isSorted) {
+      if (isSorted) {
         this.boardList = []
         this.getPinboardInfo()
       }
     },
     unPin (pinBoardId) {
       this.boardList.forEach(element => {
-        if(element.pinboardId === pinBoardId)
-          element.isDeleted = true
+        if (element.pinboardId === pinBoardId) { element.isDeleted = true }
       })
     },
     refreshPinboardData (refreshInfo) {
@@ -237,7 +242,7 @@ export default {
       currentPinboardInfo.id = currentPinboardInfo.pinboardId
       this.getComponent(currentPinboardInfo, refreshInfo.resolveFunction)
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -266,7 +271,7 @@ export default {
       padding: 2px 12px;
       border-radius: 4px;
       border: 1px solid #fff;
-      
+
       &:hover {
         background-color: #63cbd5;
         color: #fff;

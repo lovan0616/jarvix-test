@@ -11,7 +11,7 @@
         class="filter__input-text"
         @mouseenter="openDropdown"
       >
-      <i  
+      <i
         class="el-icon-circle-close filter__icon-reset"
         @click="keyword = ''"
       />
@@ -36,7 +36,8 @@
         </template>
         <div
           v-else
-          class="option is-empty">
+          class="option is-empty"
+        >
           {{ $t('schedule.base.noData') }}
         </div>
       </ul>
@@ -85,7 +86,7 @@ export default {
       return {
         rootClassName: '.filter__input-options',
         rootMargin: 0,
-        threshold: 0,
+        threshold: 0
       }
     },
     reachLastPage () {
@@ -126,19 +127,19 @@ export default {
         size: 200,
         keyword: this.keyword
       })
-      .then(({ data: newOptions, pagination }) => {
-        if (this.defaultOptions.length === 0) {
-          this.defaultOptions = newOptions
-        }
-        if (pagination.currentPage === 0) {
-          this.options = newOptions
-        } else {
-          this.options = [ ...this.options, ...newOptions ]
-        }
-        this.paginationInfo = pagination
-      })
-      .catch(() => {})
-      .finally(() => this.isSearching = false)
+        .then(({ data: newOptions, pagination }) => {
+          if (this.defaultOptions.length === 0) {
+            this.defaultOptions = newOptions
+          }
+          if (pagination.currentPage === 0) {
+            this.options = newOptions
+          } else {
+            this.options = [...this.options, ...newOptions]
+          }
+          this.paginationInfo = pagination
+        })
+        .catch(() => {})
+        .finally(() => this.isSearching = false)
     },
     onClickOption (option) {
       this.isSelectByClick = true
@@ -194,7 +195,7 @@ export default {
       list-style: none;
       z-index: 4;
       box-shadow: 0px 4px 12px rgba(73, 128, 132, 0.48);
-  
+
       .option {
         padding: 0 20px;
         line-height: 36px;

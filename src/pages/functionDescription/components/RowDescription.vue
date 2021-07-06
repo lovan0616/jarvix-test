@@ -1,13 +1,15 @@
 <template>
-  <div 
-    :style="{ top, width }" 
-    class="row-description">
-    <p 
-      class="text" 
-      v-html="text"/>
-    <div class="dot outline"/>
-    <div class="line"/>
-    <div class="dot solid"/>
+  <div
+    :style="{ top, width }"
+    class="row-description"
+  >
+    <p
+      class="text"
+      v-html="text"
+    />
+    <div class="dot outline" />
+    <div class="line" />
+    <div class="dot solid" />
   </div>
 </template>
 <script>

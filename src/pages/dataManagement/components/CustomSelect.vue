@@ -1,28 +1,32 @@
 <template>
   <div class="custom-select-block">
-    <div 
+    <div
       class="custom-select"
       @click="toggleDropdown"
     >
-      <div class="selected-option">{{ value ? selectedOption : defaultMsg }}</div>
-      <svg-icon 
-        :class="{'is-open': isDropdownOpen}" 
+      <div class="selected-option">
+        {{ value ? selectedOption : defaultMsg }}
+      </div>
+      <svg-icon
+        :class="{'is-open': isDropdownOpen}"
         icon-class="dropdown"
         class="arrow-icon"
       />
     </div>
-    <div 
+    <div
       v-show="isDropdownOpen"
       :style="[dropdownPosition, {'max-height': optionListMaxHeight + 'px'}]"
       class="option-list-block"
     >
-      <div 
+      <div
         v-for="option in optionList"
         :key="option.id"
         :class="{active: option.id === value}"
         class="option"
         @click="chooseOption(option.id)"
-      >{{ option.name }}</div>
+      >
+        {{ option.name }}
+      </div>
     </div>
   </div>
 </template>
@@ -106,7 +110,7 @@ export default {
       // 螢幕可視空間的高度 - 目前元素底部距離上方的高度如果小於下拉高度，就移到上方
       this.onTop = (viewHeight - rect.bottom) < this.optionListMaxHeight
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

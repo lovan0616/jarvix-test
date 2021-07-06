@@ -1,9 +1,10 @@
 <template>
   <div class="file-upload-dialog full-page-dialog">
     <div class="dialog-container">
-      <transition 
-        name="fade" 
-        mode="out-in">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <model-execution-flow />
       </transition>
     </div>
@@ -19,7 +20,7 @@ export default {
   },
   data () {
     return {
-    } 
+    }
   },
   destroyed () {
     this.$store.commit('modelManagement/updateUploadModelList', [])
@@ -27,6 +28,6 @@ export default {
     this.$store.commit('modelManagement/updateModelName')
   },
   methods: {
-  },
+  }
 }
 </script>

@@ -7,17 +7,18 @@
       />
     </div>
     <div class="content-block">
-      <div class="content">{{ $t('resultDescription.systemQuestionAnalysis', {question: segmentationInfo.question}) }}
+      <div class="content">
+        {{ $t('resultDescription.systemQuestionAnalysis', {question: segmentationInfo.question}) }}
         <span v-if="unknownTokenCount">
           “{{ unknowTokenList }}” {{ $tc('resultDescription.systemUnknownTokenList', unknownTokenCount) }}
         </span>
       </div>
-      <a 
-        href="javascript:void(0)" 
+      <a
+        href="javascript:void(0)"
         class="remove-link"
         @click="close"
       >
-        <svg-icon icon-class="remove-circle"/>
+        <svg-icon icon-class="remove-circle" />
       </a>
     </div>
   </div>
@@ -31,7 +32,7 @@ export default {
       default () {
         return {
           question: null,
-          unknownToken: [],
+          unknownToken: []
         }
       }
     }
@@ -48,7 +49,7 @@ export default {
     close () {
       this.$emit('close')
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

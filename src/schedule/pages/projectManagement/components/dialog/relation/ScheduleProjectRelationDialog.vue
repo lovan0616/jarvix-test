@@ -3,14 +3,13 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('schedule.project.dataSourceBindingManagement') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="$emit('close', shouldRefetchProjectsThereafter)"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="relation-container">
-
         <!-- 管理資料源 -->
         <bind-data-source
           :project-info="projectInfo"
@@ -22,10 +21,11 @@
           :title="$t('editing.loading')"
         />
         <template v-else>
-
           <!-- 管理資料表 -->
           <section class="relation-container__section">
-            <div class="relation-container__section-title">Step2: {{ $t('editing.chooseDataFrame') }}</div>
+            <div class="relation-container__section-title">
+              Step2: {{ $t('editing.chooseDataFrame') }}
+            </div>
 
             <!-- 綁定訂單 -->
             <bind-order
@@ -71,7 +71,9 @@
           <button
             class="btn btn-outline"
             @click="$emit('close', shouldRefetchProjectsThereafter)"
-          >{{ $t('editing.close') }}</button>
+          >
+            {{ $t('editing.close') }}
+          </button>
         </div>
       </div>
     </div>
@@ -185,7 +187,7 @@ export default {
             } else if (category === 'RAW_DATA') {
               this.$set(this[`form${pascaledCategory}`], file.code, file.dataframeStatus === 'BOUND' ? file.dataframeId : null)
             }
-            
+
             // 加入檢查資訊
             this.$set(this[`checkedResult${pascaledCategory}`], file.code, { ...this.defaultCheckedResult })
           })
@@ -228,9 +230,11 @@ export default {
       for (const key in this.formRawData) this.formRawData[key] = null
     },
     resetConstraintSelectors () {
-      for (const key in this.formConstraint) this.formConstraint[key] = {
-        dataframeId: null,
-        isSelected: false
+      for (const key in this.formConstraint) {
+        this.formConstraint[key] = {
+          dataframeId: null,
+          isSelected: false
+        }
       }
     },
     resetCheckedResultOrder () {

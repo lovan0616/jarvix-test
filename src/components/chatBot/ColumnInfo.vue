@@ -7,19 +7,24 @@
     v-else-if="hasError"
     :msg="$t('message.systemIsError')"
   />
-  <div 
-    v-else 
-    class="column-info">
+  <div
+    v-else
+    class="column-info"
+  >
     <div class="column-info__menu menu">
-      <div class="menu__title">{{ $t('askHelper.columnCatalog') }}</div>
+      <div class="menu__title">
+        {{ $t('askHelper.columnCatalog') }}
+      </div>
       <div class="menu__list">
-        <div 
+        <div
           v-for="(columnInfo, index) in columnTypeList"
           :key="index"
           :class="{'menu__item--active': index === selectedIndex}"
           class="menu__item"
           @click="selectCatelog(index)"
-        >{{ columnInfo }}</div>
+        >
+          {{ columnInfo }}
+        </div>
       </div>
     </div>
     <div class="column-info__block block">
@@ -29,33 +34,41 @@
       </div>
       <div class="block__description">
         <span class="column-lamp">
-          <svg-icon icon-class="lamp"/>
+          <svg-icon icon-class="lamp" />
           {{ $t('askHelper.description') }}:
         </span>
         {{ generateDescription(columnTypeList[selectedIndex]) }}
       </div>
       <table class="block__table">
         <tr>
-          <th 
-            class="column-name" 
-            colspan="3">{{ $t('askHelper.columnName') }}</th>
+          <th
+            class="column-name"
+            colspan="3"
+          >
+            {{ $t('askHelper.columnName') }}
+          </th>
         </tr>
         <template
-          v-if="columnInfoList.length > 0">
-          <tr 
+          v-if="columnInfoList.length > 0"
+        >
+          <tr
             v-for="row in columnInfoList.length / 3"
             :key="'row' + row"
-            class="column-content">
-            <td 
+            class="column-content"
+          >
+            <td
               v-for="column in 3"
               :key="'column' + column"
-              class="single-column">
+              class="single-column"
+            >
               {{ columnInfoList[(row-1)*3+column-1] ? columnInfoList[(row-1)*3+column-1] : '-' }}
             </td>
           </tr>
         </template>
         <tr v-else>
-          <td class="empty-column">{{ $t('askHelper.emptyColumn') }}</td>
+          <td class="empty-column">
+            {{ $t('askHelper.emptyColumn') }}
+          </td>
         </tr>
       </table>
     </div>
@@ -85,18 +98,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition'])
   },
   watch: {
     askCondition: {
       deep: true,
       handler (newValue, oldValue) {
         if (
-          this.mode === 'popup' 
+          this.mode === 'popup' ||
           // 初次開啟設定時不觸發
-          || (oldValue.isInit === false && oldValue.columnList === null) 
+          (oldValue.isInit === false && oldValue.columnList === null) ||
           // 切換 dataframe 清空設定時不觸發
-          || newValue.isInit === false
+          newValue.isInit === false
         ) return
         this.fetchColumnInfo()
       }
@@ -110,7 +123,7 @@ export default {
     fetchColumnInfo () {
       Promise.all([this.getDataSourceColumnInfo(false), this.getDataSourceDataValue(false)])
         .then(([columnInfo, dataValue]) => {
-          this.dataSourceColumnInfoList = {...columnInfo, ...dataValue}
+          this.dataSourceColumnInfoList = { ...columnInfo, ...dataValue }
           this.selectCatelog(this.selectedIndex)
           this.isLoading = false
         })
@@ -142,7 +155,7 @@ export default {
       const tmpColumnInfoList = JSON.parse(JSON.stringify(this.dataSourceColumnInfoList))
       this.columnInfoList = tmpColumnInfoList[key]
       // Number of columns must be multiples of 3
-      let emptyValue = this.columnInfoList.length % 3 ===  0 ? 0 : 3 - this.columnInfoList.length % 3
+      let emptyValue = this.columnInfoList.length % 3 === 0 ? 0 : 3 - this.columnInfoList.length % 3
       while (emptyValue--) {
         this.columnInfoList.push('')
       }
@@ -171,13 +184,13 @@ export default {
   position: relative;
   height: 100%;
   display: flex;
-  
+
   &__menu {
     width: 200px;
     height: 100%;
     margin-right: 20px;
   }
-  
+
   .menu {
     &__title {
       height: 42px;
@@ -303,7 +316,7 @@ export default {
         text-align: center;
         border: 1px solid #515959;
       }
-    } 
+    }
   }
 }
 </style>

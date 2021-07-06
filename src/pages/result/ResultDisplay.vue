@@ -5,7 +5,7 @@
       :segmentation-info="segmentationInfo"
       @close="closeUnknowInfoBlock"
     />
-    <spinner 
+    <spinner
       v-if="isLoading"
       :title="$t('resultDescription.analysisProcessing')"
       class="layout-spinner"
@@ -81,8 +81,9 @@ export default {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
       this.fetchApiAsk({
-        question, 'dataSourceId': this.dataSourceId,
-        'dataFrameId': this.dataFrameId,
+        question,
+        dataSourceId: this.dataSourceId,
+        dataFrameId: this.dataFrameId,
         shouldCancelToken: true
       })
     },
@@ -91,10 +92,10 @@ export default {
       handler (newValue, oldValue) {
         if (
           // 切換 dataframe 被清空時不重新問問題
-          newValue.columnList === null && newValue.filterList.length === 0
+          newValue.columnList === null && newValue.filterList.length === 0 ||
           // 開啟進階設定取得欄位資料時也不重新問問題
-          || oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length)
-          || this.segmentationPayload === null
+          oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length) ||
+          this.segmentationPayload === null
         ) return
 
         // 預先觸發重新計算 column summary 和 column correlation
@@ -104,15 +105,15 @@ export default {
             let currentWord = cur.word
             return acc + ((index !== 0 && isEnOrEnum(currentWord)) ? ` ${currentWord}` : currentWord)
           }, ''),
-          'dataSourceId': this.$route.query.dataSourceId, 
-          'dataFrameId': this.$route.query.dataFrameId,
+          dataSourceId: this.$route.query.dataSourceId,
+          dataFrameId: this.$route.query.dataFrameId,
           shouldCancelToken: true
         })
       }
     }
   },
   mounted () {
-    if(this.isModelResult) {
+    if (this.isModelResult) {
       setTimeout(() => {
         this.isLoading = false
       }, 2 * 1000)
@@ -127,10 +128,10 @@ export default {
   methods: {
     // ...mapActions('dataSource', ['triggerColumnDataCalculation']),
     fetchData () {
-      const {dataSourceId, dataFrameId, question} = this.$route.query
+      const { dataSourceId, dataFrameId, question } = this.$route.query
       if (!question) return
       this.fetchApiAsk({
-        dataSourceId, 
+        dataSourceId,
         dataFrameId,
         question,
         shouldCancelToken: true
@@ -211,7 +212,7 @@ export default {
                 return false
               }
             }
-            
+
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               algoConfig: this.algoConfig[segmentationList[0].denotation.toLowerCase()] || null,
@@ -236,7 +237,7 @@ export default {
           } else {
             // 多個結果
             this.layout = 'MultiResult'
-            this.resultInfo = {...response, question: data.question}
+            this.resultInfo = { ...response, question: data.question }
             this.isLoading = false
           }
         }).catch((error) => {

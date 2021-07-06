@@ -47,7 +47,7 @@
               :value="true"
               type="checkbox"
             >
-            <div class="checkbox-square"/>
+            <div class="checkbox-square" />
           </div>
           <span>{{ selectAll ? $t('schedule.simulation.selectedJobsCount', {count: pagination.totalItems, job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) : $t('schedule.simulation.selectAll') }}</span>
         </label>
@@ -99,7 +99,7 @@ import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'UnscheduledJobsTable',
   components: {
-    JobSelectionPaginationTable,
+    JobSelectionPaginationTable
   },
   data () {
     return {
@@ -218,7 +218,7 @@ export default {
     },
     updatePage (page) {
       this.fetchJobData(page - 1, this.pagination.itemPerPage, this.jobSearchNumber)
-    },
+    }
   }
 }
 </script>

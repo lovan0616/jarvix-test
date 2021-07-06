@@ -18,7 +18,8 @@
     <i
       slot="suffix"
       class="el-input__icon ion ion-ios-mic-outline"
-      @click="onVoiceClick"/>
+      @click="onVoiceClick"
+    />
   </el-autocomplete>
 </template>
 
@@ -26,7 +27,7 @@
 import SpeechCognition from './speechRecognition'
 import fuzzball from 'fuzzball'
 import Vue from 'vue'
-Vue.component('aucocomplete-item', {
+Vue.component('AucocompleteItem', {
   functional: true,
   props: {
     item: { type: Object, required: true }
@@ -37,7 +38,7 @@ Vue.component('aucocomplete-item', {
       h('div', { attrs: { class: 'value' } }, [item.value]),
       h('span', { attrs: { class: 'info' } }, [item.info])
     ])
-  },
+  }
 })
 export default {
   name: 'SySpeechAutocompleteInput',

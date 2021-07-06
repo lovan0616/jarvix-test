@@ -1,5 +1,5 @@
 <template>
-  <result-board 
+  <result-board
     :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :result-info="resultInfo"
@@ -13,7 +13,7 @@
   >
     <result-board-body slot="PageResultBoardBody">
       <template
-        v-if="currentResultId && resultInfo.canDoList.length > 0" 
+        v-if="currentResultId && resultInfo.canDoList.length > 0"
         slot="multiAnalyPanel"
       >
         <ul class="multi-analysis__list">
@@ -25,24 +25,27 @@
             @click="clickTab(typeInfo.denotation, index)"
           >
             <span class="multi-analysis__item-label">
-              <svg-icon :icon-class="typeInfo.icon"/>
+              <svg-icon :icon-class="typeInfo.icon" />
               {{ typeInfo.name }}
             </span>
             <div class="multi-analysis__item-status">
-              <spinner 
-                v-if="typeInfo.isProcessing" 
-                size="16"/>
-              <svg-icon 
+              <spinner
+                v-if="typeInfo.isProcessing"
+                size="16"
+              />
+              <svg-icon
                 v-else-if="!isHistogramBinSetting && typeInfo.isFailed"
                 class="exclamation-triangle-icon"
-                icon-class="exclamation-triangle" />
+                icon-class="exclamation-triangle"
+              />
               <div
                 v-else-if="hasAdvancedSetting(index)"
                 class="multi-analysis__item-dropdownlist"
               >
-                <svg-icon 
+                <svg-icon
                   icon-class="more"
-                  class="more-icon" />
+                  class="more-icon"
+                />
                 <dropdown-select
                   :bar-data="barData[typeInfo.denotation]"
                   class="dropdown"
@@ -53,12 +56,13 @@
           </li>
         </ul>
       </template>
-      <template  
-        v-if="isShowInfo" 
-        slot="PageResultBoardIndicator">
+      <template
+        v-if="isShowInfo"
+        slot="PageResultBoardIndicator"
+      >
         <notify-info-block :msg="displayedInfo" />
       </template>
-      <template 
+      <template
         v-if="resultInfo.key_result && resultInfo.key_result.length > 0"
         slot="PageResultBoardChart"
       >
@@ -106,11 +110,12 @@
           />
         </template>
       </template>
-      <template 
+      <template
         v-if="resultInfo.recommended_insight && resultInfo.recommended_insight.length > 0"
-        slot="InsightRecommended">
-        <recommended-insight 
-          v-for="componentId in resultInfo.recommended_insight" 
+        slot="InsightRecommended"
+      >
+        <recommended-insight
+          v-for="componentId in resultInfo.recommended_insight"
           :key="componentId"
           :component-id="componentId"
         />
@@ -208,7 +213,7 @@ export default {
     isHistogramBinSetting: {
       type: Boolean,
       default: false
-    },
+    }
   },
   data: () => {
     return {
@@ -237,22 +242,22 @@ export default {
             title: 'clustering.saveClusteringResultAsColumn',
             icon: 'feature',
             dialogName: 'saveClustering'
-          },
+          }
         ],
         PREDICTION: [
           {
             title: 'prediction.predictionIntervalSetting',
             icon: 'add-feature',
             dialogName: 'predictionIntervalSetting'
-          },
+          }
         ],
         OVERVIEW: [
           {
             title: 'editing.histogramBinSetting',
             icon: 'add-feature',
             dialogName: 'histogramBinSetting'
-          },
-        ],
+          }
+        ]
       }
     },
     isShowInfo () {
@@ -264,8 +269,8 @@ export default {
       if (!this.isShowInfo) return
       // 切分群時不會有 intent，所以從 active tab 取值
       switch (this.intent || this.activeTab) {
-        case 'CLUSTERING': 
-        return this.$t('editing.resultOverSizeMessage')
+        case 'CLUSTERING':
+          return this.$t('editing.resultOverSizeMessage')
       }
     }
   },
@@ -278,7 +283,7 @@ export default {
     if (this.currentResultId) {
       this.activeTab = this.intent
       const OverViewIndex = this.resultInfo.canDoList.indexOf('OVERVIEW')
-      if(OverViewIndex !== -1) this.resultInfo.canDoList.splice(0, 0, this.resultInfo.canDoList.splice(OverViewIndex, 1)[0])
+      if (OverViewIndex !== -1) this.resultInfo.canDoList.splice(0, 0, this.resultInfo.canDoList.splice(OverViewIndex, 1)[0])
       this.switchTypeList = this.resultInfo.canDoList.map(type => ({
         denotation: type,
         ...this.getSwitchTypeInfoList(type),
@@ -317,7 +322,7 @@ export default {
         type: type,
         settingConfig: {
           ...((type === this.intentType.CLUSTERING || type === this.intentType.PREDICTION) && {
-            algoConfig: this.algoConfig[type.toLowerCase()] || null,
+            algoConfig: this.algoConfig[type.toLowerCase()] || null
           }),
           ...((type === this.intentType.OVERVIEW && data) && {
             displayConfig: {
@@ -354,7 +359,7 @@ export default {
               showClose: true
             })
           }
-          
+
           this.isShowSaveClusteringDialog = true
           break
 
@@ -365,7 +370,7 @@ export default {
         case 'histogramBinSetting':
           this.isShowHistogramBinSettingDialog = true
           break
-        
+
         case 'predictionIntervalSetting':
           this.isShowPredictionIntervalSettingDialog = true
       }
@@ -409,7 +414,7 @@ export default {
       }
     },
     setTaskFailed () {
-      this.switchTypeList.forEach((type, index) => { 
+      this.switchTypeList.forEach((type, index) => {
         if (type.denotation !== this.activeTab) return
         this.$set(this.switchTypeList, index, {
           ...type,

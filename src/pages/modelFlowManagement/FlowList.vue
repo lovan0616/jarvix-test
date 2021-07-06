@@ -2,7 +2,9 @@
   <div class="data-management">
     <div class="page-title-row">
       <h1 class="title">
-        <div class="title-left">{{ $t('sideNav.flowList') }}</div>
+        <div class="title-left">
+          {{ $t('sideNav.flowList') }}
+        </div>
       </h1>
     </div>
     <div class="table-board">
@@ -13,14 +15,15 @@
               class="btn-m btn-default btn-has-icon"
               @click="createModelFlow"
             >
-              <svg-icon 
-                icon-class="plus" 
-                class="icon"/>{{ $t('modelFlow.newFlow') }}
+              <svg-icon
+                icon-class="plus"
+                class="icon"
+              />{{ $t('modelFlow.newFlow') }}
             </button>
           </div>
         </div>
       </div>
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="spinner-container"
@@ -37,7 +40,7 @@
           :flow-info="flow"
           @action="onClickFlowCardAction($event, flow)"
         />
-        <el-pagination 
+        <el-pagination
           v-if="paginationInfo.totalPages > 1"
           :total="paginationInfo.totalItems"
           :page-size="paginationInfo.itemPerPage"
@@ -104,7 +107,7 @@ export default {
       return this.$route.params.group_id
     }
   },
-    watch: {
+  watch: {
     flowUploadSuccess (value) {
       if (value) {
         this.clearPolling()
@@ -124,7 +127,7 @@ export default {
     fetchData (showSpinner = true, page = 0, size = 10) {
       if (showSpinner) this.isLoading = true
       return getModelFlowList(this.groupId, page, size)
-        .then(({modelFlows, pagination}) => {
+        .then(({ modelFlows, pagination }) => {
           this.paginationInfo = pagination
 
           // 0筆資料
@@ -139,7 +142,7 @@ export default {
             this.clearPolling()
             this.startPolling(true, 0)
             return
-          } 
+          }
           this.modelFlowList = modelFlows
         }).finally(() => {
           if (showSpinner) this.isLoading = false
@@ -168,7 +171,6 @@ export default {
         case 'deleteModelFlow':
           this.deleteFlowId = id
           this.isShowDeleteDialog = true
-          return
       }
     },
     async updateModelFlow (id) {

@@ -109,7 +109,7 @@ export default {
     mode: {
       type: String,
       required: true
-    },
+    }
   },
   data () {
     return {
@@ -161,11 +161,11 @@ export default {
       deep: true,
       handler (newValue, oldValue) {
         if (
-          this.mode === 'popup' 
+          this.mode === 'popup' ||
           // 初次開啟設定時不觸發
-          || (oldValue.isInit === false && oldValue.columnList === null)
+          (oldValue.isInit === false && oldValue.columnList === null) ||
           // 切換 dataframe 清空設定時不觸發
-          || newValue.isInit === false
+          newValue.isInit === false
         ) return
         this.fetchData()
       }
@@ -174,12 +174,12 @@ export default {
   mounted () {
     this.fetchData()
   },
-  destroyed() {
+  destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     fetchData () {
-       window.clearTimeout(this.timeoutFunction)
+      window.clearTimeout(this.timeoutFunction)
 
       // reset status
       this.isLoading = true
@@ -188,23 +188,23 @@ export default {
 
       let selectedColumnList = null
       let restrictions = []
-      
+
       // 智能分析頁面需要帶入 column list
       if (this.mode === 'display') {
         selectedColumnList = this.selectedColumnList
         restrictions = this.filterRestrictionList
       }
-      
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { 
-        id: this.dataFrameId, 
-        selectedColumnList, 
-        restrictions 
+
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', {
+        id: this.dataFrameId,
+        selectedColumnList,
+        restrictions
       })
         .then(response => {
           switch (response.statusType) {
             // 處理舊資料或新資料需重新被計算的狀態
             case 'Process':
-            case 'Ready': 
+            case 'Ready':
               this.timeoutFunction = window.setTimeout(() => this.fetchData(), 10000)
               return
             // 計算錯誤時，不顯示結果

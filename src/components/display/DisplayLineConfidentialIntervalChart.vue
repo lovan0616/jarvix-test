@@ -96,7 +96,7 @@ export default {
     isShowToolbox: {
       type: Boolean,
       default: true
-    },
+    }
   },
   data () {
     return {
@@ -112,11 +112,11 @@ export default {
         ...this.customChartStyle
       }
     },
-   seriesName () {
-    const middleLineName = this.isAnomalyTwoNumericDependence 
-      ? this.$t(`chart.feature.${this.dataset.midlineType.toLowerCase()}`)
-      : this.$t('chart.forecastValue')
-     return [
+    seriesName () {
+      const middleLineName = this.isAnomalyTwoNumericDependence
+        ? this.$t(`chart.feature.${this.dataset.midlineType.toLowerCase()}`)
+        : this.$t('chart.forecastValue')
+      return [
         this.title.xAxis[0].display_name,
         middleLineName,
         this.$t('chart.lowerBoundValue'),
@@ -124,7 +124,7 @@ export default {
         this.$t('chart.normalValue'),
         this.$t('chart.anomalousValue')
       ]
-   },
+    },
     zValue () {
       const confidentialValue = this.dataset.confidenceLevel || 99
       switch (confidentialValue) {
@@ -132,7 +132,7 @@ export default {
           return 1.645
         case 95:
           return 1.960
-        case 99: 
+        case 99:
           return 2.576
         case 99.7:
           return 3
@@ -146,7 +146,7 @@ export default {
     },
     standardLine () {
       const dataAmount = this.dataset.data.length
-      return this.isAnomalyTwoNumericDependence 
+      return this.isAnomalyTwoNumericDependence
         ? Array(dataAmount).fill(this.dataset.midlineValue)
         : this.dataset.predictDataList
     },
@@ -194,7 +194,7 @@ export default {
       source.push(this.seriesName)
       this.dataset.index.forEach((value, index) => {
         source.push([
-          value, 
+          value,
           this.adjustValueWithOffsetValue(this.standardLine[index]),
           this.adjustValueWithOffsetValue(this.lowerBoundList[index]),
           this.toUpperBoundIntervalList[index],
@@ -230,7 +230,7 @@ export default {
           markLine: {
             symbol: 'none',
             lineStyle: {
-              color: chartVariable['xAxisColor'],
+              color: chartVariable.xAxisColor,
               type: 'solid'
             },
             animation: false,
@@ -242,13 +242,13 @@ export default {
               //     position: 'start',
               //     formatter: '0',
               //   },
-              // }, 
+              // },
               {
                 yAxis: Math.abs(this.yAxisOffsetValue),
                 label: {
                   position: 'end',
                   formatter: this.title.xAxis[0].display_name
-                },
+                }
               }
             ],
             silent: true
@@ -261,13 +261,13 @@ export default {
           stack: stackName,
           symbol: 'none',
           areaStyle: {
-            color: chartVariable['intervalLineColor'],
+            color: chartVariable.intervalLineColor,
             opacity: 0.2
           },
           lineStyle: {
             type: 'dashed',
             opacity: 0
-          },
+          }
         },
         // valid data
         {
@@ -276,7 +276,7 @@ export default {
           symbol: 'circle',
           connectNulls: false,
           itemStyle: {
-            color: chartVariable['normalValueColor']
+            color: chartVariable.normalValueColor
           },
           lineStyle: {
             opacity: Number(this.isAnomalyTwoNumericDependence) * 0.5
@@ -291,7 +291,7 @@ export default {
           symbol: 'circle',
           connectNulls: false,
           itemStyle: {
-            color: chartVariable['anomalousValueColor']
+            color: chartVariable.anomalousValueColor
           },
           lineStyle: {
             opacity: 0
@@ -325,7 +325,7 @@ export default {
         },
         series: this.series,
         // 用來控制預測線和上下限顏色，原始值獨立在 serie 裡設定
-        color: chartVariable['intervalLineColor']
+        color: chartVariable.intervalLineColor
       }
 
       // 不顯示上下限和實際資料的 legend 選項
@@ -347,7 +347,7 @@ export default {
           displayValue += this.yAxisOffsetValue
           let marker = params[i].marker ? params[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color.colorStops[0].color};"></span>`
           // 有異常分析的時候，不顯示正常值
-          if(i !== 3 || !hasAnomalyData) res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
+          if (i !== 3 || !hasAnomalyData) res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
         }
         return res
       }
@@ -368,7 +368,7 @@ export default {
             if (index === 4 && i !== 0) {
               // 注意！圖表上為了線可以連結在一起所以額外塞值進正常值，在這邊要把它拿掉
               if (this.isAnomalyTwoNumericDependence && dataset[i][5] !== null) displayedValue = ''
-               // 如果為 null 則留空
+              // 如果為 null 則留空
               if (cur === null) displayedValue = ''
             }
             // 如果為 null 則留空
@@ -396,7 +396,7 @@ export default {
                 // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
                 element = element.map((item, index) => (index === 0 || item === null) ? item : item + this.yAxisOffsetValue)
                 // 注意！圖表上為了線可以連結在一起所以額外塞值進正常值，在這邊要把它拿掉
-                element[4] = this.isAnomalyTwoNumericDependence && element[5] !== null ? null  : element[4]
+                element[4] = this.isAnomalyTwoNumericDependence && element[5] !== null ? null : element[4]
                 return element
               })
               if (this.hasPagination && this.canDownloadCsv) return this.addCSVDownloadTask(this.appQuestion + this.$t('denotation.anomalyAnalysis'), this.componentId)
@@ -419,13 +419,13 @@ export default {
     adjustValueWithOffsetValue (value) {
       // 如果堆疊區間沒有橫跨正負值或當前的值是空值則保留原狀
       if (this.yAxisOffsetValue === 0 || value === null) return value
-      return value +  Math.abs(this.yAxisOffsetValue)
+      return value + Math.abs(this.yAxisOffsetValue)
     },
     formatSelectedData (selectedData) {
       const formatFunction = this.isAnomalyTwoNumericDependence ? 'roundNumber' : 'customerTimeFormatter'
       return this.$t('resultDescription.between', {
-        start: this[formatFunction](selectedData.properties.start, selectedData.properties.timeScope), 
-        end: this[formatFunction](selectedData.properties.end, selectedData.properties.timeScope, true) 
+        start: this[formatFunction](selectedData.properties.start, selectedData.properties.timeScope),
+        end: this[formatFunction](selectedData.properties.end, selectedData.properties.timeScope, true)
       })
     },
     brushRegionSelected (params) {
@@ -443,7 +443,7 @@ export default {
             display_name: this.title.xAxis[0].display_name,
             start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
             end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]],
-            ...(!this.isAnomalyTwoNumericDependence && { 
+            ...(!this.isAnomalyTwoNumericDependence && {
               start: this.dataset.timeStampList[coordRange[0] < 0 ? 0 : coordRange[0]],
               end: this.dataset.timeStampList[coordRange[1] > this.dataset.timeStampList.length - 1 ? this.dataset.timeStampList.length - 1 : coordRange[1]],
               timeScope: this.dataset.timeScope

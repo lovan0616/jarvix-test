@@ -37,7 +37,7 @@
       class="schedule-gantt-chart"
       @scroll-left="scrollToLeft"
     >
-      <template v-slot:block="{ item }">
+      <template #block="{ item }">
         <schedule-item
           :item="item"
           :display-time="scale"
@@ -46,13 +46,13 @@
           @cancel-search-order="cancelSearchOrder"
         />
       </template>
-      <template v-slot:left="{data}">
+      <template #left="{data}">
         <schedule-label
           :info="data"
           :cell-height="40"
         />
       </template>
-      <template v-slot:title>
+      <template #title>
         <default-select
           v-if="operations.length > 0"
           v-model="selectedOperation"
@@ -147,12 +147,12 @@ export default {
       const operationFilter = item => item.operation === this.selectedOperation
       return [
         ...(Boolean(this.selectedEquipment) && [equipmentFilter]),
-        ...(Boolean(this.selectedOperation) && [operationFilter]),
+        ...(Boolean(this.selectedOperation) && [operationFilter])
       ]
     },
     filteredGanttChartDataList () {
       // 甘特圖上 filters 功能
-      return this.filters.reduce((d, f) => d.filter(f) , this.ganttChartDataList)
+      return this.filters.reduce((d, f) => d.filter(f), this.ganttChartDataList)
     }
   },
   mounted () {
@@ -161,19 +161,18 @@ export default {
   methods: {
     ...mapMutations('scheduleSetting', ['setEquipments']),
     fetchGanttChartData () {
-      
       this.isLoading = true
       this.ganttChartDataList = []
 
       const getOperationInfo = this.isSimulating
         ? getMachineSimulateResult(this.planId, this.currentSolutionId, 0, 0, true)
         : getMachinePlanResult({
-            projectId: this.scheduleProjectId,
-            page: 0,
-            size: 20,
-            fetchAll: true,
-            keyword: this.searchString
-          })
+          projectId: this.scheduleProjectId,
+          page: 0,
+          size: 20,
+          fetchAll: true,
+          keyword: this.searchString
+        })
       const getExcludeInfo = this.isSimulating
         ? getMachineSimulateExcludeList(this.planId, this.currentSolutionId)
         : getMachinePlanExcludeList(this.scheduleProjectId)
@@ -267,13 +266,12 @@ export default {
           // 設定甘特圖最早和最晚的時間
           const schedule = [...operateData, ...restData]
           schedule.forEach(item => {
-
             // 集成此次模擬的機台選單
             if (!this.equipments.includes(item.equipment)) this.equipments.push(item.equipment)
 
             const currentStartTime = moment(this.getStartTime(item))
             const currentEndTime = moment(this.getEndTime(item))
-            
+
             if (!startTime || !endTime) {
               startTime = currentStartTime
               endTime = currentEndTime
@@ -298,7 +296,7 @@ export default {
             if (ganttDom) this.ganttInitialHeight = ganttDom.offsetHeight
           })
         })
-          .catch(() => this.hasError = true)
+        .catch(() => this.hasError = true)
     },
     scrollToLeft (value) {
       this.position = { x: value }

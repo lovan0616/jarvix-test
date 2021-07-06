@@ -1,6 +1,8 @@
 <template>
   <section class="relation-container__section">
-    <div class="relation-container__section-title">Step1: {{ $t('schedule.project.chooseDataSource') }}({{ $t('editing.isRequired') }})</div>
+    <div class="relation-container__section-title">
+      Step1: {{ $t('schedule.project.chooseDataSource') }}({{ $t('editing.isRequired') }})
+    </div>
     <div class="form">
       <div class="form-fields">
         <div class="form-field">
@@ -9,10 +11,11 @@
           </div>
           <spinner
             v-if="isLoadingDataSources"
-            :title="$t('editing.dataDownloading')" 
-            class="datasource-loading-spinner" 
-            size="10"/>
-          <default-select 
+            :title="$t('editing.dataDownloading')"
+            class="datasource-loading-spinner"
+            size="10"
+          />
+          <default-select
             v-else
             v-model="selectedDatasource"
             :options="dataSourceOptions"
@@ -22,9 +25,10 @@
             class="btn btn-default btn-rebind-ds"
             @click="rebindDataSource"
           >
-            <spinner 
-              v-show="isRebinding" 
-              size="10"/>
+            <spinner
+              v-show="isRebinding"
+              size="10"
+            />
             {{ $t('schedule.binding.rebind') }}
           </button>
         </div>
@@ -108,7 +112,7 @@ export default {
         })
         .catch(() => {})
         .finally(() => this.isRebinding = false)
-    },
+    }
   }
 }
 </script>

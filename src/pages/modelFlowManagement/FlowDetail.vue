@@ -19,7 +19,7 @@
       </div>
     </div>
     <spinner
-      v-if="isLoading" 
+      v-if="isLoading"
       :title="$t('editing.loading')"
     />
     <section v-else>
@@ -30,12 +30,20 @@
         </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.name') }}:</div>
-            <div class="info__text">{{ flowInfo.name }}</div>
+            <div class="info__label">
+              {{ $t('modelFlow.name') }}:
+            </div>
+            <div class="info__text">
+              {{ flowInfo.name }}
+            </div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.id') }}:</div>
-            <div class="info__text">{{ flowInfo.id }}</div>
+            <div class="info__label">
+              {{ $t('modelFlow.id') }}:
+            </div>
+            <div class="info__text">
+              {{ flowInfo.id }}
+            </div>
           </div>
         </div>
       </div>
@@ -46,16 +54,28 @@
         </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('editing.dataSource') }}:</div>
-            <div class="info__text">{{ flowInfo.targetDataSourceName || '-' }}</div>
+            <div class="info__label">
+              {{ $t('editing.dataSource') }}:
+            </div>
+            <div class="info__text">
+              {{ flowInfo.targetDataSourceName || '-' }}
+            </div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.sourceDataFrame') }}:</div>
-            <div class="info__text">{{ flowInfo.sourceDataFrameName || '-' }}</div>
+            <div class="info__label">
+              {{ $t('modelFlow.sourceDataFrame') }}:
+            </div>
+            <div class="info__text">
+              {{ flowInfo.sourceDataFrameName || '-' }}
+            </div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.targetDataFrame') }}:</div>
-            <div class="info__text">{{ flowInfo.targetDataFrameName || '-' }}</div>
+            <div class="info__label">
+              {{ $t('modelFlow.targetDataFrame') }}:
+            </div>
+            <div class="info__text">
+              {{ flowInfo.targetDataFrameName || '-' }}
+            </div>
           </div>
         </div>
       </div>
@@ -66,42 +86,68 @@
         </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('model.modelName') }}:</div>
-            <div class="info__text">{{ flowInfo.modelName }}</div>
+            <div class="info__label">
+              {{ $t('model.modelName') }}:
+            </div>
+            <div class="info__text">
+              {{ flowInfo.modelName }}
+            </div>
           </div>
         </div>
       </div>
       <!-- Input 參數 -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('model.inputParameters') }}</div>
+        <div class="info-block__title">
+          {{ $t('model.inputParameters') }}
+        </div>
         <div class="info-block__content">
           <div class="table-header">
-            <div class="info__label info__cell ">{{ $t('modelFlow.modelInputParameter') }}</div>
-            <div class="info__label info__cell ">{{ $t('modelFlow.correspondingDataFrameColumnName') }}</div>
+            <div class="info__label info__cell ">
+              {{ $t('modelFlow.modelInputParameter') }}
+            </div>
+            <div class="info__label info__cell ">
+              {{ $t('modelFlow.correspondingDataFrameColumnName') }}
+            </div>
           </div>
-          <div 
+          <div
             v-for="(item, index) in flowInfo.ioArgs.input"
             :key="index"
-            class="table-row">
-            <div class="info__text info__cell">{{ item.modelColumnName }}({{ item.columnStatsType }})</div>
-            <div class="info__text info__cell">{{ item.dataColumnName || '-' }}</div>
+            class="table-row"
+          >
+            <div class="info__text info__cell">
+              {{ item.modelColumnName }}({{ item.columnStatsType }})
+            </div>
+            <div class="info__text info__cell">
+              {{ item.dataColumnName || '-' }}
+            </div>
           </div>
         </div>
       </div>
       <!-- Output 參數 -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('model.outputParameters') }}</div>
+        <div class="info-block__title">
+          {{ $t('model.outputParameters') }}
+        </div>
         <div class="info-block__content">
           <div class="table-header">
-            <div class="info__label info__cell ">{{ $t('modelFlow.modelOutputParameter') }}</div>
-            <div class="info__label info__cell ">{{ $t('modelFlow.outputDataFrameColumnName') }}</div>
+            <div class="info__label info__cell ">
+              {{ $t('modelFlow.modelOutputParameter') }}
+            </div>
+            <div class="info__label info__cell ">
+              {{ $t('modelFlow.outputDataFrameColumnName') }}
+            </div>
           </div>
-          <div 
+          <div
             v-for="(item, index) in flowInfo.ioArgs.output"
             :key="index"
-            class="table-row">
-            <div class="info__text info__cell">{{ item.modelColumnName }}({{ item.columnStatsType }})</div>
-            <div class="info__text info__cell">{{ item.dataColumnName || '-' }}</div>
+            class="table-row"
+          >
+            <div class="info__text info__cell">
+              {{ item.modelColumnName }}({{ item.columnStatsType }})
+            </div>
+            <div class="info__text info__cell">
+              {{ item.dataColumnName || '-' }}
+            </div>
           </div>
         </div>
       </div>
@@ -112,22 +158,36 @@
         </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.updateMode') }}:</div>
-            <div class="info__text">{{ triggerTypeLabel }}</div>
+            <div class="info__label">
+              {{ $t('modelFlow.updateMode') }}:
+            </div>
+            <div class="info__text">
+              {{ triggerTypeLabel }}
+            </div>
           </div>
         </div>
       </div>
       <!-- 建立資料 -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('modelFlow.createInfo') }}</div>
+        <div class="info-block__title">
+          {{ $t('modelFlow.createInfo') }}
+        </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.createdTime') }}:</div>
-            <div class="info__text">{{ timeToDateTime(flowInfo.createdAt) }}</div>
+            <div class="info__label">
+              {{ $t('modelFlow.createdTime') }}:
+            </div>
+            <div class="info__text">
+              {{ timeToDateTime(flowInfo.createdAt) }}
+            </div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('modelFlow.creator') }}:</div>
-            <div class="info__text">{{ flowInfo.createdBy }}</div>
+            <div class="info__label">
+              {{ $t('modelFlow.creator') }}:
+            </div>
+            <div class="info__text">
+              {{ flowInfo.createdBy }}
+            </div>
           </div>
         </div>
       </div>
@@ -174,7 +234,7 @@ export default {
   },
   computed: {
     flowId () {
-      return this.$route.params['flow_id']
+      return this.$route.params.flow_id
     },
     isFlowUpdating () {
       return this.flowInfo.targetDataFrameStatusType === 'Process'
@@ -223,7 +283,6 @@ export default {
           return
         case 'deleteModelFlow':
           this.isShowDeleteDialog = true
-          return
       }
     },
     updateModelFlow () {
@@ -235,9 +294,9 @@ export default {
     deleteModelFlow () {
       this.$store.dispatch('modelFlowManagement/deleteModelFlow', this.flowInfo.id)
         .then(() => {
-          this.$router.push({name: 'FlowList'})
+          this.$router.push({ name: 'FlowList' })
         }).finally(() => {
-          this.isShowDeleteDialog = false 
+          this.isShowDeleteDialog = false
         })
     },
     clearTimer () {

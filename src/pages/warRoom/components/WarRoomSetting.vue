@@ -2,17 +2,20 @@
   <section class="war-room-setting">
     <div class="war-room-setting__header">
       <div class="war-room-setting__title">
-        <svg-icon 
-          icon-class="control-board" 
-          class="war-room-setting__header-icon"/>
+        <svg-icon
+          icon-class="control-board"
+          class="war-room-setting__header-icon"
+        />
         {{ $t('warRoom.warRoomSetting') }}
       </div>
       <span
         class="war-room-setting__close-icon"
-        @click="$emit('close')">
-        <svg-icon 
-          icon-class="close" 
-          class="war-room-setting__header-icon"/>
+        @click="$emit('close')"
+      >
+        <svg-icon
+          icon-class="close"
+          class="war-room-setting__header-icon"
+        />
       </span>
     </div>
     <section class="war-room-setting__content">
@@ -25,11 +28,14 @@
             v-validate="'required'"
             v-model="warRoomData.publishName"
             name="warRoomName"
-            class="input war-room-setting__block-text-input">
-          <div 
+            class="input war-room-setting__block-text-input"
+          >
+          <div
             v-show="errors.has('warRoomName')"
             class="error-text"
-          >{{ errors.first('warRoomName') }}</div>
+          >
+            {{ errors.first('warRoomName') }}
+          </div>
         </div>
         <div class="war-room-setting__block">
           <div class="war-room-setting__block-title">
@@ -47,7 +53,7 @@
             v-if="warRoomData.displayDateRangeSwitch"
             class="war-room-setting__block-select-field"
           >
-            <default-select 
+            <default-select
               v-validate="'required'"
               :value="selectedTimeInterval"
               :option-list="warRoomTimeIntervalList"
@@ -57,10 +63,12 @@
               name="timeIntervalConstraint"
               @change="updateTimeInterval"
             />
-            <div 
+            <div
               v-show="errors.has('timeIntervalConstraint')"
               class="error-text"
-            >{{ errors.first('timeIntervalConstraint') }}</div>
+            >
+              {{ errors.first('timeIntervalConstraint') }}
+            </div>
           </div>
           <div
             v-if="warRoomData.displayDateRangeSwitch && selectedTimeInterval === 'others'"
@@ -81,8 +89,11 @@
                 size="small"
                 type="date"
                 name="startTime"
-                @change="clearEndTime"/>
-              <div class="date-picker__seperator">-</div>
+                @change="clearEndTime"
+              />
+              <div class="date-picker__seperator">
+                -
+              </div>
               <el-date-picker
                 v-model="warRoomData.customEndTime"
                 :picker-options="customTimeInterval.endTimePickerOptions"
@@ -93,13 +104,18 @@
                 class="date-picker__item"
                 size="small"
                 type="date"
-                name="endTime"/>
+                name="endTime"
+              />
             </div>
             <div
               v-show="errors.has('startTime')"
               class="error-text"
-            >{{ errors.first('startTime') }}</div>
-            <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
+            >
+              {{ errors.first('startTime') }}
+            </div>
+            <div class="date-picker__reminder">
+              {{ '*' + $t('warRoom.timeIntervalReminder') }}
+            </div>
           </div>
         </div>
         <div class="war-room-setting__block">
@@ -107,24 +123,27 @@
             {{ $t('warRoom.recipientList') }}
           </div>
           <el-select
-            v-model="warRoomData.alertUserIdList" 
-            :placeholder="$t('editing.defaultOption')" 
+            v-model="warRoomData.alertUserIdList"
+            :placeholder="$t('editing.defaultOption')"
             multiple
             filterable
             popper-class="multiple-selector__popper"
             class="multiple-selector"
             @remove-tag="removeTag"
-            @change="listChange">
+            @change="listChange"
+          >
             <el-option
               v-for="item in alertUserIdList"
               :disabled="!hasRemovePermission(item.value)"
               :key="item.value"
               :label="item.name"
-              :value="item.value"/>
+              :value="item.value"
+            />
           </el-select>
-          <span 
-            class="war-room-setting__block-text-description">
-            {{ $t('warRoom.recipientListSettingWarning') }} 
+          <span
+            class="war-room-setting__block-text-description"
+          >
+            {{ $t('warRoom.recipientListSettingWarning') }}
           </span>
         </div>
       </div>
@@ -136,11 +155,13 @@
         >
           <svg-icon icon-class="delete" />
         </button>
-        <button 
+        <button
           type="button"
           class="btn btn-default war-room-setting__button-block-button--right"
           @click="saveSetting"
-        >{{ $t('button.save') }}</button>
+        >
+          {{ $t('button.save') }}
+        </button>
       </div>
     </section>
     <decide-dialog
@@ -177,7 +198,7 @@ export default {
     configData: {
       type: Object,
       default: () => ({
-        alertUserIdList:null,
+        alertUserIdList: null,
         customEndTime: null,
         customStartTime: null,
         displayDateRangeSwitch: false,
@@ -199,7 +220,7 @@ export default {
         startTime: '',
         endTime: '',
         startTimePickerOptions: {
-          disabledDate(time) {
+          disabledDate (time) {
             return time.getTime() > Date.now()
           },
           firstDayOfWeek: 1
@@ -215,16 +236,16 @@ export default {
   computed: {
     ...mapState('userManagement', ['userId']),
     isGroupViewer () {
-      return this.userList.filter(user => user.id === this.userId)[0]['role'] === 'group_viewer'
+      return this.userList.filter(user => user.id === this.userId)[0].role === 'group_viewer'
     },
     selectedTimeInterval () {
       if (!this.warRoomData || !this.warRoomData.displayDateRangeSwitch) return null
-      
+
       // 確認是否選擇預設區間
       if (this.warRoomData.recentTimeIntervalAmount && this.warRoomData.recentTimeIntervalUnit) {
         return `${this.warRoomData.recentTimeIntervalAmount}+${this.warRoomData.recentTimeIntervalUnit}`
       }
-      
+
       // 如果沒有選擇預設則為自訂區間
       return 'others'
     }
@@ -319,7 +340,7 @@ export default {
       this.warRoomData.customEndTime = null
     },
     updateDateRangeSwitch (isTurnedOn) {
-      if(isTurnedOn) return
+      if (isTurnedOn) return
       const {
         customStartTime,
         customEndTime,
@@ -335,19 +356,19 @@ export default {
       })
     },
     hasRemovePermission (removeUserId) {
-      return this.isGroupViewer 
+      return this.isGroupViewer
         ? this.userId === removeUserId
         : true
     },
     listChange (newList) {
       const isRemoveSelf = (newList.length < this.tempAlertUserIdList.length) && !newList.includes(this.userId) && this.tempAlertUserIdList.includes(this.userId)
       // 表示加入的是使用者自己，故需要被存起來
-      if(newList.length > this.tempAlertUserIdList.length || isRemoveSelf) {
+      if (newList.length > this.tempAlertUserIdList.length || isRemoveSelf) {
         this.tempAlertUserIdList = newList
       }
     },
     removeTag (removeUserId) {
-      if(this.hasRemovePermission(removeUserId)) return
+      if (this.hasRemovePermission(removeUserId)) return
       //  非 group__viewer 無權限可移除其他使用者，故要用 temp 覆蓋
       this.warRoomData.alertUserIdList = this.tempAlertUserIdList
     }
@@ -370,7 +391,7 @@ export default {
 
     .multiple-selector {
       margin-top: 12px;
-      
+
       /deep/ .el-select-dropdown__wrap .el-select-dropdown__item::after {
         border: 1.2px solid #FFF;
       }

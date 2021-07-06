@@ -1,12 +1,14 @@
 <template>
   <div class="input-setting-dialog">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="1"
     />
     <div class="dialog-body">
       <div class="setting-block flow-name-container">
-        <input-block 
+        <input-block
           v-validate="`required`"
           :label="$t('modelFlow.upload.setFlowName')"
           v-model="flowName"
@@ -17,14 +19,18 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
+        >
+          {{ $t('button.cancel') }}
+        </button>
         <button
           class="btn btn-default"
           @click="next"
-        >{{ $t('button.nextStep') }}</button>
+        >
+          {{ $t('button.nextStep') }}
+        </button>
       </div>
     </div>
   </div>

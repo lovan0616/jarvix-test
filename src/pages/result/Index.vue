@@ -1,6 +1,6 @@
 <template>
   <div class="result-page">
-    <result-display/>
+    <result-display />
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
         }
       }
     },
-    '$route.query.dataFrameId'(value) {
+    '$route.query.dataFrameId' (value) {
       if (this.$route.name === 'PageResult' && value) {
         const dataFrameId = value === 'all' ? 'all' : parseInt(value)
         this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
@@ -61,7 +61,7 @@ export default {
         this.$store.commit('dataSource/setAppQuestion', question)
       } else {
         const groupId = this.$route.params.group_id
-        this.$router.push({ name: 'PageIndex', params: { 'group_id': groupId } })
+        this.$router.push({ name: 'PageIndex', params: { group_id: groupId } })
       }
     }
   }

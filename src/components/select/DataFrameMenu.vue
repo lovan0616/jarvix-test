@@ -10,7 +10,8 @@
       <svg-icon
         v-show="selectedDataName"
         :icon-class="selectedIconType"
-        class="data-frame-select__icon"/>
+        class="data-frame-select__icon"
+      />
       <span
         :class="selectedDataName ? null : 'is-empty'"
         class="data-source-title"
@@ -47,11 +48,12 @@
               class="menu__item-label"
               @click="toggleDataSource(dataSourceIndex)"
             >
-              <svg-icon icon-class="data-source"/>
+              <svg-icon icon-class="data-source" />
               <span class="data-title">{{ dataSource.name }}</span>
               <svg-icon
                 icon-class="triangle"
-                class="icon-arrow"/>
+                class="icon-arrow"
+              />
             </div>
             <!-- 資料表清單 -->
             <ul
@@ -67,13 +69,15 @@
               >
                 <!-- 資料表名稱 -->
                 <div class="menu__item-label">
-                  <svg-icon 
-                    icon-class="table" 
-                    class="data-frame-select__icon"/>
+                  <svg-icon
+                    icon-class="table"
+                    class="data-frame-select__icon"
+                  />
                   <span class="data-title">{{ dataFrame.name }}</span>
                   <svg-icon
                     icon-class="checked"
-                    class="icon-current"/>
+                    class="icon-current"
+                  />
                 </div>
               </li>
             </ul>
@@ -82,7 +86,9 @@
         <div
           v-show="!hasResult"
           class="data-frame-select__empty-result"
-        >{{ $t('editing.emptyKey') }}</div>
+        >
+          {{ $t('editing.emptyKey') }}
+        </div>
       </div>
     </transition>
     <button
@@ -95,15 +101,16 @@
         slot="label"
         :content="previewDataSourceTooltipContent"
       >
-        <svg-icon 
+        <svg-icon
           :class="{ 'preview-datasource-btn__icon--show': isShowPreviewDataSource, 'preview-datasource-btn__icon--disabled': isDisablePreviewDataSource }"
           icon-class="view-data"
-          class="preview-datasource-btn__icon"/>
+          class="preview-datasource-btn__icon"
+        />
       </el-tooltip>
     </button>
     <button
       v-if="isShowAdvanceSettingEntry"
-      :disabled="isDisableDataFrameAdvanceSetting" 
+      :disabled="isDisableDataFrameAdvanceSetting"
       class="dataframe-setting-btn"
       @click="toggleAdvanceDataFrameSetting"
     >
@@ -111,10 +118,11 @@
         slot="label"
         :content="previewDataFrameSettingTooltipContent"
       >
-        <svg-icon 
+        <svg-icon
           :class="{ 'dataframe-setting-btn__icon--show': isShowSettingBox, 'dataframe-setting-btn__icon--disabled': isDisableDataFrameAdvanceSetting }"
           icon-class="filter-setting"
-          class="preview-datasource-btn__icon"/>
+          class="preview-datasource-btn__icon"
+        />
       </el-tooltip>
     </button>
   </div>
@@ -162,13 +170,13 @@ export default {
       return this.$store.state.dataSource.dataFrameId
     },
     selectedDataName () {
-      return this.dataFrameId === 'all' 
+      return this.dataFrameId === 'all'
         ? this.getDataSourceName
         : this.getDataFrameName
     },
     selectedIconType () {
       return this.dataFrameId === 'all'
-        ? 'data-source' 
+        ? 'data-source'
         : 'table'
     },
     filterText: {
@@ -220,12 +228,12 @@ export default {
       if (this.selectedDataName) return this.selectedDataName
       return this.availableDataSourceList.length === 0 ? this.$t('editing.emptyKey') : this.$t('message.switching') + '...'
     },
-    getDataSourceIndex() {
+    getDataSourceIndex () {
       return this.availableDataSourceList.findIndex(dataSource => (
         dataSource.id === this.dataSourceId
       ))
     },
-    getDataFrameIndex() {
+    getDataFrameIndex () {
       if (this.availableDataSourceList.length === 0) return -1
       return this.availableDataSourceList[this.getDataSourceIndex].dataFrames.findIndex(dataFrame => (
         dataFrame.id === this.dataFrameId
@@ -247,7 +255,7 @@ export default {
       return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
     },
     previewDataFrameSettingTooltipContent () {
-      if (this.isDisableDataFrameAdvanceSetting) return this.$t('bot.switchSpecificDataFrame') 
+      if (this.isDisableDataFrameAdvanceSetting) return this.$t('bot.switchSpecificDataFrame')
       return this.isShowSettingBox ? this.$t('bot.closeDataFrameSetting') : this.$t('bot.openDataFrameSetting')
     },
     isDisablePreviewDataSource () {
@@ -275,13 +283,13 @@ export default {
         dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
         dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
       }
-      
+
       // To prevent NavigationDuplicated error
       if (
-        selectInfo.dataSourceId === this.dataSourceId
-        && selectInfo.dataFrameId === this.dataFrameId
+        selectInfo.dataSourceId === this.dataSourceId &&
+        selectInfo.dataFrameId === this.dataFrameId
       ) return
-      
+
       if (this.filterText) this.filterText = ''
       this.isShowMenu = false
       this.onDataFrameChange(selectInfo.dataSourceId, selectInfo.dataFrameId)
@@ -290,19 +298,19 @@ export default {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
       if (this.isShowPreviewDataSource && this.redirectOnChange) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId, dataFrameId })
-      .then(() => {
-        if (!this.redirectOnChange) return
-        this.$router.push({
-          name: 'PageIndex', 
-          params: { 
-            'group_id': this.getCurrentGroupId
-          },
-          query: {
-            dataSourceId: dataSourceId,
-            dataFrameId: dataFrameId
-          }
+        .then(() => {
+          if (!this.redirectOnChange) return
+          this.$router.push({
+            name: 'PageIndex',
+            params: {
+              group_id: this.getCurrentGroupId
+            },
+            query: {
+              dataSourceId: dataSourceId,
+              dataFrameId: dataFrameId
+            }
+          })
         })
-      })
     },
     togglePreviewDataSource () {
       if (this.isDisablePreviewDataSource) return
@@ -310,7 +318,7 @@ export default {
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     },
     toggleAdvanceDataFrameSetting () {
-      if (this.isDisableDataFrameAdvanceSetting) return 
+      if (this.isDisableDataFrameAdvanceSetting) return
       this.toggleSettingBox(!this.isShowSettingBox)
     },
     closeHelper () {
@@ -352,7 +360,7 @@ export default {
     border: unset;
     border-left: 1px solid #292C2E;
     background-color: transparent;
-  
+
     &__icon {
       font-size: 18px;
       fill: rgba(255, 255, 255, .8);

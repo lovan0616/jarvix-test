@@ -34,4 +34,3 @@ export function updateMonitorSetting (data) {
     data
   })
 }
-  

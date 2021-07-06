@@ -9,7 +9,7 @@
         <div class="input-field">
           <label class="input-field__label">{{ $t('miniApp.selectFormula') }}</label>
           <div class="input-field__input-box">
-            <default-select 
+            <default-select
               v-validate="'required'"
               :option-list="formulaOptionList"
               :placeholder="$t('miniApp.selectFormula')"
@@ -20,10 +20,12 @@
               name="formula"
               @change="updateFormulaSetting"
             />
-            <div 
+            <div
               v-show="errors.has('formula')"
               class="error-text"
-            >{{ errors.first('formula') }}</div>
+            >
+              {{ errors.first('formula') }}
+            </div>
           </div>
         </div>
       </div>
@@ -37,7 +39,7 @@
           <div class="input-field">
             <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
             <div class="input-field__input-box">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="dataSourceOptionList"
                 :placeholder="$t('miniApp.chooseDataSource')"
@@ -48,16 +50,18 @@
                 name="dataSourceId"
                 @change="handleDataSourceSelected"
               />
-              <div 
+              <div
                 v-show="errors.has('dataSourceId')"
                 class="error-text"
-              >{{ errors.first('dataSourceId') }}</div>
+              >
+                {{ errors.first('dataSourceId') }}
+              </div>
             </div>
           </div>
           <div class="input-field">
             <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
             <div class="input-field__input-box">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="dataFrameOptionList"
                 :placeholder="$t('miniApp.chooseDataFrame')"
@@ -68,25 +72,29 @@
                 name="dataFrameId"
                 @change="handleDataFrameSelected"
               />
-              <div 
+              <div
                 v-show="errors.has('dataFrameId')"
                 class="error-text"
-              >{{ errors.first('dataFrameId') }}</div>
+              >
+                {{ errors.first('dataFrameId') }}
+              </div>
             </div>
           </div>
         </div>
       </div>
       <!--運算式設定-->
-      <div 
-        v-if="formulaSetting.dataSourceId && formulaSetting.dataFrameId" 
-        class="setting">
+      <div
+        v-if="formulaSetting.dataSourceId && formulaSetting.dataFrameId"
+        class="setting"
+      >
         <div class="setting__title">
           {{ $t('miniApp.formulaSetting') }}
         </div>
         <div class="setting__content">
-          <div 
-            v-if="formulaSetting.formulaId !== null" 
-            class="formula-display">
+          <div
+            v-if="formulaSetting.formulaId !== null"
+            class="formula-display"
+          >
             <label class="formula-display__title">{{ $t('miniApp.formulaPreview') }}</label>
             <div class="formula-display__content">
               {{ formulaSetting.displayedFormula }}
@@ -99,7 +107,7 @@
           >
             <label class="input-field__label">{{ input.symbol + $t('miniApp.setting') }}</label>
             <div class="input-field__input-box">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="getDataColumnOptionList(input.dataType)"
                 :placeholder="$t('miniApp.chooseColumn')"
@@ -111,10 +119,12 @@
                 class="input-field__select"
                 @change="updateFormulaInput(input.id, $event)"
               />
-              <div 
+              <div
                 v-show="errors.has('input' + formulaSetting.formulaId + '-' + index)"
                 class="error-text"
-              >{{ errors.first('input' + formulaSetting.formulaId + '-' + index) }}</div>
+              >
+                {{ errors.first('input' + formulaSetting.formulaId + '-' + index) }}
+              </div>
             </div>
           </div>
         </div>
@@ -145,8 +155,8 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { getFormulaList } from '@/API/NewAsk'
-import { 
-  getDataFrameById, 
+import {
+  getDataFrameById,
   getDataFrameColumnInfoById,
   getDateTimeColumns
 } from '@/API/DataSource'
@@ -190,7 +200,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataSource', ['dataSourceList']),
+    ...mapGetters('dataSource', ['dataSourceList'])
   },
   mounted () {
     this.getFormulaData()
@@ -238,7 +248,7 @@ export default {
       this.dataColumnOptionList = []
       this.resetInputList()
       this.fetchDataColumnList(dataFrameId)
-      this.setDataTimeColumns (dataFrameId)
+      this.setDataTimeColumns(dataFrameId)
     },
     setDataTimeColumns (dataFrameId) {
       getDateTimeColumns(dataFrameId)
@@ -254,11 +264,11 @@ export default {
           ...column,
           name: `${column.primaryAlias || column.name}（${column.statsType}）`,
           value: column.id,
-          originalName: column.primaryAlias  || column.name,
+          originalName: column.primaryAlias || column.name,
           dcId: column.id
         }))
       })
-      .finally(() => this.isLoading = false)
+        .finally(() => this.isLoading = false)
       // 預先新增一個欄位選擇器
     },
     getFormulaData () {
@@ -279,8 +289,8 @@ export default {
       const selectedFormula = this.formulaOptionList.find(formula => formula.id === selectedId)
       this.formulaSetting.displayedFormula = selectedFormula.formula
       this.formulaSetting.formulaId = selectedFormula.id
-      this.formulaSetting.inputList = selectedFormula.formulaInfo.map(input => ({ 
-        id: input.id, 
+      this.formulaSetting.inputList = selectedFormula.formulaInfo.map(input => ({
+        id: input.id,
         dataType: 'NUMERIC',
         dcId: null,
         symbol: input.symbol
@@ -289,7 +299,7 @@ export default {
     getDataColumnOptionList (dataType) {
       return this.dataColumnOptionList.filter(column => column.statsType === dataType)
     },
-    updateFormulaInput(inputId, columnId) {
+    updateFormulaInput (inputId, columnId) {
       const selectedInput = this.formulaSetting.inputList.find(input => input.id === inputId)
       selectedInput.dcId = columnId
     },
@@ -379,7 +389,7 @@ export default {
       .error-text {
         position: absolute;
       }
-      
+
       /deep/ .el-input__inner {
         font-size: 14px;
         padding-left: 0;

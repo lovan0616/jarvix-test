@@ -47,7 +47,7 @@ let histogramChartConfig = {
   chartData: {
     symbolSize: 8,
     itemStyle: {
-      color: chartVariable['lightestChartColor']
+      color: chartVariable.lightestChartColor
     },
     data: [],
     type: 'custom',
@@ -156,19 +156,19 @@ export default {
       })
 
       // set histogram xAxis
-      chartAddon.xAxis = {...chartAddon.xAxis, ...histogramChartConfig.xAxis}
+      chartAddon.xAxis = { ...chartAddon.xAxis, ...histogramChartConfig.xAxis }
       chartAddon.xAxis.interval = allSameValue ? 'auto' : interval
       chartAddon.xAxis.min = allSameValue ? newData[0] / 2 : min
       chartAddon.xAxis.max = allSameValue ? newData[0] * 2 : max
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
-      chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
+      chartAddon.yAxis = { ...chartAddon.yAxis, ...histogramChartConfig.yAxis }
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
 
       histogramChartConfig.chartData.renderItem = this.renderItem
       histogramChartConfig.chartData.data = chartData
       chartAddon.series[0] = histogramChartConfig.chartData
 
-      return {...chartAddon, ...getDrillDownTool(this.$route.name, this.title)}
+      return { ...chartAddon, ...getDrillDownTool(this.$route.name, this.title) }
     },
     chartStyle () {
       return {
@@ -220,6 +220,6 @@ export default {
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
-  },
+  }
 }
 </script>

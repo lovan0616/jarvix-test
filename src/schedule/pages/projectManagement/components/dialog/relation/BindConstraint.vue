@@ -8,9 +8,10 @@
           class="btn btn-outline"
           @click="unbind"
         >
-          <spinner 
-            v-show="isUnbinding" 
-            size="10"/>
+          <spinner
+            v-show="isUnbinding"
+            size="10"
+          />
           {{ $t('schedule.binding.unbind') }}
         </button>
         <button
@@ -18,9 +19,10 @@
           class="btn btn-default"
           @click="check"
         >
-          <spinner 
-            v-show="isChecking" 
-            size="10"/>
+          <spinner
+            v-show="isChecking"
+            size="10"
+          />
           {{ $t('schedule.binding.check') }}
         </button>
         <button
@@ -28,9 +30,10 @@
           class="btn btn-default"
           @click="bind"
         >
-          <spinner 
-            v-show="isBinding" 
-            size="10"/>
+          <spinner
+            v-show="isBinding"
+            size="10"
+          />
           {{ $t('schedule.binding.bind') }}
         </button>
       </div>
@@ -49,11 +52,12 @@
           v-if="!isYKSchedule || file.code === 'transfer_time'"
         >
           <span class="field-label">{{ $t(`schedule.setting.extraConstraint${snakeToPascal(file.code)}`) }}</span>
-          <spinner 
-            v-if="isLoadingDataFrames" 
+          <spinner
+            v-if="isLoadingDataFrames"
             :title="$t('editing.dataDownloading')"
-            class="dataframe-loading-spinner" 
-            size="10"/>
+            class="dataframe-loading-spinner"
+            size="10"
+          />
           <default-select
             v-else
             v-model="formData[file.code].dataframeId"
@@ -65,15 +69,16 @@
             @bind="bind"
           />
 
-          <label 
+          <label
             :class="{'checkbox--active': formData[file.code].isSelected}"
-            class="checkbox">
+            class="checkbox"
+          >
             <div class="checkbox-label">
               <input
                 v-model="formData[file.code].isSelected"
                 type="checkbox"
               >
-              <div class="checkbox-square"/>
+              <div class="checkbox-square" />
             </div>
           </label>
         </template>
@@ -150,7 +155,7 @@ export default {
         .filter(item => this.checkedResult[item.code].bindable)
     },
     options () {
-      return [ { value: null, label: this.$t('editing.defaultOption') }, ...this.dataFrameOptions ]
+      return [{ value: null, label: this.$t('editing.defaultOption') }, ...this.dataFrameOptions]
     }
   },
   created () {
@@ -178,7 +183,6 @@ export default {
       this.isChecking = true
       checkConstraints(requestBody)
         .then(dataframeCheckedResults => {
-          
           dataframeCheckedResults.forEach(({ code, result }) => {
             const bindable = this.resultHandler.bindable(result)
             const checkedResult = this.checkedResult[code]

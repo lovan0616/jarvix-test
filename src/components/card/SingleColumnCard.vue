@@ -4,15 +4,17 @@
       v-if="columnList.length > 1"
       :class="{ 'disabled': isProcessing || isLoading }"
       class="card__delete-icon"
-      @click="removeColumn">
-      <svg-icon 
-        icon-class="delete" 
-        class="icon"/>
+      @click="removeColumn"
+    >
+      <svg-icon
+        icon-class="delete"
+        class="icon"
+      />
     </div>
     <div class="input-field">
       <label class="input-field__label">欄位</label>
       <div class="input-field__input">
-        <default-select 
+        <default-select
           v-validate="'required'"
           :option-list="dataColumnOptionList"
           :placeholder="$t('batchLoad.chooseColumn')"
@@ -23,10 +25,12 @@
           class="input-field__select"
           @change="$emit('updateDataColumn', $event)"
         />
-        <div 
+        <div
           v-show="errors.has(columnInfo.id)"
           class="error-text"
-        >{{ errors.first(columnInfo.id) }}</div>
+        >
+          {{ errors.first(columnInfo.id) }}
+        </div>
       </div>
     </div>
   </div>
@@ -39,7 +43,7 @@ export default {
   name: 'SingleColumnCard',
   inject: ['$validator'],
   components: {
-    DefaultSelect,
+    DefaultSelect
   },
   props: {
     columnList: {

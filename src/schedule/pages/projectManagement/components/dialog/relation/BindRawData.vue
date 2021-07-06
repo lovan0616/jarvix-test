@@ -13,19 +13,23 @@
         <button
           :disabled="isChecking"
           class="btn btn-default"
-          @click="check">
-          <spinner 
-            v-show="isChecking" 
-            size="10"/>
+          @click="check"
+        >
+          <spinner
+            v-show="isChecking"
+            size="10"
+          />
           {{ $t('schedule.binding.check') }}
         </button>
         <button
           :disabled="!isDataBindable || isBinding"
           class="btn btn-default"
-          @click="bind">
-          <spinner 
-            v-show="isBinding" 
-            size="10"/>
+          @click="bind"
+        >
+          <spinner
+            v-show="isBinding"
+            size="10"
+          />
           {{ $t('schedule.binding.bind') }}
         </button>
       </div>
@@ -37,11 +41,12 @@
         class="form-field"
       >
         <span class="field-label">{{ $t(`schedule.setting.commonData${snakeToPascal(file.code)}`) }}</span>
-        <spinner 
-          v-if="isLoadingDataFrames" 
+        <spinner
+          v-if="isLoadingDataFrames"
           :title="$t('editing.dataDownloading')"
-          class="dataframe-loading-spinner" 
-          size="10"/>
+          class="dataframe-loading-spinner"
+          size="10"
+        />
         <default-select
           v-else
           v-model="formData[file.code]"

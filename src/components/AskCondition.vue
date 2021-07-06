@@ -1,40 +1,47 @@
 <template>
   <div
     v-show="isShow"
-    class="ask-condition">
+    class="ask-condition"
+  >
     <div class="ask-condition__item">
       <svg-icon
-        icon-class="data-source" 
-        class="ask-condition__icon"/>
+        icon-class="data-source"
+        class="ask-condition__icon"
+      />
       <span class="ask-condition__label">{{ getDataSourceName }}</span>
     </div>
     <div class="ask-condition__item">
       <svg-icon
-        icon-class="table" 
-        class="ask-condition__icon"/>
+        icon-class="table"
+        class="ask-condition__icon"
+      />
       <span class="ask-condition__label">{{ getDataFrameDisplayName }}</span>
     </div>
-    <div 
-      v-show="getDataFrameName !== 'all'" 
-      class="ask-condition__item">
+    <div
+      v-show="getDataFrameName !== 'all'"
+      class="ask-condition__item"
+    >
       <svg-icon
-        icon-class="column" 
-        class="ask-condition__icon"/>
+        icon-class="column"
+        class="ask-condition__icon"
+      />
       <span class="ask-condition__label">{{ selectedColumnCount }}</span>
     </div>
-    <div 
-      v-show="filterList.length > 0" 
-      class="ask-condition__item">
+    <div
+      v-show="filterList.length > 0"
+      class="ask-condition__item"
+    >
       <svg-icon
-        icon-class="filter" 
-        class="ask-condition__icon filter"/>
+        icon-class="filter"
+        class="ask-condition__icon filter"
+      />
       <span class="ask-condition__label">{{ $t('dataFrameAdvanceSetting.filterCriteria') }}({{ selectedFilterCount }})</span>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'AskCondition',

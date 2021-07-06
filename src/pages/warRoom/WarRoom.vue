@@ -1,6 +1,6 @@
 <template>
   <section class="war-room">
-    <spinner 
+    <spinner
       v-if="isLoading"
       :title="$t('editing.loading')"
       class="spinner"
@@ -13,12 +13,13 @@
       <div class="war-room__header">
         <div class="war-room__header--left">
           <router-link
-            :to="{ name: 'WarRoomList' }" 
+            :to="{ name: 'WarRoomList' }"
             class="link action-link"
           >
             <svg-icon
-              icon-class="arrow-left" 
-              class="icon"/>
+              icon-class="arrow-left"
+              class="icon"
+            />
             {{ $t('warRoom.backToList') }}
           </router-link>
           <div
@@ -28,12 +29,13 @@
             {{ warRoomConfig.publishName }}
             <a
               href="javascript:void(0);"
-              class="link action-link" 
+              class="link action-link"
               @click="editWarRoomName"
             >
               <svg-icon
-                icon-class="edit" 
-                class="icon"/>
+                icon-class="edit"
+                class="icon"
+              />
             </a>
           </div>
           <div
@@ -45,23 +47,30 @@
                 v-validate="'required'"
                 v-model="tempWarRoomPublishedName"
                 name="warRoomName"
-                class="input war-room__title-input">
-              <div 
+                class="input war-room__title-input"
+              >
+              <div
                 v-show="errors.has('warRoomName')"
                 class="error-text"
-              >{{ errors.first('warRoomName') }}</div>
+              >
+                {{ errors.first('warRoomName') }}
+              </div>
             </div>
-            <button 
+            <button
               :disabled="isProcessing"
               type="button"
               class="btn btn-default"
               @click="updateWarRoomName"
-            >{{ $t('button.save') }}</button>
+            >
+              {{ $t('button.save') }}
+            </button>
             <button
               type="button"
               class="btn btn-outline"
               @click="stopEditingWarRoomName"
-            >{{ $t('button.cancel') }}</button>
+            >
+              {{ $t('button.cancel') }}
+            </button>
           </div>
         </div>
         <div class="war-room__header--right button-container">
@@ -84,26 +93,34 @@
               type="button"
               class="btn-m btn-default button-container__button"
               @click="publishWarRoom"
-            >{{ $t('warRoom.publish') }}</button>
+            >
+              {{ $t('warRoom.publish') }}
+            </button>
             <template v-if="warRoomBasicInfo.isPublishing">
               <button
                 :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-default button-container__button"
                 @click="publishWarRoom"
-              >{{ $t('button.update') }}</button>
+              >
+                {{ $t('button.update') }}
+              </button>
               <button
                 :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-secondary button-container__button"
                 @click="unpublishWarRoom"
-              >{{ $t('warRoom.unpublish') }}</button>
+              >
+                {{ $t('warRoom.unpublish') }}
+              </button>
             </template>
-            <button 
+            <button
               type="button"
               class="btn-m btn-secondary button-container__button"
               @click="previewWarRoom"
-            >{{ $t('warRoom.preview') }}</button>
+            >
+              {{ $t('warRoom.preview') }}
+            </button>
             <custom-dropdown-select
               v-if="warRoomBasicInfo.isPublishing"
               :data-list="otherFeatureList"
@@ -115,9 +132,10 @@
                   type="button"
                   class="btn-m btn-secondary button-container__button"
                 >
-                  <svg-icon 
-                    icon-class="more" 
-                    class="icon"/>
+                  <svg-icon
+                    icon-class="more"
+                    class="icon"
+                  />
                 </button>
               </template>
             </custom-dropdown-select>
@@ -125,7 +143,7 @@
           <div class="button-container--bottom">
             <div class="button-container__description">
               <span class="question-lamp">
-                <svg-icon icon-class="lamp"/>
+                <svg-icon icon-class="lamp" />
                 {{ $t('warRoom.hint') }}:
               </span>
               {{ $t('warRoom.chartReminder') }}
@@ -135,9 +153,10 @@
               class="btn-m btn-outline btn-has-icon button-container__button"
               @click="openWarRoomSetting"
             >
-              <svg-icon 
-                icon-class="filter-setting" 
-                class="icon"/>
+              <svg-icon
+                icon-class="filter-setting"
+                class="icon"
+              />
               {{ $t('warRoom.warRoomSetting') }}
             </button>
             <custom-dropdown-select
@@ -151,9 +170,10 @@
                   type="button"
                   class="btn-m btn-outline btn-has-icon button-container__button"
                 >
-                  <svg-icon 
-                    icon-class="plus" 
-                    class="icon"/>
+                  <svg-icon
+                    icon-class="plus"
+                    class="icon"
+                  />
                   {{ $t('warRoom.add') }}
                 </button>
               </template>
@@ -165,7 +185,7 @@
         :class="{ 'war-room__display--disabled': isProcessing }"
         class="war-room__display"
       >
-        <spinner 
+        <spinner
           v-if="isProcessing"
           :title="$t('message.componentLayoutUpdating')"
           class="spinner"
@@ -179,7 +199,8 @@
             :value="numberComponent"
             group="index"
             class="chart__container"
-            @end="updateIndexLayout">
+            @end="updateIndexLayout"
+          >
             <war-room-component
               v-for="number in numberComponent"
               :key="number.componentId"
@@ -191,7 +212,7 @@
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
             />
-          </draggable>     
+          </draggable>
         </div>
         <div
           v-if="chartComponent && chartComponent.length > 0"
@@ -202,7 +223,8 @@
             data-row="1"
             group="diagram"
             class="chart__container"
-            @end="updateDiagramLayout">
+            @end="updateDiagramLayout"
+          >
             <war-room-component
               v-for="chart in chartFirstRow"
               :key="chart.componentId"
@@ -220,7 +242,8 @@
             data-row="2"
             group="diagram"
             class="chart__container"
-            @end="updateDiagramLayout">
+            @end="updateDiagramLayout"
+          >
             <war-room-component
               v-for="chart in chartSecondRow"
               :key="chart.componentId"
@@ -265,11 +288,12 @@
       @closeDialog="closeShare"
       @confirmBtn="copyLink"
     >
-      <input 
-        ref="shareInput" 
-        v-model="shareLink" 
-        type="text" 
-        class="input war-room__dialog-input">
+      <input
+        ref="shareInput"
+        v-model="shareLink"
+        type="text"
+        class="input war-room__dialog-input"
+      >
     </writing-dialog>
   </section>
 </template>
@@ -281,7 +305,7 @@ import WarRoomSetting from './components/WarRoomSetting'
 import ComponentConstraint from './components/ComponentConstraint'
 import WarRoomComponent from './components/WarRoomComponent'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import draggable from 'vuedraggable';
+import draggable from 'vuedraggable'
 import { Message } from 'element-ui'
 import {
   getWarRoomInfo,
@@ -414,8 +438,8 @@ export default {
       if (this.isShowComponentSetting) this.closeComponentSetting()
       this.$nextTick(() => {
         if (
-          (value === 'index' && this.numberComponent.length === 4)
-          || (value === 'diagram' && this.chartComponent.length === 8)
+          (value === 'index' && this.numberComponent.length === 4) ||
+          (value === 'diagram' && this.chartComponent.length === 8)
         ) {
           return Message({
             message: this.$t('message.componentAmountReachedLimit'),
@@ -549,7 +573,7 @@ export default {
       }))
 
       try {
-        await this.updateLayout ({
+        await this.updateLayout({
           diagramTypeComponents: this.chartComponent,
           indexTypeComponents: tempNumberComponent
         })
@@ -574,9 +598,9 @@ export default {
         ...chart,
         orderSequence: index + 1
       }))
-      
+
       try {
-        await this.updateLayout ({
+        await this.updateLayout({
           diagramTypeComponents: tempChartComponent,
           indexTypeComponents: this.numberComponent
         })
@@ -587,7 +611,7 @@ export default {
     },
     previewWarRoom () {
       const { war_room_id: warRoomId } = this.$route.params
-      const routeData = this.$router.resolve({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } })
+      const routeData = this.$router.resolve({ name: 'WarRoomPreviewPage', params: { war_room_id: warRoomId } })
       window.open(routeData.href, '_blank')
     },
     showShareDialog () {
@@ -615,7 +639,7 @@ export default {
     doOtherFeature (action) {
       if (action === 'shareUrl') return this.showShareDialog()
       if (action === 'viewLivePage') {
-        const routeData = this.$router.resolve({ name: 'WarRoomLivePage', query: { 'id': this.warRoomBasicInfo.urlIdentifier } })
+        const routeData = this.$router.resolve({ name: 'WarRoomLivePage', query: { id: this.warRoomBasicInfo.urlIdentifier } })
         return window.open(routeData.href, '_blank')
       }
     }
@@ -717,7 +741,7 @@ export default {
   .button-container {
     display: flex;
     flex-direction: column;
-    
+
     &--top,
     &--bottom {
       display: flex;

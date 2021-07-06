@@ -3,14 +3,16 @@
     <div
       v-for="nav in navItems"
       :key="nav.title"
-      class="nav-item">
+      class="nav-item"
+    >
       <router-link
         :to="nav.path ? nav.path : { name: nav.routeName }"
         class="nav-link main-nav-link"
       >
-        <svg-icon 
-          :icon-class="nav.icon" 
-          class="icon"/>
+        <svg-icon
+          :icon-class="nav.icon"
+          class="icon"
+        />
         {{ nav.title }}
       </router-link>
       <template v-if="nav.subNav">
@@ -22,20 +24,23 @@
           class="nav-link sub-nav-link"
           @click.native.capture="routerCapture(subNav.isLocked, $event)"
         >
-          <svg-icon 
-            icon-class="triangle" 
-            class="icon"/>
+          <svg-icon
+            icon-class="triangle"
+            class="icon"
+          />
           <el-tooltip
             :disabled="!subNav.isLocked"
-            :content="$t('model.UsedModelCannotBeEdited')" 
+            :content="$t('model.UsedModelCannotBeEdited')"
             class="model-tooltip"
-            effect="dark" 
-            placement="bottom-start">
+            effect="dark"
+            placement="bottom-start"
+          >
             <div>
               <svg-icon
                 v-if="subNav.isLocked"
-                icon-class="lock" 
-                class="lock"/>
+                icon-class="lock"
+                class="lock"
+              />
               {{ subNav.title }}
             </div>
           </el-tooltip>
@@ -87,7 +92,7 @@ export default {
     &--locked {
       color: #3C4545;
       cursor: not-allowed;
-      
+
       &:hover {
         color: #3C4545;
       }

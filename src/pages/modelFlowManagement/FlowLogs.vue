@@ -6,7 +6,7 @@
         {{ $t('modelFlow.flowUpdateLogs') }}
       </div>
     </div>
-    <spinner 
+    <spinner
       v-if="isLoading"
       :title="$t('editing.loading')"
       class="spinner-container"
@@ -20,7 +20,8 @@
       <el-table
         :data="flowUpdateLogs"
         class="sy-table"
-        style="width: 100%">
+        style="width: 100%"
+      >
         <el-table-column
           :label="$t('modelFlow.updatedTime')"
           prop="createdAt"
@@ -34,7 +35,8 @@
         <el-table-column
           :label="$t('modelFlow.updateMode')"
           prop="triggerType"
-          width="180">
+          width="180"
+        >
           <template slot-scope="scope">
             {{ triggerTypeLabel(scope.row.triggerType) }}
           </template>
@@ -58,7 +60,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination 
+      <el-pagination
         v-if="paginationInfo.totalPages > 1"
         :total="paginationInfo.totalItems"
         :page-size="paginationInfo.itemPerPage"
@@ -99,8 +101,8 @@ export default {
       return this.currentFlowInfo && this.currentFlowInfo.name || this.flowInfo.name
     },
     flowId () {
-      return this.$route.params['flow_id']
-    },
+      return this.$route.params.flow_id
+    }
   },
   mounted () {
     this.fetchData()

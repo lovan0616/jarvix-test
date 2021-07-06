@@ -27,7 +27,7 @@
             />
           </div>
           <div class="key-result-viewer">
-            <div 
+            <div
               v-show="isLoading"
               class="key-result-spinner"
             >
@@ -35,7 +35,7 @@
                 :title="$t('resultDescription.analysisProcessing')"
               />
             </div>
-            <div 
+            <div
               v-show="!isLoading"
               class="chart-block"
             >
@@ -68,11 +68,12 @@
           intend="sub_basic_info"
         />
       </template>
-      <template 
+      <template
         v-if="resultInfo.recommended_insight && resultInfo.recommended_insight.length > 0"
-        slot="InsightRecommended">
-        <recommended-insight 
-          v-for="(componentId, index) in resultInfo.recommended_insight" 
+        slot="InsightRecommended"
+      >
+        <recommended-insight
+          v-for="(componentId, index) in resultInfo.recommended_insight"
           :key="index"
           :component-id="componentId"
         />

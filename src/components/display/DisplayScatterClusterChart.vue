@@ -11,10 +11,11 @@
       :title="$t('resultDescription.currentChosenArea')"
       @save="saveFilter"
     >
-      <div 
-        slot="selectedFilterRegion" 
-        class="region-description">
-        <div 
+      <div
+        slot="selectedFilterRegion"
+        class="region-description"
+      >
+        <div
           v-for="(singleArea, index) in selectedData"
           :key="index"
           class="single-area"
@@ -32,25 +33,26 @@
         </div>
       </div>
     </selected-region>
-    <div 
+    <div
       v-if="dataset.descriptions && dataset.descriptions.length > 0"
       class="description"
     >
-      <span 
-        v-for="(description, index) in dataset.descriptions" 
-        :key="index" 
-        class="description__item">{{ description }}</span>
+      <span
+        v-for="(description, index) in dataset.descriptions"
+        :key="index"
+        class="description__item"
+      >{{ description }}</span>
     </div>
   </div>
 </template>
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-import { 
+import {
   getDrillDownTool,
   color5,
   color12,
-  convertHexToRGBA 
+  convertHexToRGBA
 } from '@/components/display/common/addons.js'
 import i18n from '@/lang/index.js'
 let scatterChartConfig = {
@@ -60,7 +62,7 @@ let scatterChartConfig = {
   yAxisSplitLine: {
     lineStyle: {
       type: 'solid',
-      color: chartVariable['splitLineColor']
+      color: chartVariable.splitLineColor
     }
   },
   chartData: {
@@ -90,7 +92,7 @@ export default {
     clusterInfos: {
       type: Array,
       default: () => ([])
-    },
+    }
   },
   data () {
     return {
@@ -100,9 +102,9 @@ export default {
   },
   computed: {
     chartOption () {
-      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.$route.name, this.title)}
+      let chartAddon = { ...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.$route.name, this.title) }
       let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
-      
+
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
 
@@ -159,7 +161,7 @@ export default {
           dimensions: [this.title.xAxis[0].display_name, this.title.yAxis[0].display_name]
         })
       })
- 
+
       // 處理分群分群
       if (this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) {
         scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.buckets.length)
@@ -176,7 +178,7 @@ export default {
         let dataset = opt.series[0].data
         let maxLength = dataset.length > 1000 ? 1000 : dataset.length
         let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div>' +
-          `<div style="margin-top: 16px;padding: 0 16px;">${maxLength === 1000 ? this.$t('resultDescription.displayTopData', {count: maxLength}) : this.$t('resultDescription.displayTotalData', {count: maxLength})}</div>` +
+          `<div style="margin-top: 16px;padding: 0 16px;">${maxLength === 1000 ? this.$t('resultDescription.displayTopData', { count: maxLength }) : this.$t('resultDescription.displayTotalData', { count: maxLength })}</div>` +
           '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
           `<td style="padding: 4px 12px;">${i18n.t('clustering.cluster')}</td>` +
           '<td style="padding: 4px 12px;">' + this.title.xAxis[0].display_name + '</td>' +
@@ -217,7 +219,7 @@ export default {
           }
         })
       })
-      
+
       chartAddon.color = this.colorSet
       return chartAddon
     },
@@ -301,7 +303,7 @@ export default {
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
-  },
+  }
 }
 </script>
 

@@ -9,9 +9,10 @@
     <div class="input-field">
       <label class="input-field__label">{{ $t('modelFlow.upload.outputColumnName') }}</label>
       <div class="input-field__input">
-        <svg-icon 
-          icon-class="go-right" 
-          class="icon"/>
+        <svg-icon
+          icon-class="go-right"
+          class="icon"
+        />
         <input-verify
           v-validate="'required'"
           v-model.trim="columnInfo.originalName"
@@ -19,10 +20,12 @@
           :name="'input' + columnInfo.id"
           type="text"
         />
-        <div 
+        <div
           v-show="errors.has('input' + columnInfo.id)"
           class="error-text"
-        >{{ errors.first('input' + columnInfo.id) }}</div>
+        >
+          {{ errors.first('input' + columnInfo.id) }}
+        </div>
       </div>
     </div>
   </div>

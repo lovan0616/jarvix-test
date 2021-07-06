@@ -3,64 +3,84 @@
     class="single-war-room war-room"
     @click.stop="edit"
   >
-    <div 
+    <div
       :class="{ 'war-room__status--published': warRoomInfo.isPublishing}"
-      class="war-room__status">
+      class="war-room__status"
+    >
       {{ warRoomInfo.isPublishing ? $t('warRoom.hasPublished') : $t('warRoom.notPublished') }}
     </div>
-    <div class="war-room__name">{{ warRoomInfo.name }}</div>
+    <div class="war-room__name">
+      {{ warRoomInfo.name }}
+    </div>
     <div class="war-room__link">
       <a
         v-if="warRoomInfo.isPublishing"
-        href="javascript:void(0);" 
+        href="javascript:void(0);"
         class="link action-link"
         @click.stop="viewDetail"
       >{{ $t('warRoom.goToLivePage') }}</a>
       <a
-        href="javascript:void(0);" 
+        href="javascript:void(0);"
         class="link action-link"
         @click.stop="edit"
       >{{ $t('warRoom.edit') }}</a>
     </div>
-    <div 
+    <div
       class="war-room__action-block"
       @click.stop
     >
       <div class="war-room__hover-box">
-        <svg-icon 
-          icon-class="more" 
-          class="icon more-icon"/>
+        <svg-icon
+          icon-class="more"
+          class="icon more-icon"
+        />
 
-        <div 
+        <div
           :class="{'war-room__popup--published': warRoomInfo.isPublishing}"
-          class="war-room__popup">
+          class="war-room__popup"
+        >
           <div
             v-if="warRoomInfo.isPublishing"
-            class="popup-box" 
-            @click.stop="unpublish">
-            <div class="popup-text">{{ $t('warRoom.unpublish') }}</div>
+            class="popup-box"
+            @click.stop="unpublish"
+          >
+            <div class="popup-text">
+              {{ $t('warRoom.unpublish') }}
+            </div>
           </div>
-          <div 
+          <div
             v-else-if="!warRoomInfo.isPublishing"
-            class="popup-box" 
-            @click.stop="publish">
-            <div class="popup-text">{{ $t('warRoom.publish') }}</div>
+            class="popup-box"
+            @click.stop="publish"
+          >
+            <div class="popup-text">
+              {{ $t('warRoom.publish') }}
+            </div>
           </div>
           <div
             v-if="warRoomInfo.isPublishing"
-            class="popup-box" 
-            @click.stop="getPublishedUrl">
-            <div class="popup-text">{{ $t('warRoom.getPublishedUrl') }}</div>
+            class="popup-box"
+            @click.stop="getPublishedUrl"
+          >
+            <div class="popup-text">
+              {{ $t('warRoom.getPublishedUrl') }}
+            </div>
           </div>
           <div
-            class="popup-box" 
-            @click.stop="renameWarRoom">
-            <div class="popup-text">{{ $t('warRoom.rename') }}</div>
+            class="popup-box"
+            @click.stop="renameWarRoom"
+          >
+            <div class="popup-text">
+              {{ $t('warRoom.rename') }}
+            </div>
           </div>
           <div
-            class="popup-box" 
-            @click.stop="deleteWarRoom">
-            <div class="popup-text">{{ $t('warRoom.delete') }}</div>
+            class="popup-box"
+            @click.stop="deleteWarRoom"
+          >
+            <div class="popup-text">
+              {{ $t('warRoom.delete') }}
+            </div>
           </div>
         </div>
       </div>
@@ -74,21 +94,22 @@ export default {
   props: {
     warRoomInfo: {
       type: Object,
-      default: ()=> {
-        return { 
+      default: () => {
+        return {
           isPublishing: false,
           name: null,
           urlIdentifier: null,
           id: null
-         }
+        }
       }
     }
   },
   methods: {
     viewDetail () {
       const routeData = this.$router.resolve({
-        name: 'WarRoomLivePage', 
-        query: { 'id': this.warRoomInfo.urlIdentifier } })
+        name: 'WarRoomLivePage',
+        query: { id: this.warRoomInfo.urlIdentifier }
+      })
       window.open(routeData.href, '_blank')
     },
     edit () {
@@ -98,10 +119,10 @@ export default {
       })
     },
     publish () {
-      this.$emit('publish', this.warRoomInfo.id )
+      this.$emit('publish', this.warRoomInfo.id)
     },
     unpublish () {
-      this.$emit('unpublish', this.warRoomInfo.id )
+      this.$emit('unpublish', this.warRoomInfo.id)
     },
     getPublishedUrl () {
       this.$emit('showShare')
@@ -247,7 +268,7 @@ export default {
       height: 0px;
       border-top: 10px solid #233131;
       border-left: 10px solid transparent;
-      border-right: 10px solid transparent; 
+      border-right: 10px solid transparent;
     }
 
     &--published {

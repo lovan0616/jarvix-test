@@ -36,7 +36,6 @@ export function updateDatabaseConnection (databaseConnectionId, connectInfo) {
   })
 }
 
-
 /**
  * 取得 table 列表
  * @param {Number} databaseConnectionId 連線 id
@@ -53,7 +52,7 @@ export function getTableList (databaseConnectionId) {
  */
 export function getConnectionInfoList (groupId) {
   return request({
-    url: `/database/connection`,
+    url: '/database/connection',
     method: 'GET',
     params: {
       groupId
@@ -66,7 +65,7 @@ export function getConnectionInfoList (groupId) {
  */
 export function testConnection (connectionInfo) {
   return request({
-    url: `/database/connection/test`,
+    url: '/database/connection/test',
     method: 'POST',
     data: connectionInfo
   })
@@ -75,7 +74,7 @@ export function testConnection (connectionInfo) {
 /**
  * 測試已新增的連線
  */
-export function testOldConnection (connectionId, cancelFunction=null) {
+export function testOldConnection (connectionId, cancelFunction = null) {
   return request({
     url: `/database/connection/${connectionId}/test`,
     method: 'POST',
@@ -109,7 +108,6 @@ export function testCreateTableSql (connectionId, sqlInfo) {
     }
   })
 }
-
 
 /**
  * 依照連線資訊 ID 對資料導入 SQL 進行初步解析

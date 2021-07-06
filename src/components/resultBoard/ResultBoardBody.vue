@@ -1,35 +1,38 @@
 <template>
   <div class="result-board-body">
-    <div 
+    <div
       :class="{ 'is-open': isShowSettingBox }"
       class="key-result-container"
     >
       <button
-        v-if="$slots.InsightBasicInfo" 
+        v-if="$slots.InsightBasicInfo"
         v-show="hasBasicInfo"
         :class="{ active: showBasicInfo }"
         type="button"
         class="btn-m btn-secondary control-btn"
         @click.stop="toggleBasicInfoDialog"
-      >{{ $t('resultDescription.basicInfo') }}</button>
-      <div 
+      >
+        {{ $t('resultDescription.basicInfo') }}
+      </button>
+      <div
         v-if="$slots.multiAnalyPanel"
-        class="multi-analysis__block">
-        <slot name="multiAnalyPanel"/>
+        class="multi-analysis__block"
+      >
+        <slot name="multiAnalyPanel" />
       </div>
       <div class="chart-block">
-        <slot name="PageResultBoardIndicator"/>
-        <slot name="PageResultBoardChart"/>
+        <slot name="PageResultBoardIndicator" />
+        <slot name="PageResultBoardChart" />
       </div>
       <slot-dialog
-        v-if="$slots.InsightBasicInfo" 
+        v-if="$slots.InsightBasicInfo"
         v-show="showBasicInfo && hasBasicInfo"
         :show="showBasicInfo"
         class="basic-info-container"
         @close="closeBasicInfoDialog"
       >
         <template slot="SlotDialog">
-          <slot name="InsightBasicInfo"/>
+          <slot name="InsightBasicInfo" />
         </template>
       </slot-dialog>
     </div>
@@ -37,18 +40,21 @@
       v-if="isShowOtherResultContainer"
       class="other-result-container"
     >
-      <slot name="InsightRootCause"/>
-      <div 
-        v-if="$slots.InsightRecommended" 
-        name="InsightRecommended">
+      <slot name="InsightRootCause" />
+      <div
+        v-if="$slots.InsightRecommended"
+        name="InsightRecommended"
+      >
         <div class="insights-info recommended">
-          <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
+          <div class="insights-info-title">
+            {{ $t('resultDescription.recommendedInsight') }}
+          </div>
           <div class="insights-info__wrapper">
-            <slot name="InsightRecommended"/>
+            <slot name="InsightRecommended" />
           </div>
         </div>
       </div>
-      <slot name="CorrelationAnalysis"/>
+      <slot name="CorrelationAnalysis" />
     </div>
   </div>
 </template>
@@ -85,7 +91,7 @@ export default {
     closeBasicInfoDialog () {
       this.showBasicInfo = false
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -110,7 +116,7 @@ export default {
       margin-right: 0;
       min-height: 500px;
     }
-    
+
     .basic-info-container {
       padding: 20px;
       border-radius: 8px;
@@ -246,6 +252,5 @@ export default {
     }
   }
 }
-
 
 </style>

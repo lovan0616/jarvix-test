@@ -9,7 +9,7 @@
         <div class="input-field">
           <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
           <div class="input-field__input-box">
-            <default-select 
+            <default-select
               v-validate="'required'"
               :option-list="dataSourceOptionList"
               :placeholder="$t('miniApp.chooseDataSource')"
@@ -20,16 +20,18 @@
               name="dataSourceId"
               @change="handleDataSourceSelected"
             />
-            <div 
+            <div
               v-show="errors.has('dataSourceId')"
               class="error-text"
-            >{{ errors.first('dataSourceId') }}</div>
+            >
+              {{ errors.first('dataSourceId') }}
+            </div>
           </div>
         </div>
         <div class="input-field">
           <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
           <div class="input-field__input-box">
-            <default-select 
+            <default-select
               v-validate="'required'"
               :option-list="dataFrameOptionList"
               :placeholder="$t('miniApp.chooseDataFrame')"
@@ -40,10 +42,12 @@
               name="dataFrameId"
               @change="handleDataFrameSelected"
             />
-            <div 
+            <div
               v-show="errors.has('dataFrameId')"
               class="error-text"
-            >{{ errors.first('dataFrameId') }}</div>
+            >
+              {{ errors.first('dataFrameId') }}
+            </div>
           </div>
         </div>
       </div>
@@ -57,7 +61,7 @@
         <div class="input-field">
           <label class="input-field__label">{{ $t('miniApp.operatedModel') }}</label>
           <div class="input-field__input-box">
-            <default-select 
+            <default-select
               v-validate="'required'"
               :option-list="modelOptionList"
               :placeholder="$t('miniApp.selectModel')"
@@ -68,22 +72,25 @@
               name="model"
               @change="updateModelSetting"
             />
-            <div 
+            <div
               v-show="errors.has('model')"
               class="error-text"
-            >{{ errors.first('model') }}</div>
+            >
+              {{ errors.first('model') }}
+            </div>
           </div>
         </div>
         <template v-if="modelSetting.modelId">
-          <div 
-            v-if="modelOuptputList.length > 0" 
-            class="input-field">
+          <div
+            v-if="modelOuptputList.length > 0"
+            class="input-field"
+          >
             <label class="input-field__label">{{ $t('miniApp.modelOperatedResult') }}</label>
             <div class="input-field__input-box">
               {{ modelOuptputList | mergeModelOutputList }}
             </div>
           </div>
-          <spinner 
+          <spinner
             v-else
             size="20"
           />
@@ -91,33 +98,42 @@
       </div>
     </div>
     <!--Input 設定-->
-    <div 
-      v-if="modelSetting.dataSourceId && modelSetting.dataFrameId && modelSetting.modelId" 
-      class="setting">
+    <div
+      v-if="modelSetting.dataSourceId && modelSetting.dataFrameId && modelSetting.modelId"
+      class="setting"
+    >
       <div class="setting__title">
         {{ $t('miniApp.inputParamSetting') }}
       </div>
       <div class="setting__content list">
-        <spinner 
+        <spinner
           v-if="isLoading"
           size="20"
         />
         <template v-else>
           <div class="list__header">
-            <div class="list__title">{{ $t('miniApp.modelInputParams') }}</div>
-            <div class="list__title">{{ $t('miniApp.targetedDataFrameColumn') }}</div>
+            <div class="list__title">
+              {{ $t('miniApp.modelInputParams') }}
+            </div>
+            <div class="list__title">
+              {{ $t('miniApp.targetedDataFrameColumn') }}
+            </div>
           </div>
-          <div 
-            v-for="(input, index) in modelInputList" 
-            :key="input + '-' + index" 
-            class="list__item">
-            <div class="list__item-data">{{ input.modelColumnName + ' (' + input.statsType + ')' }}</div>
-            <svg-icon 
-              icon-class="go-right" 
-              class="icon"/>
+          <div
+            v-for="(input, index) in modelInputList"
+            :key="input + '-' + index"
+            class="list__item"
+          >
+            <div class="list__item-data">
+              {{ input.modelColumnName + ' (' + input.statsType + ')' }}
+            </div>
+            <svg-icon
+              icon-class="go-right"
+              class="icon"
+            />
             <div class="list__item-data">
               <div class="input-field__input-box">
-                <default-select 
+                <default-select
                   v-validate="'required'"
                   :option-list="getdDataColumnOptionList(input.statsType)"
                   :placeholder="$t('editing.chooseDataColumn')"
@@ -127,10 +143,12 @@
                   class="input-field__select"
                   @change="handleModelInputChange(index, $event)"
                 />
-                <div 
+                <div
                   v-show="errors.has(index + 'modelInputId')"
                   class="error-text"
-                >{{ errors.first(index + 'modelInputId') }}</div>
+                >
+                  {{ errors.first(index + 'modelInputId') }}
+                </div>
               </div>
             </div>
           </div>
@@ -142,14 +160,14 @@
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { 
-  getDataFrameById, 
+import {
+  getDataFrameById,
   getDataFrameColumnInfoById,
   getDateTimeColumns
 } from '@/API/DataSource'
 import {
   getModelInfo,
-  getModelList 
+  getModelList
 } from '@/API/Model'
 import { mapGetters } from 'vuex'
 
@@ -162,7 +180,7 @@ export default {
   filters: {
     mergeModelOutputList (list) {
       if (!list || list.length === 0) return ''
-      return list.map(output => output.modelColumnName).join('、') 
+      return list.map(output => output.modelColumnName).join('、')
     }
   },
   props: {
@@ -207,7 +225,7 @@ export default {
   },
   computed: {
     ...mapGetters('dataSource', ['dataSourceList']),
-    ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapGetters('userManagement', ['getCurrentGroupId'])
   },
   mounted () {
     this.getModelList()
@@ -259,7 +277,7 @@ export default {
       this.dataColumnOptionList = []
       this.resetInputList()
       this.fetchDataColumnList(dataFrameId)
-      this.setDataTimeColumns (dataFrameId)
+      this.setDataTimeColumns(dataFrameId)
     },
     setDataTimeColumns (dataFrameId) {
       getDateTimeColumns(dataFrameId)
@@ -274,7 +292,7 @@ export default {
           ...column,
           name: `${column.primaryAlias || column.name}（${column.statsType}）`,
           value: column.id,
-          originalName: column.primaryAlias  || column.name,
+          originalName: column.primaryAlias || column.name,
           dcId: column.id
         }))
       })
@@ -303,12 +321,12 @@ export default {
       this.modelSetting.inputList = []
       this.modelOuptputList = []
 
-      this.fetchModelInfo (selectedId)
+      this.fetchModelInfo(selectedId)
     },
     fetchModelInfo (selectedId) {
       this.$emit('update:isLoading', true)
       getModelInfo(selectedId)
-        .then(({ioArgs: { input, output }}) => {
+        .then(({ ioArgs: { input, output } }) => {
           this.modelInputList = input
           this.modelSetting.inputList = input.map((input, index) => ({
             id: null,
@@ -327,7 +345,7 @@ export default {
     getdDataColumnOptionList (statesType) {
       return this.dataColumnOptionList.filter(option => option.statsType === statesType)
     },
-    handleModelInputChange(index, id) {
+    handleModelInputChange (index, id) {
       const selectedOption = this.dataColumnOptionList.find(column => column.id === id)
       this.modelSetting.inputList[index] = JSON.parse(JSON.stringify(selectedOption))
     }
@@ -403,7 +421,7 @@ export default {
       .error-text {
         position: absolute;
       }
-      
+
       /deep/ .el-input__inner {
         font-size: 16px;
         padding-left: 0;

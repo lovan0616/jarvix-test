@@ -1,9 +1,10 @@
 <template>
   <div class="warning-log__filter">
     <div class="single-filter">
-      <svg-icon 
-        icon-class="clock" 
-        class="icon-clock"/>
+      <svg-icon
+        icon-class="clock"
+        class="icon-clock"
+      />
       <div class="filter__title">
         {{ $t('miniApp.filterCondition') }}
       </div>
@@ -18,7 +19,8 @@
           <template v-for="(option, index) in stateOptions">
             <label
               :key="index"
-              class="radio">
+              class="radio"
+            >
               <input
                 :checked="filterSetting.activenessValue === option.value"
                 class="radio__input"
@@ -35,15 +37,17 @@
           @click.stop="resetActivenessFilter"
         >
           <svg-icon
-            icon-class="close" 
-            class="filter__delete-icon"/>
+            icon-class="close"
+            class="filter__delete-icon"
+          />
         </div>
       </div>
     </div>
     <div class="single-filter">
-      <svg-icon 
-        icon-class="clock" 
-        class="icon-clock"/>
+      <svg-icon
+        icon-class="clock"
+        class="icon-clock"
+      />
       <div class="filter__title">
         {{ $t('miniApp.timeScope') }}
       </div>
@@ -64,13 +68,15 @@
           @click.stop="resetTimeFilter"
         >
           <svg-icon
-            icon-class="close" 
-            class="filter__delete-icon"/>
+            icon-class="close"
+            class="filter__delete-icon"
+          />
         </div>
         <svg-icon
           v-else
           icon-class="triangle"
-          class="filter__dropdown-icon"/>
+          class="filter__dropdown-icon"
+        />
       </div>
     </div>
   </div>
@@ -98,31 +104,31 @@ export default {
       pickerOptions: {
         shortcuts: [{
           text: this.$t('miniApp.today'),
-          onClick(picker) {
+          onClick (picker) {
             const start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
             const end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
             picker.$emit('pick', [start, end])
           }
         }, {
           text: this.$t('miniApp.6hour'),
-          onClick(picker) {
-            const start = moment().subtract(6, 'hours').format('YYYY-MM-DD HH:mm');
-            const end = moment().format('YYYY-MM-DD HH:mm');
-            picker.$emit('pick', [start, end]);
+          onClick (picker) {
+            const start = moment().subtract(6, 'hours').format('YYYY-MM-DD HH:mm')
+            const end = moment().format('YYYY-MM-DD HH:mm')
+            picker.$emit('pick', [start, end])
           }
         }, {
           text: this.$t('miniApp.3hour'),
-          onClick(picker) {
-            const start = moment().subtract(3, 'hours').format('YYYY-MM-DD HH:mm');
-            const end = moment().format('YYYY-MM-DD HH:mm');
-            picker.$emit('pick', [start, end]);
+          onClick (picker) {
+            const start = moment().subtract(3, 'hours').format('YYYY-MM-DD HH:mm')
+            const end = moment().format('YYYY-MM-DD HH:mm')
+            picker.$emit('pick', [start, end])
           }
         }, {
           text: this.$t('miniApp.1hour'),
-          onClick(picker) {
-            const start = moment().subtract(1, 'hours').format('YYYY-MM-DD HH:mm');
-            const end = moment().format('YYYY-MM-DD HH:mm');
-            picker.$emit('pick', [start, end]);
+          onClick (picker) {
+            const start = moment().subtract(1, 'hours').format('YYYY-MM-DD HH:mm')
+            const end = moment().format('YYYY-MM-DD HH:mm')
+            picker.$emit('pick', [start, end])
           }
         }]
       }

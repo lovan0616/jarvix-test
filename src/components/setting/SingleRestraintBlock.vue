@@ -11,7 +11,7 @@
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
           class="restraint__list"
-        > 
+        >
           <span class="restraint__list--name">{{ sub_restraint.properties.display_name }} : </span>
           <template v-if="sub_restraint.type === 'enum'">
             {{ sub_restraint.properties['display_datavalues'].join(', ') }}
@@ -41,14 +41,16 @@
         @click="editRestraint"
       >
         <svg-icon
-          icon-class="edit"/>
+          icon-class="edit"
+        />
       </div>
       <div
         class="restraint__action--delete"
         @click="deleteRestraint"
       >
         <svg-icon
-          icon-class="delete"/>
+          icon-class="delete"
+        />
       </div>
     </div>
   </div>
@@ -56,7 +58,7 @@
 
 <script>
 export default {
-  name: "SingleRestraintBlock",
+  name: 'SingleRestraintBlock',
   components: {
   },
   props: {
@@ -71,15 +73,15 @@ export default {
   },
   methods: {
     isDateTime (type) {
-      return type === "datetime"
+      return type === 'datetime'
     },
-    editRestraint() {
+    editRestraint () {
       this.$emit('restraint-edit')
     },
-    deleteRestraint() {
+    deleteRestraint () {
       this.$emit('restraint-delete')
     }
-  },
+  }
 
 }
 </script>

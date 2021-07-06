@@ -3,16 +3,19 @@
     <spinner
       v-if="isLoading"
       :title="$t('editing.loading')"
-      size="50"/>
-    <main 
-      v-else 
-      class="mini-app__page">
+      size="50"
+    />
+    <main
+      v-else
+      class="mini-app__page"
+    >
       <nav class="mini-app__nav">
         <div class="nav--left">
           <div
             v-if="isEditMode"
             class="icon-arrow"
-            @click="$router.push({ name: 'MiniAppList' })">
+            @click="$router.push({ name: 'MiniAppList' })"
+          >
             <svg-icon icon-class="arrow-left" />
           </div>
           <div
@@ -34,11 +37,13 @@
                 name="appNameInput"
               />
               <button
-                class="btn-m btn-default" 
-                @click="updateAppName">
+                class="btn-m btn-default"
+                @click="updateAppName"
+              >
                 <svg-icon
                   v-if="isProcessing"
-                  icon-class="spinner"/>
+                  icon-class="spinner"
+                />
                 {{ $t('button.save') }}
               </button>
               <button
@@ -55,9 +60,10 @@
                 class="edit-app-name"
                 @click="isEditingAppName = true"
               >
-                <svg-icon 
-                  icon-class="edit" 
-                  class="icon-edit"/>
+                <svg-icon
+                  icon-class="edit"
+                  class="icon-edit"
+                />
               </div>
             </template>
           </div>
@@ -66,7 +72,7 @@
           v-if="isEditMode"
           class="nav--right"
         >
-          <div class="button-container"> 
+          <div class="button-container">
             <span
               v-if="miniApp.settings.viewModeData.updateDate"
               class="button-container__time"
@@ -86,26 +92,34 @@
                 type="button"
                 class="btn-m btn-default button-container__button"
                 @click="publishMiniApp('publish')"
-              >{{ $t('miniApp.publish') }}</button>
+              >
+                {{ $t('miniApp.publish') }}
+              </button>
               <template v-if="appData.isPublishing">
                 <button
                   :disabled="isProcessing"
                   type="button"
                   class="btn-m btn-default button-container__button"
                   @click="publishMiniApp('update')"
-                >{{ $t('button.update') }}</button>
+                >
+                  {{ $t('button.update') }}
+                </button>
                 <button
                   :disabled="isProcessing"
                   type="button"
                   class="btn-m btn-secondary button-container__button"
                   @click="unpublishMiniApp"
-                >{{ $t('miniApp.unpublish') }}</button>
+                >
+                  {{ $t('miniApp.unpublish') }}
+                </button>
               </template>
-              <button 
+              <button
                 type="button"
                 class="btn-m btn-secondary button-container__button"
                 @click="directToCertainModeMiniApp('preview')"
-              >{{ $t('miniApp.preview') }}</button>
+              >
+                {{ $t('miniApp.preview') }}
+              </button>
               <custom-dropdown-select
                 :data-list="otherFeatureList"
                 trigger="hover"
@@ -116,9 +130,10 @@
                     type="button"
                     class="btn-m btn-secondary button-container__button"
                   >
-                    <svg-icon 
-                      icon-class="more" 
-                      class="icon"/>
+                    <svg-icon
+                      icon-class="more"
+                      class="icon"
+                    />
                   </button>
                 </template>
               </custom-dropdown-select>
@@ -145,9 +160,10 @@
             @updateDashboardOrder="updateDashboardOrder($t('miniApp.dashboard'))"
           />
           <!-- 監控示警模組 -->
-          <main 
+          <main
             v-if="isShowWarningModule && !currentDashboardId"
-            class="mini-app__main warning">
+            class="mini-app__main warning"
+          >
             <warning-module
               :setting="appData.warningModule"
               :dashboard-list="dashboardList"
@@ -156,21 +172,24 @@
             />
           </main>
           <!-- 分析看板模組 -->
-          <div 
-            v-else-if="dashboardList.length === 0" 
-            class="empty-block">
+          <div
+            v-else-if="dashboardList.length === 0"
+            class="empty-block"
+          >
             {{ $t('miniApp.noneDashboard') }}
             <button
               v-if="isEditMode"
-              class="btn-m btn-default btn-has-icon create-btn" 
-              @click="isShowCreateDashboardDialog = true">
-              <svg-icon icon-class="plus"/>
+              class="btn-m btn-default btn-has-icon create-btn"
+              @click="isShowCreateDashboardDialog = true"
+            >
+              <svg-icon icon-class="plus" />
               {{ $t('miniApp.createDashboard') }}
             </button>
           </div>
-          <main 
+          <main
             v-else
-            class="mini-app__main dashboard">
+            class="mini-app__main dashboard"
+          >
             <div class="dashboard__header">
               <div class="header-left">
                 <template v-if="isEditingDashboardName">
@@ -202,7 +221,8 @@
                   >
                     <svg-icon
                       icon-class="edit"
-                      class="icon-edit"/>
+                      class="icon-edit"
+                    />
                   </div>
                 </template>
               </div>
@@ -217,11 +237,12 @@
                 >
                   <template #display>
                     <button class="btn-m btn-outline btn-has-icon create-component-btn">
-                      <svg-icon icon-class="plus"/>
+                      <svg-icon icon-class="plus" />
                       <span class="button-label">{{ $t('miniApp.component') }}</span>
-                      <svg-icon 
-                        icon-class="triangle" 
-                        class="icon-triangle"/>
+                      <svg-icon
+                        icon-class="triangle"
+                        class="icon-triangle"
+                      />
                     </button>
                   </template>
                 </custom-dropdown-select>
@@ -234,13 +255,15 @@
                 >
                   <template #display>
                     <button
-                      class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                      @click.prevent>
-                      <svg-icon icon-class="plus"/>
+                      class="btn-m btn-outline btn-has-icon create-filter-btn"
+                      @click.prevent
+                    >
+                      <svg-icon icon-class="plus" />
                       <span class="button-label">{{ $t('miniApp.panelControl') }}</span>
-                      <svg-icon 
-                        icon-class="triangle" 
-                        class="icon-triangle"/>
+                      <svg-icon
+                        icon-class="triangle"
+                        class="icon-triangle"
+                      />
                     </button>
                   </template>
                 </custom-dropdown-select>
@@ -254,18 +277,21 @@
                 >
                   <template #display>
                     <button
-                      class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                      @click.prevent>
-                      <svg-icon icon-class="plus"/>{{ $t('miniApp.filterCondition') }}
+                      class="btn-m btn-outline btn-has-icon create-filter-btn"
+                      @click.prevent
+                    >
+                      <svg-icon icon-class="plus" />{{ $t('miniApp.filterCondition') }}
                     </button>
                   </template>
                 </custom-dropdown-select>
                 <div
                   v-if="isEditMode"
-                  class="dashboard-setting-box">
+                  class="dashboard-setting-box"
+                >
                   <svg-icon
                     icon-class="more"
-                    class="more-icon" />
+                    class="more-icon"
+                  />
                   <dropdown-select
                     :bar-data="dashboardSettingOptions"
                     @switchDialogName="switchDialogName($event)"
@@ -275,8 +301,9 @@
             </div>
             <div
               v-if="controlColumnValueInfoList.length > 0 || yAxisControlColumnValueInfoList.length > 0"
-              :class="{ 'editing': isEditMode }" 
-              class="mini-app__dashboard-control mini-app__dashboard-control--top">
+              :class="{ 'editing': isEditMode }"
+              class="mini-app__dashboard-control mini-app__dashboard-control--top"
+            >
               <!--Control panel-->
               <filter-control-panel
                 v-if="controlColumnValueInfoList.length > 0"
@@ -300,8 +327,9 @@
             </div>
             <div
               v-if="filterColumnValueInfoList.length > 0"
-              :class="{ 'editing': isEditMode }" 
-              class="mini-app__dashboard-control mini-app__dashboard-control--bottom">
+              :class="{ 'editing': isEditMode }"
+              class="mini-app__dashboard-control mini-app__dashboard-control--bottom"
+            >
               <!--Filter Panel-->
               <filter-control-panel
                 :key="'filter' + currentDashboardId"
@@ -341,12 +369,14 @@
                     @goToCertainDashboard="activeCertainDashboard($event)"
                     @switchDialogName="handleDashboardSwitchName($event, componentData)"
                   >
-                    <template 
-                      v-if="componentData.type === 'monitor-warning-list'" 
-                      slot="icon">
-                      <svg-icon 
-                        icon-class="warning" 
-                        class="warning-icon"/>
+                    <template
+                      v-if="componentData.type === 'monitor-warning-list'"
+                      slot="icon"
+                    >
+                      <svg-icon
+                        icon-class="warning"
+                        class="warning-icon"
+                      />
                     </template>
                   </dashboard-task>
                 </draggable>
@@ -356,9 +386,10 @@
                   {{ $t('miniApp.noneComponent') }}
                   <button
                     v-if="isEditMode"
-                    class="btn-m btn-default btn-has-icon create-btn" 
-                    @click="createGeneralComponent">
-                    <svg-icon icon-class="plus"/>
+                    class="btn-m btn-default btn-has-icon create-btn"
+                    @click="createGeneralComponent"
+                  >
+                    <svg-icon icon-class="plus" />
                     {{ $t('miniApp.createComponent') }}
                   </button>
                 </div>
@@ -368,12 +399,14 @@
         </template>
       </div>
     </main>
-    <div 
-      v-show="isProcessing" 
-      class="dialog">
-      <spinner 
+    <div
+      v-show="isProcessing"
+      class="dialog"
+    >
+      <spinner
         :title="$t('button.processing')"
-        size="50"/>
+        size="50"
+      />
     </div>
     <create-dashboard-dialog
       v-if="isShowCreateDashboardDialog"
@@ -428,10 +461,11 @@
     >
       <input
         ref="shareInput"
-        v-model="shareLink" 
-        readonly 
-        type="text" 
-        class="input mini-app__dialog-input">
+        v-model="shareLink"
+        readonly
+        type="text"
+        class="input mini-app__dialog-input"
+      >
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
@@ -447,7 +481,7 @@
       @update="addComponentAlertToWarningModuleSetting"
       @close="closeCreateWarningCriteriaDialog"
       @converted="closeCreateWarningCriteriaDialog"
-      @confirm="deleteComponent" 
+      @confirm="deleteComponent"
     />
   </div>
 </template>
@@ -533,7 +567,7 @@ export default {
       isEditingAppName: false,
       newDashboardName: '',
       isEditingDashboardName: false,
-      filterColumnValueInfoList : [],
+      filterColumnValueInfoList: [],
       controlColumnValueInfoList: [],
       yAxisControlColumnValueInfoList: [],
       isShowCreateFilterDialog: false,
@@ -591,7 +625,7 @@ export default {
           {
             id: 'goToLivePage',
             name: this.$t('miniApp.goToLivePage')
-          },
+          }
         ]),
         {
           id: 'deleteMiniApp',
@@ -675,7 +709,7 @@ export default {
       ]
     },
     filterTypeOptions () {
-      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filterSet => filterSet.find(filter => filter.statsType === "RELATIVEDATETIME"))
+      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filterSet => filterSet.find(filter => filter.statsType === 'RELATIVEDATETIME'))
       return [
         {
           name: this.$t('miniApp.generalFilter'),
@@ -727,7 +761,7 @@ export default {
     }
   },
   created () {
-    this.getMiniAppInfo()  
+    this.getMiniAppInfo()
   },
   methods: {
     getMiniAppInfo () {
@@ -745,7 +779,7 @@ export default {
             miniAppInfo = updatedAppData
             this.isMiniAppCompiled = true
           }
-    
+
           this.miniApp = miniAppInfo
           this.newAppEditModeName = this.appData.displayedName
 
@@ -753,17 +787,17 @@ export default {
           if (this.dashboardList.length > 0 && !this.currentDashboardId) {
             this.activeCertainDashboard(this.dashboardList[0].id)
           }
-          
+
           this.initFilters()
-          
+
           // 如果有控制項，或當前 Dashboard 有控制項是剛被創完需被設定預設值時，應等待控制項更新完成後帶上新 reestriction 問問題
           this.isCurrentDashboardInit = this.controlColumnValueInfoList.length === 0
         })
         .catch(() => {})
-        .finally(() => this.isLoading = false )
+        .finally(() => this.isLoading = false)
     },
     formatRestraint (filterInfo) {
-      const columnStatsType = filterInfo.statsType      
+      const columnStatsType = filterInfo.statsType
       let filter = {
         dataSourceName: filterInfo.dataSourceName,
         dataSourceId: filterInfo.dataSourceId,
@@ -951,9 +985,10 @@ export default {
     directToCertainModeMiniApp (mode) {
       const { name, params } = this.$route
       const routeData = this.$router.resolve({
-        name, 
-        params, 
-        query: { mode: mode } })
+        name,
+        params,
+        query: { mode: mode }
+      })
       window.open(routeData.href, '_blank')
     },
     showShareDialog () {
@@ -1013,7 +1048,7 @@ export default {
       this.$validator.validate('appNameInput')
         .then(valid => {
           if (!valid) return
-          
+
           const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
           editedMiniApp.settings.editModeData.displayedName = this.newAppEditModeName
 
@@ -1036,7 +1071,7 @@ export default {
         editedMiniApp.settings.editModeData.dashboards.forEach(board => {
           if (board.id === this.currentDashboardId) board.name = this.newDashboardName
         })
-        
+
         this.updateAppSetting(editedMiniApp)
           .then(() => {
             this.isEditingDashboardName = false
@@ -1052,7 +1087,7 @@ export default {
       editedMiniApp.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) board.name = newDashboardName
       })
-      
+
       this.updateAppSetting(editedMiniApp)
         .then(() => {
           this.miniApp = editedMiniApp
@@ -1068,7 +1103,7 @@ export default {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       editedMiniApp.settings.editModeData.dashboards.splice(dashboradIndex, 1)
-      
+
       this.updateAppSetting(editedMiniApp)
         .then(() => {
           // 預設 focus 到剩餘 Dashboard 的第一個，若刪光了就 null
@@ -1157,7 +1192,7 @@ export default {
         editedMiniApp.settings.editModeData.dashboards[dashboradIndex].controlList.push(...filterList)
       } else {
         editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList.push(...filterList)
-      } 
+      }
 
       // 更新 app 資料
       this.updateAppSetting(editedMiniApp)
@@ -1165,13 +1200,13 @@ export default {
           this.isShowCreateFilterDialog = false
           this.isSingleChoiceFilter = null
           this.isYAxisController = null
-          this.getMiniAppInfo() 
+          this.getMiniAppInfo()
         })
         .finally(() => this.isProcessing = false)
     },
     switchDialogName (eventName, componentData) {
       this[`isShow${eventName}Dialog`] = true
-      switch(eventName) {
+      switch (eventName) {
         case 'DeleteComponent':
         case 'CreateComponent':
           this.currentComponentId = componentData && componentData.id
@@ -1182,7 +1217,7 @@ export default {
             controlList: this.currentDashboard.controlList,
             filterList: this.currentDashboard.filterList
           }
-        break
+          break
       }
     },
     closeCreateWarningCriteriaDialog () {
@@ -1192,7 +1227,7 @@ export default {
     addComponentAlertToWarningModuleSetting (conditionId) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       editedMiniApp.settings.editModeData.warningModule.conditions.push({
-        id: conditionId, 
+        id: conditionId,
         relatedDashboardId: null
       })
       this.updateAppSetting(editedMiniApp)
@@ -1206,7 +1241,7 @@ export default {
       // 決定要新增到控制項或篩選條件中
       editedMiniApp.settings.editModeData.dashboards[dashboradIndex][type === 'single' ? 'controlList' : 'filterList'] = updatedFilterList
       this[type === 'single' ? 'controlColumnValueInfoList' : 'filterColumnValueInfoList'] = [...updatedFilterList]
-      
+
       // edit mode 下可以賦予預設值，其餘模式則無法
       if (!this.isEditMode) return this.isProcessing = false
 
@@ -1220,7 +1255,7 @@ export default {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList = updatedControlList
-      this['yAxisControlColumnValueInfoList'] = [...updatedControlList]
+      this.yAxisControlColumnValueInfoList = [...updatedControlList]
 
       // edit mode 下可以賦予預設值，其餘模式則無法
       if (!this.isEditMode) return this.isProcessing = false
@@ -1310,7 +1345,7 @@ export default {
         columnId: null,
         dataType: null,
         statsType: 'RELATIVEDATETIME',
-        columnName: this.$t('miniApp.dateTimeFilter'),
+        columnName: this.$t('miniApp.dateTimeFilter')
       }]])
     },
     createFilterAndControl (type) {
@@ -1318,7 +1353,7 @@ export default {
     },
     warningLogTriggered ({ relatedDashboardId, rowData }) {
       this.activeCertainDashboard(relatedDashboardId)
-      
+
       // 控制項
       if (rowData.controlList.length > 0 && this.controlColumnValueInfoList.length > 0) {
         this.controlColumnValueInfoList.forEach(controlSet => {
@@ -1390,10 +1425,9 @@ export default {
           this.currentDashboardId = null
         })
         .catch(() => {})
-        .finally(() => this.isProcessing = false )
+        .finally(() => this.isProcessing = false)
     },
     componentTemplateFactory (type = 'chart') {
-
       const generalConfig = {
         size: { row: 6, column: 6 },
         hasRelatedDashboard: false,
@@ -1409,7 +1443,7 @@ export default {
         resultId: null,
         orderSequence: null,
         diagram: type,
-        indexInfo: { 
+        indexInfo: {
           unit: ''
         },
         relatedDashboard: { id: null, name: null },
@@ -1424,7 +1458,7 @@ export default {
             columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
             rowRelation: { relatedDashboardId: null }
           },
-          fontSize: 'middle',
+          fontSize: 'middle'
         },
         algoConfig: null,
         anomalySettings: [],
@@ -1437,8 +1471,8 @@ export default {
           isCreatedViaAsking: false,
           config: {
             ...generalConfig,
-            diaplayedName: this.$t('alert.realTimeMonitorAlert'),
-          },
+            diaplayedName: this.$t('alert.realTimeMonitorAlert')
+          }
         }),
         // 異常統計元件
         ...(type.includes('abnormal-statistics') && {
@@ -1448,8 +1482,8 @@ export default {
           config: {
             ...generalConfig,
             fontSize: 'middle',
-            diaplayedName: this.getAbnormalStatisticsDisplayName(type),
-          },
+            diaplayedName: this.getAbnormalStatisticsDisplayName(type)
+          }
         }),
         // 模擬器元件
         ...((type === 'simulator' || type === 'parameters-optimized-simulator') && {
@@ -1458,7 +1492,7 @@ export default {
             ...generalConfig,
             // demo 因為有八個 Input，先設定六個列
             size: { row: 12, column: 12 },
-            diaplayedName: type === 'simulator' ? this.$t(`miniApp.simulator`) : this.$t(`miniApp.parametersOptimizedSimulator`)
+            diaplayedName: type === 'simulator' ? this.$t('miniApp.simulator') : this.$t('miniApp.parametersOptimizedSimulator')
           },
           modelSetting: {
             dataSourceId: null,
@@ -1477,7 +1511,7 @@ export default {
             displayedFormula: null,
             inputList: []
           }
-        }),
+        })
       }
     },
     getAbnormalStatisticsDisplayName (type) {
@@ -1509,7 +1543,7 @@ export default {
         })
       })
     },
-    handleDashboardSwitchName({ name, componentComplementaryInfo }, componentData) {
+    handleDashboardSwitchName ({ name, componentComplementaryInfo }, componentData) {
       this.switchDialogName(name, {
         ...componentData,
         ...componentComplementaryInfo

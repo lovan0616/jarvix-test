@@ -25,22 +25,23 @@
         </div>
       </div>
     </selected-region>
-    <div 
+    <div
       v-if="dataset.descriptions.length > 0"
       class="description"
     >
-      <span 
-        v-for="(description, index) in dataset.descriptions" 
-        :key="index" 
-        class="description__item">{{ description }}</span>
+      <span
+        v-for="(description, index) in dataset.descriptions"
+        :key="index"
+        class="description__item"
+      >{{ description }}</span>
     </div>
   </div>
 </template>
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import i18n from '@/lang/index.js'
-import { 
-  getDrillDownTool, 
+import {
+  getDrillDownTool,
   xAxisDefault,
   yAxisDefault,
   color5,
@@ -72,12 +73,12 @@ let scatterChartConfig = {
     splitNumber: 1,
     gridIndex: 1,
     min: 0,
-    max: 100,
+    max: 100
   },
   chartData: {
     type: 'scatter',
     datasetIndex: 1,
-    xAxisIndex: 1, 
+    xAxisIndex: 1,
     yAxisIndex: 1
   }
 }
@@ -201,7 +202,7 @@ export default {
     series () {
       return [
         ...this.dataset.columns.map((column, index) => {
-          return { 
+          return {
             type: 'line',
             name: column,
             smooth: true,
@@ -217,7 +218,7 @@ export default {
             name: this.dataset.columns[index],
             type: 'scatter',
             datasetIndex: index + 1,
-            xAxisIndex: 1, 
+            xAxisIndex: 1,
             yAxisIndex: 1,
             // 定義維度資訊供未來 tooltip 中使用
             dimensions: [this.title.xAxis[0].display_name, this.title.yAxis[0].display_name, 'position']
@@ -228,7 +229,7 @@ export default {
           name: this.$t('clustering.outlier'),
           type: 'scatter',
           datasetIndex: this.dataset.buckets.length + 1,
-          xAxisIndex: 1, 
+          xAxisIndex: 1,
           yAxisIndex: 1,
           // 定義維度資訊供未來 tooltip 中使用
           dimensions: [this.title.xAxis[0].display_name, this.title.yAxis[0].display_name, 'position']
@@ -325,7 +326,7 @@ export default {
           {
             ...yAxisDefault(),
             name: this.title.yAxis[0].display_name,
-            gridIndex: 0,
+            gridIndex: 0
           },
           // scatter chart yAxis
           scatterChartConfig.yAxis
@@ -340,7 +341,7 @@ export default {
           ]
         }
       }
-      
+
       // 目前不提供觀看原始資料的功能
       config.toolbox.feature.dataView.show = false
       // 補上千分為逗號
@@ -385,7 +386,7 @@ export default {
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
-  },
+  }
 }
 </script>
 

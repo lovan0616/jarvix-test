@@ -24,9 +24,10 @@
         icon-name="alert-circle"
       />
     </template>
-    <no-result 
-      v-else 
-      :message="$t('message.noPeriodicResult')" />
+    <no-result
+      v-else
+      :message="$t('message.noPeriodicResult')"
+    />
   </div>
 </template>
 
@@ -69,7 +70,7 @@ export default {
   &__chart {
     flex: 1 1 calc(50% - 40px);
     width: 0;
-    
+
     &.has-margin-bottom {
       margin-bottom: 40px;
     }

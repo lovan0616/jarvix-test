@@ -1,6 +1,8 @@
 <template>
   <div class="local-file-upload">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="2"
     />

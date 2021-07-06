@@ -5,7 +5,7 @@ import request from '@/utils/publicRequest'
  */
 export function getAccountList () {
   return request({
-    url: `/admin/accounts`,
+    url: '/admin/accounts',
     method: 'GET'
   })
 }
@@ -16,7 +16,7 @@ export function getAccountList () {
  */
 export function createChangePasswordLink (targetUserId) {
   return request({
-    url: `/admin/password-reset-link`,
+    url: '/admin/password-reset-link',
     method: 'POST',
     data: {
       targetUserId
@@ -29,7 +29,7 @@ export function createChangePasswordLink (targetUserId) {
  */
 export function getSystemInfo () {
   return request({
-    url: `/management/info`,
+    url: '/management/info',
     method: 'GET'
   })
 }

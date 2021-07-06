@@ -1,6 +1,8 @@
 <template>
   <div class="choose-table">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="2"
     />
@@ -9,7 +11,7 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="processing-spinner-container"
@@ -26,7 +28,9 @@
             type="button"
             class="btn-m btn-default btn-open-edit-dialog"
             @click="openSqlEditDialog"
-          >{{ $t('button.addSqlScript') }}</button>
+          >
+            {{ $t('button.addSqlScript') }}
+          </button>
           <input-block
             v-model="queryWord"
             :label="$t('etl.tableSearch')"
@@ -36,52 +40,54 @@
         <div class="table-list-container">
           <div
             v-if="sqlTableList.length > 0"
-            class="sql-table-list table-list">
-            <label 
+            class="sql-table-list table-list"
+          >
+            <label
               v-for="(table, index) in sqlTableList"
               :key="index"
               class="single-data-frame"
             >
               <div class="checkbox">
                 <div class="checkbox-label">
-                  <input 
+                  <input
                     :id="'table' + index"
                     :value="table"
                     v-model="sqlTableChosenList"
                     type="checkbox"
                   >
-                  <div class="checkbox-square"/>
+                  <div class="checkbox-square" />
                 </div>
               </div>
               <div class="data-frame-info">
                 <div class="data-frame-name">{{ table.creatingSqlName }}<span class="remark-info">({{ $t('remoteConnection.sqlCreateTable') }})</span></div>
-                <a 
-                  href="javascript:void(0)" 
+                <a
+                  href="javascript:void(0)"
                   class="action-link"
                   @click.stop="editSqlTable(index)"
                 >
-                  <svg-icon icon-class="edit"/>
+                  <svg-icon icon-class="edit" />
                 </a>
               </div>
             </label>
           </div>
           <div
             v-if="filterTableList.length > 0"
-            class="data-frame-list table-list">
-            <label 
+            class="data-frame-list table-list"
+          >
+            <label
               v-for="(table, index) in filterTableList"
               :key="index"
               class="single-data-frame"
             >
               <div class="checkbox">
                 <div class="checkbox-label">
-                  <input 
+                  <input
                     :id="'table' + index"
                     :value="table"
                     v-model="tableIdList"
                     type="checkbox"
                   >
-                  <div class="checkbox-square"/>
+                  <div class="checkbox-square" />
                 </div>
               </div>
               <div class="data-frame-info">
@@ -94,25 +100,33 @@
           v-if="filterTableList.length === 0"
           :msg="$t('message.emptyResult')"
         />
-        <div class="remark-info">{{ $t('etl.tableChosenLimit', {number: tableConnectionLimt}) }}</div>
+        <div class="remark-info">
+          {{ $t('etl.tableChosenLimit', {number: tableConnectionLimt}) }}
+        </div>
       </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelConnection"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="isLoading"
           class="btn btn-outline"
           @click="prevStep"
-        >{{ $t('button.prevStep') }}</button>
+        >
+          {{ $t('button.prevStep') }}
+        </button>
         <button
           :disabled="isLoading || (tableIdList.length === 0 && sqlTableChosenList.length === 0)"
           class="btn btn-default"
           @click="nextStep"
-        >{{ isLoading ? $t('button.processing') : $t('button.nextStep') }}</button>
+        >
+          {{ isLoading ? $t('button.processing') : $t('button.nextStep') }}
+        </button>
       </div>
     </div>
     <EditSqlDialog
@@ -167,8 +181,8 @@ export default {
       return this.$store.state.dataManagement.currentUploadInfo
     },
     filterTableList () {
-      return this.queryWord === '' 
-        ? this.tableList 
+      return this.queryWord === ''
+        ? this.tableList
         : this.tableList.filter((element) => element.toLowerCase().split(this.queryWord.toLowerCase()).length > 1)
     }
   },
@@ -194,7 +208,7 @@ export default {
     nextStep () {
       if (this.tableIdList.length > this.tableConnectionLimt) {
         Message({
-          message: this.$t('etl.tableChosenLimit', {number: this.tableConnectionLimt}),
+          message: this.$t('etl.tableChosenLimit', { number: this.tableConnectionLimt }),
           type: 'warning',
           duration: 3 * 1000,
           showClose: true
@@ -212,7 +226,7 @@ export default {
       })
 
       let sqlPromiseList = this.sqlTableChosenList.map((element, index) => {
-        return analysisCreateTableSql(this.connectionId, {dataSourceId: this.currentUploadInfo.dataSourceId, ...element}).then(response => {
+        return analysisCreateTableSql(this.connectionId, { dataSourceId: this.currentUploadInfo.dataSourceId, ...element }).then(response => {
           response.dataSourceId = this.dataSourceId
           this.$store.commit('dataManagement/updateEtlTableList', response)
         })
@@ -271,7 +285,7 @@ export default {
       this.editSqlIndex = index
       this.openSqlEditDialog()
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

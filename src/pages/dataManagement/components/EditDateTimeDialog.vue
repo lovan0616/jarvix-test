@@ -3,11 +3,11 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('editing.mainDateTimeColumnSetting') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="dialog-header-block">
         <div class="data-frame-name">
@@ -20,16 +20,18 @@
             type="button"
             class="btn btn-default"
             @click="setMainDateTime"
-          >{{ $t('button.save') }}</button>
+          >
+            {{ $t('button.save') }}
+          </button>
         </div>
       </div>
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="spinner-container"
         size="50"
       />
-      <div 
+      <div
         v-else-if="!isLoading && hasColumn"
         class="dialog-content-block"
       >
@@ -112,7 +114,7 @@ export default {
     },
     setMainDateTime () {
       this.isSaving = true
-      const {dataColumnName, dataColumnPrimaryAlias} = this.selectedColumn
+      const { dataColumnName, dataColumnPrimaryAlias } = this.selectedColumn
       setMainDateTimeColumn(this.dataFrameInfo.id, { dataColumnName, dataColumnPrimaryAlias })
         .then(() => {
           Message({

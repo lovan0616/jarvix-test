@@ -5,7 +5,8 @@
     placement="bottom-start"
     title="Title"
     width="200"
-    trigger="hover">
+    trigger="hover"
+  >
     <svg-icon
       slot="reference"
       :icon-class="iconClass"

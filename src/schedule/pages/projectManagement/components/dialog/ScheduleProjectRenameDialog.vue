@@ -53,14 +53,14 @@ export default {
           id: this.projectInfo.id,
           name: this.newName
         }).then(() => {
-            Message({
-              message: this.$t('schedule.project.successfullyRenamed'),
-              type: 'success',
-              duration: 3 * 1000,
-              showClose: true
-            })
-            this.$emit('close')
+          Message({
+            message: this.$t('schedule.project.successfullyRenamed'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
           })
+          this.$emit('close')
+        })
           .catch(() => this.$emit('close', false))
       })
     }
@@ -69,5 +69,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  
+
 </style>

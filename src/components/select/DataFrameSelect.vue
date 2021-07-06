@@ -1,9 +1,10 @@
 <template>
   <div class="data-frame-select">
-    <svg-icon 
-      icon-class="table" 
-      class="data-frame-select__icon"/>
-    <sy-select 
+    <svg-icon
+      icon-class="table"
+      class="data-frame-select__icon"
+    />
+    <sy-select
       :selected="dataFrameId"
       :items="availableDataFrames"
       :placeholder="$t('editing.chooseDataFrame')"
@@ -36,7 +37,7 @@ export default {
       }
       return dataFrameList.reduce((acc, cur) => {
         if (cur.state !== 'Enable') return acc
-        acc.push({name: cur.primaryAlias, id: cur.id})
+        acc.push({ name: cur.primaryAlias, id: cur.id })
         return acc
       }, [defaultOption])
     }
@@ -47,18 +48,18 @@ export default {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
       if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
-      .then(() => {
-        this.$router.push({ 
-          name: 'PageIndex', 
-          params: { 
-            'group_id': this.getCurrentGroupId
-          },
-          query: {
-            dataSourceId: this.$route.query.dataSourceId,
-            dataFrameId
-          }
+        .then(() => {
+          this.$router.push({
+            name: 'PageIndex',
+            params: {
+              group_id: this.getCurrentGroupId
+            },
+            query: {
+              dataSourceId: this.$route.query.dataSourceId,
+              dataFrameId
+            }
+          })
         })
-      })
     }
   }
 }
@@ -84,7 +85,7 @@ export default {
       }
     }
   }
-  
+
   /deep/ .el-select {
     flex: 1;
   }

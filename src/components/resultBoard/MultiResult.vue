@@ -1,9 +1,13 @@
 <template>
   <div class="multi-result">
-    <div class="board-title">{{ $t('editing.multiResultTitle') }}</div>
-    <div class="board-description">{{ $t('bot.multiplePossibilities') }}</div>
+    <div class="board-title">
+      {{ $t('editing.multiResultTitle') }}
+    </div>
+    <div class="board-description">
+      {{ $t('bot.multiplePossibilities') }}
+    </div>
     <div class="question-list">
-      <div 
+      <div
         v-for="(singleQuestion, index) in resultInfo.segmentationList"
         :key="index"
         class="question-block"
@@ -15,12 +19,13 @@
           <question-name
             :question-segmentation="singleQuestion"
           />
-          <svg-icon 
-            icon-class="go-right" 
-            class="arrow-icon"/>
+          <svg-icon
+            icon-class="go-right"
+            class="arrow-icon"
+          />
         </div>
         <div class="segmentation-info-block">
-          <div 
+          <div
             v-for="(segmentation, segmentationIndex) in singleQuestion.sentence"
             :key="index + '-' + segmentationIndex"
             class="single-segmentation"
@@ -31,7 +36,7 @@
               <template
                 v-if="segmentation.dataFrameId"
               >
-                <span 
+                <span
                   :class="segmentation.type"
                   class="column-name"
                 >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from') }}
@@ -63,7 +68,7 @@
                 >
                   {{ $t(`segmentationToken.${segmentation.type}`) }}
                 </span>
-                <el-tooltip 
+                <el-tooltip
                   v-if="segmentation.properties && segmentation.properties.length > 1"
                   :tabindex="999"
                   placement="bottom"
@@ -82,7 +87,7 @@
                 v-else-if="isIntend(segmentation.type)"
               >
                 <div>
-                  <span 
+                  <span
                     :class="{intend: isIntend(segmentation.type)}"
                     class="column-name"
                   >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`) }}
@@ -91,7 +96,7 @@
               <template
                 v-else-if="isMeaningFul(segmentation.type)"
               >
-                <span 
+                <span
                   :class="segmentation.type"
                   class="column-name"
                 >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`) }}
@@ -198,7 +203,7 @@ export default {
         case 'DATA_VALUE':
         case 'DATA_COLUMN':
         case 'DATA_ROW':
-          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.dataFramePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
+          return this.$t('resultDescription.recognizeTo', { dataFrame: tokenInfo.dataFramePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`) }) + tokenInfo.matchedWord
         default:
           return this.$t(`segmentationToken.${this.tokenInfo.type}`)
       }

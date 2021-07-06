@@ -27,23 +27,23 @@ export default {
       dispatch('getGroupPinboardList', data.groupId)
     })
   },
-  getPinboardById ({commit}, data) {
+  getPinboardById ({ commit }, data) {
     return getPinboardById(data)
   },
-  updatePinboardName ({dispatch}, data) {
+  updatePinboardName ({ dispatch }, data) {
     return updatePinboardName(data.id, data.userId, data.name).then(() => {
       dispatch('getPinboardList')
     })
-  },  
-  updateGroupPinboardName ({dispatch}, data) {
+  },
+  updateGroupPinboardName ({ dispatch }, data) {
     return updateGroupPinboardName(data.id, data.groupId, data.name).then(() => {
       dispatch('getGroupPinboardList', data.groupId)
     })
   },
-  pinToBoard ({commit}, data) {
+  pinToBoard ({ commit }, data) {
     return pinToBoard(data)
   },
-  unPinById ({commit}, data) {
+  unPinById ({ commit }, data) {
     return unPinById(data)
   },
   sortPinboard ({ state }, pinbordList) {

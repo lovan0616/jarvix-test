@@ -1,12 +1,16 @@
 <template>
   <div class="page-algorithm">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('algorithm.management') }}</h1>
+      <h1 class="title">
+        {{ $t('algorithm.management') }}
+      </h1>
       <div class="bread-crumb">
         <router-link
           :to="{ name: 'PageAlgorithmList' }"
           class="title-link"
-        >{{ $t('algorithm.name') }}</router-link>
+        >
+          {{ $t('algorithm.name') }}
+        </router-link>
         <span class="divider">/</span>{{ $t('algorithm.predictiveMaintenance') }}
       </div>
     </div>
@@ -17,17 +21,21 @@
       <div class="content">
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title must">{{ $t('algorithm.targetDataSource') }}: </div>
+            <div class="item-title must">
+              {{ $t('algorithm.targetDataSource') }}:
+            </div>
             <default-select
               :value="1"
               :option-list="[
-                {value: 1, name: this.$t('algorithm.foxconnDemo')},
+                {value: 1, name: $t('algorithm.foxconnDemo')},
               ]"
               class="tag-select input"
             />
           </div>
           <div class="content-item">
-            <div class="item-title must">{{ $t('algorithm.targetDataFrame') }}: </div>
+            <div class="item-title must">
+              {{ $t('algorithm.targetDataFrame') }}:
+            </div>
             <default-select
               :value="1"
               :option-list="[
@@ -40,31 +48,37 @@
         </div>
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title must">{{ $t('algorithm.targetParamColumn') }}: </div>
+            <div class="item-title must">
+              {{ $t('algorithm.targetParamColumn') }}:
+            </div>
             <default-select
               :value="1"
               :option-list="[
-                { value: 1, name: this.$t('algorithm.temperature')},
+                { value: 1, name: $t('algorithm.temperature')},
               ]"
               class="tag-select input"
             />
           </div>
           <div class="content-item">
-            <div class="item-title must">{{ this.$t('algorithm.timeColumn') }}: </div>
-            <default-select 
+            <div class="item-title must">
+              {{ $t('algorithm.timeColumn') }}:
+            </div>
+            <default-select
               :value="1"
               :option-list="[
-                { value: 1, name: this.$t('algorithm.startTime') },
+                { value: 1, name: $t('algorithm.startTime') },
               ]"
               class="tag-select input"
             />
           </div>
           <div class="content-item">
-            <div class="item-title must">{{ $t('algorithm.statusColumn') }}: </div>
-            <default-select 
+            <div class="item-title must">
+              {{ $t('algorithm.statusColumn') }}:
+            </div>
+            <default-select
               :value="1"
               :option-list="[
-                { value: 1, name: this.$t('algorithm.status') },
+                { value: 1, name: $t('algorithm.status') },
               ]"
               class="tag-select input"
             />
@@ -75,7 +89,7 @@
 
     <div class="table-board">
       <div class="board-title-row">
-        {{ this.$t('algorithm.modelParamSetting') }}
+        {{ $t('algorithm.modelParamSetting') }}
         <!-- <div class="button-block">
           <button class="btn-m btn-default btn-has-icon"
           >
@@ -86,99 +100,130 @@
       </div>
       <div class="content">
         <div class="content-item">
-          <div class="item-title">{{ $t('algorithm.modelType') }}: </div>
-          <default-select 
+          <div class="item-title">
+            {{ $t('algorithm.modelType') }}:
+          </div>
+          <default-select
             :value="1"
             :option-list="[
-              { value: 1, name: this.$t('algorithm.unsupervised') },
-              { value: 2, name: this.$t('algorithm.supervised') },
+              { value: 1, name: $t('algorithm.unsupervised') },
+              { value: 2, name: $t('algorithm.supervised') },
             ]"
             class="tag-select input"
           />
         </div>
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.specificationUpperLimit') }}: </div>
-            <input 
-              type="text" 
-              class="input" 
-              placeholder="">
+            <div class="item-title">
+              {{ $t('algorithm.specificationUpperLimit') }}:
+            </div>
+            <input
+              type="text"
+              class="input"
+              placeholder=""
+            >
           </div>
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.specificationLowerLimit') }}: </div>
-            <input 
-              type="text" 
-              class="input" 
-              placeholder="">
-          </div>
-        </div>
-        <div class="item-wrap">
-          <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.regulatoryCapRatio') }}: </div>
-            <input 
-              :value="0.95" 
-              type="text" 
-              class="input" 
-              placeholder="0.5~1">
-          </div>
-          <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.lowerControlRatio') }}: </div>
-            <input 
-              :value="0.05" 
-              type="text" 
-              class="input" 
-              placeholder="0~0.5">
+            <div class="item-title">
+              {{ $t('algorithm.specificationLowerLimit') }}:
+            </div>
+            <input
+              type="text"
+              class="input"
+              placeholder=""
+            >
           </div>
         </div>
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.timeUnit') }}: </div>
-            <default-select 
+            <div class="item-title">
+              {{ $t('algorithm.regulatoryCapRatio') }}:
+            </div>
+            <input
+              :value="0.95"
+              type="text"
+              class="input"
+              placeholder="0.5~1"
+            >
+          </div>
+          <div class="content-item">
+            <div class="item-title">
+              {{ $t('algorithm.lowerControlRatio') }}:
+            </div>
+            <input
+              :value="0.05"
+              type="text"
+              class="input"
+              placeholder="0~0.5"
+            >
+          </div>
+        </div>
+        <div class="item-wrap">
+          <div class="content-item">
+            <div class="item-title">
+              {{ $t('algorithm.timeUnit') }}:
+            </div>
+            <default-select
               :value="1"
               :option-list="[
-                { value: 1, name: this.$t('algorithm.second') },
-                { value: 2, name: this.$t('algorithm.minute') },
-                { value: 3, name: this.$t('algorithm.hour') },
+                { value: 1, name: $t('algorithm.second') },
+                { value: 2, name: $t('algorithm.minute') },
+                { value: 3, name: $t('algorithm.hour') },
               ]"
               class="tag-select input"
             />
           </div>
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.earlyTime') }}: </div>
-            <input 
-              :value="60" 
+            <div class="item-title">
+              {{ $t('algorithm.earlyTime') }}:
+            </div>
+            <input
+              :value="60"
               :placeholder="$t('algorithm.timeUnitSeeAbove')"
-              type="text" 
-              class="input">
+              type="text"
+              class="input"
+            >
           </div>
         </div>
         <div class="content-item">
-          <div class="item-title">{{ $t('algorithm.windowSize') }}: </div>
-          <input 
-            :value="60" 
-            type="text" 
-            class="input">
+          <div class="item-title">
+            {{ $t('algorithm.windowSize') }}:
+          </div>
+          <input
+            :value="60"
+            type="text"
+            class="input"
+          >
         </div>
         <div class="content-item">
-          <div class="item-title">{{ $t('algorithm.proportionOfTrainningSet') }}: </div>
-          <input 
-            :value="0.8" 
-            type="text" 
-            class="input" 
-            placeholder="0~1">
+          <div class="item-title">
+            {{ $t('algorithm.proportionOfTrainningSet') }}:
+          </div>
+          <input
+            :value="0.8"
+            type="text"
+            class="input"
+            placeholder="0~1"
+          >
         </div>
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.warningThreshold') }}: </div>
-            <input 
-              type="text" 
-              class="input">
+            <div class="item-title">
+              {{ $t('algorithm.warningThreshold') }}:
+            </div>
+            <input
+              type="text"
+              class="input"
+            >
           </div>
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.abnormalThreshold') }}: </div>
-            <input 
-              type="text" 
-              class="input">
+            <div class="item-title">
+              {{ $t('algorithm.abnormalThreshold') }}:
+            </div>
+            <input
+              type="text"
+              class="input"
+            >
           </div>
         </div>
       </div>
@@ -197,8 +242,10 @@
       <div class="content">
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.targetDataSource') }}: </div>
-            <default-select 
+            <div class="item-title">
+              {{ $t('algorithm.targetDataSource') }}:
+            </div>
+            <default-select
               :option-list="[
                 { value: 1, name: $t('algorithm.foxconnDemo') },
               ]"
@@ -206,8 +253,10 @@
             />
           </div>
           <div class="content-item">
-            <div class="item-title">{{ $t('algorithm.targetDataFrame') }}: </div>
-            <default-select 
+            <div class="item-title">
+              {{ $t('algorithm.targetDataFrame') }}:
+            </div>
+            <default-select
               :option-list="[
                 { value: 1, name: 'TemperatureData' },
                 { value: 2, name: 'molding' },
@@ -217,8 +266,10 @@
           </div>
         </div>
         <div class="content-item">
-          <div class="item-title">{{ $t('algorithm.executionCycle') }}: </div>
-          <default-select 
+          <div class="item-title">
+            {{ $t('algorithm.executionCycle') }}:
+          </div>
+          <default-select
             :value="5"
             :option-list="[
               { value: 1, name: $tc('algorithm.second', 1) },
@@ -239,13 +290,15 @@
     </div>
 
     <div class="footer">
-      <button 
-        type="button" 
+      <button
+        type="button"
         class="btn btn-outline"
         @click="back"
-      >{{ $t('button.cancel') }}</button>
-      <button 
-        type="button" 
+      >
+        {{ $t('button.cancel') }}
+      </button>
+      <button
+        type="button"
         class="btn btn-default"
         @click="back"
       >
@@ -341,7 +394,7 @@ export default {
     back () {
       this.$router.push({ name: 'PageAlgorithmList' })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

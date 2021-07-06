@@ -1,15 +1,17 @@
 <template>
   <div class="binding-checked-info">
-    <svg-icon 
-      v-if="info" 
-      icon-class="alert-circle"/>
-    <span 
-      v-if="info && info.headerErrorMessage" 
-      class="binding-checked-info__msg">
+    <svg-icon
+      v-if="info"
+      icon-class="alert-circle"
+    />
+    <span
+      v-if="info && info.headerErrorMessage"
+      class="binding-checked-info__msg"
+    >
       {{ info.headerErrorMessage }}
     </span>
-    <span 
-      v-else-if="failedRowCount > 0" 
+    <span
+      v-else-if="failedRowCount > 0"
       class="binding-checked-info__msg"
       @click="isShowInfoDialog = true"
     >
@@ -32,7 +34,9 @@
           <span class="highlight">{{ failedRowCount }}</span>
         </i18n>
       </p>
-      <p class="reminder">{{ $t('schedule.binding.bindingReminding') }}</p>
+      <p class="reminder">
+        {{ $t('schedule.binding.bindingReminding') }}
+      </p>
       <ul class="info-list">
         <li
           v-for="column in failedColumns"

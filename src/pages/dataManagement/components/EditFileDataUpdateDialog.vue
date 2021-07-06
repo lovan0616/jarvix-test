@@ -1,14 +1,15 @@
 <template>
   <div class="edit-file-data-update-dialog full-page-dialog">
     <div class="dialog-container">
-      <choose-file-data-update-mode 
+      <choose-file-data-update-mode
         v-if="step === 1"
         :step="1"
         :title="$t('fileDataUpdate.updateData')"
         :data-frame-info="dataFrameInfo"
         :process-text="processText"
         @next="chooseMode"
-        @close="cancelFileUpdate"/>
+        @close="cancelFileUpdate"
+      />
       <data-update-file-upload
         v-if="step === 2"
         :step="step"
@@ -16,7 +17,8 @@
         :process-text="processText"
         @prev="prevStep"
         @next="nextStep"
-        @close="cancelFileUpdate"/>
+        @close="cancelFileUpdate"
+      />
       <data-update-file-upload-status
         v-if="step === 3"
         :step="step"
@@ -43,54 +45,54 @@ import DataUpdateFileUploadStatus from './localFileUpload/dataUpdate/DataUpdateF
 import ConfirmPage from './localFileUpload/fileUpload/ConfirmPage'
 
 export default {
- name: 'EditFileDataUploadDialog',
+  name: 'EditFileDataUploadDialog',
   components: {
-		ChooseFileDataUpdateMode,
-		DataUpdateFileUpload,
-		DataUpdateFileUploadStatus,
-		ConfirmPage
-	},
-	props: {
+    ChooseFileDataUpdateMode,
+    DataUpdateFileUpload,
+    DataUpdateFileUploadStatus,
+    ConfirmPage
+  },
+  props: {
     dataFrameInfo: {
       type: Object,
       required: true
     }
   },
-	data () {
-		return {
-			step: 1,
-			updateMode: '',
-			isProcessing: false,
-			processText: [
+  data () {
+    return {
+      step: 1,
+      updateMode: '',
+      isProcessing: false,
+      processText: [
         this.$t('fileDataUpdate.processStep1'),
         this.$t('fileDataUpdate.processStep2'),
         this.$t('fileDataUpdate.processStep3')
-			],
-		}
-	},
-	destroyed () {
-		this.$store.commit('dataManagement/updateUploadFileList', [])
+      ]
+    }
+  },
+  destroyed () {
+    this.$store.commit('dataManagement/updateUploadFileList', [])
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
   },
-	methods: {
-		chooseMode (updateMode) {
-			this.updateMode = updateMode
-			this.nextStep()
-		},
-		cancelFileUpdate () {
-			this.$emit('close')
-		},
-		nextStep () {
-			this.step += 1
-		},
-		prevStep () {
+  methods: {
+    chooseMode (updateMode) {
+      this.updateMode = updateMode
+      this.nextStep()
+    },
+    cancelFileUpdate () {
+      this.$emit('close')
+    },
+    nextStep () {
+      this.step += 1
+    },
+    prevStep () {
       this.step -= 1
-		},
-		uploadFinish () {
-			this.$store.commit('dataManagement/updateFileUploadSuccess', true)
-			this.$emit('close')
-		}
-	}
+    },
+    uploadFinish () {
+      this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+      this.$emit('close')
+    }
+  }
 }
 </script>
 

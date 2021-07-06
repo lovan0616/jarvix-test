@@ -1,12 +1,13 @@
 <template>
   <div class="card">
-    <svg-icon 
-      icon-class="sort" 
-      class="card__sort-icon"/>
+    <svg-icon
+      icon-class="sort"
+      class="card__sort-icon"
+    />
     <div class="input-field">
       <label class="input-field__label">{{ $t('model.upload.columnDataType') }}</label>
       <div class="input-field__input">
-        <default-select 
+        <default-select
           v-validate="'required'"
           :option-list="dataTypeOptionList"
           :placeholder="$t('batchLoad.chooseColumn')"
@@ -17,10 +18,12 @@
           class="input-field__select"
           @change="$emit('updateDataColumn', $event)"
         />
-        <div 
+        <div
           v-show="errors.has('select' + columnInfo.id)"
           class="error-text"
-        >{{ errors.first('select' + columnInfo.id) }}</div>
+        >
+          {{ errors.first('select' + columnInfo.id) }}
+        </div>
       </div>
     </div>
     <div class="input-field">
@@ -37,10 +40,12 @@
       v-if="columnList.length > 1"
       :class="{ 'disabled': isProcessing || isLoading }"
       class="card__delete-icon"
-      @click="removeColumn">
-      <svg-icon 
-        icon-class="delete" 
-        class="icon"/>
+      @click="removeColumn"
+    >
+      <svg-icon
+        icon-class="delete"
+        class="icon"
+      />
     </div>
   </div>
 </template>

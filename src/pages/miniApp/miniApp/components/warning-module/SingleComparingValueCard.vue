@@ -14,9 +14,10 @@
         :for="comparingSet.id"
         class="input-radio-label"
       >
-        <div 
-          v-if="comparingSet.isDisabled" 
-          class="setting-value">
+        <div
+          v-if="comparingSet.isDisabled"
+          class="setting-value"
+        >
           {{ comparisonOperatorName + comparingSet.value }}
         </div>
         <template v-else>
@@ -29,7 +30,7 @@
               name="comparingOperator"
               class="input-field__select"
             />
-            <div 
+            <div
               v-show="errors.has('comparingOperator')"
               class="error-text"
             >{{ errors.first('comparingOperator') }}</div>
@@ -81,7 +82,7 @@ export default {
         return option.value === this.comparingSet.comparisonOperator
       }).name
     }
-  },
+  }
 }
 </script>
 

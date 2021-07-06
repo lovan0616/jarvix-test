@@ -1,23 +1,30 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">{{ isPersonalPinboard ? $t('editing.pinboard') : $t('editing.projectPinboard') }}</h1>
-    <div class="page-category">{{ $t('editing.allCategory') }}</div>
-    <button 
-      class="btn-m btn-default btn-has-icon add-btn" 
-      @click="showAdd">
-      <svg-icon 
-        icon-class="plus" 
-        class="icon"/>
+    <h1 class="page-title">
+      {{ isPersonalPinboard ? $t('editing.pinboard') : $t('editing.projectPinboard') }}
+    </h1>
+    <div class="page-category">
+      {{ $t('editing.allCategory') }}
+    </div>
+    <button
+      class="btn-m btn-default btn-has-icon add-btn"
+      @click="showAdd"
+    >
+      <svg-icon
+        icon-class="plus"
+        class="icon"
+      />
       {{ $t('button.addNewCategory') }}
     </button>
     <spinner
-      v-if="isLoading" 
+      v-if="isLoading"
       :title="$t('editing.loading')"
     />
     <div v-else>
-      <div 
-        v-if="pinboardList.length > 0" 
-        class="pinboard-list">
+      <div
+        v-if="pinboardList.length > 0"
+        class="pinboard-list"
+      >
         <single-pinboard
           v-for="boardInfo in pinboardList"
           :key="boardInfo.id"
@@ -80,11 +87,12 @@
       @closeDialog="closeShare"
       @confirmBtn="confirmShare"
     >
-      <input 
-        ref="shareInput" 
-        v-model="shareLink" 
-        type="text" 
-        class="input pinboard-name-input">
+      <input
+        ref="shareInput"
+        v-model="shareLink"
+        type="text"
+        class="input pinboard-name-input"
+      >
     </writing-dialog>
   </div>
 </template>
@@ -131,7 +139,7 @@ export default {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
     pinboardList () {
-      return this.isPersonalPinboard 
+      return this.isPersonalPinboard
         ? this.$store.state.pinboard.pinboardList
         : this.$store.state.pinboard.groupPinboardList
     },
@@ -157,7 +165,7 @@ export default {
   },
   methods: {
     getPinboardInfo () {
-      if(this.isPersonalPinboard) {
+      if (this.isPersonalPinboard) {
         this.$store.dispatch('pinboard/getPinboardList').then(() => {
           this.isLoading = false
         })
@@ -173,7 +181,6 @@ export default {
         let promise
         if (this.isPersonalPinboard) {
           promise = this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
-          
         } else {
           promise = this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId })
         }
@@ -184,7 +191,7 @@ export default {
             this.newBoardName = null
           })
         })
-        .catch(() => {})
+          .catch(() => {})
       })
     },
     insertBoardData (boardInfo) {
@@ -201,16 +208,13 @@ export default {
     showShareDialog (boardInfo) {
       this.insertBoardData(boardInfo)
       this.isShowShare = true
-      if (this.isPersonalPinboard)
-        this.shareLink = `${window.location.origin}/account/${this.accountId}/pinboard/${boardInfo.id}`
-      else
-        this.shareLink = `${window.location.origin}/account/${this.accountId}/group/${this.groupId}/pinboard/${boardInfo.id}`
+      if (this.isPersonalPinboard) { this.shareLink = `${window.location.origin}/account/${this.accountId}/pinboard/${boardInfo.id}` } else { this.shareLink = `${window.location.origin}/account/${this.accountId}/group/${this.groupId}/pinboard/${boardInfo.id}` }
     },
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         let promise
-        if(this.isPersonalPinboard) {
+        if (this.isPersonalPinboard) {
           this.tempEditInfo.userId = this.userId
           promise = this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo)
         } else {
@@ -220,11 +224,11 @@ export default {
         promise.then(() => {
           this.isShowEdit = false
         })
-        .catch(() => {})
+          .catch(() => {})
       })
     },
     confirmDelete () {
-      if(this.isPersonalPinboard) {
+      if (this.isPersonalPinboard) {
         this.$store.dispatch('pinboard/deletePinboard', { userId: this.userId, id: this.tempEditInfo.id }).then(() => {
           this.isShowDelete = false
         })
@@ -269,7 +273,7 @@ export default {
     closeShare () {
       this.isShowShare = false
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

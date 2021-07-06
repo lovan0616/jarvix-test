@@ -1,22 +1,22 @@
 <template>
   <div class="value-alias-dialog full-page-dialog">
-    <spinner 
+    <spinner
       v-if="isSaving || isLoading"
       :title="$t('editing.isSaving')"
       class="layout-spinner"
       size="50"
     />
-    <div 
+    <div
       v-else
       class="dialog-container"
     >
       <div class="dialog-title">
         {{ $t('editing.dataColumnValue') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <template v-if="dataColumnListInfo.length > 0">
         <div class="dialog-header-block">
@@ -24,7 +24,9 @@
             :content="dataFrameInfo.primaryAlias"
             placement="bottom"
           >
-            <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
+            <div class="data-frame-name">
+              {{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}
+            </div>
           </el-tooltip>
         </div>
         <div class="dialog-content-block">
@@ -33,10 +35,12 @@
               <button
                 :disabled="isLoadingValueAliasTemplate"
                 class="btn btn-secondary"
-                @click="getValueAliasTemplate">
-                <svg-icon 
-                  v-show="isLoadingValueAliasTemplate" 
-                  icon-class="spinner"/>
+                @click="getValueAliasTemplate"
+              >
+                <svg-icon
+                  v-show="isLoadingValueAliasTemplate"
+                  icon-class="spinner"
+                />
                 {{ $t('editing.downloadAliasTemplate') }}
               </button>
             </el-tooltip>
@@ -49,9 +53,9 @@
                 for="valueAliasTemplateInput"
                 class="data-template-block__input-label"
               >
-                <span class="file-name">{{ valueAliasTemplateInput ? valueAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
+                <span class="file-name">{{ valueAliasTemplateInput ? valueAliasTemplateInput.name : $t('editing.chooseFile') }}</span>
                 <input
-                  id="valueAliasTemplateInput" 
+                  id="valueAliasTemplateInput"
                   :key="valueAliasTemplateInput ? valueAliasTemplateInput.name : 'empty'"
                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                   type="file"
@@ -59,79 +63,100 @@
                   @change="onInputValueAliasTemplate($event.target.files)"
                 >
               </label>
-              <div 
-                v-show="valueAliasTemplateInput" 
-                class="button-block">
-                <a 
-                  href="javascript:void(0);" 
+              <div
+                v-show="valueAliasTemplateInput"
+                class="button-block"
+              >
+                <a
+                  href="javascript:void(0);"
                   class="link btn-cancel"
                   @click="onCancelUploadValueAliasTemplate"
                 >{{ $t('button.cancel') }}</a>
                 <a
-                  :disabled="isUploadingValueAliasTemplate" 
+                  :disabled="isUploadingValueAliasTemplate"
                   href="javascript:void(0);"
                   class="link btn-confirm"
                   @click="updateBooleanAndCategoryValueAliasTemplate"
-                > 
+                >
                   <svg-icon
                     v-show="isUploadingValueAliasTemplate"
-                    icon-class="spinner"/>
+                    icon-class="spinner"
+                  />
                   {{ $t('button.upload') }}
                 </a>
               </div>
               <el-tooltip
                 slot="reference"
-                :content="$t('editing.uploadValueAliasTemplate')" >
+                :content="$t('editing.uploadValueAliasTemplate')"
+              >
                 <button
                   class="btn btn-secondary"
-                >{{ $t('editing.uploadAliasTemplate') }}</button>
+                >
+                  {{ $t('editing.uploadAliasTemplate') }}
+                </button>
               </el-tooltip>
             </el-popover>
             <div class="button-block">
               <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 class="btn-m btn-default"
                 @click="buildAlias"
-              >{{ $t('button.build') }}</button>
+              >
+                {{ $t('button.build') }}
+              </button>
             </div>
           </div>
           <div class="data-column-block">
-            <div class="block-title">{{ $t('editing.columnName') }}</div>
+            <div class="block-title">
+              {{ $t('editing.columnName') }}
+            </div>
             <div class="data-column-block-body">
-              <div 
+              <div
                 v-for="column in dataColumnListInfo"
                 :key="column.dataColumnId"
                 :class="{active: currentColumnInfo.dataColumnId === column.dataColumnId}"
                 class="data-column-row"
                 @click="setCurrentColumn(column)"
-              >{{ column.primaryAlias }}</div>
+              >
+                {{ column.primaryAlias }}
+              </div>
             </div>
           </div>
           <div class="data-value-block">
-            <div class="block-title">{{ $t('editing.columnName') }}：{{ currentColumnInfo.primaryAlias }}</div>
+            <div class="block-title">
+              {{ $t('editing.columnName') }}：{{ currentColumnInfo.primaryAlias }}
+            </div>
             <div class="data-value-table data-table">
               <div class="data-table-head is-scrolling">
                 <div class="data-table-row table-head">
-                  <div class="data-table-cell data-value">{{ $t('editing.dataValue') }}</div>
-                  <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
-                  <div class="data-table-cell action">{{ $t('editing.action') }}</div>
+                  <div class="data-table-cell data-value">
+                    {{ $t('editing.dataValue') }}
+                  </div>
+                  <div class="data-table-cell alias">
+                    {{ $t('editing.alias') }}
+                  </div>
+                  <div class="data-table-cell action">
+                    {{ $t('editing.action') }}
+                  </div>
                 </div>
               </div>
               <div class="data-table-body">
-                <div 
+                <div
                   v-for="(valueInfo, index) in currentColumnInfo.aliasList"
                   :key="index"
                   :class="{'is-editing': currentEditValueIndex === index}"
                   class="data-table-row"
                 >
-                  <div class="data-table-cell data-value">{{ valueInfo.dataValue }}</div>
+                  <div class="data-table-cell data-value">
+                    {{ valueInfo.dataValue }}
+                  </div>
                   <div class="data-table-cell alias">
-                    <div 
+                    <div
                       v-if="currentEditValueIndex === index"
                       class="edit-block"
                     >
-                      <div 
+                      <div
                         v-for="(singleAlias, aliasIndex) in tempAliasInfo"
                         :key="index + '-' + aliasIndex"
                         class="edit-alias-input-block"
@@ -149,41 +174,47 @@
                           :content="$t('button.remove')"
                           placement="bottom"
                         >
-                          <div 
-                            class="svg-wrapper" 
-                            @click="removeAlias(aliasIndex)">
-                            <svg-icon icon-class="ban"/>
+                          <div
+                            class="svg-wrapper"
+                            @click="removeAlias(aliasIndex)"
+                          >
+                            <svg-icon icon-class="ban" />
                           </div>
                         </el-tooltip>
                       </div>
-                      <button 
+                      <button
                         class="btn-m btn-secondary btn-add"
                         @click="addAlias"
                       >
-                        <svg-icon 
-                          icon-class="plus" 
-                          class="icon"/>{{ $t('button.add') }}
+                        <svg-icon
+                          icon-class="plus"
+                          class="icon"
+                        />{{ $t('button.add') }}
                       </button>
                     </div>
-                    <div 
+                    <div
                       v-else
                       class="display-block"
                     >
-                      <div 
+                      <div
                         v-for="(singleAlias, aliasIndex) in valueInfo.alias"
                         :class="{'is-modified': singleAlias.isModified}"
                         :key="index + '-' + aliasIndex"
                         class="alias"
-                      >{{ singleAlias.name }}<span v-show="aliasIndex !== valueInfo.alias.length - 1">,</span></div>
-                      <div 
+                      >
+                        {{ singleAlias.name }}<span v-show="aliasIndex !== valueInfo.alias.length - 1">,</span>
+                      </div>
+                      <div
                         v-show="valueInfo.alias.length === 0"
                         class="not-set"
-                      >{{ $t('editing.notSet') }}</div>
+                      >
+                        {{ $t('editing.notSet') }}
+                      </div>
                     </div>
                   </div>
                   <div class="data-table-cell action">
-                    <a 
-                      v-if="currentEditValueIndex !== index" 
+                    <a
+                      v-if="currentEditValueIndex !== index"
                       href="javascript:void(0);"
                       class="link action-link"
                       @click="editValueAlias(index)"
@@ -196,10 +227,11 @@
                         :content="$t('button.save')"
                         placement="bottom"
                       >
-                        <div 
-                          class="svg-wrapper" 
-                          @click="saveAlias(index)">
-                          <svg-icon icon-class="save"/>
+                        <div
+                          class="svg-wrapper"
+                          @click="saveAlias(index)"
+                        >
+                          <svg-icon icon-class="save" />
                         </div>
                       </el-tooltip>
                       <el-tooltip
@@ -207,9 +239,10 @@
                         :content="$t('button.cancel')"
                         placement="bottom"
                       >
-                        <div 
-                          class="svg-wrapper" 
-                          @click="cancelEditAlias">
+                        <div
+                          class="svg-wrapper"
+                          @click="cancelEditAlias"
+                        >
                           <svg-icon
                             icon-class="close"
                             class="icon-close"

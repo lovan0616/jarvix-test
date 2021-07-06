@@ -6,17 +6,19 @@
     <app-header v-if="!$route.meta.isHeaderHidden">
       <HeaderNav slot="nav" />
     </app-header>
-    <AppSideNav v-if="!$route.meta.isSideNavHidden"/>
-    <main 
-      :class="{'with-side-nav': !$route.meta.isSideNavHidden}" 
-      class="main">
+    <AppSideNav v-if="!$route.meta.isSideNavHidden" />
+    <main
+      :class="{'with-side-nav': !$route.meta.isSideNavHidden}"
+      class="main"
+    >
       <transition
-        name="fade" 
-        mode="out-in">
+        name="fade"
+        mode="out-in"
+      >
         <router-view />
       </transition>
     </main>
-    <spinner 
+    <spinner
       v-if="isAppLoading"
       :title="$t('message.switching')"
       class="spinner"
@@ -112,13 +114,13 @@ export default {
       const newDataSourceList = new Set(newList.map(item => item.id))
       for (let i = 0; i < oldList.length; i++) {
         if (
-          !newDataSourceList.has(oldList[i].id)
-          || oldList[i].processDataFrameCount > newList.find(dataFrame => dataFrame.id === oldList[i].id).processDataFrameCount
+          !newDataSourceList.has(oldList[i].id) ||
+          oldList[i].processDataFrameCount > newList.find(dataFrame => dataFrame.id === oldList[i].id).processDataFrameCount
         ) return true
       }
       return false
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

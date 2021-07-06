@@ -1,20 +1,26 @@
 <template>
   <div class="war-room-list-page list-page">
-    <h1 class="list-page__title">{{ $t('warRoom.warRoom') }}</h1>
+    <h1 class="list-page__title">
+      {{ $t('warRoom.warRoom') }}
+    </h1>
     <div class="list-page__action-container">
       <button
-        class="btn-m btn-default btn-has-icon add-btn" 
-        @click="showAdd">
-        <svg-icon 
-          icon-class="plus" 
-          class="icon"/>
+        class="btn-m btn-default btn-has-icon add-btn"
+        @click="showAdd"
+      >
+        <svg-icon
+          icon-class="plus"
+          class="icon"
+        />
         {{ $t('button.AddNewWarRoom') }}
       </button>
       <div
         v-if="!isLoading && warRoomList.length > 0"
         class="list-page__filter-select-wrapper"
       >
-        <div class="list-page__filter-select-label">{{ $t('warRoom.displaySetting') }}</div>
+        <div class="list-page__filter-select-label">
+          {{ $t('warRoom.displaySetting') }}
+        </div>
         <default-select
           v-model="selectedFilterOption"
           :option-list="filterOptions"
@@ -23,13 +29,14 @@
       </div>
     </div>
     <spinner
-      v-if="isLoading" 
+      v-if="isLoading"
       :title="$t('editing.loading')"
     />
     <div v-else>
-      <div 
-        v-if="warRoomList.length > 0" 
-        class="war-room-list">
+      <div
+        v-if="warRoomList.length > 0"
+        class="war-room-list"
+      >
         <single-war-room
           v-for="warRoomInfo in displayedFilterList"
           :key="warRoomInfo.id"
@@ -96,11 +103,12 @@
       @closeDialog="closeShare"
       @confirmBtn="confirmShare"
     >
-      <input 
-        ref="shareInput" 
-        v-model="shareLink" 
-        type="text" 
-        class="input name-input">
+      <input
+        ref="shareInput"
+        v-model="shareLink"
+        type="text"
+        class="input name-input"
+      >
     </writing-dialog>
   </div>
 </template>
@@ -111,13 +119,14 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { 
-  createWarRoom, 
-  deleteWarRoom, 
-  getWarRoomList, 
+import {
+  createWarRoom,
+  deleteWarRoom,
+  getWarRoomList,
   updateWarRoomName,
   publishWarRoom,
-  unpublishWarRoom } from '@/API/WarRoom'
+  unpublishWarRoom
+} from '@/API/WarRoom'
 import { Message } from 'element-ui'
 
 export default {
@@ -190,7 +199,7 @@ export default {
         this.isLoading = false
       })
     },
-    publish(id) {
+    publish (id) {
       publishWarRoom(id).then(() => {
         Message({
           message: this.$t('message.publishSuccessfully'),
@@ -282,7 +291,7 @@ export default {
         this.isShowDelete = false
         this.fetchData()
       })
-      .finally(() => { this.isProcessing = false })
+        .finally(() => { this.isProcessing = false })
     },
     confirmShare () {
       let input = this.$refs.shareInput
@@ -316,7 +325,7 @@ export default {
     closeShare () {
       this.isShowShare = false
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

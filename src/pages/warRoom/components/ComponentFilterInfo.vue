@@ -3,13 +3,13 @@
     <div class="war-room-setting__filter-title">
       {{ dataColumnNames }}
     </div>
-    <ul 
+    <ul
       v-for="(restraint, index) in restriction"
       :key="index"
       class="war-room-setting__filter-description"
     >
       <template v-if="restraint.type === 'compound'">
-        <li 
+        <li
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
           class="war-room-setting__filter-description-item"
@@ -47,9 +47,9 @@
 export default {
   name: 'ComponentFilterInfo',
   props: {
-    restriction: { 
-      type: Array, 
-      default: () => [] 
+    restriction: {
+      type: Array,
+      default: () => []
     },
     dataColumnMap: {
       type: Object,
@@ -66,7 +66,7 @@ export default {
           return result
         }, []).join(' & ')
       } else {
-        let dcName = this.restriction[0].properties['dc_id']
+        let dcName = this.restriction[0].properties.dc_id
         return this.dataColumnMap[dcName].primary_alias || dcName
       }
     }

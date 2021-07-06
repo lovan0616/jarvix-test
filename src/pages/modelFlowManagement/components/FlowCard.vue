@@ -6,15 +6,17 @@
       </div>
       <div class="flow-id">
         (ID: {{ flowInfo.id }})
-      </div> 
+      </div>
       <div class="flow-record flow-text">
         {{ $t('modelFlow.createdInfo', { name: flowInfo.createdBy, time: timeToDateTime(flowInfo.createdAt) }) }}
-      </div> 
+      </div>
     </div>
     <div class="flow-card__content">
       <div class="flow-card__list">
         <div class="flow-info-wrapper">
-          <div class="flow-label">{{ $t('modelFlow.updateMode') }}：</div>
+          <div class="flow-label">
+            {{ $t('modelFlow.updateMode') }}：
+          </div>
           <div class="flow-text">
             {{ $t(`modelFlow.triggerTypes.${flowInfo.triggerType.toLowerCase()}`) }}
           </div>
@@ -38,25 +40,35 @@
         </div>
       </div>
       <div class="flow-card__list">
-        <div class="flow-label">{{ $t('modelFlow.outputResult') }}：</div>
+        <div class="flow-label">
+          {{ $t('modelFlow.outputResult') }}：
+        </div>
         <template v-if="flowInfo.targetDataSource">
           <div class="flow-text-wrapper">
             <svg-icon
               icon-class="data-source"
-              class="icon" />
+              class="icon"
+            />
             <div
               class="flow-text flow-text--underline"
               @click="goToDataSourcePage"
-            >{{ flowInfo.targetDataSource }}</div>
+            >
+              {{ flowInfo.targetDataSource }}
+            </div>
           </div>
           <div class="flow-text-wrapper">
             <svg-icon
               icon-class="table"
-              class="icon" />
-            <div class="flow-text">{{ flowInfo.targetDataFrameName }}</div>
+              class="icon"
+            />
+            <div class="flow-text">
+              {{ flowInfo.targetDataFrameName }}
+            </div>
           </div>
         </template>
-        <template v-else>-</template>
+        <template v-else>
+          -
+        </template>
       </div>
     </div>
   </div>

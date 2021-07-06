@@ -1,9 +1,10 @@
 <template>
   <div class="restraint-setting">
     <div
-      class="restraint-setting__back-icon" 
-      @click="backToPreviousPage">
-      <svg-icon icon-class="arrow-left"/>
+      class="restraint-setting__back-icon"
+      @click="backToPreviousPage"
+    >
+      <svg-icon icon-class="arrow-left" />
       {{ $t('dataFrameAdvanceSetting.restrictionSetting') }}
     </div>
     <div class="restraint-setting__header">
@@ -19,30 +20,34 @@
         type="button"
         class="btn-outline add-restraint-btn"
         @click.stop="addSubRestraint"
-      ><span>
-        <svg-icon icon-class="plus" />
-      </span>
+      >
+        <span>
+          <svg-icon icon-class="plus" />
+        </span>
       </button>
-      <div 
+      <div
         v-show="isShowSeletor"
         ref="selectList"
-        class="restraint-setting__selector selector">
+        class="restraint-setting__selector selector"
+      >
         <search-block
           v-model="queryColumnName"
           :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
           class="selector__input-block"
         />
-        <div 
-          v-if="columnFilterOption.length === 0" 
-          class="empty-message">
+        <div
+          v-if="columnFilterOption.length === 0"
+          class="empty-message"
+        >
           {{ $t('message.emptyResult') }}
         </div>
         <div class="selector__list-block">
           <template v-for="(column, index) in columnFilterOption">
-            <label 
+            <label
               :key="index"
               :class="{'checkbox--active': column.active}"
-              class="checkbox">
+              class="checkbox"
+            >
               <div class="checkbox-label">
                 <input
                   v-model="column.active"
@@ -50,7 +55,7 @@
                   type="checkbox"
                   @change="selectColumn(index)"
                 >
-                <div class="checkbox-square"/>
+                <div class="checkbox-square" />
               </div>
               <span>{{ column.name }}</span>
             </label>
@@ -59,9 +64,10 @@
       </div>
     </div>
     <div class="restraint-setting__content">
-      <div 
-        v-if="tempRestraintList.length === 0" 
-        class="empty-message">
+      <div
+        v-if="tempRestraintList.length === 0"
+        class="empty-message"
+      >
         {{ $t('dataFrameAdvanceSetting.noRestraintYet') }}
       </div>
       <template v-else>
@@ -80,7 +86,8 @@
         type="button"
         class="btn btn-default"
         @click.stop="save()"
-      >{{ $t('button.confirm') }}
+      >
+        {{ $t('button.confirm') }}
       </button>
     </div>
   </div>
@@ -132,26 +139,26 @@ export default {
         : this.columnOption
     },
     hasSettingChanged () {
-      if(this.restraint === undefined && this.tempRestraintList.length !== 0) {
+      if (this.restraint === undefined && this.tempRestraintList.length !== 0) {
         return true
       }
       let isRestraintConditionUntouched
-      if(this.restraint.type !== 'compound') {
-        isRestraintConditionUntouched = this.tempRestraintList.length === 1 && JSON.stringify(this.restraint) === JSON.stringify(this.tempRestraintList[0]) 
+      if (this.restraint.type !== 'compound') {
+        isRestraintConditionUntouched = this.tempRestraintList.length === 1 && JSON.stringify(this.restraint) === JSON.stringify(this.tempRestraintList[0])
       } else {
-        isRestraintConditionUntouched = JSON.stringify(this.restraint.restraints) === JSON.stringify(this.tempRestraintList) 
+        isRestraintConditionUntouched = JSON.stringify(this.restraint.restraints) === JSON.stringify(this.tempRestraintList)
       }
       return !isRestraintConditionUntouched
     }
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
-    if(this.restraint.type === 'compound') {
+    if (this.restraint.type === 'compound') {
       this.tempRestraintList = JSON.parse(JSON.stringify(this.restraint.restraints))
     } else {
       this.tempRestraintList = [JSON.parse(JSON.stringify(this.restraint))]
       this.tempRestraintList.forEach(restraint => {
-        if(restraint.properties.data_type === 'datetime'){
+        if (restraint.properties.data_type === 'datetime') {
           restraint.properties.start = this.customerTimeFormatter(restraint.properties.start, 'SECOND')
           restraint.properties.end = this.customerTimeFormatter(restraint.properties.end, 'SECOND')
         }
@@ -168,7 +175,7 @@ export default {
       }
     },
     backToPreviousPage () {
-      this.$emit("prev")
+      this.$emit('prev')
     },
     async selectColumn (index) {
       const selectColumn = this.columnList.filter(column => this.columnFilterOption[index].id === column.id)[0]
@@ -176,9 +183,9 @@ export default {
       const columnDataType = selectColumn.dataType
 
       const isColumnInList = this.tempRestraintList.some(restraint => {
-        return restraint.properties['dc_id'] === selectColumn.id
+        return restraint.properties.dc_id === selectColumn.id
       })
-      if(isColumnInList) return 
+      if (isColumnInList) return
 
       let subStraintType, subStraintProperties
       switch (columnStatsType) {
@@ -211,7 +218,7 @@ export default {
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
             end: null,
-            start: null 
+            start: null
           }
           break
       }
@@ -245,7 +252,7 @@ export default {
         this.$emit('updated:restraint', updatedRestraint)
       })
     }
-  },
+  }
 }
 </script>
 
@@ -344,7 +351,7 @@ export default {
 
       &::-webkit-scrollbar-thumb {
         background-color: rgba(0, 0, 0, 0.7);
-      }  
+      }
 
       .checkbox {
         display: flex;
@@ -406,7 +413,7 @@ export default {
     &::-webkit-scrollbar {
       width: 5px;
     }
-    
+
     .empty-message {
       color: #AAAAAA;
       font-size: 12px;

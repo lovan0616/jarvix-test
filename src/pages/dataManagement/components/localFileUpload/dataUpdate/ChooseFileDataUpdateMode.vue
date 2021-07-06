@@ -7,12 +7,15 @@
       :step="step"
       :process-text="processText"
     />
-    <div 
-      class="dialog-sub-title">
+    <div
+      class="dialog-sub-title"
+    >
       {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">{{ $t('fileDataUpdate.updateMode') }}</div>
+      <div class="setting-block__title">
+        {{ $t('fileDataUpdate.updateMode') }}
+      </div>
       <div
         v-for="status in updateStatusList"
         :key="status.type"
@@ -34,14 +37,18 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelFileUpdate"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           class="btn btn-primary"
           @click="chooseFile"
-        >{{ $t('fileDataUpdate.processStep2') }}</button>
+        >
+          {{ $t('fileDataUpdate.processStep2') }}
+        </button>
       </div>
     </div>
   </div>
@@ -51,11 +58,11 @@
 import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
 
 export default {
- name: 'ChooseFileDataUpdateMode',
+  name: 'ChooseFileDataUpdateMode',
   components: {
-		UploadProcessBlock
-	},
-	props: {
+    UploadProcessBlock
+  },
+  props: {
     dataFrameInfo: {
       type: Object,
       required: true
@@ -73,11 +80,11 @@ export default {
       required: true
     }
   },
-	data () {
-		return {
-			updateMode: 'append',
-			updateStatusList: [
-				{
+  data () {
+    return {
+      updateMode: 'append',
+      updateStatusList: [
+        {
           type: 'append',
           name: this.$t('fileDataUpdate.append')
         },
@@ -85,17 +92,17 @@ export default {
           type: 'reimport',
           name: this.$t('fileDataUpdate.reimport')
         }
-			]
-		}
-	},
-	methods: {
-		chooseFile () {
-			this.$emit('next', this.updateMode)
-		},
-		cancelFileUpdate () {
-			this.$emit('close')
-		}
-	}
+      ]
+    }
+  },
+  methods: {
+    chooseFile () {
+      this.$emit('next', this.updateMode)
+    },
+    cancelFileUpdate () {
+      this.$emit('close')
+    }
+  }
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="schedule-index-page">
     <router-view :key="scheduleProjectId" />
-    <schedule-helper v-if="isShowScheduleHelper"/>
+    <schedule-helper v-if="isShowScheduleHelper" />
   </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
     const account_id = store.getters['userManagement/getCurrentAccountId']
     const group_id = store.getters['userManagement/getCurrentGroupId']
     const schedule_project_id = Number(to.params.schedule_project_id)
-    
+
     const isProjectExist = store.state.scheduleSetting.scheduleProjects.some(item => item.id === schedule_project_id)
     if (isProjectExist) {
       store.commit('scheduleSetting/setCurrentProjectId', schedule_project_id)

@@ -5,10 +5,12 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-default"
           @click="$emit('next')"
-        >{{ $t('button.confirm') }}</button>
+        >
+          {{ $t('button.confirm') }}
+        </button>
       </div>
     </div>
   </div>
@@ -22,7 +24,7 @@ export default {
       type: String,
       required: true
     }
-  },
+  }
 }
 </script>
 

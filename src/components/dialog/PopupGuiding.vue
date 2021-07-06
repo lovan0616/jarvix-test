@@ -1,17 +1,19 @@
 <template>
   <transition name="popup">
-    <div 
-      v-if="showDialog" 
-      class="popup-guiding">
+    <div
+      v-if="showDialog"
+      class="popup-guiding"
+    >
       <div class="popup-guiding-main">
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="btn-close"
           @click="closePopup"
         >
-          <svg-icon 
-            icon-class="close" 
-            class="close-icon"/>
+          <svg-icon
+            icon-class="close"
+            class="close-icon"
+          />
         </a>
         <div class="popup-guiding-top popup-container">
           <div
@@ -21,8 +23,12 @@
             class="step"
             @click="chooseStep(index + 1)"
           >
-            <div class="step-label">{{ index + 1 }}</div>
-            <div class="step-name">{{ step.name }}</div>
+            <div class="step-label">
+              {{ index + 1 }}
+            </div>
+            <div class="step-name">
+              {{ step.name }}
+            </div>
           </div>
         </div>
         <div class="guide-title-block popup-container">
@@ -30,15 +36,15 @@
         </div>
         <div class="popup-guiding-center">
           <div class="step-control-block">
-            <a 
-              v-if="currentStep > min" 
+            <a
+              v-if="currentStep > min"
               class="step-control"
               href="javasctipt:void(0)"
               @click="chooseStep(currentStep - 1)"
             >{{ $t('guiding.prevStep') }}</a>
           </div>
           <div class="img-block popup-container">
-            <img 
+            <img
               v-for="(step, index) in stepList"
               :class="{ 'is-actived': index + 1 === currentStep }"
               :src="require(`@/assets/images/${step.imgSrc}`)"
@@ -47,17 +53,19 @@
             >
           </div>
           <div class="step-control-block">
-            <a 
-              v-if="currentStep < stepList.length" 
+            <a
+              v-if="currentStep < stepList.length"
               class="step-control"
               href="javasctipt:void(0)"
               @click="chooseStep(currentStep + 1)"
             >{{ $t('guiding.nextStep') }}</a>
-            <button 
+            <button
               v-else
               class="btn-finish"
               @click="closePopup"
-            >{{ $t('guiding.endStep') }}</button>
+            >
+              {{ $t('guiding.endStep') }}
+            </button>
           </div>
         </div>
       </div>

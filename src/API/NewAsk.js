@@ -42,7 +42,7 @@ export function askSpecificType ({ resultId, type, settingConfig }, cancelFuncti
  */
 export function refreshResult (data) {
   return request({
-    url: `/ask/result/refresh`,
+    url: '/ask/result/refresh',
     method: 'POST',
     data
   })
@@ -64,7 +64,7 @@ export function getComponentList (resultId, cancelFunction) {
  */
 export function getComponentData (componentInfo, cancelFunction) {
   return request({
-    url: `/ask/componentData`,
+    url: '/ask/componentData',
     method: 'POST',
     data: componentInfo,
     cancelToken: cancelFunction
@@ -74,7 +74,7 @@ export function getComponentData (componentInfo, cancelFunction) {
 /**
  * component data csv download
  */
-export function getComponentDataCSV (componentId, limit=null) {
+export function getComponentDataCSV (componentId, limit = null) {
   return request({
     url: `/ask/component/${componentId}/download/csv`,
     method: 'GET',
@@ -87,7 +87,7 @@ export function getComponentDataCSV (componentId, limit=null) {
 /**
  * get question history
  */
-export function getHistoryQuestionList(dataSourceId, dataFrameId) {
+export function getHistoryQuestionList (dataSourceId, dataFrameId) {
   return request({
     url: `/ask/questionHistoryList/${dataSourceId}`,
     method: 'GET',
@@ -103,9 +103,9 @@ export function getHistoryQuestionList(dataSourceId, dataFrameId) {
  * @param {Number} dataFrameId,
  * @param {Number} dataSourceId
  */
-export function addTableToMemory(accountId, dataFrameId, dataSourceId) {
+export function addTableToMemory (accountId, dataFrameId, dataSourceId) {
   return request({
-    url: `/inMemory`,
+    url: '/inMemory',
     method: 'POST',
     data: {
       accountId,
@@ -118,9 +118,9 @@ export function addTableToMemory(accountId, dataFrameId, dataSourceId) {
 /**
  * get available language parser
  */
-export function getParserLanguageList() {
+export function getParserLanguageList () {
   return request({
-    url: `/ask/question/languages`,
+    url: '/ask/question/languages',
     method: 'GET'
   })
 }
@@ -128,9 +128,9 @@ export function getParserLanguageList() {
 /**
  * get formula list
  */
-export function getFormulaList() {
+export function getFormulaList () {
   return request({
-    url: `/ask/askFormulaList/search`,
+    url: '/ask/askFormulaList/search',
     method: 'GET'
   })
 }
@@ -138,9 +138,9 @@ export function getFormulaList() {
 /**
  * ask result using existing formula
  */
-export function askFormulaResult(askInfo) {
+export function askFormulaResult (askInfo) {
   return request({
-    url: `/ask/formulaResult`,
+    url: '/ask/formulaResult',
     method: 'POST',
     data: askInfo
   })

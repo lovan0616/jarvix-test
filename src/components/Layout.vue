@@ -1,6 +1,6 @@
 <template>
   <div class="layout-root">
-    <spinner 
+    <spinner
       v-if="loading"
       :title="$t('resultDescription.analysisProcessing')"
       class="layout-spinner"

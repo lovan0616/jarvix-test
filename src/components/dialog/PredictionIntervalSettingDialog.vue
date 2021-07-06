@@ -23,13 +23,15 @@
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="$emit('close')"
-        >{{ $t('button.cancel') }}</button>
+        >
+          {{ $t('button.cancel') }}
+        </button>
         <button
           :disabled="isProcessing"
           class="btn btn-default"
           @click="reAnalyze"
         >
-          <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-if="isProcessing"><svg-icon icon-class="spinner" />{{ $t('button.processing') }}</span>
           <span v-else>{{ $t('prediction.rePredict') }}</span>
         </button>
       </div>
@@ -71,7 +73,6 @@ export default {
 
           this.setAlgoConfig({ ...this.algoConfig, prediction: this.tempAlgoConfig })
           this.$emit('re-analyze', 'PREDICTION')
-          
         })
     }
   }

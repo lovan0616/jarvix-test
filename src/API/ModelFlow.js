@@ -2,11 +2,11 @@ import request from '@/utils/publicRequest'
 
 /**
  * get model flow list
- * @query {Number} groupId - group id 
+ * @query {Number} groupId - group id
  * @query {Number} page - pagination page
  * @query {Number} size - list size
  */
- export function getModelFlowList(groupId, page = 0, size) {
+export function getModelFlowList (groupId, page = 0, size) {
   return request({
     url: '/model-flows',
     method: 'GET',
@@ -18,7 +18,7 @@ import request from '@/utils/publicRequest'
   })
 }
 
-export function getModelFlowDetail(modelFlowId) {
+export function getModelFlowDetail (modelFlowId) {
   return request({
     url: `model-flows/${modelFlowId}`,
     method: 'GET'
@@ -29,7 +29,7 @@ export function getModelFlowDetail(modelFlowId) {
  * create model flow
  * @param {Object} data - 建立的流程資訊
  */
- export function createModelFlow(data) {
+export function createModelFlow (data) {
   return request({
     url: '/model-flows',
     method: 'POST',
@@ -39,16 +39,16 @@ export function getModelFlowDetail(modelFlowId) {
 
 /**
  * active model flow
- * @query {Number} modelFlowId - model flow id 
+ * @query {Number} modelFlowId - model flow id
  */
- export function updateModelFlow(modelFlowId) {
+export function updateModelFlow (modelFlowId) {
   return request({
     url: `/model-flows/${modelFlowId}/update`,
     method: 'POST'
   })
 }
 
-export function deleteModelFlow(modelFlowId) {
+export function deleteModelFlow (modelFlowId) {
   return request({
     url: `/model-flows/${modelFlowId}`,
     method: 'DELETE'

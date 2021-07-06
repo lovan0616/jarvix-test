@@ -15,7 +15,7 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo({ commit, rootState, rootGetters }, defaultGroupId) {
+  async getUserInfo ({ commit, rootState, rootGetters }, defaultGroupId) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
@@ -26,7 +26,7 @@ export default {
       // get user permission
       const userInfo = await getPermission(defaultGroupId)
 
-      if(userInfo.error) {
+      if (userInfo.error) {
         Message({
           message: userInfo.error.message,
           type: 'warning',
@@ -44,7 +44,7 @@ export default {
           groupPermissionList = defaultGroup.groupPermissionList
         }
       }
-      
+
       commit('setUserInfo', {
         userId: userInfo.userData.id,
         userName: userInfo.userData.name,
@@ -65,14 +65,14 @@ export default {
       const hasPermission = rootGetters['userManagement/hasPermission']
       const userLanguage = userInfo.userData.language
       const LocalLanguage = rootState.setting.locale
-      const isNeededtoChangeLanguage = !hasPermission('english_ui') && LocalLanguage === 'en-US' 
+      const isNeededtoChangeLanguage = !hasPermission('english_ui') && LocalLanguage === 'en-US'
 
       const tempLocale = isNeededtoChangeLanguage
         ? rootState.setting.languageDefault
-        : LocalLanguage 
-      
+        : LocalLanguage
+
       // 未設定語系，並在登入前曾修改語系
-      if (!userLanguage && rootState.setting.changeLangBeforeLogin ) {
+      if (!userLanguage && rootState.setting.changeLangBeforeLogin) {
         updateLocale(tempLocale)
       } else if (userLanguage && userLanguage !== LocalLanguage) {
         // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
@@ -87,18 +87,18 @@ export default {
       // get account info
       const accountInfo = await getAccountInfo(defaultAccount.id)
       commit('setLicenseInfo', accountInfo.license)
-      
+
       const account_id = rootGetters['userManagement/getCurrentAccountId']
       if (!defaultGroup) {
         return router.push({
           name: 'PageGrouplessGuidance',
           params: { account_id }
         })
-      } 
+      }
       // refresh token
       // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)
-    } catch(error) {
+    } catch (error) {
       return Promise.reject(error)
     }
   },
@@ -109,22 +109,22 @@ export default {
         const newGroupId = getters.getCurrentGroupId
 
         // 更新後無隸屬任何群組
-        if(!newGroupId) {
+        if (!newGroupId) {
           commit('dataSource/setDataSourceList', [], { root: true })
           return dispatch('dataSource/handleEmptyDataSource', null, { root: true })
         }
-        
+
         // default 群組在更新前後相同
         if (newGroupId === originalGroupId) return
 
         // 更新後 default 已變更
-        return dispatch('switchGroupById', { 
-          accountId: getters.getCurrentAccountId, 
+        return dispatch('switchGroupById', {
+          accountId: getters.getCurrentAccountId,
           groupId: newGroupId
         })
       })
   },
-  switchAccountById({ state, dispatch, commit }, { accountId, defaultGroupId, dataSourceId, dataFrameId }) {
+  switchAccountById ({ state, dispatch, commit }, { accountId, defaultGroupId, dataSourceId, dataFrameId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchAccount({ accountId })
@@ -147,7 +147,7 @@ export default {
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   },
-  switchGroupById({ dispatch, commit }, { accountId, groupId, dataSourceId, dataFrameId }) {
+  switchGroupById ({ dispatch, commit }, { accountId, groupId, dataSourceId, dataFrameId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchGroup({ accountId, groupId })
@@ -165,7 +165,7 @@ export default {
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   },
-  async getUserGroupList({ commit, getters }) {
+  async getUserGroupList ({ commit, getters }) {
     const userInfo = await getPermission(getters.getCurrentGroupId)
     const defaultAccount = userInfo.accountList.find(account => account.isDefault)
     commit('setGroupList', {

@@ -3,23 +3,26 @@
     <el-cascader
       v-model="editedColumnInfo.statsType"
       :disabled="isReviewMode"
-      :show-all-levels="false" 
+      :show-all-levels="false"
       :options="cascaderStatsTypeOptions"
       :props="{ expandTrigger: 'hover', label: 'name', children: 'pattern' }"
       filterable
       class="sy-select theme-dark"
-      @change="openConfirmMsg">
+      @change="openConfirmMsg"
+    >
       <template #default="{ node, data }">
         <svg-icon
           v-if="statsTypeList.includes(data.value)"
           :icon-class="getStatsTypeIcon(data.value)"
-          class="statsType__icon" />
+          class="statsType__icon"
+        />
         <span class="statsType__label">{{ data.name }}</span>
       </template>
     </el-cascader>
-    <svg-icon 
+    <svg-icon
       :icon-class="getStatsTypeIcon(editedColumnInfo.statsType[0])"
-      class="statsType__icon" />
+      class="statsType__icon"
+    />
     <div
       v-if="showConfirmMsg"
       class="confirm"
@@ -85,15 +88,17 @@ export default {
     cascaderStatsTypeOptions () {
       if (this.editedColumnInfo.originalStatsType === 'BOOLEAN') return this.statsTypeOptions
       return this.statsTypeOptions.map(item => {
-        if(item.value !== 'DATETIME') return item
-        else return {
-          ...item,
-          pattern: this.datetimePatterns.map(pattern => {
-            return {
-              value: pattern.datetimePattern,
-              name: pattern.datetimePattern
-            }
-          })
+        if (item.value !== 'DATETIME') return item
+        else {
+          return {
+            ...item,
+            pattern: this.datetimePatterns.map(pattern => {
+              return {
+                value: pattern.datetimePattern,
+                name: pattern.datetimePattern
+              }
+            })
+          }
         }
       })
     }
@@ -119,7 +124,7 @@ export default {
     columnInfoFormatter (cascaderColumnInfo) {
       const tempColumnInfo = JSON.parse(JSON.stringify(cascaderColumnInfo))
       tempColumnInfo.statsType = cascaderColumnInfo.statsType[0]
-      tempColumnInfo.datetimePatterns = cascaderColumnInfo.statsType[0] === 'DATETIME' 
+      tempColumnInfo.datetimePatterns = cascaderColumnInfo.statsType[0] === 'DATETIME'
         ? [cascaderColumnInfo.statsType[1]]
         : []
       return tempColumnInfo
@@ -173,7 +178,7 @@ export default {
         default:
           return 'check-circle'
       }
-    },
+    }
   }
 }
 </script>

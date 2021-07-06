@@ -39,7 +39,7 @@ export function getGroupRoles (groupId) {
  */
 export function updateGroupRole (info) {
   return request({
-    url: `/group/role`,
+    url: '/group/role',
     method: 'PUT',
     data: info
   })

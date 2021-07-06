@@ -1,8 +1,9 @@
 <template>
   <!-- Output Params EXPECTATIOKN -->
-  <div 
+  <div
     v-if="settingType === 'EXPECTATION'"
-    class="input-field">
+    class="input-field"
+  >
     <label class="input-field__label">{{ criteriaInfo.modelColumnName }}</label>
     <div class="input-field__content-container">
       <div class="input-field__radio-group-container">
@@ -31,9 +32,10 @@
     </div>
   </div>
   <!-- Output Params Risk Property -->
-  <div 
+  <div
     v-else-if="settingType === 'RISK'"
-    class="input-field">
+    class="input-field"
+  >
     <label class="input-field__label">{{ $t('miniApp.riskLevel') }}</label>
     <div class="input-field__content-container">
       <div class="input-field__radio-group-container">
@@ -96,7 +98,7 @@ export default {
       riskLevelList: [
         { type: 'LOW', name: this.$t('miniApp.low') },
         { type: 'MEDIUM', name: this.$t('miniApp.medium') }
-      ],
+      ]
     }
   },
   methods: {
@@ -128,7 +130,7 @@ export default {
   .input-radio-group:not(:last-of-type) {
     margin-right: 12px;
   }
-  
+
   .el-input {
     width: 100%;
   }
@@ -143,7 +145,7 @@ export default {
       color: #AAAAAA;
       font-weight: normal;
       font-size: 16px;
-    } 
+    }
   }
 
   /deep/ .input-verify .input-verify-text {

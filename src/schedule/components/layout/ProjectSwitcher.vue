@@ -6,14 +6,18 @@
     class="project-switcher"
     @select="switchProject($event)"
   >
-    <template v-slot:display>
-      <div 
-        v-if="getCurrentProject" 
-        class="project-switcher__label">
-        <div class="project-switcher__label-text">{{ getCurrentProject.name }}</div>
-        <svg-icon 
-          icon-class="dropdown" 
-          class="project-switcher__label-icon"/>
+    <template #display>
+      <div
+        v-if="getCurrentProject"
+        class="project-switcher__label"
+      >
+        <div class="project-switcher__label-text">
+          {{ getCurrentProject.name }}
+        </div>
+        <svg-icon
+          icon-class="dropdown"
+          class="project-switcher__label-icon"
+        />
       </div>
       <span v-else>Nae</span>
     </template>
@@ -36,7 +40,7 @@ export default {
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     ...mapGetters('scheduleSetting', ['getCurrentProject']),
-    ...mapState('scheduleSetting', ['scheduleProjectId', 'scheduleProjects']),
+    ...mapState('scheduleSetting', ['scheduleProjectId', 'scheduleProjects'])
   },
   methods: {
     switchProject (projectId) {
@@ -45,11 +49,12 @@ export default {
 
       this.$store.commit('updateAppLoadingStatus', true)
       this.$store.commit('scheduleSetting/setCurrentProjectId', projectId)
-      this.$router.push({ name: 'ScheduleProject',
+      this.$router.push({
+        name: 'ScheduleProject',
         params: {
-          'account_id': this.getCurrentAccountId,
-          'group_id': this.getCurrentGroupId,
-          'schedule_project_id': projectId
+          account_id: this.getCurrentAccountId,
+          group_id: this.getCurrentGroupId,
+          schedule_project_id: projectId
         }
       })
       // 因切換專案是同步行為，製造一點過場的感覺
@@ -83,6 +88,6 @@ export default {
       white-space: nowrap;
     }
   }
-  
+
 }
 </style>

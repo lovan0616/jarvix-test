@@ -5,11 +5,15 @@
         {{ $t('feature.createFeature') }}
       </div>
       <div class="feature-block">
-        <div class="block-title">{{ $t('editing.tableName') }}</div>
+        <div class="block-title">
+          {{ $t('editing.tableName') }}
+        </div>
         {{ currentDataFrameInfo.name }}
       </div>
       <div class="feature-block">
-        <div class="block-title">Step1: {{ $t('feature.featureColumnName') }}（{{ $t('editing.isRequired') }}）</div>
+        <div class="block-title">
+          Step1: {{ $t('feature.featureColumnName') }}（{{ $t('editing.isRequired') }}）
+        </div>
         <div class="input-block name">
           <input-block
             v-validate="`required|max:${max}`"
@@ -19,7 +23,9 @@
         </div>
       </div>
       <div class="feature-block">
-        <div class="block-title">Step2: {{ $t('feature.featureSetting') }}（{{ $t('editing.isRequired') }}）</div>
+        <div class="block-title">
+          Step2: {{ $t('feature.featureSetting') }}（{{ $t('editing.isRequired') }}）
+        </div>
         <div
           v-for="mode in operationTypeList"
           :key="mode.type"
@@ -68,53 +74,70 @@
             <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('feature.hint') }}:</span>{{ $t('feature.maxColumn', {number: 3}) }}</div>
           </div> -->
           <div class="setting">
-            <div class="rule">{{ $t('feature.value') }}: <span 
-              class="token value"
-              @click="setOption('numeric', null)"
-            >100</span></div>
-            <div class="rule">{{ $t('feature.columnValue') }}: <span 
-              class="token column"
-              @click="setOption('column', null)"
-            >“{{ $t('editing.columnName') }}”</span></div>
-            <div class="rule">{{ $t('feature.plus') }}: <span 
-              class="token operator"
-              @click="setOption('operator', '+')"
-            >+</span></div>
-            <div class="rule">{{ $t('feature.minus') }}: <span 
-              class="token operator"
-              @click="setOption('operator', '-')"
-            >-</span></div>
-            <div class="rule">{{ $t('feature.multiple') }}: <span 
-              class="token operator"
-              @click="setOption('operator', '*')"
-            >*</span></div>
-            <div class="rule">{{ $t('feature.divide') }}: <span 
-              class="token operator"
-              @click="setOption('operator', '/')"
-            >/</span></div>
+            <div class="rule">
+              {{ $t('feature.value') }}: <span
+                class="token value"
+                @click="setOption('numeric', null)"
+              >100</span>
+            </div>
+            <div class="rule">
+              {{ $t('feature.columnValue') }}: <span
+                class="token column"
+                @click="setOption('column', null)"
+              >“{{ $t('editing.columnName') }}”</span>
+            </div>
+            <div class="rule">
+              {{ $t('feature.plus') }}: <span
+                class="token operator"
+                @click="setOption('operator', '+')"
+              >+</span>
+            </div>
+            <div class="rule">
+              {{ $t('feature.minus') }}: <span
+                class="token operator"
+                @click="setOption('operator', '-')"
+              >-</span>
+            </div>
+            <div class="rule">
+              {{ $t('feature.multiple') }}: <span
+                class="token operator"
+                @click="setOption('operator', '*')"
+              >*</span>
+            </div>
+            <div class="rule">
+              {{ $t('feature.divide') }}: <span
+                class="token operator"
+                @click="setOption('operator', '/')"
+              >/</span>
+            </div>
           </div>
           <div class="setting last">
-            <div class="rule">{{ $t('feature.parentheses') }}: <span 
-              class="token bracket"
-              @click="setOption('operator', '(')"
-            >(</span><span 
-              class="token bracket"
-              @click="setOption('operator', ')')"
-            >)</span></div>
+            <div class="rule">
+              {{ $t('feature.parentheses') }}: <span
+                class="token bracket"
+                @click="setOption('operator', '(')"
+              >(</span><span
+                class="token bracket"
+                @click="setOption('operator', ')')"
+              >)</span>
+            </div>
           </div>
-          <div 
-            class="feature-input-block">
+          <div
+            class="feature-input-block"
+          >
             <div
               v-if="featureFormula[featureInfo.type].length === 0"
               class="placeholder"
-            >{{ $t('feature.inputPlaceholder') }}</div>
-            <draggable 
+            >
+              {{ $t('feature.inputPlaceholder') }}
+            </div>
+            <draggable
               v-model="featureFormula[featureInfo.type]"
               class="feature-container"
               @start="drag=true"
               @end="drag=false"
             >
-              <div 
+              <div
                 v-for="(element, index) in featureFormula[featureInfo.type]"
                 :key="index"
                 class="operator"
@@ -145,14 +168,15 @@
                 >
                   {{ element.value }}
                 </template>
-                <a 
-                  href="javascript:void(0)" 
+                <a
+                  href="javascript:void(0)"
                   class="delete-btn"
                   @click="removeOption(index)"
                 >
-                  <svg-icon 
-                    icon-class="close" 
-                    class="delete-icon"/>
+                  <svg-icon
+                    icon-class="close"
+                    class="delete-icon"
+                  />
                 </a>
               </div>
             </draggable>
@@ -163,28 +187,35 @@
             :msg-list="[$t('feature.chooseOptionHint')]"
           />
           <div class="setting">
-            <div class="rule">{{ $t('feature.columnValue') }}: <span 
-              class="token column"
-              @click="setOption('column', null)"
-            >“{{ $t('editing.columnName') }}”</span></div>
-            <div class="rule">{{ $t('feature.minus') }}: <span 
-              class="token operator"
-              @click="setOption('operator', '-')"
-            >-</span></div>
+            <div class="rule">
+              {{ $t('feature.columnValue') }}: <span
+                class="token column"
+                @click="setOption('column', null)"
+              >“{{ $t('editing.columnName') }}”</span>
+            </div>
+            <div class="rule">
+              {{ $t('feature.minus') }}: <span
+                class="token operator"
+                @click="setOption('operator', '-')"
+              >-</span>
+            </div>
           </div>
-          <div 
-            class="feature-input-block">
+          <div
+            class="feature-input-block"
+          >
             <div
               v-if="featureFormula[featureInfo.type].length === 0"
               class="placeholder"
-            >{{ $t('feature.datetimeInputPlaceholder') }}</div>
-            <draggable 
+            >
+              {{ $t('feature.datetimeInputPlaceholder') }}
+            </div>
+            <draggable
               v-model="featureFormula[featureInfo.type]"
               class="feature-container"
               @start="drag=true"
               @end="drag=false"
             >
-              <div 
+              <div
                 v-for="(element, index) in featureFormula[featureInfo.type]"
                 :key="index"
                 class="operator"
@@ -215,14 +246,15 @@
                 >
                   {{ element.value }}
                 </template>
-                <a 
-                  href="javascript:void(0)" 
+                <a
+                  href="javascript:void(0)"
                   class="delete-btn"
                   @click="removeOption(index)"
                 >
-                  <svg-icon 
-                    icon-class="close" 
-                    class="delete-icon"/>
+                  <svg-icon
+                    icon-class="close"
+                    class="delete-icon"
+                  />
                 </a>
               </div>
             </draggable>
@@ -237,26 +269,31 @@
                 :placeholder="$t('editing.defaultOption')"
                 :class="{'has-error': errors.has('timeScope')}"
                 class="time-scope-select"
-                name="timeScope"/>
-              <div 
+                name="timeScope"
+              />
+              <div
                 v-show="errors.has('timeScope')"
                 class="error-text"
-              >{{ errors.first('timeScope') }}</div>
+              >
+                {{ errors.first('timeScope') }}
+              </div>
             </div>
           </div>
         </template>
       </div>
       <div class="button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelEdit"
-        >{{ $t('button.cancel') }}</button>
+        >
+          {{ $t('button.cancel') }}
+        </button>
         <button
           :disabled="isProcessing"
           class="btn btn-default"
           @click="saveFeature"
         >
-          <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-if="isProcessing"><svg-icon icon-class="spinner" />{{ $t('button.processing') }}</span>
           <span v-else-if="isUpdateMode">{{ $t('button.save') }}</span>
           <span v-else>{{ $t('button.create') }}</span>
         </button>
@@ -289,7 +326,7 @@ export default {
     },
     currentDataFrameInfo: {
       type: Object,
-      default: () => { 
+      default: () => {
         return {
           name: '',
           value: null
@@ -328,7 +365,7 @@ export default {
         {
           type: 'DATETIME',
           name: this.$t('feature.datetimeOperation')
-        },
+        }
       ],
       featureSettingTimeScopeUnitOptionList: [
         { value: 'Second', name: this.$t('timeScopeUnit.second') },
@@ -353,8 +390,8 @@ export default {
       this.dataSourceId = this.editFeatureInfo.dataSourceId
     } else {
       this.featureInfo.dataFrameId = this.currentDataFrameInfo.value
-      this.getDataFrameColumnInfo (this.featureInfo.dataFrameId)
-    } 
+      this.getDataFrameColumnInfo(this.featureInfo.dataFrameId)
+    }
   },
   methods: {
     getDataFrameColumnInfo (value) {
@@ -392,15 +429,11 @@ export default {
       let validateMsg = ''
       const columnList = this.featureFormula[this.featureInfo.type].filter(element => element.type === 'column')
       const numericList = this.featureFormula[this.featureInfo.type].filter(element => element.type === 'numeric')
-      if(columnList.some(element => element.value === null))
-        validateMsg = this.$t('message.emptyDataColumn')
-      if(columnList.length == 0)
-        validateMsg = this.$t('message.emptyColumn')
-      if(this.featureFormula[this.featureInfo.type].length == 0)
-        validateMsg = this.$t('message.emptyFeatureFormula')
-      if (numericList.some(element => element.value === null || element.value === ''))
-        validateMsg = this.$t('message.emptyNumeric')
-      if(validateMsg) {
+      if (columnList.some(element => element.value === null)) { validateMsg = this.$t('message.emptyDataColumn') }
+      if (columnList.length == 0) { validateMsg = this.$t('message.emptyColumn') }
+      if (this.featureFormula[this.featureInfo.type].length == 0) { validateMsg = this.$t('message.emptyFeatureFormula') }
+      if (numericList.some(element => element.value === null || element.value === '')) { validateMsg = this.$t('message.emptyNumeric') }
+      if (validateMsg) {
         Message({
           message: validateMsg,
           type: 'error',
@@ -429,7 +462,7 @@ export default {
             this.isProcessing = false
             return
           }
-          if(this.featureInfo.type === 'NUMERIC') this.featureInfo.timeScope = null
+          if (this.featureInfo.type === 'NUMERIC') this.featureInfo.timeScope = null
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           this.isProcessing = true
           promise.then(() => {

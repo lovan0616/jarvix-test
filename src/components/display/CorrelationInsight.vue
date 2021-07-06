@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="correlation-insight"
     v-html="textTransform(info)"
   />

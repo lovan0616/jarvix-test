@@ -1,9 +1,9 @@
 <template>
-  <div 
+  <div
     :class="{'has-error': errors.has(name)}"
     class="input-block"
   >
-    <input 
+    <input
       :class="{valid: inputValue !== null && inputValue !== '' }"
       :type="type"
       :placeholder="placeholder"
@@ -12,13 +12,16 @@
       :disabled="disabled"
       class="input"
     >
-    <label 
-      :for="name" 
-      class="placeholder">{{ label }}</label>
-    <div 
+    <label
+      :for="name"
+      class="placeholder"
+    >{{ label }}</label>
+    <div
       v-show="errors.has(name)"
       class="error-text"
-    >{{ errors.first(name) }}</div>
+    >
+      {{ errors.first(name) }}
+    </div>
   </div>
 </template>
 <script>

@@ -1,6 +1,6 @@
 <template>
   <ul class="list">
-    <spinner 
+    <spinner
       v-if="isLoading"
       class="list__spinner"
       size="50"
@@ -14,17 +14,19 @@
         @click="log.relatedDashboardId ? warningLogTriggered(log) : null"
       >
         <div class="list__item--left">
-          <svg-icon 
-            icon-class="alert" 
-            class="list__item-icon"/>
+          <svg-icon
+            icon-class="alert"
+            class="list__item-icon"
+          />
         </div>
         <div class="list__item--right">
           <div class="list__item-title">
             {{ log.conditionName }}
           </div>
-          <div 
-            class="list__item-sub-title" 
-            v-html="log.conditionMetMessage"/>
+          <div
+            class="list__item-sub-title"
+            v-html="log.conditionMetMessage"
+          />
           <div class="list__item-description">
             {{ log.createDate | convertTimeStamp }}
           </div>
@@ -32,7 +34,9 @@
       </li>
     </template>
     <template v-else>
-      <div class="empty-text">{{ $t('alert.emptyLogs') }}</div>
+      <div class="empty-text">
+        {{ $t('alert.emptyLogs') }}
+      </div>
     </template>
   </ul>
 </template>
@@ -50,7 +54,7 @@ export default {
     },
     isEditMode: {
       type: Boolean,
-      default: false,
+      default: false
     }
   },
   data () {
@@ -62,7 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapGetters('userManagement', ['getCurrentGroupId'])
   },
   created () {
     this.init()
@@ -92,7 +96,7 @@ export default {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
             ...log,
-            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null,
+            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null
           }
         })
       })
@@ -137,7 +141,7 @@ export default {
                 dataType: monitoredDateRange[0].dataType,
                 end: monitoredDateRange[0].end,
                 start: monitoredDateRange[0].start,
-                statsType: monitoredDateRange[0].statsType,
+                statsType: monitoredDateRange[0].statsType
               }
             })
           ]

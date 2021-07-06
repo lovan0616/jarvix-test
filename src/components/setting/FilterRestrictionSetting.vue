@@ -1,9 +1,10 @@
 <template>
   <div class="restriction-setting">
     <div
-      class="restriction-setting__back-icon" 
-      @click="backToPreviousPage">
-      <svg-icon icon-class="arrow-left"/>
+      class="restriction-setting__back-icon"
+      @click="backToPreviousPage"
+    >
+      <svg-icon icon-class="arrow-left" />
       {{ $t('dataFrameAdvanceSetting.filterCriteria') }}
     </div>
     <div class="restriction-setting__header">
@@ -19,20 +20,22 @@
       type="button"
       class="btn-m btn-outline add-restriction-btn"
       @click="addRestraint"
-    ><span>
-      <svg-icon icon-class="plus" />
-      {{ $t('dataFrameAdvanceSetting.addRestriction') }}
-    </span>
+    >
+      <span>
+        <svg-icon icon-class="plus" />
+        {{ $t('dataFrameAdvanceSetting.addRestriction') }}
+      </span>
     </button>
     <div class="restriction-setting__content">
-      <div 
-        v-if="tempRestrictionList.length === 0" 
-        class="empty-message">
+      <div
+        v-if="tempRestrictionList.length === 0"
+        class="empty-message"
+      >
         {{ $t('dataFrameAdvanceSetting.noRestrictionYet') }}
       </div>
       <template v-else>
-        <single-restraint-block 
-          v-for="(restraint, index) in tempRestrictionList" 
+        <single-restraint-block
+          v-for="(restraint, index) in tempRestrictionList"
           :key="index"
           :index="index + 1"
           :restraint="restraint"
@@ -99,12 +102,9 @@ export default {
     },
     deleteRestraint (index) {
       this.tempRestrictionList.splice(index, 1)
-      if(this.tempRestrictionList.length === 0)
-        this.$emit('empty-restraint')
-      else
-        this.$emit('updated:restriction', this.tempRestrictionList)
+      if (this.tempRestrictionList.length === 0) { this.$emit('empty-restraint') } else { this.$emit('updated:restriction', this.tempRestrictionList) }
     }
-  },
+  }
 }
 </script>
 

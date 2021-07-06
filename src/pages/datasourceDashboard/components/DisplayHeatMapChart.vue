@@ -38,13 +38,13 @@ export default {
       type: Object,
       default: null
     },
-    height: {type: String, default: '550px'},
-    width: {type: String, default: '100%'}
+    height: { type: String, default: '550px' },
+    width: { type: String, default: '100%' }
   },
   data () {
     echartAddon.mapping({
       'seriesItem:heatmap': {
-        'large': true
+        large: true
       },
       'grid:default': {},
       'xAxis:default': {},
@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     options () {
-      const {tooltip} = JSON.parse(JSON.stringify(commonChartOptions()))
+      const { tooltip } = JSON.parse(JSON.stringify(commonChartOptions()))
       const config = {
         ...this.addonOptions,
         tooltip: {
@@ -67,8 +67,8 @@ export default {
           trigger: 'item',
           position: 'top',
           formatter (params) {
-            if (!params || !params['value']) return
-            return `${i18n.t('resultDescription.degreeOfCorrelation')}: ${params['value'][2]}<br>${params['value'][0]}, ${params['value'][1]}`
+            if (!params || !params.value) return
+            return `${i18n.t('resultDescription.degreeOfCorrelation')}: ${params.value[2]}<br>${params.value[0]}, ${params.value[1]}`
           }
         },
         grid: {

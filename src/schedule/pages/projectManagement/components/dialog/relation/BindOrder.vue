@@ -13,19 +13,23 @@
         <button
           :disabled="isChecking"
           class="btn btn-default"
-          @click="check">
-          <spinner 
-            v-show="isChecking" 
-            size="10"/>
+          @click="check"
+        >
+          <spinner
+            v-show="isChecking"
+            size="10"
+          />
           {{ $t('schedule.binding.check') }}
         </button>
         <button
           :disabled="!checkedResult.bindable || isBinding"
           class="btn btn-default"
-          @click="bind">
-          <spinner 
-            v-show="isBinding" 
-            size="10"/>
+          @click="bind"
+        >
+          <spinner
+            v-show="isBinding"
+            size="10"
+          />
           {{ $t('schedule.binding.bind') }}
         </button>
       </div>
@@ -35,10 +39,11 @@
         <span class="field-label">{{ $t('schedule.project.orderOrJobInfo') }}</span>
         <spinner
           v-if="isLoadingDataFrames"
-          :title="$t('editing.dataDownloading')" 
-          class="dataframe-loading-spinner" 
-          size="10"/>
-        <default-select 
+          :title="$t('editing.dataDownloading')"
+          class="dataframe-loading-spinner"
+          size="10"
+        />
+        <default-select
           v-else
           v-model="innerFormData"
           :options="dataFrameOptions"
@@ -146,7 +151,7 @@ export default {
             this.checkedResult.applicableRowCount = res.available
             this.checkedResult.notApplicableRowCount = res.notApplicableRowIndexes.length
           }
-          
+
           if (!this.resultHandler.hasError(this.checkedResult)) {
             Message({
               message: this.$t('schedule.binding.allOrderDataIsValid'),
@@ -160,7 +165,7 @@ export default {
         .catch(error => {
           if (error.hasOwnProperty('headerErrorMessage')) {
             this.checkedResult.headerErrorMessage = error.headerErrorMessage
-          } 
+          }
         })
         .finally(() => this.isChecking = false)
     },
@@ -194,7 +199,7 @@ export default {
       }
 
       this.isUnbinding = true
-      unbindOrder (this.scheduleProjectId)
+      unbindOrder(this.scheduleProjectId)
         .then(() => {
           Message({
             message: this.$t('schedule.binding.successfullyUnbindOrder'),

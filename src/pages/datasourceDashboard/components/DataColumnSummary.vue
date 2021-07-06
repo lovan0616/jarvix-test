@@ -21,7 +21,8 @@
               :popper-class="'column-summary__tooltip'"
               :visible-arrow="false"
               :content="`${name}`"
-              placement="bottom-start">
+              placement="bottom-start"
+            >
               <span>{{ name }}</span>
             </el-tooltip>
           </div>
@@ -31,7 +32,8 @@
               :enterable="false"
               :visible-arrow="false"
               :popper-class="'column-summary__tooltip'"
-              placement="bottom-start">
+              placement="bottom-start"
+            >
               <template slot="content">
                 <span v-if="typeof value === 'string'">{{ value }}</span>
                 <span v-else>{{ value.start + '-' }}<br>{{ value.end }}</span>
@@ -95,8 +97,8 @@ export default {
           const showLargestValue = largestValue || largestValue === ''
           const showSecondaryValue = secondaryValue || secondaryValue === ''
           return {
-            ...(showLargestValue && {[largestValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(largestValueCount / totlaRowsWithData)}),
-            ...(showSecondaryValue && {[secondaryValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(secondaryValueCount / totlaRowsWithData)}),
+            ...(showLargestValue && { [largestValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(largestValueCount / totlaRowsWithData) }),
+            ...(showSecondaryValue && { [secondaryValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(secondaryValueCount / totlaRowsWithData) }),
             [this.$t('columnSummary.distinctCount')]: `${this.formatComma(this.summaryData.distinct_count)} ${this.$t('columnSummary.record')}`
           }
         }
@@ -118,16 +120,16 @@ export default {
             false_count: falseCount
           } = this.summaryData.boolean_stats_meta
           return {
-            'True': this.formatPercentage(trueCount / this.summaryData.total_count),
-            'False': this.formatPercentage(falseCount / this.summaryData.total_count)
+            True: this.formatPercentage(trueCount / this.summaryData.total_count),
+            False: this.formatPercentage(falseCount / this.summaryData.total_count)
           }
         }
         case 'NUMERIC': {
-          const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
+          const { avg, sum, stdev } = this.summaryData.numeric_stats_meta
           return {
-            [this.$t(`columnSummary.avg`)]: this.formatNumeric(avg),
-            [this.$t(`columnSummary.sum`)]: this.formatNumeric(sum),
-            [this.$t(`columnSummary.stdev`)]: this.formatNumeric(stdev)
+            [this.$t('columnSummary.avg')]: this.formatNumeric(avg),
+            [this.$t('columnSummary.sum')]: this.formatNumeric(sum),
+            [this.$t('columnSummary.stdev')]: this.formatNumeric(stdev)
           }
         }
       }
@@ -137,8 +139,8 @@ export default {
       const constValue = this.summaryData.constant
       const showConst = constValue || constValue === ''
       return {
-        ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.total_count)}),
-        ...(showConst && {[this.$t(`columnSummary.const`)]: this.summaryData.constant || `(${this.$t('columnSummary.emptyString')})`})
+        ...(nullPercentage && { Null: this.formatPercentage(this.summaryData.null_count / this.summaryData.total_count) }),
+        ...(showConst && { [this.$t('columnSummary.const')]: this.summaryData.constant || `(${this.$t('columnSummary.emptyString')})` })
       }
     }
   },

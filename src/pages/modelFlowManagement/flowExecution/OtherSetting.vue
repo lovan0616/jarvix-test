@@ -1,6 +1,8 @@
 <template>
   <div class="content-setting-dialog">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="3"
     />
@@ -35,16 +37,19 @@
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="isProcessing"
           class="btn btn-default"
           @click="build"
         >
           <span v-if="isProcessing">
-            <svg-icon 
-              v-if="isProcessing" 
-              icon-class="spinner"/>
+            <svg-icon
+              v-if="isProcessing"
+              icon-class="spinner"
+            />
             {{ $t('button.processing') }}
           </span>
           <span v-else>{{ $t('button.build') }}</span>
@@ -68,7 +73,7 @@ export default {
       isProcessing: false,
       updateMode: 'MANUAL',
       updateStatusList: [
-				{
+        {
           type: 'MANUAL',
           name: this.$t('modelFlow.triggerTypes.manual')
         },
@@ -76,11 +81,11 @@ export default {
           type: 'AUTOMATIC',
           name: this.$t('modelFlow.triggerTypes.automatic')
         }
-			]
+      ]
     }
   },
   computed: {
-    ...mapState('modelFlowManagement', ['currentUploadFlowInfo']),
+    ...mapState('modelFlowManagement', ['currentUploadFlowInfo'])
   },
   mounted () {
     this.fetchData()

@@ -1,9 +1,10 @@
 <template>
   <div class="wrapper">
     <main class="main">
-      <transition 
-        name="fade" 
-        mode="out-in">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <router-view />
       </transition>
     </main>

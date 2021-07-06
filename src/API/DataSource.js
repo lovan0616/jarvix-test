@@ -67,7 +67,7 @@ export function renameDataSourceById (dataSourceId, name) {
  * @param {Number} dataSourceId - 資料源 ID
  * @param {Array} columns - 篩選的欄位(帶入勾選的選項, 全部選為 null, 都沒選為 [])
  */
-export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns = null, restrictions) {
+export function getDataSourceColumnInfoById (dataSourceId, dataFrameId, columns = null, restrictions) {
   return request({
     url: `/datasources/${dataSourceId}/dataColumns/name/search`,
     method: 'POST',
@@ -86,7 +86,7 @@ export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns =
  * @param {Number} dataSourceId - 資料源 ID
  * @param {Array} columns - 篩選的欄位(帶入勾選的選項, 全部選為 null, 都沒選為 [])
  */
-export function getDataSourceDataValueById(dataSourceId, dataFrameId, columns = null, restrictions, size = 50) {
+export function getDataSourceDataValueById (dataSourceId, dataFrameId, columns = null, restrictions, size = 50) {
   return request({
     url: `/datasources/${dataSourceId}/dataValue/search`,
     method: 'POST',
@@ -119,7 +119,7 @@ export function getDataFrameById (dataSourceId, getAllState = false) {
  * get data of dataframe by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameData(dataFrameId, selectedColumnList, restrictions, page = 0, cancelToken) {
+export function getDataFrameData (dataFrameId, selectedColumnList, restrictions, page = 0, cancelToken) {
   // FIXME just default a big size, doesn't implement with pagination
   return request({
     url: `/dataFrame/${dataFrameId}/data/search`,
@@ -154,7 +154,7 @@ export function deleteDataFrameById (dataFrameId) {
  * @param {Boolean} hasAliasLimit - true: get one primary alias, false: get all alias
  * @param {Boolean} hasBlockClustering - whether to filter out clustering columns
  */
-export function getDataFrameColumnInfoById(dataFrameId, hasFeature = true, hasAliasLimit = true, hasBlockClustering = false, includePrimaryKey = true) {
+export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true, hasAliasLimit = true, hasBlockClustering = false, includePrimaryKey = true) {
   return request({
     url: `/dataColumn/dataFrame/${dataFrameId}`,
     method: 'GET',
@@ -175,7 +175,7 @@ export function getDataFrameColumnInfoById(dataFrameId, hasFeature = true, hasAl
  */
 export function patchDataColumnPrimaryAlias (dataColumn) {
   return request({
-    url: `/dataColumn/display-alias`,
+    url: '/dataColumn/display-alias',
     method: 'PATCH',
     data: dataColumn
   })
@@ -185,7 +185,7 @@ export function patchDataColumnPrimaryAlias (dataColumn) {
  * delete dataColumn by id
  * @param {Number} dataColumnId - id
  */
-export function deleteDataColumnById(dataColumnId) {
+export function deleteDataColumnById (dataColumnId) {
   return request({
     url: `/dataColumn/clustering-columns/${dataColumnId}  `,
     method: 'DELETE'
@@ -196,7 +196,7 @@ export function deleteDataColumnById(dataColumnId) {
  * fuzzy search dataColumn value by id
  * @param {Number} dataColumnId - id
  */
-export function dataValueSearch(dataColumnId, searchInfo) {
+export function dataValueSearch (dataColumnId, searchInfo) {
   return request({
     url: `/dataColumn/${dataColumnId}/dataValue-search`,
     method: 'POST',
@@ -214,7 +214,7 @@ export function dataValueSearch(dataColumnId, searchInfo) {
  * @param {Number} dataColumnId - id
  * @param {String} searchString - query
  */
-export function getDataColumnValue(dataColumnId) {
+export function getDataColumnValue (dataColumnId) {
   return request({
     url: `/dataColumn/${dataColumnId}/value-and-alias`,
     method: 'GET'
@@ -230,7 +230,7 @@ export function getDataColumnValue(dataColumnId) {
  */
 export function updateDataFrameAlias (userEditedInput) {
   return request({
-    url: `/datasources/userEdited`,
+    url: '/datasources/userEdited',
     method: 'POST',
     data: userEditedInput
   })
@@ -242,7 +242,7 @@ export function updateDataFrameAlias (userEditedInput) {
  */
 export function getDataFrameRelationById (dataSourceId) {
   return request({
-    url: `/dataFrame/relation`,
+    url: '/dataFrame/relation',
     method: 'GET',
     params: {
       dataSourceId
@@ -258,7 +258,7 @@ export function getDataFrameRelationById (dataSourceId) {
  */
 export function saveDataFrameRelation (inputData) {
   return request({
-    url: `/dataFrame/relation`,
+    url: '/dataFrame/relation',
     method: 'POST',
     data: inputData
   })
@@ -343,7 +343,7 @@ export function setMainDateTimeColumn (dataFrameId, dataColumnData) {
  */
 export function dataPreprocessor (data) {
   return request({
-    url: `/data/preprocessor`,
+    url: '/data/preprocessor',
     method: 'POST',
     data
   })
@@ -354,7 +354,7 @@ export function dataPreprocessor (data) {
  */
 export function dataRepreprocessor (data) {
   return request({
-    url: `/data/repreprocessor`,
+    url: '/data/repreprocessor',
     method: 'POST',
     data
   })
@@ -363,7 +363,7 @@ export function dataRepreprocessor (data) {
 /*
  * Dataframe column summary
  */
-export function dataFrameColumnSummary(dataFrameId, selectedColumnList, restrictions, cancelToken) {
+export function dataFrameColumnSummary (dataFrameId, selectedColumnList, restrictions, cancelToken) {
   return request({
     url: `/dataFrame/${dataFrameId}/summary/search`,
     method: 'POST',
@@ -379,7 +379,7 @@ export function dataFrameColumnSummary(dataFrameId, selectedColumnList, restrict
  * get column correlation matrix
  * @param {Number} dataFrameId - 欲查閱的資料表 ID
  */
-export function getColumnCorrelationMatrix(dataFrameId, selectedColumnList, restrictions) {
+export function getColumnCorrelationMatrix (dataFrameId, selectedColumnList, restrictions) {
   return request({
     url: `/dataFrame/${dataFrameId}/relationMatrix/search`,
     method: 'POST',
@@ -405,7 +405,7 @@ export function getDataFrameEtlSetting (dataFrameId) {
  * get batch load setting
  * @param {Number} dataFrameId - 欲查閱的資料表 ID
  */
-export function getBatchLoadSetting(dataFrameId) {
+export function getBatchLoadSetting (dataFrameId) {
   return request({
     url: `/dataFrame/${dataFrameId}/crontab/config`,
     method: 'GET'
@@ -417,7 +417,7 @@ export function getBatchLoadSetting(dataFrameId) {
  * @param {Number} dataFrameId - 欲設定的資料表 ID
  * @param {Object} data - 送給後端的設定資料
  */
-export function setBatchLoad(dataFrameId, data) {
+export function setBatchLoad (dataFrameId, data) {
   return request({
     url: `/dataFrame/${dataFrameId}/crontab/config`,
     method: 'POST',
@@ -430,7 +430,7 @@ export function setBatchLoad(dataFrameId, data) {
  * @param {Number} dataFrameId - 欲更新的資料表 ID
  * @param {Object} data - 送給後端的設定資料
  */
-export function updateBatchLoadSetting(dataFrameId, data) {
+export function updateBatchLoadSetting (dataFrameId, data) {
   return request({
     url: `/dataFrame/${dataFrameId}/crontab/config`,
     method: 'PUT',
@@ -443,7 +443,7 @@ export function updateBatchLoadSetting(dataFrameId, data) {
  * @param {Number} dataFrameId - 欲更新的資料表 ID
  * @param {Object} status - 是否啟動設定
  */
-export function changeBatchLoadSettingStatus(dataFrameId, status = 'Disable') {
+export function changeBatchLoadSettingStatus (dataFrameId, status = 'Disable') {
   return request({
     url: `/dataFrame/${dataFrameId}/crontab/config/status`,
     method: 'PATCH',
@@ -457,7 +457,7 @@ export function changeBatchLoadSettingStatus(dataFrameId, status = 'Disable') {
  * trigger calculated data summary and relation matrix
  * @param {Number} dataFrameId - 欲計算的資料表 ID
  */
-export function triggerColumnDataCalculation(dataFrameId, restrictions) {
+export function triggerColumnDataCalculation (dataFrameId, restrictions) {
   return request({
     url: `/dataFrame/${dataFrameId}/calculated/data/trigger`,
     method: 'POST',
@@ -494,7 +494,7 @@ export function updateDataUpdateSetting (dataFrameId, settingData) {
  * 取得dataFrame DB連線資訊
  * @param {Number} dataFrameId - 欲查閱的資料表 ID
  */
-export function getDataFrameCreatedInfo(dataFrameId) {
+export function getDataFrameCreatedInfo (dataFrameId) {
   return request({
     url: `/dataFrame/${dataFrameId}/advanced/info`,
     method: 'GET'
@@ -509,7 +509,7 @@ export function getDataFrameCreatedInfo(dataFrameId) {
  */
 export function saveClusteringColumn (data) {
   return request({
-    url: `/dataColumn/clustering-columns`,
+    url: '/dataColumn/clustering-columns',
     method: 'POST',
     data
   })
@@ -540,9 +540,9 @@ export function reCalculateMetaData (dataFrameId) {
  * update numeric column ordinal setting
  * @param {Object} data - 欄位設定資料
  */
-export function updateColumnOrdinality(data) {
+export function updateColumnOrdinality (data) {
   return request({
-    url: `/dataColumn/ordinality`,
+    url: '/dataColumn/ordinality',
     method: 'PUT',
     data
   })

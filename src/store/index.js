@@ -45,10 +45,10 @@ export default new Vuex.Store({
     updateAskHelperStatus (state, data) {
       state.isShowAskHelper = data
     },
-    updateSideNavStatus(state, data) {
+    updateSideNavStatus (state, data) {
       state.isShowFullSideNav = data
     },
-    updateAppLoadingStatus(state, data) {
+    updateAppLoadingStatus (state, data) {
       state.isAppLoading = data
     }
   }

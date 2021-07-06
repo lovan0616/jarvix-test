@@ -2,17 +2,20 @@
   <section class="war-room-setting">
     <div class="war-room-setting__header">
       <div class="war-room-setting__title">
-        <svg-icon 
-          icon-class="filter" 
-          class="war-room-setting__header-icon"/>
+        <svg-icon
+          icon-class="filter"
+          class="war-room-setting__header-icon"
+        />
         {{ $t('warRoom.dataConstraint') }}
       </div>
       <span
         class="war-room-setting__close-icon"
-        @click="$emit('close')">
-        <svg-icon 
-          icon-class="close" 
-          class="war-room-setting__header-icon"/>
+        @click="$emit('close')"
+      >
+        <svg-icon
+          icon-class="close"
+          class="war-room-setting__header-icon"
+        />
       </span>
     </div>
     <section class="war-room-setting__content">
@@ -28,7 +31,9 @@
             v-if="convertedSelectedColumns === null"
             class="war-room-setting__filter"
           >
-            <div class="war-room-setting__filter-title">{{ $t('warRoom.allColumns') }} </div>
+            <div class="war-room-setting__filter-title">
+              {{ $t('warRoom.allColumns') }}
+            </div>
           </div>
           <template v-else>
             <div
@@ -36,7 +41,9 @@
               :key="index"
               class="war-room-setting__filter"
             >
-              <div class="war-room-setting__filter-title">{{ column }}</div>
+              <div class="war-room-setting__filter-title">
+                {{ column }}
+              </div>
             </div>
           </template>
         </div>
@@ -78,53 +85,53 @@ export default {
   },
   data () {
     return {
-      dummySelectedColumns:[
-        "速度1","壓切_位切","時3","料溫4","壓1","時2","壓3","模溫","料溫1","料溫2","料溫3","Flatness R1_1","Flatness R1_3","Flatness R1_7","Flatness R1_9","Flatness R2_1","Flatness R2_3","Flatness R2_7","Flatness R2_9","Profile_R1_1","Profile_R1_3","Profile_R1_7","Profile_R1_9","Profile_R2_1","Profile_R2_3","Profile_R2_7","Profile_R2_9","產品"
+      dummySelectedColumns: [
+        '速度1', '壓切_位切', '時3', '料溫4', '壓1', '時2', '壓3', '模溫', '料溫1', '料溫2', '料溫3', 'Flatness R1_1', 'Flatness R1_3', 'Flatness R1_7', 'Flatness R1_9', 'Flatness R2_1', 'Flatness R2_3', 'Flatness R2_7', 'Flatness R2_9', 'Profile_R1_1', 'Profile_R1_3', 'Profile_R1_7', 'Profile_R1_9', 'Profile_R2_1', 'Profile_R2_3', 'Profile_R2_7', 'Profile_R2_9', '產品'
       ],
       dummyRestriction: [
-      [
-        {
-          "type": "range",
-          "properties": {
-            "dc_id": null,
-            "dc_name": "revenue",
-            "data_type": "int",
-            "start": "189.6331197097944",
-            "end": "2302.7828174123338",
-            "datavalues": null
-          },
-          "restraints": null
-        }
-      ],
-      [
-        {
-          "type": "range",
-          "properties": {
-            "dc_id": null,
-            "dc_name": "cost",
-            "data_type": "int",
-            "start": "595.5589694860814",
-            "end": "934.4502168094219",
-            "datavalues": null
-          },
-          "restraints": null
-        }
-      ],
-      [
-        {
-          "type": "range",
-          "properties": {
-            "dc_id": null,
-            "dc_name": "cost",
-            "data_type": "int",
-            "start": "642.859483404711",
-            "end": "668.5892210920771",
-            "datavalues": null
-          },
-          "restraints": null
-        }
+        [
+          {
+            type: 'range',
+            properties: {
+              dc_id: null,
+              dc_name: 'revenue',
+              data_type: 'int',
+              start: '189.6331197097944',
+              end: '2302.7828174123338',
+              datavalues: null
+            },
+            restraints: null
+          }
+        ],
+        [
+          {
+            type: 'range',
+            properties: {
+              dc_id: null,
+              dc_name: 'cost',
+              data_type: 'int',
+              start: '595.5589694860814',
+              end: '934.4502168094219',
+              datavalues: null
+            },
+            restraints: null
+          }
+        ],
+        [
+          {
+            type: 'range',
+            properties: {
+              dc_id: null,
+              dc_name: 'cost',
+              data_type: 'int',
+              start: '642.859483404711',
+              end: '668.5892210920771',
+              datavalues: null
+            },
+            restraints: null
+          }
+        ]
       ]
-    ]
     }
   },
   computed: {

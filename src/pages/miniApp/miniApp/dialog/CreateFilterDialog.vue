@@ -3,13 +3,13 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ title }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
-      <!-- <spinner 
+      <!-- <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         size="50"
@@ -23,7 +23,7 @@
           <div class="input-field">
             <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
             <div class="input-field__input">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="dataSourceOptionList"
                 :placeholder="$t('miniApp.chooseDataSource')"
@@ -34,16 +34,18 @@
                 name="dataSourceId"
                 @change="fetchDataFrameList"
               />
-              <div 
+              <div
                 v-show="errors.has('dataSourceId')"
                 class="error-text"
-              >{{ errors.first('dataSourceId') }}</div>
+              >
+                {{ errors.first('dataSourceId') }}
+              </div>
             </div>
           </div>
           <div class="input-field">
             <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
             <div class="input-field__input">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="dataFrameOptionList"
                 :placeholder="$t('miniApp.chooseDataFrame')"
@@ -54,10 +56,12 @@
                 name="dataFrameId"
                 @change="fetchDataColumnList"
               />
-              <div 
+              <div
                 v-show="errors.has('dataFrameId')"
                 class="error-text"
-              >{{ errors.first('dataFrameId') }}</div>
+              >
+                {{ errors.first('dataFrameId') }}
+              </div>
             </div>
           </div>
           <template v-if="selectedBasicInfo.dataFrameId">
@@ -67,9 +71,10 @@
                   <div class="card__wrapper-title--left">
                     {{ $t('miniApp.filterConditions') }}
                   </div>
-                  <div 
-                    v-if="isHierarchicalFilter" 
-                    class="card__wrapper-title--right">
+                  <div
+                    v-if="isHierarchicalFilter"
+                    class="card__wrapper-title--right"
+                  >
                     *{{ $t('miniApp.conditionRelations') }}
                   </div>
                 </div>
@@ -90,14 +95,16 @@
                 class="btn btn-m btn-outline"
                 @click="addNewColumnCard()"
               >
-                <svg-icon 
-                  icon-class="plus" 
-                  class="icon" />{{ $t('button.add') }}
+                <svg-icon
+                  icon-class="plus"
+                  class="icon"
+                />{{ $t('button.add') }}
               </button>
             </template>
-            <div 
-              v-else 
-              class="input-field">
+            <div
+              v-else
+              class="input-field"
+            >
               <label class="input-field__label">{{ $t('miniApp.yAxisControllerColumns') }}</label>
               <div class="input-field__input">
                 <default-multi-select
@@ -112,24 +119,30 @@
                   name="yAxisController"
                   @input="updateYAxisControllerList"
                 />
-                <div 
+                <div
                   v-show="errors.has('yAxisController')"
                   class="error-text"
-                >{{ errors.first('yAxisController') }}</div>
+                >
+                  {{ errors.first('yAxisController') }}
+                </div>
               </div>
             </div>
           </template>
         </div>
         <div class="button__block">
-          <button 
+          <button
             class="btn btn-outline"
             @click="closeDialog"
-          >{{ $t('button.cancel') }}</button>
-          <button 
+          >
+            {{ $t('button.cancel') }}
+          </button>
+          <button
             :disabled="isProcessing"
             class="btn btn-default"
             @click="createFilter"
-          >{{ $t('button.save') }}</button>
+          >
+            {{ $t('button.save') }}
+          </button>
         </div>
       </template>
     </div>
@@ -143,8 +156,8 @@ import InputBlock from '@/components/InputBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SingleColumnCard from '@/components/card/SingleColumnCard'
 import { mapGetters } from 'vuex'
-import { 
-  getDataFrameById, 
+import {
+  getDataFrameById,
   getDataFrameColumnInfoById
 } from '@/API/DataSource'
 
@@ -171,7 +184,7 @@ export default {
       type: Boolean,
       default: false
     },
-    isYAxisController : {
+    isYAxisController: {
       type: Boolean,
       default: false
     },
@@ -187,10 +200,10 @@ export default {
         dataSourceId: null,
         dataSourceName: null,
         dataFrameId: null,
-        dataFrameName: null,
+        dataFrameName: null
       },
       singleFilterGeneralTemplate: {
-        id: null,        
+        id: null,
         dataSourceId: null,
         dataSourceName: null,
         dataFrameId: null,
@@ -216,7 +229,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataSource', ['dataSourceList']),
+    ...mapGetters('dataSource', ['dataSourceList'])
   },
   mounted () {
     this.fetchDataSourceList()
@@ -271,18 +284,18 @@ export default {
             ...cur,
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
-            originalName: cur.primaryAlias  || cur.name
+            originalName: cur.primaryAlias || cur.name
           })
           return acc
         }, [])
       })
-      .finally(() => this.isLoading = false)
+        .finally(() => this.isLoading = false)
       // 預先新增一個欄位選擇器
       if (!this.isYAxisController) this.addNewColumnCard()
     },
     isUnavailableOption (option) {
-      return this.isSingleChoiceFilter && option.statsType !== 'CATEGORY'
-        || this.isYAxisController && option.statsType !== 'NUMERIC'
+      return this.isSingleChoiceFilter && option.statsType !== 'CATEGORY' ||
+        this.isYAxisController && option.statsType !== 'NUMERIC'
     },
     addNewColumnCard () {
       this.filterInfoList.push({
@@ -291,13 +304,13 @@ export default {
         id: Date.now().toString()
       })
     },
-    removeColumnCard(cardId) {
+    removeColumnCard (cardId) {
       this.filterInfoList = this.filterInfoList.filter(filter => filter.id !== cardId)
     },
     closeDialog () {
       this.$emit('closeDialog')
     },
-    updateDataColumn(columnId, filterId) {
+    updateDataColumn (columnId, filterId) {
       const filterInfo = this.filterInfoList.find(filter => filter.id === filterId)
       const dataColumnInfo = this.dataColumnOptionList.find(column => column.id === columnId)
       filterInfo.dataType = dataColumnInfo.dataType
@@ -349,7 +362,7 @@ export default {
       font-size: 14px;
     }
   }
-  
+
   .setting-block {
     position: relative;
     padding: 24px;
@@ -391,7 +404,7 @@ export default {
       &:not(:last-of-type) {
         margin-bottom: 24px;
       }
-      
+
       &__multi-select {
         width: 100%;
       }
@@ -409,7 +422,7 @@ export default {
       &__input-wrapper {
         margin-top: 8px;
       }
-      
+
       .deletable-checkbox {
         display: flex;
         align-items: center;
@@ -485,7 +498,7 @@ export default {
           color: $theme-color-white;
         }
 
-        &__list { 
+        &__list {
           &:not(:last-child) {
             margin-bottom: 6px;
           }

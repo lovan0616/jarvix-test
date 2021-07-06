@@ -95,7 +95,7 @@ export default {
       delete chartAddon.legend
 
       // set histogram xAxis
-      chartAddon.xAxis = {...chartAddon.xAxis, ...histogramConfig.xAxis}
+      chartAddon.xAxis = { ...chartAddon.xAxis, ...histogramConfig.xAxis }
       chartAddon.xAxis.interval = interval
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
@@ -111,7 +111,7 @@ export default {
         }
       }
       // set histogram yAxis
-      chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
+      chartAddon.yAxis = { ...chartAddon.yAxis, ...histogramConfig.yAxis }
       chartAddon.yAxis.splitLine = { show: false }
       chartAddon.yAxis.axisLabel.show = false
 
@@ -161,7 +161,7 @@ export default {
         style: style
       }
     }
-  },
+  }
 }
 </script>
 

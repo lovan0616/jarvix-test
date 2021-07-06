@@ -149,7 +149,7 @@ Vue.mixin({
     },
     /* 去除浮點數計算 造成的長尾數 https://www.itread01.com/content/1545644704.html */
     displayFloat (num, precision = 12) {
-      return parseFloat(num.toPrecision(precision));
+      return parseFloat(num.toPrecision(precision))
     },
     timeToDate (time) {
       return moment(time).format('YYYY-MM-DD')
@@ -172,7 +172,7 @@ Vue.mixin({
         return moment.utc(time).add(2, 'month').format(format)
       }
 
-      if(timeScope === "WEEK") {
+      if (timeScope === 'WEEK') {
         /* 當一年最後一週跨到下一年
          * moment js 與後端回傳的 week 不同
          * EX: 2018-12-30(日)禮拜天落在 2018年第52週，但後端會傳 2019年第一週
@@ -186,39 +186,39 @@ Vue.mixin({
     },
     // 在使用 TimePicker 時，把後端的 timeScope 對印到 element-ui 的 type, format
     getDatePickerOptions (timeScope) {
-      switch(timeScope) {
-        case "SECOND":
-        case "MINUTE":
-        case "HOUR":
+      switch (timeScope) {
+        case 'SECOND':
+        case 'MINUTE':
+        case 'HOUR':
           return {
-            type: "datetime",
-            format: "yyyy-MM-dd HH:mm:ss"
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
           }
-        case "DAY":
+        case 'DAY':
           return {
-            type: "date",
-            format: "yyyy-MM-dd"
+            type: 'date',
+            format: 'yyyy-MM-dd'
           }
-        case "WEEK":
+        case 'WEEK':
           return {
-            type: "week",
-            format: "yyyy-W WW"
+            type: 'week',
+            format: 'yyyy-W WW'
           }
-        case "MONTH":
-        case "QUARTER":
+        case 'MONTH':
+        case 'QUARTER':
           return {
-            type: "month",
-            format: "yyyy-MM"
+            type: 'month',
+            format: 'yyyy-MM'
           }
-        case "YEAR":
+        case 'YEAR':
           return {
-            type: "year",
-            format: "yyyy"
+            type: 'year',
+            format: 'yyyy'
           }
         default:
           return {
-            type: "datetime",
-            format: "yyyy-MM-dd HH:mm:ss"
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss'
           }
       }
     },
@@ -353,7 +353,7 @@ Vue.mixin({
       switch (denotation) {
         case 'OVERVIEW':
           return { name: i18n.t('denotation.dataOverview'), icon: 'basic-info' }
-        case 'CLUSTERING': 
+        case 'CLUSTERING':
           return { name: i18n.t('denotation.clusteringAnalysis'), icon: 'clustering' }
         case 'CORRELATION_VERIFICATION':
           return { name: i18n.t('denotation.correlationAnalysis'), icon: 'correlation-analysis' }
@@ -504,7 +504,7 @@ Vue.mixin({
       * EX: 若同時有 aM, bK，只有單位是 aM 且和 maxValue 差不到十倍的要顯示到小數點後第 2 位
       *     若所有的單位都是 K，則全部和 maxValue 差不到十倍的 bK 都要顯示到小數點後第 2 位
       */
-      let lessThanTenTimes =  maxValue / num <= 10
+      let lessThanTenTimes = maxValue / num <= 10
       let numberFixedDigits = lessThanTenTimes ? 2 : 0
       return this.shortenNumber(num, numberFixedDigits)
     },
@@ -617,9 +617,9 @@ Vue.mixin({
     },
     fetchMiniAppActiveWarningConditions (settingData) {
       if (
-        !settingData.activate
-        || !settingData.conditions
-        || settingData.conditions.length === 0
+        !settingData.activate ||
+        !settingData.conditions ||
+        settingData.conditions.length === 0
       ) return Promise.resolve([])
 
       const appConditionIds = settingData.conditions.map(item => item.id)

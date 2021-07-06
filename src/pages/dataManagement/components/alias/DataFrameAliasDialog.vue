@@ -6,15 +6,16 @@
     @closeDialog="$emit('close')"
     @confirmBtn="createAlias"
   >
-    <spinner 
+    <spinner
       v-if="isSaving || isLoading"
       :title="getSpinnerTitle"
       class="layout-spinner"
       size="50"
     />
-    <div 
-      v-else 
-      class="dialog-container">
+    <div
+      v-else
+      class="dialog-container"
+    >
       <empty-info-block
         v-if="dataFrameAlias.length === 0"
         :msg="$t('editing.emptyDataFrameAlias')"
@@ -36,14 +37,16 @@
         <a
           href="javascript:void(0)"
           class="link remove"
-          @click="removeDataFrameAlias(index)">
+          @click="removeDataFrameAlias(index)"
+        >
           {{ $t('button.remove') }}
         </a>
       </div>
-      <button 
-        class="btn btn-secondary add" 
-        @click="addNewAlias">
-        <svg-icon icon-class="plus"/>
+      <button
+        class="btn btn-secondary add"
+        @click="addNewAlias"
+      >
+        <svg-icon icon-class="plus" />
         {{ $t('button.add') }}
       </button>
     </div>
@@ -139,7 +142,7 @@ export default {
         name: ''
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -21,18 +21,22 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div 
+          <div
             v-if="singleType.type === 'enum'"
             class="filter-description"
           >
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
-            <div 
+            <div class="column-name">
+              {{ singleType.properties.display_name }} =
+            </div>
+            <div
               v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
               :key="'enum-' + propertiesIndex"
               class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
+            >
+              {{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span>
+            </div>
           </div>
-          <div 
+          <div
             v-if="singleType.type === 'range'"
             class="region-description"
           >
@@ -108,7 +112,7 @@ export default {
   data () {
     echartAddon.mapping({
       'seriesItem:line': {
-        'large': true
+        large: true
       },
       'color:10': {},
       'grid:default': {},
@@ -196,7 +200,7 @@ export default {
           type: 'value',
           name: axis.display_name,
           nameTextStyle: {
-            color: chartVariable['textColor'],
+            color: chartVariable.textColor,
             align: index % 2 === 0 ? 'left' : 'right'
           },
           offset: Math.floor(index / 2) * 35,
@@ -259,9 +263,9 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { 
+            formatter (value) {
               let num = value.data[colIndex + 1]
-              return labelFormatter(num, maxValue[colIndex]) 
+              return labelFormatter(num, maxValue[colIndex])
             }
           }
         })

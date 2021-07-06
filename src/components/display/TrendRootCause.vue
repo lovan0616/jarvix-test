@@ -1,9 +1,11 @@
 <template>
-  <div 
+  <div
     v-if="info.length > 0"
     class="trend-root-cause"
   >
-    <div class="block-title">{{ $t('resultDescription.trendInsight') }}</div>
+    <div class="block-title">
+      {{ $t('resultDescription.trendInsight') }}
+    </div>
     <div
       v-for="(singleInfo, index) in info"
       :key="index"
@@ -12,7 +14,9 @@
       @click="linkTo(singleInfo.next_question)"
     >
       <span class="info-index">{{ index + 1 }}</span>
-      <div class="info-content">{{ singleInfo.information }}</div>
+      <div class="info-content">
+        {{ singleInfo.information }}
+      </div>
     </div>
     <!-- <div
       v-if="info.length === 0"

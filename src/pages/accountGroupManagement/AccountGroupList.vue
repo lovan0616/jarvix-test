@@ -1,7 +1,9 @@
 <template>
   <div class="group-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('sideNav.accountGroupManagement') }}</h1>
+      <h1 class="title">
+        {{ $t('sideNav.accountGroupManagement') }}
+      </h1>
     </div>
     <div class="table-board">
       <div class="board-title-row">
@@ -14,7 +16,8 @@
           >
             <svg-icon
               icon-class="plus"
-              class="icon"/>{{ $t('button.createGroup') }}
+              class="icon"
+            />{{ $t('button.createGroup') }}
           </router-link>
         </div>
       </div>
@@ -24,23 +27,26 @@
         :loading="isLoading"
         :empty-message="$t('editing.notYetCreateGroup')"
       >
-        <template v-slot:action="{ data }">
+        <template #action="{ data }">
           <a
-            :disabled="!hasPermission('account_delete_group')" 
+            :disabled="!hasPermission('account_delete_group')"
             href="javascript:void(0);"
             class="link action-link"
-            @click="confirmDelete(data)">{{ $t('button.delete') }}</a>
+            @click="confirmDelete(data)"
+          >{{ $t('button.delete') }}</a>
           <a
-            :disabled="!hasPermission('account_update_group')" 
+            :disabled="!hasPermission('account_update_group')"
             href="javascript:void(0);"
             class="link action-link"
-            @click="editGroup(data)">{{ $t('editing.editingName') }}</a>
+            @click="editGroup(data)"
+          >{{ $t('editing.editingName') }}</a>
           <a
             v-if="license.maxUser !== 1"
-            :disabled="!hasGroupReadUserPermission(data)" 
+            :disabled="!hasGroupReadUserPermission(data)"
             href="javascript:void(0);"
             class="link action-link"
-            @click="confirmEnterGroup(data)">{{ $t('editing.memberManagement') }}</a>
+            @click="confirmEnterGroup(data)"
+          >{{ $t('editing.memberManagement') }}</a>
         </template>
       </crud-table>
       <decide-dialog
@@ -96,7 +102,7 @@ export default {
         {
           text: this.$t('editing.groupName'),
           value: 'groupName',
-          sort: true,
+          sort: true
         },
         {
           text: this.$t('editing.groupOwner'),
@@ -117,7 +123,7 @@ export default {
         }
       ]
     },
-    userGroupList() {
+    userGroupList () {
       return this.$store.state.userManagement.groupList
     }
   },

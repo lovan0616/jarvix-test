@@ -8,11 +8,16 @@
     />
     <template v-else>
       <div class="page-title-row">
-        <h1 class="title">{{ $t('algorithm.management') }}</h1>
+        <h1 class="title">
+          {{ $t('algorithm.management') }}
+        </h1>
         <div class="bread-crumb">
           <router-link
             :to="{ name: 'PageAlgorithmList' }"
-            class="title-link">{{ $t('algorithm.name') }}</router-link>
+            class="title-link"
+          >
+            {{ $t('algorithm.name') }}
+          </router-link>
           <span class="divider">/</span>{{ $t('button.create') }}
         </div>
       </div>
@@ -23,7 +28,9 @@
         <div class="content">
           <div class="item-wrap">
             <div class="content-item">
-              <div class="item-title must">{{ $t('algorithm.type') }}: </div>
+              <div class="item-title must">
+                {{ $t('algorithm.type') }}:
+              </div>
               <default-select
                 v-model="selectedAlgorithm"
                 :option-list="algorithmOptions"
@@ -41,7 +48,9 @@
         <div class="content">
           <div class="item-wrap">
             <div class="content-item">
-              <div class="item-title must">{{ $t('algorithm.targetDataSource') }}: </div>
+              <div class="item-title must">
+                {{ $t('algorithm.targetDataSource') }}:
+              </div>
               <default-select
                 v-model="targetDatasource"
                 :option-list="datasourceOptions"
@@ -50,9 +59,11 @@
               />
             </div>
             <div class="content-item">
-              <div class="item-title must">{{ $t('algorithm.targetDataSource') }}: </div>
-              <default-select 
-                :style="{width: '240px'}" 
+              <div class="item-title must">
+                {{ $t('algorithm.targetDataSource') }}:
+              </div>
+              <default-select
+                :style="{width: '240px'}"
                 v-model="targetDataframe"
                 :option-list="dataframeOptions"
                 class="tag-select input"
@@ -63,7 +74,9 @@
 
           <div class="item-wrap">
             <div class="content-item">
-              <div class="item-title must">{{ $t('algorithm.targetParamColumn') }}: </div>
+              <div class="item-title must">
+                {{ $t('algorithm.targetParamColumn') }}:
+              </div>
               <default-select
                 v-model="targetDatacolumn"
                 :option-list="datacolumnOptions"
@@ -71,7 +84,9 @@
               />
             </div>
             <div class="content-item">
-              <div class="item-title must">{{ $t('algorithm.timeColumn') }}: </div>
+              <div class="item-title must">
+                {{ $t('algorithm.timeColumn') }}:
+              </div>
               <default-select
                 v-model="timeDatacolumn"
                 :option-list="datacolumnOptions"
@@ -80,9 +95,11 @@
             </div>
           </div>
           <div class="content-item">
-            <div class="item-title must">{{ $t('algorithm.measurementColumn') }}: </div>
-            <default-multi-select 
-              :style="{width: '360px'}" 
+            <div class="item-title must">
+              {{ $t('algorithm.measurementColumn') }}:
+            </div>
+            <default-multi-select
+              :style="{width: '360px'}"
               v-model="valueDatacolumns"
               :option-list="datacolumnOptions"
               class="tag-select input"
@@ -97,14 +114,16 @@
           type="button"
           class="btn btn-outline"
           @click="back"
-        >{{ $t('button.cancel') }}</button>
+        >
+          {{ $t('button.cancel') }}
+        </button>
         <!-- <button type="button" class="btn btn-default"
           @click="create"
         >
           <span>{{ $t('button.create') }}</span>
         </button> -->
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="btn btn-default"
           @click="execute"
         >

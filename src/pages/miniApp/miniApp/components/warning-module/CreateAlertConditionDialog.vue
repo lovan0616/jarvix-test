@@ -3,11 +3,11 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('alert.createAlertCondition') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="$emit('close')"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <template>
         <!-- Condition Name -->
@@ -28,11 +28,13 @@
         </div>
         <!-- Condition Target -->
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('alert.sourceSetting') }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.sourceSetting') }}
+          </div>
           <div class="input-field">
             <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
             <div class="input-field__input">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="dataSourceOptionList"
                 :placeholder="$t('miniApp.chooseDataSource')"
@@ -42,16 +44,18 @@
                 name="dataSourceId"
                 @change="fetchDataFrameList"
               />
-              <div 
+              <div
                 v-show="errors.has('dataSourceId')"
                 class="error-text"
-              >{{ errors.first('dataSourceId') }}</div>
+              >
+                {{ errors.first('dataSourceId') }}
+              </div>
             </div>
           </div>
           <div class="input-field">
             <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
             <div class="input-field__input">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="dataFrameOptionList"
                 :placeholder="$t('miniApp.chooseDataFrame')"
@@ -61,16 +65,18 @@
                 name="dataFrameId"
                 @change="fetchDataColumnList"
               />
-              <div 
+              <div
                 v-show="errors.has('dataFrameId')"
                 class="error-text"
-              >{{ errors.first('dataFrameId') }}</div>
+              >
+                {{ errors.first('dataFrameId') }}
+              </div>
             </div>
           </div>
           <div class="input-field">
             <label class="input-field__label">{{ $t('alert.dataColumn') }}</label>
             <div class="input-field__input">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 :option-list="dataColumnNumericOptionList"
                 :is-disabled="isLoadingDataColumnList"
@@ -80,16 +86,20 @@
                 name="dataColumnId"
                 @change="onSelectDataColumn"
               />
-              <div 
+              <div
                 v-show="errors.has('dataColumnId')"
                 class="error-text"
-              >{{ errors.first('dataColumnId') }}</div>
+              >
+                {{ errors.first('dataColumnId') }}
+              </div>
             </div>
           </div>
         </div>
         <!-- Condition Comparing Values -->
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('alert.conditionSetting') }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.conditionSetting') }}
+          </div>
           <single-comparing-value-card
             v-for="(comparingSet, index) in newConditionSetting.comparingValues"
             :key="index"
@@ -99,7 +109,9 @@
         </div>
         <!-- Condition Message Settings -->
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('alert.conditionMessageSetting') }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.conditionMessageSetting') }}
+          </div>
           <alert-condition-message-editor
             :condition-id="conditionId"
             :prop-param-options="dataColumnAllOptionList"
@@ -111,12 +123,16 @@
             :disabled="isProcessing"
             class="btn btn-outline"
             @click="$emit('close')"
-          >{{ $t('button.cancel') }}</button>
-          <button 
+          >
+            {{ $t('button.cancel') }}
+          </button>
+          <button
             :disabled="isProcessing"
             class="btn btn-default"
             @click="createAlertCondition"
-          >{{ $t('button.save') }}</button>
+          >
+            {{ $t('button.save') }}
+          </button>
         </div>
       </template>
     </div>
@@ -130,8 +146,8 @@ import SingleComparingValueCard from './SingleComparingValueCard'
 import AlertConditionMessageEditor from './AlertConditionMessageEditor'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
-import { 
-  getDataFrameById, 
+import {
+  getDataFrameById,
   getDataFrameColumnInfoById
 } from '@/API/DataSource'
 import {
@@ -172,7 +188,7 @@ export default {
       messageParams: [],
       // 前端畫面暫存
       tempConditionSetting: {
-        dataSourceId: null,
+        dataSourceId: null
       },
       conditionId: null,
       isPatchingConditionMessage: false,
@@ -180,7 +196,7 @@ export default {
       dataColumnAllOptionList: [],
       isLoadingDataFrameList: false,
       isLoadingDataColumnList: false,
-      isProcessing: false,
+      isProcessing: false
     }
   },
   computed: {
@@ -194,12 +210,12 @@ export default {
     },
     comparisonOperatorOptionList () {
       return [
-        { value: 'GREATER_THAN',             name: this.$t('comparisonOperator.GREATER_THAN') },
+        { value: 'GREATER_THAN', name: this.$t('comparisonOperator.GREATER_THAN') },
         { value: 'GREATER_THAN_OR_EQUAL_TO', name: this.$t('comparisonOperator.GREATER_THAN_OR_EQUAL_TO') },
-        { value: 'LESS_THAN',                name: this.$t('comparisonOperator.LESS_THAN') },
-        { value: 'LESS_THAN_OR_EQUAL_TO',    name: this.$t('comparisonOperator.LESS_THAN_OR_EQUAL_TO') },
-        { value: 'EQUAL',                    name: this.$t('comparisonOperator.EQUAL') },
-        { value: 'NOT_EQUAL',                name: this.$t('comparisonOperator.NOT_EQUAL') },
+        { value: 'LESS_THAN', name: this.$t('comparisonOperator.LESS_THAN') },
+        { value: 'LESS_THAN_OR_EQUAL_TO', name: this.$t('comparisonOperator.LESS_THAN_OR_EQUAL_TO') },
+        { value: 'EQUAL', name: this.$t('comparisonOperator.EQUAL') },
+        { value: 'NOT_EQUAL', name: this.$t('comparisonOperator.NOT_EQUAL') }
       ]
     },
     max () {
@@ -247,13 +263,13 @@ export default {
             type: 'column',
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
-            originalName: cur.primaryAlias  || cur.name,
+            originalName: cur.primaryAlias || cur.name,
             statsType: cur.statsType
           })
           return acc
         }, [])
       })
-      .finally(() => this.isLoadingDataColumnList = false)
+        .finally(() => this.isLoadingDataColumnList = false)
     },
     onSelectDataColumn () {
       // 補上送到後端所需的欄位名稱
@@ -283,7 +299,7 @@ export default {
           this.$emit('close')
         }
       })
-    },
+    }
   }
 }
 </script>
@@ -316,7 +332,7 @@ export default {
       &:not(:last-of-type) {
         margin-bottom: 24px;
       }
-      
+
       &__label {
         font-size: 14px;
         color: #CCCCCC;

@@ -1,6 +1,6 @@
 <template>
   <div class="key-result">
-    <spinner 
+    <spinner
       v-if="isLoading"
       :title="$t('resultDescription.analysisProcessing')"
       class="layout-spinner"
@@ -14,46 +14,60 @@
         @close="closeUnknowInfoBlock"
       />
 
-      <div 
-        v-if="computedKeyResultId" 
-        class="key-result__content">
+      <div
+        v-if="computedKeyResultId"
+        class="key-result__content"
+      >
         <div class="key-result__question">
           <span class="question-mark">Q</span>
           {{ computedQuestion }}
         </div>
         <div class="key-result__switch-wrapper">
-          <div 
-            :class="{ 'active': currentComponent.type === 'chart' || currentComponent.type === 'paramCompare' }"
-            class="key-result__switch" 
-            @click="switchComponentType('chart')" >
-            <svg-icon 
-              class="icon" 
-              icon-class="check-circle" />
-            {{ $t('miniApp.displayChart') }}
-          </div>
-          <div 
-            v-if="currentComponent.isIndexTypeAvailable" 
-            :class="{ 'active': currentComponent.type === 'index' }" 
+          <div
+            :class="{
+              active:
+                currentComponent.type === 'chart' ||
+                currentComponent.type === 'paramCompare',
+            }"
             class="key-result__switch"
-            @click="switchComponentType('index')">
-            <svg-icon 
-              class="icon" 
-              icon-class="check-circle" />
-            {{ $t('miniApp.displayIndex') }}
+            @click="switchComponentType('chart')"
+          >
+            <svg-icon
+              class="icon"
+              icon-class="check-circle"
+            />
+            {{ $t("miniApp.displayChart") }}
           </div>
-          <div 
-            v-if="currentComponent.isTextTypeAvailable" 
-            :class="{ 'active': currentComponent.type === 'text' }" 
+          <div
+            v-if="currentComponent.isIndexTypeAvailable"
+            :class="{ active: currentComponent.type === 'index' }"
             class="key-result__switch"
-            @click="switchComponentType('text')" >
-            <svg-icon 
-              class="icon" 
-              icon-class="check-circle" />
-            {{ $t('miniApp.displayText') }}
+            @click="switchComponentType('index')"
+          >
+            <svg-icon
+              class="icon"
+              icon-class="check-circle"
+            />
+            {{ $t("miniApp.displayIndex") }}
+          </div>
+          <div
+            v-if="currentComponent.isTextTypeAvailable"
+            :class="{ active: currentComponent.type === 'text' }"
+            class="key-result__switch"
+            @click="switchComponentType('text')"
+          >
+            <svg-icon
+              class="icon"
+              icon-class="check-circle"
+            />
+            {{ $t("miniApp.displayText") }}
           </div>
         </div>
-        <div 
-          v-show="currentComponent.type === 'chart' || currentComponent.type === 'paramCompare'" 
+        <div
+          v-show="
+            currentComponent.type === 'chart' ||
+              currentComponent.type === 'paramCompare'
+          "
           class="key-result__card card"
         >
           <div class="card__content">
@@ -61,7 +75,9 @@
               :key="'chart-' + computedKeyResultId"
               :component-id="computedKeyResultId"
               :is-show-description="false"
-              :is-show-coefficients="segmentation && segmentation.denotation === 'STABILITY'"
+              :is-show-coefficients="
+                segmentation && segmentation.denotation === 'STABILITY'
+              "
               :is-show-donwnload-btn="false"
               :is-show-toolbox="false"
               :anomaly-setting="anomalySetting"
@@ -72,12 +88,14 @@
           </div>
         </div>
         <div
-          v-show="currentComponent.type === 'index'" 
+          v-show="currentComponent.type === 'index'"
           class="key-result__card card"
         >
           <div class="card__content">
             <div class="setting">
-              <div class="setting__label">{{ $t('miniApp.index') }}</div>
+              <div class="setting__label">
+                {{ $t("miniApp.index") }}
+              </div>
               <task
                 :key="'index-' + computedKeyResultId"
                 :component-id="computedKeyResultId"
@@ -87,7 +105,9 @@
               />
             </div>
             <div class="setting">
-              <div class="setting__label">{{ $t('miniApp.displayedUnit') }}</div>
+              <div class="setting__label">
+                {{ $t("miniApp.displayedUnit") }}
+              </div>
               <input
                 :disabled="isLoading"
                 v-model.trim="currentComponent.indexInfo.unit"
@@ -99,7 +119,7 @@
         </div>
         <!--Text Type Component-->
         <div
-          v-show="currentComponent.type === 'text'" 
+          v-show="currentComponent.type === 'text'"
           class="key-result__card card"
         >
           <div class="card__content">
@@ -128,16 +148,27 @@
         <svg-icon
           class="icon"
           icon-class="information-circle"
-        />{{ $t('miniApp.componentNotAddable') }}
+        />{{
+          $t("miniApp.componentNotAddable")
+        }}
       </div>
-      <div 
-        v-if="computedKeyResultId && isNeededDisplaySetting && currentComponent.algoConfig"
-        class="key-result__setting display-setting">
-        <div class="display-setting__title">{{ $t('miniApp.displaySetting') }}</div>
+      <div
+        v-if="
+          computedKeyResultId &&
+            isNeededDisplaySetting &&
+            currentComponent.algoConfig
+        "
+        class="key-result__setting display-setting"
+      >
+        <div class="display-setting__title">
+          {{ $t("miniApp.displaySetting") }}
+        </div>
         <div class="display-setting__content">
           <div class="display-setting__item-box">
             <div class="display-setting__item item">
-              <div class="item__label">{{ $t('miniApp.standardLine') }}</div>
+              <div class="item__label">
+                {{ $t("miniApp.standardLine") }}
+              </div>
               <default-select
                 v-model="currentComponent.algoConfig.standardLineType"
                 :option-list="standardLineTypeOptionList"
@@ -145,10 +176,13 @@
                 class="input item__input"
               />
             </div>
-            <div 
+            <div
               v-if="segmentation.denotation === 'ANOMALY'"
-              class="display-setting__item item">
-              <div class="item__label">{{ $t('miniApp.stddevTimes') }}</div>
+              class="display-setting__item item"
+            >
+              <div class="item__label">
+                {{ $t("miniApp.stddevTimes") }}
+              </div>
               <default-select
                 v-model="currentComponent.algoConfig.stddevTimes"
                 :option-list="stddevTimesOptionList"
@@ -158,29 +192,37 @@
             </div>
           </div>
           <div class="display-setting__button-box">
-            <button 
-              class="btn btn-default display-setting__button" 
+            <button
+              class="btn btn-default display-setting__button"
               @click="saveChartSetting(true)"
             >
-              {{ $t('button.change') }}
+              {{ $t("button.change") }}
             </button>
           </div>
         </div>
       </div>
       <!--異常標記設定-->
-      <form 
+      <form
         v-if="computedKeyResultId && isShowAnomalySetting"
         data-vv-scope="anomaly"
         class="key-result__setting anomaly"
-        @submit.prevent="saveAnomalySetting">
-        <div class="anomaly__title">{{ $t('miniApp.anomalySetting') }}</div>
+        @submit.prevent="saveAnomalySetting"
+      >
+        <div class="anomaly__title">
+          {{ $t("miniApp.anomalySetting") }}
+        </div>
         <div class="anomaly__content">
-          <div class="anomaly__content-title">{{ $t('miniApp.anomalyRules') }}</div>
+          <div class="anomaly__content-title">
+            {{ $t("miniApp.anomalyRules") }}
+          </div>
           <div class="anomaly__settings">
             <div class="anomaly__settings--top">
               <div
-                v-if="tempComponentAnomalySettings.length === 0" 
-                class="anomaly__empty-message">{{ $t('miniApp.emptyRules') }}</div>
+                v-if="tempComponentAnomalySettings.length === 0"
+                class="anomaly__empty-message"
+              >
+                {{ $t("miniApp.emptyRules") }}
+              </div>
               <div
                 v-for="setting in tempComponentAnomalySettings"
                 v-else
@@ -201,28 +243,33 @@
                     class="threshold__input"
                   />
                 </div>
-                <div 
-                  class="threshold--right" 
-                  @click="removeSetting(setting.id)">
+                <div
+                  class="threshold--right"
+                  @click="removeSetting(setting.id)"
+                >
                   <svg-icon
                     icon-class="delete"
-                    class="icon threshold__delete-icon" 
+                    class="icon threshold__delete-icon"
                   />
                 </div>
               </div>
             </div>
             <div class="anomaly__settings--bottom">
-              <button 
+              <button
                 v-if="tempComponentAnomalySettings.length < 2"
-                type="button" 
+                type="button"
                 class="btn btn-outline"
                 @click="createAnomolyNewRule"
-              >{{ $t('button.createNewRule') }}</button>
+              >
+                {{ $t("button.createNewRule") }}
+              </button>
               <button
                 v-if="isAnomalySettingChanged"
                 type="submit"
-                class="btn btn-default anomaly__button" 
-              >{{ $t('button.applyToChart') }}</button>
+                class="btn btn-default anomaly__button"
+              >
+                {{ $t("button.applyToChart") }}
+              </button>
             </div>
           </div>
         </div>
@@ -270,7 +317,7 @@ export default {
     controls: {
       type: Array,
       default: () => []
-    },
+    }
   },
   data () {
     return {
@@ -336,10 +383,21 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId', 'isManuallyTriggeredAskQuestion']),
+    ...mapState('dataSource', [
+      'dataSourceId',
+      'dataFrameId',
+      'appQuestion',
+      'currentQuestionInfo',
+      'currentQuestionId',
+      'isManuallyTriggeredAskQuestion'
+    ]),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
-      return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
+      return (
+        this.resultInfo &&
+        this.resultInfo.key_result &&
+        this.resultInfo.key_result[0]
+      )
     },
     computedQuestion () {
       return this.question || this.currentComponent.question
@@ -352,20 +410,30 @@ export default {
       return [].concat.apply([], [...this.filters, ...this.controls])
     },
     isNeededDisplaySetting () {
-      return this.segmentation && (this.segmentation.denotation === 'STABILITY' || this.segmentation.denotation === 'ANOMALY')
+      return (
+        this.segmentation &&
+        (this.segmentation.denotation === 'STABILITY' ||
+          this.segmentation.denotation === 'ANOMALY')
+      )
     },
     isAnomalySettingChanged () {
       if (!this.computedKeyResultId || !this.isShowAnomalySetting) return
-      let tempSetting = this.tempComponentAnomalySettings ? [...this.tempComponentAnomalySettings] : []
-      let tempCurrentSetting = this.currentComponent.anomalySettings ? [...this.currentComponent.anomalySettings] : []
+      let tempSetting = this.tempComponentAnomalySettings
+        ? [...this.tempComponentAnomalySettings]
+        : []
+      let tempCurrentSetting = this.currentComponent.anomalySettings
+        ? [...this.currentComponent.anomalySettings]
+        : []
       if (tempSetting.length !== tempCurrentSetting.length) return true
       tempSetting = tempSetting.sort((a, b) => a.value - b.value)
-      tempCurrentSetting  = tempCurrentSetting.sort((a, b) => a.value - b.value)
+      tempCurrentSetting = tempCurrentSetting.sort((a, b) => a.value - b.value)
       for (let i = 0; i < tempSetting.length; i++) {
         if (
-          (tempSetting[i].comparison !== tempCurrentSetting[i].comparison)
-          || (tempSetting[i].value !== tempCurrentSetting[i].value)
-        )  return true
+          tempSetting[i].comparison !== tempCurrentSetting[i].comparison ||
+          tempSetting[i].value !== tempCurrentSetting[i].value
+        ) {
+          return true
+        }
       }
       return false
     }
@@ -381,16 +449,26 @@ export default {
   mounted () {
     this.resetAnomalySetting()
     if (this.currentComponent.keyResultId) {
-      this.tempComponentAnomalySettings = JSON.parse(JSON.stringify(this.currentComponent.anomalySettings || []))
-      if (this.currentComponent.anomalySettings && this.currentComponent.anomalySettings.length > 0) {
+      this.tempComponentAnomalySettings = JSON.parse(
+        JSON.stringify(this.currentComponent.anomalySettings || [])
+      )
+      if (
+        this.currentComponent.anomalySettings &&
+        this.currentComponent.anomalySettings.length > 0
+      ) {
         this.anomalySetting.yAxis = {
           ...this.anomalySetting.yAxis,
           ...formatAnomalySetting(this.tempComponentAnomalySettings)
         }
       }
       // 假如已經有完整的舊有問句資訊，就不需要重新再問
-      if (this.checkHasCorrectSegmentation(this.currentComponent.segmentation)) {
-        this.askResult(this.currentComponent.segmentation, this.currentComponent.questionId)
+      if (
+        this.checkHasCorrectSegmentation(this.currentComponent.segmentation)
+      ) {
+        this.askResult(
+          this.currentComponent.segmentation,
+          this.currentComponent.questionId
+        )
       } else {
         this.askQuestion(this.currentComponent.question)
       }
@@ -412,12 +490,23 @@ export default {
     },
     checkIsTextTypeAvailable (transcript) {
       // 以下需確保問句中只帶有一個 category 欄位
-      const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
-      const isSingleCategoryDataColumn = transcript.subjectList[0].categoryDataColumnList && transcript.subjectList[0].categoryDataColumnList.length === 1
-      const haveSameDataColumn = isSingleCategoryDataColumn && transcript.subjectList[0].categoryDataColumnList[0].dataColumnId === transcript.subjectList[0].dataColumn.dataColumnId
+      const isSingleSubject =
+        transcript.subjectList && transcript.subjectList.length === 1
+      const isSingleCategoryDataColumn =
+        transcript.subjectList[0].categoryDataColumnList &&
+        transcript.subjectList[0].categoryDataColumnList.length === 1
+      const haveSameDataColumn =
+        isSingleCategoryDataColumn &&
+        transcript.subjectList[0].categoryDataColumnList[0].dataColumnId ===
+          transcript.subjectList[0].dataColumn.dataColumnId
       // 確保不是該 category 欄位中的值，因為他會被視為該欄位下的 filter 條件
       const isEmptyFilterList = transcript.subjectList[0].filterList === null
-      return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
+      return (
+        isSingleSubject &&
+        isEmptyFilterList &&
+        isSingleCategoryDataColumn &&
+        haveSameDataColumn
+      )
     },
     askQuestion (question) {
       this.$store.commit('result/updateCurrentResultInfo', null)
@@ -431,119 +520,154 @@ export default {
       this.resultInfo = null
       this.layout = null
       this.isShowAnomalySetting = false
-      this.closeUnknowInfoBlock();
-      this.$store.dispatch('chatBot/askQuestion', {
-        question,
-        dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
-        dataFrameId: this.currentComponent.dataFrameId || this.dataFrameId,
-        shouldCancelToken: true,
-        // 編輯模式下帶入當初問問句使用的 parser 語系；新創時走原本流程（拿當前 store 中的語系）
-        language: this.currentComponent.init && this.currentComponent.parserLanguage
-      }).then(response => {
+      this.closeUnknowInfoBlock()
+      this.$store
+        .dispatch('chatBot/askQuestion', {
+          question,
+          dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
+          dataFrameId: this.currentComponent.dataFrameId || this.dataFrameId,
+          shouldCancelToken: true,
+          // 編輯模式下帶入當初問問句使用的 parser 語系；新創時走原本流程（拿當前 store 中的語系）
+          language:
+            this.currentComponent.init && this.currentComponent.parserLanguage
+        })
+        .then((response) => {
+          let questionId = response.questionId
+          let segmentationList = response.segmentationList
 
-        let questionId = response.questionId
-        let segmentationList = response.segmentationList
+          // 處理沒顯示結果的狀況：無結果 or 不支援問題所以不顯示結果
+          const noShowAnswerSituations = [
+            'NO_ANSWER',
+            'DIFFERENCE',
+            'CORRELATION_EXPLORATION',
+            'ROOT_CAUSE',
+            'PROFILE'
+          ]
+          const hasNoShowAnswerDenotation = (el) =>
+            el === segmentationList[0].denotation
 
-        // 處理沒顯示結果的狀況：無結果 or 不支援問題所以不顯示結果
-        const noShowAnswerSituations = ['NO_ANSWER','DIFFERENCE', 'CORRELATION_EXPLORATION', 'ROOT_CAUSE', 'PROFILE']
-        const hasNoShowAnswerDenotation = (el) => el === segmentationList[0].denotation
+          if (noShowAnswerSituations.some(hasNoShowAnswerDenotation)) {
+            this.segmentation = segmentationList[0]
 
-        if(noShowAnswerSituations.some(hasNoShowAnswerDenotation)) {
-          this.segmentation = segmentationList[0]          
-
-          switch (this.segmentation.denotation) {
-            // 無結果
-            case 'NO_ANSWER':
-              this.resultInfo = {
-              title: this.segmentation.errorCategory,
-              description: this.segmentation.errorMessage
+            switch (this.segmentation.denotation) {
+              // 無結果
+              case 'NO_ANSWER':
+                this.resultInfo = {
+                  title: this.segmentation.errorCategory,
+                  description: this.segmentation.errorMessage
+                }
+                break
+              // 有關、根因分析、畫像分析、差異分析的問句 => 不顯示結果
+              default:
+                this.resultInfo = {
+                  title: this.$t('editing.notShowResultTitle'),
+                  description: this.$t('editing.notShowResultDescription')
+                }
+                break
             }
-              break;
-            // 有關、根因分析、畫像分析、差異分析的問句 => 不顯示結果
-            default:
-              this.resultInfo = {
-              title: this.$t('editing.notShowResultTitle'),
-              description: this.$t('editing.notShowResultDescription')
-            }
-              break;
+
+            this.layout = 'EmptyResult'
+            this.$emit('update:isLoading', false)
+            return false
           }
 
-          this.layout = 'EmptyResult'
-          this.$emit('update:isLoading', false)
-          return false
-        }
+          // 一個結果
+          if (segmentationList.length === 1) {
+            this.segmentation = segmentationList[0]
+            // 取得 dataframe 預設日期欄位資訊
+            getDateTimeColumns(
+              this.segmentation.transcript.dataFrame.dataFrameId
+            )
+              .then((columnList) => {
+                this.mainDateColumn = columnList.find(
+                  (column) => column.isDefault
+                )
 
-        // 一個結果
-        if (segmentationList.length === 1) {
-          this.segmentation = segmentationList[0]
-          // 取得 dataframe 預設日期欄位資訊
-          getDateTimeColumns(this.segmentation.transcript.dataFrame.dataFrameId)
-            .then(columnList => {
-              this.mainDateColumn = columnList.find(column => column.isDefault)
-
-              // 存取問句結果讓 restriction 使用
-              this.questionInfo = {
-                questionId: response.questionId,
-                dataFrameId: segmentationList[0].transcript.dataFrame.dataFrameId,
-                dataColumns: this.getDataColumnlist(segmentationList[0].transcript.subjectList)
-              }
-              return this.askResult(null, questionId)
-            })
-            .then(res => this.getComponent(res.resultId))
-            .catch((error) => {})
-        } else {
-          // 多個結果
-          this.$store.commit('dataSource/setCurrentQuestionId', response.questionId)
-          this.layout = 'MultiResult'
-          this.resultInfo = {...response, question: question}
+                // 存取問句結果讓 restriction 使用
+                this.questionInfo = {
+                  questionId: response.questionId,
+                  dataFrameId:
+                    segmentationList[0].transcript.dataFrame.dataFrameId,
+                  dataColumns: this.getDataColumnlist(
+                    segmentationList[0].transcript.subjectList
+                  )
+                }
+                return this.askResult(null, questionId)
+              })
+              .then((res) => this.getComponent(res.resultId))
+              .catch((error) => {})
+          } else {
+            // 多個結果
+            this.$store.commit(
+              'dataSource/setCurrentQuestionId',
+              response.questionId
+            )
+            this.layout = 'MultiResult'
+            this.resultInfo = { ...response, question: question }
+            this.$emit('update:isLoading', false)
+            this.$emit('update:isAddable', null)
+          }
+        })
+        .catch((error) => {
           this.$emit('update:isLoading', false)
           this.$emit('update:isAddable', null)
-        }
-      }).catch((error) => {
-        this.$emit('update:isLoading', false)
-        this.$emit('update:isAddable', null)
-        // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
-        this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-      })
+          // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+        })
     },
     askResult (selectedResultSegmentationInfo, questionId, isSetAlgoConfig) {
       this.$emit('update:isLoading', true)
-      if (selectedResultSegmentationInfo) this.segmentation = selectedResultSegmentationInfo
+      if (selectedResultSegmentationInfo) {
+        this.segmentation = selectedResultSegmentationInfo
+      }
 
       // 初次創建時，預設元件名稱為使用者輸入的問句
       if (!this.currentComponent.init) {
-        this.currentComponent.config.diaplayedName = this.segmentation.sentence.reduce((acc, cur) =>  acc += ` ${cur.matchedWord}`, '')
+        this.currentComponent.config.diaplayedName =
+          this.segmentation.sentence.reduce(
+            (acc, cur) => (acc += ` ${cur.matchedWord}`),
+            ''
+          )
       }
 
       // 確認是否為趨勢類型問題
       const isTrendQuestion = this.segmentation.denotation === 'TREND'
-      let dateTimeColumn = this.segmentation.transcript.subjectList.find(subject => subject.dateTime)
-      return this.$store.dispatch('chatBot/askResult', {
-        algoConfig: isSetAlgoConfig ? this.currentComponent.algoConfig || null : null,
-        questionId: questionId || this.currentQuestionId,
-        segmentation: this.segmentation,
-        restrictions: this.restrictions(),
-        selectedColumnList: null,
-        isFilter: true,
-        ...(isTrendQuestion && {
-          displayConfig: {
-            histogramBarSize: null,
-            sortOrders: dateTimeColumn ? [
-              {
-                dataColumnId: dateTimeColumn.dateTime.dataColumn.dataColumnId,
-                sortType: 'DESC'
-              }
-            ] : []
-          }
+      let dateTimeColumn = this.segmentation.transcript.subjectList.find(
+        (subject) => subject.dateTime
+      )
+      return this.$store
+        .dispatch('chatBot/askResult', {
+          algoConfig: isSetAlgoConfig
+            ? this.currentComponent.algoConfig || null
+            : null,
+          questionId: questionId || this.currentQuestionId,
+          segmentation: this.segmentation,
+          restrictions: this.restrictions(),
+          selectedColumnList: null,
+          isFilter: true,
+          ...(isTrendQuestion && {
+            displayConfig: {
+              histogramBarSize: null,
+              sortOrders: dateTimeColumn
+                ? [
+                  {
+                    dataColumnId:
+                        dateTimeColumn.dateTime.dataColumn.dataColumnId,
+                    sortType: 'DESC'
+                  }
+                ]
+                : []
+            }
+          })
         })
-      })
-      .then(res => this.getComponent(res.resultId))
-      .catch(error => {})
+        .then((res) => this.getComponent(res.resultId))
+        .catch((error) => {})
     },
     getComponent (resultId) {
       window.clearTimeout(this.timeoutFunction)
-      this.$store.dispatch('chatBot/getComponentList', resultId)
-        .then(componentResponse => {
+      this.$store
+        .dispatch('chatBot/getComponentList', resultId)
+        .then((componentResponse) => {
           switch (componentResponse.status) {
             case 'Process':
             case 'Ready':
@@ -558,39 +682,56 @@ export default {
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               // 初次創建時，預設元件名稱為使用者輸入的問句
-              if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
+              if (!this.currentComponent.keyResultId) {
+                this.currentComponent.config.diaplayedName = this.appQuestion
+              }
               this.currentComponent.keyResultId = componentResponse.id
-              this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
-              this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
-              this.question = this.composeComponentQuestion(componentResponse.segmentationPayload.sentence),
+              this.currentComponent.isIndexTypeAvailable =
+                componentResponse.isIndexTypeComponent
+              this.currentComponent.isTextTypeAvailable =
+                this.checkIsTextTypeAvailable(componentResponse.transcript);
+              (this.question = this.composeComponentQuestion(
+                componentResponse.segmentationPayload.sentence
+              )),
               this.$store.commit('result/updateCurrentResultId', resultId)
               // data columns 重新處理是因為 ask question 取得的是建議的句子切法
               // 最終切法和辨別結果要以 get component list 為主
               this.$store.commit('result/updateCurrentResultInfo', {
                 keyResultId: componentResponse.componentIds.key_result[0],
-                dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
+                dataColumns: this.getDataColumnlist(
+                  componentResponse.segmentationPayload.transcript.subjectList
+                ),
                 segmentation: this.segmentation,
-                question: this.composeComponentQuestion(componentResponse.segmentationPayload.sentence),
+                question: this.composeComponentQuestion(
+                  componentResponse.segmentationPayload.sentence
+                ),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
-                dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
+                dataFrameId:
+                  componentResponse.segmentationPayload.transcript.dataFrame
+                    .dataFrameId,
                 dateTimeColumn: this.mainDateColumn
               })
               // 比照智能分析ResultDisplay，過濾出紀錄parser無法判斷字詞的物件，裝進unknownToken陣列中，以此判斷是否顯示unknow-info-block
-              this.segmentationInfo.unknownToken = componentResponse.segmentationPayload.sentence.filter(
-                element => {
-                  return element.type === "UNKNOWN";
-                }
-              );
-              this.segmentationInfo.question = this.appQuestion;
+              this.segmentationInfo.unknownToken =
+                componentResponse.segmentationPayload.sentence.filter(
+                  (element) => {
+                    return element.type === 'UNKNOWN'
+                  }
+                )
+              this.segmentationInfo.question = this.appQuestion
 
-            
               if (this.isNeededDisplaySetting) {
-                this.currentComponent.algoConfig = this.currentComponent.algoConfig || this.algoConfig[componentResponse.intent.toLowerCase()]
+                this.currentComponent.algoConfig =
+                  this.currentComponent.algoConfig ||
+                  this.algoConfig[componentResponse.intent.toLowerCase()]
               } else {
                 this.currentComponent.algoConfig = null
               }
-              this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
+              this.$emit(
+                'update:isAddable',
+                componentResponse.layout === 'general' || false
+              )
               this.$emit('update:isLoading', false)
               break
             case 'Disable':
@@ -605,7 +746,8 @@ export default {
               this.$emit('update:isLoading', false)
               break
           }
-        }).catch((error) => {
+        })
+        .catch((error) => {
           this.$emit('update:isAddable', null)
           this.$emit('update:isLoading', false)
           this.$store.commit('result/updateCurrentResultId', null)
@@ -617,24 +759,40 @@ export default {
     composeComponentQuestion (sentence) {
       const regex = /^[A-Za-z0-9]/
       return sentence.reduce((acc, cur, index) => {
-          return (regex.test(cur.word) && index > 0) ? `${acc} ${cur.word}` : `${acc}${cur.word}`
-        }, '')
+        return regex.test(cur.word) && index > 0
+          ? `${acc} ${cur.word}`
+          : `${acc}${cur.word}`
+      }, '')
     },
     getDataColumnlist (subjectList) {
       return subjectList
-        .filter(item => item.dataColumn || item.categoryDataColumnList || item.filterList || item.dateTime)
+        .filter(
+          (item) =>
+            item.dataColumn ||
+            item.categoryDataColumnList ||
+            item.filterList ||
+            item.dateTime
+        )
         .reduce((acc, cur, index, filteredSubjectList) => {
           // 匯集所有欄位
           const columnList = [
             ...(cur.categoryDataColumnList || []),
             ...(cur.dataColumn !== null && [cur.dataColumn]),
-            ...(cur.filterList !== null && cur.filterList.map(filter => filter.dataColumn) || []),
+            ...((cur.filterList !== null &&
+              cur.filterList.map((filter) => filter.dataColumn)) ||
+              []),
             ...(cur.dateTime !== null && [cur.dateTime.dataColumn])
           ]
           // 將不重複的欄位存起來
-          columnList.forEach(column => { if (!acc['dataColumnId-' + column.dataColumnId]) acc['dataColumnId-' + column.dataColumnId] = column })
+          columnList.forEach((column) => {
+            if (!acc['dataColumnId-' + column.dataColumnId]) {
+              acc['dataColumnId-' + column.dataColumnId] = column
+            }
+          })
           // 最後一筆時，回傳所有不重複的欄位清單
-          return index === filteredSubjectList.length - 1 ? Object.keys(acc).map(key => acc[key]) : acc
+          return index === filteredSubjectList.length - 1
+            ? Object.keys(acc).map((key) => acc[key])
+            : acc
         }, {})
         .map((item, index, list) => ({
           columnId: item.dataColumnId,
@@ -657,60 +815,74 @@ export default {
       this.currentComponent.type = type
     },
     includeSameColumnPrimaryAliasFilter (filterName) {
-      return this.questionInfo.dataColumns.find(column => column.columnName === filterName)
+      return this.questionInfo.dataColumns.find(
+        (column) => column.columnName === filterName
+      )
     },
     restrictions () {
       return this.allFilterList
-        .filter(filter => this.checkShouldApplyMiniAppFilter(filter, this.mainDateColumn))
-        .map(filter => {
+        .filter((filter) =>
+          this.checkShouldApplyMiniAppFilter(filter, this.mainDateColumn)
+        )
+        .map((filter) => {
           let type = ''
           let data_type = ''
           switch (filter.statsType) {
-            case ('STRING'):
-            case ('BOOLEAN'):
-            case ('CATEGORY'):
+            case 'STRING':
+            case 'BOOLEAN':
+            case 'CATEGORY':
               data_type = 'string'
               type = 'enum'
               break
-            case ('FLOAT'):
-            case ('NUMERIC'):
+            case 'FLOAT':
+            case 'NUMERIC':
               data_type = 'int'
               type = 'range'
               break
-            case ('DATETIME'):
-            case ('RELATIVEDATETIME'):
+            case 'DATETIME':
+            case 'RELATIVEDATETIME':
               data_type = 'datetime'
               type = 'range'
-              break  
+              break
           }
 
           // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          if (filter.statsType === 'RELATIVEDATETIME') return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: this.mainDateColumn.dataColumnId,
-              display_name: this.mainDateColumn.dataColumnPrimaryAlias,
-              ...this.formatRelativeDatetime(filter.dataValues[0])
-            }
-          }]
+          if (filter.statsType === 'RELATIVEDATETIME') {
+            return [
+              {
+                type,
+                properties: {
+                  data_type,
+                  dc_id: this.mainDateColumn.dataColumnId,
+                  display_name: this.mainDateColumn.dataColumnPrimaryAlias,
+                  ...this.formatRelativeDatetime(filter.dataValues[0])
+                }
+              }
+            ]
+          }
 
-          return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: filter.columnId,
-              display_name: filter.columnName,
-              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
-                datavalues: filter.dataValues,
-                display_datavalues: filter.dataValues
-              }),
-              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
-                start: filter.start,
-                end: filter.end
-              }),
+          return [
+            {
+              type,
+              properties: {
+                data_type,
+                dc_id: filter.columnId,
+                display_name: filter.columnName,
+                ...((filter.statsType === 'STRING' ||
+                  filter.statsType === 'BOOLEAN' ||
+                  filter.statsType === 'CATEGORY') && {
+                  datavalues: filter.dataValues,
+                  display_datavalues: filter.dataValues
+                }),
+                ...((filter.statsType === 'NUMERIC' ||
+                  filter.statsType === 'FLOAT' ||
+                  filter.statsType === 'DATETIME') && {
+                  start: filter.start,
+                  end: filter.end
+                })
+              }
             }
-          }]
+          ]
         })
     },
     formatRelativeDatetime (dataValue) {
@@ -718,14 +890,16 @@ export default {
         start: null,
         end: null
       }
-      
+
       // update datetime range
       if (dataValue === 'today') {
         properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
         properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
       } else if (RegExp('^.*hour.*$').test(dataValue)) {
         const hour = Number(dataValue.split('hour')[0])
-        properties.start = moment().subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
+        properties.start = moment()
+          .subtract(hour, 'hours')
+          .format('YYYY-MM-DD HH:mm')
         properties.end = moment().format('YYYY-MM-DD HH:mm')
       } else {
         properties.start = null
@@ -738,35 +912,46 @@ export default {
       this.resetAnomalySetting()
       this.currentComponent.anomalySettings = []
       this.switchComponentType('chart')
-      this.currentComponent.indexInfo = { 
+      this.currentComponent.indexInfo = {
         unit: ''
       }
       this.currentComponent.config.fontSize = 'middle'
     },
     saveChartSetting (isSetAlgoConfig) {
-      this.askResult(this.segmentation, this.currentQuestionId, isSetAlgoConfig)
+      this.askResult(
+        this.segmentation,
+        this.currentQuestionId,
+        isSetAlgoConfig
+      )
     },
     saveAnomalySetting () {
-      this.$validator.validateAll('anomaly')
-        .then(valid => {
-          if (!valid) return
-          this.resetAnomalySetting()
-  
-          // 確保 input 字串轉為數值
-          this.tempComponentAnomalySettings = this.tempComponentAnomalySettings.map(setting => ({
+      this.$validator.validateAll('anomaly').then((valid) => {
+        if (!valid) return
+        this.resetAnomalySetting()
+
+        // 確保 input 字串轉為數值
+        this.tempComponentAnomalySettings =
+          this.tempComponentAnomalySettings.map((setting) => ({
             ...setting,
             value: parseFloat(setting.value)
           }))
 
-          // 將暫存儲存回 component data 當中
-          this.currentComponent.anomalySettings = JSON.parse(JSON.stringify(this.tempComponentAnomalySettings))
+        // 將暫存儲存回 component data 當中
+        this.currentComponent.anomalySettings = JSON.parse(
+          JSON.stringify(this.tempComponentAnomalySettings)
+        )
 
-          // 如果有設定，則轉換成上下線及射線的格式
-          if (this.tempComponentAnomalySettings && this.tempComponentAnomalySettings.length > 0) {
-            this.anomalySetting.yAxis = formatAnomalySetting(this.tempComponentAnomalySettings)
-          }
-          this.saveChartSetting(false)
-        })
+        // 如果有設定，則轉換成上下線及射線的格式
+        if (
+          this.tempComponentAnomalySettings &&
+          this.tempComponentAnomalySettings.length > 0
+        ) {
+          this.anomalySetting.yAxis = formatAnomalySetting(
+            this.tempComponentAnomalySettings
+          )
+        }
+        this.saveChartSetting(false)
+      })
     },
     setConfig (configData) {
       const { supportedFunction = {} } = configData
@@ -780,8 +965,11 @@ export default {
         value: null
       })
     },
-    removeSetting(settingId) {
-      this.tempComponentAnomalySettings = this.tempComponentAnomalySettings.filter(setting => setting.id !== settingId)
+    removeSetting (settingId) {
+      this.tempComponentAnomalySettings =
+        this.tempComponentAnomalySettings.filter(
+          (setting) => setting.id !== settingId
+        )
     },
     resetAnomalySetting () {
       this.anomalySetting = {
@@ -797,11 +985,11 @@ export default {
         }
       }
     },
-    closeUnknowInfoBlock() {
+    closeUnknowInfoBlock () {
       this.segmentationInfo = {
         question: null,
         unknownToken: []
-      };
+      }
     }
   }
 }
@@ -833,18 +1021,18 @@ export default {
   }
 
   &__switch {
-    background: #1C292B;
+    background: #1c292b;
     border-radius: 12px;
-    border: 2px solid #1C292B;
-    color: #6C7678;
+    border: 2px solid #1c292b;
+    color: #6c7678;
     font-weight: 600;
     font-size: 14px;
     padding: 8px 16px;
     cursor: pointer;
 
     &.active {
-      color: #2AD2E2;
-      border: 2px solid #2AD2E2;
+      color: #2ad2e2;
+      border: 2px solid #2ad2e2;
     }
 
     &:not(:last-of-type) {
@@ -859,7 +1047,7 @@ export default {
   }
 
   .card {
-    background: #1C292B;
+    background: #1c292b;
     border: 2px solid transparent;
     border-radius: 12px;
     padding: 18.5px;
@@ -868,19 +1056,19 @@ export default {
     &__content {
       display: flex;
     }
-    
+
     .setting {
       &__label {
         font-size: 14px;
-        color: #AAAAAA;
+        color: #aaaaaa;
       }
       &__input {
         height: 39px;
         font-size: 16px;
-        border-color: #FFFFFF;
+        border-color: #ffffff;
 
         &::placeholder {
-          color: #AAAAAA;
+          color: #aaaaaa;
         }
         /deep/ .el-input__inner {
           padding-left: 0;
@@ -897,8 +1085,8 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 30px;
-    background: rgba(255,223,111,0.08);
-    color: #FFDF6F;
+    background: rgba(255, 223, 111, 0.08);
+    color: #ffdf6f;
     font-size: 14px;
     text-align: left;
     padding: 8px 14px;
@@ -909,7 +1097,6 @@ export default {
   }
 
   .display-setting {
-
     &__title {
       margin-bottom: 8px;
       font-weight: 600;
@@ -920,7 +1107,7 @@ export default {
     &__content {
       display: flex;
       flex-direction: row;
-      background: #1C292B;
+      background: #1c292b;
       border: 2px solid transparent;
       border-radius: 12px;
       padding: 18.5px;
@@ -930,7 +1117,7 @@ export default {
       display: flex;
       flex-direction: column;
     }
-    
+
     &__item {
       display: flex;
       flex-direction: row;
@@ -945,7 +1132,7 @@ export default {
         font-size: 14px;
         font-weight: 600;
         line-height: 20px;
-        color: #CCCCCC;
+        color: #cccccc;
       }
 
       &__input {
@@ -972,11 +1159,11 @@ export default {
       font-weight: 600;
       font-size: 18px;
       line-height: 25px;
-      color: #FFFFFF;
+      color: #ffffff;
     }
 
     &__content {
-      background: #1C292B;
+      background: #1c292b;
       border-radius: 12px;
       padding: 18.5px;
       display: flex;
@@ -985,7 +1172,7 @@ export default {
     &__content-title {
       font-weight: 600;
       font-size: 14px;
-      color: #AAAAAA;
+      color: #aaaaaa;
       margin-right: 33px;
     }
 
@@ -1007,14 +1194,14 @@ export default {
     }
 
     &__empty-message {
-      color: #AAAAAA;
+      color: #aaaaaa;
       font-size: 14px;
     }
 
     .threshold {
       display: flex;
       width: 50%;
-      background: #141C1D;
+      background: #141c1d;
       border-radius: 8px;
       padding: 18px 20px;
       justify-content: space-between;
@@ -1022,10 +1209,10 @@ export default {
       &--left {
         display: flex;
       }
-      
+
       &__select {
         height: 40px;
-        border-bottom: 1px solid #FFFFFF;
+        border-bottom: 1px solid #ffffff;
         max-width: 115px;
         margin-right: 16px;
       }
@@ -1042,7 +1229,7 @@ export default {
 
       &__delete-icon {
         cursor: pointer;
-        color: #AAAAAA;
+        color: #aaaaaa;
       }
     }
   }

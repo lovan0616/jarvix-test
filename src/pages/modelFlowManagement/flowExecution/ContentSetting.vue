@@ -1,6 +1,8 @@
 <template>
   <div class="content-setting-dialog">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="2"
     />
@@ -12,7 +14,7 @@
         </div>
         <div class="setting-block__content">
           <div class="select-wrapper">
-            <default-select 
+            <default-select
               v-validate="'required'"
               :option-list="dataSourceOptionList"
               :placeholder="$t('miniApp.chooseDataSource')"
@@ -23,13 +25,15 @@
               name="dataSourceId"
               @change="fetchDataFrameList"
             />
-            <div 
+            <div
               v-show="errors.has('dataSourceId')"
               class="error-text"
-            >{{ errors.first('dataSourceId') }}</div>
+            >
+              {{ errors.first('dataSourceId') }}
+            </div>
           </div>
           <div class="select-wrapper">
-            <default-select 
+            <default-select
               v-validate="'required'"
               :option-list="dataFrameOptionList"
               :placeholder="$t('miniApp.chooseDataFrame')"
@@ -40,10 +44,12 @@
               name="dataframeId"
               @change="fetchDataColumnList"
             />
-            <div 
+            <div
               v-show="errors.has('dataframeId')"
               class="error-text"
-            >{{ errors.first('dataframeId') }}</div>
+            >
+              {{ errors.first('dataframeId') }}
+            </div>
           </div>
         </div>
       </div>
@@ -52,7 +58,7 @@
         <div class="setting-block__title">
           {{ $t('modelFlow.upload.modelSetting') }}
         </div>
-        <default-select 
+        <default-select
           v-validate="'required'"
           :option-list="modelOptionList"
           :placeholder="$t('modelFlow.upload.chooseModel')"
@@ -63,19 +69,22 @@
           @change="modelChangedHandler"
           @intersect="fetchModelList"
         />
-        <div 
+        <div
           v-show="errors.has('modelId')"
           class="error-text"
-        >{{ errors.first('modelId') }}</div>
+        >
+          {{ errors.first('modelId') }}
+        </div>
       </div>
       <!-- input setting -->
-      <div 
+      <div
         v-if="modelId"
-        class="setting-block">
+        class="setting-block"
+      >
         <div class="setting-block__title">
           {{ $t('modelFlow.upload.inputSetting') }}
         </div>
-        <spinner 
+        <spinner
           v-if="isLoadingModel"
           :title="$t('editing.loading')"
           class="spinner-container"
@@ -93,13 +102,14 @@
         </template>
       </div>
       <!-- output setting -->
-      <div 
-        v-if="modelId" 
-        class="setting-block">
+      <div
+        v-if="modelId"
+        class="setting-block"
+      >
         <div class="setting-block__title">
           {{ $t('modelFlow.upload.outputSetting') }}
         </div>
-        <spinner 
+        <spinner
           v-if="isLoadingModel"
           :title="$t('editing.loading')"
           class="spinner-container"
@@ -131,11 +141,13 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="isLoading"
           class="btn btn-default"
           @click="next"
@@ -204,10 +216,10 @@ export default {
       return this.ioArgs.output.map(item => item.originalName)
     },
     isLoading () {
-      return this.isLoadingDataSource
-        || this.isLoadingDataFrame
-        || this.isLoadingDataColumn
-        || this.isLoadingModel
+      return this.isLoadingDataSource ||
+        this.isLoadingDataFrame ||
+        this.isLoadingDataColumn ||
+        this.isLoadingModel
     }
   },
   mounted () {
@@ -249,7 +261,7 @@ export default {
               }
             })
           // 先選第一個
-          if (this.dataFrameOptionList.length > 0 ) {
+          if (this.dataFrameOptionList.length > 0) {
             this.sourceDataframeId = this.dataFrameOptionList[0].value
             this.fetchDataColumnList()
           } else {
@@ -279,8 +291,8 @@ export default {
     },
     fetchModelList () {
       // 取過且已經取到最後一頁
-      if (this.modelsPagination.currentPage >= 0
-        && this.modelsPagination.currentPage >= this.modelsPagination.totalPages - 1) {
+      if (this.modelsPagination.currentPage >= 0 &&
+        this.modelsPagination.currentPage >= this.modelsPagination.totalPages - 1) {
         this.enableModelsLazyLoading = false
         return
       }
@@ -294,7 +306,7 @@ export default {
                 value: model.id
               }
             })
-          this.modelOptionList = [ ...this.modelOptionList, ...newModelOptions ]
+          this.modelOptionList = [...this.modelOptionList, ...newModelOptions]
         })
     },
     clearData () {
@@ -316,7 +328,7 @@ export default {
       this.isLoadingModel = true
       // 模型更動要把 IO 全部更新
       getModelInfo(this.modelId)
-        .then(({ioArgs}) => {
+        .then(({ ioArgs }) => {
           this.ioArgs = {
             input: ioArgs.input.map(input => {
               return {
@@ -438,7 +450,7 @@ export default {
       padding-left: 0;
       border-bottom: 1px solid #FFFFFF;
 
-      &::placeholder { 
+      &::placeholder {
         font-size: 16px;
       }
     }
@@ -448,7 +460,7 @@ export default {
         color: #AAAAAA;
         border-bottom: 1px solid #AAAAAA;
 
-        &::placeholder { 
+        &::placeholder {
           color: #AAAAAA;
         }
       }
@@ -456,7 +468,7 @@ export default {
       .el-icon-arrow-up:before {
         color: #AAAAAA;
       }
-    } 
+    }
 
     /deep/ .input-field {
       &:not(:last-of-type) {
@@ -495,7 +507,7 @@ export default {
       }
 
       .el-input__inner {
-        &::placeholder { 
+        &::placeholder {
           font-size: 14px;
         }
       }

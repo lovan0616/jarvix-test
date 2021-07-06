@@ -1,89 +1,103 @@
 <template>
   <div class="single-pinboard-preview">
-    <div 
+    <div
       v-if="isAskDelete"
       class="confirm-delete"
     >
-      <div class="confirm-content">{{ $t('editing.confirmDeleteBoardOrNot') }}</div>
+      <div class="confirm-content">
+        {{ $t('editing.confirmDeleteBoardOrNot') }}
+      </div>
       <div class="button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelDelete"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           class="btn btn-default"
           @click="deletePinboard"
-        >{{ $t('button.confirm') }}</button>
+        >
+          {{ $t('button.confirm') }}
+        </button>
       </div>
     </div>
-    <div 
+    <div
       v-else-if="isEdit"
       class="action-block edit"
     >
-      <input 
-        v-model="tempEditInfo.name" 
+      <input
+        v-model="tempEditInfo.name"
         type="text"
         class="input board-name-input"
       >
       <div class="button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelEdit"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="!tempEditInfo.name"
           class="btn btn-default"
           @click="confirmEdit"
-        >{{ $t('button.confirm') }}</button>
+        >
+          {{ $t('button.confirm') }}
+        </button>
       </div>
     </div>
-    <div 
+    <div
       v-else-if="isShare"
       class="action-block edit"
     >
-      <input 
-        ref="shareInput" 
-        :value="shareUrl" 
+      <input
+        ref="shareInput"
+        :value="shareUrl"
         type="text"
         class="input"
         readOnly
         @click="inputSelect"
       >
       <div class="button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelShare"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           class="btn btn-default"
           @click="copy"
-        >{{ $t('button.copy') }}</button>
+        >
+          {{ $t('button.copy') }}
+        </button>
       </div>
     </div>
-    <div 
+    <div
       v-else
       class="action-block"
       @click="goToBoard"
     >
       {{ boardInfo.name }}
       <div class="action-row">
-        <div 
+        <div
           class="single-action"
           @click.stop="checkDelete"
         >
-          <svg-icon icon-class="delete"/>
+          <svg-icon icon-class="delete" />
         </div>
-        <div 
+        <div
           class="single-action"
           @click.stop="editName"
         >
-          <svg-icon icon-class="edit"/>
+          <svg-icon icon-class="edit" />
         </div>
-        <div 
+        <div
           class="single-action"
           @click.stop="share"
         >
-          <svg-icon icon-class="share"/>
+          <svg-icon icon-class="share" />
         </div>
       </div>
     </div>
@@ -97,7 +111,7 @@ export default {
   props: {
     boardInfo: {
       type: Object,
-      default: ()=> {
+      default: () => {
         return { id: null, name: null }
       }
     }
@@ -119,7 +133,7 @@ export default {
     },
     accountId () {
       return this.$route.params.account_id
-    },
+    }
   },
   methods: {
     editName () {
@@ -184,6 +198,6 @@ export default {
         this.cancelShare()
       })
     }
-  },
+  }
 }
 </script>
