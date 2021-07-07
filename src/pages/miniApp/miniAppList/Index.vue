@@ -273,7 +273,8 @@ export default {
     async showEditDialog (miniAppInfo) {
       this.holdMiniAppInfo(miniAppInfo)
       const miniAppInfoAPI = await getMiniAppInfo(miniAppInfo.id)
-      this.timeZoneId = miniAppInfoAPI.settings.editModeData.timeZone
+      this.timeZoneId = (miniAppInfoAPI && miniAppInfoAPI.settings && miniAppInfoAPI.settings.editModeData && miniAppInfoAPI.settings.editModeData.timeZone)
+        || moment.tz.guess()
       this.isShowEdit = true
     },
     showDeleteDialog (miniAppInfo) {
