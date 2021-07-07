@@ -155,7 +155,7 @@
           <div class="timeZone">
             <p class="group-title">{{ $t('common.timezone') }}</p>
             <time-zone-select 
-              :v-validate="'require'"
+              v-validate="'required'"
               v-model="columnInfo.timeZone"
               name="timeZone"
             />

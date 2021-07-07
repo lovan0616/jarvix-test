@@ -36,7 +36,7 @@
             {{ $t('common.timezone') }}
           </div>
           <time-zone-select 
-            :v-validate="'require'"
+            v-validate="'required'"
             v-model="warRoomData.timeZone"
             name="timeZone"
           />

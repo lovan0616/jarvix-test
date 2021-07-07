@@ -69,8 +69,8 @@
       <div class="dialog__input-block">
         <label class="dialog__label">
           {{ $t('common.timezone') }}
-          <time-zone-select 
-            v-validate="'require'"
+          <time-zone-select
+            v-validate="'required'"
             v-model="timeZoneId"
             name="timeZoneId"
           />
