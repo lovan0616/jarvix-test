@@ -458,7 +458,7 @@ export default {
         .then(({ crontabConfigContent, primaryKeys }) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
-          if (crontabConfigContent && !crontabConfigContent.hasOwnProperty('timeZone')) {
+          if (crontabConfigContent && !crontabConfigContent.timeZone) {
             this.columnInfo.timeZone = moment.tz.guess() // 用當地 timeZone
             this.originalColumnInfo.timeZone = this.columnInfo.timeZone
           }
