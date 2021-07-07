@@ -323,7 +323,7 @@ export default {
 
         // 呼叫彈出視窗
         Message({
-          message: this.$t('message.editNameSuccess'),
+          message: this.$t('message.saveSuccess'),
           type: 'success',
           duration: 3 * 1000,
           showClose: true
