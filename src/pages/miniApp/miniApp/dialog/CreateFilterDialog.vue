@@ -98,7 +98,7 @@
             <div 
               v-else 
               class="input-field">
-              <label class="input-field__label">{{ $t('miniapp.yAxisControllerColumns') }}</label>
+              <label class="input-field__label">{{ $t('miniApp.yAxisControllerColumns') }}</label>
               <div class="input-field__input">
                 <default-multi-select
                   v-validate="'required'"
