@@ -133,7 +133,6 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
 import moment from 'moment-timezone';
 import SingleMiniAppCard from './components/SingleMiniAppCard'
 import DecideDialog from '@/components/dialog/DecideDialog'
@@ -314,7 +313,9 @@ export default {
 
         // 更新 APP timezone
         this.tempEditInfo.settings = JSON.parse(JSON.stringify(miniAppInfo.settings))
-        this.tempEditInfo.settings.editModeData.timeZone = this.timeZoneId
+        if (this.tempEditInfo.settings.editModeData.timeZone !== this.timeZoneId) {
+          this.tempEditInfo.settings.editModeData.timeZone = this.timeZoneId
+        }
         promiseArr.push(updateAppSetting(this.tempEditInfo.id, this.tempEditInfo))
 
         // 送出更新
