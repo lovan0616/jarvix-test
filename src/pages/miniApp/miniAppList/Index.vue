@@ -301,22 +301,24 @@ export default {
         const miniAppInfo = await getMiniAppInfo(this.tempEditInfo.id)
         let appWarningConditions = miniAppInfo && miniAppInfo.settings.editModeData.warningModule.conditions
 
-        // 更新示警條件 timezone & 更新 App 設定
-        const updateConfig = {
-          "conditionIds": appWarningConditions.map((item) => item.id),
-          "groupId": this.groupId,
-          "timeZone": this.timeZoneId
+        const promiseArr = []
+        if (appWarningConditions && appWarningConditions.length > 0) {
+          // 更新示警條件 timezone & 更新 App 設定
+          const updateConfig = {
+            "conditionIds": appWarningConditions.map((item) => item.id),
+            "groupId": this.groupId,
+            "timeZone": this.timeZoneId
+          }
+          promiseArr.push(updateAlertTimeZone(updateConfig))
         }
 
         // 更新 APP timezone
         this.tempEditInfo.settings = JSON.parse(JSON.stringify(miniAppInfo.settings))
         this.tempEditInfo.settings.editModeData.timeZone = this.timeZoneId
+        promiseArr.push(updateAppSetting(this.tempEditInfo.id, this.tempEditInfo))
 
         // 送出更新
-        await axios.all([
-          updateAlertTimeZone(updateConfig),
-          updateAppSetting(this.tempEditInfo.id, this.tempEditInfo)
-        ])
+        await Promise.all(promiseArr)
 
         // 呼叫彈出視窗
         Message({
