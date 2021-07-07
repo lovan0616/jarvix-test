@@ -799,7 +799,7 @@
     },
     "checkDatarowDeletable": "Check if any datarow is deleted.",
     "reimportReminder": "Reimporting data will cause the deletion of the bounded flow.",
-    "cycleSetting": "Cycle setting"
+    "cycleSetting": "Cycle Setting"
   },
   "fileDataUpdate": {
     "updateData": "Update Data",
