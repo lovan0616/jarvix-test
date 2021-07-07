@@ -156,7 +156,7 @@
             <p class="group-title">{{ $t('common.timezone') }}</p>
             <time-zone-select 
               v-validate="'require'"
-              :current-id.sync="timeZoneId"
+              v-model="timeZoneId"
               name="timeZoneId"
             />
           </div>

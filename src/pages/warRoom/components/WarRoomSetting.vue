@@ -37,7 +37,7 @@
           </div>
           <time-zone-select 
             v-validate="'require'"
-            :current-id.sync="timeZoneId" 
+            v-model="timeZoneId"
             name="timeZoneId"
           />
         </div>

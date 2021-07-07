@@ -15,7 +15,7 @@ import moment from 'moment-timezone'
 export default {
   components: {DefaultSelect},
   props: {
-    currentId: {
+    value: {
       type: [String, Number],
       default: null
     }
@@ -31,10 +31,10 @@ export default {
     },
     timeZoneId: {
       get(){
-        return this.currentId
+        return this.value
       },
       set(val){
-        this.$emit('update:currentId',val)
+        this.$emit('input', val)
       }
     }
   }
