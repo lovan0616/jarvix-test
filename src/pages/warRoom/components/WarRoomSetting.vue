@@ -36,9 +36,9 @@
             {{ $t('common.timezone') }}
           </div>
           <time-zone-select 
-            v-validate="'require'"
-            v-model="timeZoneId"
-            name="timeZoneId"
+            :v-validate="'require'"
+            v-model="warRoomData.timeZone"
+            name="timeZone"
           />
         </div>
         <div class="war-room-setting__block">
@@ -202,13 +202,6 @@ export default {
     }
   },
   data () {
-    const timeZoneId = (this.configData
-      && this.configData.timeZone
-      && moment.tz.names().includes(this.configData.timeZone)
-    )
-      ? this.configData.timeZone
-      : moment.tz.guess()
-
     return {
       warRoomData: null,
       isLoading: false,
@@ -231,7 +224,6 @@ export default {
         }
       },
       isShowDeleteWarRoom: false,
-      timeZoneId,
     }
   },
   computed: {
@@ -251,13 +243,11 @@ export default {
       return 'others'
     }
   },
-  watch: {
-    timeZoneId(val) {
-      this.warRoomData.timeZone = val
-    }
-  },
   mounted () {
     this.warRoomData = JSON.parse(JSON.stringify(this.configData))
+    if (this.warRoomData && !this.warRoomData.hasOwnProperty('timeZone')) {
+      this.warRoomData.timeZone = moment.tz.guess()
+    }
     this.tempAlertUserIdList = this.warRoomData.alertUserIdList
     this.fetchData()
   },

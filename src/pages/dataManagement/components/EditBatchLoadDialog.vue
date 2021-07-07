@@ -155,9 +155,9 @@
           <div class="timeZone">
             <p class="group-title">{{ $t('common.timezone') }}</p>
             <time-zone-select 
-              v-validate="'require'"
-              v-model="timeZoneId"
-              name="timeZoneId"
+              :v-validate="'require'"
+              v-model="columnInfo.timeZone"
+              name="timeZone"
             />
           </div>
           <div class="cycle-setting">
@@ -414,8 +414,6 @@ export default {
       isLoading: false,
       isProcessing: false,
       hasError: false,
-      timeZoneId: moment.tz.guess(),
-      timeZoneCache: moment.tz.guess(),
     }
   },
   computed: {
@@ -445,7 +443,7 @@ export default {
       }
 
       // compare timezone
-      if (this.timeZoneId !== this.timeZoneCache) return true
+      if (this.columnInfo.timeZone !== this.originalColumnInfo.timeZone) return true
 
       return false
     },
@@ -463,12 +461,10 @@ export default {
         .then(({ crontabConfigContent, primaryKeys }) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
-          this.timeZoneId = (crontabConfigContent
-            && crontabConfigContent.timeZone
-            && moment.tz.names().includes(crontabConfigContent.timeZone))
-            ? crontabConfigContent.timeZone // 還原 timeZone
-            : moment.tz.guess() // 用當地 timeZone
-          this.timeZoneCache = this.timeZoneId
+          if (crontabConfigContent && !crontabConfigContent.hasOwnProperty('timeZone')) {
+            this.columnInfo.timeZone = moment.tz.guess() // 用當地 timeZone
+            this.originalColumnInfo = this.columnInfo.timeZone
+          }
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
 
@@ -517,7 +513,7 @@ export default {
         mode: this.columnInfo.mode,
         updateDateColumn: this.columnInfo.updateDateColumn,
         deletable: this.columnInfo.deletable === null ? false : this.columnInfo.deletable,
-        timeZone: this.timeZoneId
+        timeZone: this.columnInfo.timeZone
       }
     },
     setSetting () {
