@@ -189,7 +189,7 @@
           >{{ errors.first('mode') }}</div>
           <div 
             v-if="columnInfo.mode === 'BASIC'" 
-            class="input-field -basic">
+            class="input-field input-field--basic">
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
@@ -642,7 +642,7 @@ export default {
     .input-field {
       display: flex;
       flex-direction: column;
-      &.-basic {
+      &--basic {
         .input-field__input {
           width: 50%;
           .el-select {
