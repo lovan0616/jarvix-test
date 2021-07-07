@@ -299,7 +299,7 @@ export default {
 
         // 取得 App 內的示警條件列表
         const miniAppInfo = await getMiniAppInfo(this.tempEditInfo.id)
-        let appWarningConditions = miniAppInfo && JSON.parse(JSON.stringify(miniAppInfo.settings.editModeData.warningModule.conditions))
+        let appWarningConditions = miniAppInfo && miniAppInfo.settings.editModeData.warningModule.conditions
 
         // 更新示警條件 timezone & 更新 App 設定
         const updateConfig = {
