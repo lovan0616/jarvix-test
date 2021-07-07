@@ -483,7 +483,6 @@ import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState } from 'vuex'
-import axios from 'axios'
 import { updateAlertTimeZone } from '@/API/Alert'
 
 export default {
@@ -1197,7 +1196,7 @@ export default {
         id: conditionId, 
         relatedDashboardId: null
       })
-      await axios.all([
+      await Promise.all([
         updateAlertTimeZone({
           "conditionIds": [conditionId],
           "groupId": this.$route.params.group_id,
