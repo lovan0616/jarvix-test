@@ -442,9 +442,6 @@ export default {
         if (this.cronSettingValueBasic !== this.originalColumnInfo.cron) return true
       }
 
-      // compare timezone
-      if (this.columnInfo.timeZone !== this.originalColumnInfo.timeZone) return true
-
       return false
     },
     composedAdvancedCronSetting () {
