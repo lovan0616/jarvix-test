@@ -460,7 +460,7 @@ export default {
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           if (crontabConfigContent && !crontabConfigContent.hasOwnProperty('timeZone')) {
             this.columnInfo.timeZone = moment.tz.guess() // 用當地 timeZone
-            this.originalColumnInfo = this.columnInfo.timeZone
+            this.originalColumnInfo.timeZone = this.columnInfo.timeZone
           }
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
