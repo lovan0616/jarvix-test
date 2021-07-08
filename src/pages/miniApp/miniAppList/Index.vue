@@ -71,8 +71,8 @@
           {{ $t('common.timezone') }}
           <time-zone-select
             v-validate="'required'"
-            v-model="timeZoneId"
-            name="timeZoneId"
+            v-model="tempEditInfo.settings.editModeData.timeZone"
+            name="timeZone"
           />
         </label>
       </div>
@@ -185,7 +185,8 @@ export default {
               activate: false,
               updateFrequency: '* * * * *',
               conditions: [] // { id: 1, relatedDashboardId: null }
-            }
+            },
+            timeZone: moment.tz.guess()
           },
           viewModeData: {
             dashboards: [],
@@ -212,7 +213,6 @@ export default {
         'key',
         'len-with-line-chart'
       ],
-      timeZoneId: moment.tz.guess(),
     }
   },
   computed: {
@@ -245,9 +245,6 @@ export default {
         // 編輯模式下的名稱預設為 app 名稱
         editInfo.settings.editModeData.displayedName = editInfo.name
 
-        // 設定 timezone
-        editInfo.settings.editModeData.timeZone = this.timeZoneId
-
         // 送出 API
         createApp({
           ...editInfo,
@@ -270,10 +267,11 @@ export default {
       this.tempEditInfo = JSON.parse(JSON.stringify(miniAppInfo))
     },
     async showEditDialog (miniAppInfo) {
-      this.holdMiniAppInfo(miniAppInfo)
       const miniAppInfoAPI = await getMiniAppInfo(miniAppInfo.id)
-      this.timeZoneId = (miniAppInfoAPI && miniAppInfoAPI.settings && miniAppInfoAPI.settings.editModeData && miniAppInfoAPI.settings.editModeData.timeZone)
-        || moment.tz.guess()
+      if (!miniAppInfoAPI.settings.editModeData.timeZone) {
+        miniAppInfoAPI.settings.editModeData.timeZone = moment.tz.guess()
+      }
+      this.holdMiniAppInfo(miniAppInfoAPI)
       this.isShowEdit = true
     },
     showDeleteDialog (miniAppInfo) {
@@ -287,7 +285,6 @@ export default {
     },
     showAdd () {
       this.holdMiniAppInfo(this.miniAppInfoTemplate)
-      this.timeZoneId = moment.tz.guess()
       this.isShowEdit = true
     },
     async confirmEdit () {
@@ -295,28 +292,20 @@ export default {
         const isValidate = await this.$validator.validateAll()
         if (!isValidate) return
         this.isProcessing = true
+        const promiseArr = [
+          updateAppSetting(this.tempEditInfo.id, this.tempEditInfo)
+        ]
 
-        // 取得 App 內的示警條件列表
-        const miniAppInfo = await getMiniAppInfo(this.tempEditInfo.id)
-        let appWarningConditions = miniAppInfo && miniAppInfo.settings.editModeData.warningModule.conditions
-
-        const promiseArr = []
+        // 更新示警條件 timezone & 更新 App 設定
+        let appWarningConditions = this.tempEditInfo.settings.editModeData.warningModule.conditions
         if (appWarningConditions && appWarningConditions.length > 0) {
-          // 更新示警條件 timezone & 更新 App 設定
           const updateConfig = {
             "conditionIds": appWarningConditions.map((item) => item.id),
             "groupId": this.groupId,
-            "timeZone": this.timeZoneId
+            "timeZone": this.tempEditInfo.settings.editModeData.timeZone
           }
           promiseArr.push(updateAlertTimeZone(updateConfig))
         }
-
-        // 更新 APP timezone
-        this.tempEditInfo.settings = JSON.parse(JSON.stringify(miniAppInfo.settings))
-        if (this.tempEditInfo.settings.editModeData.timeZone !== this.timeZoneId) {
-          this.tempEditInfo.settings.editModeData.timeZone = this.timeZoneId
-        }
-        promiseArr.push(updateAppSetting(this.tempEditInfo.id, this.tempEditInfo))
 
         // 送出更新
         await Promise.all(promiseArr)
