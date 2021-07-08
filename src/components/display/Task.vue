@@ -223,7 +223,7 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.diagram = response.diagram
               this.resultId = response.resultId
-              this.canDownloadCsv = response.canDownloadCsv
+              this.canDownloadCsv = response.supportedFunction ? response.supportedFunction.canDownloadCsv : response.canDownloadCsv
               this.componentName = this.getChartTemplate(this.convertedType || this.diagram)
               let responseData = response.data
 
@@ -235,10 +235,12 @@ export default {
               this.$emit('setDiagram', response.diagram)
 
               // component 設定資訊
+              // 舊資料內可能不含 supportedFunction，這邊做上下兼容處理
+              let enableAlert = response.supportedFunction ? response.supportedFunction.analysisInfo.enableAlert : (response.enableAlert || false)
               this.$emit('setConfig', {
-                enableAlert: response.enableAlert,
+                enableAlert,
                 // 2N 異常設定示警需要 x 軸欄位資訊
-                ...((response.enableAlert && responseData.title) && {
+                ...((enableAlert && responseData.title) && {
                   xAxis: responseData.title.xAxis && responseData.title.xAxis.filter(xAxis => xAxis.dc_id),
                   yAxis: responseData.title.yAxis
                 }),
