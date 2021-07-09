@@ -41,13 +41,16 @@
         :data-list.sync="userData"
         :loading="isLoading"
         :empty-message="$t('editing.notYetCreateGroup')"
-        @changeRole="showChangeRole"
-        @deleteUserFromAccount="showDeleteAccount"
       >
         <template #roleZhName>
           <role-desc-pop />
         </template>
         <template #action="{ data }">
+          <a
+            :disabled="hasChangePwdPermission"
+            class="link action-link"
+            @click="showResetPasswordDialog(data, !hasChangePwdPermission)"
+          >{{ $t('editing.changePassword') }}</a>
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
@@ -56,11 +59,38 @@
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showDeleteAccount(data, !btnDisabled(data))"
+            @click="showDeleteUserDialog(data, !btnDisabled(data))"
           >{{ $t('button.remove') }}</a>
         </template>
       </crud-table>
     </div>
+    <writing-dialog
+      v-if="isShowRestPasswordDialog"
+      :title="$t('editing.changePassword')"
+      :button="$t('button.change')"
+      :is-loading="isProcessing"
+      :show-both="true"
+      @closeDialog="closeRestPasswordDialog"
+      @confirmBtn="changePassword"
+    >
+      <div class="dialog-select-input-box">
+        <input-verify
+          v-validate="'required|min:8|requireOneNumeric'"
+          ref="confirmPassword"
+          v-model="passwordInfo.password"
+          :placeholder="$t('editing.newPassword')"
+          type="password"
+          name="verifyNewPassword"
+        />
+        <input-verify
+          v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
+          v-model="passwordInfo.verifyPassword"
+          :placeholder="$t('editing.confirmNewPassword')"
+          type="password"
+          name="verifyPasswordCheck"
+        />
+      </div>
+    </writing-dialog>
     <writing-dialog
       v-if="isShowChangeRole"
       :title="$t('userManagement.updateRole')"
@@ -92,13 +122,13 @@
     </writing-dialog>
 
     <decide-dialog
-      v-if="isShowDeleteAccount"
-      :title="$t('userManagement.confirmDeleteAccountText')"
+      v-if="isShowDeleteUserDialog"
+      :title="$t('userManagement.confirmDeleteAccountUserText')"
       :type="'delete'"
       :btn-text="$t('button.remove')"
       :is-processing="isProcessing"
-      @closeDialog="closeDeleteAccount"
-      @confirmBtn="deleteAccount"
+      @closeDialog="closeDeleteUserDialog"
+      @confirmBtn="deleteUser"
     />
     <create-user-dialog
       v-if="isShowCreateUser"
@@ -121,7 +151,7 @@
   </div>
 </template>
 <script>
-import { getAccountUsers, deleteUserAccount, inviteUser, batchInviteUser, getAccountRoles, updateRole, getSelfInfo } from '@/API/User'
+import { getAccountUsers, deleteAccountUser, inviteUser, batchInviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { Message } from 'element-ui'
 
@@ -146,17 +176,7 @@ export default {
       inviteeList: [],
       userData: [],
       isShowChangeRole: false,
-      isShowDeleteAccount: false,
-      currentId: '',
-      currentUser: {
-        active: null,
-        username: '',
-        role: '',
-        roleId: null
-      },
-      selfUser: {
-        roleId: null
-      },
+      isShowDeleteUserDialog: false,
       confirmDeleteText: this.$t('editing.confirmDelete'),
       closeText: this.$t('editing.close'),
       unableLoginText: this.$t('editing.unableLogin'),
@@ -189,7 +209,20 @@ export default {
           value: 'action',
           width: '300px'
         }
-      ]
+      ],
+      currentUser: {
+        id: null,
+        active: null,
+        username: '',
+        role: '',
+        roleId: null
+      },
+      passwordInfo: {
+        password: null,
+        verifyPassword: null
+      },
+      selfInfo: null,
+      isShowRestPasswordDialog: false
     }
   },
   computed: {
@@ -212,6 +245,10 @@ export default {
           name: this.$t('editing.general')
         }
       ]
+    },
+    hasChangePwdPermission () {
+      if (!this.selfInfo) return false
+      return this.selfInfo.role !== 'account_owner' && this.selfInfo.role !== 'account_maintainer'
     }
   },
   watch: {
@@ -239,11 +276,12 @@ export default {
     },
     getSelfInfo () {
       getSelfInfo().then(response => {
-        this.selfUser = this.userData.filter(user => user.id === response.id)[0]
+        this.selfInfo = this.userData.filter(user => user.id === response.id)[0]
       })
     },
     btnDisabled (user) {
-      return (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') || this.selfUser.id === user.id
+      if (!this.selfInfo || !user) return true
+      return (this.selfInfo.role === 'account_maintainer' && user.role === 'account_owner') || this.selfInfo.id === user.id
     },
     showInviteUser () {
       this.isShowInviteUser = true
@@ -352,7 +390,7 @@ export default {
       updateRole({
         accountId: this.currentAccountId,
         newRole: this.currentUser.roleId,
-        userId: this.currentId
+        userId: this.currentUser.id
       })
         .then(response => {
           this.closeChangeRole()
@@ -370,14 +408,14 @@ export default {
           this.isProcessing = false
         })
     },
-    deleteAccount () {
+    deleteUser () {
       this.isProcessing = true
-      deleteUserAccount(
+      deleteAccountUser(
         this.currentAccountId,
-        this.currentId
+        this.currentUser.id
       )
         .then(response => {
-          this.closeDeleteAccount()
+          this.closeDeleteUserDialog()
           this.getUserList()
           Message({
             message: this.$t('message.deleteSuccess'),
@@ -396,20 +434,19 @@ export default {
 
       const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role)) || user.role
       this.currentUser.roleId = option.value
-      this.currentId = user.id
+      this.currentUser.id = user.id
       this.isShowChangeRole = true
     },
     closeChangeRole () {
       this.isShowChangeRole = false
     },
-    showDeleteAccount (user, hasPermission) {
+    showDeleteUserDialog (user, hasPermission) {
       if (!hasPermission) return
-
-      this.currentId = user.id
-      this.isShowDeleteAccount = true
+      this.currentUser.id = user.id
+      this.isShowDeleteUserDialog = true
     },
-    closeDeleteAccount () {
-      this.isShowDeleteAccount = false
+    closeDeleteUserDialog () {
+      this.isShowDeleteUserDialog = false
     },
     groupName (list) {
       // 暫時只呈現第一個名稱
@@ -436,38 +473,80 @@ export default {
         }
       }
       return existingUsers
+    },
+    async changePassword () {
+      const result = this.$validator.validateAll()
+      if (!result) return
+
+      try {
+        this.isProcessing = true
+        const { active, password, username, id } = this.currentUser
+        await updateUser({
+          active,
+          password,
+          username,
+          userId: id,
+          accountId: this.currentAccountId
+        })
+        this.closeRestPasswordDialog()
+        this.isProcessing = false
+        await this.getUserList()
+        Message({
+          message: this.$t('message.changePasswordSuccess'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      } catch (err) {
+        this.isProcessing = false
+      }
+    },
+    showResetPasswordDialog (user, hasPermission) {
+      if (!hasPermission) return
+      this.currentUser.id = user.id
+      this.currentUser.username = user.name
+      this.currentUser.active = user.active
+      this.isShowRestPasswordDialog = true
+    },
+    closeRestPasswordDialog () {
+      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
+      this.isShowRestPasswordDialog = false
+      this.$nextTick(() => {
+        this.passwordInfo.password = null
+        this.passwordInfo.verifyPassword = null
+      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .user-management {
-
   .page-title-row {
     margin-bottom: 16px;
 
     .title {
-      margin: 0;
       font-size: 24px;
       line-height: 32px;
+      margin: 0;
     }
 
     .bread-crumb {
-      display: flex;
       align-items: center;
+      display: flex;
       font-size: 16px;
-      line-height: 20px;
       letter-spacing: 1px;
+      line-height: 20px;
     }
   }
 
   .tooltip-container {
     margin: 0 3px;
+
     .tooltip {
-      width: 212px;
-      white-space: normal;
-      padding: 12px;
       line-height: 14px;
+      padding: 12px;
+      white-space: normal;
+      width: 212px;
       z-index: 2010;
     }
 
@@ -481,10 +560,10 @@ export default {
   }
 
   .table-board {
-    padding: 24px;
     background: var(--color-bg-5);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    padding: 24px;
   }
 }
 
@@ -492,11 +571,13 @@ export default {
 <style lang="scss">
 .role-select.el-select {
   width: 120px;
+
   .el-input__inner {
     height: 20px;
     line-height: 20px;
     padding-left: 0;
   }
+
   .el-input__icon {
     line-height: 20px;
   }

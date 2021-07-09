@@ -72,26 +72,8 @@ export function getAccountUsers (id) {
 }
 
 /**
- * 新增使用者
- * @param {Object} userInfo - 使用者資訊
- * @param {String} userInfo.email - 使用者郵件
- * @param {String} userInfo.password - 使用者密碼
- * @param {String} userInfo.username - 使用者名稱
- */
-export function createUser (userInfo) {
-  return request({
-    url: '/users',
-    method: 'POST',
-    data: userInfo
-  })
-}
-
-/**
  * 更新使用者
  * @param {Object} userInfo - 使用者資訊
- * @param {String} userInfo.email - 使用者郵件
- * @param {String} userInfo.password - 使用者密碼
- * @param {String} userInfo.username - 使用者名稱
  */
 export function updateUser (userInfo) {
   return request({
@@ -255,7 +237,7 @@ export function updateRole (info) {
  * @param {Number} accountId - 帳戶 ID
  * @param {Number} userId - 使用者 ID
  */
-export function deleteUserAccount (id, accountId) {
+export function deleteAccountUser (id, accountId) {
   return request({
     url: `/account/${id}/user/${accountId}`,
     method: 'DELETE'
