@@ -483,6 +483,7 @@ import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState } from 'vuex'
+import { updateAlertTimeZone } from '@/API/Alert'
 
 export default {
   inject: ['$validator'],
@@ -1189,15 +1190,23 @@ export default {
       this.componentToWarningCriteriaData = {}
       this.isShowCreateWarningCriteriaDialog = false
     },
-    addComponentAlertToWarningModuleSetting (conditionId) {
+    async addComponentAlertToWarningModuleSetting (conditionId) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       editedMiniApp.settings.editModeData.warningModule.conditions.push({
         id: conditionId, 
         relatedDashboardId: null
       })
-      this.updateAppSetting(editedMiniApp)
-        .then(() => this.miniApp = editedMiniApp)
-        .catch(() => {})
+      await Promise.all([
+        updateAlertTimeZone({
+          "conditionIds": [conditionId],
+          "groupId": this.$route.params.group_id,
+          "timeZone": editedMiniApp.settings.editModeData && editedMiniApp.settings.editModeData.timeZone
+            ? editedMiniApp.settings.editModeData.timeZone
+            : moment.tz.guess()
+        }),
+        this.updateAppSetting(editedMiniApp)
+      ])
+      this.miniApp = editedMiniApp
     },
     updateFilter (updatedFilterList, type) {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
@@ -1515,7 +1524,7 @@ export default {
         ...componentComplementaryInfo
       })
     }
-  }
+  },
 }
 </script>
 
