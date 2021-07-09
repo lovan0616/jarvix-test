@@ -245,7 +245,7 @@ export default {
   },
   mounted () {
     this.warRoomData = JSON.parse(JSON.stringify(this.configData))
-    if (this.warRoomData && !this.warRoomData.hasOwnProperty('timeZone')) {
+    if (this.warRoomData && !this.warRoomData.timeZone) {
       this.warRoomData.timeZone = moment.tz.guess()
     }
     this.tempAlertUserIdList = this.warRoomData.alertUserIdList
