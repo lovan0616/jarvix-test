@@ -328,7 +328,11 @@ export default {
         }
       ],
       anomalySetting: null,
-      tempComponentAnomalySettings: []
+      tempComponentAnomalySettings: [],
+      segmentationInfo: {
+        question: '',
+        unknownToken: []
+      }
     }
   },
   computed: {
@@ -459,7 +463,6 @@ export default {
             .catch((error) => {})
         } else {
           // 多個結果
-          // this.$store.commit('dataSource/setAppQuestion', null)
           this.$store.commit('dataSource/setCurrentQuestionId', response.questionId)
           this.layout = 'MultiResult'
           this.resultInfo = {...response, question: question}
@@ -767,11 +770,9 @@ export default {
     closeUnknowInfoBlock() {
       this.segmentationInfo = {
         question: null,
-        unknownToken: [],
-        nlpToken: []
+        unknownToken: []
       };
     }
-
   }
 }
 </script>

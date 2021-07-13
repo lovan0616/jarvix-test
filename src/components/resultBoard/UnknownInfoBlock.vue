@@ -8,15 +8,9 @@
     </div>
     <div class="content-block">
       <div class="content">{{ $t('resultDescription.systemQuestionAnalysis', {question: segmentationInfo.question}) }}
-        <span v-if="segmentationInfo.unknownToken.length > 0">“{{ unknowTokenList }}” {{ $t('resultDescription.systemUnknownTokenList') }}</span><span v-if="segmentationInfo.unknownToken.length > 0 && segmentationInfo.nlpToken.length > 0">，</span>
-        <template
-          v-if="segmentationInfo.nlpToken.length > 0"
-        >
-          <span
-            v-for="(nlpToken, index) in segmentationInfo.nlpToken"
-            :key="index"
-          >“{{ nlpToken.word }}” {{ $t('resultDescription.beRecognized') }} “{{ nlpToken.matchedWord }}”<span v-if="index < segmentationInfo.nlpToken.length - 1">、</span></span>
-        </template>。
+        <span v-if="segmentationInfo.unknownToken.length > 0">
+          “{{ unknowTokenList }}” {{ $t('resultDescription.systemUnknownTokenList') }}。
+        </span>
       </div>
       <a 
         href="javascript:void(0)" 
@@ -38,7 +32,6 @@ export default {
         return {
           question: null,
           unknownToken: [],
-          nlpToken: []
         }
       }
     }
