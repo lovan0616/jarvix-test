@@ -349,6 +349,8 @@
     "emptyPinboard": "目前无任何内容",
     "emptyResult": "没有相关数据",
     "emptyResultDescription": "您所输入的问题，无法找到相关联的数据进行分析，请重新输入语句搜寻，或使用系统建议语句",
+    "notShowResultTitle": "应用程式目前不支援以下这几种问句类型：",
+    "notShowResultDescription": "根因分析、关联分析、差异分析、画像分析，请更换问句询问。",
     "preview": "预览",
     "result": "结果",
     "comparisonCategory": "比较类",

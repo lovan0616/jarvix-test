@@ -234,13 +234,15 @@ import { algoConfig } from '@/utils/general'
 import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
 import { formatAnomalySetting } from '@/components/display/common/addons'
+import NotShowResult from '@/pages/result/components/NotShowResult'
 
 export default {
   name: 'DashboardComponent',
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    InputVerify
+    InputVerify,
+    NotShowResult
   },
   props: {
     currentComponent: {
@@ -413,23 +415,34 @@ export default {
         // 編輯模式下帶入當初問問句使用的 parser 語系；新創時走原本流程（拿當前 store 中的語系）
         language: this.currentComponent.init && this.currentComponent.parserLanguage
       }).then(response => {
+
         let questionId = response.questionId
         let segmentationList = response.segmentationList
-        
-        // 無結果
-        const emptyResultDenotationList = ['NO_ANSWER', 'DIFFERENCE', 'CORRELATION_EXPLORATION', 'ROOT_CAUSE', 'PROFILE']
-        const hasEmptyResultDenotation = (el) => el === segmentationList[0].denotation
 
-        if (emptyResultDenotationList.some(hasEmptyResultDenotation)) {
+        // 處理沒顯示結果的狀況：無結果 or 不支援問題所以不顯示結果
+        const noShowAnswerSituations = ['NO_ANSWER','DIFFERENCE', 'CORRELATION_EXPLORATION', 'ROOT_CAUSE', 'PROFILE']
+        const hasNoShowAnswerDenotation = (el) => el === segmentationList[0].denotation
+
+        if(noShowAnswerSituations.some(hasNoShowAnswerDenotation)) {
           this.segmentation = segmentationList[0]
           this.$store.commit('result/updateCurrentResultInfo', null)
-          this.layout = 'EmptyResult'
           this.resultInfo = {
             title: this.segmentation.errorCategory,
             description: this.segmentation.errorMessage
           }
           this.$emit('update:isLoading', false)
           this.$emit('update:isAddable', null)
+
+          switch (this.segmentation.denotation) {
+            // 無結果
+            case 'NO_ANSWER':
+              this.layout = 'EmptyResult'
+              break;
+            // 有關、根因分析、畫像分析、差異分析的問句 => 不顯示結果
+            default:
+              this.layout = 'NotShowResult'
+              break;
+          }
           return false
         }
 
