@@ -25,7 +25,7 @@
         <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
         <div
           v-if="isAboveUpperBound || isBelowLowerBound"
-          class="card__message"
+          :class="['card__message', {hidable__message: isEditable}]"
         >
           <svg-icon
             :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
@@ -436,7 +436,7 @@ export default {
     .card__control {
       display: block;
     }
-    .card__message {
+    .card__message.hidable__message {
       display: none;
     }
   }
