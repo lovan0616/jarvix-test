@@ -16,6 +16,7 @@ export default {
     changeLangBeforeLogin: false,
     token: null,
     tokenTimestamp: null,
+    tokenRefreshPromise: null,
     isSmtpConnected: false
   },
   actions,

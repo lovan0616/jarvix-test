@@ -16,5 +16,8 @@ export default {
   },
   updateTokenTimestamp (state, data) {
     state.tokenTimestamp = data
+  },
+  updateTokenRefreshPromise (state, data) {
+    state.tokenRefreshPromise = data
   }
 }
