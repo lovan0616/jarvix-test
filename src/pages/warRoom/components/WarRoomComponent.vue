@@ -2,7 +2,8 @@
   <div
     :class="{
       'card--focused': isFocusing,
-      'card--no-bg': isError
+      'card--no-bg': isError,
+      'card--hover': isEditable
     }"
     class="card"
   >
@@ -348,7 +349,6 @@ export default {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  cursor: grab;
   border: 1px solid transparent;
 
   &__header {
@@ -416,6 +416,10 @@ export default {
   &--no-bg {
     background: transparent;
     border: 2px solid #202D2D;
+  }
+
+  &--hover {
+    cursor: grab;
   }
 
   &.sortable-chosen,
