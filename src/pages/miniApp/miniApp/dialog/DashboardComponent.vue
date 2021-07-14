@@ -234,7 +234,6 @@ import { algoConfig } from '@/utils/general'
 import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
 import { formatAnomalySetting } from '@/components/display/common/addons'
-import NotShowResult from '@/pages/result/components/NotShowResult'
 
 export default {
   name: 'DashboardComponent',
@@ -242,7 +241,6 @@ export default {
   components: {
     DefaultSelect,
     InputVerify,
-    NotShowResult
   },
   props: {
     currentComponent: {
@@ -424,25 +422,27 @@ export default {
         const hasNoShowAnswerDenotation = (el) => el === segmentationList[0].denotation
 
         if(noShowAnswerSituations.some(hasNoShowAnswerDenotation)) {
-          this.segmentation = segmentationList[0]
-          this.$store.commit('result/updateCurrentResultInfo', null)
-          this.resultInfo = {
-            title: this.segmentation.errorCategory,
-            description: this.segmentation.errorMessage
-          }
-          this.$emit('update:isLoading', false)
-          this.$emit('update:isAddable', null)
+          this.segmentation = segmentationList[0]          
 
           switch (this.segmentation.denotation) {
             // 無結果
             case 'NO_ANSWER':
-              this.layout = 'EmptyResult'
+              this.resultInfo = {
+              title: this.segmentation.errorCategory,
+              description: this.segmentation.errorMessage
+            }
               break;
             // 有關、根因分析、畫像分析、差異分析的問句 => 不顯示結果
             default:
-              this.layout = 'NotShowResult'
+              this.resultInfo = {
+              title: this.$t('editing.notShowResultTitle'),
+              description: this.$t('editing.notShowResultDescription')
+            }
               break;
           }
+
+          this.layout = 'EmptyResult'
+          this.$emit('update:isLoading', false)
           return false
         }
 
