@@ -9,7 +9,7 @@
     <div class="content-block">
       <div class="content">{{ $t('resultDescription.systemQuestionAnalysis', {question: segmentationInfo.question}) }}
         <span v-if="segmentationInfo.unknownToken.length > 0">
-          “{{ unknowTokenList }}” {{ $t('resultDescription.systemUnknownTokenList') }}。
+          “{{ unknowTokenList }}” {{ $tc('resultDescription.systemUnknownTokenList', unknownTokenCount) }}
         </span>
       </div>
       <a 
@@ -39,6 +39,9 @@ export default {
   computed: {
     unknowTokenList () {
       return this.segmentationInfo.unknownToken.map(element => element.matchedWord).join(', ')
+    },
+    unknownTokenCount () {
+      return this.segmentationInfo.unknownToken[0].word.split(' ').length
     }
   },
   methods: {
