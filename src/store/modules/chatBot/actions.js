@@ -55,7 +55,7 @@ export default {
     addTableToMemory(rootGetters['userManagement/getCurrentAccountId'], rootGetters['dataSource/currentDataFrameId'], rootState.dataSource.dataSourceId)
   },
   getParserList ({commit, rootState}) {
-    getParserLanguageList().then(res => {
+    return getParserLanguageList().then(res => {
       let currentLanguage = 'ZH_TW'
       // switch (rootState.setting.locale) {
       //   case 'zh-TW':
