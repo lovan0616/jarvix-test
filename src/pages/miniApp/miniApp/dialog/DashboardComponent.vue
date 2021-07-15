@@ -240,7 +240,7 @@ export default {
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    InputVerify
+    InputVerify,
   },
   props: {
     currentComponent: {
@@ -268,7 +268,7 @@ export default {
     return {
       questionInfo: null,
       resultInfo: null,
-      layout: '',
+      layout: null,
       timeoutFunction: null,
       totalSec: 50,
       periodSec: 200,
@@ -417,7 +417,7 @@ export default {
       this.totalSec = 50
       this.periodSec = 200
       this.resultInfo = null
-      this.layout = ''
+      this.layout = null
       this.isShowAnomalySetting = false
       this.$store.dispatch('chatBot/askQuestion', {
         question,
@@ -427,20 +427,36 @@ export default {
         // 編輯模式下帶入當初問問句使用的 parser 語系；新創時走原本流程（拿當前 store 中的語系）
         language: this.currentComponent.init && this.currentComponent.parserLanguage
       }).then(response => {
+
         let questionId = response.questionId
         let segmentationList = response.segmentationList
-        
-        // 無結果
-        if (segmentationList[0].denotation === 'NO_ANSWER') {
-          this.segmentation = segmentationList[0]
-          this.$store.commit('result/updateCurrentResultInfo', null)
-          this.layout = 'EmptyResult'
-          this.resultInfo = {
-            title: this.segmentation.errorCategory,
-            description: this.segmentation.errorMessage
+
+        // 處理沒顯示結果的狀況：無結果 or 不支援問題所以不顯示結果
+        const noShowAnswerSituations = ['NO_ANSWER','DIFFERENCE', 'CORRELATION_EXPLORATION', 'ROOT_CAUSE', 'PROFILE']
+        const hasNoShowAnswerDenotation = (el) => el === segmentationList[0].denotation
+
+        if(noShowAnswerSituations.some(hasNoShowAnswerDenotation)) {
+          this.segmentation = segmentationList[0]          
+
+          switch (this.segmentation.denotation) {
+            // 無結果
+            case 'NO_ANSWER':
+              this.resultInfo = {
+              title: this.segmentation.errorCategory,
+              description: this.segmentation.errorMessage
+            }
+              break;
+            // 有關、根因分析、畫像分析、差異分析的問句 => 不顯示結果
+            default:
+              this.resultInfo = {
+              title: this.$t('editing.notShowResultTitle'),
+              description: this.$t('editing.notShowResultDescription')
+            }
+              break;
           }
+
+          this.layout = 'EmptyResult'
           this.$emit('update:isLoading', false)
-          this.$emit('update:isAddable', null)
           return false
         }
 

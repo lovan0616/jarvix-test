@@ -350,6 +350,8 @@
     "emptyPinboard": "目前無任何內容",
     "emptyResult": "沒有相關資料",
     "emptyResultDescription": "您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用系統建議語句",
+    "notShowResultTitle": "應用程式目前不支援以下這幾種問句類型：",
+    "notShowResultDescription": "根因分析、關聯分析、差異分析、畫像分析，請更換問句詢問。",
     "preview": "預覽",
     "result": "結果",
     "comparisonCategory": "比較類",

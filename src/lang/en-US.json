@@ -350,6 +350,8 @@
     "emptyPinboard": "There is currently no content.",
     "emptyResult": "No relevant information.",
     "emptyResultDescription": "Unable to find relevant information. Please ask differently or utilize recommended questions.",
+    "notShowResultTitle": "Unsupported question types",
+    "notShowResultDescription": "Root Cause, Relation, Difference, Profile Analysis are currently not supported in the Application Builder.",
     "preview": "Preview",
     "result": "Result",
     "comparisonCategory": "Comparison",
