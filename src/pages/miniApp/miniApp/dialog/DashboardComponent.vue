@@ -724,7 +724,7 @@ export default {
       this.currentComponent.config.fontSize = 'middle'
     },
     saveChartSetting (isSetAlgoConfig) {
-      this.askResult(this.segmentation, this.questionInfo.questionId, isSetAlgoConfig)
+      this.askResult(this.segmentation, this.currentQuestionId, isSetAlgoConfig)
     },
     saveAnomalySetting () {
       this.$validator.validateAll('anomaly')
