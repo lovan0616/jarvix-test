@@ -186,6 +186,7 @@
               :component-id="number.componentId"
               :is-editable="true"
               :is-focusing="selectedComponent && selectedComponent.componentId === number.componentId"
+              :is-show-warning-message="true"
               class="number__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
