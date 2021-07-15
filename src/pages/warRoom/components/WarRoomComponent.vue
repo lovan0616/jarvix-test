@@ -2,7 +2,8 @@
   <div
     :class="{
       'card--focused': isFocusing,
-      'card--no-bg': isError
+      'card--no-bg': isError,
+      'card--hover': isEditable
     }"
     class="card"
   >
@@ -25,7 +26,7 @@
         <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
         <div
           v-if="isAboveUpperBound || isBelowLowerBound"
-          class="card__message"
+          :class="['card__message', {'card__message--hover': isEditable}]"
         >
           <svg-icon
             :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
@@ -348,7 +349,6 @@ export default {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  cursor: grab;
   border: 1px solid transparent;
 
   &__header {
@@ -418,6 +418,10 @@ export default {
     border: 2px solid #202D2D;
   }
 
+  &--hover {
+    cursor: grab;
+  }
+
   &.sortable-chosen,
   &.sortable-drag {
     cursor: grabbing;
@@ -435,6 +439,9 @@ export default {
     background: #202D2D;
     .card__control {
       display: block;
+    }
+    .card__message--hover {
+      display: none;
     }
   }
 
