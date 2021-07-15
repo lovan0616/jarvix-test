@@ -79,13 +79,6 @@
   </div>
 </template>
 <script>
-import SearchBlock from '@/components/SearchBlock'
-import DataTable from '@/components/table/DataTable'
-import FileUploadDialog from './components/FileUploadDialog'
-import CreateDataSource from './components/CreateDataSource'
-import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
-import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import DataStorageUsageInfo from './components/DataStorageUsageInfo'
 import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
@@ -94,13 +87,13 @@ import orderBy from 'lodash.orderby'
 export default {
   name: 'DataSourceList',
   components: {
-    SearchBlock,
-    DataTable,
-    FileUploadDialog,
-    CreateDataSource,
-    ConfirmDeleteDialog,
-    ConfirmChangeNameDialog,
-    DataStorageUsageInfo
+    SearchBlock: () => import('@/components/SearchBlock'),
+    DataTable: () => import('@/components/table/DataTable'),
+    FileUploadDialog: () => import('./components/FileUploadDialog'),
+    CreateDataSource: () => import('./components/CreateDataSource'),
+    ConfirmDeleteDialog: () => import('./components/ConfirmDeleteDialog'),
+    ConfirmChangeNameDialog: () => import('./components/ConfirmChangeNameDialog'),
+    DataStorageUsageInfo: () => import('./components/DataStorageUsageInfo')
   },
   data () {
     return {

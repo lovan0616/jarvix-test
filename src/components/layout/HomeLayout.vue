@@ -46,20 +46,16 @@
   </div>
 </template>
 <script>
-import ChatRoomBlock from '@/components/chatBot/ChatRoom'
-import PreviewDataSource from '@/components/PreviewDataSource'
-import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
-import AskCondition from '@/components/AskCondition'
 import store from '@/store'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'HomeLayout',
   components: {
-    ChatRoomBlock,
-    PreviewDataSource,
-    AdvanceDataFrameSetting,
-    AskCondition
+    ChatRoomBlock: () => import('@/components/chatBot/ChatRoom'),
+    PreviewDataSource: () => import('@/components/PreviewDataSource'),
+    AdvanceDataFrameSetting: () => import('@/components/AdvanceDataFrameSetting'),
+    AskCondition: () => import('@/components/AskCondition')
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
