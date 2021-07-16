@@ -1,7 +1,7 @@
 <template>
   <div class="result-layout">
     <unknown-info-block
-      v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
+      v-if="segmentationInfo.unknownToken.length > 0"
       :segmentation-info="segmentationInfo"
       @close="closeUnknowInfoBlock"
     />
@@ -305,9 +305,6 @@ export default {
         })
     },
     segmentationAnalysis (payloadInfo) {
-      // this.segmentationInfo.nlpToken = payloadInfo.sentence.filter(element => {
-      //   return element.isMatchedByNlp || element.isSynonym
-      // })
       this.segmentationInfo.unknownToken = payloadInfo.sentence.filter(element => {
         return element.type === 'UNKNOWN'
       })
@@ -317,7 +314,6 @@ export default {
       this.segmentationInfo = {
         question: null,
         unknownToken: [],
-        nlpToken: []
       }
     }
   }
