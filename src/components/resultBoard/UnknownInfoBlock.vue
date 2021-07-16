@@ -41,7 +41,7 @@ export default {
       return this.segmentationInfo.unknownToken.map(element => element.matchedWord).join(', ')
     },
     unknownTokenCount () {
-      return this.segmentationInfo.unknownToken[0].word.split(' ').length
+      return this.segmentationInfo.unknownToken.length
     }
   },
   methods: {
