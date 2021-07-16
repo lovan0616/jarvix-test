@@ -8,7 +8,7 @@
     </div>
     <div class="content-block">
       <div class="content">{{ $t('resultDescription.systemQuestionAnalysis', {question: segmentationInfo.question}) }}
-        <span v-if="segmentationInfo.unknownToken.length > 0">
+        <span v-if="unknownTokenCount">
           “{{ unknowTokenList }}” {{ $tc('resultDescription.systemUnknownTokenList', unknownTokenCount) }}
         </span>
       </div>
