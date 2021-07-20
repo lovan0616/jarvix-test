@@ -265,19 +265,19 @@ export default {
 
       // 移除 null 值
       config.tooltip.formatter = this.tooltipFormatter
-      config.tooltip.position = function(pos, params, dom, rect, size){
+      config.tooltip.position = function (pos, params, dom, rect, size) {
         return {
           top: Math.max(pos[1] - 80, 0),
           left: ['left', 'right'][+(pos[0] < size.viewSize[0] / 2)] === 'left'
-          ? pos[0] - (size.contentSize[0] + 20)
-          : pos[0] + 20
+            ? pos[0] - (size.contentSize[0] + 20)
+            : pos[0] + 20
         }
       }
       config.tooltip.transitionDuration = 0
 
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.tooltip.extraCssText = "max-height:200px;overflow:auto;"
+      config.tooltip.extraCssText = 'max-height:200px;overflow:auto;'
       config.tooltip.enterable = true
 
       // 只有一個分類
@@ -608,15 +608,14 @@ export default {
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
     },
-    tooltipFormatter(datas) {
+    tooltipFormatter (datas) {
       const orderTarget = (this.orderBy && this.orderBy.target) || 'value'
       const orderDirection = (this.orderBy && this.orderBy.direction) || 'desc'
 
       return datas.sort((a, b) => {
         const targetA = orderDirection === 'desc' ? a : b
         const targetB = orderDirection === 'desc' ? b : a
-        if (orderTarget === 'key') { return targetB.seriesName.localeCompare(targetA.seriesName)}
-        else if (orderTarget === 'value') {
+        if (orderTarget === 'key') { return targetB.seriesName.localeCompare(targetA.seriesName) } else if (orderTarget === 'value') {
           return targetB.value[targetB.componentIndex + 1] - targetA.value[targetA.componentIndex + 1]
         }
       }).reduce((str, item) => {
