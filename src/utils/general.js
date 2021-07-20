@@ -110,7 +110,7 @@ export const booleanOptionList = [
 export const intentType = {
   OVERVIEW: 'OVERVIEW',
   CLUSTERING: 'CLUSTERING',
-  PREDICTION: "PREDICTION"
+  PREDICTION: 'PREDICTION'
 }
 
 export const alertTargetType = {
@@ -140,23 +140,23 @@ export const algoConfig = {
 
 export const sizeTable = {
   large: {
-    'font-size': '80px', 
-    'height': '83px', 
+    'font-size': '80px',
+    height: '83px',
     'line-height': '80px'
   },
   middle: {
-    'font-size': '54px', 
-    'height': '54px', 
+    'font-size': '54px',
+    height: '54px',
     'line-height': '54px'
   },
   small: {
-    'font-size': '36px', 
-    'height': '36px', 
+    'font-size': '36px',
+    height: '36px',
     'line-height': '36px'
   },
   mini: {
-    'font-size': '28px', 
-    'height': '28px', 
+    'font-size': '28px',
+    height: '28px',
     'line-height': '28px'
-  },
+  }
 }

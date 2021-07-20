@@ -1,14 +1,17 @@
 <template>
   <div>
-    <div 
+    <div
       v-show="!showEtlSetting"
       class="etl-choose-column"
     >
       <div class="section data-frame">
-        <div 
-          v-if="showDataFrameName" 
-          class="data-frame__name">
-          <div class="title">{{ $t('etl.currentDataFrame') }}：</div>
+        <div
+          v-if="showDataFrameName"
+          class="data-frame__name"
+        >
+          <div class="title">
+            {{ $t('etl.currentDataFrame') }}：
+          </div>
           <default-select
             v-model="currentTableIndex"
             :option-list="tableOptionList"
@@ -16,22 +19,26 @@
             @change="chooseTable"
           />
         </div>
-        <div 
+        <div
           v-if="isShowDistributed"
           class="data-frame__distributed"
         >
-          <div class="title">{{ $t('etl.isDistributed') }}：</div>
-          <el-switch 
+          <div class="title">
+            {{ $t('etl.isDistributed') }}：
+          </div>
+          <el-switch
             v-model="isDistributed"
             class="setting-switch"
             @change="changeDistributedStatus"
           />
         </div>
-        <div 
+        <div
           v-if="isDistributed"
           class="data-frame__distributed data-frame__select"
         >
-          <div class="title">{{ $t('etl.distributedColumnName') }}：</div>
+          <div class="title">
+            {{ $t('etl.distributedColumnName') }}：
+          </div>
           <default-select
             key="distributedColumnSelect"
             v-model="distributedColumnName"
@@ -50,7 +57,9 @@
           </dl>
         </div>
         <div class="data-frame__select">
-          <div class="title">{{ $t('etl.columnSelected') }}：</div>
+          <div class="title">
+            {{ $t('etl.columnSelected') }}：
+          </div>
           <column-select
             :current-table-info="currentTableInfo"
             @toggleColumn="toggleColumn"
@@ -71,7 +80,7 @@
           <template #index-header>
             <div class="toggle-block">
               <label class="checkbox">
-                <div 
+                <div
                   :class="{'indeterminate': someColumnSelected && !allColumnSelected}"
                   class="checkbox-label"
                 >
@@ -80,7 +89,7 @@
                     v-model="allColumnSelected"
                     type="checkbox"
                   >
-                  <div class="checkbox-square"/>
+                  <div class="checkbox-square" />
                 </div>
               </label>
             </div>
@@ -88,14 +97,16 @@
           <template #columns-header="{ column, index }">
             <div class="header-block">
               <div class="header">
-                <span 
-                  :class="{'has-changed': column[index].hasChanged}" 
-                  class="text">
+                <span
+                  :class="{'has-changed': column[index].hasChanged}"
+                  class="text"
+                >
                   <el-tooltip
                     :enterable="false"
                     :visible-arrow="false"
                     :content="column[index].primaryAlias"
-                    placement="bottom-start">
+                    placement="bottom-start"
+                  >
                     <span>{{ column[index].primaryAlias }}</span>
                   </el-tooltip>
                 </span>
@@ -103,7 +114,8 @@
                   :enterable="false"
                   :visible-arrow="false"
                   :content="getColumnSelectedContent(column[index].active)"
-                  placement="bottom">
+                  placement="bottom"
+                >
                   <label class="checkbox">
                     <div class="checkbox-label">
                       <input
@@ -113,7 +125,7 @@
                         type="checkbox"
                         @change="toggleColumn(index)"
                       >
-                      <div class="checkbox-square"/>
+                      <div class="checkbox-square" />
                     </div>
                   </label>
                 </el-tooltip>
@@ -129,7 +141,8 @@
                   :enterable="false"
                   :visible-arrow="false"
                   :content="$t('etl.advance')"
-                  placement="bottom">
+                  placement="bottom"
+                >
                   <div @click="chooseColumn(index)">
                     <svg-icon
                       icon-class="setting"
@@ -144,7 +157,7 @@
                   :key="currentTableIndex + '-' + index + 'column-summary'"
                   :summary-data="currentTableInfo.columns[index].dataSummary"
                 />
-                <spinner 
+                <spinner
                   v-else
                   :title="$t('etl.dataCalculate')"
                   class="spinner-conatiner"
@@ -158,7 +171,7 @@
           *{{ $t('notification.columnSummarySampleNotification') }}
         </p>
       </div>
-      <spinner 
+      <spinner
         v-else
         :title="$t('editing.loading')"
         class="processing-spinner-container"
@@ -249,7 +262,7 @@ export default {
       if (tableInfo.rowData) {
         let numericIndex = []
         tableInfo.columns.forEach((element, index) => {
-          if (element.originalStatsType === "NUMERIC") {
+          if (element.originalStatsType === 'NUMERIC') {
             numericIndex.push(index)
           }
         })
@@ -281,7 +294,6 @@ export default {
     },
     isDistributed: {
       get () {
-        
         return this.currentTableInfo.isDistributed
       },
       set (value) {
@@ -349,7 +361,7 @@ export default {
             this.$store.commit('dataManagement/updateSummaryInfo', {
               tableIndex: this.currentTableIndex,
               columnIndex,
-              dataSummary: {...element.dataSummary, statsType: element.statsType}
+              dataSummary: { ...element.dataSummary, statsType: element.statsType }
             })
           }
         })
@@ -365,7 +377,7 @@ export default {
     getColumnSelectedContent (checked) {
       return checked ? this.$t('etl.selectColumn') : this.$t('etl.skipColumn')
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -386,9 +398,9 @@ export default {
           border: 1px solid #2AD2E2;
         }
       }
-      .data-frame__distributed {   
+      .data-frame__distributed {
         display: flex;
-        align-items: center;     
+        align-items: center;
         flex-basis: 100%;
         margin-bottom: 8px;
         font-size: 14px;

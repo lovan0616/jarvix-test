@@ -1,9 +1,9 @@
 <template>
   <div class="file-list-block">
     <div class="block-title-row">
-      <slot name="fileListTitle"/>
+      <slot name="fileListTitle" />
     </div>
-    <div 
+    <div
       :class="[{fail: type === 'fail'}, {'droppable': dragEnter}]"
       class="file-list"
     >

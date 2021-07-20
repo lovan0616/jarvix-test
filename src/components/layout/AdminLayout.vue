@@ -2,26 +2,29 @@
   <div class="app-layout admin-layout">
     <header class="admin-header">
       <img
-        src="@/assets/images/logo-text.svg" 
-        alt="logo" 
-        class="page-logo-img">
-      <a 
-        href="/login" 
-        class="link">
-        <svg-icon 
-          icon-class="arrow-left" 
-          class="icon" />{{ $t('link.backToLogin') }}
+        src="@/assets/images/logo-text.svg"
+        alt="logo"
+        class="page-logo-img"
+      >
+      <a
+        href="/login"
+        class="link"
+      >
+        <svg-icon
+          icon-class="arrow-left"
+          class="icon"
+        />{{ $t('link.backToLogin') }}
       </a>
     </header>
     <div class="wrapper">
-      
       <main class="main">
-        <div class="bg"/>
-        <slot/>
+        <div class="bg" />
+        <slot />
       </main>
-      <div 
-        class="language-setting" 
-        @click="showChangeLanguageDialog">
+      <div
+        class="language-setting"
+        @click="showChangeLanguageDialog"
+      >
         <svg-icon icon-class="language" />
         <span>{{ $t('editing.languageSetting') }}</span>
       </div>
@@ -34,7 +37,7 @@
   </div>
 </template>
 <script>
-import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
+import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog'
 
 export default {
   name: 'AdminLayout',

@@ -1,17 +1,21 @@
 <template>
   <div class="single-file-row-container">
-    <div 
+    <div
       :class="statusClass"
       class="single-file-row"
     >
       <div class="single-file-info">
-        <div class="file-info name">{{ singleFile.fileFullName }}</div>
-        <div class="file-info size">{{ byteToMB(singleFile.size) }}</div>
-        <div 
+        <div class="file-info name">
+          {{ singleFile.fileFullName }}
+        </div>
+        <div class="file-info size">
+          {{ byteToMB(singleFile.size) }}
+        </div>
+        <div
           v-if="currntUploadStatus === uploadStatus.uploading"
           class="single-file-progress"
         >
-          <div 
+          <div
             :style="{ width: progress + '%' }"
             class="progress-bar"
           />
@@ -89,7 +93,7 @@ export default {
         this.askCancelFunction('cancel')
       }
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

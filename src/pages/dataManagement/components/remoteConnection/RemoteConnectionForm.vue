@@ -1,15 +1,17 @@
 <template>
   <div class="remote-connection-form">
     <!-- 為了避免瀏覽器自動帶入 -->
-    <input 
-      name="account" 
-      type="text" 
-      class="hidden-input">
-    <input 
-      name="password" 
-      type="password" 
-      class="hidden-input">
-    <input-block 
+    <input
+      name="account"
+      type="text"
+      class="hidden-input"
+    >
+    <input
+      name="password"
+      type="password"
+      class="hidden-input"
+    >
+    <input-block
       v-validate="`required|max:${max}`"
       v-if="!dataSourceId"
       :label="$t('editing.dataSourceName')"
@@ -17,21 +19,21 @@
       class="dialog-input"
       name="dataSourceName"
     />
-    <input-block 
+    <input-block
       v-validate="`required|max:${max}`"
       :label="$t('editing.connectionName')"
       v-model="connectInfo.name"
       class="dialog-input"
       name="connectionName"
     />
-    <input-block 
+    <input-block
       v-validate="'required'"
       :label="$t('editing.loginAccount')"
       v-model="connectInfo.account"
       class="dialog-input"
       name="account"
     />
-    <input-block 
+    <input-block
       v-validate="'required'"
       :label="$t('editing.loginPassword')"
       v-model="connectInfo.password"
@@ -40,7 +42,7 @@
       name="loginPwd"
     />
     <div class="database-type-select-block dialog-input">
-      <label 
+      <label
         for="connectInfo.databaseType"
         class="select-label"
       >{{ $t('editing.databaseType') }}</label>
@@ -52,14 +54,14 @@
         name="databaseType"
       />
     </div>
-    <input-block 
+    <input-block
       v-validate="'required'"
       v-model="connectInfo.database"
       :label="connectInfo.databaseType === 'ORACLE' ? 'SID' : 'Database'"
       class="dialog-input"
       name="database"
     />
-    <input-block 
+    <input-block
       v-validate="'max:128'"
       v-model="connectInfo.schema"
       class="dialog-input"
@@ -67,7 +69,7 @@
       name="schema"
     />
     <div class="inline-input-block">
-      <input-block 
+      <input-block
         v-validate="'required'"
         v-model="connectInfo.host"
         class="dialog-input host"

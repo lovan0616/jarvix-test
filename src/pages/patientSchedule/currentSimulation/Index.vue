@@ -8,9 +8,10 @@
       title="Rescheduling ..."
     />
   </div>
-  <div 
-    v-else 
-    class="current-simulation">
+  <div
+    v-else
+    class="current-simulation"
+  >
     <h2 class="header">
       Current {{ isOt ? 'Scheduling' : 'Allocation' }} Plan
     </h2>
@@ -25,9 +26,10 @@
       v-if="planned"
       class="simulation-content"
     >
-      <div 
-        v-if="isOt" 
-        class="plan-KPI KPI">
+      <div
+        v-if="isOt"
+        class="plan-KPI KPI"
+      >
         <h3 class="KPI__title">
           OT Room Scheduling
         </h3>

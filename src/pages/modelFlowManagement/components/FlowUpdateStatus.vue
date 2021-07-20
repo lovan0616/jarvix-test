@@ -1,13 +1,17 @@
 <template>
   <div class="update-status-block">
-    <div class="flow-label">{{ $t('modelFlow.updatedInformation') }}：</div>
+    <div class="flow-label">
+      {{ $t('modelFlow.updatedInformation') }}：
+    </div>
     <div class="flow-text">
-      <spinner 
-        v-if="isFlowUpdating" 
-        size="14" />
+      <spinner
+        v-if="isFlowUpdating"
+        size="14"
+      />
       <span
         v-if="flowUpdateTime"
-        class="flow-update-time">
+        class="flow-update-time"
+      >
         {{ flowUpdateTime }}
       </span>
       <span>
@@ -53,7 +57,6 @@ export default {
         default:
           return this.flowInfo.targetDataFrameStatusType
       }
-      
     }
   }
 }

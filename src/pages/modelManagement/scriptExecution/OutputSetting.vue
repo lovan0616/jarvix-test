@@ -1,6 +1,8 @@
 <template>
   <div class="input-setting-dialog">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="4"
     />
@@ -17,7 +19,8 @@
           {{ $t('model.upload.argsReminder', {mainScriptName}) }}
         </div>
         <draggable
-          v-model="columnList">
+          v-model="columnList"
+        >
           <model-column-setting-card
             v-for="column in columnList"
             :column-info="column"
@@ -28,34 +31,38 @@
             @updateDataColumn="updateDataColumn($event, column.id)"
             @remove="removeColumnCard"
           />
-        </draggable> 
+        </draggable>
         <button
           :disabled="isProcessing"
           class="btn btn-m btn-outline"
           @click="addNewColumnCard()"
         >
-          <svg-icon 
-            icon-class="plus" 
-            class="icon" />{{ $t('button.add') }}
+          <svg-icon
+            icon-class="plus"
+            class="icon"
+          />{{ $t('button.add') }}
         </button>
       </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="isProcessing"
           class="btn btn-default"
           @click="buildData"
         >
           <span v-if="isProcessing">
-            <svg-icon 
-              v-if="isProcessing" 
-              icon-class="spinner"/>
+            <svg-icon
+              v-if="isProcessing"
+              icon-class="spinner"
+            />
             {{ $t('button.processing') }}
           </span>
           <span v-else>{{ $t('button.buildData') }}</span>
@@ -122,15 +129,15 @@ export default {
         id: uuidv4()
       })
     },
-    updateDataColumn(statesType, selectedColumnCardId) {
+    updateDataColumn (statesType, selectedColumnCardId) {
       const columnCard = this.columnList.find(columnCard => columnCard.id === selectedColumnCardId)
       columnCard.statsType = statesType
     },
-    removeColumnCard(cardId) {
+    removeColumnCard (cardId) {
       this.columnList = this.columnList.filter(columnCard => columnCard.id !== cardId)
     },
     cancel () {
-     this.updateShowCreateModelDialog(false)
+      this.updateShowCreateModelDialog(false)
     },
     buildData () {
       this.$validator.validateAll().then(isValidate => {
@@ -154,12 +161,12 @@ export default {
             output: this.columnList.map(({ modelColumnName, statsType }) => ({ modelColumnName, statsType }))
           }
         })
-        .then(() => {
+          .then(() => {
           // 為了觸發重新撈取資料
-          this.$store.commit('modelManagement/updateModelUploadSuccess', true)
-          this.updateShowCreateModelDialog(false)
-        })
-        .catch(() => { this.isProcessing = false })
+            this.$store.commit('modelManagement/updateModelUploadSuccess', true)
+            this.updateShowCreateModelDialog(false)
+          })
+          .catch(() => { this.isProcessing = false })
       })
     }
   }
@@ -212,7 +219,7 @@ export default {
       }
 
       .el-input__inner {
-        &::placeholder { 
+        &::placeholder {
           font-size: 14px;
         }
       }

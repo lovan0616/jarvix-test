@@ -1,22 +1,26 @@
 <template>
   <div class="simulator">
-    <spinner 
-      v-if="isLoading" 
+    <spinner
+      v-if="isLoading"
     />
     <empty-info-block
       v-else-if="isFetchInputFailed"
       :msg="$t('message.systemIsError')"
     />
-    <section 
-      v-show="!isLoading && !isFetchInputFailed" 
-      class="simulator__content">
-      <form 
-        :data-vv-scope="`params-optimization-${simulatorId}`" 
-        class="simulator__setting-container" 
-        @submit.prevent="simulate">
+    <section
+      v-show="!isLoading && !isFetchInputFailed"
+      class="simulator__content"
+    >
+      <form
+        :data-vv-scope="`params-optimization-${simulatorId}`"
+        class="simulator__setting-container"
+        @submit.prevent="simulate"
+      >
         <div class="simulator__setting-container--top">
           <div class="simulator__setting">
-            <div class="simulator__setting-title">{{ $t('miniApp.inputParamsCriteria') }}</div>
+            <div class="simulator__setting-title">
+              {{ $t('miniApp.inputParamsCriteria') }}
+            </div>
             <div class="simulator__setting-content">
               <parameters-optimized-simulator-input
                 v-for="(columnInfo, index) in modelInfo"
@@ -33,7 +37,9 @@
             </div>
           </div>
           <div class="simulator__setting">
-            <div class="simulator__setting-title">{{ $t('miniApp.outputParamsCriteria') }}</div>
+            <div class="simulator__setting-title">
+              {{ $t('miniApp.outputParamsCriteria') }}
+            </div>
             <div class="simulator__setting-content">
               <parameters-optimized-simulator-output
                 v-for="(output, index) in outputInfo.criteria"
@@ -46,7 +52,9 @@
             </div>
           </div>
           <div class="simulator__setting">
-            <div class="simulator__setting-title">{{ $t('miniApp.outputResultSetting') }}</div>
+            <div class="simulator__setting-title">
+              {{ $t('miniApp.outputResultSetting') }}
+            </div>
             <div class="simulator__setting-content">
               <parameters-optimized-simulator-output
                 :is-processing="isSimulating"
@@ -57,41 +65,48 @@
             </div>
           </div>
         </div>
-        
+
         <div class="simulator__setting-container--bottom">
           <button
             :disabled="isSimulating"
             type="submit"
             class="btn-m btn-default btn-simulate"
-          >{{ $t('miniApp.startSimulating') }}</button>
+          >
+            {{ $t('miniApp.startSimulating') }}
+          </button>
         </div>
       </form>
       <div class="simulator__result">
-        <div 
-          v-if="!taskId" 
-          class="simulator__default-message">
+        <div
+          v-if="!taskId"
+          class="simulator__default-message"
+        >
           {{ failedMessage || $t('miniApp.notYetSimulate') }}
         </div>
         <template v-else>
-          <el-tabs 
+          <el-tabs
             v-model="activeTabName"
             class="simulator__result-tab"
-            type="card">
-            <el-tab-pane 
-              :label="$t('miniApp.simulationResult')" 
-              :name="$t('miniApp.simulationResult')">
+            type="card"
+          >
+            <el-tab-pane
+              :label="$t('miniApp.simulationResult')"
+              :name="$t('miniApp.simulationResult')"
+            >
               <div
                 v-if="isSimulateFailed"
-                class="simulator__default-message">
+                class="simulator__default-message"
+              >
                 {{ failedMessage || $t('message.systemIsError') }}
               </div>
               <spinner
                 v-else-if="isSimulating"
                 :title="$t('miniApp.simulating')"
               />
-              <div 
+              <div
                 v-else
-                class="simulator__result-panel">
+                class="simulator__result-panel"
+              >
                 <simulator-result-card
                   v-for="(result, index) in simulatorResults"
                   :key="index"
@@ -100,8 +115,8 @@
               </div>
             </el-tab-pane>
             <!-- 下次再加 -->
-            <!-- <el-tab-pane 
-              :label="$t('miniApp.savedRecord')" 
+            <!-- <el-tab-pane
+              :label="$t('miniApp.savedRecord')"
               :name="$t('miniApp.savedRecord')">
               <div class="simulator__record-panel">
                 {{ $t('miniApp.savedRecord') }}
@@ -125,7 +140,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
-  name: "ParametersOptimizedSimulator",
+  name: 'ParametersOptimizedSimulator',
   components: {
     DefaultSelect,
     EmptyInfoBlock,
@@ -136,7 +151,7 @@ export default {
   props: {
     isEditMode: {
       type: Boolean,
-      default: false,
+      default: false
     },
     restrictions: {
       type: Array,
@@ -168,7 +183,7 @@ export default {
     }
   },
   computed: {
-    
+
   },
   watch: {
     modelInfo: {
@@ -190,7 +205,7 @@ export default {
     getModelInfo () {
       this.isLoading = true
       getModelInfo(this.modelSetting.modelId)
-        .then(({ioArgs: { output: outputList }}) => this.outputInfo.criteria = outputList.map(output => ({
+        .then(({ ioArgs: { output: outputList } }) => this.outputInfo.criteria = outputList.map(output => ({
           ...output,
           expectType: 'MAX'
         })))
@@ -204,11 +219,11 @@ export default {
         }
       }))
     },
-    updateColumnInfoState(index) {
+    updateColumnInfoState (index) {
       this.modelInfo = this.modelInfo.map((input, currentIndex) => {
         if (index !== currentIndex) return input
         return {
-          ...input, 
+          ...input,
           isInit: true
         }
       })
@@ -241,7 +256,7 @@ export default {
                   startTime: null,
                   endTime: null
                 }
-              } else if (input.statsType === 'NUMERIC') { 
+              } else if (input.statsType === 'NUMERIC') {
                 return {
                   conditionType: input.userInput.type,
                   dataColumnId: input.columnId,
@@ -270,15 +285,15 @@ export default {
             outputLimit: 5
           }
         })
-        .then((taskId) => {
-          this.taskId = taskId
-          this.startPolling()
-        })
-        .catch(error => { 
-          this.isSimulating = false
-          this.failedMessage = error.error && error.error.message
-          this.isSimulateFailed = true
-         })      
+          .then((taskId) => {
+            this.taskId = taskId
+            this.startPolling()
+          })
+          .catch(error => {
+            this.isSimulating = false
+            this.failedMessage = error.error && error.error.message
+            this.isSimulateFailed = true
+          })
       })
     },
     handleFetchInputFailed (message) {
@@ -287,11 +302,11 @@ export default {
       if (!this.failedMessage) this.failedMessage = message
     },
     startPolling () {
-      if(!this.isSimulating) return
+      if (!this.isSimulating) return
       this.intervalFunction = window.setInterval(() => {
         getParamOptimizationResult(this.taskId)
-          .then(({status, results, errorMessage})=> {
-            switch(status) {
+          .then(({ status, results, errorMessage }) => {
+            switch (status) {
               case 'Ready':
               case 'Process':
                 break
@@ -306,18 +321,18 @@ export default {
                 break
             }
           })
-          .catch(error => { 
+          .catch(error => {
             this.isSimulating = false
             this.failedMessage = error.error && error.error.message
             this.isSimulateFailed = true
             this.clearPolling()
-          }) 
-      }, 5000) 
+          })
+      }, 5000)
     },
     clearPolling () {
       this.isSimulating = false
       if (this.intervalFunction) window.clearInterval(this.intervalFunction)
     }
-  },
+  }
 }
 </script>

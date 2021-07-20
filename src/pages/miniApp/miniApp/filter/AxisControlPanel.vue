@@ -1,8 +1,9 @@
 <template>
   <section class="axis-control">
     <svg-icon
-      icon-class="adjuster-horizontal" 
-      class="axis-control__filter-icon"/>
+      icon-class="adjuster-horizontal"
+      class="axis-control__filter-icon"
+    />
     <single-axis-control-badge
       v-for="(controlOptionList, index) in controlList"
       :key="index"

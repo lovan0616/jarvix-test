@@ -3,24 +3,30 @@
     :title="title"
     @close="cancel"
   >
-    <div 
-      slot="dialogBody" 
-      class="content">{{ content }}</div>
-    <template 
-      slot="dialogFooter" 
-      class="dialog-btn-block">
-      <button 
-        type="button" 
+    <div
+      slot="dialogBody"
+      class="content"
+    >
+      {{ content }}
+    </div>
+    <template
+      slot="dialogFooter"
+      class="dialog-btn-block"
+    >
+      <button
+        type="button"
         class="btn btn-secondary"
         @click="cancel"
-      >{{ $t('button.cancel') }}</button>
-      <button 
-        :disabled="isProcessing" 
+      >
+        {{ $t('button.cancel') }}
+      </button>
+      <button
+        :disabled="isProcessing"
         type="button"
         class="btn btn-default"
         @click="confirm"
       >
-        <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+        <span v-if="isProcessing"><svg-icon icon-class="spinner" />{{ $t('button.processing') }}</span>
         <span v-else>{{ $t('button.confirmDelete') }}</span>
       </button>
     </template>

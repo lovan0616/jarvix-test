@@ -1,12 +1,14 @@
 <template>
-  <el-tooltip 
+  <el-tooltip
     :tabindex="999"
     :popper-class="`${tokenInfo.type} name-token-tooltip`"
     :hide-after="0"
     placement="bottom"
   >
-    <div slot="content">{{ tooltipContent(tokenInfo) }}</div>
-    <span 
+    <div slot="content">
+      {{ tooltipContent(tokenInfo) }}
+    </div>
+    <span
       :class="tokenInfo.type"
       class="question-token"
     >{{ tokenInfo.word }}</span>
@@ -66,7 +68,7 @@ export default {
           return this.$t(`segmentationToken.${tokenInfo.type}`)
       }
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

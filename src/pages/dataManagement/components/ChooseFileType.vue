@@ -1,29 +1,34 @@
 <template>
   <div class="choose-file-type">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <div class="dialog-body">
       <div class="input-block-container">
         <div class="choose-type-container">
-          <div 
+          <div
             v-for="dataType in dataTypeList"
             :key="dataType.type"
             :class="{'is-disabled': !hasPermission(dataType.type)}"
             class="single-type-block"
             @click="selectDataType(dataType.type)"
           >
-            <svg-icon 
+            <svg-icon
               class="check-icon"
               icon-class="check-circle"
             />
             <div class="single-type-content">
-              <svg-icon 
+              <svg-icon
                 :icon-class="dataType.icon"
                 class="icon"
               />
-              <div class="type-title">{{ dataType.title }}</div>
-              <div 
-                class="type-content" 
-                v-html="dataType.description"/>
+              <div class="type-title">
+                {{ dataType.title }}
+              </div>
+              <div
+                class="type-content"
+                v-html="dataType.description"
+              />
             </div>
           </div>
         </div>
@@ -31,10 +36,12 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
+        >
+          {{ $t('button.cancel') }}
+        </button>
       </div>
     </div>
   </div>
@@ -72,7 +79,7 @@ export default {
           description: this.$t('editing.remoteConnectionDescription')
         }
       ]
-    } 
+    }
   },
   methods: {
     hasPermission (type) {

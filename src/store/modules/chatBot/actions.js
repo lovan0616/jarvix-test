@@ -1,11 +1,9 @@
 import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
-import i18n from '@/lang/index.js'
 import moment from 'moment-timezone'
 
 export default {
-  askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
-
+  askQuestion ({ dispatch, commit, state, rootState, rootGetters }, data) {
     let cancelToken = null
     // 當同時問多個問題時，不去 cancel 前一個問題的 request
     if (data.shouldCancelToken) {
@@ -29,7 +27,7 @@ export default {
 
     return askQuestion(askCondition, cancelToken)
   },
-  askResult ({dispatch, state}, data) {
+  askResult ({ dispatch, state }, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
     return askResult(data, cancelToken)
   },
@@ -38,23 +36,23 @@ export default {
     commit('result/updateCurrentResultId', data.resultId, { root: true })
     return askSpecificType(data, cancelToken)
   },
-  getComponentList ({dispatch, state}, data) {
+  getComponentList ({ dispatch, state }, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
     return getComponentList(data, cancelToken)
   },
-  getComponentData ({dispatch}, data) {
+  getComponentData ({ dispatch }, data) {
     return getComponentData(data)
   },
-  cancelRequest ({state}) {
+  cancelRequest ({ state }) {
     if (state.askCancelToken) {
       state.askCancelToken.cancel('cancel')
     }
   },
-  openAskInMemory ({rootGetters, rootState}) {
+  openAskInMemory ({ rootGetters, rootState }) {
     if (!rootGetters['userManagement/hasPermission']('in_memory')) return
     addTableToMemory(rootGetters['userManagement/getCurrentAccountId'], rootGetters['dataSource/currentDataFrameId'], rootState.dataSource.dataSourceId)
   },
-  getParserList ({commit, rootState}) {
+  getParserList ({ commit, rootState }) {
     return getParserLanguageList().then(res => {
       let currentLanguage = 'ZH_TW'
       // switch (rootState.setting.locale) {

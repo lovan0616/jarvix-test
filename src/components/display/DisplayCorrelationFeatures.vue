@@ -2,11 +2,15 @@
   <div class="display-correlation-features">
     <div class="feature-header">
       <div class="feature-header-left">
-        <div class="feature-header-title"><div class="dot"/>{{ $t('resultDescription.featureList') }}</div>
-        <div class="feature-header-description">{{ $t('resultDescription.hereIsFeatures') }}</div>
+        <div class="feature-header-title">
+          <div class="dot" />{{ $t('resultDescription.featureList') }}
+        </div>
+        <div class="feature-header-description">
+          {{ $t('resultDescription.hereIsFeatures') }}
+        </div>
       </div>
       <template v-if="!isNaN(confidence)">
-        <el-tooltip 
+        <el-tooltip
           :content="$t('resultDescription.modelConfidence')"
           placement="bottom"
         >
@@ -18,7 +22,7 @@
       </template>
     </div>
     <div class="feature-body">
-      <div 
+      <div
         v-for="(item, index) in features"
         :class="['feature-item', {'selected': index === displayFactorIndex}]"
         :key="index"
@@ -33,9 +37,10 @@
           </div>
         </div>
         <div class="item-bar">
-          <div 
-            :style="{width: item['importance'] * 100 + '%'}" 
-            class="item-inner-bar"/>
+          <div
+            :style="{width: item['importance'] * 100 + '%'}"
+            class="item-inner-bar"
+          />
         </div>
       </div>
     </div>
@@ -75,7 +80,7 @@ export default {
     round (x, n = 2) {
       return Math.round(x * Math.pow(10, n)) / Math.pow(10, n)
     }
-  },
+  }
 }
 </script>
 <style lang="scss">

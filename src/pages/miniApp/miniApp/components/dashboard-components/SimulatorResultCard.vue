@@ -1,19 +1,29 @@
 <template>
   <div class="simulator-result-card">
-    <div 
-      v-for="(output, index) in outputList" 
+    <div
+      v-for="(output, index) in outputList"
       :key="'output-' + index"
-      class="output-field">
-      <div class="output-field__label">{{ output.name }}</div>
-      <div class="output-field__value">{{ output.value }}</div>
+      class="output-field"
+    >
+      <div class="output-field__label">
+        {{ output.name }}
+      </div>
+      <div class="output-field__value">
+        {{ output.value }}
+      </div>
     </div>
     <hr>
-    <div 
-      v-for="(input, index) in inputList" 
+    <div
+      v-for="(input, index) in inputList"
       :key="'input-' + index"
-      class="input-field">
-      <div class="input-field__label">{{ input.name }}</div>
-      <div class="input-field__value">{{ input.value }}</div>
+      class="input-field"
+    >
+      <div class="input-field__label">
+        {{ input.name }}
+      </div>
+      <div class="input-field__value">
+        {{ input.value }}
+      </div>
     </div>
   </div>
 </template>
@@ -21,7 +31,7 @@
 <script>
 
 export default {
-  name: "SimulatorResultCard",
+  name: 'SimulatorResultCard',
   props: {
     result: {
       type: Array,
@@ -29,10 +39,10 @@ export default {
     }
   },
   computed: {
-    inputList() {
+    inputList () {
       return this.result.filter(param => param.type === 'input')
     },
-    outputList() {
+    outputList () {
       return this.result.filter(param => param.type === 'output')
     }
   }
@@ -59,7 +69,7 @@ export default {
 
   .output-field {
     margin-bottom: 8px;
-    
+
     &__label {
       margin-bottom: 4px;
       font-weight: 600;
@@ -77,7 +87,7 @@ export default {
   hr {
     margin-block-end: 16px;
     margin-block-start: 16px;
-    border: 0; 
+    border: 0;
     border-top: 1px solid #676E6E;
   }
 

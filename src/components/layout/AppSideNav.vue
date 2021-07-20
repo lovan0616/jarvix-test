@@ -6,7 +6,7 @@
   >
     <div class="sidenav__container">
       <div
-        v-if="accountList && accountList.length > 0" 
+        v-if="accountList && accountList.length > 0"
         class="sidenav__account"
       >
         <custom-dropdown-select
@@ -23,7 +23,8 @@
               :disabled="isShowFullSideNav"
               :enterable="false"
               transition=""
-              placement="right">
+              placement="right"
+            >
               <div class="dropdown__badge">
                 {{ currentAccountName }}
               </div>
@@ -31,7 +32,7 @@
           </template>
         </custom-dropdown-select>
       </div>
-      <ul 
+      <ul
         class="sidenav__list--top list"
         @click="closeSideNav"
       >
@@ -41,15 +42,17 @@
           :disabled="isShowFullSideNav"
           :enterable="false"
           transition=""
-          placement="right">
+          placement="right"
+        >
           <li class="list__item">
             <router-link
               :to="accountHomePageRoute()"
               class="list__link"
             >
-              <svg-icon 
-                icon-class="home" 
-                class="list__icon" />
+              <svg-icon
+                icon-class="home"
+                class="list__icon"
+              />
               <span class="list__text">
                 {{ $t('sideNav.home') }}
               </span>
@@ -62,15 +65,17 @@
           :disabled="isShowFullSideNav"
           :enterable="false"
           transition=""
-          placement="right">
+          placement="right"
+        >
           <li class="list__item">
             <router-link
               :to="{ name: 'PersonalPagePinboardList', params: { 'account_id': getCurrentAccountId }}"
               class="list__link"
             >
-              <svg-icon 
-                icon-class="pin" 
-                class="list__icon" />
+              <svg-icon
+                icon-class="pin"
+                class="list__icon"
+              />
               <span class="list__text">
                 {{ $t('sideNav.pinboard') }}
               </span>
@@ -84,15 +89,17 @@
           :disabled="isShowFullSideNav"
           :enterable="false"
           transition=""
-          placement="right">
+          placement="right"
+        >
           <li class="list__item">
             <router-link
               :to="{ name: 'AccountManagement', params: { 'account_id': getCurrentAccountId } }"
               class="list__link"
             >
-              <svg-icon 
-                icon-class="account-management" 
-                class="list__icon" />
+              <svg-icon
+                icon-class="account-management"
+                class="list__icon"
+              />
               <span class="list__text">
                 {{ $t('sideNav.accountManagement') }}
               </span>
@@ -107,17 +114,19 @@
           :disabled="isShowFullSideNav"
           :enterable="false"
           transition=""
-          placement="right">
+          placement="right"
+        >
           <li ref="preferencesIcon">
-            <a 
-              :class="{'active': isShowUserPreferences}" 
+            <a
+              :class="{'active': isShowUserPreferences}"
               href="javascript:void(0);"
               class="list__link"
               @click="isShowUserPreferences = !isShowUserPreferences"
             >
               <svg-icon
                 icon-class="user-setting"
-                class="list__icon" />
+                class="list__icon"
+              />
               <span class="list__text">
                 {{ $t('sideNav.preferences' ) }}
               </span>
@@ -126,26 +135,34 @@
           </li>
         </el-tooltip>
       </ul>
-      <div 
+      <div
         v-if="isShowUserPreferences"
         ref="preferences"
-        class="user-preferences preferences">
-        <h3 class="preferences__name"> {{ userName }} </h3>
-        <p class="preferences__email"> {{ userEmail }} </p>
-        <p class="preferences__role"> {{ roleOptions[currentUserRole] }} </p>
+        class="user-preferences preferences"
+      >
+        <h3 class="preferences__name">
+          {{ userName }}
+        </h3>
+        <p class="preferences__email">
+          {{ userEmail }}
+        </p>
+        <p class="preferences__role">
+          {{ roleOptions[currentUserRole] }}
+        </p>
         <li
           v-for="item in settingList"
           :key="item.title"
           class="preferences__item"
         >
-          <a 
-            href="javascript:void(0);" 
+          <a
+            href="javascript:void(0);"
             class="preferences__link"
             @click="switchDialogName(item.dialogDisplayHandler)"
           >
-            <svg-icon 
+            <svg-icon
               :icon-class="item.icon"
-              class="preferences__icon" />
+              class="preferences__icon"
+            />
             <span class="preferences__text">
               {{ $t(item.title) }}
             </span>
@@ -176,8 +193,8 @@
 <script>
 import { getAccountRoles } from '@/API/User'
 import DecideDialog from '@/components/dialog/DecideDialog'
-import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
-import ChangePwdDialog from '@/components/dialog/ChangePwdDialog';
+import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog'
+import ChangePwdDialog from '@/components/dialog/ChangePwdDialog'
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
@@ -214,13 +231,13 @@ export default {
       return this.isShowFullSideNav ? fullName : fullName[0]
     },
     currentUserRole () {
-      return this.accountList.filter(element => element.id === this.getCurrentAccountId)[0]['role']
+      return this.accountList.filter(element => element.id === this.getCurrentAccountId)[0].role
     },
     settingList () {
       return [
-        {icon: 'key', title: 'user.changePwd', dialogDisplayHandler: 'isShowChangePwdDialog'},
-        {icon: 'language', title: 'editing.languageSetting', dialogDisplayHandler: 'isShowLanguage'},
-        {icon: 'logout', title: 'button.logout', dialogDisplayHandler: 'isShowLogout'}
+        { icon: 'key', title: 'user.changePwd', dialogDisplayHandler: 'isShowChangePwdDialog' },
+        { icon: 'language', title: 'editing.languageSetting', dialogDisplayHandler: 'isShowLanguage' },
+        { icon: 'logout', title: 'button.logout', dialogDisplayHandler: 'isShowLogout' }
       ]
     }
   },
@@ -264,15 +281,14 @@ export default {
         })
     },
     closeSideNav () {
-      if(this.isShowFullSideNav)
-        this.updateSideNavStatus(false)
+      if (this.isShowFullSideNav) { this.updateSideNavStatus(false) }
     },
     closeUserPreferences () {
       this.isShowUserPreferences = false
     },
     accountHomePageRoute () {
-      const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
-      const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
+      const groupLessPage = { name: 'PageGrouplessGuidance', params: { account_id: this.getCurrentAccountId } }
+      const accountHomePage = { name: 'PageIndex', params: { account_id: this.getCurrentAccountId, group_id: this.getCurrentGroupId } }
       return this.groupList.length === 0 ? groupLessPage : accountHomePage
     },
     accountListData () {
@@ -282,27 +298,27 @@ export default {
           id: account.id,
           name: account.name
         }))
-        .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
+        .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1)
     },
     async switchAccount (accountId) {
       this.isLoading = true
       try {
         await this.switchAccountById({ accountId })
         if (this.groupList.length === 0) {
-          return this.$router.push({ 
+          return this.$router.push({
             name: 'PageGrouplessGuidance',
-            params: { 'account_id': accountId }
+            params: { account_id: accountId }
           })
-        } 
+        }
 
         this.$router.push({
-          name: 'PageIndex', 
-          params: { 
-            account_id: accountId, 
-            group_id: this.getCurrentGroupId 
+          name: 'PageIndex',
+          params: {
+            account_id: accountId,
+            group_id: this.getCurrentGroupId
           },
           query: {
-            ...(this.dataSourceId && { 
+            ...(this.dataSourceId && {
               dataSourceId: this.dataSourceId,
               dataFrameId: this.dataFrameId
             })
@@ -313,9 +329,9 @@ export default {
         this.updateSideNavStatus(false)
       }
     },
-    handleLanguageDialogSubmit() {
-      this.isShowLanguage = false;
-      this.updateSideNavStatus(false);
+    handleLanguageDialogSubmit () {
+      this.isShowLanguage = false
+      this.updateSideNavStatus(false)
     }
   }
 }
@@ -342,7 +358,7 @@ export default {
     border-right: 1px solid var(--color-border);
     padding-bottom: 10px;
   }
-  
+
   &__account {
     padding: 12px ($app-side-nav-closed-width - 32px) / 2;
   }
@@ -445,7 +461,7 @@ export default {
     border-radius: 5px;
     filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
   }
-  
+
   .preferences {
     padding-top: 10px;
     &__name {

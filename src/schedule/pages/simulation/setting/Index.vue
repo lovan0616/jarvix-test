@@ -150,12 +150,12 @@ export default {
     ...mapState('simulation', ['solutions', 'scheduledJobs', 'planId', 'selectAllOrders', 'searchOrderCount']),
     ...mapGetters('scheduleSetting', ['isYKSchedule']),
     displaySelectedJobCounter () {
-      if (this.selectAllOrders)  {
-        return this.$t('schedule.simulation.selectedJobsCount', {count: this.searchOrderCount, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
+      if (this.selectAllOrders) {
+        return this.$t('schedule.simulation.selectedJobsCount', { count: this.searchOrderCount, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
       } else if (this.scheduledJobs.length > 0) {
-        return this.$t('schedule.simulation.selectedJobsCount', {count: this.scheduledJobs.length, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
+        return this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
       } else {
-        return this.$t('schedule.simulation.noSelectedJobs', {job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job')})
+        return this.$t('schedule.simulation.noSelectedJobs', { job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
       }
     },
     hasInvalidSolution () {
@@ -175,7 +175,7 @@ export default {
     ...mapMutations('simulation', ['addSolution', 'removeSolution']),
     fetchDataBoundStatus () {
       fetchDataBoundStatus(this.scheduleProjectId)
-        .then(dataframes => {  
+        .then(dataframes => {
           // 確定訂單、共同資料都已經綁定，不然不能進行模擬
           this.allowSimulation = dataframes
             .filter(item => item.category === 'ORDER' || item.category === 'RAW_DATA')

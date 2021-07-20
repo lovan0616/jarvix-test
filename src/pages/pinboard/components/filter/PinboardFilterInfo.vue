@@ -1,18 +1,19 @@
 <template>
   <div class="single-filter-container">
     <div class="filter-title">
-      <svg-icon 
-        icon-class="filter" 
-        class="icon"/>{{ dataColumnNames }}
+      <svg-icon
+        icon-class="filter"
+        class="icon"
+      />{{ dataColumnNames }}
     </div>
-    <ul 
+    <ul
       v-for="(restraint, index) in restriction"
       :class="{'last': isLast}"
       :key="index"
       class="filter-description-block"
     >
       <template v-if="restraint.type === 'compound'">
-        <li 
+        <li
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
           class="filter-description"
@@ -46,7 +47,7 @@
   </div>
 </template>
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PinboardFilterInfo',
@@ -55,9 +56,9 @@ export default {
       type: Number,
       default: null
     },
-    restriction: { 
-      type: Array, 
-      default: () => [] 
+    restriction: {
+      type: Array,
+      default: () => []
     },
     isLast: {
       type: Boolean,
@@ -66,7 +67,7 @@ export default {
   },
   computed: {
     ...mapState('pinboard', ['pinboardData']),
-    getDataInfo() {
+    getDataInfo () {
       return this.pinboardData.find(data => data.resultId === this.resultId)
     },
     dataColumnNames () {
@@ -78,7 +79,7 @@ export default {
           return result
         }, []).join(' & ')
       } else {
-        let dcId = this.restriction[0].properties['dc_id']
+        let dcId = this.restriction[0].properties.dc_id
         return Object.values(this.getDataInfo.dataColumnMap).filter(item => item.id === dcId)[0].primary_alias
       }
     }

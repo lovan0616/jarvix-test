@@ -1,15 +1,17 @@
 <template>
   <div class="remote-connection">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block />
     <div class="dialog-body">
-      <form 
+      <form
         class="input-block-container"
       >
         <div class="return-block-container">
           <div class="block__arrow" />
           <a
-            href="javascript:void(0);" 
+            href="javascript:void(0);"
             class="link action-link"
             @click.prevent="prevStep"
           >
@@ -20,19 +22,23 @@
           :data-source-id="dataSourceId"
           :connect-info="connectInfo"
           class="remote-connection-form"
-        />  
+        />
         <div class="dialog-footer">
           <div class="dialog-button-block">
             <button
               :disabled="isProcessing"
               class="btn btn-default"
               @click.prevent="saveConnectionInfo(false)"
-            >{{ $t('button.saveAndConnect') }}</button>
-            <button 
+            >
+              {{ $t('button.saveAndConnect') }}
+            </button>
+            <button
               :disabled="isProcessing"
               class="btn btn-default"
               @click.prevent="saveConnectionInfo"
-            >{{ $t('button.save') }}</button>
+            >
+              {{ $t('button.save') }}
+            </button>
           </div>
         </div>
       </form>
@@ -53,10 +59,10 @@ export default {
     RemoteConnectionForm
   },
   props: {
-    connectInfo: { 
+    connectInfo: {
       type: Object,
       default: () => {
-        return  {
+        return {
           account: null,
           databaseType: null,
           host: null,
@@ -101,13 +107,13 @@ export default {
         this.isProcessing = false
       })
     },
-    saveConnectionInfo (onlySave=true) {
+    saveConnectionInfo (onlySave = true) {
       this.$validator.validateAll().then(result => {
         if (result) {
           this.isProcessing = true
-          const {id, ...connectionInfo} = this.connectInfo
-          return updateDatabaseConnection (id, connectionInfo)
-            .then (() => {
+          const { id, ...connectionInfo } = this.connectInfo
+          return updateDatabaseConnection(id, connectionInfo)
+            .then(() => {
               this.$store.commit('dataManagement/updateCurrentConnectionDB', connectionInfo.databaseType)
               Message({
                 message: this.$t('message.saveSuccess'),
@@ -117,13 +123,13 @@ export default {
               })
               onlySave ? this.prevStep() : this.chooseConnection(id)
             })
-            .catch(() => { 
+            .catch(() => {
               this.isProcessing = false
             })
         }
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -173,4 +179,3 @@ export default {
   }
 }
 </style>
-

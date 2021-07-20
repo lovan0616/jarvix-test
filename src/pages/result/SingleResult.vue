@@ -88,7 +88,7 @@ export default {
           this.isLoading = false
         })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

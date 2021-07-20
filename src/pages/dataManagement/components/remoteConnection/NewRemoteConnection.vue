@@ -1,26 +1,32 @@
 <template>
   <div class="remote-connection">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="isLoading ? 2 : 1"
     />
     <div class="dialog-body">
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.DBconnecting')"
         class="loading-block"
         size="50"
       />
-      <form 
+      <form
         v-else
         class="input-block-container"
       >
         <div class="title-block-container">
-          <div class="block-title">{{ $t('etl.newConnectionSetting') }}</div>
-          <button 
+          <div class="block-title">
+            {{ $t('etl.newConnectionSetting') }}
+          </div>
+          <button
             class="btn-m btn-outline"
             @click.prevent="prevStep"
-          >{{ $t('etl.connectionHistory') }}</button>
+          >
+            {{ $t('etl.connectionHistory') }}
+          </button>
         </div>
         <remote-connection-form
           :data-source-id="dataSourceId"
@@ -31,15 +37,19 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="isLoading"
           class="btn btn-default"
           @click="nextStep"
-        >{{ isLoading ? $t('button.connecting') : $t('button.nextStep') }}</button>
+        >
+          {{ isLoading ? $t('button.connecting') : $t('button.nextStep') }}
+        </button>
       </div>
     </div>
   </div>
@@ -135,7 +145,7 @@ export default {
         this.isLoading = false
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -169,4 +179,3 @@ export default {
   }
 }
 </style>
-

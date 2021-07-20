@@ -17,9 +17,11 @@
       <button
         class="btn-m btn-outline"
         @click="save"
-      >{{ $t('resultDescription.saveFilterCondition') }}</button>
+      >
+        {{ $t('resultDescription.saveFilterCondition') }}
+      </button>
     </div>
-    <slot name="selectedFilterRegion"/>
+    <slot name="selectedFilterRegion" />
   </div>
 </template>
 
@@ -35,11 +37,11 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
-    ...mapState('dataSource', ['currentQuestionDataFrameId', 'dataFrameId']),
+    ...mapState('dataSource', ['currentQuestionDataFrameId', 'dataFrameId'])
   },
   methods: {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setDisplaySection']),
-    openSettingBox() {
+    openSettingBox () {
       if (this.$route.name === 'PageResult') {
         this.setDisplaySection('filter')
         if (!this.isShowSettingBox) this.toggleSettingBox(true)
@@ -48,7 +50,7 @@ export default {
     async save () {
       // 如果 store 中的 dataframe id 與當前結果的 dataframe 不同須先切換
       if (this.currentQuestionDataFrameId !== this.dataFrameId) {
-        await this.$store.dispatch('dataSource/changeDataFrameById', this.currentQuestionDataFrameId )
+        await this.$store.dispatch('dataSource/changeDataFrameById', this.currentQuestionDataFrameId)
         // 更新 URL 中的 dataframe id
         return this.$router.replace({
           name: 'PageResult',
@@ -65,7 +67,7 @@ export default {
       }
       this.openSettingBox()
       this.$emit('save')
-    },
+    }
   }
 }
 </script>

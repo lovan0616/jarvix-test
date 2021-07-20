@@ -3,16 +3,16 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('batchLoad.setBatchLoad') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="dialog__sub-title">
         {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
       </div>
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         size="50"
@@ -23,7 +23,9 @@
       />
       <template v-else>
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('batchLoad.updateSetting') }}</div>
+          <div class="setting-block__title">
+            {{ $t('batchLoad.updateSetting') }}
+          </div>
           <div
             v-for="status in updateStatusList"
             :key="status.type"
@@ -48,13 +50,19 @@
             :disabled="isProcessing"
             class="btn btn-default"
             @click="updateImmediately"
-          >{{ $t('button.updateImmediately') }}</button>
+          >
+            {{ $t('button.updateImmediately') }}
+          </button>
         </div>
         <template v-if="columnInfo.status !== 'DISABLE'">
           <div class="setting-block">
-            <div class="setting-block__title">{{ $t('batchLoad.updateContent') }}</div>
+            <div class="setting-block__title">
+              {{ $t('batchLoad.updateContent') }}
+            </div>
             <div class="input-field">
-              <div class="input-field__label">{{ $t('batchLoad.updateMode') }}</div>
+              <div class="input-field__label">
+                {{ $t('batchLoad.updateMode') }}
+              </div>
               <div class="input-field__warning">
                 <svg-icon icon-class="data-explanation" />
                 {{ $t('batchLoad.reimportReminder') }}
@@ -80,17 +88,19 @@
                     class="input-radio-label"
                   >{{ mode.name }}</label>
                 </div>
-                <div 
+                <div
                   v-show="errors.has('type')"
                   class="error-text"
-                >{{ errors.first('type') }}</div>
+                >
+                  {{ errors.first('type') }}
+                </div>
               </div>
             </div>
             <template v-if="columnInfo.type === 'UPDATE' && dateTimeColumnList.length > 0">
               <div class="input-field">
                 <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
                 <div class="input-field__input">
-                  <default-select 
+                  <default-select
                     v-validate="'required'"
                     v-model="columnInfo.updateDateColumn"
                     :option-list="dateTimeColumnList"
@@ -100,10 +110,12 @@
                     class="input-field__select"
                     name="updatedTimeColumn"
                   />
-                  <div 
+                  <div
                     v-show="errors.has('updatedTimeColumn')"
                     class="error-text"
-                  >{{ errors.first('updatedTimeColumn') }}</div>
+                  >
+                    {{ errors.first('updatedTimeColumn') }}
+                  </div>
                 </div>
               </div>
               <div class="input-field">
@@ -121,10 +133,12 @@
                     name="primaryKeyColumn"
                     @input="primaryKeys = $event"
                   />
-                  <div 
+                  <div
                     v-show="errors.has('primaryKeyColumn')"
                     class="error-text"
-                  >{{ errors.first('primaryKeyColumn') }}</div>
+                  >
+                    {{ errors.first('primaryKeyColumn') }}
+                  </div>
                 </div>
               </div>
               <div class="input-field">
@@ -134,7 +148,7 @@
                       v-model="columnInfo.deletable"
                       type="checkbox"
                     >
-                    <div class="checkbox-square"/>
+                    <div class="checkbox-square" />
                   </div>
                   <span>{{ $t('batchLoad.checkDatarowDeletable') }}</span>
                 </label>
@@ -151,17 +165,23 @@
           v-if="columnInfo.status === 'AUTO'"
           class="setting-block"
         >
-          <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
+          <div class="setting-block__title">
+            {{ $t('batchLoad.scheduleSetting') }}
+          </div>
           <div class="timeZone">
-            <p class="group-title">{{ $t('common.timezone') }}</p>
-            <time-zone-select 
+            <p class="group-title">
+              {{ $t('common.timezone') }}
+            </p>
+            <time-zone-select
               v-validate="'required'"
               v-model="columnInfo.timeZone"
               name="timeZone"
             />
           </div>
           <div class="cycle-setting">
-            <p class="group-title">{{ $t('batchLoad.cycleSetting') }}</p>
+            <p class="group-title">
+              {{ $t('batchLoad.cycleSetting') }}
+            </p>
             <div
               v-for="option in updateCronSettingOptionList"
               :key="option.mode"
@@ -183,15 +203,18 @@
               >{{ option.name }}</label>
             </div>
           </div>
-          <div 
+          <div
             v-show="errors.has('mode')"
             class="error-text"
-          >{{ errors.first('mode') }}</div>
-          <div 
-            v-if="columnInfo.mode === 'BASIC'" 
-            class="input-field input-field--basic">
+          >
+            {{ errors.first('mode') }}
+          </div>
+          <div
+            v-if="columnInfo.mode === 'BASIC'"
+            class="input-field input-field--basic"
+          >
             <div class="input-field__input">
-              <default-select 
+              <default-select
                 v-validate="'required'"
                 v-model="cronSettingValueBasic"
                 :option-list="scheduleInfo.basicScheduleList"
@@ -200,36 +223,43 @@
                 class="input-field__select"
                 name="basicScheduleColumn"
               />
-              <div 
+              <div
                 v-show="errors.has('basicScheduleColumn')"
                 class="error-text"
-              >{{ errors.first('basicScheduleColumn') }}</div>
+              >
+                {{ errors.first('basicScheduleColumn') }}
+              </div>
             </div>
           </div>
-          <div 
+          <div
             v-else-if="columnInfo.mode === 'ADVANCED'"
-            class="cron-time">
+            class="cron-time"
+          >
             <div class="cron-time__setting">
-              <div 
+              <div
                 v-for="time in cronSettingValueAdvanced"
                 :key="time.unit"
-                class="cron-time__input">
+                class="cron-time__input"
+              >
                 <input-block
                   :label="time.unit"
-                  v-model="time.value" />
+                  v-model="time.value"
+                />
               </div>
             </div>
             <div class="cron-info">
-              <div 
+              <div
                 v-for="info in settingInfo"
                 :key="info.title"
-                class="cron-info__block">
+                class="cron-info__block"
+              >
                 <span class="cron-info__title"> {{ info.title }} </span>
                 <ul>
                   <li
                     v-for="(item, index) in info.content"
                     :key="index"
-                    class="cron-info__list">
+                    class="cron-info__list"
+                  >
                     {{ item }}
                   </li>
                 </ul>
@@ -239,15 +269,19 @@
         </div>
         <template v-if="hasSettingDataChanged">
           <div class="button__block">
-            <button 
+            <button
               class="btn btn-outline"
               @click="closeDialog"
-            >{{ $t('button.cancel') }}</button>
-            <button 
+            >
+              {{ $t('button.cancel') }}
+            </button>
+            <button
               :disabled="isProcessing || isUpdateWithoutDateTimeColumn"
               class="btn btn-default"
               @click="columnInfo.id ? updateBatchLoad() : setBatchLoad()"
-            >{{ $t('button.save') }}</button>
+            >
+              {{ $t('button.save') }}
+            </button>
           </div>
         </template>
       </template>
@@ -256,16 +290,16 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
+import moment from 'moment-timezone'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
 import InputBlock from '@/components/InputBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import { 
-  getDataFrameColumnInfoById, 
-  getBatchLoadSetting, 
-  setBatchLoad, 
+import {
+  getDataFrameColumnInfoById,
+  getBatchLoadSetting,
+  setBatchLoad,
   updateBatchLoadSetting,
   triggerUpdateData
 } from '@/API/DataSource'
@@ -409,11 +443,11 @@ export default {
             value: '0 0 1 * *',
             name: this.$t('batchLoad.everyMonth')
           }
-        ],
+        ]
       },
       isLoading: false,
       isProcessing: false,
-      hasError: false,
+      hasError: false
     }
   },
   computed: {
@@ -421,7 +455,7 @@ export default {
       return this.columnInfo.type === 'UPDATE' && this.dateTimeColumnList.length === 0
     },
     dateTimeColumnList () {
-      return this.columnInfo.columnList.filter(column => column.dataType === "DATETIME")
+      return this.columnInfo.columnList.filter(column => column.dataType === 'DATETIME')
     },
     hasSettingDataChanged () {
       // compare primary key lists
@@ -446,7 +480,7 @@ export default {
     },
     composedAdvancedCronSetting () {
       return this.cronSettingValueAdvanced.reduce((acc, cur, index, arr) => acc + cur.value + (index === arr.length - 1 ? '' : ' '), '')
-    },
+    }
   },
   mounted () {
     this.getBatchSetting()
@@ -597,7 +631,7 @@ export default {
       font-size: 14px;
     }
   }
-  
+
   .setting-block {
     position: relative;
     padding: 24px;
@@ -647,7 +681,7 @@ export default {
       &:not(:last-of-type) {
         margin-bottom: 24px;
       }
-      
+
       &__multi-select {
         width: 100%;
       }
@@ -670,7 +704,7 @@ export default {
       &__input-wrapper {
         margin-top: 8px;
       }
-      
+
       .deletable-checkbox {
         display: flex;
         align-items: center;
@@ -746,7 +780,7 @@ export default {
           color: $theme-color-white;
         }
 
-        &__list { 
+        &__list {
           &:not(:last-child) {
             margin-bottom: 6px;
           }

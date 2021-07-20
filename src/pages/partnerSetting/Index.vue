@@ -1,19 +1,23 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
-      <div class="setting-block__title">顯示設定</div>
+      <div class="setting-block__title">
+        顯示設定
+      </div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">切換顯示 Logo：</label>
-          <el-switch 
+          <el-switch
             v-model="switchDisplayLogo"
             class="setting-switch"
           />
-          <div 
+          <div
             v-if="switchDisplayLogo"
             class="sub-setting-block"
           >
-            <div class="block__title">選擇欲變更的圖片</div>
+            <div class="block__title">
+              選擇欲變更的圖片
+            </div>
             <div
               v-for="(option, index) in logoOptionList"
               :key="index + '-' + option"
@@ -33,7 +37,6 @@
               >{{ option }}</label>
             </div>
           </div>
-          
         </div>
       </div>
     </div>

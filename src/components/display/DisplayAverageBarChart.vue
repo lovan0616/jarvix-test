@@ -17,19 +17,19 @@ function averageBarChartConfig (t) {
     chartData: {
       type: 'bar',
       itemStyle: {
-        color: chartVariable['averageBarColor']
+        color: chartVariable.averageBarColor
       },
       legendHoverLink: false,
       emphasis: {
         itemStyle: {
-          color: chartVariable['averageBarColor']
+          color: chartVariable.averageBarColor
         }
       },
       barMaxWidth: '18',
       markLine: {
         symbol: ['none', 'none'],
         lineStyle: {
-          color: chartVariable['averageLineColor']
+          color: chartVariable.averageLineColor
         },
         data: [
           {
@@ -81,11 +81,11 @@ export default {
           return {
             value: element,
             itemStyle: {
-              color: element === maxValue ? chartVariable['maxValueColor'] : chartVariable['minValueColor']
+              color: element === maxValue ? chartVariable.maxValueColor : chartVariable.minValueColor
             },
             emphasis: {
               itemStyle: {
-                color: element === maxValue ? chartVariable['maxValueColor'] : chartVariable['minValueColor']
+                color: element === maxValue ? chartVariable.maxValueColor : chartVariable.minValueColor
               }
             }
           }

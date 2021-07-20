@@ -1,11 +1,12 @@
 <template>
   <!--CATEGORY or BOOLEAN-->
-  <div 
-    v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'" 
-    class="input-field">
+  <div
+    v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'"
+    class="input-field"
+  >
     <label class="input-field__label">{{ inputData.columnName }}</label>
     <div class="input-field__input">
-      <default-select 
+      <default-select
         v-validate="'required'"
         :popper-append-to-body="true"
         :option-list="inputData.valueList"
@@ -16,19 +17,25 @@
         filterable
         class="input-field__select"
       />
-      <div 
+      <div
         v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName)"
         class="error-text"
-      >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName) }}</div>
-      <div 
-        v-if="isEmptyData" 
-        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
+      >
+        {{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + inputData.columnName) }}
+      </div>
+      <div
+        v-if="isEmptyData"
+        class="input-field__reminder"
+      >
+        {{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}
+      </div>
     </div>
   </div>
   <!--NUMERIC-->
-  <div 
-    v-else-if="inputData.statsType === 'NUMERIC'" 
-    class="input-field">
+  <div
+    v-else-if="inputData.statsType === 'NUMERIC'"
+    class="input-field"
+  >
     <label class="input-field__label">{{ getNumericTitle }}</label>
     <div class="input-field__input">
       <input-verify
@@ -39,15 +46,19 @@
         :validate-scope="'simulator-' + simulatorId"
         type="text"
       />
-      <div 
-        v-if="isEmptyData" 
-        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
+      <div
+        v-if="isEmptyData"
+        class="input-field__reminder"
+      >
+        {{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}
+      </div>
     </div>
   </div>
   <!-- DATETIME -->
   <div
     v-else-if="inputData.statsType === 'DATETIME'"
-    class="input-field">
+    class="input-field"
+  >
     <label class="input-field__label">{{ getDateTimeTitle }}</label>
     <div class="input-field__input">
       <el-date-picker
@@ -62,13 +73,18 @@
         :editable="false"
         type="datetime"
       />
-      <div 
+      <div
         v-show="errors.has('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime')"
         class="error-text"
-      >{{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime') }}</div>
-      <div 
-        v-if="isEmptyData" 
-        class="input-field__reminder">{{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}</div>
+      >
+        {{ errors.first('simulator-' + simulatorId + '.' + inputId + '-' + 'dateTime') }}
+      </div>
+      <div
+        v-if="isEmptyData"
+        class="input-field__reminder"
+      >
+        {{ '*' + $t('miniApp.noResultCheckFilterAndDataSource') }}
+      </div>
     </div>
   </div>
 </template>
@@ -83,7 +99,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
-  name: "SimulatorInput",
+  name: 'SimulatorInput',
   components: {
     DefaultSelect,
     EmptyInfoBlock,
@@ -121,9 +137,9 @@ export default {
     getNumericTitle () {
       if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC') return
       if (this.isEmptyData) return this.inputData.columnName
-      return this.inputData.columnName + '(' + this.$t('miniApp.minAndMax', { 
-        min: Math.round(this.inputData.valueList.min * 100) / 100, 
-        max: Math.round(this.inputData.valueList.max  * 100) / 100
+      return this.inputData.columnName + '(' + this.$t('miniApp.minAndMax', {
+        min: Math.round(this.inputData.valueList.min * 100) / 100,
+        max: Math.round(this.inputData.valueList.max * 100) / 100
       }) + ')'
     },
     getDateTimeTitle () {
@@ -142,7 +158,7 @@ export default {
     isEmptyData () {
       if (!this.inputData.statsType) return false
       switch (this.inputData.statsType) {
-        case 'NUMERIC': 
+        case 'NUMERIC':
           return this.inputData.valueList.min === null || this.inputData.valueList.max === null
         case 'DATETIME':
           return this.inputData.datetimeInfo.start === null || this.inputData.datetimeInfo.end === null
@@ -153,7 +169,7 @@ export default {
     }
   },
   watch: {
-    
+
   },
   mounted () {
     this.configInputData()
@@ -162,8 +178,8 @@ export default {
     configInputData () {
       Promise.all([
         ...((this.columnInfo.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
-          // restrictions: this.restrictions.length > 0 ? this.restrictions : null 
-          restrictions: null 
+          // restrictions: this.restrictions.length > 0 ? this.restrictions : null
+          restrictions: null
         })]),
         ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') && [this.searchValue(this.columnInfo.columnId, '')]),
         searchColumnDefaultValue(this.modelId, this.columnInfo.columnId, {
@@ -182,7 +198,7 @@ export default {
       inputData.statsType = this.columnInfo.statsType
       inputData.columnName = this.columnInfo.originalName
 
-      if(inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
+      if (inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
         inputData.valueList = columnInfo.fuzzySearchResult
         inputData.valueList = inputData.valueList.map(element => ({
           value: element,
@@ -212,8 +228,8 @@ export default {
         // restrictions: this.restrictions.length > 0 ? this.restrictions : null
         restrictions: null
       })
-    },
-  },
+    }
+  }
 
 }
 </script>
@@ -234,7 +250,7 @@ export default {
   /deep/ .el-select-dropdown {
     width: 100%;
   }
-  
+
   .el-input {
     width: 100%;
   }
@@ -250,7 +266,7 @@ export default {
         color: #AAAAAA;
         font-weight: normal;
         font-size: 16px;
-      } 
+      }
     }
   }
 

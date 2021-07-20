@@ -3,16 +3,16 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('fileDataUpdate.updateSetting') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="dialog__sub-title">
         {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
       </div>
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         size="50"
@@ -23,7 +23,9 @@
       />
       <template v-else>
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('updateSetting.activationStatus') }}</div>
+          <div class="setting-block__title">
+            {{ $t('updateSetting.activationStatus') }}
+          </div>
           <div
             v-for="status in statusList"
             :key="status.type"
@@ -45,7 +47,9 @@
         </div>
         <template v-if="columnInfo.status !== 'DISABLE'">
           <div class="setting-block">
-            <div class="setting-block__title">{{ $t('updateSetting.updateCriteriaContent') }}</div>
+            <div class="setting-block__title">
+              {{ $t('updateSetting.updateCriteriaContent') }}
+            </div>
             <template v-if="isUpdateWithoutDateTimeColumn">
               <empty-info-block
                 :msg="$t('editing.emptyDateTime')"
@@ -55,7 +59,7 @@
               <div class="input-field">
                 <label class="input-field__label">{{ $t('updateSetting.updateTime') }}</label>
                 <div class="input-field__input">
-                  <default-select 
+                  <default-select
                     v-validate="'required'"
                     v-model="columnInfo.updateDateColumn"
                     :option-list="dateTimeColumnList"
@@ -65,10 +69,12 @@
                     class="input-field__select"
                     name="updatedTimeColumn"
                   />
-                  <div 
+                  <div
                     v-show="errors.has('updatedTimeColumn')"
                     class="error-text"
-                  >{{ errors.first('updatedTimeColumn') }}</div>
+                  >
+                    {{ errors.first('updatedTimeColumn') }}
+                  </div>
                 </div>
               </div>
               <div class="input-field">
@@ -85,25 +91,31 @@
                     class="input-field__multi-select"
                     name="primaryKeyColumn"
                   />
-                  <div 
+                  <div
                     v-show="errors.has('primaryKeyColumn')"
                     class="error-text"
-                  >{{ errors.first('primaryKeyColumn') }}</div>
+                  >
+                    {{ errors.first('primaryKeyColumn') }}
+                  </div>
                 </div>
               </div>
             </template>
           </div>
         </template>
         <div class="button__block">
-          <button 
+          <button
             class="btn btn-outline"
             @click="closeDialog"
-          >{{ $t('button.cancel') }}</button>
-          <button 
+          >
+            {{ $t('button.cancel') }}
+          </button>
+          <button
             :disabled="isProcessing || isUpdateWithoutDateTimeColumn"
             class="btn btn-default"
             @click="updateSetting"
-          >{{ $t('button.save') }}</button>
+          >
+            {{ $t('button.save') }}
+          </button>
         </div>
       </template>
     </div>
@@ -114,8 +126,8 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import { 
-  getDataFrameColumnInfoById, 
+import {
+  getDataFrameColumnInfoById,
   getBatchLoadSetting,
   updateDataUpdateSetting
 } from '@/API/DataSource'
@@ -159,7 +171,7 @@ export default {
       return this.dateTimeColumnList.length === 0
     },
     dateTimeColumnList () {
-      return this.columnInfo.columnList.filter(column => column.dataType === "DATETIME")
+      return this.columnInfo.columnList.filter(column => column.dataType === 'DATETIME')
     }
   },
   mounted () {
@@ -226,7 +238,7 @@ export default {
       font-size: 14px;
     }
   }
-  
+
   .setting-block {
     position: relative;
     padding: 24px;
@@ -248,7 +260,7 @@ export default {
       &:not(:last-of-type) {
         margin-bottom: 24px;
       }
-      
+
       &__multi-select {
         width: 100%;
       }

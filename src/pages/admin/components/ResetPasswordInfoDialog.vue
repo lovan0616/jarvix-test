@@ -15,7 +15,8 @@
       ref="link"
       :value="resetPasswordLink"
       class="reset-paswork-link-block"
-      readonly/>
+      readonly
+    />
   </writing-dialog>
 </template>
 

@@ -11,10 +11,11 @@
       :title="$t('resultDescription.currentChosenArea')"
       @save="saveFilter"
     >
-      <div 
-        slot="selectedFilterRegion" 
-        class="region-description">
-        <div 
+      <div
+        slot="selectedFilterRegion"
+        class="region-description"
+      >
+        <div
           v-for="(singleArea, index) in selectedData"
           :key="index"
           class="single-area"
@@ -32,19 +33,20 @@
         </div>
       </div>
     </selected-region>
-    <div 
+    <div
       v-if="dataset.descriptions && dataset.descriptions.length > 0"
       class="description"
     >
-      <span 
-        v-for="(description, index) in dataset.descriptions" 
-        :key="index" 
-        class="description__item">{{ description }}</span>
+      <span
+        v-for="(description, index) in dataset.descriptions"
+        :key="index"
+        class="description__item"
+      >{{ description }}</span>
     </div>
   </div>
 </template>
 <script>
-import { 
+import {
   colorOnly2,
   color5,
   color12,
@@ -62,7 +64,7 @@ let scatterBubleChartConfig = {
     splitLine: {
       lineStyle: {
         type: 'dashed',
-        color: chartVariable['splitLineColor']
+        color: chartVariable.splitLineColor
       }
     }
   },
@@ -70,13 +72,13 @@ let scatterBubleChartConfig = {
     splitLine: {
       lineStyle: {
         type: 'dashed',
-        color: chartVariable['splitLineColor']
+        color: chartVariable.splitLineColor
       }
     },
     axisLine: {
       show: true,
       lineStyle: {
-        color: chartVariable['yAxisColor']
+        color: chartVariable.yAxisColor
       }
     },
     scale: true
@@ -176,13 +178,13 @@ export default {
         ...this.dataset.buckets,
         ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.dataset.outliersBuckets])
       ]
-      
+
       // 準備所有欄位名稱
       const columns = [
         ...this.dataset.columns,
-        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.$t('clustering.outlier')]) 
+        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.$t('clustering.outlier')])
       ]
-      
+
       for (let i = 0; i < groupList.length; i++) {
         const groupData = groupList[i].reduce((acc, cur, index) => {
           // 排除值為 0 的點
@@ -190,7 +192,7 @@ export default {
           // 塞入資料名稱
           cur[3] = this.dataset.index ? this.dataset.index[index] : null
           // 塞入類別（組別）名稱
-          cur[4] = columns[i] 
+          cur[4] = columns[i]
           // 資料最大值
           maxValue = Math.max(maxValue, cur[2])
           // 資料最小值
@@ -215,15 +217,15 @@ export default {
         config.chartData.label.emphasis.formatter = param => param.data[2]
         config.chartData.name = columns[i]
         config.chartData.itemStyle.color = this.colorList[i] || this.colorList[i % 10]
-        config.chartData.data = groupData 
+        config.chartData.data = groupData
         // 定義每個維度的名稱，方便在 tooltip 取用
         config.chartData.dimensions = [this.title.xAxis[0].display_name, this.title.yAxis[0].display_name, 'value', 'dataName', 'serieName']
         chartAddon.series.push(config.chartData)
       }
-      
+
       // x 軸設定
       chartAddon.xAxis = {
-        ...chartAddon.xAxis, 
+        ...chartAddon.xAxis,
         ...scatterBubleChartConfig.xAxis,
         name: this.title.xAxis[0].display_name,
         min: minXaxis,
@@ -302,7 +304,7 @@ export default {
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
-  },
+  }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="result-board-container">
-    <div 
+    <div
       :id="pinBoardId"
       :class="{'has-filter': hasFilter}"
       class="result-board"
@@ -24,39 +24,43 @@
           class="btn-m btn-default download-button"
           @click="downloadResult"
         >
-          <svg-icon 
-            :icon-class="isDownloading ? 'spinner' : 'download'" 
-            class="icon"/>
+          <svg-icon
+            :icon-class="isDownloading ? 'spinner' : 'download'"
+            class="icon"
+          />
           {{ $t('button.downloadPage') }}
         </button>
-        <div 
+        <div
           v-if="isPinboardPage"
           class="pin-button-block"
         >
-          <button 
+          <button
             class="btn-m btn-default"
             @click="askPinboardTitleQuestion"
           >
-            <svg-icon 
-              icon-class="len-with-line-chart" 
-              class="icon icon-ask-jarvix"/>{{ $t('pinboard.intelligentAnalysis') }}
+            <svg-icon
+              icon-class="len-with-line-chart"
+              class="icon icon-ask-jarvix"
+            />{{ $t('pinboard.intelligentAnalysis') }}
           </button>
-          <button 
+          <button
             class="btn-m btn-default"
             @click.stop.prevent="togglePinboardInfo"
           >
             <svg-icon
               icon-class="data-explanation"
-              class="icon"/>{{ $t('button.dataExplanation') }}
+              class="icon"
+            />{{ $t('button.dataExplanation') }}
           </button>
-          <button 
+          <button
             :disabled="isRefreshing"
             class="btn-m btn-default"
             @click.stop.prevent="refreshData"
           >
             <svg-icon
               :icon-class="isRefreshing ? 'spinner' : 'refresh'"
-              class="icon"/>{{ $t('button.dataUpdate') }}
+              class="icon"
+            />{{ $t('button.dataUpdate') }}
           </button>
           <pinboard-info-dialog
             v-if="isShowPinboardInfo"
@@ -65,49 +69,62 @@
             @close="closePinboardInfo"
           />
           <button class="hover-box">
-            <svg-icon 
-              icon-class="more" 
-              class="icon more-icon"/>
+            <svg-icon
+              icon-class="more"
+              class="icon more-icon"
+            />
             <div class="pinboard-popup hover-box__popup">
-              <div 
-                class="popup-box" 
-                @click.stop="showShare">
-                <svg-icon 
-                  icon-class="share" 
-                  class="icon popup-icon"/>
-                <div class="popup-text">{{ $t('button.share') }}</div>
+              <div
+                class="popup-box"
+                @click.stop="showShare"
+              >
+                <svg-icon
+                  icon-class="share"
+                  class="icon popup-icon"
+                />
+                <div class="popup-text">
+                  {{ $t('button.share') }}
+                </div>
               </div>
 
-              <div 
-                class="popup-box border-line" 
-                @click.stop="downloadResult">
-                <svg-icon 
-                  :icon-class="isDownloading ? 'spinner' : 'download'" 
-                  class="icon popup-icon"/>
-                <div class="popup-text">{{ $t('button.downloadPage') }}</div>
+              <div
+                class="popup-box border-line"
+                @click.stop="downloadResult"
+              >
+                <svg-icon
+                  :icon-class="isDownloading ? 'spinner' : 'download'"
+                  class="icon popup-icon"
+                />
+                <div class="popup-text">
+                  {{ $t('button.downloadPage') }}
+                </div>
               </div>
-              <div 
-                class="popup-box" 
-                @click.stop="showDelete">
-                <svg-icon 
-                  icon-class="delete" 
-                  class="icon popup-icon"/>
-                <div class="popup-text">{{ $t('button.delete') }}</div>
+              <div
+                class="popup-box"
+                @click.stop="showDelete"
+              >
+                <svg-icon
+                  icon-class="delete"
+                  class="icon popup-icon"
+                />
+                <div class="popup-text">
+                  {{ $t('button.delete') }}
+                </div>
               </div>
-              
             </div>
           </button>
         </div>
-        <div 
+        <div
           v-else-if="$route.name === 'PageResult'"
         >
           <button
             class="btn-m btn-default pin-button"
             @click="pinToBoard"
           >
-            <span class="pin-slash"><svg-icon 
-              :icon-class="isLoading ? 'spinner' : 'pin'" 
-              class="icon"/></span>
+            <span class="pin-slash"><svg-icon
+              :icon-class="isLoading ? 'spinner' : 'pin'"
+              class="icon"
+            /></span>
             {{ showAddToWarRoomButton ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
           </button>
           <pinboard-dialog
@@ -119,8 +136,8 @@
           />
         </div>
       </div>
-      <slot name="PageResultBoardBody"/>
-      <slot name="RootCauseResultBoardBody"/>
+      <slot name="PageResultBoardBody" />
+      <slot name="RootCauseResultBoardBody" />
     </div>
 
     <writing-dialog
@@ -131,11 +148,12 @@
       @closeDialog="closeShare"
       @confirmBtn="confirmShare"
     >
-      <input 
-        ref="shareInput" 
-        :value="shareUrl" 
-        type="text" 
-        class="input pinboard-name-input">
+      <input
+        ref="shareInput"
+        :value="shareUrl"
+        type="text"
+        class="input pinboard-name-input"
+      >
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
@@ -153,7 +171,7 @@
       @closeDialog="isShowConfimAccountSwitch = false"
       @confirmBtn="confirmOpenJarviX"
     />
-    <slot name="dialogs"/>
+    <slot name="dialogs" />
   </div>
 </template>
 <script>
@@ -277,7 +295,7 @@ export default {
   },
   methods: {
     downloadResult () {
-      if(this.isDownloading) return
+      if (this.isDownloading) return
       this.isDownloading = true
       const node = this.$el
       const fileName = this.question
@@ -293,7 +311,7 @@ export default {
       this.isRefreshing = true
       refreshResult({ askResultId: this.resultId, isFilter: false })
         .then(res => {
-          let promise = new Promise(resolve => this.$emit('refresh', {resolveFunction: resolve, pinBoardId: this.pinBoardId}))
+          let promise = new Promise(resolve => this.$emit('refresh', { resolveFunction: resolve, pinBoardId: this.pinBoardId }))
           promise.then(() => {
             this.isRefreshing = false
           })
@@ -314,7 +332,7 @@ export default {
     },
     selectPinboard (id) {
       this.isLoading = true
-      this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId})
+      this.$store.dispatch('pinboard/pinToBoard', { folderId: id, resultId: this.currentResultId })
         .then(res => {
           this.pinBoardId = res.id
           this.isLoading = false
@@ -424,9 +442,9 @@ export default {
       this.openJarviX()
     },
     openJarviX () {
-      window.open(`${location.origin}/account/${this.pinboardAccountId}/group/${this.pinboardGroupId}/result?question=${this.question}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=click_pinboard`);
+      window.open(`${location.origin}/account/${this.pinboardAccountId}/group/${this.pinboardGroupId}/result?question=${this.question}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=click_pinboard`)
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -529,7 +547,7 @@ export default {
       }
     }
   }
-  
+
   .download-button {
     margin-right: 11px;
   }

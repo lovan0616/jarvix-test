@@ -1,7 +1,7 @@
 <template>
   <div class="table-responsive">
     <template v-if="isDataLoading">
-      <spinner/>
+      <spinner />
     </template>
     <div v-else-if="isShowChart">
       <display-basic-chart
@@ -26,9 +26,10 @@
         height="450px"
       />
     </div>
-    <table 
-      v-else 
-      class="table table-bordered">
+    <table
+      v-else
+      class="table table-bordered"
+    >
       <!-- Table header -->
       <thead>
         <tr
@@ -49,10 +50,11 @@
             :key="JSON.stringify(col)"
             :colspan="spanSize('col', sortedCols, colIndex, colFieldIndex)"
           >
-            <slot 
-              v-if="colField.headerSlotName" 
-              :name="colField.headerSlotName" 
-              :value="col[`col-${colFieldIndex}`]">
+            <slot
+              v-if="colField.headerSlotName"
+              :name="colField.headerSlotName"
+              :value="col[`col-${colFieldIndex}`]"
+            >
               Missing slot <code>{{ colField.headerSlotName }}</code>
             </slot>
             <template v-else>
@@ -70,9 +72,10 @@
 
       <!-- Table body -->
       <tbody>
-        <tr 
-          v-for="(row, rowIndex) in sortedRows" 
-          :key="JSON.stringify(row)">
+        <tr
+          v-for="(row, rowIndex) in sortedRows"
+          :key="JSON.stringify(row)"
+        >
           <!-- Row headers -->
           <th
             v-for="(rowField, rowFieldIndex) in rowFields"
@@ -80,10 +83,11 @@
             :key="`head-${JSON.stringify(rowField)}`"
             :rowspan="spanSize('row', sortedRows, rowIndex, rowFieldIndex)"
           >
-            <slot 
-              v-if="rowField.headerSlotName" 
-              :name="rowField.headerSlotName" 
-              :value="row[`row-${rowFieldIndex}`]">
+            <slot
+              v-if="rowField.headerSlotName"
+              :name="rowField.headerSlotName"
+              :value="row[`row-${rowFieldIndex}`]"
+            >
               Missing slot <code>{{ rowField.headerSlotName }}</code>
             </slot>
             <template v-else>
@@ -96,11 +100,14 @@
             :key="JSON.stringify(col)"
             class="text-right"
           >
-            <slot 
-              v-if="$scopedSlots.value" 
-              :value="value(row, col)" 
-              name="value" />
-            <template v-else>{{ value(row, col) }}</template>
+            <slot
+              v-if="$scopedSlots.value"
+              :value="value(row, col)"
+              name="value"
+            />
+            <template v-else>
+              {{ value(row, col) }}
+            </template>
           </td>
           <!-- Row footers (if slots are provided) -->
           <th
@@ -109,10 +116,11 @@
             :key="`foot-${JSON.stringify(rowField)}`"
             :rowspan="spanSize('row', rows, rowIndex, rowFields.length - rowFieldIndex - 1)"
           >
-            <slot 
-              v-if="rowField.footerSlotName" 
-              :name="rowField.footerSlotName" 
-              :value="row[`row-${rowFields.length - rowFieldIndex - 1}`]">
+            <slot
+              v-if="rowField.footerSlotName"
+              :name="rowField.footerSlotName"
+              :value="row[`row-${rowFields.length - rowFieldIndex - 1}`]"
+            >
               Missing slot <code>{{ rowField.footerSlotName }}</code>
             </slot>
             <template v-else>
@@ -127,22 +135,26 @@
         <tr
           v-for="(colField, colFieldIndex) in colFieldsReverse"
           v-if="colField.showFooter"
-          :key="`foot-${JSON.stringify(colField)}`">
+          :key="`foot-${JSON.stringify(colField)}`"
+        >
           <!-- Bottom left dead zone -->
           <th
             v-if="colFieldIndex === firstColFieldFooterIndex && rowHeaderSize > 0"
             :colspan="rowHeaderSize"
-            :rowspan="colHeaderSize"/>
+            :rowspan="colHeaderSize"
+          />
           <!-- Column footers -->
           <th
             v-for="(col, colIndex) in sortedCols"
             v-if="spanSize('col', sortedCols, colIndex, colFields.length - colFieldIndex - 1) !== 0"
             :key="JSON.stringify(col)"
-            :colspan="spanSize('col', sortedCols, colIndex, colFields.length - colFieldIndex - 1)">
-            <slot 
-              v-if="colField.footerSlotName" 
-              :name="colField.footerSlotName" 
-              :value="col[`col-${colFields.length - colFieldIndex - 1}`]">
+            :colspan="spanSize('col', sortedCols, colIndex, colFields.length - colFieldIndex - 1)"
+          >
+            <slot
+              v-if="colField.footerSlotName"
+              :name="colField.footerSlotName"
+              :value="col[`col-${colFields.length - colFieldIndex - 1}`]"
+            >
               Missing slot <code>{{ colField.footerSlotName }}</code>
             </slot>
             <template v-else>
@@ -322,7 +334,7 @@ export default {
     },
     // Get value from valuesHashTable
     value (row, col) {
-      let data = this.valuesHashTable.get({...row, ...col}) || []
+      let data = this.valuesHashTable.get({ ...row, ...col }) || []
       let result = 0
       if (this.aggregate === 'sum') {
         result = data.reduce((a, b) => a + b, 0)
@@ -421,7 +433,7 @@ export default {
       previous.push(data)
       return previous
     }
-  },
+  }
 }
 </script>
 

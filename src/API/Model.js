@@ -2,11 +2,11 @@ import request from '@/utils/publicRequest'
 
 /**
  * get model list
- * @query {Number} groupId - group id 
+ * @query {Number} groupId - group id
  * @query {Number} page - pagination page
  * @query {Number} size - pagination item per page
  */
-export function getModelList(groupId, page = 0, size = 20, enableParamOpt = false) {
+export function getModelList (groupId, page = 0, size = 20, enableParamOpt = false) {
   return request({
     url: `/models?groupId=${groupId}`,
     method: 'GET',
@@ -22,7 +22,7 @@ export function getModelList(groupId, page = 0, size = 20, enableParamOpt = fals
  * model upload
  * @param {formData} modelData - 要上傳的 model
  */
- export function uploadModel(modelData) {
+export function uploadModel (modelData) {
   return request({
     url: '/models',
     method: 'POST',
@@ -32,10 +32,10 @@ export function getModelList(groupId, page = 0, size = 20, enableParamOpt = fals
 
 /**
  * re-upload model
- * @query {Number} modelId - model id 
+ * @query {Number} modelId - model id
  * @param {formData} modelData - 要重新上傳的 model
  */
- export function reUploadModel(modelId, data) {
+export function reUploadModel (modelId, data) {
   return request({
     url: `/models/${modelId}`,
     method: 'POST',
@@ -47,7 +47,7 @@ export function getModelList(groupId, page = 0, size = 20, enableParamOpt = fals
  * create model
  * @param {Object} data - 建立的模型資訊
  */
- export function createModel(data) {
+export function createModel (data) {
   return request({
     url: '/models/create',
     method: 'POST',
@@ -57,9 +57,9 @@ export function getModelList(groupId, page = 0, size = 20, enableParamOpt = fals
 
 /**
  * get model info
- * @query {Number} modelId - model id 
+ * @query {Number} modelId - model id
  */
- export function getModelInfo(modelId) {
+export function getModelInfo (modelId) {
   return request({
     url: `/models/${modelId}`,
     method: 'GET'
@@ -68,10 +68,10 @@ export function getModelList(groupId, page = 0, size = 20, enableParamOpt = fals
 
 /**
  * modify model info
- * @query {Number} modelId - model id 
+ * @query {Number} modelId - model id
  * @param {Object} data - 修改的模型資訊
  */
- export function modifyModelInfo(modelId, data) {
+export function modifyModelInfo (modelId, data) {
   return request({
     url: `/models/${modelId}`,
     method: 'PATCH',
@@ -81,9 +81,9 @@ export function getModelList(groupId, page = 0, size = 20, enableParamOpt = fals
 
 /**
  * delete model
- * @params {Number} modelId - model id 
+ * @params {Number} modelId - model id
  */
- export function deleteModelById(modelId) {
+export function deleteModelById (modelId) {
   return request({
     url: `/models/${modelId}`,
     method: 'DELETE'
@@ -92,10 +92,10 @@ export function getModelList(groupId, page = 0, size = 20, enableParamOpt = fals
 
 /**
  * search column default value under restrictions
- * @params {Number} modelId - model id 
+ * @params {Number} modelId - model id
  * @params {Number} dataColumnId - data column id
  */
-export function searchColumnDefaultValue(modelId, dataColumnId, data) {
+export function searchColumnDefaultValue (modelId, dataColumnId, data) {
   return request({
     url: `/models/${modelId}/input-columns/${dataColumnId}/search-default-value`,
     method: 'POST',
@@ -105,10 +105,10 @@ export function searchColumnDefaultValue(modelId, dataColumnId, data) {
 
 /**
  * search numeric column value range under restrictions
- * @params {Number} modelId - model id 
+ * @params {Number} modelId - model id
  * @params {Number} dataColumnId - data column id
  */
-export function searchNumericColumnValueRange(modelId, dataColumnId, data) {
+export function searchNumericColumnValueRange (modelId, dataColumnId, data) {
   return request({
     url: `/models/${modelId}/input-columns/${dataColumnId}/search-range`,
     method: 'POST',
@@ -118,9 +118,9 @@ export function searchNumericColumnValueRange(modelId, dataColumnId, data) {
 
 /**
  * simulate
- * @params {Number} modelId - model id 
+ * @params {Number} modelId - model id
  */
-export function modelSimulate(modelId, data) {
+export function modelSimulate (modelId, data) {
   return request({
     url: `/models/${modelId}/simulate`,
     method: 'POST',
@@ -130,9 +130,9 @@ export function modelSimulate(modelId, data) {
 
 /**
  * get parameter optimization task result
- * @query {Number} taskId - task id 
+ * @query {Number} taskId - task id
  */
- export function getParamOptimizationResult(taskId) {
+export function getParamOptimizationResult (taskId) {
   return request({
     url: `/model-param-opt/tasks/${taskId}/result`,
     method: 'GET'
@@ -142,11 +142,10 @@ export function modelSimulate(modelId, data) {
 /**
  * create parameter optimization task
  */
-export function createParamOptimizationTask(data) {
+export function createParamOptimizationTask (data) {
   return request({
-    url: `/model-param-opt/tasks/create`,
+    url: '/model-param-opt/tasks/create',
     method: 'POST',
     data
   })
 }
-

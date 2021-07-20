@@ -1,9 +1,9 @@
 <template>
   <div class="file-upload">
     <div class="dialog-body">
-      <input 
-        ref="fileUploadInput" 
-        :accept="acceptFileTypes.join(',').toString()" 
+      <input
+        ref="fileUploadInput"
+        :accept="acceptFileTypes.join(',').toString()"
         type="file"
         class="hidden"
         name="fileUploadInput"
@@ -21,17 +21,22 @@
         @dragenter.native="toggleDragEnter(true)"
         @dragleave.native="toggleDragEnter(false)"
       >
-        <div 
-          slot="uploadLimit" 
-          class="upload-remark">
-          <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
+        <div
+          slot="uploadLimit"
+          class="upload-remark"
+        >
+          <div class="title">
+            【{{ $t('editing.uploadLimitTitle') }}】
+          </div>
           <div
             v-for="(msg, index) in $t('model.upload.modelLimit')"
             :key="index"
-          >{{ Number(index) + 1 }}. {{ $t(`model.upload.modelLimit.${index}`, {mainScriptName}) }}</div>
+          >
+            {{ Number(index) + 1 }}. {{ $t(`model.upload.modelLimit.${index}`, {mainScriptName}) }}
+          </div>
         </div>
       </upload-block>
-      <div 
+      <div
         v-else
         class="file-list-container"
         @drop.prevent="dropFiles($event)"
@@ -46,20 +51,21 @@
           :progress="progress"
           :currnt-upload-status="currntUploadStatus"
         />
-        <div 
+        <div
           v-if="uploadModelList.length > 0 && currntUploadStatus === uploadStatus.wait"
           class="file-chosen-info"
         >
           <span class="file-chosen-remark">
             {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadModelList.length, size: byteToMB(totalTransmitDataAmount)}) }}
           </span>
-          <button 
+          <button
             class="btn-m btn-secondary btn-has-icon"
             @click="chooseFile"
           >
-            <svg-icon 
-              icon-class="file-plus" 
-              class="icon"/>
+            <svg-icon
+              icon-class="file-plus"
+              class="icon"
+            />
             {{ $t('editing.addFile') }}
           </button>
         </div>
@@ -68,42 +74,52 @@
     <div class="dialog-footer">
       <div
         v-if="uploadStatusInfo"
-        class="dialog-status-block status">
-        <svg-icon 
+        class="dialog-status-block status"
+      >
+        <svg-icon
           :icon-class="uploadStatusInfo.icon"
           :class="[`status-${currntUploadStatus}`]"
           class="status-icon"
         />
-        <div 
+        <div
           :class="[`status-${currntUploadStatus}`]"
-          class="status-title">{{ uploadStatusInfo.title }}</div>
+          class="status-title"
+        >
+          {{ uploadStatusInfo.title }}
+        </div>
       </div>
       <div class="dialog-button-block">
-        <span 
-          v-if="currntUploadStatus === uploadStatus.uploading" 
-          class="uploading-reminding">{{ $t('editing.uploading') }}</span>
-        <button 
+        <span
+          v-if="currntUploadStatus === uploadStatus.uploading"
+          class="uploading-reminding"
+        >{{ $t('editing.uploading') }}</span>
+        <button
           v-if="!isReUpload && (currntUploadStatus === uploadStatus.wait || currntUploadStatus === uploadStatus.fail)"
           class="btn btn-outline"
           @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
-        <slot 
-          v-if="currntUploadStatus === uploadStatus.wait" 
-          name="additionalButton"/>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <slot
+          v-if="currntUploadStatus === uploadStatus.wait"
+          name="additionalButton"
+        />
+        <button
           v-if="uploadModelList.length > 0 && currntUploadStatus === uploadStatus.wait"
           class="btn btn-default"
           @click="isReUpload ? fileReUpload() : fileUpload()"
         >
           <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
-          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"/>{{ $t('button.uploading') }}</span>
+          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner" />{{ $t('button.uploading') }}</span>
         </button>
         <button
           v-if="currntUploadStatus === uploadStatus.fail || currntUploadStatus === uploadStatus.success"
           class="btn btn-outline"
           type="button"
           @click="prev"
-        >{{ $t('button.chooseFileUpload') }}</button>
+        >
+          {{ $t('button.chooseFileUpload') }}
+        </button>
       </div>
     </div>
   </div>
@@ -150,7 +166,7 @@ export default {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
     currentModelId () {
-      return this.$route.params['model_id']
+      return this.$route.params.model_id
     },
     // 總資料傳輸量
     totalTransmitDataAmount () {
@@ -223,7 +239,7 @@ export default {
           id: new Date().getTime() + i
         })
       }
-      
+
       this.updateUploadModelList(this.formDataList)
     },
     hasMainPy () {
@@ -233,7 +249,7 @@ export default {
 
       if (hasMainPy === -1) {
         Message({
-          message: this.$t('model.upload.lackOfMainScript', {mainScriptName: this.mainScriptName}),
+          message: this.$t('model.upload.lackOfMainScript', { mainScriptName: this.mainScriptName }),
           type: 'warning',
           duration: 3 * 1000,
           showClose: true
@@ -253,7 +269,7 @@ export default {
         const waitingFileList = [...this.formDataList]
         const firstFormData = waitingFileList.shift().data
         const modelName = this.currentUploadModelName
-      /**
+        /**
        * 注意！
        * 目前後端只會拿第一筆的 id, name 去更新
        */
@@ -285,7 +301,7 @@ export default {
     async fileReUpload () {
       // 先檢查上傳檔案內是否包含 main.py
       if (!this.hasMainPy()) return
-      
+
       // 更新狀態
       this.currntUploadStatus = uploadStatus.uploading
       try {
@@ -419,11 +435,11 @@ export default {
       }
 
       .status-fail {
-        color: #FF5C46; 
+        color: #FF5C46;
       }
 
       .status-success {
-        color: #2FECB3; 
+        color: #2FECB3;
       }
     }
   }

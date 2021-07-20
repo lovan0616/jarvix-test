@@ -38,7 +38,7 @@ export function getPinboardById (folderId) {
  */
 export function createPinboard (name) {
   return request({
-    url: `/pinBoard/user/folder`,
+    url: '/pinBoard/user/folder',
     method: 'POST',
     data: {
       name
@@ -51,7 +51,7 @@ export function createPinboard (name) {
  * @param {String} name - 新分類名稱
  * @param {Number} groupId
  */
-export function createGroupPinboard ({name, groupId}) {
+export function createGroupPinboard ({ name, groupId }) {
   return request({
     url: `/pinBoard/group/${groupId}/folder`,
     method: 'POST',
@@ -72,7 +72,7 @@ export function updatePinboardName (folderId, userId, name) {
     url: `/pinBoard/user/${userId}/folder/${folderId}`,
     method: 'PATCH',
     data: {
-      name,
+      name
     }
   })
 }
@@ -122,7 +122,7 @@ export function deleteGroupPinboard (groupId, folderId) {
  */
 export function pinToBoard (data) {
   return request({
-    url: `/pinBoard`,
+    url: '/pinBoard',
     method: 'POST',
     data
   })

@@ -2,7 +2,7 @@
   <span :class="['flow-action-dropdown', `${shape}-like`]">
     <a class="link link-dropdown">{{ $t('modelFlow.function') }}</a>
     <dropdown-select
-      :bar-data="flowActions" 
+      :bar-data="flowActions"
       @switchDialogName="$emit('action', $event)"
     />
     <svg-icon
@@ -52,7 +52,7 @@ export default {
   display: flex;
   align-items: center;
   color: $theme-color-primary;
-  
+
   &:hover {
     .dropdown-select {
       visibility: visible;

@@ -1,6 +1,8 @@
 <template>
   <div class="empty-pinboard">
-    <div class="empty-pinboard__text">{{ $t('pinboard.emptyInfo', {name: question}) }}</div>
+    <div class="empty-pinboard__text">
+      {{ $t('pinboard.emptyInfo', {name: question}) }}
+    </div>
   </div>
 </template>
 <script>

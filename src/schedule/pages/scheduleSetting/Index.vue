@@ -357,10 +357,10 @@ export default {
         })
         this.$store.commit('scheduleSetting/updateSetting', copiedSetting)
       })
-      .catch(() => {})
-      .finally(() => {
-        this.isLoading = false
-      })
+        .catch(() => {})
+        .finally(() => {
+          this.isLoading = false
+        })
     },
     toggleCollapse (section) {
       this.collapseAll[section] = !this.collapseAll[section]

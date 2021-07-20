@@ -1,34 +1,38 @@
 <template>
-  <confirm-dialog 
+  <confirm-dialog
     :title="title"
     class="confirm-change-name-dialog"
     @close="cancel"
   >
-    <div 
-      slot="dialogBody" 
-      class="content">
-      <input-block 
+    <div
+      slot="dialogBody"
+      class="content"
+    >
+      <input-block
         v-validate="`required|max:${max}`"
         v-model="newName"
         class="login-input-block"
         name="newDataSourceName"
       />
     </div>
-    <template 
-      slot="dialogFooter" 
-      class="dialog-btn-block">
-      <button 
-        type="button" 
+    <template
+      slot="dialogFooter"
+      class="dialog-btn-block"
+    >
+      <button
+        type="button"
         class="btn btn-outline"
         @click="cancel"
-      >{{ $t('button.cancel') }}</button>
-      <button 
-        :disabled="isProcessing" 
+      >
+        {{ $t('button.cancel') }}
+      </button>
+      <button
+        :disabled="isProcessing"
         type="button"
         class="btn btn-default"
         @click="confirm"
       >
-        <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+        <span v-if="isProcessing"><svg-icon icon-class="spinner" />{{ $t('button.processing') }}</span>
         <span v-else>{{ $t('button.confirm') }}</span>
       </button>
     </template>
@@ -71,7 +75,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isProcessing = true
-        let confirmResult = new Promise(resolve => this.$emit('confirm', {resolve, name: this.newName}))
+        let confirmResult = new Promise(resolve => this.$emit('confirm', { resolve, name: this.newName }))
         confirmResult.then(() => {
           this.isProcessing = false
         })
@@ -80,7 +84,7 @@ export default {
     cancel () {
       this.$emit('cancel')
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

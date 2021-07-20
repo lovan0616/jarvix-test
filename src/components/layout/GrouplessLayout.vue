@@ -1,16 +1,27 @@
 <template>
   <div class="groupless-layout">
-    <p class="guiding">{{ $t('guiding.notBelongToGroups') }}</p>
-    <p 
-      v-if="hasPermission('account_create_group')" 
-      class="guiding">{{ $t('guiding.pleaseCreateOrJoinGroup') }}</p>
-    <p 
-      v-else 
-      class="guiding">{{ $t('guiding.pleaseInformManager') }}</p>
+    <p class="guiding">
+      {{ $t('guiding.notBelongToGroups') }}
+    </p>
+    <p
+      v-if="hasPermission('account_create_group')"
+      class="guiding"
+    >
+      {{ $t('guiding.pleaseCreateOrJoinGroup') }}
+    </p>
+    <p
+      v-else
+      class="guiding"
+    >
+      {{ $t('guiding.pleaseInformManager') }}
+    </p>
     <router-link
       v-if="hasPermission('account_create_group')"
-      :to="{ name: 'AccountGroupManagement', params: { 'account_id': $route.params.account_id } }" 
-      class="link">{{ this.$t('message.goToGroupManagement') }}</router-link>
+      :to="{ name: 'AccountGroupManagement', params: { 'account_id': $route.params.account_id } }"
+      class="link"
+    >
+      {{ $t('message.goToGroupManagement') }}
+    </router-link>
   </div>
 </template>
 
@@ -29,15 +40,15 @@ export default {
     const currentAccount = store.getters['userManagement/getCurrentAccountId']
     const currentGroup = store.getters['userManagement/getCurrentGroupId']
     currentAccount && !currentGroup ? next() : next({
-      name: 'PageIndex', 
+      name: 'PageIndex',
       params: {
-        'account_id': currentAccount,
-        'group_id': currentGroup 
-      } 
+        account_id: currentAccount,
+        group_id: currentGroup
+      }
     })
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission'])
   }
 }
 </script>

@@ -53,7 +53,7 @@ export default {
       type: Number,
       default: 0
     },
-    height: {type: String, default: '420px'},
+    height: { type: String, default: '420px' },
     hasPagination: {
       type: Boolean,
       default: false
@@ -137,7 +137,7 @@ export default {
           '<td>' + dataset[0][1] + '</td>' +
           '<td>' + dataset[0][2] + '</td>' +
           '</tr>'
-        
+
         for (let i = 1; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
             <td>${dataset[i][0]}</td><td>${this.formatComma(dataset[i][1])}</td><td>${dataset[i][2]}</td>
@@ -175,12 +175,12 @@ export default {
         for (let i = 0; i < 2; i++) {
           if (params.dimensionNames[i] === 'index') {
             dataInfo.push({
-              ...this.title['xAxis'][0],
+              ...this.title.xAxis[0],
               value: params.value[i]
             })
           } else {
             dataInfo.push({
-              ...this.title['yAxis'][0],
+              ...this.title.yAxis[0],
               value: params.value[i]
             })
           }

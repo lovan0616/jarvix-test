@@ -4,25 +4,29 @@
       v-if="isEditMode || isWarningModuleActivate"
       :class="{'is-active': isShowWarningModule && !currentDashboardId}"
       class="title warning-module-entry"
-      @click="$emit('openWarningModule')">
-      <svg-icon 
-        icon-class="warning" 
-        class="label-icon"/>
+      @click="$emit('openWarningModule')"
+    >
+      <svg-icon
+        icon-class="warning"
+        class="label-icon"
+      />
       <span class="label-name">{{ $t('alert.monitorAlert') }}</span>
     </div>
     <div class="title">
-      <svg-icon 
-        icon-class="dashboard" 
-        class="label-icon"/>
+      <svg-icon
+        icon-class="dashboard"
+        class="label-icon"
+      />
       <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
       <div
         v-if="isEditMode"
         class="create-dashboard-icon-block"
         @click="$emit('showCreateDashboardDialog')"
       >
-        <svg-icon 
-          icon-class="plus" 
-          class="create-dashboard-icon"/>
+        <svg-icon
+          icon-class="plus"
+          class="create-dashboard-icon"
+        />
       </div>
     </div>
     <ul class="item-wrapper">
@@ -34,15 +38,16 @@
         @end="updateDashboardOrder"
       >
         <li
-          v-for="dashboard in dashboardList" 
+          v-for="dashboard in dashboardList"
           :key="dashboard.id"
           :class="{'is-active': dashboard.id === currentDashboardId}"
           class="item"
           @click="$emit('activeCertainDashboard', dashboard.id)"
         >
-          <svg-icon 
-            class="item-icon" 
-            icon-class="triangle"/>
+          <svg-icon
+            class="item-icon"
+            icon-class="triangle"
+          />
           <span class="item-name">{{ dashboard.name }}</span>
         </li>
       </draggable>

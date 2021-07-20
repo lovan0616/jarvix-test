@@ -1,11 +1,11 @@
 <template>
-  <warning-setting 
+  <warning-setting
     v-if="isEditMode"
     :setting="setting"
     :dashboard-list="dashboardList"
     @update="$emit('update', $event)"
   />
-  <warning-log 
+  <warning-log
     v-else
     :setting="setting"
     @goToCertainDashboard="$emit('goToCertainDashboard', $event)"
@@ -32,7 +32,7 @@ export default {
       default: () => []
     }
   },
-  data() {
+  data () {
     return {
     }
   },

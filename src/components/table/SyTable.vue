@@ -1,12 +1,14 @@
 <template>
   <div class="sy-table-block">
-    <button 
-      v-if="isShowDonwnloadBtn && appQuestion" 
+    <button
+      v-if="isShowDonwnloadBtn && appQuestion"
       type="button"
       class="btn-m btn-default btn-download"
       @click="downloadData"
-    >{{ $t('button.download') }}</button>
-    <el-table 
+    >
+      {{ $t('button.download') }}
+    </button>
+    <el-table
       v-bind="tableProps"
       :cell-class-name="getCellIndex"
       :row-class-name="tableRowClassName"
@@ -31,12 +33,14 @@
         width="0px"
         align="center"
       >
-        <template 
-          slot="header" 
-          slot-scope="scope">
-          <Observer 
-            :options="formOptions()" 
-            @intersect="getData"/>
+        <template
+          slot="header"
+          slot-scope="scope"
+        >
+          <Observer
+            :options="formOptions()"
+            @intersect="getData"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -45,7 +49,7 @@
       :right="20"
       @click.native="$emit('next')"
     />
-    <el-pagination 
+    <el-pagination
       v-if="totalPage > 1"
       :total="dataset.data.length"
       :page-size="countPerPage"
@@ -72,7 +76,7 @@ export default {
   props: {
     ...Table.props,
     dataset: {
-      type: [ Object, Array ],
+      type: [Object, Array],
       validator: value => {
         if (typeof value !== 'object') return false
         if (!(value instanceof Array)) {
@@ -117,7 +121,7 @@ export default {
       type: Array,
       default: () => [
         // 為指定的行或列加上 cellClassName
-        // { 
+        // {
         //   type: 'row',
         //   index: 1,
         //   className: 'myClassName moreClassName' // 欲帶入多個 class 時以空格隔開即可
@@ -229,7 +233,7 @@ export default {
       return {
         rootClassName: '.el-table__header-wrapper',
         rootMargin: this.lazyLoadInfo.rootMargin,
-        threshold: 0,
+        threshold: 0
       }
     },
     changePage (value) {
@@ -253,14 +257,14 @@ export default {
       this.exportToCSV(fileName, tableData)
     },
     getCellIndex ({ row, column, rowIndex, columnIndex }) {
-      // 為 行/列 增加 index 屬性，供 clickCell 事件使用 
-      row.index = rowIndex;
-      column.index = columnIndex;
-      
+      // 為 行/列 增加 index 屬性，供 clickCell 事件使用
+      row.index = rowIndex
+      column.index = columnIndex
+
       // 回傳 cellClassName
       let colSetting = this.customCellClassName.find(item => item.index === columnIndex && item.type === 'column')
       let rowSetting = this.customCellClassName.find(item => item.index === rowIndex && item.type === 'row')
-      
+
       if (colSetting && rowSetting) return [colSetting.className, rowSetting.className]
       if (colSetting) return colSetting.className
       if (rowSetting) return rowSetting.className
@@ -269,13 +273,13 @@ export default {
       this.$emit('clickCell', { row, column })
     },
     onClickRow (row, column) {
-      this.$emit('clickRow', { 
-        row, 
+      this.$emit('clickRow', {
+        row,
         column,
         header: this.dataset.columns
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

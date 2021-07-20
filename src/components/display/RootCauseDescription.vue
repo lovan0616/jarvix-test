@@ -10,10 +10,16 @@
         class="cause-item"
       >
         <div class="cause-item-header">
-          <div class="cause-item-column">{{ cause.column }}</div>
-          <div class="cause-item-weight">{{ $t('resultDescription.weight') }}: {{ cause.weight }}</div>
+          <div class="cause-item-column">
+            {{ cause.column }}
+          </div>
+          <div class="cause-item-weight">
+            {{ $t('resultDescription.weight') }}: {{ cause.weight }}
+          </div>
         </div>
-        <div class="cause-item-description">{{ cause.description }}</div>
+        <div class="cause-item-description">
+          {{ cause.description }}
+        </div>
       </div>
     </div>
     <ul class="notes">
@@ -30,9 +36,9 @@
 export default {
   name: 'RootCauseDescription',
   props: {
-    description: {type: String, default: ''},
-    causes: {type: Array, default: () => []},
-    notes: {type: Array, default: () => []}
+    description: { type: String, default: '' },
+    causes: { type: Array, default: () => [] },
+    notes: { type: Array, default: () => [] }
   }
 }
 </script>

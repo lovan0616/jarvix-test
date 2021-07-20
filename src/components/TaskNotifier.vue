@@ -9,20 +9,25 @@
     @hide="toggleIsOpen"
   >
     <div>
-      <div 
-        v-show="taskCount === 0" 
-        class="task-notifier__content--empty">{{ $t('resultDescription.noData') }}</div>
+      <div
+        v-show="taskCount === 0"
+        class="task-notifier__content--empty"
+      >
+        {{ $t('resultDescription.noData') }}
+      </div>
       <div
         v-show="processingTasks.length > 0"
-        class="task-notifier__content">
+        class="task-notifier__content"
+      >
         <div
           v-for="(task, index) in processingTasks"
           :key="index"
           class="task-notifier__single-task"
         >
-          <svg-icon 
-            icon-class="spinner" 
-            class="task__icon"/>
+          <svg-icon
+            icon-class="spinner"
+            class="task__icon"
+          />
           <span class="task__title">{{ $t('editing.buildingNewColumn') }}</span>
           <ul class="task__desc">
             <li class="task__desc-item">
@@ -46,15 +51,17 @@
       </div>
       <div
         v-show="tableDataCSVDownloadList.length > 0"
-        class="task-notifier__content">
+        class="task-notifier__content"
+      >
         <div
           v-for="(task, index) in tableDataCSVDownloadList"
           :key="index"
           class="task-notifier__single-task"
         >
-          <svg-icon 
-            icon-class="spinner" 
-            class="task__icon"/>
+          <svg-icon
+            icon-class="spinner"
+            class="task__icon"
+          />
           <div class="task__content">
             <span class="task__title task__title--highlight">
               {{ task.question }}
@@ -71,7 +78,8 @@
     >
       <el-badge
         :value="taskCount"
-        :hidden="taskCount === 0">
+        :hidden="taskCount === 0"
+      >
         <svg-icon icon-class="task" />
       </el-badge>
     </div>
@@ -129,7 +137,7 @@ export default {
       for (let i = 0; i < downloadingTaskNumber; i++) {
         readyList[i].status = 'Process'
         getComponentDataCSV(readyList[i].componentId)
-          .then(({data}) => {
+          .then(({ data }) => {
             this.downloadCSV(readyList[i].question, data)
           })
           .catch(() => {})

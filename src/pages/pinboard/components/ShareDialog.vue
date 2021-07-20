@@ -1,19 +1,21 @@
 <template>
   <div class="tooltip-dialog">
     <div class="input-block">
-      <input 
-        ref="shareInput" 
-        :value="shareUrl" 
+      <input
+        ref="shareInput"
+        :value="shareUrl"
         type="text"
         class="input"
         readonly
         @click="selectText"
       >
     </div>
-    <button 
+    <button
       class="btn btn-copy"
       @click="copyInput"
-    >{{ $t('button.copy') }}</button>
+    >
+      {{ $t('button.copy') }}
+    </button>
   </div>
 </template>
 <script>

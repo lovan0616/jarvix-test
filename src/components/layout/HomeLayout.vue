@@ -1,43 +1,46 @@
 <template>
   <div class="home-layout">
-    <transition 
-      name="fade" 
-      mode="out-in">
-      <chat-room-block class="with-side-nav"/>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <chat-room-block class="with-side-nav" />
     </transition>
     <transition name="fast-fade-in">
       <advance-data-frame-setting v-if="isShowSettingBox" />
     </transition>
-    <div 
+    <div
       :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
       class="wrapper wrapper--has-chat-room"
     >
-      <ask-condition :key="`${dataSourceId}-${dataFrameId}`"/>
+      <ask-condition :key="`${dataSourceId}-${dataFrameId}`" />
       <main class="main">
         <div class="center">
-          <transition 
-            name="fade" 
-            mode="out-in">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
             <router-view />
           </transition>
         </div>
       </main>
     </div>
     <transition name="fast-fade-in">
-      <section 
+      <section
         v-if="isShowPreviewDataSource"
         :class="{ 'preview-datasource--has-basic-df-setting': isShowSettingBox }"
-        class="preview-datasource">
-        <preview-data-source 
-          :key="dataSourceId" 
+        class="preview-datasource"
+      >
+        <preview-data-source
+          :key="dataSourceId"
           :is-previewing="true"
           mode="popup"
         />
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="preview-datasource__close-btn"
           @click="closePreviewDataSource"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </section>
     </transition>
   </div>
@@ -56,7 +59,7 @@ export default {
     ChatRoomBlock,
     PreviewDataSource,
     AdvanceDataFrameSetting,
-    AskCondition,
+    AskCondition
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
@@ -70,7 +73,7 @@ export default {
     const currentGroup = store.getters['userManagement/getCurrentGroupId']
     currentAccount && !currentGroup ? next({ name: 'PageGrouplessGuidance' }) : next()
   },
-  beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate (to, from, next) {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
     next()
   },
@@ -83,7 +86,7 @@ export default {
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

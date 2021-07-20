@@ -60,7 +60,7 @@ export default class EchartAddon {
   detectHandler (key) {
     const isSpecial = this.specialList.find(special => special === key)
     if (isSpecial) return this[`${key}Handler`].bind(this)
-    else return this['optionsHandler'].bind(this)
+    else return this.optionsHandler.bind(this)
   }
 
   optionsHandler (key, mappingResult) {
@@ -117,7 +117,7 @@ export default class EchartAddon {
   mappingWithObject (target) {
     return Object.keys(target).reduce((accu, curr) => {
       if (curr === 'seriesItems') {
-        accu['seriesItems'] = this.mappingWithSeriesItems(target[curr])
+        accu.seriesItems = this.mappingWithSeriesItems(target[curr])
         return accu
       } else {
         const d = this.mappingWithString(curr, target[curr])
@@ -127,7 +127,7 @@ export default class EchartAddon {
   }
 
   mappingWithSeriesItems (target) {
-    return target.map(t => this.mappingWithObject(t)['seriesItem'])
+    return target.map(t => this.mappingWithObject(t).seriesItem)
   }
 
   mappingWithArray (target) {

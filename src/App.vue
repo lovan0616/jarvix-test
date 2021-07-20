@@ -1,19 +1,22 @@
 <template>
-  <div 
-    id="app" 
+  <div
+    id="app"
     :lang="getLang"
     :theme="getColor"
   >
-    <div class="app-bg"/>
-    <transition 
-      name="fade" 
-      mode="out-in">
-      <router-view 
+    <div class="app-bg" />
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <router-view
         v-if="init"
-        :key="locale"/>
-      <spinner 
-        v-else 
-        style="height: 100vh;"/>
+        :key="locale"
+      />
+      <spinner
+        v-else
+        style="height: 100vh;"
+      />
     </transition>
   </div>
 </template>
@@ -68,6 +71,6 @@ export default {
       let locale = prevLocale || browserLocale
       this.$store.commit('setting/setLocale', locale)
     }
-  },
+  }
 }
 </script>

@@ -22,7 +22,9 @@
         type="button"
         class="btn-m btn-secondary btn-monitor"
         @click="openMonitorSettingDialog"
-      >{{ $t('button.monitorSetting') }}</button>
+      >
+        {{ $t('button.monitorSetting') }}
+      </button>
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
@@ -143,7 +145,7 @@ export default {
       type: Boolean,
       default: false
     },
-     anomalySetting: {
+    anomalySetting: {
       type: Object,
       default: () => ({
         xAxis: {
@@ -224,7 +226,7 @@ export default {
               this.canDownloadCsv = response.canDownloadCsv
               this.componentName = this.getChartTemplate(this.convertedType || this.diagram)
               let responseData = response.data
-              
+
               // 推薦洞察 需要將 question 傳給外層組件顯示用
               if (responseData.question) {
                 this.$emit('setQuestion', responseData.question)
@@ -251,7 +253,7 @@ export default {
               }
 
               let isAutoRefresh = response.isAutoRefresh
-              if(isAutoRefresh && this.isPinboardPage) {
+              if (isAutoRefresh && this.isPinboardPage) {
                 this.autoRefreshFunction = window.setTimeout(() => {
                   this.autoRefreshData()
                 }, 60 * 1000)
@@ -328,7 +330,7 @@ export default {
             this.hasNextPage = false
           }
         })
-        .finally(() => this.$emit('finished'))
+          .finally(() => this.$emit('finished'))
       })
     },
     handleTaskInitData () {
@@ -380,7 +382,7 @@ export default {
           // 更新 columns
           this.componentData.dataset.display_columns = concatDisplayColumns
         }
-        
+
         /**
          * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆一樣時間的話
          **/
@@ -484,10 +486,10 @@ export default {
       this.notes.push(note)
     },
     genSamplingNote (randomLimit) {
-      return this.$t('resultNote.samplingNote', {randomLimit})
+      return this.$t('resultNote.samplingNote', { randomLimit })
     },
     genGroupLimitNote (randomLimit) {
-      return this.$t('resultNote.groupLimitNote', {randomLimit})
+      return this.$t('resultNote.groupLimitNote', { randomLimit })
     },
     openMonitorSettingDialog () {
       this.isShowMonitorSettingDialog = true
@@ -508,7 +510,7 @@ export default {
     },
     toggleLabel () {
       this.isShowLabelData = !this.isShowLabelData
-    },
+    }
   }
 }
 </script>

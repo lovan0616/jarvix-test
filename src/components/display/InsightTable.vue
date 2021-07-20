@@ -16,108 +16,164 @@
           v-if="checkProperty(singleBasicInfo, 'sum')"
           class="insight-vertical-table"
         >
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'sum')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.sum') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.sum) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.sum') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.sum) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'count')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.count') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.count) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.count') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.count) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'max')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.max') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.max) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.max') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.max) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'min')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.min') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.min) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.min') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.min) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'avg')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.mean') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.avg) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.mean') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.avg) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'sd')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.std') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.sd) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.std') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.sd) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'comment')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.note') }}</div>
-            <div class="insight-table-content">{{ singleBasicInfo.comment }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.note') }}
+            </div>
+            <div class="insight-table-content">
+              {{ singleBasicInfo.comment }}
+            </div>
           </div>
         </div>
         <div
           v-else
           class="insight-vertical-table"
         >
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'total')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.count') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.total) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.count') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.total) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'max')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.maxCategory') }}</div>
-            <div class="insight-table-content">{{ singleBasicInfo.max }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.maxCategory') }}
+            </div>
+            <div class="insight-table-content">
+              {{ singleBasicInfo.max }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'max_n')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.maxCategoryCount') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.max_n) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.maxCategoryCount') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.max_n) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'min')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.minCategory') }}</div>
-            <div class="insight-table-content">{{ singleBasicInfo.min }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.minCategory') }}
+            </div>
+            <div class="insight-table-content">
+              {{ singleBasicInfo.min }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'min_n')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.minCategoryCount') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.min_n) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.minCategoryCount') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.min_n) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'avg')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.countMean') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.avg) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.countMean') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.avg) }}
+            </div>
           </div>
-          <div 
+          <div
             v-if="checkProperty(singleBasicInfo, 'sd')"
             class="insight-table-row"
           >
-            <div class="insight-table-head">{{ $t('aggregatedValue.countStd') }}</div>
-            <div class="insight-table-content">{{ formatComma(singleBasicInfo.sd) }}</div>
+            <div class="insight-table-head">
+              {{ $t('aggregatedValue.countStd') }}
+            </div>
+            <div class="insight-table-content">
+              {{ formatComma(singleBasicInfo.sd) }}
+            </div>
           </div>
         </div>
       </el-tab-pane>
@@ -127,12 +183,16 @@
         v-for="(commentInfo, index) in info.nComment"
         :key="index"
         class="insights-info-text"
-      >{{ commentInfo }}</div>
+      >
+        {{ commentInfo }}
+      </div>
       <div
         v-for="(commentInfo, index) in info.cComment"
         :key="index"
         class="insights-info-text"
-      >{{ commentInfo }}</div>
+      >
+        {{ commentInfo }}
+      </div>
     </div>
   </div>
 </template>

@@ -17,12 +17,16 @@
           :key="index"
         >
           <div class="filter-description">
-            <div class="column-name">{{ singleType.properties.display_name }} =</div>
-            <div 
+            <div class="column-name">
+              {{ singleType.properties.display_name }} =
+            </div>
+            <div
               v-for="(singleData, propertiesIndex) in singleType.properties.display_datavalues"
               :key="'enum-' + propertiesIndex"
               class="single-filter"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.display_datavalues.length - 1">、</span></div>
+            >
+              {{ singleData }}<span v-show="propertiesIndex !== singleType.properties.display_datavalues.length - 1">、</span>
+            </div>
           </div>
         </div>
       </div>
@@ -81,7 +85,7 @@ export default {
   data () {
     echartAddon.mapping({
       'seriesItem:stackBar': {
-        'large': true
+        large: true
       },
       'color:10': {},
       'grid:default': {},

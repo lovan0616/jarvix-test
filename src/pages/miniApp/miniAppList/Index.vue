@@ -1,24 +1,29 @@
 <template>
   <div class="mini-app-list-page list-page wrapper">
-    <h1 class="list-page__title">{{ $t('miniApp.application') }}</h1>
+    <h1 class="list-page__title">
+      {{ $t('miniApp.application') }}
+    </h1>
     <div class="list-page__action-container">
       <button
-        class="btn-m btn-default btn-has-icon add-btn" 
-        @click="showAdd">
-        <svg-icon 
-          icon-class="plus" 
-          class="icon"/>
+        class="btn-m btn-default btn-has-icon add-btn"
+        @click="showAdd"
+      >
+        <svg-icon
+          icon-class="plus"
+          class="icon"
+        />
         {{ $t('miniApp.createNewApplication') }}
       </button>
     </div>
     <spinner
-      v-if="isLoading" 
+      v-if="isLoading"
       :title="$t('editing.loading')"
     />
     <div v-else>
-      <div 
-        v-if="miniAppList.length > 0" 
-        class="mini-app-list">
+      <div
+        v-if="miniAppList.length > 0"
+        class="mini-app-list"
+      >
         <single-mini-app-card
           v-for="miniAppInfo in miniAppList"
           :key="miniAppInfo.id"
@@ -95,9 +100,10 @@
               type="radio"
               class="dialog__icon-box-radio"
             >
-            <svg-icon 
-              :icon-class="icon" 
-              class="icon"/>
+            <svg-icon
+              :icon-class="icon"
+              class="icon"
+            />
           </label>
         </div>
         <div
@@ -124,16 +130,17 @@
       @closeDialog="closeShare"
       @confirmBtn="confirmShare"
     >
-      <input 
-        ref="shareInput" 
-        v-model="shareLink" 
-        type="text" 
-        class="input name-input">
+      <input
+        ref="shareInput"
+        v-model="shareLink"
+        type="text"
+        class="input name-input"
+      >
     </writing-dialog>
   </div>
 </template>
 <script>
-import moment from 'moment-timezone';
+import moment from 'moment-timezone'
 import SingleMiniAppCard from './components/SingleMiniAppCard'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
@@ -141,7 +148,7 @@ import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
 import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
 import { Message } from 'element-ui'
-import { 
+import {
   getMiniAppInfo,
   getMiniAppList,
   createApp,
@@ -212,7 +219,7 @@ export default {
         'feature',
         'key',
         'len-with-line-chart'
-      ],
+      ]
     }
   },
   computed: {
@@ -300,9 +307,9 @@ export default {
         let appWarningConditions = this.tempEditInfo.settings.editModeData.warningModule.conditions
         if (appWarningConditions && appWarningConditions.length > 0) {
           const updateConfig = {
-            "conditionIds": appWarningConditions.map((item) => item.id),
-            "groupId": this.groupId,
-            "timeZone": this.tempEditInfo.settings.editModeData.timeZone
+            conditionIds: appWarningConditions.map((item) => item.id),
+            groupId: this.groupId,
+            timeZone: this.tempEditInfo.settings.editModeData.timeZone
           }
           promiseArr.push(updateAlertTimeZone(updateConfig))
         }
@@ -366,13 +373,13 @@ export default {
     closeShare () {
       this.isShowShare = false
     },
-    selectIcon(icon) {
+    selectIcon (icon) {
       this.tempEditInfo.icon = icon
     },
     getValidationRules (iconList) {
-      return`required|included:${iconList.join()}`
+      return `required|included:${iconList.join()}`
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

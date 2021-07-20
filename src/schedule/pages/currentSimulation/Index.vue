@@ -157,15 +157,15 @@ export default {
     },
     downloadSimulation () {
       let link = document.createElement('a')
-        if (link.download !== undefined) {
-          // Browsers that support HTML5 download attribute
-          link.setAttribute('href', this.excelURL)
-          link.setAttribute('download', 'plan.xlsx')
-          link.style.visibility = 'hidden'
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }
+      if (link.download !== undefined) {
+        // Browsers that support HTML5 download attribute
+        link.setAttribute('href', this.excelURL)
+        link.setAttribute('download', 'plan.xlsx')
+        link.style.visibility = 'hidden'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
     },
     reSimulate () {
       this.isLoadingLastSolution = true

@@ -20,14 +20,16 @@
           :disabled="isLoading"
           class="btn-m btn-secondary button-container__button"
           @click="isShowCreateConditionDialog = true"
-        >{{ $t('alert.createAlertCondition') }}</button>
+        >
+          {{ $t('alert.createAlertCondition') }}
+        </button>
       </div>
     </nav>
     <main class="warning-setting__content">
       <div class="warning-setting__content-frequency">
         <section class="setting-block">
           {{ $t('miniApp.monitorUpdateFrequency') }}：
-          <default-select 
+          <default-select
             v-model="tempWarningModuleConfig.updateFrequency"
             :is-disabled="isLoading"
             :option-list="updateFrequency"
@@ -39,10 +41,11 @@
         </section>
       </div>
       <div class="warning-setting__content-condition">
-        <spinner 
-          v-if="isLoading || isProcessing" 
-          :title="$t('button.download')" 
-          size="50"/>
+        <spinner
+          v-if="isLoading || isProcessing"
+          :title="$t('button.download')"
+          size="50"
+        />
         <empty-info-block
           v-else-if="isEmpyAlertCondition"
           :msg="$t('alert.emptyCondition')"
@@ -53,12 +56,13 @@
             <span class="col-condition">{{ $t('alert.alertCondition') }}</span>
             <span class="col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
             <span class="col-status">{{ $t('alert.operatingStatus') }}</span>
-            <span class="col-deletion"/>
+            <span class="col-deletion" />
           </div>
           <section
             v-for="condition in tempWarningModuleConfig.conditions"
-            :key="condition.id" 
-            class="setting-block">
+            :key="condition.id"
+            class="setting-block"
+          >
             <div class="col-enable">
               <el-switch
                 :disabled="condition.isDisabled"
@@ -72,16 +76,17 @@
             <div class="col-condition">
               <div>{{ condition.name }}</div>
               <div class="datasource-info">
-                <svg-icon icon-class="data-source"/>{{ condition.dataSourceName }}
-                <svg-icon icon-class="table"/>{{ condition.dataFrameName }}
-                <svg-icon :icon-class="isComponentAlerter(condition.targetType) ? 'watch-list' : 'column'"/>
-                {{ isComponentAlerter(condition.targetType) 
-                  ? $t('alert.monitoringItem', {number: condition.targetConfig.combinationCounts }) 
-                : condition.targetConfig.displayName }}
+                <svg-icon icon-class="data-source" />{{ condition.dataSourceName }}
+                <svg-icon icon-class="table" />{{ condition.dataFrameName }}
+                <svg-icon :icon-class="isComponentAlerter(condition.targetType) ? 'watch-list' : 'column'" />
+                {{ isComponentAlerter(condition.targetType)
+                  ? $t('alert.monitoringItem', {number: condition.targetConfig.combinationCounts })
+                  : condition.targetConfig.displayName }}
               </div>
-              <div 
-                class="comparing-values" 
-                v-html="displayedConditionMessage(condition.targetConfig.displayName || condition.targetConfig.analysisValueType, condition.comparingValues)"/>
+              <div
+                class="comparing-values"
+                v-html="displayedConditionMessage(condition.targetConfig.displayName || condition.targetConfig.analysisValueType, condition.comparingValues)"
+              />
               <div class="message-template">
                 <span class="message-template__label">{{ $t('alert.alertLogMessage') }}:</span>
                 <span class="message-template__content">{{ condition[`alertMessage${locale.split('-')[1]}`] }}</span>
@@ -108,11 +113,14 @@
                   v-if="isAllowManulTriggerAlert(condition.status)"
                   class="btn btn-outline"
                   @click="runAlert(condition.id)"
-                >{{ $t('button.runRightAway') }}</button>
+                >
+                  {{ $t('button.runRightAway') }}
+                </button>
                 <div
                   v-else
-                  class="message">
-                  <spinner size="14"/>{{ $t('alert.operating') }}
+                  class="message"
+                >
+                  <spinner size="14" />{{ $t('alert.operating') }}
                 </div>
               </template>
             </div>
@@ -225,7 +233,7 @@ export default {
   created () {
     this.fetchSettingData()
   },
-  destroyed() {
+  destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
@@ -236,26 +244,25 @@ export default {
       const { activate, updateFrequency } = this.setting
       this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
       return this.fetchAlertConditions()
-        .finally(() => this.isLoading = false )
+        .finally(() => this.isLoading = false)
     },
     fetchAlertConditions () {
       window.clearTimeout(this.timeoutFunction)
       const isOwnConditionIdList = this.setting.conditions.map(condition => condition.id)
       return getAlertConditions(this.getCurrentGroupId)
-        .then(conditions => {      
+        .then(conditions => {
           let latestConditions = []
           conditions
             .filter(condition => isOwnConditionIdList.includes(condition.id))
             .sort((a, b) => a.id - b.id)
             .forEach(condition => {
-
               // 尋找之前是否有針對此示警條件做過設定
               const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
-              
+
               // 若有，檢查所設定關聯看板是否還存在
               let isRelatedDashbaordExist = false
               if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
-              
+
               // 組成示警條件列表
               latestConditions.push({
                 ...condition,
@@ -313,7 +320,6 @@ export default {
         }
         return acc.concat(`- ${targetColumnName}${comparisonOperator}${cur.value}<br>`)
       }, '')
-      
     },
     createAlertCondition (conditionId) {
       this.setting.conditions.push({ id: conditionId })
@@ -332,9 +338,9 @@ export default {
       this.saveWarningModuleSetting()
     },
     isComponentAlerter (targetType) {
-      return targetType === this.alertTargetType['COMPONENT']
+      return targetType === this.alertTargetType.COMPONENT
     },
-    isAllowManulTriggerAlert(status) {
+    isAllowManulTriggerAlert (status) {
       const enableList = ['Ready', 'Complete', 'Fail']
       return enableList.includes(status)
     },
@@ -348,7 +354,7 @@ export default {
           })
         })
         .catch(() => {
-           this.tempWarningModuleConfig.conditions = this.tempWarningModuleConfig.conditions.map(condition => {
+          this.tempWarningModuleConfig.conditions = this.tempWarningModuleConfig.conditions.map(condition => {
             if (condition.id !== conditionId) return condition
             return { ...condition, status: 'Fail' }
           })
@@ -361,7 +367,7 @@ export default {
         .then(() => this.fetchAlertConditions())
         .catch(() => condition.isDisabled = false)
     }
-  },
+  }
 }
 </script>
 

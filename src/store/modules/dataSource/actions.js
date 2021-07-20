@@ -1,11 +1,11 @@
 import co from 'co'
-import { 
-  getDataSourceList, 
-  getDataSourceColumnInfoById, 
-  getDataSourceDataValueById, 
-  getDataFrameById, 
-  getDataFrameData, 
-  dataFrameColumnSummary, 
+import {
+  getDataSourceList,
+  getDataSourceColumnInfoById,
+  getDataSourceDataValueById,
+  getDataFrameById,
+  getDataFrameData,
+  dataFrameColumnSummary,
   getColumnCorrelationMatrix,
   triggerColumnDataCalculation
 } from '@/API/DataSource'
@@ -26,13 +26,13 @@ export default {
     const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
     if (currentGroupId) {
       dispatch('getDataSourceList', {
-        dataSourceId: queryDataSource, 
+        dataSourceId: queryDataSource,
         dataFrameId: queryDataFrame === 'all' ? 'all' : parseInt(queryDataFrame)
       })
     }
     commit('setIsInit', true)
   },
-  getDataSourceList({ dispatch, commit, state, rootGetters }, { dataSourceId, dataFrameId }) {
+  getDataSourceList ({ dispatch, commit, state, rootGetters }, { dataSourceId, dataFrameId }) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
       // 找出第一個可以使用的 dataSourceId
@@ -47,9 +47,9 @@ export default {
           if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
           const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
           router.push({
-            name: 'PageIndex', 
-            params: { 
-              'group_id': currentGroupId
+            name: 'PageIndex',
+            params: {
+              group_id: currentGroupId
             },
             query: {
               ...(dataSourceId && {
@@ -76,8 +76,8 @@ export default {
       }
     })
   },
-  async changeDataSourceById({ dispatch, commit, state, rootGetters }, {dataSourceId, dataFrameId}) {
-    if (state.dataSourceId === dataSourceId  && state.dataFrameId === dataFrameId) return Promise.resolve(state)
+  async changeDataSourceById ({ dispatch, commit, state, rootGetters }, { dataSourceId, dataFrameId }) {
+    if (state.dataSourceId === dataSourceId && state.dataFrameId === dataFrameId) return Promise.resolve(state)
     // 清空對話紀錄
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
@@ -87,7 +87,7 @@ export default {
 
     // 避免切換 dataSource 但 dataFrame 皆為 all 沒有觸發到 dataFrame id 變化
     commit('setDataFrameId', null)
-    
+
     if (!dataSourceId) return Promise.resolve(state)
 
     // 更新 DataFrame 資料
@@ -101,7 +101,7 @@ export default {
       router.push({
         name: 'PageIndex',
         params: {
-          'group_id': currentGroupId
+          group_id: currentGroupId
         },
         query: {
           dataSourceId: dataSourceId,
@@ -126,15 +126,15 @@ export default {
 
     // 更新 DataFrame 資料
     commit('setDataFrameId', dataFrameId)
-    return co(function* () {
+    return co(function * () {
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo', true)
       yield dispatch('getDataSourceDataValue', true)
       return Promise.resolve(state)
     })
   },
-  clearChatbot({ dispatch, commit, state }) {
-    // 清空篩選條件 
+  clearChatbot ({ dispatch, commit, state }) {
+    // 清空篩選條件
     dispatch('clearAllFilter')
     // 清除 question id
     commit('clearCurrentQuestionId')
@@ -144,20 +144,20 @@ export default {
   handleEmptyDataSource ({ dispatch, commit }) {
     dispatch('clearAllFilter')
     commit('clearCurrentQuestionId')
-    commit('chatBot/updateIsUseAlgorithm', false, {root: true})
+    commit('chatBot/updateIsUseAlgorithm', false, { root: true })
     commit('setDataSourceId', null)
     commit('setDataFrameList', [])
     commit('setDataFrameId', null)
   },
-  getDataSourceTables ({state}) {
+  getDataSourceTables ({ state }) {
     if (state.dataSourceId === null) return []
     return getDataFrameById(state.dataSourceId)
   },
-  getDataFrameColumnSummary({ state }, { id, selectedColumnList = null, restrictions, page, cancelToken }) {
+  getDataFrameColumnSummary ({ state }, { id, selectedColumnList = null, restrictions, page, cancelToken }) {
     if (page > 0) return
     return dataFrameColumnSummary(id, selectedColumnList, restrictions, cancelToken)
   },
-  getDataFrameData({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken }) {
+  getDataFrameData ({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken }) {
     return getDataFrameData(id, selectedColumnList, restrictions, page, cancelToken)
   },
   getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode, isOnlyFetchSummary }) {
@@ -179,10 +179,10 @@ export default {
       dispatch('getDataFrameColumnSummary', { id, selectedColumnList, restrictions, page, cancelToken })
     ])
   },
-  getDataFrameColumnCorrelation({ state }, { id, selectedColumnList = null, restrictions = [] }) {
+  getDataFrameColumnCorrelation ({ state }, { id, selectedColumnList = null, restrictions = [] }) {
     return getColumnCorrelationMatrix(id, selectedColumnList, restrictions)
   },
-  getDataSourceColumnInfo({ commit, state, getters, rootGetters }, shouldStore = true) {
+  getDataSourceColumnInfo ({ commit, state, getters, rootGetters }, shouldStore = true) {
     if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
@@ -191,7 +191,7 @@ export default {
       return shouldStore ? commit('setDataSourceColumnInfoList', response) : response
     })
   },
-  getDataSourceDataValue({ commit, state, getters, rootGetters }, shouldStore = true) {
+  getDataSourceDataValue ({ commit, state, getters, rootGetters }, shouldStore = true) {
     if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
@@ -200,7 +200,7 @@ export default {
       return shouldStore ? commit('setDataSourceDataValueList', response) : response
     })
   },
-  updateResultRouter ({commit, state, rootGetters}, actionTag) {
+  updateResultRouter ({ commit, state, rootGetters }, actionTag) {
     /**
      * 這邊的 DataSource 需要轉成字串的原因是：
      * 今天如果直接在結果頁重新整理，我如果直接從 router 進來
@@ -220,7 +220,7 @@ export default {
       }
     })
   },
-  getHistoryQuestionList ({commit, state, getters}, dataSourceIdData) {
+  getHistoryQuestionList ({ commit, state, getters }, dataSourceIdData) {
     const dataSourceId = state.dataSourceId || dataSourceIdData
     const dataFrameId = getters.currentDataFrameId
 
@@ -228,10 +228,10 @@ export default {
       commit('setHistoryQuestionList', res)
     })
   },
-  updateFilterList({ commit }, filterList) {
+  updateFilterList ({ commit }, filterList) {
     commit('setUpdatedFilterList', filterList)
   },
-  updateFilterStatusList ({commit, state}, statusList) {
+  updateFilterStatusList ({ commit, state }, statusList) {
     commit('setStatusList', statusList)
   },
   clearAllFilter ({ commit }) {
@@ -240,12 +240,12 @@ export default {
   cancelRequest ({ state }, mode) {
     if (mode === 'popup' && typeof popupCancelFunction === 'function') {
       popupCancelFunction('cancel')
-    } 
+    }
     if (mode === 'display' && typeof displayCancelFunction === 'function') {
       displayCancelFunction('cancel')
     }
   },
-  async updateDataFrameList({ commit, state, dispatch }) {
+  async updateDataFrameList ({ commit, state, dispatch }) {
     // 取得 dataFrame 資料
     const dataFrameList = await dispatch('getDataSourceTables')
 
@@ -260,12 +260,12 @@ export default {
 
     // 確認當前 dataFrame 是否存在
     const hasCurrentDataFrame = dataFrameList.some(element => element.id === state.dataFrameId)
-    if (state.dataFrameId === "all" || hasCurrentDataFrame) return
+    if (state.dataFrameId === 'all' || hasCurrentDataFrame) return
 
     // 如果 dataFrame 被刪掉則恢復預設 all
     return dispatch('changeDataFrameById', 'all')
   },
-  triggerColumnDataCalculation({ state, getters }) {
+  triggerColumnDataCalculation ({ state, getters }) {
     const restrictions = getters.filterRestrictionList
     return triggerColumnDataCalculation(state.dataFrameId, restrictions)
   }

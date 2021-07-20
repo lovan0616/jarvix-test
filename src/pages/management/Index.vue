@@ -6,10 +6,11 @@
       </div>
       <div class="wrapper">
         <main class="main">
-          <transition 
-            name="fade" 
-            mode="out-in">
-            <router-view/>
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <router-view />
           </transition>
         </main>
       </div>
@@ -92,7 +93,7 @@ export default {
         })
       }
     }
-  },
+  }
 }
 </script>
 

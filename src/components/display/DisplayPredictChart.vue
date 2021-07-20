@@ -27,22 +27,50 @@
         </div>
       </div>
     </selected-region>
-    <div 
+    <div
       v-if="info.length > 0"
       class="predict-detail-region"
     >
-      <div class="block-title">{{ $t('resultDescription.predictionInfo') }}</div>
+      <div class="block-title">
+        {{ $t('resultDescription.predictionInfo') }}
+      </div>
       <div class="predict-detail-block">
-        <div 
+        <div
           v-for="(singleInfo, index) in info"
           :key="index"
           class="single-info-block"
         >
-          <div class="info-target">{{ $t("resultDescription.timeOfPredictionInterval", {time: singleInfo.time}) }}</div>
-          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.predictionMax') }}</div><div class="info-content">{{ singleInfo.max }}</div></div>
-          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.predictionMin') }}</div><div class="info-content">{{ singleInfo.min }}</div></div>
-          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.confidenceInterval') }}</div><div class="info-content">{{ singleInfo.diff }}</div></div>
-          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.confidenceIndex') }}</div><div class="info-content confidence">{{ singleInfo.conf }}</div></div>
+          <div class="info-target">
+            {{ $t("resultDescription.timeOfPredictionInterval", {time: singleInfo.time}) }}
+          </div>
+          <div class="info-detail">
+            <div class="info-title">
+              {{ $t('resultDescription.predictionMax') }}
+            </div><div class="info-content">
+              {{ singleInfo.max }}
+            </div>
+          </div>
+          <div class="info-detail">
+            <div class="info-title">
+              {{ $t('resultDescription.predictionMin') }}
+            </div><div class="info-content">
+              {{ singleInfo.min }}
+            </div>
+          </div>
+          <div class="info-detail">
+            <div class="info-title">
+              {{ $t('resultDescription.confidenceInterval') }}
+            </div><div class="info-content">
+              {{ singleInfo.diff }}
+            </div>
+          </div>
+          <div class="info-detail">
+            <div class="info-title">
+              {{ $t('resultDescription.confidenceIndex') }}
+            </div><div class="info-content confidence">
+              {{ singleInfo.conf }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -151,11 +179,11 @@ export default {
       return yAxisMaxValue + (yAxisMaxValue - yAxisMinValue) / 4
     },
     seriesName () {
-     return [
+      return [
         this.title.xAxis[0].display_name,
         ...this.dataset.columns
       ]
-   },
+    },
     transformedData () {
       const source = []
       source.push(this.seriesName)
@@ -163,10 +191,10 @@ export default {
         source.push([
           value,
           ...this.dataset.data[index].map((data, index) => {
-              // 誤差區間值不用調整
-              if(index === 4) return data
-              return this.adjustValueWithOffsetValue(data)
-            })
+            // 誤差區間值不用調整
+            if (index === 4) return data
+            return this.adjustValueWithOffsetValue(data)
+          })
         ])
       })
       return source
@@ -180,7 +208,7 @@ export default {
           markLine: {
             symbol: 'none',
             lineStyle: {
-              color: chartVariable['xAxisColor'],
+              color: chartVariable.xAxisColor,
               type: 'solid'
             },
             animation: false,
@@ -192,13 +220,13 @@ export default {
               //     position: 'start',
               //     formatter: '0',
               //   },
-              // }, 
+              // },
               {
                 yAxis: Math.abs(this.yAxisOffsetValue),
                 label: {
                   position: 'end',
                   formatter: this.title.xAxis[0].display_name
-                },
+                }
               }
             ],
             silent: true
@@ -206,51 +234,51 @@ export default {
         }
         switch (colIndex) {
           case 1:
-            item['itemStyle'] = {
+            item.itemStyle = {
               color: color12[2]
             }
             break
           case 2:
-            item['areaStyle'] = {
+            item.areaStyle = {
               color: 'transparent'
             }
-            item['itemStyle'] = {
+            item.itemStyle = {
               color: color12[2]
             }
-            item['lineStyle'] = {
+            item.lineStyle = {
               type: 'dashed'
             }
             break
           case 3:
-            item['stack'] = 'predict'
-            item['areaStyle'] = {
+            item.stack = 'predict'
+            item.areaStyle = {
               color: 'transparent'
             }
-            item['itemStyle'] = {
+            item.itemStyle = {
               color: color12[3]
             }
-            item['symbol'] = this.lineSymbol
-            item['lineStyle'] = {
+            item.symbol = this.lineSymbol
+            item.lineStyle = {
               type: 'dashed'
             }
             break
           case 4:
-            item['stack'] = 'predict'
-            item['areaStyle'] = {
+            item.stack = 'predict'
+            item.areaStyle = {
               color: color12[3],
               opacity: 0.2
             }
-            item['symbol'] = this.lineSymbol
-            item['lineStyle'] = {
+            item.symbol = this.lineSymbol
+            item.lineStyle = {
               type: 'dashed'
             }
             break
           case 5:
-            item['lineStyle'] = {
+            item.lineStyle = {
               type: 'dashed'
             }
-            item['symbol'] = this.lineSymbol
-            item['itemStyle'] = {
+            item.symbol = this.lineSymbol
+            item.itemStyle = {
               color: color12[3]
             }
             break
@@ -265,9 +293,9 @@ export default {
               show: true,
               fontSize: 10,
               color: '#fff',
-              formatter (value) { 
+              formatter (value) {
                 let num = value.data[colIndex + 1]
-                return labelFormatter(num, maxValue[colIndex]) 
+                return labelFormatter(num, maxValue[colIndex])
               }
             }
           })
@@ -334,7 +362,7 @@ export default {
           if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined || (datas[i].value[componentIndex] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null) || (componentIndex === 3 && datas[i].value[componentIndex] && datas[i].value[componentIndex - 1])) continue
           // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
           let displayValue = datas[i].value[componentIndex]
-          displayValue += (i === 4) ? 0 :this.yAxisOffsetValue
+          displayValue += (i === 4) ? 0 : this.yAxisOffsetValue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
           res += marker + datas[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
         }
@@ -348,9 +376,9 @@ export default {
             if (e.target && e.target.id === 'export-btn') {
               let exportData = this.options.dataset.source.map((element, row) => {
                 if (element[2] === 0 && element[3] === 0 && element[4] === null) {
-                  return [element[0]+ this.yAxisOffsetValue, element[1]+ this.yAxisOffsetValue, null, null, null]
+                  return [element[0] + this.yAxisOffsetValue, element[1] + this.yAxisOffsetValue, null, null, null]
                 } else {
-                  if(row === 0) return element 
+                  if (row === 0) return element
                   element = element.map((item, index) => (index === 0 || index === 5 || item === null) ? item : item + this.yAxisOffsetValue)
                   return element
                 }
@@ -389,7 +417,7 @@ export default {
     adjustValueWithOffsetValue (value) {
       // 如果堆疊區間沒有橫跨正負值或當前的值是空值則保留原狀
       if (this.yAxisOffsetValue === 0 || value === null) return value
-      return value +  Math.abs(this.yAxisOffsetValue)
+      return value + Math.abs(this.yAxisOffsetValue)
     },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {

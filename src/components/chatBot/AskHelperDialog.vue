@@ -1,13 +1,13 @@
 <template>
-  <div 
+  <div
     class="ask-helper-dialog"
   >
     <a
       href="javascript:void(0)"
       class="ask-helper__close-btn"
       @click="closeDialog"
-    ><svg-icon icon-class="close"/></a>
-    <el-tabs 
+    ><svg-icon icon-class="close" /></a>
+    <el-tabs
       v-model="activeTab"
       class="ask-helper-tab"
       type="card"
@@ -16,14 +16,14 @@
         :label="$t('askHelper.tabToken')"
         :name="$t('askHelper.tabToken')"
       >
-        <column-info/>
+        <column-info />
       </el-tab-pane>
       <el-tab-pane
         v-if="$store.state.setting.locale.includes('zh')"
         :label="$t('askHelper.tabSample')"
         :name="$t('askHelper.tabSample')"
       >
-        <question-sample/>
+        <question-sample />
       </el-tab-pane>
     </el-tabs>
   </div>

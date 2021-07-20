@@ -1,19 +1,22 @@
 <template>
   <div class="bread-crumb">
-    <router-link 
-      :to="{ name: 'ModelList' }" 
-      class="link">{{ $t('sideNav.modelList') }}</router-link>
+    <router-link
+      :to="{ name: 'ModelList' }"
+      class="link"
+    >
+      {{ $t('sideNav.modelList') }}
+    </router-link>
     <span class="divider">/</span>{{ name }}
   </div>
 </template>
 <script>
 export default {
-	props: {
-		name: {
-			type: String,
-			default: ''
-		}
-	}
+  props: {
+    name: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

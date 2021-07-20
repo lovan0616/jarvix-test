@@ -4,13 +4,13 @@
     @mouseenter.self="toggleDropdownList('hover')"
     @mouseleave.self="toggleDropdownList('hover')"
   >
-    <div 
+    <div
       class="dropdown__select"
       @click="toggleDropdownList('click')"
     >
       <slot name="display" />
     </div>
-    <div 
+    <div
       :class="{ 'dropdown__list-container--show': isShowDropdownList }"
       class="dropdown__list-container"
     >
@@ -26,7 +26,7 @@
               'dropdown__link--selected': isSelectedItem(item.id),
               'dropdown__link--point': hasBulletPoint,
               'dropdown__link--arrow': item.children
-            }" 
+            }"
             href="javascript:void(0);"
             class="dropdown__link"
             @click="selectItem(item.id)"
@@ -48,7 +48,7 @@
                   :class="{
                     'dropdown__link--selected': isSelectedItem(children.id),
                     'dropdown__link--point': hasBulletPoint
-                  }" 
+                  }"
                   href="javascript:void(0);"
                   class="dropdown__link"
                   @click="selectItem(children.id)"
@@ -66,9 +66,9 @@
 
 <script>
 export default {
-  name: "CustomDropdownSelect",
+  name: 'CustomDropdownSelect',
   props: {
-    // hover 或 click 
+    // hover 或 click
     trigger: {
       type: String,
       default: 'hover'
@@ -90,7 +90,7 @@ export default {
       default: true
     }
   },
-  data() {
+  data () {
     return {
       isShowDropdownList: false
     }
@@ -106,14 +106,14 @@ export default {
     }
   },
   methods: {
-    toggleDropdownList(trigger) {
+    toggleDropdownList (trigger) {
       if (trigger !== this.trigger) return
       this.isShowDropdownList = !this.isShowDropdownList
     },
-    isSelectedItem(id) {
+    isSelectedItem (id) {
       return id === this.selectedId
     },
-    selectItem(id) {
+    selectItem (id) {
       if (this.isLoading || this.selectedId === id) return
       if (this.trigger === 'click') this.toggleDropdownList('click')
       this.$emit('select', id)

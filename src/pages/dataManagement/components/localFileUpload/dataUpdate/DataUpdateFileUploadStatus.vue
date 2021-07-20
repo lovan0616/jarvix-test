@@ -13,9 +13,10 @@
         :title="$t('editing.uploaded')"
         :file-list="successList"
       >
-        <div 
-          slot="fileListTitle" 
-          class="uploaded-data-info">
+        <div
+          slot="fileListTitle"
+          class="uploaded-data-info"
+        >
           {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
         </div>
       </file-list-block>
@@ -28,26 +29,31 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="cancelFileUpdate"
-        >{{ $t('button.cancel') }}</button>
-        <button 
-          :disabled="isProcessing" 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
+          :disabled="isProcessing"
           class="btn btn-outline"
           type="button"
           @click="chooseFileUpload"
-        >{{ $t('button.chooseFileUpload') }}</button>
-        <button 
+        >
+          {{ $t('button.chooseFileUpload') }}
+        </button>
+        <button
           :disabled="successList.length === 0 || isProcessing"
           class="btn btn-default"
           @click="build"
         >
           <span v-if="isProcessing">
-            <svg-icon 
-              v-if="isProcessing" 
-              icon-class="spinner"/>
+            <svg-icon
+              v-if="isProcessing"
+              icon-class="spinner"
+            />
             {{ $t('button.processing') }}
           </span>
           <span v-else>{{ $t('fileDataUpdate.build') }}</span>
@@ -108,42 +114,42 @@ export default {
   methods: {
     chooseFileUpload () {
       this.$store.commit('dataManagement/updateUploadFileList', [])
-      this.$emit("prev")
+      this.$emit('prev')
     },
     cancelFileUpdate () {
-      this.$emit("close")
+      this.$emit('close')
     },
-		build () {
+    build () {
       this.isProcessing = true
       // 更新一定只有一筆資料，所以才可以直接取 index 0
       let uploadFile = this.successList[0]
-      let uploadFileInfo =  {
+      let uploadFileInfo = {
         fileId: uploadFile.fileId,
         dataFrameId: this.dataFrameInfo.id,
-        ...(uploadFile.tabDetail ? {tabDetail: uploadFile.tabDetail} : {})
+        ...(uploadFile.tabDetail ? { tabDetail: uploadFile.tabDetail } : {})
       }
       let promise
-			switch(this.updateMode) {
-				case 'append':
-					promise = appendFile(uploadFileInfo)
-					break
-				case 'reimport':
-					promise = reimportFile(uploadFileInfo)
-					break
+      switch (this.updateMode) {
+        case 'append':
+          promise = appendFile(uploadFileInfo)
+          break
+        case 'reimport':
+          promise = reimportFile(uploadFileInfo)
+          break
       }
-      promise.then (() => {
+      promise.then(() => {
         this.$store.commit('dataSource/setProcessingDataFrameList', {
           dataSourceId: this.$route.params.id,
           dataFrameId: this.dataFrameInfo.id,
-          primaryAlias: this.dataFrameInfo.primaryAlias,
+          primaryAlias: this.dataFrameInfo.primaryAlias
         })
         this.$emit('next')
       })
-      .catch(() => {})
-      .finally(() => {
-        this.isProcessing = false
-      })
-		}
+        .catch(() => {})
+        .finally(() => {
+          this.isProcessing = false
+        })
+    }
   }
 }
 </script>

@@ -4,38 +4,45 @@
     :class="{
       'grey-bg': isEditMode,
       'blue-bg': !isEditMode && isShowControlOptionList,
-      'hoverable': !isEditMode 
+      'hoverable': !isEditMode
     }"
     class="control"
     @click="toggleControlOptionList"
   >
-    <div class="control__title">{{ displayName }}</div>
+    <div class="control__title">
+      {{ displayName }}
+    </div>
     <div
       v-if="isEditMode"
-      class="control__delete-icon-box" 
-      @click="removeControl">
+      class="control__delete-icon-box"
+      @click="removeControl"
+    >
       <svg-icon
-        icon-class="close" 
-        class="control__delete-icon"/>
+        icon-class="close"
+        class="control__delete-icon"
+      />
     </div>
     <svg-icon
       v-else
-      icon-class="dropdown" 
-      class="control__dropdown-icon"/>
+      icon-class="dropdown"
+      class="control__dropdown-icon"
+    />
     <!--Enum-->
     <div
       v-if="isShowControlOptionList"
       class="control__selector-panel selector"
-      @click.stop>
+      @click.stop
+    >
       <spinner
         v-if="isLoading"
         class="filter-spinner"
         size="20"
       />
       <template v-else>
-        <div 
-          v-if="controlOptionList.length === 0" 
-          class="empty-message">
+        <div
+          v-if="controlOptionList.length === 0"
+          class="empty-message"
+        >
           {{ $t('message.emptyResult') }}
         </div>
         <div class="selector__list-block">
@@ -44,7 +51,8 @@
             <label
               :key="index"
               name="control"
-              class="radio">
+              class="radio"
+            >
               <input
                 :checked="value.isSelected"
                 class="radio__input"
@@ -79,7 +87,7 @@ export default {
       controlOptionList: [],
       isLoading: false,
       isShowControlOptionList: false,
-      isProcessing: false,
+      isProcessing: false
     }
   },
   computed: {
@@ -95,7 +103,7 @@ export default {
       handler (val) {
         this.formatOptionList()
       }
-    },
+    }
   },
   mounted () {
     this.formatOptionList()
@@ -107,7 +115,7 @@ export default {
   methods: {
     autoHide (evt) {
       if (!this.isShowControlOptionList) return false
-      if (!this.$el.contains(evt.target))  this.toggleControlOptionList()
+      if (!this.$el.contains(evt.target)) this.toggleControlOptionList()
     },
     formatOptionList () {
       const selectedOption = this.initialControlOptionList.find(option => option.isSelected)
@@ -248,7 +256,7 @@ export default {
     &:focus {
       outline: none;
     }
-      
+
     .placeholder {
       font-size: 14px;
       line-height: 22px;
@@ -270,7 +278,7 @@ export default {
 
     &::-webkit-scrollbar-thumb {
       background-color: rgba(0, 0, 0, 0.7);
-    }  
+    }
 
     .radio {
       padding: 8px 12px;

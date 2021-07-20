@@ -25,7 +25,7 @@ export default {
     ScheduledJobsTable
   },
   computed: {
-    ...mapState('simulation', ['selectAllOrders']),
+    ...mapState('simulation', ['selectAllOrders'])
   },
   methods: {
     ...mapMutations('simulation', ['updateScheduledJobs'])

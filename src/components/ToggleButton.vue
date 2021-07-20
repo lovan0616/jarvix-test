@@ -1,11 +1,11 @@
 <template>
   <label class="toggle-button">
-    <input 
+    <input
       v-model="inputValue"
       type="checkbox"
       name
     >
-    <div class="slider"/>
+    <div class="slider" />
   </label>
 </template>
 <script>

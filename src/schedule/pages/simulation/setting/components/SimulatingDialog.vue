@@ -94,14 +94,14 @@ export default {
 
               if (this.isYKSchedule) {
                 adoptionSolution(this.planId, simulationResult.completedSolutionIds[0])
-                .then(() => {
-                  this.$store.commit('simulation/setPlanId', null)
-                  this.$store.commit('simulation/setSolutions', [])
-                  this.$store.commit('simulation/updateScheduledJobs', [])
-                  this.$router.push({ name: 'CurrentSimulation' })
-                }).catch(() => {
-                  this.simulateFail()
-                })
+                  .then(() => {
+                    this.$store.commit('simulation/setPlanId', null)
+                    this.$store.commit('simulation/setSolutions', [])
+                    this.$store.commit('simulation/updateScheduledJobs', [])
+                    this.$router.push({ name: 'CurrentSimulation' })
+                  }).catch(() => {
+                    this.simulateFail()
+                  })
               } else {
                 this.$router.push({ name: 'SimulationResult' })
               }

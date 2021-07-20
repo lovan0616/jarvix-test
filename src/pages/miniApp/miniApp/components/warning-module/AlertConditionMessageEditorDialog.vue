@@ -3,11 +3,11 @@
     <div class="dialog-container">
       <div class="dialog-title">
         編輯示警訊息
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="$emit('close')"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="setting-block">
         <alert-condition-message-editor

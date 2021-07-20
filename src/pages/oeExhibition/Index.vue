@@ -3,28 +3,35 @@
     <div class="page__header">
       <img
         class="page__logo"
-        src="@/assets/images/logo-green-x.svg">
+        src="@/assets/images/logo-green-x.svg"
+      >
       <div class="page__title">
         太陽能案場 I-V 曲線
       </div>
-      <button 
+      <button
         :disabled="loading"
         type="button"
         class="btn btn-outline refresh-btn"
         @click="getRandomChart"
-      >更新資料</button>
+      >
+        更新資料
+      </button>
     </div>
     <div class="page__content">
       <spinner
         v-if="loading"
         size="50"
-        class="page__spinner"/>
+        class="page__spinner"
+      />
       <div
         v-for="(chart, index) in chartList"
         v-else
         :key="index"
-        class="chart__item">
-        <div class="chart__title">{{ chart.question }}</div>
+        class="chart__item"
+      >
+        <div class="chart__title">
+          {{ chart.question }}
+        </div>
         <div class="chart__content">
           <display-line-chart
             :is-show-toolbox="false"

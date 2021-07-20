@@ -4,10 +4,12 @@
       v-if="isShowDelete"
       href="javascript:void(0)"
       class="form__delete"
-      @click="removeInvitee">
-      <svg-icon 
-        icon-class="delete" 
-        class="icon"/>
+      @click="removeInvitee"
+    >
+      <svg-icon
+        icon-class="delete"
+        class="icon"
+      />
     </a>
     <div class="form__block">
       <span class="form__label">{{ $t('userManagement.userAccount') }}</span>
@@ -24,15 +26,16 @@
       <span class="form__label">
         {{ $t('userManagement.userRoleAuthority') }}
         <span class="tooltip-container">
-          <svg-icon 
-            icon-class="information-circle" 
-            class="icon" />
+          <svg-icon
+            icon-class="information-circle"
+            class="icon"
+          />
           <div class="tooltip">
             <role-desc-pop />
           </div>
         </span>
       </span>
-      <default-select 
+      <default-select
         v-model="invitee.accountRoleId"
         :option-list="roleOptions"
         class="input"
@@ -60,10 +63,12 @@
       <a
         href="javascript:void(0)"
         class="form__see-password"
-        @click="changePasswordType">
+        @click="changePasswordType"
+      >
         <svg-icon
-          icon-class="view-data" 
-          class="icon" />
+          icon-class="view-data"
+          class="icon"
+        />
       </a>
     </div>
   </div>
@@ -95,9 +100,9 @@ export default {
       default: () => {}
     }
   },
-  data (){
+  data () {
     return {
-      passwordType: 'password',
+      passwordType: 'password'
     }
   },
   methods: {
@@ -150,7 +155,7 @@ export default {
     top: 33px;
     right: 0;
     color: var(--color-white);
-    
+
     &:hover {
       color: #4DE2F0;
     }
@@ -168,7 +173,7 @@ export default {
       .error-text {
         bottom: -20px;
       }
-      
+
       .input-verify-text {
         margin-bottom: 0;
       }

@@ -2,7 +2,8 @@
   <section class="war-room">
     <div
       v-if="isPreviewing"
-      class="war-room__reminder">
+      class="war-room__reminder"
+    >
       {{ $t('warRoom.previewPageReminder') }}
     </div>
     <header class="war-room__header">
@@ -22,7 +23,7 @@
       :class="{ 'war-room__content--disabled': isLoading }"
       class="war-room__content"
     >
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="spinner"
@@ -34,9 +35,12 @@
       >
         <svg-icon
           v-if="hasError"
-          icon-class="alert" 
-          class="icon"/>
-        <div class="war-room__error-message-title">{{ isEmptyData ? $t('warRoom.emptyComponentMessage') : $t('warRoom.warRoomDisplayErrorMessage') }}</div>
+          icon-class="alert"
+          class="icon"
+        />
+        <div class="war-room__error-message-title">
+          {{ isEmptyData ? $t('warRoom.emptyComponentMessage') : $t('warRoom.warRoomDisplayErrorMessage') }}
+        </div>
       </div>
       <template v-else>
         <div
@@ -145,7 +149,7 @@ export default {
 
       // 如果沒有選擇預設則為自訂區間
       if (!recentTimeIntervalAmount || !recentTimeIntervalUnit) return this.warRoomStartTime + '-' + this.warRoomEndTime
-      
+
       const timeInterval = `${recentTimeIntervalAmount}+${recentTimeIntervalUnit}`
       return this.warRoomTimeIntervalList.find(interval => interval.value === timeInterval).name
     }

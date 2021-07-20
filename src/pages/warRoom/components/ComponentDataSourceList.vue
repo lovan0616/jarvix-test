@@ -3,12 +3,13 @@
     <div class="war-room-setting__block">
       <a
         href="javascript:void(0);"
-        class="link action-link" 
+        class="link action-link"
         @click="$emit('back')"
       >
         <svg-icon
-          icon-class="arrow-left" 
-          class="icon"/>
+          icon-class="arrow-left"
+          class="icon"
+        />
         {{ $t('warRoom.back') }}
       </a>
     </div>
@@ -28,14 +29,14 @@
         >
           <a
             href="javascript:void(0);"
-            class="link" 
+            class="link"
             @click="selectedDataSourceItem(item)"
           >{{ item.question }}</a>
           <a
             href="javascript:void(0);"
-            class="link icon" 
+            class="link icon"
             @click="deleteDataSourceItem(item.itemId, 'index', index)"
-          ><svg-icon icon-class="delete"/></a>
+          ><svg-icon icon-class="delete" /></a>
         </div>
       </div>
     </div>
@@ -55,14 +56,14 @@
         >
           <a
             href="javascript:void(0);"
-            class="link" 
+            class="link"
             @click="selectedDataSourceItem(item)"
           >{{ item.question }}</a>
           <a
             href="javascript:void(0);"
-            class="link icon" 
+            class="link icon"
             @click="deleteDataSourceItem(item.itemId, 'diagram', index)"
-          ><svg-icon icon-class="delete"/></a>
+          ><svg-icon icon-class="delete" /></a>
         </div>
       </div>
     </div>

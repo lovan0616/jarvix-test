@@ -1,21 +1,29 @@
 <template>
   <div class="pinboard-data-info">
-    <div class="pinboard-data-info__title">{{ $t('pinboard.dataFrame') }}</div>
+    <div class="pinboard-data-info__title">
+      {{ $t('pinboard.dataFrame') }}
+    </div>
     <ul class="pinboard-data-info__list">
       <li>{{ getDataInfo.dataframeName }}</li>
     </ul>
-    <div class="pinboard-data-info__title">{{ $t('pinboard.relativeDataColun') }}</div>
+    <div class="pinboard-data-info__title">
+      {{ $t('pinboard.relativeDataColun') }}
+    </div>
     <ul class="pinboard-data-info__list">
-      <li v-if="selectedColumnsInfo === null"> {{ $t('pinboard.allColumns') }} </li>
+      <li v-if="selectedColumnsInfo === null">
+        {{ $t('pinboard.allColumns') }}
+      </li>
       <li
         v-for="(column, index) in selectedColumnsInfo"
         :key="index"
-      >{{ column }} </li>
+      >
+        {{ column }}
+      </li>
     </ul>
   </div>
 </template>
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PinboardDataInfo',
@@ -27,7 +35,7 @@ export default {
   },
   computed: {
     ...mapState('pinboard', ['pinboardData']),
-    getDataInfo() {
+    getDataInfo () {
       return this.pinboardData.find(data => data.resultId === this.resultId)
     },
     selectedColumnsInfo () {

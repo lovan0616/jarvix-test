@@ -71,7 +71,7 @@ export function analysisFile (fileId, fileInfo) {
  * @param {Object} data - 欲更新的檔案資訊
  */
 export function appendFile (data) {
-  const {fileId, ...fileInfo} = data
+  const { fileId, ...fileInfo } = data
   return request({
     url: `/files/${fileId}/append`,
     method: 'POST',
@@ -116,7 +116,7 @@ export function getDataFrameSummary (dataFrameId) {
  */
 export function getDatetimePatterns () {
   return request({
-    url: `/data/datetime-patterns`,
+    url: '/data/datetime-patterns',
     method: 'GET'
   })
 }

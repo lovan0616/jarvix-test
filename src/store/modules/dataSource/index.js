@@ -35,7 +35,7 @@ export default {
       },
       formula: {
         '@type': 'FormulaAlgoConfig'
-      },
+      }
     },
     clusteringInfo: {
       clusterList: [],

@@ -3,35 +3,40 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('editing.columnSetSetting') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="dialog-header-block">
         <div class="header-button-block">
-          <button 
+          <button
             class="btn btn-secondary btn-has-icon add-btn"
             @click="addColumnSet"
-          ><svg-icon 
-            icon-class="plus" 
-            class="icon"/>{{ $t('button.addColumnSet') }}</button>
+          >
+            <svg-icon
+              icon-class="plus"
+              class="icon"
+            />{{ $t('button.addColumnSet') }}
+          </button>
           <el-tooltip
             :content="dataFrameInfo.primaryAlias"
             placement="bottom"
           >
-            <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
+            <div class="data-frame-name">
+              {{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}
+            </div>
           </el-tooltip>
         </div>
       </div>
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('editing.loading')"
         class="spinner-container"
         size="50"
       />
-      <div 
+      <div
         v-else
         class="dialog-content-block"
       >

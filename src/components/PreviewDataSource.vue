@@ -36,7 +36,8 @@
                 slot="label"
                 :visible-arrow="false"
                 :content="tab.name"
-                placement="bottom-start">
+                placement="bottom-start"
+              >
                 <span>{{ tab.name }}</span>
               </el-tooltip>
             </el-tab-pane>
@@ -119,8 +120,8 @@ export default {
     },
     // 根據當前選定的 id 進行切換
     dataFrameId (value) {
-      if (!value) return 
-      this.onDataSourceTableChange (value)
+      if (!value) return
+      this.onDataSourceTableChange(value)
     }
   },
   mounted () {
@@ -156,7 +157,7 @@ export default {
       this.dataSourceTable = this.dataSourceTables.find(item => item.id === id)
     },
     onDataSourceTableChange (id) {
-      const dataFrameId = id === 'all' ? this.currentDataFrameId :  Number(id)
+      const dataFrameId = id === 'all' ? this.currentDataFrameId : Number(id)
       if (this.dataSourceTable.id === dataFrameId) return
       this.hasError = false
       this.dataSourceTable.id = dataFrameId
@@ -272,7 +273,7 @@ export default {
       padding: 0;
       background-color: transparent;
     }
-                                                                                                                                                                  
+
     .board-body {
       padding: 23px 0;
 
@@ -295,8 +296,6 @@ export default {
     }
   }
 }
-
-
 
 /deep/ .el-tabs {
   width: 100%;

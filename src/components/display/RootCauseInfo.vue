@@ -1,9 +1,11 @@
 <template>
-  <div 
+  <div
     v-if="info.rootCause.length > 0"
     class="insights-info root-cause"
   >
-    <div class="insights-info-title">{{ $t('resultDescription.dataInsight') }}</div>
+    <div class="insights-info-title">
+      {{ $t('resultDescription.dataInsight') }}
+    </div>
     <el-tabs
       v-model="activeTab"
     >
@@ -28,7 +30,9 @@
               <el-tooltip
                 :content="tableInfo.columnValue"
               >
-                <div class="column-title">{{ tableInfo.columnValue }}</div>
+                <div class="column-title">
+                  {{ tableInfo.columnValue }}
+                </div>
               </el-tooltip>
               <div class="sub-title">
                 <span class="sub-title__text">{{ rootCauseInfo.name }}</span>
@@ -36,11 +40,15 @@
                 <span class="sub-title__text">{{ $t('aggregatedValue.mean').toLowerCase() }}</span>
               </div>
               <div class="amount-block">
-                <div class="count">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
+                <div class="count">
+                  {{ Math.abs(tableInfo.diffAverageRate) + '%' }}
+                </div>
                 <div
                   v-show="tableInfo.unusual"
                   class="hight-light-label"
-                >{{ $t('resultDescription.keyInsight') }}</div>
+                >
+                  {{ $t('resultDescription.keyInsight') }}
+                </div>
               </div>
             </div>
             <div class="detail-info">
@@ -48,7 +56,7 @@
                 <i18n
                   path="resultDescription.totalColumnAverage"
                   tag="pre"
-                  class="detail-info__list__item" 
+                  class="detail-info__list__item"
                 >
                   <span class="text name">{{ rootCauseInfo.name }}</span>
                   <span class="text">{{ tableInfo.totalAverage }}</span>
@@ -56,7 +64,7 @@
                 <i18n
                   path="resultDescription.compareToAverage"
                   tag="pre"
-                  class="detail-info__list__item" 
+                  class="detail-info__list__item"
                 >
                   <span class="text name">[{{ tableInfo.columnName }}] {{ tableInfo.columnValue }} </span>
                   <span class="text percentage">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</span>
@@ -65,16 +73,28 @@
               </div>
               <div class="info-block">
                 <div class="single-info">
-                  <div class="info-label">{{ $t('resultDescription.dataRowCount') }}</div>
-                  <div class="info-content">{{ tableInfo.count }}</div>
+                  <div class="info-label">
+                    {{ $t('resultDescription.dataRowCount') }}
+                  </div>
+                  <div class="info-content">
+                    {{ tableInfo.count }}
+                  </div>
                 </div>
                 <div class="single-info">
-                  <div class="info-label">{{ $t('resultDescription.totalPercentage') }}</div>
-                  <div class="info-content">{{ tableInfo.percent || '-' }} </div>
+                  <div class="info-label">
+                    {{ $t('resultDescription.totalPercentage') }}
+                  </div>
+                  <div class="info-content">
+                    {{ tableInfo.percent || '-' }}
+                  </div>
                 </div>
                 <div class="single-info">
-                  <div class="info-label">{{ $t('aggregatedValue.mean') }}</div>
-                  <div class="info-content">{{ tableInfo.average }}</div>
+                  <div class="info-label">
+                    {{ $t('aggregatedValue.mean') }}
+                  </div>
+                  <div class="info-content">
+                    {{ tableInfo.average }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -138,7 +158,7 @@ export default {
       this.$store.commit('dataSource/setAppQuestion', question)
       this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_rootcause' : 'click_rootcause_pinboard')
     }
-  },
+  }
 }
 </script>
 
@@ -264,7 +284,7 @@ export default {
           margin: 0;
           display: flex;
           flex-wrap: wrap;
-          // 為了保留空白而使用 <pre> 這邊必須把字型再蓋回來 
+          // 為了保留空白而使用 <pre> 這邊必須把字型再蓋回來
           font-family: $theme-font-family-default;
           word-break: break-word;
           &::before {

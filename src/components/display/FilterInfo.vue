@@ -1,19 +1,20 @@
 <template>
   <div class="filter-block">
-    <div 
-      v-if="tempFilterList.length > 0" 
+    <div
+      v-if="tempFilterList.length > 0"
       class="filter-block__action-box"
     >
-      <a 
-        href="javascript:void(0);" 
+      <a
+        href="javascript:void(0);"
         class="link filter-block__action-box-link"
         @click="onClearAll"
       >{{ $t('dataFrameAdvanceSetting.clearCriteria') }}</a>
     </div>
     <div class="filter-block__select-box">
-      <div 
-        v-if="tempFilterList.length === 0" 
-        class="empty-message">
+      <div
+        v-if="tempFilterList.length === 0"
+        class="empty-message"
+      >
         {{ $t('dataFrameAdvanceSetting.noCriteriaYet') }}
       </div>
       <single-filter-block
@@ -28,14 +29,15 @@
       />
     </div>
     <div class="filter-block__button-block">
-      <button 
+      <button
         type="button"
         class="btn-m btn-outline"
         @click="$emit('addRestriction')"
-      ><span>
-        <svg-icon icon-class="plus" />
-        {{ $t('dataFrameAdvanceSetting.addFilter') }}
-      </span>
+      >
+        <span>
+          <svg-icon icon-class="plus" />
+          {{ $t('dataFrameAdvanceSetting.addFilter') }}
+        </span>
       </button>
     </div>
   </div>
@@ -69,7 +71,7 @@ export default {
       })
       this.$emit('update:tempFilterList', updatedTempFilterList)
     },
-    editFilter(index) {
+    editFilter (index) {
       this.$emit('editRestriction', index)
     },
     deleteFilter (index) {

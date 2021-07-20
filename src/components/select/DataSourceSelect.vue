@@ -1,17 +1,18 @@
 <template>
   <div class="data-source-select-block">
-    <svg-icon 
-      icon-class="folder" 
-      class="data-source-select-icon"/>
-    <sy-select 
+    <svg-icon
+      icon-class="folder"
+      class="data-source-select-icon"
+    />
+    <sy-select
       :selected="dataSourceId"
       :items="buildDataSourceList"
       :placeholder="$t('editing.chooseDataSource')"
       class="data-source-select"
       @update:selected="onDataSourceChange"
     />
-    <a 
-      href="javascript:void(0)" 
+    <a
+      href="javascript:void(0)"
       class="preview-datasource-btn"
       @click="togglePreviewDataSource"
     >
@@ -19,10 +20,11 @@
         slot="label"
         :content="previewDataSourceTooltipContent"
       >
-        <svg-icon 
+        <svg-icon
           :class="{'preview-datasource-btn__icon--show': isShowPreviewDataSource}"
           icon-class="view-data"
-          class="preview-datasource-btn__icon"/>
+          class="preview-datasource-btn__icon"
+        />
       </el-tooltip>
     </a>
   </div>
@@ -63,10 +65,10 @@ export default {
       if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId })
         .then(() => {
-          this.$router.push({ 
-            name: 'PageIndex', 
-            params: { 
-              'group_id': this.getCurrentGroupId
+          this.$router.push({
+            name: 'PageIndex',
+            params: {
+              group_id: this.getCurrentGroupId
             },
             query: {
               dataSourceId: this.dataSourceId,

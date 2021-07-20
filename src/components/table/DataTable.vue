@@ -2,24 +2,24 @@
   <div class="data-table data-source-list-table">
     <div class="data-table-head">
       <div class="data-table-row table-head">
-        <div 
+        <div
           v-if="hasCheckbox"
           class="data-table-cell checkbox"
         >
-          <label 
+          <label
             :class="{indeterminate: selectList.length > 0 && selectList.length < dataList.length}"
             class="checkbox-label"
           >
-            <input 
-              v-model="selectAll" 
+            <input
+              v-model="selectAll"
               :disabled="isProcessing"
               type="checkbox"
               name="selectAll"
             >
-            <div class="checkbox-square"/>
+            <div class="checkbox-square" />
           </label>
         </div>
-        <div 
+        <div
           v-for="headInfo in headers"
           :key="headInfo.value"
           :class="{sort: headInfo.sort, hasWidth: headInfo.width}"
@@ -29,9 +29,10 @@
           }"
           class="data-table-cell"
           @click="(headInfo.sort) ? rankingData(headInfo.value) : ''"
-        >{{ headInfo.text }}
-          <svg-icon 
-            v-if="headInfo.sort && sortStatus" 
+        >
+          {{ headInfo.text }}
+          <svg-icon
+            v-if="headInfo.sort && sortStatus"
             :class="{ 'arrow-up': sortStatus[headInfo.value] > 0, 'active': sortStatus[headInfo.value] }"
             icon-class="arrow-down"
             class="arrow-icon"
@@ -39,19 +40,19 @@
         </div>
       </div>
     </div>
-    <spinner 
+    <spinner
       v-if="loading"
       :title="$t('editing.loading')"
       class="spinner-container"
       size="50"
     />
-    <div 
+    <div
       v-else
       class="data-table-body"
     >
-      <empty-info-block 
+      <empty-info-block
         v-if="isSearchResultEmpty"
-        :msg="this.$t('message.emptyResult')"
+        :msg="$t('message.emptyResult')"
       />
       <upload-block
         v-else-if="dataList.length === 0"
@@ -60,29 +61,29 @@
         class="empty-status"
         @create="createDataSource"
       />
-      <div 
+      <div
         v-for="(data, index) in dataList"
         v-else
         :key="index"
         :class="{selected: selectList.indexOf(data) > -1, 'is-processing': isInProcess(data) || isPending(data)}"
         class="data-table-row"
       >
-        <div 
+        <div
           v-if="hasCheckbox"
           class="data-table-cell checkbox"
         >
           <label class="checkbox-label">
-            <input 
-              v-model="selectList" 
+            <input
+              v-model="selectList"
               :value="data"
               :disabled="isProcessing"
               type="checkbox"
               name="fileChosen"
             >
-            <div class="checkbox-square"/>
+            <div class="checkbox-square" />
           </label>
         </div>
-        <div 
+        <div
           v-for="headInfo in headers"
           :class="{action: headInfo.action, hasWidth: headInfo.width}"
           :key="headInfo.value"
@@ -93,18 +94,18 @@
           class="data-table-cell"
         >
           <el-tooltip
-            v-if="headInfo.link && checkLinkEnable(headInfo, data)" 
+            v-if="headInfo.link && checkLinkEnable(headInfo, data)"
             :content="data[headInfo.value]"
             placement="bottom-start"
           >
-            <a 
+            <a
               href="javascript:void(0)"
               class="link name-link"
               @click="linkTo(headInfo.link, data.id)"
             >{{ data[headInfo.value] }}</a>
           </el-tooltip>
-          <a 
-            v-for="action in headInfo.action" 
+          <a
+            v-for="action in headInfo.action"
             v-else-if="headInfo.action"
             :key="action.name"
             :disabled="isDisabledActionButton(action.value, data)"
@@ -119,12 +120,13 @@
               @switchDialogName="doAction($event, action.link, data)"
             />
             {{ action.name }}
-            <svg-icon 
-              v-if="action.subAction" 
-              icon-class="triangle" 
-              class="icon dropdown-icon" />
+            <svg-icon
+              v-if="action.subAction"
+              icon-class="triangle"
+              class="icon dropdown-icon"
+            />
           </a>
-          <span 
+          <span
             v-else-if="headInfo.value === 'state'"
             :class="{'is-processing': data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'}"
           >
@@ -133,19 +135,20 @@
               icon-class="spinner"
             />
             {{ buildStatus(data[headInfo.value]) }}
-            <el-tooltip 
+            <el-tooltip
               v-if="data.processComment"
               :content="data.processComment"
               class="item"
               popper-class="error-tooltip"
               placement="bottom"
             >
-              <svg-icon 
-                icon-class="alert" 
-                class="alert-icon"/>
+              <svg-icon
+                icon-class="alert"
+                class="alert-icon"
+              />
             </el-tooltip>
           </span>
-          <span 
+          <span
             v-else-if="headInfo.value === 'type'"
             :class="{'is-processing': data[headInfo.value] === 'PROCESS'}"
           >
@@ -154,16 +157,17 @@
               icon-class="spinner"
             />
             {{ buildStatus(data[headInfo.value]) }}
-            <el-tooltip 
+            <el-tooltip
               v-if="data.processComment"
               :content="data.processComment"
               class="item"
               popper-class="error-tooltip"
               placement="bottom"
             >
-              <svg-icon 
-                icon-class="alert" 
-                class="alert-icon"/>
+              <svg-icon
+                icon-class="alert"
+                class="alert-icon"
+              />
             </el-tooltip>
           </span>
           <span
@@ -188,7 +192,7 @@
               <span class="dataframe-name">{{ data[headInfo.value] }}</span>
             </el-tooltip>
           </span>
-          <span 
+          <span
             v-else-if="headInfo.value === 'latestImportStatus'"
             :class="{ 'is-processing': data[headInfo.value] === 'Process' }"
           >
@@ -201,7 +205,7 @@
               placement="bottom-start"
             >
               <template #content>
-                <div 
+                <div
                   v-for="info in dbConnectionLogInfo(data[headInfo.value])"
                   :key="info.title"
                   class="db-connection-log-info info"
@@ -211,9 +215,10 @@
                     {{ info.title === "dbConnectionElapsedTime" ? elapsedTimeFormat(data[info.title]) : timeToDateTimeSecondPrecision(data[info.title]) }}
                   </p>
                 </div>
-                <div 
-                  v-if="data.dataImportErrorMessage" 
-                  class="db-connection-log-info">
+                <div
+                  v-if="data.dataImportErrorMessage"
+                  class="db-connection-log-info"
+                >
                   <p class="info__label">{{ $t('editing.errorReason') }}</p>
                   <p class="info__description">{{ data.dataImportErrorMessage }}</p>
                 </div>
@@ -222,17 +227,18 @@
                 {{ batchLoadStatus(data) }}
                 <svg-icon
                   v-show="data['dbConnectionStartTime'] && data['dbConnectionEndTime'] && data['dbConnectionElapsedTime']"
-                  icon-class="information-circle" />
+                  icon-class="information-circle"
+                />
               </span>
             </el-tooltip>
           </span>
           <!-- 暫時放這 -->
           <span v-else-if="headInfo.value === 'createMethodLabel'">
-            {{ data[headInfo.value] }} 
+            {{ data[headInfo.value] }}
             <a
               v-if="data.joinCount > 1"
               :disabled="isInProcess(data) || isPending(data) || calculateId === data.id"
-              class="link" 
+              class="link"
               href="javascript:void(0);"
               @click="calculateMeta(data)"
             >
@@ -244,7 +250,7 @@
             <a
               v-if="data.enabledManualUpdate && data.lastImportType === 'REIMPORT'"
               :disabled="updateId === data.id"
-              class="link" 
+              class="link"
               href="javascript:void(0);"
               @click="updateImmediately(data)"
             >
@@ -377,22 +383,22 @@ export default {
   methods: {
     dbConnectionLogInfo (status) {
       return status === 'Process'
-      ? [{
-        title: 'dbConnectionStartTime',
-        label: this.$t('editing.startTime')
-      }]
-      : [{
-        title: 'dbConnectionStartTime',
-        label: this.$t('editing.startTime')
-      },
-      {
-        title: 'dbConnectionEndTime',
-        label: this.$t('editing.endTime')
-      },
-      {
-        title: 'dbConnectionElapsedTime',
-        label: this.$t('editing.elapsedTime')
-      }]
+        ? [{
+          title: 'dbConnectionStartTime',
+          label: this.$t('editing.startTime')
+        }]
+        : [{
+          title: 'dbConnectionStartTime',
+          label: this.$t('editing.startTime')
+        },
+        {
+          title: 'dbConnectionEndTime',
+          label: this.$t('editing.endTime')
+        },
+        {
+          title: 'dbConnectionElapsedTime',
+          label: this.$t('editing.elapsedTime')
+        }]
     },
     setSortStatus () {
       let sortObj = {}
@@ -426,7 +432,7 @@ export default {
 
       let order = this.sortStatus[name] > 0 ? 'asc' : 'desc'
 
-      this.$emit('sort', {name, order})
+      this.$emit('sort', { name, order })
     },
     linkTo (link, id) {
       let paramKey = link.paramName || 'id'
@@ -463,17 +469,17 @@ export default {
     },
     doAction (actionName, actionLink, data) {
       if (
-        !actionName
-        || this.isDisabledActionButton(actionName, data)
+        !actionName ||
+        this.isDisabledActionButton(actionName, data)
       ) return false
       if (actionLink) return this.linkTo(actionLink, data.id)
       this.$emit(actionName, data)
     },
-    isDisabledActionButton(actionName, data) {
+    isDisabledActionButton (actionName, data) {
       if (
-        this.isProcessing
-        || this.isInProcess(data) 
-        || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
+        this.isProcessing ||
+        this.isInProcess(data) ||
+        ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
       ) return true
       return false
     },
@@ -507,7 +513,7 @@ export default {
       }
     },
     batchLoadStatus (data) {
-      switch (data['latestImportStatus']) {
+      switch (data.latestImportStatus) {
         case null:
           return this.$t('batchLoad.noRecord')
         case 'Complete':
@@ -539,19 +545,19 @@ export default {
       })
     },
     isInProcess (data) {
-      return data['state'] === 'Process' || data['state'] === 'PROCESSING'
+      return data.state === 'Process' || data.state === 'PROCESSING'
     },
     isPending (data) {
-      return data['state'] === 'Pending'
+      return data.state === 'Pending'
     },
     isFail (data) {
-      return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL' || data['state'] === 'Warn' || data['type'] === 'WARN'
+      return data.state === 'Disable' || data.type === 'DISABLE' || data.state === 'Fail' || data.type === 'FAIL' || data.state === 'Warn' || data.type === 'WARN'
     },
     elapsedTimeFormat (time) {
       let hour = this.$tc('timeScopeUnit.allowArg.hour', Math.floor(time / 3600)) + ' '
       let minute = this.$tc('timeScopeUnit.allowArg.minute', Math.floor(time % 3600 / 60)) + ' '
       let second = this.$tc('timeScopeUnit.allowArg.second', time % 60)
-      return  hour + minute + second
+      return hour + minute + second
     },
     calculateMeta (dataInfo) {
       if (this.isInProcess(dataInfo) || this.isPending(dataInfo) || this.calculateId === dataInfo.id) return false
@@ -562,7 +568,7 @@ export default {
         this.$emit('fetch')
       })
     },
-    updateImmediately ({id}) {
+    updateImmediately ({ id }) {
       if (this.updateId === id) return false
       this.updateId = id
       return triggerUpdateData(id).then(() => {
@@ -576,7 +582,7 @@ export default {
         this.$emit('fetch')
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -710,7 +716,7 @@ export default {
   &:not(:first-child) {
     margin-top: 15px;
   }
-  
+
   .info {
     &__label, &__description {
       margin: 0;
@@ -722,11 +728,11 @@ export default {
       font-weight: 600;
       color: $theme-color-white;
     }
-    
+
     &__description {
       color: #DDDDDD;
     }
-  } 
+  }
 }
 
 .data-source-list-table {

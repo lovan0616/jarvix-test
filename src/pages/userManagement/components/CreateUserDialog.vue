@@ -1,41 +1,48 @@
 <template>
   <div class="create-user-dialog full-create-dialog">
     <h2>{{ $t('userManagement.createUser') }}</h2>
-    <div 
-      class="full-create-dialog-box" 
-      @click.stop>
+    <div
+      class="full-create-dialog-box"
+      @click.stop
+    >
       <create-user-form
         v-for="(invitee, index) in inviteeList"
         :key="invitee.id"
         :invitee="invitee"
         :role-options="roleOptions"
         :is-show-delete="inviteeList.length > 1"
-        @removeInvitee="removeInvitee(index)" />
+        @removeInvitee="removeInvitee(index)"
+      />
       <button
         class="btn btn-m btn-outline"
         @click="addNewInvitee()"
       >
-        <svg-icon 
-          icon-class="plus" 
-          class="icon" />{{ $t('button.add') }}
+        <svg-icon
+          icon-class="plus"
+          class="icon"
+        />{{ $t('button.add') }}
       </button>
     </div>
-    <div 
-      class="dialog-btn-row" 
-      @click.stop>
+    <div
+      class="dialog-btn-row"
+      @click.stop
+    >
       <button
         :disabled="isProcessing"
         class="btn btn-outline dialog-btn"
-        @click="closeDialog">
+        @click="closeDialog"
+      >
         {{ $t('button.cancel') }}
       </button>
       <button
         :disabled="isProcessing"
         class="btn btn-default dialog-btn dialog-create"
-        @click="confirmBtn">
-        <svg-icon 
-          v-if="isProcessing" 
-          icon-class="spinner"/>
+        @click="confirmBtn"
+      >
+        <svg-icon
+          v-if="isProcessing"
+          icon-class="spinner"
+        />
         {{ $t('button.submit') }}
       </button>
     </div>
@@ -66,7 +73,7 @@ export default {
       default: null
     }
   },
-  data (){
+  data () {
     return {
       inviteeList: []
     }
@@ -76,7 +83,7 @@ export default {
       return this.$store.getters['userManagement/getCurrentAccountId']
     }
   },
-  mounted (){
+  mounted () {
     this.addNewInvitee()
   },
   destroyed () {

@@ -13,12 +13,18 @@
     </div>
     <div class="job__detail">
       <div class="job__detail-description">
-        <div v-if="item.patientID">Patient ID: {{ item.patientID }}</div>
-        <div v-if="item.surgeryType">Surgery Type: {{ item.surgeryType }}</div>
+        <div v-if="item.patientID">
+          Patient ID: {{ item.patientID }}
+        </div>
+        <div v-if="item.surgeryType">
+          Surgery Type: {{ item.surgeryType }}
+        </div>
         <div>Type: {{ item.type }}</div>
         <div>Start: {{ item.start }}</div>
         <div>End: {{ item.end }}</div>
-        <div v-if="item.noShowProbability">No Show Probability: {{ item.noShowProbability }}</div>
+        <div v-if="item.noShowProbability">
+          No Show Probability: {{ item.noShowProbability }}
+        </div>
       </div>
     </div>
   </el-popover>

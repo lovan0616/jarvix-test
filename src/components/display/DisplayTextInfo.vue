@@ -15,14 +15,14 @@ export default {
       type: String,
       required: true
     },
-    dataset: { 
-      type: Object, 
+    dataset: {
+      type: Object,
       default: () => ([])
     },
     customChartStyle: {
       type: Object,
       default: () => {}
-    },
+    }
   },
   computed: {
     displayedText () {

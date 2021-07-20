@@ -1,9 +1,10 @@
 <template>
   <div class="file-upload-dialog full-page-dialog">
     <div class="dialog-container">
-      <transition 
-        name="fade" 
-        mode="out-in">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <flow-execution-flow />
       </transition>
     </div>

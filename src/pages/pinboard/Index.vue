@@ -1,17 +1,18 @@
 <template>
   <div class="wrapper">
     <main class="main">
-      <transition 
-        name="fade" 
-        mode="out-in">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <router-view />
       </transition>
     </main>
 
     <el-backtop target=".wrapper">
       <div class="backtop-content">
-        <svg-icon icon-class="chevron-up-solid"/>
-    </div>
+        <svg-icon icon-class="chevron-up-solid" />
+      </div>
     </el-backtop>
   </div>
 </template>

@@ -30,7 +30,7 @@ export function bindOrder (data) {
  * 解除綁定訂單
  *  @param {Number} projectId - 排程子專案 id
  */
- export function unbindOrder (projectId) {
+export function unbindOrder (projectId) {
   return request({
     url: '/dataframe/unbind/order',
     method: 'POST',
@@ -115,7 +115,7 @@ export function bindConstraints (data) {
  *  @param {Array} data - codes - 欲解除的資料表
  *  @param {Number} data - projectId - 排程子專案 id
  */
- export function unbindConstraint (data) {
+export function unbindConstraint (data) {
   return request({
     url: '/dataframe/unbind/constraint',
     method: 'POST',

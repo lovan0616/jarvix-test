@@ -5,12 +5,13 @@
         {{ $t(`schedule.setting.extraConstraint${snakeToPascal(fileData.code)}`) }}
       </div>
       <div class="file__item-description">
-        <div 
+        <div
           :class="isEmpty(fileData.name)"
-          class="file__item-name" >
+          class="file__item-name"
+        >
           {{ $t('schedule.setting.fileName') }}：{{ fileData.name || $t('schedule.setting.noFileSelected') }}
         </div>
-        <div 
+        <div
           :class="isEmpty(fileData.updateDate)"
           class="file__item-date"
         >

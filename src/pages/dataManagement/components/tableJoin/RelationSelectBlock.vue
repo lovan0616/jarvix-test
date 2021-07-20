@@ -1,9 +1,10 @@
 <template>
   <div class="select-block">
     <div class="select-block-item">
-      <svg-icon 
-        icon-class="table" 
-        class="type-icon" />
+      <svg-icon
+        icon-class="table"
+        class="type-icon"
+      />
       <default-select
         v-validate="'required'"
         :key="'top-select'"
@@ -15,9 +16,10 @@
       />
     </div>
     <div class="select-block-item">
-      <svg-icon 
-        icon-class="column" 
-        class="type-icon" />
+      <svg-icon
+        icon-class="column"
+        class="type-icon"
+      />
       <default-select
         v-validate="'required'"
         :key="'bottom-select'"
@@ -62,16 +64,15 @@ export default {
     }
   },
   computed: {
-    dataFrameSelectList() {
-      return this.dataFrameList.map(element=> ({
+    dataFrameSelectList () {
+      return this.dataFrameList.map(element => ({
         ...element,
-        value : element.id
+        value: element.id
       }))
-    }   
+    }
   },
   mounted () {
     if (this.dataFrameId) this.fetchDataColumnList(this.dataFrameId)
-    
   },
   methods: {
     fetchDataColumnList (dataFrameId) {

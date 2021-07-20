@@ -1,6 +1,8 @@
 <template>
   <div class="etl-setting">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="3"
     />
@@ -9,27 +11,34 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <etl-choose-column/>
+      <etl-choose-column />
     </div>
-    <div 
-      v-if="currentColumnIndex === null" 
-      class="dialog-footer">
+    <div
+      v-if="currentColumnIndex === null"
+      class="dialog-footer"
+    >
       <div class="dialog-button-block">
-        <button 
+        <button
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="prev"
-        >{{ $t('button.prevStep') }}</button>
-        <button 
+        >
+          {{ $t('button.prevStep') }}
+        </button>
+        <button
           :disabled="isProcessing"
           class="btn btn-default"
           @click="buildData"
-        >{{ $t('button.buildData') }}</button>
+        >
+          {{ $t('button.buildData') }}
+        </button>
       </div>
     </div>
   </div>
@@ -121,7 +130,7 @@ export default {
       }
       return result
     }
-  },
+  }
 }
 </script>
 

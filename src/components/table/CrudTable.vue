@@ -6,7 +6,7 @@
           v-if="hasCheckbox"
           class="data-table-cell checkbox"
         >
-          <label 
+          <label
             :class="{indeterminate: selectList.length > 0 && selectList.length < dataList.length}"
             class="checkbox-label"
           >
@@ -16,7 +16,7 @@
               type="checkbox"
               name="selectAll"
             >
-            <div class="checkbox-square"/>
+            <div class="checkbox-square" />
           </label>
         </div>
         <div
@@ -29,26 +29,29 @@
           }"
           class="data-table-cell"
           @click="(headInfo.sort) ? rankingData(headInfo.value) : ''"
-        >{{ headInfo.text }}
+        >
+          {{ headInfo.text }}
           <span
             v-if="headInfo.tooltip"
             class="tooltip-container"
           >
-            <svg-icon 
-              icon-class="information-circle" 
-              class="icon" />
+            <svg-icon
+              icon-class="information-circle"
+              class="icon"
+            />
             <div
               :style="{width: headInfo.tooltip.width}"
               class="tooltip"
             >
               <slot :name="headInfo.value" />
-              <span 
-                v-if="headInfo.tooltip.text" 
-                v-html="headInfo.tooltip.text" />
+              <span
+                v-if="headInfo.tooltip.text"
+                v-html="headInfo.tooltip.text"
+              />
             </div>
           </span>
-          <svg-icon 
-            v-if="headInfo.sort && sortStatus" 
+          <svg-icon
+            v-if="headInfo.sort && sortStatus"
             :class="{ 'arrow-up': sortStatus[headInfo.value] > 0, 'active': sortStatus[headInfo.value] }"
             icon-class="arrow-down"
             class="arrow-icon"
@@ -56,7 +59,7 @@
         </div>
       </div>
     </div>
-    <spinner 
+    <spinner
       v-if="loading"
       :title="$t('editing.loading')"
       class="spinner-container"
@@ -70,28 +73,28 @@
       v-else
       class="data-table-body"
     >
-      <div 
+      <div
         v-for="(data, index) in dataList"
         :key="index"
         :class="{selected: selectList.indexOf(data) > -1}"
         class="data-table-row"
       >
-        <div 
+        <div
           v-if="hasCheckbox"
           class="data-table-cell checkbox"
         >
           <label class="checkbox-label">
-            <input 
-              v-model="selectList" 
+            <input
+              v-model="selectList"
               :value="data"
               :disabled="isProcessing"
               type="checkbox"
               name="fileChosen"
             >
-            <div class="checkbox-square"/>
+            <div class="checkbox-square" />
           </label>
         </div>
-        <div 
+        <div
           v-for="headInfo in headers"
           :class="{action: headInfo.action, hasWidth: headInfo.width}"
           :key="headInfo.value"
@@ -102,9 +105,10 @@
           class="data-table-cell"
         >
           <template v-if="headInfo.value === 'action'">
-            <slot 
-              :data="data" 
-              name="action">
+            <slot
+              :data="data"
+              name="action"
+            >
               <a
                 v-for="action in headInfo.action"
                 :key="action.name"
@@ -119,10 +123,11 @@
                   class="dropdown"
                 />
                 {{ action.name }}
-                <svg-icon 
-                  v-if="getBarData(action.subAction, data).length > 0" 
-                  icon-class="triangle" 
-                  class="icon dropdown-icon" />
+                <svg-icon
+                  v-if="getBarData(action.subAction, data).length > 0"
+                  icon-class="triangle"
+                  class="icon dropdown-icon"
+                />
               </a>
             </slot>
           </template>
@@ -282,7 +287,7 @@ export default {
       let order = this.sortStatus[name] > 0 ? 'asc' : 'desc'
       this.$emit('update:dataList', orderBy(this.dataList, [name], [order]))
     },
-    linkTo (link, id) { 
+    linkTo (link, id) {
       let paramKey = link.paramName || 'id'
       this.$router.push({
         name: link.name,
@@ -309,7 +314,7 @@ export default {
           case 'YYYY-MM-DD':
             return this.timeToDate(value)
           case 'YYYY-MM-DD HH:mm':
-          default: 
+          default:
             return this.timeToDateTime(value)
         }
       } else {

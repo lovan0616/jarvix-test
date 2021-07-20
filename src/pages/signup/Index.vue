@@ -1,16 +1,20 @@
 <template>
   <page-layout>
     <div class="signup-page">
-      <h1 class="page-title">{{ $t('editing.userSignup') }}</h1>
+      <h1 class="page-title">
+        {{ $t('editing.userSignup') }}
+      </h1>
       <form
         @submit.prevent="submitForm"
       >
         <div class="signup-form">
           <div class="signup-input-block input-block">
-            <div class="input valid">{{ userInfo.email }}</div>
+            <div class="input valid">
+              {{ userInfo.email }}
+            </div>
             <label class="placeholder">{{ $t('editing.username') }}</label>
           </div>
-          <input-block 
+          <input-block
             v-validate="`required|max:${max}|`"
             :label="$t('editing.userTitle')"
             v-model="userInfo.username"
@@ -18,7 +22,7 @@
             name="userName"
             type="text"
           />
-          <input-block 
+          <input-block
             v-validate="`required|min:8|max:${max}|requireOneNumeric`"
             ref="confirmPassword"
             :label="$t('editing.setLoginPassword')"
@@ -27,7 +31,7 @@
             name="userPassword"
             type="password"
           />
-          <input-block 
+          <input-block
             v-validate="`required|min:8|max:${max}|requireOneNumeric|confirmed:confirmPassword`"
             :label="$t('editing.confirmPasswordAgain')"
             v-model="userInfo.verifyPassword"
@@ -94,7 +98,7 @@ export default {
   },
   methods: {
     confirmEmailToken (emailToken) {
-      mailConfirm({emailToken})
+      mailConfirm({ emailToken })
         .then(res => {
           this.userInfo.email = res.email
           this.userInfo.accountId = res.accountId
@@ -110,7 +114,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isProcessing = true
-        const {verifyPassword, ...userInfo} = this.userInfo
+        const { verifyPassword, ...userInfo } = this.userInfo
         signup(userInfo)
           .then(() => {
             this.$router.push({ name: 'PageLogin' })
@@ -124,7 +128,7 @@ export default {
           .catch(() => { this.isProcessing = false })
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

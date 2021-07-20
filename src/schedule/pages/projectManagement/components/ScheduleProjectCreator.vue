@@ -2,12 +2,17 @@
   <div class="general-management-page general-management-page--project-create">
     <div class="page-title-row">
       <h1 class="title">
-        <div class="title-left">{{ $t('schedule.project.projectManagement') }}</div>
+        <div class="title-left">
+          {{ $t('schedule.project.projectManagement') }}
+        </div>
       </h1>
       <div class="bread-crumb">
-        <router-link 
-          :to="{ name: 'ScheduleProjectList' }" 
-          class="title-link">{{ $t('schedule.project.projectManagement') }}</router-link>
+        <router-link
+          :to="{ name: 'ScheduleProjectList' }"
+          class="title-link"
+        >
+          {{ $t('schedule.project.projectManagement') }}
+        </router-link>
         <span class="divider">/</span>
         {{ $t('schedule.project.createProject') }}
       </div>
@@ -19,7 +24,7 @@
           <div class="form__content">
             <default-input
               v-validate="'required'"
-              v-model="formData.name" 
+              v-model="formData.name"
               :placeholder="$t('schedule.project.pleaseEnterProjectName')"
               name="name"
             />
@@ -40,11 +45,12 @@
                   type="radio"
                   name="isNewDataSource"
                 >
-                <label 
-                  class="input-radio-label" 
-                  for="true">{{ $t('schedule.project.existingDataSource') }}</label>
+                <label
+                  class="input-radio-label"
+                  for="true"
+                >{{ $t('schedule.project.existingDataSource') }}</label>
               </div>
-              <default-select 
+              <default-select
                 v-validate.disable="'required'"
                 v-model="formData.datasourceId"
                 :options="dataSourceOptions"
@@ -62,13 +68,14 @@
                   type="radio"
                   name="isNewDataSource"
                 >
-                <label 
-                  class="input-radio-label" 
-                  for="false">{{ $t('schedule.project.createDataSource') }}</label>
+                <label
+                  class="input-radio-label"
+                  for="false"
+                >{{ $t('schedule.project.createDataSource') }}</label>
               </div>
-              <default-input 
+              <default-input
                 v-validate="'required'"
-                v-model="formData.datasourceName" 
+                v-model="formData.datasourceName"
                 :placeholder="$t('schedule.project.pleaseEnterDataSourceName')"
                 name="datasourceName"
                 @input="isNewDataSource = true"
@@ -78,13 +85,18 @@
         </div>
       </div>
       <div class="button-block">
-        <default-button 
-          type="outline" 
-          @click="$router.push({ name: 'ScheduleProjectList' })">{{ $t('button.cancel') }}</default-button>
+        <default-button
+          type="outline"
+          @click="$router.push({ name: 'ScheduleProjectList' })"
+        >
+          {{ $t('button.cancel') }}
+        </default-button>
         <default-button
           :is-disabled="isProcessing"
           @click="onClickCreate"
-        >{{ $t('button.build') }}</default-button>
+        >
+          {{ $t('button.build') }}
+        </default-button>
       </div>
     </div>
   </div>
@@ -92,7 +104,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { postProjectWithDatasource, postProjectNewDatasource } from '@/schedule/API/Project' 
+import { postProjectWithDatasource, postProjectNewDatasource } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
 
 export default {
@@ -132,7 +144,7 @@ export default {
     onClickCreate () {
       const validateName = this.$validator.validate('name')
       const fields = [validateName, this.isNewDataSource ? this.$validator.validate('datasourceName') : this.$validator.validate('datasourceId')]
-      
+
       Promise.all(fields)
         .then(res => {
           if (res.some(isValid => !isValid)) return

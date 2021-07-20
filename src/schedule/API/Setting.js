@@ -36,7 +36,6 @@ export function getUploadFileList (projectId) {
   })
 }
 
-
 export function downloadCurrentSetting (fileId) {
   return request({
     url: `/uploadfile/download/${fileId}`,

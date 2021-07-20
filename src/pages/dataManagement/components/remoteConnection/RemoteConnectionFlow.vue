@@ -1,8 +1,9 @@
 <template>
   <div class="remote-connection-flow">
-    <transition 
-      name="fade" 
-      mode="out-in">
+    <transition
+      name="fade"
+      mode="out-in"
+    >
       <choose-connection
         v-if="step === 0"
         @skip="nextStep"

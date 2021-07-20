@@ -13,6 +13,7 @@ import '@/icons'
 import './styles/App.scss'
 import i18n from './lang/index.js'
 import moment from 'moment'
+import Rollbar from 'rollbar'
 
 import {
   Button,
@@ -133,8 +134,6 @@ import DefaultSelect from '@/schedule/components/DefaultSelect.vue'
 import DefaultDatePicker from '@/schedule/components/DefaultDatePicker.vue'
 // import Spinner from '@/schedule/components/Spinner.vue'
 
-var Rollbar = require('vue-rollbar')
-
 Vue.use(VueEvents)
 // Element UI components
 Vue.use(Button)
@@ -170,7 +169,7 @@ ElementLocale.i18n((key, value) => i18n.t(key, value))
 
 Vue.use(vGanttChart)
 
-Vue.component('v-echart', ECharts)
+Vue.component('VEchart', ECharts)
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
 Vue.component(PreviewDataSource.name, PreviewDataSource)
@@ -232,7 +231,6 @@ Vue.component(DisplayIndexInfo.name, DisplayIndexInfo)
 Vue.component(DisplayTextInfo.name, DisplayTextInfo)
 Vue.component(ParameterComparisonTable.name, ParameterComparisonTable)
 
-
 Vue.component('DefaultButton', DefaultButton)
 Vue.component('DefaultInput', DefaultInput)
 Vue.component('DefaultSelect', DefaultSelect)
@@ -268,7 +266,7 @@ Validator.extend('validLowerBound', (lowerBoundValue, [upperBoundValue]) => {
 
 Validator.extend('validDatetimeUpperBound', (upperBoundValue, [lowerBoundValue]) => {
   const getTimestamp = (time) => {
-    let ISOTime = new Date(time).toISOString()
+    const ISOTime = new Date(time).toISOString()
     return moment(ISOTime).format('x')
   }
   return Number(getTimestamp(upperBoundValue)) > Number(getTimestamp(lowerBoundValue))
@@ -278,7 +276,7 @@ Validator.extend('validDatetimeUpperBound', (upperBoundValue, [lowerBoundValue])
 
 Validator.extend('validDatetimeLowerBound', (lowerBoundValue, [upperBoundValue]) => {
   const getTimestamp = (time) => {
-    let ISOTime = new Date(time).toISOString()
+    const ISOTime = new Date(time).toISOString()
     return moment(ISOTime).format('x')
   }
   return Number(getTimestamp(lowerBoundValue)) < Number(getTimestamp(upperBoundValue))
@@ -339,27 +337,27 @@ Vue.use(VeeValidate, {
         },
         letterDashUnderscore () {
           return i18n.t('message.formLetterDashUnderscore')
-        }, 
+        },
         validUpperBound () {
           return i18n.t('message.upperBoundShouldBeLargerThanLowerBound')
         },
-        validLowerBound() {
+        validLowerBound () {
           return i18n.t('message.lowerBoundShouldBeSmallerThanUpperBound')
         },
         validDatetimeUpperBound () {
           return i18n.t('message.endTimeShouldBeLargerThanStartTime')
         },
-        validDatetimeLowerBound() {
+        validDatetimeLowerBound () {
           return i18n.t('message.StartTimeShouldBeSmallerThanEndTime')
         },
-        eitherOneIsRequired(field, params) {
+        eitherOneIsRequired (field, params) {
           return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')
         },
-        decimal(field, params) {
+        decimal (field, params) {
           if (params.length === 0) return i18n.t('message.formDecimal')
           return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
         },
-        between(field, params) {
+        between (field, params) {
           return i18n.t('message.numericShouldBeBetween', { min: params[0], max: params[1] })
         }
       }
@@ -379,12 +377,12 @@ Vue.use(VeeValidate, {
           return i18n.t('message.formCharacterOverMax', { max: length })
         },
         min (field, length) {
-          return i18n.t('message.formCharacterOverMin', {min: length})
+          return i18n.t('message.formCharacterOverMin', { min: length })
         },
-        min_value(field, value) {
+        min_value (field, value) {
           return i18n.t('message.formValueOverMin', { min: value })
         },
-        max_value(field, value) {
+        max_value (field, value) {
           return i18n.t('message.formValueUnderMax', { max: value })
         },
         requireOneNumeric (field) {
@@ -399,20 +397,20 @@ Vue.use(VeeValidate, {
         letterDashUnderscore () {
           return i18n.t('message.formLetterDashUnderscore')
         },
-        validUpperBound() {
+        validUpperBound () {
           return i18n.t('message.upperBoundShouldBeLargerThanLowerBound')
         },
-        validLowerBound() {
+        validLowerBound () {
           return i18n.t('message.lowerBoundShouldBeSmallerThanUpperBound')
         },
-        eitherOneIsRequired(field, params) {
+        eitherOneIsRequired (field, params) {
           return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')
         },
-        decimal(field, params) {
+        decimal (field, params) {
           if (params.length === 0) return i18n.t('message.formDecimal')
           return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
         },
-        between(field, params) {
+        between (field, params) {
           return i18n.t('message.numericShouldBeBetween', { min: params[0], max: params[1] })
         }
       }
@@ -431,11 +429,12 @@ Vue.use(VueGtag, {
 }, router)
 
 // rollbar error tracking
-Vue.use(Rollbar, {
-  accessToken: process.env.ROLL_BAR,
+const PRODUCT_ENV = ['sygps.sis.ai', 'jarvix.sis.ai', 'jarvix.synergiesai.cn']
+Vue.prototype.$rollbar = new Rollbar({
+  accessToken: 'f90f60f1fb114062a224d0a4d0be677d',
   captureUncaught: true,
   captureUnhandledRejections: true,
-  enabled: window.location.hostname === 'sygps.sis.ai' || window.location.hostname === 'jarvix.sis.ai',
+  enabled: PRODUCT_ENV.some(envName => window.location.hostname === envName),
   environment: window.location.hostname,
   payload: {
     client: {
@@ -445,11 +444,6 @@ Vue.use(Rollbar, {
         guess_uncaught_frames: true
       }
     },
-    // person: {
-    //   id: this.userInfo.account,
-    //   username: res.account,
-    //   email: this.userInfo.account
-    // },
     server: {
       host: window.location.host
     }
@@ -457,8 +451,8 @@ Vue.use(Rollbar, {
 })
 
 Vue.config.productionTip = false
-Vue.config.errorHandler = err => {
-  Vue.rollbar.error(err)
+Vue.config.errorHandler = (err, vm, info) => {
+  vm.$rollbar.error(err)
 }
 
 /* eslint-disable no-new */
@@ -468,5 +462,6 @@ new Vue({
   store,
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  render: h => h(App)
 })

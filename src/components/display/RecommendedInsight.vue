@@ -1,10 +1,13 @@
 <template>
-  <div 
-    v-show="isTaskComplete" 
+  <div
+    v-show="isTaskComplete"
     class="recommended-insights__card"
-    @click="learnMore">
+    @click="learnMore"
+  >
     <div class="card__header">
-      <div class="header__title">{{ question }}</div>
+      <div class="header__title">
+        {{ question }}
+      </div>
     </div>
     <div class="card__body">
       <task

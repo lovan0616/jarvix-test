@@ -28,10 +28,10 @@ const service = axios.create({
       }
     },
     trace_key: {
-      toString() {
+      toString () {
         return uuidv4()
       }
-    },
+    }
   }
 })
 
@@ -53,11 +53,11 @@ service.interceptors.response.use(
     const res = response.data
     if (res.success && !res.meta) return res.data // 特殊情況 光電展 response 無 meta
     if (res.success && !res.data) return res.success // 特殊情況 PATCH:/alert/conditions/timezone response 無 data
-    if (res.success) return res.meta.pagination ? {...res.data, ...res.meta} : res.data
+    if (res.success) return res.meta.pagination ? { ...res.data, ...res.meta } : res.data
 
     // rollbar 留存
     if (window.location.hostname !== 'localhost') {
-      Vue.rollbar.error(JSON.stringify(res))
+      Vue.prototype.$rollbar.error(JSON.stringify(res))
     }
 
     if (res.error) {
@@ -67,7 +67,7 @@ service.interceptors.response.use(
         const blob = new Blob([stackTrace], { type: 'text/plain' })
         const url = window.URL.createObjectURL(blob)
         messageString = `<p style="font-size: 14px;">${res.error.message || i18n.t('errorMessage.defaultMsg')}</p>
-          <a href="${url}" class="link" download="errors-log">${ i18n.t('errorMessage.errorMessageDownload') }</a>`
+          <a href="${url}" class="link" download="errors-log">${i18n.t('errorMessage.errorMessageDownload')}</a>`
       } else {
         messageString = res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg')
       }
@@ -88,7 +88,7 @@ service.interceptors.response.use(
     if (axios.isCancel(error)) {
       return Promise.reject(error)
     }
-    
+
     if (!error.response) {
       // network error
       Message({
@@ -103,7 +103,7 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(!originalRequest._retry && oldToken !== store.state.setting.token) {
+          if (!originalRequest._retry && oldToken !== store.state.setting.token) {
             originalRequest._retry = true
             try {
               return await service(originalRequest)
@@ -111,7 +111,7 @@ service.interceptors.response.use(
               return Promise.reject(error)
             }
           }
-          
+
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
           store.commit('dataSource/setIsInit', false)
@@ -145,7 +145,7 @@ service.interceptors.response.use(
 
     // rollbar 留存
     if (window.location.hostname !== 'localhost') {
-      Vue.rollbar.error(JSON.stringify(error))
+      Vue.prototype.$rollbar.error(JSON.stringify(error))
     }
 
     return Promise.reject(error)

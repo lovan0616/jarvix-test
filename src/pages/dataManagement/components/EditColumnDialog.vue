@@ -1,18 +1,22 @@
 <template>
   <div class="edit-column-dialog full-page-dialog">
     <div class="dialog-container">
-      <div class="dialog-title">{{ $t('editing.dataColumn') }}
-        <a 
-          href="javascript:void(0)" 
+      <div class="dialog-title">
+        {{ $t('editing.dataColumn') }}
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="dialog-header-block">
-        <el-tooltip 
+        <el-tooltip
           :content="tableInfo.primaryAlias"
-          placement="bottom">
-          <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
+          placement="bottom"
+        >
+          <div class="data-frame-name">
+            {{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}
+          </div>
         </el-tooltip>
       </div>
       <div class="edit-table-block">
@@ -21,10 +25,12 @@
             <button
               :disabled="isLoadingPrimaryAliasTemplate"
               class="btn btn-secondary"
-              @click="getPrimaryAliasTemplate">
-              <svg-icon 
-                v-show="isLoadingPrimaryAliasTemplate" 
-                icon-class="spinner"/>
+              @click="getPrimaryAliasTemplate"
+            >
+              <svg-icon
+                v-show="isLoadingPrimaryAliasTemplate"
+                icon-class="spinner"
+              />
               {{ $t('editing.downloadAliasTemplate') }}
             </button>
           </el-tooltip>
@@ -37,7 +43,7 @@
               for="primaryAliasTemplateInput"
               class="data-template-block__input-label"
             >
-              <span class="file-name">{{ primaryAliasTemplateInput ? primaryAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
+              <span class="file-name">{{ primaryAliasTemplateInput ? primaryAliasTemplateInput.name : $t('editing.chooseFile') }}</span>
               <input
                 id="primaryAliasTemplateInput"
                 :key="primaryAliasTemplateInput ? primaryAliasTemplateInput.name : 'empty'"
@@ -47,22 +53,25 @@
                 @change="onInputPrimaryAliasTemplate($event.target.files)"
               >
             </label>
-            <div 
-              v-show="primaryAliasTemplateInput" 
-              class="button-block">
+            <div
+              v-show="primaryAliasTemplateInput"
+              class="button-block"
+            >
               <a
                 href="javascript:void(0);"
-                class="link btn-cancel" 
-                @click="onCancelUploadPrimaryAliasTemplate">{{ $t('button.cancel') }}</a>
+                class="link btn-cancel"
+                @click="onCancelUploadPrimaryAliasTemplate"
+              >{{ $t('button.cancel') }}</a>
               <a
-                :disabled="isUploadingPrimaryAliasTemplate" 
+                :disabled="isUploadingPrimaryAliasTemplate"
                 href="javascript:void(0);"
                 class="link btn-confirm"
                 @click="updatePrimaryAliasTemplate"
-              > 
+              >
                 <svg-icon
                   v-show="isUploadingPrimaryAliasTemplate"
-                  icon-class="spinner"/>
+                  icon-class="spinner"
+                />
                 {{ $t('button.upload') }}
               </a>
             </div>
@@ -72,7 +81,9 @@
             >
               <button
                 class="btn btn-secondary"
-              >{{ $t('editing.uploadAliasTemplate') }}</button>
+              >
+                {{ $t('editing.uploadAliasTemplate') }}
+              </button>
             </el-tooltip>
           </el-popover>
           <div
@@ -80,38 +91,52 @@
             class="button-block"
           >
             <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-            <button 
+            <button
               :disabled="isProcessing"
               class="btn-m btn-default"
               @click="buildAlias"
-            >{{ $t('button.build') }}</button>
+            >
+              {{ $t('button.build') }}
+            </button>
           </div>
         </div>
         <div class="data-table">
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
-              <div class="data-table-cell name">{{ $t('editing.columnDisplayName') }}</div>
-              <div 
+              <div class="data-table-cell name">
+                {{ $t('editing.columnDisplayName') }}
+              </div>
+              <div
                 v-if="isJoinTable"
                 class="data-table-cell source"
               >
                 {{ $t('editing.columnSource') }}
                 <span class="nav-item nav-function tooltip-container">
-                  <svg-icon 
-                    icon-class="information-circle" 
-                    class="icon" />
+                  <svg-icon
+                    icon-class="information-circle"
+                    class="icon"
+                  />
                   <div class="tooltip">{{ $t('editing.columnSourceRemind') }}</div>
                 </span>
               </div>
-              <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
-              <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
-              <div class="data-table-cell created-method">{{ $t('editing.createdMethod') }}</div>
-              <div class="data-table-cell action">{{ $t('editing.action') }}</div>
+              <div class="data-table-cell alias">
+                {{ $t('editing.alias') }}
+              </div>
+              <div class="data-table-cell tag">
+                {{ $t('editing.columnTag') }}
+              </div>
+              <div class="data-table-cell created-method">
+                {{ $t('editing.createdMethod') }}
+              </div>
+              <div class="data-table-cell action">
+                {{ $t('editing.action') }}
+              </div>
             </div>
           </div>
-          <div 
-            ref="dataTableBody" 
-            class="data-table-body">
+          <div
+            ref="dataTableBody"
+            class="data-table-body"
+          >
             <spinner v-if="isLoading" />
             <div
               v-for="(column, index) in columnList"
@@ -122,8 +147,9 @@
               <div class="data-table-cell name">
                 <el-tooltip
                   v-show="!isEditing(column.id)"
-                  :disabled="column.originalName === column.name.primaryAlias" 
-                  placement="bottom-start">
+                  :disabled="column.originalName === column.name.primaryAlias"
+                  placement="bottom-start"
+                >
                   <template #content>
                     {{ $t('editing.originalName') }}：{{ column.originalName }}
                   </template>
@@ -132,7 +158,8 @@
                     <svg-icon
                       v-show="column.originalName && column.originalName !== column.name.primaryAlias"
                       icon-class="information-circle"
-                      class="name-info-icon" />
+                      class="name-info-icon"
+                    />
                   </span>
                 </el-tooltip>
                 <input-verify
@@ -143,25 +170,29 @@
                   class="edit-alias-input-block"
                 />
               </div>
-              <div 
+              <div
                 v-if="isJoinTable"
                 class="data-table-cell source"
-              >{{ column.parentDataFrameAlias || '-' }}</div>
+              >
+                {{ column.parentDataFrameAlias || '-' }}
+              </div>
               <div class="data-table-cell alias">
                 <span v-show="!isEditing(column.id) && column.aliasList.length === 0"> - </span>
-                <div 
+                <div
                   v-for="(singleAlias, aliasIndex) in column.aliasList"
                   v-show="!isEditing(column.id)"
                   :class="{'is-modified': singleAlias.isModified}"
                   :key="column.id + '-' + aliasIndex"
                   class="alias__item"
-                >{{ singleAlias.name }}<span v-show="aliasIndex !== column.aliasList.length - 1">, </span></div>
+                >
+                  {{ singleAlias.name }}<span v-show="aliasIndex !== column.aliasList.length - 1">, </span>
+                </div>
                 <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
-                <div 
-                  v-show="isEditing(column.id)" 
+                <div
+                  v-show="isEditing(column.id)"
                   class="edit-block"
                 >
-                  <div 
+                  <div
                     v-for="(singleAlias, aliasIndex) in tempRowInfo.aliasList"
                     :key="column.id + '-' + aliasIndex"
                     class="edit-alias-input-list"
@@ -173,21 +204,23 @@
                       :placeholder="$t('editing.dataFrameColumnAliasInputPlaceholder')"
                       class="edit-alias-input-block"
                     />
-                    <div 
+                    <div
                       class="link"
                       @click="removeAlias(aliasIndex)"
                     >
-                      <svg-icon 
-                        icon-class="ban" />
+                      <svg-icon
+                        icon-class="ban"
+                      />
                     </div>
                   </div>
-                  <button 
+                  <button
                     class="btn-m btn-secondary btn-add"
                     @click="addAlias"
                   >
-                    <svg-icon 
-                      icon-class="plus" 
-                      class="icon icon-plus"/>{{ $t('button.add') }}
+                    <svg-icon
+                      icon-class="plus"
+                      class="icon icon-plus"
+                    />{{ $t('button.add') }}
                   </button>
                 </div>
               </div>
@@ -216,14 +249,14 @@
               </div>
               <div class="data-table-cell action">
                 <template v-if="tempRowInfo.dataColumnId !== column.id">
-                  <a 
+                  <a
                     class="link action-link"
                     href="javascript:void(0)"
                     @click="edit(column)"
                   >{{ $t('button.edit') }}</a>
                   <!--分群欄位才可刪除-->
-                  <a 
-                    v-if="column.isClustering" 
+                  <a
+                    v-if="column.isClustering"
                     class="link action-link"
                     href="javascript:void(0)"
                     @click="confirmDelete(column)"
@@ -236,9 +269,10 @@
                     :content="$t('button.save')"
                     placement="bottom"
                   >
-                    <div 
+                    <div
                       class="svg-wrapper"
-                      @click="saveAlias(index)">
+                      @click="saveAlias(index)"
+                    >
                       <svg-icon
                         icon-class="save"
                       />
@@ -250,9 +284,10 @@
                     :content="$t('button.cancel')"
                     placement="bottom"
                   >
-                    <div 
-                      class="svg-wrapper" 
-                      @click="cancel">
+                    <div
+                      class="svg-wrapper"
+                      @click="cancel"
+                    >
                       <svg-icon
                         icon-class="close"
                         class="icon-close"
@@ -267,7 +302,7 @@
       </div>
       <decide-dialog
         v-if="showConfirmDeleteDialog"
-        :title="this.$t('editing.confirmDeleteColumnText')"
+        :title="$t('editing.confirmDeleteColumnText')"
         :type="'delete'"
         :is-processing="isProcessing"
         @closeDialog="closeDeleteDialog"
@@ -429,7 +464,7 @@ export default {
         ...this.userEditInfo,
         userEditedColumnInputList: this.userEditInfo.userEditedColumnInputList.filter(column => !column.isClustering)
       }
-      if (filteredUserEditInfo.userEditedColumnInputList.length > 0){
+      if (filteredUserEditInfo.userEditedColumnInputList.length > 0) {
         promises.push(updateDataFrameAlias(filteredUserEditInfo))
 
         // Numeric 欄位設定時序
@@ -612,7 +647,7 @@ export default {
       if (column.statsType !== 'NUMERIC') return ''
       return `(${column.isOrdinal ? this.$t('editing.isOrdinal') : this.$t('editing.isNotOrdinal')})`
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -692,7 +727,7 @@ export default {
 
   .edit-alias-input-list {
     display: flex;
-    
+
     .link {
       height: 32px;
     }

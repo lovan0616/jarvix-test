@@ -1,24 +1,28 @@
 <template>
   <div class="single-file-row-container">
-    <div 
+    <div
       :class="statusClass"
       class="single-file-row"
     >
       <div class="single-file">
         <div class="single-file-info">
-          <div class="file-info name">{{ formDataInfo.name }}</div>
-          <div class="file-info size">{{ byteToMB(formDataInfo.size) }}</div>
-          <div 
+          <div class="file-info name">
+            {{ formDataInfo.name }}
+          </div>
+          <div class="file-info size">
+            {{ byteToMB(formDataInfo.size) }}
+          </div>
+          <div
             v-if="singleFile.status === uploadStatus.uploading"
             class="single-file-progress"
           >
-            <div 
+            <div
               :style="{ width: progress + '%' }"
               class="progress-bar"
             />
           </div>
         </div>
-        <div 
+        <div
           :class="{finished: singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail}"
           class="file-status"
         >
@@ -27,13 +31,13 @@
             :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
             :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
           />
-          <a 
+          <a
             v-else-if="singleFile.status === uploadStatus.uploading"
             class="link action-link cancel"
             href="javascript:void(0)"
             @click="cancelUpload"
           >{{ $t('button.cancel') }}</a>
-          <a 
+          <a
             v-else
             class="link action-link"
             href="javascript:void(0)"
@@ -41,11 +45,13 @@
           >{{ $t('button.delete') }}</a>
         </div>
       </div>
-      <div 
+      <div
         v-if="singleFile.tabDetails && singleFile.tabDetails.length > 0"
         class="tab-list"
       >
-        <div class="list-title">{{ $t('editing.chooseTab') }}</div>
+        <div class="list-title">
+          {{ $t('editing.chooseTab') }}
+        </div>
         <div
           v-for="tabDetail in singleFile.tabDetails"
           :key="tabDetail.tabNum"
@@ -59,20 +65,22 @@
             type="radio"
             class="input-radio"
           >
-          <label 
+          <label
             :for="`${index}-${tabDetail.tabNum}`"
             class="input-radio-label"
           >{{ tabDetail.tabName }}</label>
         </div>
       </div>
     </div>
-    <div 
+    <div
       v-if="singleFile.status === uploadStatus.forbidden"
       class="error-notification"
     >
-      <svg-icon 
-        icon-class="alert" 
-        class="alert-icon"/>{{ singleFile.msg }}</div>
+      <svg-icon
+        icon-class="alert"
+        class="alert-icon"
+      />{{ singleFile.msg }}
+    </div>
   </div>
 </template>
 <script>
@@ -166,7 +174,7 @@ export default {
         this.askCancelFunction('cancel')
       }
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -255,7 +263,7 @@ export default {
     }
 
     .single-tab {
-      width: 100%;      
+      width: 100%;
     }
   }
 }

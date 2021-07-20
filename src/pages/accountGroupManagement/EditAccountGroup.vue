@@ -1,7 +1,9 @@
 <template>
   <div class="group-management">
     <div class="page-title-row">
-      <h1 class="title">{{ editTypeName }}</h1>
+      <h1 class="title">
+        {{ editTypeName }}
+      </h1>
       <div class="bread-crumb">
         <router-link
           :to="{ name: 'AccountGroupManagement' }"
@@ -19,7 +21,9 @@
     >
       <div class="input-wrapper">
         <div class="input-group">
-          <div class="input-label">{{ $t('editing.groupName') }}</div>
+          <div class="input-label">
+            {{ $t('editing.groupName') }}
+          </div>
           <input-block
             v-validate="`required|max:${max}`"
             v-model="groupName"
@@ -31,7 +35,9 @@
           v-if="editType === 'create'"
           class="input-group"
         >
-          <div class="input-label">{{ $t('editing.groupOwner') }}</div>
+          <div class="input-label">
+            {{ $t('editing.groupOwner') }}
+          </div>
           <div
             :class="{'has-error': errors.has('owner')}"
             class="input-block"
@@ -48,7 +54,9 @@
             <div
               v-if="errors.has('owner')"
               class="error-text"
-            >{{ errors.first('owner') }}</div>
+            >
+              {{ errors.first('owner') }}
+            </div>
           </div>
         </div>
       </div>
@@ -57,12 +65,16 @@
           type="button"
           class="btn btn-outline"
           @click.stop="quitEditGroup"
-        >{{ $t('button.cancel') }}</button>
+        >
+          {{ $t('button.cancel') }}
+        </button>
         <button
           :disabled="isLoading"
           class="btn btn-default"
           type="submit"
-        >{{ editType === 'create' ? $t('button.built') : $t('button.save') }}</button>
+        >
+          {{ editType === 'create' ? $t('button.built') : $t('button.save') }}
+        </button>
       </div>
     </form>
   </div>
@@ -126,7 +138,7 @@ export default {
         .then(userList => {
           this.userList = userList
           this.userEmailList = userList.map(user => ({
-            value: user.email + ` (${user.name})`,
+            value: user.email + ` (${user.name})`
           }))
           this.isLoading = false
         })

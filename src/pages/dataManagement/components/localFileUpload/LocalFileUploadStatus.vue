@@ -1,6 +1,8 @@
 <template>
   <div class="file-upload-finished">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="3"
       :process-text="processText"
@@ -11,9 +13,10 @@
         :title="$t('editing.uploaded')"
         :file-list="successList"
       >
-        <div 
-          slot="fileListTitle" 
-          class="uploaded-data-info">
+        <div
+          slot="fileListTitle"
+          class="uploaded-data-info"
+        >
           {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
         </div>
       </file-list-block>
@@ -26,26 +29,31 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
-          :disabled="isProcessing" 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
+          :disabled="isProcessing"
           class="btn btn-outline"
           type="button"
           @click="prev"
-        >{{ $t('button.chooseFileUpload') }}</button>
-        <button 
+        >
+          {{ $t('button.chooseFileUpload') }}
+        </button>
+        <button
           :disabled="successList.length === 0 || isProcessing"
           class="btn btn-default"
           @click="next"
         >
           <span v-if="isProcessing">
-            <svg-icon 
-              v-if="isProcessing" 
-              icon-class="spinner"/>
+            <svg-icon
+              v-if="isProcessing"
+              icon-class="spinner"
+            />
             {{ $t('button.processing') }}
           </span>
           <span v-else>{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</span>
@@ -105,7 +113,7 @@ export default {
       let promiseList = []
 
       this.successList.forEach((element, index) => {
-        const {fileId, fileName, fileType, tabDetail} = element
+        const { fileId, fileName, fileType, tabDetail } = element
         let fileInfo = {
           dataSourceId: this.dataSourceId,
           fileName,
@@ -141,7 +149,7 @@ export default {
   .dialog-title {
     margin-bottom: 16px;
   }
-  
+
   .uploaded-data-info {
     font-size: 14px;
     line-height: 20px;

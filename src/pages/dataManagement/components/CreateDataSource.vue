@@ -2,10 +2,12 @@
   <div class="file-upload-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="create-data-source">
-        <div class="dialog-title">{{ $t('editing.newDataSource') }}</div>
+        <div class="dialog-title">
+          {{ $t('editing.newDataSource') }}
+        </div>
         <div class="dialog-body">
           <div class="input-block-container">
-            <input-block 
+            <input-block
               v-validate="`required|max:${max}`"
               :label="$t('editing.dataSourceName')"
               v-model="dataSourceInfo.name"
@@ -16,16 +18,18 @@
         </div>
         <div class="dialog-footer">
           <div class="dialog-button-block">
-            <button 
+            <button
               class="btn btn-outline"
               @click="cancelBuilt"
-            >{{ $t('button.cancel') }}</button>
-            <button 
+            >
+              {{ $t('button.cancel') }}
+            </button>
+            <button
               :disabled="isProcessing"
               class="btn btn-default"
               @click="built"
             >
-              <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+              <span v-if="isProcessing"><svg-icon icon-class="spinner" />{{ $t('button.processing') }}</span>
               <span v-else>{{ $t('button.built') }}</span>
             </button>
           </div>
@@ -72,7 +76,7 @@ export default {
         this.$emit('confirm', this.dataSourceInfo)
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

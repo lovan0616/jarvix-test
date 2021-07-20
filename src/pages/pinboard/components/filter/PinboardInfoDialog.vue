@@ -4,18 +4,21 @@
       <el-tabs
         v-model="activeTab"
         class="pinboard-info-tab"
-        type="card">
+        type="card"
+      >
         <el-tab-pane
           :label="$t('pinboard.source')"
           :name="$t('pinboard.source')"
         >
           <pinboard-data-info
-            :result-id="resultId"/>
+            :result-id="resultId"
+          />
         </el-tab-pane>
         <el-tab-pane
           v-if="hasFilter"
           :label="$t('pinboard.restrict')"
-          :name="$t('pinboard.restrict')">
+          :name="$t('pinboard.restrict')"
+        >
           <pinboard-filter-info
             v-for="(restrict, index) in filterInfo"
             :result-id="resultId"
@@ -31,7 +34,7 @@
 <script>
 import PinboardFilterInfo from './PinboardFilterInfo'
 import PinboardDataInfo from './PinboardDataInfo'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PinboardInfoDialog',
@@ -56,12 +59,12 @@ export default {
   },
   computed: {
     ...mapState('pinboard', ['pinboardData']),
-    getDataInfo() {
+    getDataInfo () {
       return this.pinboardData.find(data => data.resultId === this.resultId)
     },
     hasFilter () {
       return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.getDataInfo.restrictions.length > 0
-    },
+    }
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)

@@ -2,11 +2,17 @@
   <div class="message-editor">
     <div class="message-editor__description">
       <div class="message-editor__param-examples">
-        <div class="message-editor__param-item-example">{{ $t('alert.messageColumnParamSyntaxDescription') }}</div>
-        <div class="message-editor__param-item-example">{{ $t('alert.messageIndicatorParamSyntaxDescription') }}</div>
+        <div class="message-editor__param-item-example">
+          {{ $t('alert.messageColumnParamSyntaxDescription') }}
+        </div>
+        <div class="message-editor__param-item-example">
+          {{ $t('alert.messageIndicatorParamSyntaxDescription') }}
+        </div>
       </div>
       <div class="message-editor__description-example">
-        <div class="title">{{ $t('alert.messageExampleDescription') }}</div>
+        <div class="title">
+          {{ $t('alert.messageExampleDescription') }}
+        </div>
         <i18n
           path="alert.messageTemplateSettingExample"
           tag="div"
@@ -54,12 +60,16 @@
         :disabled="isProcessing"
         class="btn btn-outline"
         @click="$emit('close')"
-      >{{ $t('button.cancel') }}</button>
-      <button 
+      >
+        {{ $t('button.cancel') }}
+      </button>
+      <button
         :disabled="isProcessing"
         class="btn btn-default"
         @click="patchAlertMessage"
-      >{{ $t('button.save') }}</button>
+      >
+        {{ $t('button.save') }}
+      </button>
     </div>
   </div>
 </template>
@@ -139,7 +149,7 @@ export default {
       this.messageOfAllLangs = {
         'zh-TW': { message: this.condition ? this.condition.alertMessageTW : '' },
         'zh-CN': { message: this.condition ? this.condition.alertMessageCN : '' },
-        ...(this.hasPermission('english_ui') && {'en-US': { message: this.condition ? this.condition.alertMessageUS : '' }})
+        ...(this.hasPermission('english_ui') && { 'en-US': { message: this.condition ? this.condition.alertMessageUS : '' } })
       }
     },
     insertParam (lang, id) {
@@ -195,12 +205,12 @@ export default {
             type: 'column',
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
-            originalName: cur.primaryAlias  || cur.name,
+            originalName: cur.primaryAlias || cur.name
           })
           return acc
         }, [])
       })
-      .finally(() => this.isLoadingpropParamOptions = false)
+        .finally(() => this.isLoadingpropParamOptions = false)
     },
     patchAlertMessage () {
       this.formatPatchMessageParams()

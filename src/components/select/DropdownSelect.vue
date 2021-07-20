@@ -1,16 +1,17 @@
 <template>
   <div class="dropdown-select">
     <div class="dropdown-select-box">
-      <div 
+      <div
         v-for="(bar, index) in barData"
         :class="['dropdown-flex', { 'disabled': bar.disabled, 'dropdown-border-line': index !== barData.length - 1 }]"
         :key="index"
         @click="dialogEvent(bar)"
       >
-        <svg-icon 
-          v-if="bar.icon" 
-          :icon-class="bar.icon" 
-          class="icon dropdown-icon"/>
+        <svg-icon
+          v-if="bar.icon"
+          :icon-class="bar.icon"
+          class="icon dropdown-icon"
+        />
         <div>{{ $t(bar.title) }}</div>
       </div>
     </div>
@@ -51,7 +52,7 @@ export default {
         return this.$router.push(bar.path)
       } else if (bar.name) {
         return this.$router.push({
-          name: bar.name, 
+          name: bar.name,
           ...bar.id && { params: { id: bar.id } }
         })
       } else {

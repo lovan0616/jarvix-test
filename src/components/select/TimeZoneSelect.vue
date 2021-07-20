@@ -1,5 +1,5 @@
 <template>
-  <default-select 
+  <default-select
     v-model="timeZoneId"
     :option-list="timeZoneList"
     :filterable="true"
@@ -13,7 +13,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import moment from 'moment-timezone'
 
 export default {
-  components: {DefaultSelect},
+  components: { DefaultSelect },
   props: {
     value: {
       type: [String, Number],
@@ -21,7 +21,7 @@ export default {
     }
   },
   computed: {
-    timeZoneList() {
+    timeZoneList () {
       return moment.tz.names().map((item) => {
         return {
           value: item,
@@ -30,10 +30,10 @@ export default {
       })
     },
     timeZoneId: {
-      get(){
+      get () {
         return this.value
       },
-      set(val){
+      set (val) {
         this.$emit('input', val)
       }
     }

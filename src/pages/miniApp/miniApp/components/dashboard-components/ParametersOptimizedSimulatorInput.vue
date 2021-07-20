@@ -1,8 +1,9 @@
 <template>
   <!--CATEGORY-->
-  <div 
-    v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'" 
-    class="input-field">
+  <div
+    v-if="inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN'"
+    class="input-field"
+  >
     <label class="input-field__label">{{ inputData.columnName }}</label>
     <div class="input-field__content-container">
       <div class="input-field__radio-group-container">
@@ -45,20 +46,26 @@
           class="input-field__multi-select"
           @input="columnInfo.userInput.selectedList = $event"
         />
-        <div 
+        <div
           v-show="errors.has(`params-optimization-${simulatorId}.category${inputData.columnName}`)"
           class="error-text"
-        >{{ errors.first(`params-optimization-${simulatorId}.category${inputData.columnName}`) }}</div>
+        >
+          {{ errors.first(`params-optimization-${simulatorId}.category${inputData.columnName}`) }}
+        </div>
       </div>
-      <div 
-        v-if="disableInput" 
-        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
+      <div
+        v-if="disableInput"
+        class="input-field__reminder"
+      >
+        {{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}
+      </div>
     </div>
   </div>
   <!--NUMERIC-->
-  <div 
-    v-else-if="inputData.statsType === 'NUMERIC'" 
-    class="input-field">
+  <div
+    v-else-if="inputData.statsType === 'NUMERIC'"
+    class="input-field"
+  >
     <label class="input-field__label">{{ inputData.columnName }}</label>
     <div class="input-field__content-container">
       <div class="input-field__radio-group-container">
@@ -86,9 +93,10 @@
         </div>
       </div>
       <div class="input-field__input-group-container">
-        <div 
-          :class="{ 'disabled': disableInput }" 
-          class="input-field__input">
+        <div
+          :class="{ 'disabled': disableInput }"
+          class="input-field__input"
+        >
           <input-verify
             v-validate="minValueRules"
             ref="minValue"
@@ -101,28 +109,33 @@
           <el-tooltip
             :disabled="disableInput"
             class="tooltip-container"
-            effect="dark" 
-            placement="bottom">
-            <div slot="content">{{ 
-              columnInfo.userInput.type === 'RANGE' 
-                ? $t('aggregation.min') + '：' + formatComma(tempInputValueRange.min)
-                : $t('miniApp.numberRange', { 
-                  min: formatComma(tempInputValueRange.min), 
-                  max: formatComma(tempInputValueRange.max)
-                })
-            }}</div>
+            effect="dark"
+            placement="bottom"
+          >
+            <div slot="content">
+              {{
+                columnInfo.userInput.type === 'RANGE'
+                  ? $t('aggregation.min') + '：' + formatComma(tempInputValueRange.min)
+                  : $t('miniApp.numberRange', {
+                    min: formatComma(tempInputValueRange.min),
+                    max: formatComma(tempInputValueRange.max)
+                  })
+              }}
+            </div>
             <svg-icon
               class="icon"
-              icon-class="information-circle"/>
+              icon-class="information-circle"
+            />
           </el-tooltip>
         </div>
         <template v-if="columnInfo.userInput.type === 'RANGE'">
           <div class="input-field__divider">
             -
           </div>
-          <div 
-            :class="{ 'disabled': disableInput }" 
-            class="input-field__input" >
+          <div
+            :class="{ 'disabled': disableInput }"
+            class="input-field__input"
+          >
             <input-verify
               v-validate="maxValueRules"
               ref="maxValue"
@@ -135,25 +148,33 @@
             <el-tooltip
               :disabled="disableInput"
               class="tooltip-container"
-              effect="dark" 
-              placement="bottom">
-              <div slot="content">{{ $t('aggregation.max') + '：' + formatComma(tempInputValueRange.max) }}</div>
+              effect="dark"
+              placement="bottom"
+            >
+              <div slot="content">
+                {{ $t('aggregation.max') + '：' + formatComma(tempInputValueRange.max) }}
+              </div>
               <svg-icon
                 class="icon"
-                icon-class="information-circle"/>
+                icon-class="information-circle"
+              />
             </el-tooltip>
           </div>
         </template>
       </div>
-      <div 
-        v-if="disableInput" 
-        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
+      <div
+        v-if="disableInput"
+        class="input-field__reminder"
+      >
+        {{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}
+      </div>
     </div>
   </div>
   <!--DATETIME-->
-  <div 
-    v-else-if="inputData.statsType === 'DATETIME'" 
-    class="input-field">
+  <div
+    v-else-if="inputData.statsType === 'DATETIME'"
+    class="input-field"
+  >
     <label class="input-field__label">{{ inputData.columnName }}</label>
     <div class="input-field__content-container">
       <div class="input-field__input-group-container">
@@ -175,13 +196,18 @@
           @input="updateDateTimeRange"
         />
       </div>
-      <div 
+      <div
         v-show="!disableInput && errors.has('params-optimization-' + simulatorId + '.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd')"
         class="error-text"
-      >{{ errors.first('params-optimization-' + simulatorId + '.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd') }}</div>
-      <div 
-        v-if="disableInput" 
-        class="input-field__reminder">{{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}</div>
+      >
+        {{ errors.first('params-optimization-' + simulatorId + '.' + inputId + 'dateTimeRangeStart,' + inputId + 'dateTimeRangeEnd') }}
+      </div>
+      <div
+        v-if="disableInput"
+        class="input-field__reminder"
+      >
+        {{ '*' + $t('miniApp.noResultUnderCurrentRestrictions') }}
+      </div>
     </div>
   </div>
 </template>
@@ -241,7 +267,7 @@ export default {
       ],
       tempInputValueRange: {
         min: null,
-        max: null,
+        max: null
       },
       isValidStartTime: true,
       isValidEndTime: true
@@ -250,9 +276,9 @@ export default {
   computed: {
     getNumericTitle () {
       if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC') return
-      return this.inputData.columnName + '(' + this.$t('miniApp.minAndMax', { 
-        min: Math.round(this.inputData.valueList.min * 100) / 100, 
-        max: Math.round(this.inputData.valueList.max  * 100) / 100
+      return this.inputData.columnName + '(' + this.$t('miniApp.minAndMax', {
+        min: Math.round(this.inputData.valueList.min * 100) / 100,
+        max: Math.round(this.inputData.valueList.max * 100) / 100
       }) + ')'
     },
     dateTimePickerOptions () {
@@ -270,7 +296,7 @@ export default {
     disableInput () {
       if (!this.inputData.statsType) return
       switch (this.inputData.statsType) {
-        case 'NUMERIC': 
+        case 'NUMERIC':
           return this.columnInfo.userInput.min === null || this.columnInfo.userInput.max === null
         case 'DATETIME':
           return this.columnInfo.userInput.start === null || this.columnInfo.userInput.end === null
@@ -283,8 +309,8 @@ export default {
       if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC' || this.columnInfo.userInput.type === 'ALL') return
       const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
       if (
-        (this.columnInfo.userInput.min !== '' && decimalRegex.test(this.columnInfo.userInput.min))
-        && this.columnInfo.userInput.max !== ''
+        (this.columnInfo.userInput.min !== '' && decimalRegex.test(this.columnInfo.userInput.min)) &&
+        this.columnInfo.userInput.max !== ''
       ) return `decimal|max_value:${this.tempInputValueRange.max}|min_value:${this.columnInfo.userInput.min}`
       if (this.columnInfo.userInput.max !== '') return `decimal|max_value:${this.tempInputValueRange.max}`
       return 'required'
@@ -293,26 +319,26 @@ export default {
       if (!this.inputData.statsType || this.inputData.statsType !== 'NUMERIC') return
       const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
       if (
-        (this.columnInfo.userInput.max !== '' && decimalRegex.test(this.columnInfo.userInput.max))
-        && this.columnInfo.userInput.min !== ''
+        (this.columnInfo.userInput.max !== '' && decimalRegex.test(this.columnInfo.userInput.max)) &&
+        this.columnInfo.userInput.min !== ''
       ) return `decimal|min_value:${this.tempInputValueRange.min}|max_value:${this.columnInfo.userInput.max}`
-      if (this.columnInfo.userInput.min !== '') return `decimal|min_value:${this.tempInputValueRange.min}`    
+      if (this.columnInfo.userInput.min !== '') return `decimal|min_value:${this.tempInputValueRange.min}`
       return 'required'
     }
   },
   watch: {
-    
+
   },
   mounted () {
     this.configInputData()
   },
   methods: {
-    fetchInputColumnInfo(statsType) {
+    fetchInputColumnInfo (statsType) {
       switch (statsType) {
         case 'NUMERIC':
         case 'DATETIME':
           return searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
-            restrictions: this.restrictions.length > 0 ? this.restrictions : null 
+            restrictions: this.restrictions.length > 0 ? this.restrictions : null
           })
         case 'CATEGORY':
         case 'BOOLEAN':
@@ -329,7 +355,7 @@ export default {
       inputData.statsType = this.columnInfo.statsType
       inputData.columnName = this.columnInfo.originalName
 
-      if(inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
+      if (inputData.statsType === 'CATEGORY' || inputData.statsType === 'BOOLEAN') {
         inputData.valueList = columnInfo.fuzzySearchResult.map(element => ({
           value: element,
           name: element
@@ -347,8 +373,7 @@ export default {
           end: columnInfo.end && this.customerTimeFormatter(columnInfo.end, 'MINUTE')
         }
         inputData.valueList = columnInfo
-      } 
-
+      }
 
       this.$emit('done')
       this.inputData = {
@@ -368,9 +393,9 @@ export default {
       this.columnInfo.userInput.start = start
       this.columnInfo.userInput.end = end
 
-      this.isValidStartTime =  start >= this.customerTimeFormatter(this.tempInputValueRange.min, 'MINUTE')
-      this.isValidEndTime =  end <= this.customerTimeFormatter(this.tempInputValueRange.max, 'MINUTE')
-    },
+      this.isValidStartTime = start >= this.customerTimeFormatter(this.tempInputValueRange.min, 'MINUTE')
+      this.isValidEndTime = end <= this.customerTimeFormatter(this.tempInputValueRange.max, 'MINUTE')
+    }
   }
 }
 </script>

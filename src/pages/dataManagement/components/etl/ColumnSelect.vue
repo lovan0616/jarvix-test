@@ -1,5 +1,5 @@
 <template>
-  <default-select 
+  <default-select
     v-model="selectedValue"
     :placeholder="selectedCount.toString()"
     :option-list="options"
@@ -15,7 +15,7 @@
             type="checkbox"
             @change="$emit('toggleColumn', index)"
           >
-          <div class="checkbox-square"/>
+          <div class="checkbox-square" />
         </div>
         <span>{{ option.name }}</span>
       </label>

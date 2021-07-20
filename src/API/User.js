@@ -18,7 +18,7 @@ export function login (loginInfo) {
 export function refreshToken () {
   return request({
     url: 'auth/refresh',
-    method: 'PUT',
+    method: 'PUT'
   })
 }
 
@@ -95,7 +95,7 @@ export function createUser (userInfo) {
  */
 export function updateUser (userInfo) {
   return request({
-    url: `/users`,
+    url: '/users',
     method: 'PUT',
     data: userInfo
   })
@@ -117,7 +117,7 @@ export function deleteUser (id) {
  */
 export function getSelfInfo (id) {
   return request({
-    url: `/users`,
+    url: '/users',
     method: 'GET'
   })
 }
@@ -244,7 +244,7 @@ export function getAccountRoles (accountId) {
  */
 export function updateRole (info) {
   return request({
-    url: `/account/user`,
+    url: '/account/user',
     method: 'PUT',
     data: info
   })
@@ -269,7 +269,7 @@ export function deleteUserAccount (id, accountId) {
  */
 export function switchGroup (accountInfo) {
   return request({
-    url: `/group/switch`,
+    url: '/group/switch',
     method: 'POST',
     data: accountInfo
   })
@@ -279,9 +279,9 @@ export function switchGroup (accountInfo) {
  * 切換帳戶
  * @param {Number} accountInfo.accountId - 欲切換的帳戶 ID
  */
-export function switchAccount(accountInfo) {
+export function switchAccount (accountInfo) {
   return request({
-    url: `/account/switch`,
+    url: '/account/switch',
     method: 'POST',
     data: accountInfo
   })
@@ -295,7 +295,7 @@ export function switchAccount(accountInfo) {
 export async function updateLocale (language) {
   const userId = store.state.userManagement.userId
   return request({
-    url: `/users/language`,
+    url: '/users/language',
     method: 'PUT',
     data: { language, userId }
   })
@@ -304,7 +304,7 @@ export async function updateLocale (language) {
 /**
  * 變更密碼
  */
-export function changePassword(passwordInfo) {
+export function changePassword (passwordInfo) {
   return request({
     url: '/users/password',
     method: 'PATCH',

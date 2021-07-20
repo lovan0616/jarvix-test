@@ -6,10 +6,11 @@
         @dblclick="hasEmergency = true"
       >
         <div class="header__root">
-          <a class="header__logo" >
-            <img 
-              class="img-logo" 
-              src="@/assets/images/sygps_logo.png">
+          <a class="header__logo">
+            <img
+              class="img-logo"
+              src="@/assets/images/sygps_logo.png"
+            >
           </a>
           <nav class="nav-header">
             <!-- Surgery Scheduling -->
@@ -17,22 +18,23 @@
               v-if="isOTSchedule"
               class="nav-left"
             >
-              <router-link 
+              <router-link
                 :to="{ name: 'DemoCurrentOTSimulation'}"
                 :class="{ 'active': $route.name === 'DemoCurrentOTSimulation' }"
                 class="nav-item"
               >
                 Surgery Schedule
               </router-link>
-              <router-link 
+              <router-link
                 :to="{ name: 'DemoOTSimulationSetting'}"
                 :class="{ 'active': $route.name === 'DemoOTSimulationSetting' }"
                 class="nav-item"
               >
                 <el-badge
                   :hidden="!hasEmergency"
-                  class="menu-badge" 
-                  value="2">
+                  class="menu-badge"
+                  value="2"
+                >
                   <span>Surgery Simulation</span>
                 </el-badge>
               </router-link>
@@ -42,7 +44,7 @@
               v-else
               class="nav-left"
             >
-              <router-link 
+              <router-link
                 :to="{ name: 'DemoCurrentBedSimulation', query: { planned: true } }"
                 class="nav-item"
               >
@@ -58,9 +60,10 @@
     </header>
     <main class="main">
       <aside>
-        <div 
-          v-if="isMenuOpen" 
-          class="surgery-menu">
+        <div
+          v-if="isMenuOpen"
+          class="surgery-menu"
+        >
           <ul class="surgery-menu__list">
             <li
               v-for="(item, index) in menuItem"
@@ -71,7 +74,7 @@
                 :class="['item-label', activeIMenuItem === item.label ? 'is-active' : '']"
                 @click="clickMenuItem(item.label)"
               >
-                <svg-icon icon-class="triangle"/>
+                <svg-icon icon-class="triangle" />
                 {{ item.label }}
               </div>
               <ul
@@ -83,12 +86,14 @@
                   :key="index"
                   class="sub-item"
                   @click.stop="clickSubmenu(childItem.label)"
-                >{{ childItem.label }}</li>
+                >
+                  {{ childItem.label }}
+                </li>
               </ul>
             </li>
           </ul>
           <div class="copyright-block">
-            <img 
+            <img
               class="logo"
               src="@/assets/images/logo-green-x.svg"
               @click="goToWarRoom"
@@ -107,13 +112,15 @@
       </aside>
       <div class="main-content">
         <transition
-          name="fade" 
-          mode="out-in">
-          <router-view 
+          name="fade"
+          mode="out-in"
+        >
+          <router-view
             :is-ot="isOTSchedule"
             :has-emergency="hasEmergency"
             :key="isOTSchedule"
-            @insert="hasEmergency = false" />
+            @insert="hasEmergency = false"
+          />
         </transition>
       </div>
     </main>
@@ -141,7 +148,7 @@ export default {
             { label: 'Netural' },
             { label: 'Orthopedics' },
             { label: 'Plastic' },
-            { label: 'General' },
+            { label: 'General' }
           ]
         },
         { label: 'Pre-op Assessment' },
@@ -170,7 +177,7 @@ export default {
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
-    toggleSideNav() {
+    toggleSideNav () {
       this.updateSideNavStatus(!this.isShowFullSideNav)
     },
     clickMenuItem (menuName) {
@@ -189,7 +196,6 @@ export default {
         case 'Bedroom Allocation':
           this.$router.push({ name: 'DemoCurrentBedSimulation', query: { planned: true } })
           this.isMenuOpen = false
-          return
       }
     },
     goToWarRoom () {
@@ -225,7 +231,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%; 
+  width: 100%;
   height: auto;
   height: $header-height;
   z-index: $header-z-index;
@@ -440,7 +446,7 @@ export default {
   background-color: rgb(0, 0, 0);
   box-shadow: 0px 0px 20px rgba(12, 209, 222, .1);
   color: #8B9B9C;
-  
+
   &__list {
     flex: 1;
     min-height: 0;

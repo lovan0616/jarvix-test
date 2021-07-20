@@ -1,10 +1,12 @@
 <template>
   <div class="display-basic-chart">
-    <button 
+    <button
       v-if="lineChartData"
       class="btn-m btn-default change-diagram-btn"
       @click="changeDiagram"
-    >{{ $t('button.changeDiagram') }}</button>
+    >
+      {{ $t('button.changeDiagram') }}
+    </button>
     <display-line-chart
       v-if="showLineChart && lineChartData"
       :dataset="lineChartData.dataset"
@@ -35,8 +37,10 @@
           :key="index"
         >
           <div class="filter-description">
-            <div class="column-name">{{ $t('resultDescription.restrict') + (index + 1) }}:</div>
-            <div 
+            <div class="column-name">
+              {{ $t('resultDescription.restrict') + (index + 1) }}:
+            </div>
+            <div
               v-for="(singleData, propertiesIndex) in singleType.restraints"
               :key="'enum-' + propertiesIndex"
               class="single-filter"
@@ -92,7 +96,7 @@ export default {
         }
       }
     },
-    height: {type: String, default: '420px'},
+    height: { type: String, default: '420px' },
     hasPagination: {
       type: Boolean,
       default: false
@@ -121,7 +125,7 @@ export default {
   data () {
     echartAddon.mapping({
       'seriesItem:bar': {
-        'large': true
+        large: true
       },
       'color:10': {},
       'grid:default': {},
@@ -169,7 +173,7 @@ export default {
       config.toolbox.feature.myShowLabel.onclick = () => {
         this.$emit('toggleLabel')
       }
-      
+
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
           this.$el.addEventListener('click', this.controlPagination, false)
@@ -208,8 +212,8 @@ export default {
       // 如果是 bar chart
       config.yAxis.scale = true
       // 開啟點擊觸發事件
-      config.xAxis. triggerEvent = true
-      config.yAxis. triggerEvent = true
+      config.xAxis.triggerEvent = true
+      config.yAxis.triggerEvent = true
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 20) {
@@ -288,7 +292,7 @@ export default {
         lineChartData[xAxisIndex][seriesIndex] += this.dataset.data[index][0]
       })
       // 關掉 drill down
-      let xAxis = {...this.title.xAxis[0]}
+      let xAxis = { ...this.title.xAxis[0] }
       xAxis.drillable = false
 
       return {
@@ -328,13 +332,13 @@ export default {
           if (name === 'index') {
             params.value[index].split(',').forEach((column, columnIndex) => {
               dataInfo.push({
-                ...this.title['xAxis'][columnIndex],
+                ...this.title.xAxis[columnIndex],
                 value: column
               })
             })
           } else {
             dataInfo.push({
-              ...this.title['yAxis'][0],
+              ...this.title.yAxis[0],
               value: params.value[index]
             })
           }
@@ -361,9 +365,9 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { 
+            formatter (value) {
               let num = value.data[colIndex + 1]
-              return labelFormatter(num, maxValue[colIndex]) 
+              return labelFormatter(num, maxValue[colIndex])
             }
           }
         })

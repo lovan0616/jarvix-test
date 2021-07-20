@@ -4,10 +4,18 @@
       {{ displayedDataStorageUsageRate }}
     </div>
     <div class="info-block__detail">
-      <dt class="info-block__detail-title">{{ $t('accountInfo.currentDataUsage') }}</dt>
-      <dd class="info-block__detail-content">{{ license.currentDataStorageSize }} GB</dd>
-      <dt class="info-block__detail-title">{{ $t('accountInfo.dataUsageProvided') }}</dt>
-      <dd class="info-block__detail-content">{{ displayedMaxDataStorageSize }}</dd>
+      <dt class="info-block__detail-title">
+        {{ $t('accountInfo.currentDataUsage') }}
+      </dt>
+      <dd class="info-block__detail-content">
+        {{ license.currentDataStorageSize }} GB
+      </dd>
+      <dt class="info-block__detail-title">
+        {{ $t('accountInfo.dataUsageProvided') }}
+      </dt>
+      <dd class="info-block__detail-content">
+        {{ displayedMaxDataStorageSize }}
+      </dd>
     </div>
   </div>
 </template>

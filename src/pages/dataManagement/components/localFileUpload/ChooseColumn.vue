@@ -1,6 +1,8 @@
 <template>
   <div class="choose-column">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="3"
     />
@@ -13,14 +15,18 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           class="btn btn-default"
           @click="nextStep"
-        >{{ $t('button.nextStep') }}</button>
+        >
+          {{ $t('button.nextStep') }}
+        </button>
       </div>
     </div>
   </div>
@@ -47,7 +53,7 @@ export default {
     nextStep () {
       this.$emit('next')
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

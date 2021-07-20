@@ -1,12 +1,14 @@
 <template>
   <page-layout>
     <div class="login-page">
-      <h1 class="page-title">{{ $t('editing.userLogin') }}</h1>
+      <h1 class="page-title">
+        {{ $t('editing.userLogin') }}
+      </h1>
       <form
         @submit.prevent="submitForm"
       >
         <div class="login-form">
-          <input-block 
+          <input-block
             v-validate="'required'"
             :label="$t('editing.username')"
             v-model="userInfo.account"
@@ -14,7 +16,7 @@
             name="userName"
             type="email"
           />
-          <input-block 
+          <input-block
             v-validate="'required'"
             :label="$t('editing.password')"
             v-model="userInfo.password"
@@ -23,15 +25,18 @@
             type="password"
           />
         </div>
-        <button 
-          :disabled="isSubmit" 
+        <button
+          :disabled="isSubmit"
           type="submit"
           class="btn btn-default btn-submit"
-        >{{ $t('button.login') }}</button>
+        >
+          {{ $t('button.login') }}
+        </button>
         <a
           v-if="isSmtpConnected"
           href="/forget-password"
-          class="link">{{ $t('forgetPassword.title') }}</a>
+          class="link"
+        >{{ $t('forgetPassword.title') }}</a>
       </form>
     </div>
   </page-layout>
@@ -77,14 +82,14 @@ export default {
           })
             .then(({ accessToken }) => {
               this.updateTokenTimestamp(new Date().getTime())
-              this.updateToken(accessToken) 
+              this.updateToken(accessToken)
               localStorage.setItem('token', accessToken)
               return this.getUserInfo()
             })
             .then(() => {
               // 判斷是否為 Admin
               if (this.isAdmin) {
-                return this.$router.push({name: 'PageAdmin'})
+                return this.$router.push({ name: 'PageAdmin' })
               }
 
               // 取得前一次停留或拜訪的資訊
@@ -95,7 +100,7 @@ export default {
                 this.$store.commit('dataSource/setDataSourceList', [])
                 this.$store.dispatch('dataSource/handleEmptyDataSource')
               }
-              
+
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
               if (this.getCurrentGroupId && dataSourceId) {
                 const dataFrameId = this.$store.state.dataSource.dataFrameId
@@ -109,21 +114,21 @@ export default {
                 params.account_id = this.getCurrentAccountId
                 params.group_id = this.getCurrentGroupId
                 return this.$router.push({ name, query, params })
-              } 
-              
+              }
+
               // 沒有群組時導向引導頁面
               if (!this.getCurrentGroupId) {
-                return this.$router.push({ 
+                return this.$router.push({
                   name: 'PageGrouplessGuidance',
-                  params: { 'account_id': this.getCurrentAccountId }
+                  params: { account_id: this.getCurrentAccountId }
                 })
-              } 
+              }
 
               this.$router.push({
-                name: 'PageIndex', 
+                name: 'PageIndex',
                 params: {
-                  'account_id': this.getCurrentAccountId,
-                  'group_id': this.getCurrentGroupId
+                  account_id: this.getCurrentAccountId,
+                  group_id: this.getCurrentGroupId
                 }
               })
             })

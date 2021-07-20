@@ -1,15 +1,19 @@
 <template>
   <div class="question-sample">
     <div class="question-sample__menu">
-      <div class="question-sample__menu__title">{{ $t('askHelper.catalog') }}</div>
+      <div class="question-sample__menu__title">
+        {{ $t('askHelper.catalog') }}
+      </div>
       <div class="question-sample__menu__list">
-        <div 
+        <div
           v-for="(questionCategory, index) in questionSampleList"
           :key="index"
           :class="{'question-sample__menu__item--active': index === selectedIndex}"
           class="question-sample__menu__item"
           @click="selectCatelog(index)"
-        >{{ questionCategory.name }}</div>
+        >
+          {{ questionCategory.name }}
+        </div>
       </div>
     </div>
     <div class="question-sample__block">
@@ -19,7 +23,7 @@
       </div>
       <div class="question-sample__block__description">
         <span class="question-lamp">
-          <svg-icon icon-class="lamp"/>
+          <svg-icon icon-class="lamp" />
           {{ $t('askHelper.description') }}:
         </span>
         {{ $t('askHelper.exampleDesc') }}
@@ -27,12 +31,17 @@
       <div
         v-for="(question, index) in questionList"
         :key="index"
-        class="question-box">
+        class="question-box"
+      >
         <div class="question-ask">
-          <p class="question-ask-text">{{ $t('askHelper.ask') }}: </p>
+          <p class="question-ask-text">
+            {{ $t('askHelper.ask') }}:
+          </p>
           <p>{{ question.questionText }}</p>
         </div>
-        <div class="question-example">{{ $t('askHelper.example') }}:</div>
+        <div class="question-example">
+          {{ $t('askHelper.example') }}:
+        </div>
         <single-question
           v-for="(exampleQuestion, exampleQuestionIndex) in question.questionExample"
           :example-question="exampleQuestion"
@@ -79,7 +88,7 @@ export default {
     width: 200px;
     height: 100%;
     margin-right: 20px;
-    
+
     &__title {
       height: 42px;
       padding: 5px 24px;
@@ -114,7 +123,7 @@ export default {
       line-height: 32px;
       color: #999999;
       background: rgba(35, 61, 64, 0.6);
-      
+
       &:not(:last-of-type) {
         border-bottom: 1px solid rgba(50, 75, 78, 0.6);
       }
@@ -146,7 +155,7 @@ export default {
     width: calc(100% - 224px);
     overflow: auto;
     padding-right: 10px;
-    
+
     &__title {
       font-size: 18px;
       line-height: 32px;

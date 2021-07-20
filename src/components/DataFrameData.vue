@@ -1,15 +1,17 @@
 <template>
   <div class="data-frame-data">
-    <spinner v-if="isLoading"/>
+    <spinner v-if="isLoading" />
     <empty-info-block
       v-else-if="!isLoading && hasError"
       :msg="$t('message.systemIsError')"
     />
-    <div 
+    <div
       v-else
       class="board-body-section"
     >
-      <div class="title">{{ $t('editing.dataFrameContent') }}</div>
+      <div class="title">
+        {{ $t('editing.dataFrameContent') }}
+      </div>
       <template v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0">
         <div class="overview">
           <div class="overview__data">
@@ -20,10 +22,12 @@
               {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
             </div>
           </div>
-          <button 
+          <button
             class="btn-m btn-default"
             @click="toggleShowSummaryInfo"
-          >{{ showDataSummary ? $t('common.hide') : $t('common.show') }}{{ $t('button.columnSummaryInfo') }}</button>
+          >
+            {{ showDataSummary ? $t('common.hide') : $t('common.show') }}{{ $t('button.columnSummaryInfo') }}
+          </button>
         </div>
         <pagination-table
           v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0"
@@ -37,7 +41,7 @@
           <template #columns-header="{ column, index }">
             <div class="header-block">
               <div class="header">
-                <span 
+                <span
                   v-if="showColumnSummaryRow"
                   class="icon"
                 >
@@ -46,7 +50,8 @@
                     :enterable="false"
                     :visible-arrow="false"
                     :content="`${getStatesTypeName(index)}`"
-                    class="icon">
+                    class="icon"
+                  >
                     <svg-icon :icon-class="getHeaderIcon(index)" />
                   </el-tooltip>
                 </span>
@@ -163,11 +168,11 @@ export default {
       deep: true,
       handler (newValue, oldValue) {
         if (
-          this.mode === 'popup' 
+          this.mode === 'popup' ||
           // 初次開啟設定時不觸發
-          || (oldValue.isInit === false && oldValue.columnList === null) 
+          (oldValue.isInit === false && oldValue.columnList === null) ||
           // 切換 dataframe 清空設定時不觸發
-          || newValue.isInit === false
+          newValue.isInit === false
         ) return
         this.fetchDataFrameData(this.dataFrameId, 0, true)
       }
@@ -185,7 +190,7 @@ export default {
     this.isLoading = true
     this.fetchDataFrameData(this.dataFrameId, 0, true)
   },
-  destroyed() {
+  destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
@@ -224,7 +229,7 @@ export default {
             // 如為空陣列，則輪詢取得最新的 summary 資訊
             if (!this.showColumnSummaryRow) {
               return this.timeoutFunction = window.setTimeout(() => {
-                this.fetchDataFrameData(id, page, false, true) 
+                this.fetchDataFrameData(id, page, false, true)
               }, watingTime)
             } else {
               return this.tableSummaryList = dataColumnSummary.map(column => ({
@@ -233,7 +238,7 @@ export default {
                 totalRows: this.pagination.totalItems
               }))
             }
-          } 
+          }
 
           // 若選擇重新取得資料表所有資料時
           if (resetPagination) {
@@ -246,7 +251,7 @@ export default {
 
             if (!this.showColumnSummaryRow) {
               this.timeoutFunction = window.setTimeout(() => {
-                this.fetchDataFrameData(id, page, false, true) 
+                this.fetchDataFrameData(id, page, false, true)
               }, watingTime)
             } else {
               this.tableSummaryList = dataColumnSummary.map(column => ({
@@ -259,11 +264,11 @@ export default {
 
           let numericIndex = []
           this.tableSummaryList.forEach((element, index) => {
-            if (element.statsType === "NUMERIC") {
+            if (element.statsType === 'NUMERIC') {
               numericIndex.push(index)
             }
           })
-          
+
           dataFrameData.data.forEach(data => {
             numericIndex.forEach(numeric => {
               data[numeric] = this.formatComma(data[numeric])

@@ -2,23 +2,27 @@
   <div class="general-management-page general-management-page--project-list">
     <div class="page-title-row">
       <h1 class="title">
-        <div class="title-left">{{ $t('schedule.project.projectManagement') }}</div>
+        <div class="title-left">
+          {{ $t('schedule.project.projectManagement') }}
+        </div>
       </h1>
       <div class="bread-crumb">
         {{ $t('schedule.project.projectManagement') }}
       </div>
     </div>
     <spinner
-      v-if="isLoading" 
+      v-if="isLoading"
       :title="$t('editing.loading')"
-      size="50"/>
-    <div 
-      v-else 
-      class="table-board">
+      size="50"
+    />
+    <div
+      v-else
+      class="table-board"
+    >
       <div class="board-title-row">
         <div class="board-title-row__left">
           <default-button @click="$router.push({ name: 'ScheduleProjectCreator' })">
-            <i class="el-icon-plus"/>
+            <i class="el-icon-plus" />
             {{ $t('schedule.project.createProject') }}
           </default-button>
         </div>
@@ -26,10 +30,12 @@
       <el-table
         :data="projectList"
         class="ss-table project-table"
-        style="width: 100%">
+        style="width: 100%"
+      >
         <el-table-column
           :label="$t('schedule.project.projectName')"
-          prop="name">
+          prop="name"
+        >
           <template slot-scope="scope">
             <a
               v-if="scope.row.datasourceStatus === 'Bound'"
@@ -56,12 +62,14 @@
         </el-table-column>
         <el-table-column
           :label="$t('editing.creator')"
-          prop="creatorName"/>
+          prop="creatorName"
+        />
         <el-table-column
           :label="$t('editing.createDate')"
           prop="createDate"
           sortable
-          width="120">
+          width="120"
+        >
           <template slot-scope="scope">
             <span>{{ timeToDate(scope.row.createDate) }}</span>
           </template>
@@ -70,34 +78,39 @@
           :label="$t('editing.updateDate')"
           prop="updateDate"
           sortable
-          width="120">
+          width="120"
+        >
           <template slot-scope="scope">
             <span>{{ timeToDate(scope.row.updateDate) }}</span>
           </template>
         </el-table-column>
         <el-table-column
           :label="$t('editing.action')"
-          width="220">
+          width="220"
+        >
           <template slot-scope="scope">
             <a
               href="javascript:void(0);"
               class="action-link link"
-              @click="openDialog('Relation', scope.row)">
+              @click="openDialog('Relation', scope.row)"
+            >
               {{ scope.row.datasourceStatus === 'Bound'
                 ? $t('schedule.project.dataManagement')
                 : $t('schedule.project.relationManagement')
               }}
             </a>
-            <a 
+            <a
               href="javascript:void(0);"
               class="action-link link"
-              @click="openDialog('Rename', scope.row)">
+              @click="openDialog('Rename', scope.row)"
+            >
               {{ $t('button.rename') }}
             </a>
-            <a 
+            <a
               href="javascript:void(0);"
               class="action-link link"
-              @click="openDialog('Delete', scope.row)">
+              @click="openDialog('Delete', scope.row)"
+            >
               {{ $t('button.delete') }}
             </a>
           </template>
@@ -147,7 +160,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId'])
   },
   created () {
     this.fetchData()

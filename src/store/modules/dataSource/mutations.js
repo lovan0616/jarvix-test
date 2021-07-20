@@ -94,7 +94,7 @@ export default {
   },
   setStatusList (state, data) {
     state.filterList.forEach((filter, index) => {
-      state.filterList[index]['status'] = data[index]
+      state.filterList[index].status = data[index]
     })
   },
   clearCurrentQuestionId (state) {

@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     modelId () {
-      return this.$route.params['model_id']
+      return this.$route.params.model_id
     }
   },
   mounted () {
@@ -47,7 +47,7 @@ export default {
         .then((response) => {
           this.modelInfo = response
         })
-    },
+    }
   }
 }
 </script>

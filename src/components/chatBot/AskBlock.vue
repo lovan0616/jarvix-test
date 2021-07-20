@@ -1,9 +1,10 @@
 <template>
-  <div 
-    :class="{'is-focus': isFocus}" 
-    class="ask-container">
+  <div
+    :class="{'is-focus': isFocus}"
+    class="ask-container"
+  >
     <div class="ask-block">
-      <div 
+      <div
         :class="{
           'has-filter': hasFilter,
           'is-use-algorithm': isUseAlgorithm,
@@ -18,7 +19,7 @@
           class="parser-select"
         />
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
-        <input 
+        <input
           ref="questionInput"
           :class="{ 'disabled': availableDataSourceList.length === 0 }"
           :name="new Date().getTime()"
@@ -34,56 +35,58 @@
           @focus="focusInput"
           @blur="blurInput"
         >
-        <a 
-          href="javascript:void(0);" 
+        <a
+          href="javascript:void(0);"
           class="clean-btn"
           @click="cleanQuestion"
         >
-          <svg-icon icon-class="remove-circle"/>
+          <svg-icon icon-class="remove-circle" />
         </a>
-        <a 
-          href="javascript:void(0);" 
+        <a
+          href="javascript:void(0);"
           class="ask-btn"
           @click="enterQuestion"
         >
-          <svg-icon icon-class="go-right"/>
+          <svg-icon icon-class="go-right" />
         </a>
       </div>
       <div
         v-if="isShowAskHelperEntry"
-        :class="{ 'disabled': availableDataSourceList.length === 0 }" 
+        :class="{ 'disabled': availableDataSourceList.length === 0 }"
         class="ask-remark-block"
-        @click="openAskHelperDialog">
+        @click="openAskHelperDialog"
+      >
         <el-tooltip
           slot="label"
           :content="$t('askHelper.title')"
         >
-          <svg-icon 
-            :class="{'ask-btn__icon--show': isShowAskHelper}" 
+          <svg-icon
+            :class="{'ask-btn__icon--show': isShowAskHelper}"
             icon-class="ask-helper"
-            class="ask-btn__icon"/>
+            class="ask-btn__icon"
+          />
         </el-tooltip>
-        
       </div>
     </div>
     <div
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
       class="history-question-block"
     >
-      <div 
+      <div
         v-for="(singleHistory, index) in historyQuestionList"
         :key="index"
         class="history-question"
         @click="copyQuestion(singleHistory.question)"
       >
-        <svg-icon 
-          icon-class="clock" 
-          class="icon"/>
+        <svg-icon
+          icon-class="clock"
+          class="icon"
+        />
         {{ singleHistory.question }}
       </div>
     </div>
     <transition name="fast-fade-in">
-      <ask-helper-dialog 
+      <ask-helper-dialog
         v-if="isShowAskHelper"
         ref="helperDialog"
         :class="{ 'ask-helper--has-basic-df-setting': isShowSettingBox }"
@@ -187,10 +190,10 @@ export default {
       if (from.name === 'PageResult' && to.name === 'PageResult') return
       // 其他情況切換 datasource 或 dataframe 時會觸發回首頁，此變化才清空問句 input: 可能切換至沒有 datasource 的群組
       if (
-        !to.query.dataSourceId
-        || !to.query.dataFrameId
-        || (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString()
-        || (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
+        !to.query.dataSourceId ||
+        !to.query.dataFrameId ||
+        (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString() ||
+        (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
       ) {
         this.userQuestion = null
         this.closeHelper()
@@ -202,7 +205,7 @@ export default {
       }
     },
     copiedColumnName (value) {
-      if(!value) return
+      if (!value) return
       this.userQuestion = this.userQuestion ? this.userQuestion + value : value
       this.clearCopiedColumnName()
     }
@@ -244,11 +247,11 @@ export default {
       }
       if (evt.data === '回到資料集') {
         // 回到首頁
-        this.$router.push({ 
-          name: 'PageIndex', 
+        this.$router.push({
+          name: 'PageIndex',
           params: {
-            'account_id': this.getCurrentAccountId,
-            'group_id': this.getCurrentGroupId
+            account_id: this.getCurrentAccountId,
+            group_id: this.getCurrentGroupId
           },
           query: {
             dataSourceId: this.$route.query.dataSourceId,
@@ -285,7 +288,7 @@ export default {
       if (this.showHistoryQuestion && !clickInside) {
         this.showHistoryQuestion = false
       }
-      
+
       // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
       if (this.showHistoryQuestion && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
         this.showHistoryQuestion = false
@@ -300,18 +303,18 @@ export default {
       if (this.availableDataSourceList.length === 0) return
       /**
        * 移除特殊符號 (unicode \u0008, referred to as \b in strings)
-       * 先移除特殊符號再問問句 
+       * 先移除特殊符號再問問句
        */
       this.$store.commit('dataSource/setAppQuestion', this.userQuestion.replace(/[\b]/g, ''))
       if (this.redirectOnAsk) {
         this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
-        
+
         /* For demo */
         let correctCount = 0
         modelQuestionKeyWordList.forEach(word => {
           correctCount += this.userQuestion.includes(word)
         })
-        if(correctCount >= 2) this.$store.commit('result/updateIsModelResult', true)
+        if (correctCount >= 2) this.$store.commit('result/updateIsModelResult', true)
         else this.$store.commit('result/updateIsModelResult', false)
         /* For demo */
       } else {
@@ -379,7 +382,7 @@ export default {
       border-radius: 5px;
     }
   }
-  
+
   .ask-block {
     position: relative;
     height: 100%;
@@ -554,7 +557,6 @@ export default {
       &:hover {
         background-color: #464A50;
       }
-
 
       .icon {
         margin-right: 14px;

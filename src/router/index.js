@@ -28,10 +28,10 @@ const router = new Router({
                 duration: 3 * 1000,
                 showClose: true
               })
-              return next({name: 'PageLogin'})
+              return next({ name: 'PageLogin' })
             }
-            if (!groupId) return next({ name: 'PageGrouplessGuidance', params: { 'account_id': accountId } })
-            next({ name: 'PageIndex', params: { 'account_id': accountId, 'group_id': groupId } })
+            if (!groupId) return next({ name: 'PageGrouplessGuidance', params: { account_id: accountId } })
+            next({ name: 'PageIndex', params: { account_id: accountId, group_id: groupId } })
           }
         },
         {
@@ -122,8 +122,8 @@ const router = new Router({
                     layers: ['account/:account_id', 'management', 'function-description'],
                     icon: 'description'
                   }
-                },
-              ],
+                }
+              ]
             },
             {
               path: 'pinboard',
@@ -149,7 +149,7 @@ const router = new Router({
                 {
                   path: 'groupless-guidance',
                   name: 'PageGrouplessGuidance',
-                  component: () => import('@/components/layout/GrouplessLayout'),
+                  component: () => import('@/components/layout/GrouplessLayout')
                 },
                 {
                   path: ':group_id',
@@ -295,22 +295,22 @@ const router = new Router({
                             },
                             {
                               path: '/',
-                              name: 'DataFileList',      
+                              name: 'DataFileList',
                               beforeEnter: (to, from, next) => {
                                 const dataSourceList = store.getters['dataSource/dataSourceList']
-                                const {id, ...resParams} = to.params
+                                const { id, ...resParams } = to.params
                                 const dataSourceExist = dataSourceList.some(data => data.id === Number(id))
-                                if(!dataSourceExist) {
+                                if (!dataSourceExist) {
                                   Message({
                                     message: i18n.t('message.dataSourceNotExist'),
                                     type: 'error',
                                     duration: 3 * 1000,
                                     showClose: true
                                   })
-                                  next({ name:'DataSourceList', params: resParams })
+                                  next({ name: 'DataSourceList', params: resParams })
                                 }
                                 next()
-                              },              
+                              },
                               component: () => import('@/pages/dataManagement/DataFileList'),
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'datasource', ':id'],
@@ -318,7 +318,7 @@ const router = new Router({
                               }
                             }
                           ]
-                        },
+                        }
                       ]
                     },
                     {
@@ -423,7 +423,7 @@ const router = new Router({
                               name: 'ReUploadFile',
                               component: () => import('@/pages/modelManagement/ReUploadFile'),
                               beforeEnter: (to, from, next) => {
-                                store.state.modelManagement.currentModelInfo.inUse 
+                                store.state.modelManagement.currentModelInfo.inUse
                                   ? next(from)
                                   : next()
                               },
@@ -438,7 +438,7 @@ const router = new Router({
                               name: 'ConfigSetting',
                               component: () => import('@/pages/modelManagement/ConfigSetting'),
                               beforeEnter: (to, from, next) => {
-                                store.state.modelManagement.currentModelInfo.inUse 
+                                store.state.modelManagement.currentModelInfo.inUse
                                   ? next(from)
                                   : next()
                               },
@@ -476,7 +476,7 @@ const router = new Router({
                               meta: {
                                 layers: ['account/:account_id', 'group', ':group_id', 'model-flow', '/'],
                                 permission: ['flow']
-                              },
+                              }
                             }
                           ]
                         },
@@ -517,7 +517,7 @@ const router = new Router({
                     },
                     ...ScheduleRouter.options.routes
                   ]
-                },
+                }
               ]
             }
           ]
@@ -633,24 +633,24 @@ router.beforeEach(async (to, from, next) => {
         // }
         // if (defaultGroup) {
         //   next({
-        //     name: 'PageIndex', 
-        //     params: { 
+        //     name: 'PageIndex',
+        //     params: {
         //       account_id: currentAccountId,
         //       group_id: currentGroupId
         //     }
         //   })
         // } else {
-        //   next({ 
+        //   next({
         //     name: 'PageGrouplessGuidance',
-        //     params: { 
-        //       account_id: currentAccountId 
+        //     params: {
+        //       account_id: currentAccountId
         //     }
         //   })
         // }
         return
       }
     }
-    
+
     const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
     if (paramsGroupId && (Number(paramsGroupId) !== currentGroupId)) {
       await store.dispatch('userManagement/switchGroupById', {
@@ -674,7 +674,7 @@ router.beforeEach(async (to, from, next) => {
 
     // 檢查是否為 group 層下的路由: 變免在 account 層 $router 物件中 params 帶有 group id
     const isGroupRoute = to.matched.some(route => route.name === 'group')
-    return next({ 
+    return next({
       name: to.name,
       params: {
         ...to.params,
@@ -689,7 +689,7 @@ router.beforeEach(async (to, from, next) => {
   if (!store.state.chatBot.parserLanguage) {
     await store.dispatch('chatBot/getParserList')
   }
-  
+
   // 確認 account 和 group 權限都符合
   const hasPermission = store.getters['userManagement/hasPermission']
   for (let i = 0; i < to.matched.length; i++) {

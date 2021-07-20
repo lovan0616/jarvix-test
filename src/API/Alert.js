@@ -90,7 +90,7 @@ export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, acti
  */
 export function getAlertLogsCount ({ conditionIds, groupId, active, startTime, endTime }) {
   return request({
-    url: `/alert/logs/count`,
+    url: '/alert/logs/count',
     method: 'POST',
     data: {
       conditionIds,
@@ -106,7 +106,7 @@ export function getAlertLogsCount ({ conditionIds, groupId, active, startTime, e
  * 變更示警紀錄尚未處理狀態
  * @param {string} id - log id
  */
-export function patchAlertLogActiveness(logId, stateInfo) {
+export function patchAlertLogActiveness (logId, stateInfo) {
   return request({
     url: `/alert/log/${logId}/activeness`,
     method: 'PATCH',
@@ -121,7 +121,7 @@ export function patchAlertLogActiveness(logId, stateInfo) {
  * @param {Object} language - 欲修改的語言
  * @param {Object} message - 示警訊息
  */
-export function patchConditionMessageParams(conditionId, data) {
+export function patchConditionMessageParams (conditionId, data) {
   return request({
     url: `/alert/condition/${conditionId}/message-templates`,
     method: 'PATCH',
@@ -133,7 +133,7 @@ export function patchConditionMessageParams(conditionId, data) {
  * 取得指定元件可分析值型別選項
  * @param {Number} id - component id
  */
-export function getComponentIndicators(componentId) {
+export function getComponentIndicators (componentId) {
   return request({
     url: `/alert/component/${componentId}/analysisValueTypes`,
     method: 'GET'
@@ -143,9 +143,9 @@ export function getComponentIndicators(componentId) {
 /**
  * 新增監控示警條件(透過Component)
  */
-export function convertComponentToAlertCondition(data) {
+export function convertComponentToAlertCondition (data) {
   return request({
-    url: `/alert/condition/component`,
+    url: '/alert/condition/component',
     method: 'POST',
     data
   })
@@ -155,7 +155,7 @@ export function convertComponentToAlertCondition(data) {
  * 手動觸發示警
  * @param {Number} id - condition id
  */
-export function manualTriggerAlert(id) {
+export function manualTriggerAlert (id) {
   return request({
     url: `alert/conditions/${id}/trigger`,
     method: 'POST'
@@ -165,9 +165,9 @@ export function manualTriggerAlert(id) {
 /**
  * 更改示警條件 timezone
  */
-export function updateAlertTimeZone(data) {
+export function updateAlertTimeZone (data) {
   return request({
-    url: `/alert/conditions/timezone`,
+    url: '/alert/conditions/timezone',
     method: 'PATCH',
     data
   })

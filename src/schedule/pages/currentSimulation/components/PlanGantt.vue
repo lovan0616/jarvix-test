@@ -58,7 +58,7 @@ export default {
       isLoading: true,
       isJobEmpty: false,
       isCollapsed: false,
-      scale: 60,
+      scale: 60
     }
   },
   computed: {

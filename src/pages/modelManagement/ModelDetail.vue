@@ -7,98 +7,154 @@
       </div>
       <button
         v-if="!isLoading"
-        type="button" 
+        type="button"
         class="btn-m btn-secondary"
-        @click="isShowDeleteDialog = true">
+        @click="isShowDeleteDialog = true"
+      >
         {{ $t('model.deleteModel') }}
       </button>
     </div>
     <spinner
-      v-if="isLoading" 
+      v-if="isLoading"
       :title="$t('editing.loading')"
     />
     <section v-else>
       <!-- 模型名稱 / ID -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('model.modelNameId') }}</div>
+        <div class="info-block__title">
+          {{ $t('model.modelNameId') }}
+        </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('model.name') }}:</div>
-            <div class="info__text">{{ modelInfo.name }}</div>
-            <div 
-              class="link action-link" 
-              @click="openRenameDialog">{{ $t('editing.editingName') }}</div>
+            <div class="info__label">
+              {{ $t('model.name') }}:
+            </div>
+            <div class="info__text">
+              {{ modelInfo.name }}
+            </div>
+            <div
+              class="link action-link"
+              @click="openRenameDialog"
+            >
+              {{ $t('editing.editingName') }}
+            </div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('model.id') }}:</div>
-            <div class="info__text">{{ modelInfo.id }}</div>
+            <div class="info__label">
+              {{ $t('model.id') }}:
+            </div>
+            <div class="info__text">
+              {{ modelInfo.id }}
+            </div>
           </div>
         </div>
       </div>
       <!-- 模型檔案 -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('model.modelFile') }}</div>
+        <div class="info-block__title">
+          {{ $t('model.modelFile') }}
+        </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('model.lastUpdatedTime') }}:</div>
-            <div class="info__text">{{ modelInfo.updatedAt ? timeToDateTime(modelInfo.updatedAt) : "-" }}</div>
+            <div class="info__label">
+              {{ $t('model.lastUpdatedTime') }}:
+            </div>
+            <div class="info__text">
+              {{ modelInfo.updatedAt ? timeToDateTime(modelInfo.updatedAt) : "-" }}
+            </div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('model.fileInfo') }}:</div>
+            <div class="info__label">
+              {{ $t('model.fileInfo') }}:
+            </div>
             <div class="info__text model-name-area">
               <div
                 v-for="(name, index) in displayModelNames"
                 :key="index"
-              >{{ name }}</div>
+              >
+                {{ name }}
+              </div>
             </div>
           </div>
         </div>
       </div>
       <!-- Input 參數 -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('model.inputParameters') }}</div>
+        <div class="info-block__title">
+          {{ $t('model.inputParameters') }}
+        </div>
         <div class="info-block__content">
           <div class="table-header">
-            <div class="info__label info__cell ">{{ $t('model.parameterDataType') }}</div>
-            <div class="info__label info__cell ">{{ $t('model.parameterDataName') }}</div>
+            <div class="info__label info__cell ">
+              {{ $t('model.parameterDataType') }}
+            </div>
+            <div class="info__label info__cell ">
+              {{ $t('model.parameterDataName') }}
+            </div>
           </div>
-          <div 
+          <div
             v-for="(item, index) in modelInfo.ioArgs.input"
             :key="index"
-            class="table-row">
-            <div class="info__text info__cell">{{ item.statsType }}</div>
-            <div class="info__text info__cell">{{ item.modelColumnName }}</div>
+            class="table-row"
+          >
+            <div class="info__text info__cell">
+              {{ item.statsType }}
+            </div>
+            <div class="info__text info__cell">
+              {{ item.modelColumnName }}
+            </div>
           </div>
         </div>
       </div>
       <!-- Output 參數 -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('model.outputParameters') }}</div>
+        <div class="info-block__title">
+          {{ $t('model.outputParameters') }}
+        </div>
         <div class="info-block__content">
           <div class="table-header">
-            <div class="info__label info__cell ">{{ $t('model.parameterDataType') }}</div>
-            <div class="info__label info__cell ">{{ $t('model.parameterDataName') }}</div>
+            <div class="info__label info__cell ">
+              {{ $t('model.parameterDataType') }}
+            </div>
+            <div class="info__label info__cell ">
+              {{ $t('model.parameterDataName') }}
+            </div>
           </div>
-          <div 
+          <div
             v-for="(item, index) in modelInfo.ioArgs.output"
             :key="index"
-            class="table-row">
-            <div class="info__text info__cell">{{ item.statsType }}</div>
-            <div class="info__text info__cell">{{ item.modelColumnName }}</div>
+            class="table-row"
+          >
+            <div class="info__text info__cell">
+              {{ item.statsType }}
+            </div>
+            <div class="info__text info__cell">
+              {{ item.modelColumnName }}
+            </div>
           </div>
         </div>
       </div>
       <!-- 建立資料 -->
       <div class="info-block">
-        <div class="info-block__title">{{ $t('model.createInfo') }}</div>
+        <div class="info-block__title">
+          {{ $t('model.createInfo') }}
+        </div>
         <div class="info-block__content">
           <div class="info__row">
-            <div class="info__label">{{ $t('model.createdTime') }}:</div>
-            <div class="info__text">{{ timeToDateTime(modelInfo.createdAt) }}</div>
+            <div class="info__label">
+              {{ $t('model.createdTime') }}:
+            </div>
+            <div class="info__text">
+              {{ timeToDateTime(modelInfo.createdAt) }}
+            </div>
           </div>
           <div class="info__row">
-            <div class="info__label">{{ $t('model.creator') }}:</div>
-            <div class="info__text">{{ modelInfo.createdBy }}</div>
+            <div class="info__label">
+              {{ $t('model.creator') }}:
+            </div>
+            <div class="info__text">
+              {{ modelInfo.createdBy }}
+            </div>
           </div>
         </div>
       </div>
@@ -157,7 +213,7 @@ export default {
   },
   computed: {
     modelId () {
-      return this.$route.params['model_id']
+      return this.$route.params.model_id
     },
     displayModelNames () {
       return this.modelInfo.modelNames.slice().sort(item => item === this.mainScriptName ? -1 : 0)
@@ -183,9 +239,9 @@ export default {
     },
     rename () {
       this.$validator.validateAll().then(isValidated => {
-        if(!isValidated) return
-        if(this.editedName === this.modelInfo.name) return this.isShowRenameDialog = false
-        modifyModelInfo(this.modelId, { 
+        if (!isValidated) return
+        if (this.editedName === this.modelInfo.name) return this.isShowRenameDialog = false
+        modifyModelInfo(this.modelId, {
           ...this.modelInfo, name: this.editedName
         }).finally(() => {
           this.isShowRenameDialog = false
@@ -202,9 +258,9 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          this.$router.push({name: 'ModelList'})
+          this.$router.push({ name: 'ModelList' })
         }).finally(() => {
-          this.isShowDeleteDialog = false 
+          this.isShowDeleteDialog = false
         })
     }
   }

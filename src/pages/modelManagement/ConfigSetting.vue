@@ -7,15 +7,17 @@
       </div>
     </div>
     <spinner
-      v-if="isLoading" 
+      v-if="isLoading"
       :title="$t('editing.loading')"
     />
-    <div 
+    <div
       v-else
-      class="setting-container">
+      class="setting-container"
+    >
       <!-- Input 參數設定 -->
-      <div 
-        class="setting-block">
+      <div
+        class="setting-block"
+      >
         <div class="setting-block__title">
           {{ $t('model.upload.inputArgsSetting') }}
           <div class="setting-block__reminder">
@@ -27,7 +29,8 @@
           {{ $t('model.upload.argsReminder', {mainScriptName}) }}
         </div>
         <draggable
-          v-model="tempArgs.input">
+          v-model="tempArgs.input"
+        >
           <model-column-setting-card
             v-for="(column, index) in tempArgs.input"
             :column-info="column"
@@ -37,19 +40,21 @@
             @updateDataColumn="updateDataColumn($event, column.id, tempArgs.input)"
             @remove="removeColumnCard(index, tempArgs.input)"
           />
-        </draggable> 
+        </draggable>
         <button
           class="btn btn-m btn-outline"
           @click="addNewColumnCard(tempArgs.input)"
         >
-          <svg-icon 
-            icon-class="plus" 
-            class="icon" />{{ $t('button.add') }}
+          <svg-icon
+            icon-class="plus"
+            class="icon"
+          />{{ $t('button.add') }}
         </button>
       </div>
       <!-- Output 參數設定 -->
-      <div 
-        class="setting-block">
+      <div
+        class="setting-block"
+      >
         <div class="setting-block__title">
           {{ $t('model.upload.outputArgsSetting') }}
           <div class="setting-block__reminder">
@@ -57,7 +62,8 @@
           </div>
         </div>
         <draggable
-          v-model="tempArgs.output">
+          v-model="tempArgs.output"
+        >
           <model-column-setting-card
             v-for="(column, index) in tempArgs.output"
             :column-info="column"
@@ -67,14 +73,15 @@
             @updateDataColumn="updateDataColumn($event, column.id, tempArgs.output)"
             @remove="removeColumnCard(index, tempArgs.output)"
           />
-        </draggable> 
+        </draggable>
         <button
           class="btn btn-m btn-outline"
           @click="addNewColumnCard(tempArgs.output)"
         >
-          <svg-icon 
-            icon-class="plus" 
-            class="icon" />{{ $t('button.add') }}
+          <svg-icon
+            icon-class="plus"
+            class="icon"
+          />{{ $t('button.add') }}
         </button>
       </div>
       <button
@@ -84,9 +91,10 @@
         @click="save"
       >
         <span v-if="isProcessing">
-          <svg-icon 
-            v-if="isProcessing" 
-            icon-class="spinner"/>
+          <svg-icon
+            v-if="isProcessing"
+            icon-class="spinner"
+          />
           {{ $t('button.processing') }}
         </span>
         <span v-else>{{ $t('button.save') }}</span>
@@ -123,7 +131,7 @@ export default {
   },
   computed: {
     modelId () {
-      return this.$route.params['model_id']
+      return this.$route.params.model_id
     },
     isArgsTouched () {
       return JSON.stringify(this.tempArgs) !== JSON.stringify(this.modelInfo.ioArgs)
@@ -156,7 +164,7 @@ export default {
                   ...item,
                   id: uuidv4()
                 }
-              }),
+              })
             }
           }
           this.tempArgs = JSON.parse(JSON.stringify(this.modelInfo.ioArgs))
@@ -172,10 +180,10 @@ export default {
         id: uuidv4()
       })
     },
-    removeColumnCard(index, args) {
+    removeColumnCard (index, args) {
       args.splice(index, 1)
     },
-    updateDataColumn(statesType, selectedColumnCardId, args) {
+    updateDataColumn (statesType, selectedColumnCardId, args) {
       const columnCard = args.find(columnCard => columnCard.id === selectedColumnCardId)
       columnCard.statsType = statesType
     },
@@ -183,27 +191,27 @@ export default {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.isProcessing = true
-        modifyModelInfo(this.modelId, { 
+        modifyModelInfo(this.modelId, {
           ...this.modelInfo,
           ioArgs: this.tempArgs
         })
-        .then(() => {
-          this.modelInfo.ioArgs = JSON.parse(JSON.stringify(this.tempArgs))
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
+          .then(() => {
+            this.modelInfo.ioArgs = JSON.parse(JSON.stringify(this.tempArgs))
+            Message({
+              message: this.$t('message.saveSuccess'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
           })
-        })
-        .finally(() => {
-          this.isProcessing = false
-          this.isShowRenameDialog = false
-        })
+          .finally(() => {
+            this.isProcessing = false
+            this.isShowRenameDialog = false
+          })
       })
     }
   }
-  
+
 }
 </script>
 <style lang="scss" scoped>
@@ -221,7 +229,7 @@ export default {
       }
 
       .el-input__inner {
-        &::placeholder { 
+        &::placeholder {
           font-size: 14px;
         }
       }
@@ -229,4 +237,3 @@ export default {
   }
 }
 </style>
-

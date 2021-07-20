@@ -1,12 +1,16 @@
 <template>
   <div class="group-creation">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('sideNav.groupCreateUser') }}</h1>
+      <h1 class="title">
+        {{ $t('sideNav.groupCreateUser') }}
+      </h1>
       <div class="bread-crumb">
         <router-link
           :to="{ name: 'GroupUserList' }"
           class="title-link"
-        >{{ $t('sideNav.groupUserList') }}</router-link>
+        >
+          {{ $t('sideNav.groupUserList') }}
+        </router-link>
         <span class="divider">/</span>{{ $t('sideNav.groupCreateUser') }}
       </div>
     </div>
@@ -16,7 +20,9 @@
     >
       <div class="input-wrapper">
         <div class="input-group">
-          <div class="input-label">{{ $t('editing.inviteeEmail') }}：</div>
+          <div class="input-label">
+            {{ $t('editing.inviteeEmail') }}：
+          </div>
           <div
             :class="{'has-error': errors.has('invitee')}"
             class="input-block"
@@ -34,7 +40,9 @@
             <div
               v-if="errors.has('invitee')"
               class="error-text"
-            >{{ errors.first('invitee') }}</div>
+            >
+              {{ errors.first('invitee') }}
+            </div>
           </div>
         </div>
         <!-- <div class="input-group">
@@ -62,12 +70,16 @@
           type="button"
           class="btn btn-outline"
           @click.stop="backToUserList"
-        >{{ $t('button.cancel') }}</button>
+        >
+          {{ $t('button.cancel') }}
+        </button>
         <button
           :disabled="isLoading"
           class="btn btn-default"
           type="submit"
-        >{{ $t('button.confirm') }}</button>
+        >
+          {{ $t('button.confirm') }}
+        </button>
       </div>
     </form>
   </div>

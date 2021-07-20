@@ -1,13 +1,14 @@
 <template>
   <div class="setting-block">
-    <div 
+    <div
       :class="{'has-change': true}"
       class="section-block"
     >
       <div class="setting-input-block">
-        <label 
-          class="input-label" 
-          for="">{{ $t('etl.dataType') }}</label>
+        <label
+          class="input-label"
+          for=""
+        >{{ $t('etl.dataType') }}</label>
         <div class="setting-cascader-container">
           <el-cascader
             v-model="columnStatsType"
@@ -23,20 +24,23 @@
               <svg-icon
                 v-if="statsTypeList.includes(data.value)"
                 :icon-class="getStatsTypeIcon(data.value)"
-                class="statsType__icon" />
+                class="statsType__icon"
+              />
               <span class="statsType__label">{{ data.name }}</span>
             </template>
           </el-cascader>
-          <svg-icon 
+          <svg-icon
             :icon-class="getStatsTypeIcon(editColumnInfo.statsType)"
-            class="setting-cascader-icon" />
+            class="setting-cascader-icon"
+          />
         </div>
       </div>
       <div class="setting-input-block">
-        <label 
-          class="input-label" 
-          for="">{{ $t('etl.emptyStringReplaceValue') }}</label>
-        <default-select 
+        <label
+          class="input-label"
+          for=""
+        >{{ $t('etl.emptyStringReplaceValue') }}</label>
+        <default-select
           v-model="stringReplaceObject.newValue"
           :is-disabled="isReviewMode"
           :option-list="replaceTypeOptionList"
@@ -52,10 +56,11 @@
         />
       </div>
       <div class="setting-input-block">
-        <label 
-          class="input-label" 
-          for="">{{ $t('etl.nullReplaceValue') }}</label>
-        <default-select 
+        <label
+          class="input-label"
+          for=""
+        >{{ $t('etl.nullReplaceValue') }}</label>
+        <default-select
           v-model="nullReplaceObject.newValue"
           :is-disabled="isReviewMode"
           :option-list="replaceTypeOptionList"
@@ -71,10 +76,11 @@
         />
       </div>
       <div class="setting-input-block">
-        <label 
-          class="input-label" 
-          for="">{{ $t('etl.errorReplaceValue') }}</label>
-        <default-select 
+        <label
+          class="input-label"
+          for=""
+        >{{ $t('etl.errorReplaceValue') }}</label>
+        <default-select
           v-model="errorDefaultObject.newValue"
           :is-disabled="isReviewMode"
           :option-list="replaceTypeOptionList"
@@ -89,14 +95,16 @@
           name="errorDefaultObject"
         />
       </div>
-      <div 
-        v-if="!isReviewMode" 
-        class="setting-input-block">
-        <label 
-          class="input-label" 
-          for="">{{ $t('etl.customDataManagement') }}</label>
+      <div
+        v-if="!isReviewMode"
+        class="setting-input-block"
+      >
+        <label
+          class="input-label"
+          for=""
+        >{{ $t('etl.customDataManagement') }}</label>
         <div class="input-list">
-          <div 
+          <div
             v-for="(replaceValue, index) in replaceValueList"
             :key="replaceValue.id"
             class="inline-input-block"
@@ -107,9 +115,10 @@
               v-model="replaceValue.value"
               :placeholder="$t('etl.columnValue')"
             />
-            <svg-icon 
-              icon-class="go-right" 
-              class="arrow-icon"/>
+            <svg-icon
+              icon-class="go-right"
+              class="arrow-icon"
+            />
             <default-select
               v-if="editColumnInfo.statsType === 'BOOLEAN'"
               :option-list="replaceTypeOptionList"
@@ -122,31 +131,38 @@
               :type="replaceValueInputType"
               :placeholder="$t('etl.replaceValue')"
             />
-            <a 
-              href="javascript:void(0)" 
+            <a
+              href="javascript:void(0)"
               class="link remove-link"
               @click="removeReplaceValue(index)"
             >{{ $t('button.remove') }}</a>
           </div>
         </div>
-        <button 
+        <button
           class="btn btn-outline"
           @click="addReplaceValue"
-        >{{ $t('button.create') }}</button>
+        >
+          {{ $t('button.create') }}
+        </button>
       </div>
     </div>
-    <div 
-      v-if="!isReviewMode" 
-      class="submit-block" >
+    <div
+      v-if="!isReviewMode"
+      class="submit-block"
+    >
       <div class="button-block">
-        <button 
+        <button
           class="btn btn-default"
           @click="saveSetting"
-        >{{ $t('button.keepSave') }}</button>
-        <button 
+        >
+          {{ $t('button.keepSave') }}
+        </button>
+        <button
           class="btn btn-outline"
           @click="reset"
-        >{{ $t('button.resumeDefault') }}</button>
+        >
+          {{ $t('button.resumeDefault') }}
+        </button>
       </div>
       <span class="remark-info">{{ $t('etl.remarkToSave') }}</span>
     </div>
@@ -218,9 +234,9 @@ export default {
     columnStatsType: {
       get () {
         // 因應 cascader 的資料型態, 需轉成 Array
-        return this.editColumnInfo.statsType === 'DATETIME' ? 
-          [this.editColumnInfo.statsType, this.editColumnInfo.datetimePatterns[0]] :
-          [this.editColumnInfo.statsType]
+        return this.editColumnInfo.statsType === 'DATETIME'
+          ? [this.editColumnInfo.statsType, this.editColumnInfo.datetimePatterns[0]]
+          : [this.editColumnInfo.statsType]
       },
       set (value) {
         this.editColumnInfo.statsType = value[0]
@@ -254,15 +270,17 @@ export default {
     cascaderStatsTypeOptions () {
       if (this.editColumnInfo.originalStatsType === 'BOOLEAN') return this.statsTypeOptions
       return this.statsTypeOptions.map(item => {
-        if(item.value !== 'DATETIME') return item
-        else return {
-          ...item,
-          pattern: this.datetimePatterns.map(pattern => {
-            return {
-              value: pattern.datetimePattern,
-              name: pattern.datetimePattern
-            }
-          })
+        if (item.value !== 'DATETIME') return item
+        else {
+          return {
+            ...item,
+            pattern: this.datetimePatterns.map(pattern => {
+              return {
+                value: pattern.datetimePattern,
+                name: pattern.datetimePattern
+              }
+            })
+          }
         }
       })
     },
@@ -319,7 +337,7 @@ export default {
           this.errorDefaultObject = newColumnInfo
         }
         return newColumnInfo
-      })   
+      })
     },
     getStatsTypeIcon (statesType) {
       switch (statesType) {
@@ -390,7 +408,7 @@ export default {
         delete el.customValue
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -412,7 +430,7 @@ export default {
       top: 20%;
       left: 6px;
       font-size: 16px;
-    } 
+    }
 
     .setting-cascader.el-cascader {
       background-color: transparent;

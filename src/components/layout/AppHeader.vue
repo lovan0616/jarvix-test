@@ -1,16 +1,16 @@
 <template>
   <header class="header">
-    <div 
+    <div
       :class="{ 'header__sidenav-toggle-container--expand': isShowFullSideNav }"
       class="header__sidenav-toggle-container"
     >
-      <a 
-        href="javascript:void(0);" 
+      <a
+        href="javascript:void(0);"
         class="toggle"
         @click="toggleSideNav"
       >
-        <svg-icon 
-          icon-class="side-nav" 
+        <svg-icon
+          icon-class="side-nav"
           class="toggle__icon"
         />
         <span class="toggle__text">
@@ -20,30 +20,33 @@
     </div>
     <div class="header__container">
       <div class="header__root">
-        <div 
-          v-if="$route.meta.isModule" 
+        <div
+          v-if="$route.meta.isModule"
           class="header__back-arrow"
           @click="$router.push({ name: 'ScheduleProjectList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }})"
         >
-          <svg-icon icon-class="arrow-left"/>
+          <svg-icon icon-class="arrow-left" />
         </div>
         <a
           v-else
           :class="logoType === 'ASE' ? 'ase_logo' : ''"
-          class="header__logo" 
+          class="header__logo"
           @click="directToHomePage"
         >
-          <img 
-            v-if="logoType === 'ASE'" 
-            src="@/assets/images/ase-logo.png">
-          <img 
-            v-else-if="logoType === 'SyGPS'" 
-            src="@/assets/images/logo_white.svg">
-          <img 
-            v-else 
-            src="@/assets/images/logo.svg">
+          <img
+            v-if="logoType === 'ASE'"
+            src="@/assets/images/ase-logo.png"
+          >
+          <img
+            v-else-if="logoType === 'SyGPS'"
+            src="@/assets/images/logo_white.svg"
+          >
+          <img
+            v-else
+            src="@/assets/images/logo.svg"
+          >
         </a>
-        <slot name="nav"/>
+        <slot name="nav" />
       </div>
     </div>
   </header>
@@ -65,25 +68,25 @@ export default {
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
-    toggleSideNav() {
+    toggleSideNav () {
       this.updateSideNavStatus(!this.isShowFullSideNav)
     },
-    directToHomePage() {
-      const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
+    directToHomePage () {
+      const groupLessPage = { name: 'PageGrouplessGuidance', params: { account_id: this.getCurrentAccountId } }
       const accountHomePage = {
-        name: 'PageIndex', 
-        params: { 
-          'account_id': this.getCurrentAccountId, 
-          'group_id': this.getCurrentGroupId
+        name: 'PageIndex',
+        params: {
+          account_id: this.getCurrentAccountId,
+          group_id: this.getCurrentGroupId
         },
-        ...(this.dataSourceId && { 
+        ...(this.dataSourceId && {
           query: {
-            'dataSourceId': this.dataSourceId,
-            'dataFrameId': this.dataFrameId
+            dataSourceId: this.dataSourceId,
+            dataFrameId: this.dataFrameId
           }
         })
       }
-      
+
       // catch error when trying to navigate to same location as the current one
       // to avoid displaying a warning in the console
       this.$router.push(this.groupList.length === 0 ? groupLessPage : accountHomePage).catch(err => {})
@@ -96,7 +99,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%; 
+  width: 100%;
   height: auto;
   height: $header-height;
   z-index: $header-z-index;
@@ -181,6 +184,5 @@ export default {
     }
   }
 
-  
 }
 </style>

@@ -1,15 +1,19 @@
 <template>
   <div class="update-license">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('sideNav.updateLicense') }}</h1>
+      <h1 class="title">
+        {{ $t('sideNav.updateLicense') }}
+      </h1>
     </div>
     <section class="license-info">
-      <form 
+      <form
         class="license-info__form"
         @submit.prevent="confirmUpdate"
       >
         <div class="license-info__input-block">
-          <h2 class="license-info__title">{{ $t('updateLicense.licenseKey') }}</h2>
+          <h2 class="license-info__title">
+            {{ $t('updateLicense.licenseKey') }}
+          </h2>
           <textarea
             v-validate="`required`"
             v-model.trim="licenseInfo.newLicense"
@@ -22,15 +26,17 @@
           <div
             v-show="errors.has('newLicense')"
             class="error-text"
-          >{{ errors.first('newLicense') }}</div>
+          >
+            {{ errors.first('newLicense') }}
+          </div>
         </div>
         <div class="license-info__button-block">
-          <button 
+          <button
             :class="isLoading ? 'btn-has-icon' : ''"
             type="submit"
             class="btn btn-default btn-update"
           >
-            <svg-icon 
+            <svg-icon
               v-if="isLoading"
               icon-class="spinner"
             />
@@ -59,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['getCurrentAccountId']),
+    ...mapGetters('userManagement', ['getCurrentAccountId'])
   },
   methods: {
     confirmUpdate () {
@@ -96,7 +102,6 @@ export default {
       line-height: 32px;
     }
   }
-
 
   .license-info {
     margin-bottom: 16px;

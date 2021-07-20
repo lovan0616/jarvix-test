@@ -3,24 +3,33 @@
     slot="label"
     :disabled="!isFailed"
     :enterable="false"
-    class="tooltip">
+    class="tooltip"
+  >
     <div slot="content">
-      <div class="tooltip__title">{{ $t('miniApp.pleaseCheckFollowingSituations') + '：' }}</div>
-      <p class="tooltip__item">{{ '1.' + $t('miniApp.dataframeExistenceAndRebuild') }}</p>
-      <p class="tooltip__item">{{ '2.' + $t('miniApp.connectionStatus') }}</p>
-      <p class="tooltip__item">{{ '3.' + $t('miniApp.otherReasons') }}</p>
+      <div class="tooltip__title">
+        {{ $t('miniApp.pleaseCheckFollowingSituations') + '：' }}
+      </div>
+      <p class="tooltip__item">
+        {{ '1.' + $t('miniApp.dataframeExistenceAndRebuild') }}
+      </p>
+      <p class="tooltip__item">
+        {{ '2.' + $t('miniApp.connectionStatus') }}
+      </p>
+      <p class="tooltip__item">
+        {{ '3.' + $t('miniApp.otherReasons') }}
+      </p>
     </div>
     <div
       ref="container"
       :class="{
         'grey-bg': isSingleChoiceFilter,
         'blue-bg': !isEditMode && isShowFilterPanel,
-        'hoverable': !isEditMode 
+        'hoverable': !isEditMode
       }"
       class="filter"
       @click="toggleFilterPanel"
     >
-      <spinner 
+      <spinner
         v-if="isProcessing"
         size="10"
       />
@@ -28,19 +37,24 @@
         <div
           :class="{'filter__title--error': isFailed}"
           class="filter__title"
-        >{{ displayName }}</div>
+        >
+          {{ displayName }}
+        </div>
         <div
           v-if="isEditMode"
-          class="filter__delete-icon-box" 
-          @click="removeFilter">
+          class="filter__delete-icon-box"
+          @click="removeFilter"
+        >
           <svg-icon
-            icon-class="close" 
-            class="filter__delete-icon"/>
+            icon-class="close"
+            class="filter__delete-icon"
+          />
         </div>
         <svg-icon
           v-else
           icon-class="triangle"
-          class="filter__dropdown-icon"/>
+          class="filter__dropdown-icon"
+        />
         <template v-if="!isFailed">
           <!--Range-->
           <div
@@ -48,61 +62,73 @@
             class="filter__input-panel input-panel"
             @click.stop
           >
-            <spinner 
+            <spinner
               v-if="isLoading"
               class="filter-spinner"
             />
             <template v-else>
               <div class="input-panel__input-group">
-                <label 
-                  class="input-panel__label" 
-                  for="max">{{ `${$t('miniApp.upperBound')}(max: ${filter.dataMax})` }}</label>
+                <label
+                  class="input-panel__label"
+                  for="max"
+                >{{ `${$t('miniApp.upperBound')}(max: ${filter.dataMax})` }}</label>
                 <input
                   v-validate="upperBoundRules"
                   id="max"
                   ref="upperBound"
                   v-model.trim="tempFilter.end"
                   :placeholder="$t('miniApp.pleaseEnterNumber')"
-                  name="upperBound" 
-                  class="input-panel__input input" 
-                  type="text">
-                <div 
+                  name="upperBound"
+                  class="input-panel__input input"
+                  type="text"
+                >
+                <div
                   v-show="errors.has('upperBound')"
                   class="error-text"
-                >{{ errors.first('upperBound') }}</div>
+                >
+                  {{ errors.first('upperBound') }}
+                </div>
               </div>
               <div class="input-panel__input-group">
-                <label 
-                  class="input-panel__label" 
-                  for="min">{{ `${$t('miniApp.lowerBound')}(min: ${filter.dataMin})` }}</label>
-                <input 
+                <label
+                  class="input-panel__label"
+                  for="min"
+                >{{ `${$t('miniApp.lowerBound')}(min: ${filter.dataMin})` }}</label>
+                <input
                   v-validate="lowerBoundRules"
                   id="min"
                   ref="lowerBound"
                   v-model.trim="tempFilter.start"
-                  :placeholder="$t('miniApp.pleaseEnterNumber')" 
+                  :placeholder="$t('miniApp.pleaseEnterNumber')"
                   name="lowerBound"
-                  class="input-panel__input input" 
-                  type="text">
-                <div 
+                  class="input-panel__input input"
+                  type="text"
+                >
+                <div
                   v-show="errors.has('lowerBound')"
                   class="error-text"
-                >{{ errors.first('lowerBound') }}</div>
+                >
+                  {{ errors.first('lowerBound') }}
+                </div>
               </div>
               <div class="button__block">
-                <button 
+                <button
                   class="btn btn-outline"
                   @click="toggleFilterPanel"
-                >{{ $t('button.cancel') }}</button>
-                <button 
+                >
+                  {{ $t('button.cancel') }}
+                </button>
+                <button
                   class="btn btn-default"
                   @click="updateRangeFilteredColumnValue"
-                >{{ $t('button.save') }}</button>
+                >
+                  {{ $t('button.save') }}
+                </button>
               </div>
             </template>
           </div>
           <!--Datetime-->
-          <div 
+          <div
             v-else-if="filter.statsType === 'DATETIME'"
             :class="{ 'hidden': isShowFilterPanel }"
             class="filter__datetime-picker-panel"
@@ -124,7 +150,8 @@
           <div
             v-else-if="isShowFilterPanel && (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN')"
             class="filter__selector-panel selector"
-            @click.stop>
+            @click.stop
+          >
             <input
               v-model.trim="searchInput"
               :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
@@ -137,9 +164,10 @@
               size="20"
             />
             <template v-else>
-              <div 
-                v-if="filter.dataValueOptionList.length === 0" 
-                class="empty-message">
+              <div
+                v-if="filter.dataValueOptionList.length === 0"
+                class="empty-message"
+              >
                 {{ $t('message.emptyResult') }}
               </div>
               <div class="selector__list-block">
@@ -149,7 +177,8 @@
                     v-if="isSingleChoiceFilter"
                     :key="index"
                     name="control"
-                    class="radio">
+                    class="radio"
+                  >
                     <input
                       :checked="checkValueIsChecked(value.name)"
                       class="radio__input"
@@ -162,14 +191,15 @@
                   <label
                     v-else
                     :key="index"
-                    class="checkbox">
+                    class="checkbox"
+                  >
                     <div class="checkbox-label">
                       <input
                         :checked="checkValueIsChecked(value.name)"
                         type="checkbox"
                         @input="updateMultipleEnumFilteredColumnValue($event, value.name)"
                       >
-                      <div class="checkbox-square"/>
+                      <div class="checkbox-square" />
                     </div>
                     <span class="radio__name">{{ value.name }}</span>
                   </label>
@@ -181,10 +211,12 @@
           <div
             v-else-if="isShowFilterPanel && filter.statsType === 'RELATIVEDATETIME'"
             class="filter__selector-panel selector"
-            @click.stop>
-            <div 
-              v-if="filter.dataValueOptionList.length === 0" 
-              class="empty-message">
+            @click.stop
+          >
+            <div
+              v-if="filter.dataValueOptionList.length === 0"
+              class="empty-message"
+            >
               {{ $t('message.emptyResult') }}
             </div>
             <div class="selector__list-block">
@@ -192,7 +224,8 @@
                 <label
                   :key="index"
                   name="control"
-                  class="radio">
+                  class="radio"
+                >
                   <input
                     :checked="checkValueIsChecked(option.value)"
                     class="radio__input"
@@ -276,14 +309,14 @@ export default {
       if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
         const selectedAmount = this.filter.dataValues.length
         if (selectedAmount === 0) return this.filter.columnName
-        return this.isSingleChoiceFilter ? `${this.filter.columnName}: ${ this.filter.dataValues[0] }` : `${this.filter.columnName} (${ this.filter.dataValues.length })`
+        return this.isSingleChoiceFilter ? `${this.filter.columnName}: ${this.filter.dataValues[0]}` : `${this.filter.columnName} (${this.filter.dataValues.length})`
       } else if (this.filter.statsType === 'RELATIVEDATETIME') {
         if (this.filter.dataValues.length === 0) return this.filter.columnName
-        return `${this.filter.columnName}: ${ this.$t('miniApp.' + this.filter.dataValues[0]) }`
+        return `${this.filter.columnName}: ${this.$t('miniApp.' + this.filter.dataValues[0])}`
       } else if (this.filter.statsType === 'NUMERIC') {
-        return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.start} - ${this.filter.end})`
+        return this.filter.start === null || this.filter.start === '' ? this.filter.columnName : `${this.filter.columnName} (${this.filter.start} - ${this.filter.end})`
       } else if (this.filter.statsType === 'DATETIME') {
-        return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName}: ${ this.filter.start} - ${this.filter.end}`
+        return this.filter.start === null || this.filter.start === '' ? this.filter.columnName : `${this.filter.columnName}: ${this.filter.start} - ${this.filter.end}`
       }
     },
     dateTimeRange () {
@@ -293,7 +326,7 @@ export default {
     pickerOptions () {
       const vm = this
       return {
-        disabledDate(time) {
+        disabledDate (time) {
           return time.getTime() < new Date(vm.filter.dataMin).getTime() || time.getTime() > new Date(vm.filter.dataMax).getTime()
         }
       }
@@ -320,7 +353,7 @@ export default {
             name: value,
             isSelected: this.filter.dataValues.includes(value)
           }))
-        })  
+        })
         .finally(() => this.isLoading = false)
     },
     isNeedUpdate (val) {
@@ -342,7 +375,7 @@ export default {
   methods: {
     autoHide (evt) {
       if (!this.isShowFilterPanel) return false
-      if (!this.$el.contains(evt.target))  this.toggleFilterPanel()
+      if (!this.$el.contains(evt.target)) this.toggleFilterPanel()
     },
     async fetchData () {
       this.isLoading = true
@@ -375,12 +408,12 @@ export default {
           name: value,
           isSelected: this.filter.dataValues.includes(value)
         }))
-      
+
         // 控制項須確保至少選定其中一個項目：如果當前沒有或之前選定的值在新取的選項中沒有，則預設為第一個選項
-        const isNeedDefaultSelect = this.isSingleChoiceFilter 
-          && (this.filter.dataValues.length === 0 || !this.filter.dataValueOptionList.find(option => option.isSelected))
-          && this.filter.dataValueOptionList.length > 0
-          
+        const isNeedDefaultSelect = this.isSingleChoiceFilter &&
+          (this.filter.dataValues.length === 0 || !this.filter.dataValueOptionList.find(option => option.isSelected)) &&
+          this.filter.dataValueOptionList.length > 0
+
         //  將預設選項更新出去
         if (isNeedDefaultSelect) return this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
         // 如果是因為階層被觸發去重新取選單資料，須把取完後的結果更新出去，並由外層委派下一個 filter 去更新
@@ -408,9 +441,9 @@ export default {
           if (statsType === 'NUMERIC') {
             this.filter.dataMin = valueList.min
             this.filter.dataMax = valueList.max
-            return 
+            return
           }
-          
+
           if (statsType === 'DATETIME') {
             // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
             valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
@@ -432,7 +465,7 @@ export default {
       if (!this.isShowFilterPanel) {
         this.createTempFilter()
       } else {
-        if (this.filter.statsType === "NUMERIC") {
+        if (this.filter.statsType === 'NUMERIC') {
           this.$validator.detach('upperBound')
           this.$validator.detach('lowerBound')
           this.$nextTick(() => this.tempFilter = {})
@@ -487,7 +520,6 @@ export default {
         .slice(0, currentFilterIndex)
         .filter(filter => this.checkShouldApplyMiniAppFilter(filter))
         .map(filter => {
-
           let type = ''
           let data_type = ''
           switch (filter.statsType) {
@@ -506,39 +538,41 @@ export default {
             case ('RELATIVEDATETIME'):
               data_type = 'datetime'
               type = 'range'
-              break  
+              break
           }
 
           // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          if (filter.statsType === 'RELATIVEDATETIME') return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: this.componentData.dateTimeColumn.dataColumnId,
-              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-              ...this.formatRelativeDatetime(filter.dataValues[0])
-            }
-          }]
-          
+          if (filter.statsType === 'RELATIVEDATETIME') {
+            return [{
+              type,
+              properties: {
+                data_type,
+                dc_id: this.componentData.dateTimeColumn.dataColumnId,
+                display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+                ...this.formatRelativeDatetime(filter.dataValues[0])
+              }
+            }]
+          }
+
           return [{
             type,
             properties: {
               data_type,
               dc_id: filter.columnId,
               display_name: filter.columnName,
-              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
+              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY') && {
                 datavalues: filter.dataValues,
                 display_datavalues: filter.dataValues
               }),
               ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
                 start: filter.start,
                 end: filter.end
-              }),
+              })
             }
           }]
         })
-        return restrictions.length === 0 ? null : restrictions
-    },
+      return restrictions.length === 0 ? null : restrictions
+    }
   }
 }
 </script>
@@ -691,7 +725,7 @@ export default {
     &:focus {
       outline: none;
     }
-      
+
     .placeholder {
       font-size: 14px;
       line-height: 22px;
@@ -713,7 +747,7 @@ export default {
 
     &::-webkit-scrollbar-thumb {
       background-color: rgba(0, 0, 0, 0.7);
-    }  
+    }
 
     .checkbox {
       display: flex;

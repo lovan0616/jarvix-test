@@ -3,9 +3,10 @@
     class="alert-condition-deleter"
     @click="onClickDeleteIcon"
   >
-    <svg-icon 
-      icon-class="delete" 
-      class="alert-condition-deleter__delete-icon"/>
+    <svg-icon
+      icon-class="delete"
+      class="alert-condition-deleter__delete-icon"
+    />
     <div
       v-show="isShowConfirmMsg"
       class="alert-condition-deleter__confirm-pop"
@@ -51,10 +52,10 @@ export default {
     onClickDeleteIcon () {
       this.isShowConfirmMsg = true
     },
-    cancelDeletion() {
+    cancelDeletion () {
       this.isShowConfirmMsg = false
     },
-    confirmDeletion() {
+    confirmDeletion () {
       this.isProcessing = true
       deleteAlertCondition(this.condition.id)
         .then(() => {
@@ -94,7 +95,7 @@ export default {
     box-shadow: 0px 2px 10px rgba(34, 117, 125, 0.5);
     right: -10px;
     top: calc(100% + 8px);
-    
+
     &::before {
       content: '';
       position: absolute;

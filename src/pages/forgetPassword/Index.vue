@@ -1,7 +1,9 @@
 <template>
   <page-layout>
     <div class="forget-pwd-page">
-      <h1 class="page-title">{{ $t('forgetPassword.title') }}</h1>
+      <h1 class="page-title">
+        {{ $t('forgetPassword.title') }}
+      </h1>
       <form
         @submit.prevent="submitForm"
       >
@@ -16,15 +18,19 @@
             type="email"
           />
         </div>
-        <button 
-          :disabled="isSubmit" 
+        <button
+          :disabled="isSubmit"
           type="submit"
           class="btn btn-default btn-submit"
-        >{{ $t('button.send') }}</button>
+        >
+          {{ $t('button.send') }}
+        </button>
         <router-link
           :to="{ name: 'PageLogin' }"
           class="link"
-        >{{ $t('link.backToLogin') }}</router-link>
+        >
+          {{ $t('link.backToLogin') }}
+        </router-link>
       </form>
     </div>
   </page-layout>

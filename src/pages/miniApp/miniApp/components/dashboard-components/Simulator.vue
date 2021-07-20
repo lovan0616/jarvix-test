@@ -1,23 +1,26 @@
 <template>
   <div class="simulator">
-    <spinner 
-      v-if="isLoading" 
+    <spinner
+      v-if="isLoading"
     />
     <empty-info-block
       v-else-if="isFetchInputFailed || isModelDepreciated"
       :msg="isFetchInputFailed ? $t('message.systemIsError') : $t('message.modelNotFoundPleaseReset')"
     />
-    <section 
-      v-show="!isLoading && !isFetchInputFailed && !isModelDepreciated" 
-      class="simulator__content">
-      <form 
-        :data-vv-scope="'simulator-' + simulatorId" 
+    <section
+      v-show="!isLoading && !isFetchInputFailed && !isModelDepreciated"
+      class="simulator__content"
+    >
+      <form
+        :data-vv-scope="'simulator-' + simulatorId"
         class="simulator__setting-container"
         @submit.prevent="simulate"
       >
         <div class="simulator__setting-container--top">
           <div class="simulator__setting">
-            <div class="simulator__setting-title">{{ $t('miniApp.simulationParamSetting') }}</div>
+            <div class="simulator__setting-title">
+              {{ $t('miniApp.simulationParamSetting') }}
+            </div>
             <div class="simulator__setting-content">
               <simulator-input
                 v-for="(columnInfo, index) in modelInfo"
@@ -39,52 +42,62 @@
             :disabled="isProcessing"
             type="submit"
             class="btn-m btn-default btn-simulate"
-          >{{ $t('miniApp.startSimulating') }}</button>
+          >
+            {{ $t('miniApp.startSimulating') }}
+          </button>
         </div>
       </form>
       <div class="simulator__result">
-        <div 
-          v-if="!resultList" 
-          class="simulator__default-message">
+        <div
+          v-if="!resultList"
+          class="simulator__default-message"
+        >
           {{ $t('miniApp.notYetSimulate') }}
         </div>
         <template v-else>
-          <el-tabs 
+          <el-tabs
             v-model="activeTabName"
             class="simulator__result-tab"
-            type="card">
-            <el-tab-pane 
-              :label="$t('miniApp.simulationResult')" 
-              :name="$t('miniApp.simulationResult')">
+            type="card"
+          >
+            <el-tab-pane
+              :label="$t('miniApp.simulationResult')"
+              :name="$t('miniApp.simulationResult')"
+            >
               <div
                 v-if="isSimulateFailed"
-                class="simulator__default-message">
+                class="simulator__default-message"
+              >
                 {{ failedMessage || $t('message.systemIsError') }}
               </div>
               <spinner
                 v-else-if="isProcessing"
                 :title="$t('miniApp.simulating')"
               />
-              <div 
+              <div
                 v-else
-                class="simulator__result-panel">
+                class="simulator__result-panel"
+              >
                 <div class="simulator__result-card">
-                  <div 
+                  <div
                     v-for="(result, index) in resultList"
                     :key="index"
-                    class="item">
-                    <div class="item__label">{{ result.name }}</div>
+                    class="item"
+                  >
+                    <div class="item__label">
+                      {{ result.name }}
+                    </div>
                     <div
                       class="item__value"
                       v-html="isNaN(roundNumber(result.value, 3)) ? lineBreak(result.value) : roundNumber(result.value, 3)"
                     />
-                  </div>  
+                  </div>
                 </div>
               </div>
             </el-tab-pane>
             <!-- 下次再加 -->
-            <!-- <el-tab-pane 
-              :label="$t('miniApp.savedRecord')" 
+            <!-- <el-tab-pane
+              :label="$t('miniApp.savedRecord')"
               :name="$t('miniApp.savedRecord')">
               <div class="simulator__record-panel">
                 {{ $t('miniApp.savedRecord') }}
@@ -106,7 +119,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
-  name: "Simulator",
+  name: 'Simulator',
   components: {
     DefaultSelect,
     EmptyInfoBlock,
@@ -115,7 +128,7 @@ export default {
   props: {
     isEditMode: {
       type: Boolean,
-      default: false,
+      default: false
     },
     restrictions: {
       type: Array,
@@ -141,7 +154,7 @@ export default {
     }
   },
   computed: {
-    
+
   },
   watch: {
     modelInfo: {
@@ -166,11 +179,11 @@ export default {
         userInput: ''
       }))
     },
-    updateColumnInfoState(index) {
+    updateColumnInfoState (index) {
       this.modelInfo = this.modelInfo.map((input, currentIndex) => {
         if (index !== currentIndex) return input
         return {
-          ...input, 
+          ...input,
           isInit: true
         }
       })
@@ -181,7 +194,7 @@ export default {
         if (!result) return
         this.isSimulateFailed = false
         this.isProcessing = true
-        
+
         modelSimulate(this.modelSetting.modelId, {
           inputValues: this.modelInfo.map(column => column.userInput)
         })
@@ -194,7 +207,7 @@ export default {
             })
           })
           .catch(() => { this.isSimulateFailed = true })
-          .finally(() => { this.isProcessing = false })        
+          .finally(() => { this.isProcessing = false })
       })
     },
     handleFetchInputFailed (message) {
@@ -202,7 +215,7 @@ export default {
       this.isFetchInputFailed = true
       if (!this.failedMessage) this.failedMessage = message
     }
-  },
+  }
 
 }
 </script>

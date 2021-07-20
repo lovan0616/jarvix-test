@@ -1,28 +1,38 @@
 <template>
-  <div 
-    class="dialog-box" 
-    @click="closeDialog">
-    <div 
-      class="dialog-inner-box" 
-      @click.stop>
+  <div
+    class="dialog-box"
+    @click="closeDialog"
+  >
+    <div
+      class="dialog-inner-box"
+      @click.stop
+    >
       <div @click="closeDialog">
-        <svg-icon 
-          icon-class="close" 
-          class="icon dialog-close"/>
+        <svg-icon
+          icon-class="close"
+          class="icon dialog-close"
+        />
       </div>
       <div class="dialog-content-wrapper">
-        <div 
-          :class="{'hasContent': content}" 
-          class="title">{{ title }}</div>
-        <div 
-          v-if="content" 
-          class="content">{{ content }}</div>
+        <div
+          :class="{'hasContent': content}"
+          class="title"
+        >
+          {{ title }}
+        </div>
+        <div
+          v-if="content"
+          class="content"
+        >
+          {{ content }}
+        </div>
       </div>
       <div class="dialog-button-block">
         <button
           :disabled="isProcessing"
           class="btn dialog-decide-cancel"
-          @click="closeDialog">
+          @click="closeDialog"
+        >
           {{ $t('button.cancel') }}
         </button>
         <button
@@ -31,9 +41,10 @@
           class="btn btn-default dialog-decide-change-logout"
           @click="confirmBtn"
         >
-          <svg-icon 
-            v-if="isProcessing" 
-            icon-class="spinner"/>
+          <svg-icon
+            v-if="isProcessing"
+            icon-class="spinner"
+          />
           {{ btnText }}
         </button>
         <button
@@ -42,7 +53,7 @@
           class="btn btn-default dialog-decide-change-delete"
           @click="confirmBtn"
         >
-          <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-if="isProcessing"><svg-icon icon-class="spinner" />{{ $t('button.processing') }}</span>
           <span v-else>{{ btnText }}</span>
         </button>
       </div>

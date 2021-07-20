@@ -7,7 +7,7 @@
     @closeDialog="$emit('closeDialog')"
     @confirmBtn="changeLang"
   >
-    <sy-select 
+    <sy-select
       :placeholder="$t('nav.languagePlaceholder')"
       :selected="locale"
       :items="langOptions"
@@ -19,7 +19,7 @@
 
 <script>
 import WritingDialog from '@/components/dialog/WritingDialog'
-import SySelect from '@/components/select/SySelect';
+import SySelect from '@/components/select/SySelect'
 import { updateLocale } from '@/API/User'
 import { mapState, mapGetters } from 'vuex'
 
@@ -82,7 +82,7 @@ export default {
     },
     langOnSelected (item) {
       this.selectedLanguage = item
-    },
+    }
   }
 }
 </script>

@@ -7,19 +7,23 @@
       :step="step"
       :process-text="processText"
     />
-    <div 
-      class="dialog-sub-title">
+    <div
+      class="dialog-sub-title"
+    >
       {{ $t('editing.dataFrame') + ': ' + dataFrameInfo.primaryAlias }}
     </div>
     <file-upload
       :file-count-limit="1"
       @next="$emit('next')"
-      @close="$emit('close')">
-      <template v-slot:additionalButton>
-        <button 
+      @close="$emit('close')"
+    >
+      <template #additionalButton>
+        <button
           class="btn btn-outline"
           @click="reChooseMode"
-        >{{ $t('fileDataUpdate.reSetting') }}</button>
+        >
+          {{ $t('fileDataUpdate.reSetting') }}
+        </button>
       </template>
     </file-upload>
   </div>
@@ -50,9 +54,9 @@ export default {
   },
   methods: {
     reChooseMode () {
-			this.$store.commit('dataManagement/updateUploadFileList', [])
-			this.$emit('prev')
-		},
+      this.$store.commit('dataManagement/updateUploadFileList', [])
+      this.$emit('prev')
+    }
   }
 }
 </script>

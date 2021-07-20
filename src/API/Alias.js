@@ -15,7 +15,7 @@ export function getValueAlias (columnId) {
  */
 export function saveValueAlias (aliasInfo) {
   return request({
-    url: `/alias/value`,
+    url: '/alias/value',
     method: 'PATCH',
     data: aliasInfo
   })

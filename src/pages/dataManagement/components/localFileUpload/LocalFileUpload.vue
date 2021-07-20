@@ -1,16 +1,21 @@
 <template>
   <div class="local-file-upload">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="currntUploadStatus === uploadStatus.uploading ? 2 : 1"
       :process-text="processText"
     />
-    <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
+    <div class="data-source-name">
+      {{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}
+    </div>
     <file-upload
       :file-count-limit="fileCountLimit"
       @updateCurrntUploadStatus="updateCurrntUploadStatus"
       @next="$emit('next')"
-      @close="cancelFileUpload"/>
+      @close="cancelFileUpload"
+    />
   </div>
 </template>
 <script>

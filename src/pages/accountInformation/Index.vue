@@ -1,7 +1,9 @@
 <template>
   <div class="account-info">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('sideNav.accountInformation') }}</h1>
+      <h1 class="title">
+        {{ $t('sideNav.accountInformation') }}
+      </h1>
     </div>
     <section class="account-info-block">
       <h2 class="account-info-block__title">
@@ -69,7 +71,7 @@
         </div>
       </template>
     </section>
-    
+
     <section class="account-info-block usage-status">
       <h2 class="account-info-block__title">
         {{ $t('accountInfo.accountUsageStatus') }}
@@ -85,27 +87,40 @@
         <empty-info-block
           v-if="groupStatus.groupUsageList.length === 0"
         />
-        <div 
+        <div
           v-for="(groupUsage, index) in groupStatus.groupUsageList"
           :key="index"
-          class="usage-status__item item">
+          class="usage-status__item item"
+        >
           <h3 class="item__title">
             {{ groupUsage.groupName }}
           </h3>
           <div class="item__info">
-            <h3 class="item__info--title"> {{ $t('accountInfo.dataFrameAmount') }} </h3>
-            <div class="item__info--amount"> {{ formatComma(groupUsage.dataSourceCount) }} </div>
+            <h3 class="item__info--title">
+              {{ $t('accountInfo.dataFrameAmount') }}
+            </h3>
+            <div class="item__info--amount">
+              {{ formatComma(groupUsage.dataSourceCount) }}
+            </div>
           </div>
           <div class="item__info">
-            <h3 class="item__info--title"> {{ $t('accountInfo.pinBoardAmount') }} </h3>
-            <div class="item__info--amount"> {{ formatComma(groupUsage.pinBoardCount) }} </div>
+            <h3 class="item__info--title">
+              {{ $t('accountInfo.pinBoardAmount') }}
+            </h3>
+            <div class="item__info--amount">
+              {{ formatComma(groupUsage.pinBoardCount) }}
+            </div>
           </div>
           <div
             v-if="hasPermission('war_room')"
             class="item__info"
           >
-            <h3 class="item__info--title"> {{ $t('accountInfo.warRoomAmount') }} </h3>
-            <div class="item__info--amount"> {{ formatComma(groupUsage.warRoomCount) }} </div>
+            <h3 class="item__info--title">
+              {{ $t('accountInfo.warRoomAmount') }}
+            </h3>
+            <div class="item__info--amount">
+              {{ formatComma(groupUsage.warRoomCount) }}
+            </div>
           </div>
         </div>
       </template>
@@ -119,8 +134,8 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'AccountInfo',
-    components: {
-      EmptyInfoBlock
+  components: {
+    EmptyInfoBlock
   },
   data () {
     return {
@@ -135,7 +150,7 @@ export default {
       groupStatus: {
         groupCount: null,
         groupUsageList: []
-      },
+      }
     }
   },
   computed: {
@@ -204,7 +219,7 @@ export default {
   }
 }
 
-.info-wrapper { 
+.info-wrapper {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(2, 76px) 50px;

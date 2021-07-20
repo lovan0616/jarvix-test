@@ -17,20 +17,24 @@
       class="card__error-message"
     >
       <svg-icon
-        icon-class="alert" 
-        class="icon"/>
+        icon-class="alert"
+        class="icon"
+      />
       {{ errorMessage }}
     </div>
     <template v-else>
       <div class="card__header">
-        <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
+        <div class="card__title">
+          {{ componentBasicInfo.config.displayName }}
+        </div>
         <div
           v-if="isAboveUpperBound || isBelowLowerBound"
           :class="['card__message', {'card__message--hover': isEditable}]"
         >
           <svg-icon
-            :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
-            class="icon"/>
+            :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'"
+            class="icon"
+          />
           {{ isAboveUpperBound ? $t('warRoom.reachedUpperBound') : $t('warRoom.reachedLowerBound') }}
         </div>
       </div>
@@ -74,23 +78,25 @@
       class="card__control"
     >
       <a
-        href="javascript:void(0);" 
+        href="javascript:void(0);"
         class="link action-link"
         @click="editSetting"
       >
         <svg-icon
-          icon-class="filter-setting" 
-          class="icon"/>
+          icon-class="filter-setting"
+          class="icon"
+        />
       </a>
       <a
         v-if="!isError"
-        href="javascript:void(0);" 
+        href="javascript:void(0);"
         class="link action-link"
         @click="viewConstraint"
       >
         <svg-icon
-          icon-class="filter" 
-          class="icon"/>
+          icon-class="filter"
+          class="icon"
+        />
       </a>
     </div>
   </div>
@@ -140,8 +146,8 @@ export default {
       isTaskComplete: true,
       isShowToolbox: false,
       customChartStyle: {
-        width: '100%', 
-        height: '100%',
+        width: '100%',
+        height: '100%'
       },
       diagram: null,
       isLoading: true,
@@ -166,18 +172,18 @@ export default {
     },
     componentConfigTimeInterval () {
       if (
-        this.isLoading
-        || this.isError
-        || this.isEditable
-        || !this.componentBasicInfo.config
-        || !this.componentBasicInfo.config.displayDateRangeSwitch
+        this.isLoading ||
+        this.isError ||
+        this.isEditable ||
+        !this.componentBasicInfo.config ||
+        !this.componentBasicInfo.config.displayDateRangeSwitch
       ) return null
 
       const {
-        recentTimeIntervalAmount, 
-        recentTimeIntervalUnit, 
-        customEndTime, 
-        customStartTime 
+        recentTimeIntervalAmount,
+        recentTimeIntervalUnit,
+        customEndTime,
+        customStartTime
       } = this.componentBasicInfo.config
 
       // 如果沒有選擇預設則為自訂區間
@@ -190,10 +196,10 @@ export default {
     },
     timeInterval () {
       if (
-        this.isLoading
-        || this.isError
-        || this.isEditable
-        || (!this.componentConfigTimeInterval && !this.warRoomDefaultTime)
+        this.isLoading ||
+        this.isError ||
+        this.isEditable ||
+        (!this.componentConfigTimeInterval && !this.warRoomDefaultTime)
       ) return null
       return this.componentConfigTimeInterval || this.warRoomDefaultTime
     }
@@ -222,7 +228,7 @@ export default {
             this.checkRefreshStatus()
           }, this.convertRefreshFrequency(this.componentBasicInfo.config.refreshFrequency))
           this.isLoading = false
-         })
+        })
         .catch(() => {
           // 若為 live 頁面，需確認是否有更新版本上線
           if (!this.isPreviewing) this.$emit('check-update')
@@ -252,7 +258,7 @@ export default {
 
               // 定期更新 component 資料
               let isAutoRefresh = componentBasicInfo.config.isAutoRefresh
-              if(isAutoRefresh && !this.isEditable) {
+              if (isAutoRefresh && !this.isEditable) {
                 this.autoRefreshFunction = window.setTimeout(() => {
                   this.checkRefreshStatus()
                 }, this.convertRefreshFrequency(componentBasicInfo.config.refreshFrequency))
@@ -263,7 +269,7 @@ export default {
                 responseData.title.xAxis = formatComponentTitle(responseData.title.xAxis)
                 responseData.title.yAxis = formatComponentTitle(responseData.title.yAxis)
               }
-              
+
               // 儲存圖表資料
               if (!responseData.dataset.data || responseData.dataset.data.length === 0) {
                 this.isLoading = false
@@ -302,14 +308,14 @@ export default {
           this.errorMessage = error.error && error.error.message ? error.error.message : this.$t('message.systemIsError')
         })
     },
-    viewConstraint() {
+    viewConstraint () {
       this.$emit('check-constraint', this.componentBasicInfo)
     },
-    editSetting() {
+    editSetting () {
       this.$emit('check-setting', {
         ...this.componentBasicInfo,
         ...(this.isError && { isError: this.isError }),
-        ...(this.errorMessage && { errorMessage: this.errorMessage }),
+        ...(this.errorMessage && { errorMessage: this.errorMessage })
       })
     },
     convertRefreshFrequency (cronTab) {

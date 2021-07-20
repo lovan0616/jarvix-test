@@ -3,8 +3,9 @@
     <div class="button-block">
       <span
         v-if="relationInfo.state === 'Process'"
-        class="spinner">
-        <svg-icon icon-class="spinner"/>
+        class="spinner"
+      >
+        <svg-icon icon-class="spinner" />
       </span>
       <template v-else>
         <button
@@ -12,25 +13,33 @@
           :disabled="isLoading"
           class="btn btn-secondary"
           @click="deleteJoinTable()"
-        >{{ $t('button.delete') }}</button>
-        <button 
-          v-if="isEditing && !relationInfo.id" 
+        >
+          {{ $t('button.delete') }}
+        </button>
+        <button
+          v-if="isEditing && !relationInfo.id"
           type="button"
           class="btn btn-outline"
           @click="cancelAddingJoinTable()"
-        >{{ $t('button.cancel') }}</button>
-        <button 
-          v-if="!isEditing" 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
+          v-if="!isEditing"
           type="button"
           class="btn btn-outline"
           @click="toggleIsEditing()"
-        >{{ $t('button.edit') }}</button>
-        <button 
-          v-if="isEditing && relationInfo.id" 
+        >
+          {{ $t('button.edit') }}
+        </button>
+        <button
+          v-if="isEditing && relationInfo.id"
           type="button"
           class="btn btn-outline"
           @click="cancelEdit()"
-        >{{ $t('button.close') }}</button>
+        >
+          {{ $t('button.close') }}
+        </button>
       </template>
     </div>
     <div
@@ -41,7 +50,9 @@
         :content="relationInfo.name"
         placement="bottom"
       >
-        <h3 class="table-name">{{ relationInfo.name }}</h3>
+        <h3 class="table-name">
+          {{ relationInfo.name }}
+        </h3>
       </el-tooltip>
       <h6 class="join-type">
         {{ $t('editing.joinType') }}
@@ -56,9 +67,10 @@
         :class="{'is-editing': isEditing, 'disabled': isPreviewingResult, 'invalid': errors.has(relationInfo.key)}"
         class="input-block"
       >
-        <label 
-          for="" 
-          class="label">*{{ $t('editing.tableName') }}</label>
+        <label
+          for=""
+          class="label"
+        >*{{ $t('editing.tableName') }}</label>
         <input-block
           v-validate="`required|max:${max}`"
           v-if="!relationInfo.id"
@@ -68,9 +80,12 @@
           v-model="editedRelationInfo.name"
           type="text"
         />
-        <div 
-          v-else 
-          class="name">{{ relationInfo.name }}</div>
+        <div
+          v-else
+          class="name"
+        >
+          {{ relationInfo.name }}
+        </div>
       </div>
       <section
         :class="{'disabled': isPreviewingResult}"
@@ -101,9 +116,10 @@
               :data-column="relation.leftDataColumn"
               :index="relationIndex"
             />
-            <svg-icon 
-              icon-class="table-correlation" 
-              class="correlation-icon"/>
+            <svg-icon
+              icon-class="table-correlation"
+              class="correlation-icon"
+            />
             <relation-select-block
               :data-frame-list="dataFrameList"
               :initial-data-frame-id.sync="relation.rightDataFrame.id"
@@ -131,13 +147,15 @@
       />
       <div class="footer-button-block">
         <template v-if="!isPreviewingResult">
-          <button 
-            v-if="!isLoading" 
+          <button
+            v-if="!isLoading"
             :disabled="isLoading"
             type="button"
             class="btn btn-default"
             @click="getPreviewResult()"
-          >{{ $t('button.setting') }}</button>
+          >
+            {{ $t('button.setting') }}
+          </button>
           <span
             v-else
             class="remark-text"
@@ -146,18 +164,22 @@
           </span>
         </template>
         <template v-else>
-          <button 
-            :disabled="isLoading" 
+          <button
+            :disabled="isLoading"
             type="button"
             class="btn btn-outline"
             @click="isPreviewingResult = false"
-          >{{ $t('button.reset') }}</button>
-          <button 
-            :disabled="isLoading" 
+          >
+            {{ $t('button.reset') }}
+          </button>
+          <button
+            :disabled="isLoading"
             type="button"
             class="btn btn-default"
             @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
-          >{{ $t('button.confirmBuild') }}</button>
+          >
+            {{ $t('button.confirmBuild') }}
+          </button>
         </template>
       </div>
     </template>
@@ -416,7 +438,7 @@ export default {
       this.isPreviewingResult = false
       this.editedRelationInfo = JSON.parse(JSON.stringify(this.relationInfo))
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

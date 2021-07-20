@@ -1,6 +1,6 @@
 <template>
   <div class="slot-dialog">
-    <slot name="SlotDialog"/>
+    <slot name="SlotDialog" />
   </div>
 </template>
 <script>

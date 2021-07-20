@@ -1,12 +1,17 @@
 <template>
   <div class="single-mini-app mini-app">
     <div class="mini-app__badge">
-      <svg-icon 
-        :icon-class="miniAppInfo.icon" 
-        class="icon mini-app__icon"/>
+      <svg-icon
+        :icon-class="miniAppInfo.icon"
+        class="icon mini-app__icon"
+      />
     </div>
-    <div class="mini-app__name">{{ miniAppInfo.name }}</div>
-    <div class="mini-app__description">{{ miniAppInfo.description }}</div>
+    <div class="mini-app__name">
+      {{ miniAppInfo.name }}
+    </div>
+    <div class="mini-app__description">
+      {{ miniAppInfo.description }}
+    </div>
     <router-link
       :to="{
         name: 'MiniApp',
@@ -14,45 +19,54 @@
         query: { mode: 'edit' }
       }"
       class="link action-link"
-    >{{ $t('miniApp.editContent') }}</router-link>
-    <a 
-      href="javascript:void(0);" 
+    >
+      {{ $t('miniApp.editContent') }}
+    </router-link>
+    <a
+      href="javascript:void(0);"
       class="link action-link"
       @click="openMiniApp"
     >{{ $t('miniApp.goToApp') }}</a>
     <div class="mini-app__action-block">
       <div class="mini-app__hover-box">
-        <svg-icon 
-          icon-class="more" 
-          class="icon more-icon"/>
+        <svg-icon
+          icon-class="more"
+          class="icon more-icon"
+        />
         <div class="mini-app__popup">
           <div
-            class="popup-box" 
-            @click.stop="editAppInfo">
+            class="popup-box"
+            @click.stop="editAppInfo"
+          >
             <div class="popup-text">
-              <svg-icon 
-                icon-class="edit" 
-                class="icon "/>
+              <svg-icon
+                icon-class="edit"
+                class="icon "
+              />
               {{ $t('miniApp.editInfo') }}
             </div>
           </div>
           <div
-            class="popup-box" 
-            @click.stop="getAppUrl">
+            class="popup-box"
+            @click.stop="getAppUrl"
+          >
             <div class="popup-text">
-              <svg-icon 
+              <svg-icon
                 icon-class="share"
-                class="icon "/>
+                class="icon "
+              />
               {{ $t('miniApp.getAppUrl') }}
             </div>
           </div>
           <div
-            class="popup-box" 
-            @click.stop="deleteApp">
+            class="popup-box"
+            @click.stop="deleteApp"
+          >
             <div class="popup-text">
-              <svg-icon 
-                icon-class="delete" 
-                class="icon "/>
+              <svg-icon
+                icon-class="delete"
+                class="icon "
+              />
               {{ $t('miniApp.deleteApp') }}
             </div>
           </div>
@@ -68,13 +82,13 @@ export default {
   props: {
     miniAppInfo: {
       type: Object,
-      default: ()=> {
-        return { 
+      default: () => {
+        return {
           isPublishing: false,
           name: null,
           urlIdentifier: null,
           id: null
-         }
+        }
       }
     }
   },
@@ -91,14 +105,15 @@ export default {
     openMiniApp () {
       const { params } = this.$route
       const routeData = this.$router.resolve({
-        name: 'MiniApp', 
+        name: 'MiniApp',
         params: {
           ...params,
-          'mini_app_id': this.miniAppInfo.id
+          mini_app_id: this.miniAppInfo.id
         },
-        query: { mode: 'view' } })
+        query: { mode: 'view' }
+      })
       window.open(routeData.href, '_blank')
-    },
+    }
   }
 }
 </script>
@@ -136,7 +151,7 @@ export default {
   &__name,
   &__description {
     text-overflow: ellipsis;
-    overflow: hidden;  
+    overflow: hidden;
     white-space: nowrap;
   }
 
@@ -211,7 +226,7 @@ export default {
       height: 0px;
       border-top: 10px solid #233131;
       border-left: 10px solid transparent;
-      border-right: 10px solid transparent; 
+      border-right: 10px solid transparent;
     }
 
     .popup-box {

@@ -3,11 +3,11 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('alert.createAlertCondition') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="$emit('close')"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <template>
         <!-- Condition Name -->
@@ -28,53 +28,77 @@
         </div>
         <!-- Condition Target -->
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('alert.originalDataSource') }}</div>
-          <div class="data-source">
-            <div class="data-source__title">{{ $t('alert.dataSource') }}</div>       
-            <div class="data-source__content">{{ currentDataSource.name }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.originalDataSource') }}
           </div>
           <div class="data-source">
-            <div class="data-source__title">{{ $t('alert.dataFrame') }}</div>
+            <div class="data-source__title">
+              {{ $t('alert.dataSource') }}
+            </div>
+            <div class="data-source__content">
+              {{ currentDataSource.name }}
+            </div>
+          </div>
+          <div class="data-source">
+            <div class="data-source__title">
+              {{ $t('alert.dataFrame') }}
+            </div>
             <spinner
               v-if="isFetchingDataFrame"
               class="setting-block__spinner"
               size="20"
-            /> 
-            <div 
-              v-else 
-              class="data-source__content">{{ currentDataFrame.primaryAlias }}</div>
+            />
+            <div
+              v-else
+              class="data-source__content"
+            >
+              {{ currentDataFrame.primaryAlias }}
+            </div>
           </div>
           <div
             v-if="analysisValueType === 'DATA_VALUE'"
-            class="data-source">
-            <div class="data-source__title">{{ $t('alert.monitoredField') }}</div>       
-            <div class="data-source__content">{{ componentData.chartInfo.yAxis[0].display_name }}</div>
+            class="data-source"
+          >
+            <div class="data-source__title">
+              {{ $t('alert.monitoredField') }}
+            </div>
+            <div class="data-source__content">
+              {{ componentData.chartInfo.yAxis[0].display_name }}
+            </div>
           </div>
           <div
             v-if="componentType === 'formula'"
             class="data-source"
           >
-            <div class="data-source__title">{{ $t('alert.expression') }}</div>
+            <div class="data-source__title">
+              {{ $t('alert.expression') }}
+            </div>
             <spinner
               v-if="isFetchingFormulas"
               class="setting-block__spinner"
               size="20"
-            /> 
-            <div 
-              v-else 
-              class="data-source__content">{{ currentFormula.name }}</div>
+            />
+            <div
+              v-else
+              class="data-source__content"
+            >
+              {{ currentFormula.name }}
+            </div>
           </div>
         </div>
         <!--示警指標-->
         <div
-          v-show="analysisValueType !== 'DATA_VALUE'" 
-          class="setting-block">
-          <div class="setting-block__title">{{ $t('alert.alertIndicator') }}</div>
+          v-show="analysisValueType !== 'DATA_VALUE'"
+          class="setting-block"
+        >
+          <div class="setting-block__title">
+            {{ $t('alert.alertIndicator') }}
+          </div>
           <spinner
             v-if="isFetchingIndocators"
             class="setting-block__spinner"
             size="20"
-          />        
+          />
           <div
             v-for="(indicator, index) in indicators"
             v-else
@@ -103,7 +127,9 @@
           v-if="componentData.controlList.length > 0"
           class="setting-block"
         >
-          <div class="setting-block__title">{{ $t('alert.columnValueCombination') }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.columnValueCombination') }}
+          </div>
           <div class="select-group select-group--row">
             <label
               v-for="(control, index) in columnValueCombinationOptionList"
@@ -117,7 +143,7 @@
                     :checked="control.isSelected"
                     type="checkbox"
                   >
-                  <div class="checkbox-square"/>
+                  <div class="checkbox-square" />
                 </div>
               </div>
               <div class="label-content">
@@ -131,7 +157,9 @@
           v-if="filterOptionList.length > 0"
           class="setting-block"
         >
-          <div class="setting-block__title">{{ $t('alert.dataFilterCondition') }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.dataFilterCondition') }}
+          </div>
           <div class="select-group select-group--column">
             <label
               v-for="(filter, index) in filterOptionList"
@@ -145,7 +173,7 @@
                     :checked="filter.isSelected"
                     type="checkbox"
                   >
-                  <div class="checkbox-square"/>
+                  <div class="checkbox-square" />
                 </div>
               </div>
               <div class="label-content">
@@ -160,7 +188,9 @@
           v-if="showConditionComapringSection"
           class="setting-block"
         >
-          <div class="setting-block__title">{{ $t('alert.conditionSetting') }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.conditionSetting') }}
+          </div>
           <single-comparing-value-card
             v-for="(comparingSet, index) in conditionComparings"
             :key="comparingSet.id"
@@ -172,7 +202,9 @@
         </div>
         <!-- Condition Message Settings -->
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('alert.conditionMessageSetting') }}</div>
+          <div class="setting-block__title">
+            {{ $t('alert.conditionMessageSetting') }}
+          </div>
           <alert-condition-message-editor
             :condition-id="conditionId"
             :prop-param-options="paramsOptionList"
@@ -185,12 +217,16 @@
             :disabled="isProcessing"
             class="btn btn-outline"
             @click="$emit('close')"
-          >{{ $t('button.cancel') }}</button>
-          <button 
+          >
+            {{ $t('button.cancel') }}
+          </button>
+          <button
             :disabled="!isSaveable"
             class="btn btn-default"
             @click="createAlertCondition"
-          >{{ $t('button.save') }}</button>
+          >
+            {{ $t('button.save') }}
+          </button>
         </div>
       </template>
     </div>
@@ -252,7 +288,7 @@ export default {
       messageParams: [],
       // 前端畫面暫存
       tempConditionSetting: {
-        dataSourceId: null,
+        dataSourceId: null
       },
       conditionId: null,
       isPatchingConditionMessage: false,
@@ -280,16 +316,16 @@ export default {
       return this.dataSourceOptionList.find(dataSource => dataSource.id === currentDataSourceId)
     },
     currentDataFrameId () {
-     return this.componentType === 'formula' ? this.componentData.formulaSetting.dataFrameId : this.componentData.dataFrameId
+      return this.componentType === 'formula' ? this.componentData.formulaSetting.dataFrameId : this.componentData.dataFrameId
     },
     comparisonOperatorOptionList () {
       return [
-        { value: 'GREATER_THAN',             name: this.$t('comparisonOperator.GREATER_THAN') },
+        { value: 'GREATER_THAN', name: this.$t('comparisonOperator.GREATER_THAN') },
         { value: 'GREATER_THAN_OR_EQUAL_TO', name: this.$t('comparisonOperator.GREATER_THAN_OR_EQUAL_TO') },
-        { value: 'LESS_THAN',                name: this.$t('comparisonOperator.LESS_THAN') },
-        { value: 'LESS_THAN_OR_EQUAL_TO',    name: this.$t('comparisonOperator.LESS_THAN_OR_EQUAL_TO') },
-        { value: 'EQUAL',                    name: this.$t('comparisonOperator.EQUAL') },
-        { value: 'NOT_EQUAL',                name: this.$t('comparisonOperator.NOT_EQUAL') },
+        { value: 'LESS_THAN', name: this.$t('comparisonOperator.LESS_THAN') },
+        { value: 'LESS_THAN_OR_EQUAL_TO', name: this.$t('comparisonOperator.LESS_THAN_OR_EQUAL_TO') },
+        { value: 'EQUAL', name: this.$t('comparisonOperator.EQUAL') },
+        { value: 'NOT_EQUAL', name: this.$t('comparisonOperator.NOT_EQUAL') }
       ]
     },
     max () {
@@ -299,7 +335,7 @@ export default {
       // 指標
       const selectedIndicator = this.indicators
         .filter(indicator => indicator.type === this.newConditionSetting.targetConfig.analysisValueType)
-        .map(indicator => ({ 
+        .map(indicator => ({
           type: 'indicator',
           value: indicator.type,
           name: this.analysisValueType === 'DATA_VALUE' ? this.componentData.chartInfo.yAxis[0].display_name : indicator.text,
@@ -319,8 +355,8 @@ export default {
       // 如果選離群值或數值型，須將圖表 x 軸資訊加入參數列表
       const xAxisColumns = []
       if (
-        this.analysisValueType === 'OUTLIER_VALUE'
-        || this.analysisValueType === 'DATA_VALUE'
+        this.analysisValueType === 'OUTLIER_VALUE' ||
+        this.analysisValueType === 'DATA_VALUE'
       ) {
         this.componentData.chartInfo.xAxis.forEach(column => {
           xAxisColumns.push({
@@ -345,7 +381,6 @@ export default {
           })
         })
       }
-
 
       return [...selectedIndicator, ...selectedColumnValueCombinations, ...xAxisColumns, ...complemataryParams]
     },
@@ -375,13 +410,13 @@ export default {
     this.configConditionComparings()
   },
   methods: {
-    configFilterOptionList() {
+    configFilterOptionList () {
       this.filterOptionList = this.componentData.filterList.reduce((acc, cur) => {
         const validFilterList = []
         // 確認 filter 是否有使用者的給定值
         cur.forEach(filter => this.checkIsValidFilter(filter) && validFilterList.push(filter))
         validFilterList.forEach(filter => {
-          acc.push({ 
+          acc.push({
             ...filter,
             // 暫時預設全選，待後端修正
             isSelected: true,
@@ -393,7 +428,7 @@ export default {
     },
     checkIsValidFilter (filter) {
       switch (filter.statsType) {
-        case 'CATEGORY': 
+        case 'CATEGORY':
           return filter.dataValues.length > 0
         case 'BOOLEAN':
           return filter.dataValues.length > 0
@@ -401,15 +436,15 @@ export default {
           return filter.start && filter.end
         case ('DATETIME'):
           return filter.start && filter.end
-        case ('RELATIVEDATETIME'): 
+        case ('RELATIVEDATETIME'):
           return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
-        default: 
+        default:
           return false
       }
     },
     transformFilterValue (filter) {
       switch (filter.statsType) {
-        case 'CATEGORY': 
+        case 'CATEGORY':
           return filter.dataValues.join(', ')
         case 'BOOLEAN':
           return filter.dataValues.join(', ')
@@ -417,7 +452,7 @@ export default {
           return `${filter.start} - ${filter.end}`
         case ('DATETIME'):
           return `${filter.start} - ${filter.end}`
-        case ('RELATIVEDATETIME'): 
+        case ('RELATIVEDATETIME'):
           return this.$t('miniApp.' + filter.dataValues[0])
       }
     },
@@ -462,7 +497,7 @@ export default {
           const settingData = {
             ...this.newConditionSetting,
             componentId: this.componentData.keyResultId,
-            dataFrameId: this.currentDataFrameId,
+            dataFrameId: this.currentDataFrameId
           }
           // 展開條件
           settingData.targetConfig.combinationColumns = this.columnValueCombinationOptionList
@@ -491,7 +526,7 @@ export default {
 
           // 資料過濾條件: 相對時間 filter
           settingData.targetConfig.dateRangeColumn = this.formatRelatvieDateTimeFilter(selectedFilterLists.relativeDateTime[0])
-          
+
           // 指標如果選定離群值，不帶條件設定
           if (!this.showConditionComapringSection) {
             settingData.comparingValues = null
@@ -531,11 +566,11 @@ export default {
           filterInfo.recentInterval = Number(selectedValue.split('hour')[0])
           filterInfo.recentIntervalUnit = 'Hour'
           break
-        case RegExp('^today$').test(selectedValue): 
+        case RegExp('^today$').test(selectedValue):
           filterInfo.recentInterval = 0
           filterInfo.recentIntervalUnit = 'Day'
           break
-        case RegExp('^.*day.*$').test(selectedValue): 
+        case RegExp('^.*day.*$').test(selectedValue):
           filterInfo.recentInterval = Number(selectedValue.split('day')[0])
           filterInfo.recentIntervalUnit = 'Day'
           break
@@ -578,7 +613,7 @@ export default {
             case ('RELATIVEDATETIME'):
               data_type = 'datetime'
               type = 'range'
-              break  
+              break
           }
 
           return [{
@@ -587,21 +622,21 @@ export default {
               data_type,
               dc_id: filter.columnId,
               display_name: filter.columnName,
-              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
+              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY') && {
                 datavalues: filter.dataValues,
                 display_datavalues: filter.dataValues
               }),
               ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
                 start: filter.start,
                 end: filter.end
-              }),
+              })
             }
           }]
         })
     },
     configConditionComparings () {
       let optionList = []
-      
+
       // 元件本身已經設定警示線
       this.componentData.anomalySettings && this.componentData.anomalySettings.forEach(setting => {
         optionList.push({
@@ -640,7 +675,7 @@ export default {
       switch (operator) {
         case 'gt':
           return 'GREATER_THAN'
-        case 'gte': 
+        case 'gte':
           return 'GREATER_THAN_OR_EQUAL_TO'
         case 'equal':
           return 'EQUAL'
@@ -649,7 +684,7 @@ export default {
         case 'lt':
           return 'LESS_THAN'
       }
-    },
+    }
   }
 }
 </script>
@@ -687,7 +722,7 @@ export default {
       &:not(:last-of-type) {
         margin-bottom: 24px;
       }
-      
+
       &__label {
         font-size: 14px;
         color: #CCCCCC;

@@ -1,32 +1,40 @@
 <template>
   <div class="user-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('userManagement.accountUserList') }}</h1>
+      <h1 class="title">
+        {{ $t('userManagement.accountUserList') }}
+      </h1>
     </div>
     <div class="table-board">
       <div class="button-block">
         <button
           :disabled="isLoading || isProcessing || reachUserLimit"
           class="btn-m btn-default btn-has-icon"
-          @click="showInviteUser">
-          <svg-icon 
-            icon-class="user-invite" 
-            class="icon"/>
+          @click="showInviteUser"
+        >
+          <svg-icon
+            icon-class="user-invite"
+            class="icon"
+          />
           {{ $t('userManagement.inviteUser') }}
         </button>
         <button
           :disabled="isLoading || isProcessing || reachUserLimit"
           class="btn-m btn-default btn-has-icon"
-          @click="showCreateUser">
-          <svg-icon 
-            icon-class="user-plus" 
-            class="icon"/>
+          @click="showCreateUser"
+        >
+          <svg-icon
+            icon-class="user-plus"
+            class="icon"
+          />
           {{ $t('userManagement.createUser') }}
         </button>
-        <div 
+        <div
           v-if="reachUserLimit"
           class="reach-limit"
-        >{{ $t('notification.userLimitNotification') }}</div>
+        >
+          {{ $t('notification.userLimitNotification') }}
+        </div>
       </div>
       <crud-table
         :headers="tableHeaders"
@@ -36,18 +44,20 @@
         @changeRole="showChangeRole"
         @deleteUserFromAccount="showDeleteAccount"
       >
-        <template v-slot:roleZhName>
+        <template #roleZhName>
           <role-desc-pop />
         </template>
-        <template v-slot:action="{ data }">
+        <template #action="{ data }">
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showChangeRole(data, !btnDisabled(data))">{{ $t('userManagement.updateRole') }}</a>
+            @click="showChangeRole(data, !btnDisabled(data))"
+          >{{ $t('userManagement.updateRole') }}</a>
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showDeleteAccount(data, !btnDisabled(data))">{{ $t('button.remove') }}</a>
+            @click="showDeleteAccount(data, !btnDisabled(data))"
+          >{{ $t('button.remove') }}</a>
         </template>
       </crud-table>
     </div>
@@ -64,15 +74,16 @@
         <div class="label">
           {{ $t('userManagement.userRoleAuthority') }}
           <span class="tooltip-container">
-            <svg-icon 
-              icon-class="information-circle" 
-              class="icon" />
+            <svg-icon
+              icon-class="information-circle"
+              class="icon"
+            />
             <div class="tooltip">
               <role-desc-pop />
             </div>
           </span>
         </div>
-        <default-select 
+        <default-select
           v-model="currentUser.roleId"
           :option-list="roleOptions"
           class="input account-role-select"
@@ -167,7 +178,7 @@ export default {
         {
           text: this.$t('editing.userAccount'),
           value: 'email',
-          sort: true,
+          sort: true
         },
         {
           text: this.$t('userManagement.userName'),
@@ -282,18 +293,18 @@ export default {
       this.isProcessing = true
       let promise = inviteType === 'inviteUser'
         ? inviteUser({
-            emailList: this.inviteeList.map(invitee => {
-              return {
-                accountRole: invitee.roleId,
-                groupId: 1, // 暫定預設 1 為 default group
-                mail: invitee.email
-              }
-            }),
-            webURL: window.location.origin + this.$router.resolve({ name: 'PageSignup' }).href,
-            accountId: this.currentAccountId
-          })
+          emailList: this.inviteeList.map(invitee => {
+            return {
+              accountRole: invitee.roleId,
+              groupId: 1, // 暫定預設 1 為 default group
+              mail: invitee.email
+            }
+          }),
+          webURL: window.location.origin + this.$router.resolve({ name: 'PageSignup' }).href,
+          accountId: this.currentAccountId
+        })
         : batchInviteUser(this.inviteeList)
-      
+
       promise.then(() => {
         this.isShowInviteUser = false
         this.isShowCreateUser = false
@@ -306,10 +317,10 @@ export default {
           showClose: true
         })
       })
-      .catch(() => {})
-      .finally(() => {
-        this.isProcessing = false
-      })
+        .catch(() => {})
+        .finally(() => {
+          this.isProcessing = false
+        })
     },
     getUserList () {
       this.isLoading = true
@@ -434,7 +445,7 @@ export default {
       }
       return existingUsers
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

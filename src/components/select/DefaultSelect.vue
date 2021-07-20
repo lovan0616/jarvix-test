@@ -22,7 +22,7 @@
       :label="option.name"
       :value="option.value"
     >
-      <slot 
+      <slot
         :option="option"
         :index="index"
         name="option-content"
@@ -48,14 +48,14 @@ export default {
     value: { type: [String, Number, Boolean, Array], default: undefined },
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' },
-    isDisabled: {type: Boolean, default: false},
+    isDisabled: { type: Boolean, default: false },
     size: { type: String, default: '' },
-    multiple: {type: Boolean, default: false},
-    collapseTags: {type: Boolean, default: false},
-    filterable: {type: Boolean, default: false},
-    filterMethod: {type: Boolean, default: false},
-    enableLazyLoading: {type: Boolean, default: false},
-    popperAppendToBody: {type: Boolean, default: false},
+    multiple: { type: Boolean, default: false },
+    collapseTags: { type: Boolean, default: false },
+    filterable: { type: Boolean, default: false },
+    filterMethod: { type: Boolean, default: false },
+    enableLazyLoading: { type: Boolean, default: false },
+    popperAppendToBody: { type: Boolean, default: false }
   },
   computed: {
     selectedValue: {
@@ -72,7 +72,7 @@ export default {
       return {
         rootClassName: '.el-select-dropdown__wrap',
         rootMargin: 0,
-        threshold: 0,
+        threshold: 0
       }
     }
   },

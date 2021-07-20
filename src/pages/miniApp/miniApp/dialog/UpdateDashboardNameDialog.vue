@@ -40,7 +40,7 @@ export default {
   computed: {
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
-    },
+    }
   },
   mounted () {
     this.newDashboardName = this.originalDashboardName
@@ -58,5 +58,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  
+
 </style>

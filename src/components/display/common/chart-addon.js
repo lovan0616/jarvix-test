@@ -15,13 +15,13 @@ export function commonChartOptions () {
       selectorButtonGap: 20,
       textStyle: {
         lineHeight: 14,
-        color: chartVariable['textColor']
+        color: chartVariable.textColor
       },
       pageButtonPosition: 'start',
       pageButtonGap: 16,
-      pageIconColor: chartVariable['textColor'],
+      pageIconColor: chartVariable.textColor,
       pageTextStyle: {
-        color: chartVariable['textColor']
+        color: chartVariable.textColor
       },
       selector: [
         {
@@ -91,7 +91,7 @@ export function commonChartOptions () {
           readOnly: true,
           backgroundColor: '#0b2224',
           textareaColor: '#0b2224',
-          buttonColor: chartVariable['themeColor'],
+          buttonColor: chartVariable.themeColor,
           textColor: '#fff'
         },
         brush: {
@@ -160,12 +160,12 @@ export function commonChartOptions () {
     tooltip: {
       show: true,
       trigger: 'axis',
-      backgroundColor: chartVariable['backgroundColor'],
+      backgroundColor: chartVariable.backgroundColor,
       borderWidth: 1,
-      borderColor: chartVariable['borderColor'],
+      borderColor: chartVariable.borderColor,
       padding: 10,
       textStyle: {
-        color: chartVariable['textColor']
+        color: chartVariable.textColor
       },
       extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);',
       confine: true
@@ -184,15 +184,15 @@ export function chartOptions () {
       nameGap: 5,
       nameTextStyle: {
         fontSize: 12,
-        color: chartVariable['textColor']
+        color: chartVariable.textColor
       },
       axisLabel: {
         rotate: 30,
-        color: chartVariable['xAxisLabelColor']
+        color: chartVariable.xAxisLabelColor
       },
       axisLine: {
         lineStyle: {
-          color: chartVariable['xAxisColor']
+          color: chartVariable.xAxisColor
         }
       },
       // 刻度
@@ -206,11 +206,11 @@ export function chartOptions () {
       // nameGap: 58,
       nameTextStyle: {
         fontSize: 12,
-        color: chartVariable['textColor'],
+        color: chartVariable.textColor,
         align: 'left'
       },
       axisLabel: {
-        color: chartVariable['yAxisLabelColor']
+        color: chartVariable.yAxisLabelColor
       },
       axisLine: {
         show: false

@@ -12,8 +12,8 @@
 export default {
   name: 'DisplayIndexInfo',
   props: {
-    dataset: { 
-      type: Object, 
+    dataset: {
+      type: Object,
       default: () => ([])
     },
     isShowAlert: {
@@ -23,7 +23,7 @@ export default {
     customChartStyle: {
       type: Object,
       default: () => {}
-    },
+    }
   }
 }
 </script>

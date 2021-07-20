@@ -4,8 +4,10 @@
       href="javascript:void(0)"
       class="schedule-helper__close-btn"
       @click="closeScheduleHelper"
-    ><svg-icon icon-class="close"/></a>
-    <h1 class="schedule-helper__title">{{ $t('schedule.helper.columnDescription') }}</h1>
+    ><svg-icon icon-class="close" /></a>
+    <h1 class="schedule-helper__title">
+      {{ $t('schedule.helper.columnDescription') }}
+    </h1>
     <div class="schedule-helper__content">
       <div class="sample__menus">
         <!-- 共用資料設定 -->
@@ -14,13 +16,15 @@
             {{ $t('schedule.setting.commonDataSetting') }}
           </div>
           <div class="sample__menu__list">
-            <div 
+            <div
               v-for="(sample, index) in samples.rawData"
               :key="index"
               :class="{'sample__menu__item--active': isActive('rawData', index)}"
               class="sample__menu__item"
               @click="selectSample('rawData', index)"
-            >{{ $t(`schedule.setting.commonData${sample.dataFrameCode}`) }}</div>
+            >
+              {{ $t(`schedule.setting.commonData${sample.dataFrameCode}`) }}
+            </div>
           </div>
         </div>
         <!-- 額外限制條件設定 -->
@@ -29,13 +33,15 @@
             {{ $t('schedule.setting.extraConstraintSetting') }}
           </div>
           <div class="sample__menu__list">
-            <div 
+            <div
               v-for="(sample, index) in samples.constraint"
               :key="index"
               :class="{'sample__menu__item--active': isActive('constraint', index)}"
               class="sample__menu__item"
               @click="selectSample('constraint', index)"
-            >{{ $t(`schedule.setting.extraConstraint${sample.dataFrameCode}`) }}</div>
+            >
+              {{ $t(`schedule.setting.extraConstraint${sample.dataFrameCode}`) }}
+            </div>
           </div>
         </div>
       </div>
@@ -46,7 +52,8 @@
         <div
           v-for="(column, index) in currentSample.columns"
           :key="index"
-          class="column__block">
+          class="column__block"
+        >
           <div class="column__block__title">
             <span>{{ $t('schedule.helper.columnName') }}：{{ column.columnName }}</span>
           </div>
@@ -361,7 +368,7 @@ export default {
   &__content {
     display: flex;
     overflow: auto;
-    
+
     .sample {
       position: relative;
       height: 100%;
@@ -376,7 +383,7 @@ export default {
         &:not(:last-child) {
           margin-bottom: 20px;
         }
-        
+
         &__title {
           position: relative;
           height: 42px;
@@ -412,7 +419,7 @@ export default {
           line-height: 32px;
           color: #999999;
           background: rgba(35, 61, 64, 0.6);
-          
+
           &:not(:last-of-type) {
             border-bottom: 1px solid rgba(50, 75, 78, 0.6);
           }
@@ -444,7 +451,7 @@ export default {
         flex: 1;
         overflow: auto;
         padding-right: 10px;
-        
+
         &__title {
           font-size: 18px;
           line-height: 32px;

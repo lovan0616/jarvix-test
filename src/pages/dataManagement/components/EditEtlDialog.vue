@@ -4,14 +4,14 @@
       :style="getDialogStyle"
       class="dialog-container"
     >
-      <div v-if="editing" >
+      <div v-if="editing">
         <div class="dialog-title">
           {{ isReviewMode ? $t('button.reviewEtlSetting') : $t('button.editEtlSetting') }}
-          <a 
-            href="javascript:void(0)" 
+          <a
+            href="javascript:void(0)"
             class="close-btn"
             @click="closeDialog"
-          ><svg-icon icon-class="close"/></a>
+          ><svg-icon icon-class="close" /></a>
         </div>
         <spinner
           v-if="isLoading"
@@ -21,7 +21,9 @@
         />
         <div v-else>
           <div class="dialog-header-block">
-            <div class="data-frame-name">{{ $t('editing.tableName') }}：{{ dataFrameInfo.primaryAlias }}</div>
+            <div class="data-frame-name">
+              {{ $t('editing.tableName') }}：{{ dataFrameInfo.primaryAlias }}
+            </div>
           </div>
           <div class="dialog-content-block">
             <etl-setting
@@ -29,47 +31,53 @@
               :show-data-frame-name="false"
             />
           </div>
-          <div 
-            v-if="isReviewMode" 
-            class="dialog-button-block">
+          <div
+            v-if="isReviewMode"
+            class="dialog-button-block"
+          >
             <button
               type="button"
               class="btn btn-outline"
               @click="closeDialog"
-            >{{ $t('button.close') }}
+            >
+              {{ $t('button.close') }}
             </button>
           </div>
-          <div 
-            v-else 
-            class="dialog-button-block">
+          <div
+            v-else
+            class="dialog-button-block"
+          >
             <button
               :disabled="isProcessing"
               type="button"
               class="btn btn-outline"
               @click="closeDialog"
-            >{{ $t('button.cancel') }}
+            >
+              {{ $t('button.cancel') }}
             </button>
             <button
               :disabled="isProcessing"
               type="button"
               class="btn btn-default"
               @click="buildData"
-            >{{ $t('button.buildData') }}
+            >
+              {{ $t('button.buildData') }}
             </button>
           </div>
         </div>
       </div>
-      <confirm-page 
-        v-else 
+      <confirm-page
+        v-else
         :content="$t('editing.dataBuildingReminding')"
-        @next="closeDialog"/>
+        @next="closeDialog"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import { getDataFrameEtlSetting, dataRepreprocessor } from '@/API/DataSource'
-import EtlSetting from '@/pages/dataManagement/components/etl/EtlChooseColumn';
+import EtlSetting from '@/pages/dataManagement/components/etl/EtlChooseColumn'
 import ConfirmPage from '@/pages/dataManagement/components/localFileUpload/fileUpload/ConfirmPage'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
@@ -164,7 +172,7 @@ export default {
     },
     closeDialog () {
       this.$emit('close')
-    },
+    }
   }
 }
 </script>

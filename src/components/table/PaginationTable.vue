@@ -1,12 +1,12 @@
 <template>
   <div class="sy-table-block">
-    <div 
+    <div
       v-show="isProcessing"
       class="spinner-block"
     >
-      <spinner class="spinner"/>
+      <spinner class="spinner" />
     </div>
-    <el-table 
+    <el-table
       v-bind="tableProps"
       :empty-text="$t('editing.noData')"
       class="sy-table"
@@ -31,10 +31,11 @@
         :min-width="minColumnWidth"
       >
         <!--Header slot-->
-        <template 
-          slot="header" 
-          slot-scope="scope">
-          <slot 
+        <template
+          slot="header"
+          slot-scope="scope"
+        >
+          <slot
             :column="dataset.columns"
             :index="i"
             name="columns-header"
@@ -48,16 +49,18 @@
         width="0px"
         align="center"
       >
-        <template 
-          slot="header" 
-          slot-scope="scope">
-          <Observer 
-            :options="formOptions()" 
-            @intersect="getData"/>
+        <template
+          slot="header"
+          slot-scope="scope"
+        >
+          <Observer
+            :options="formOptions()"
+            @intersect="getData"
+          />
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination 
+    <el-pagination
       v-if="paginationInfo.totalPages > 1"
       :total="paginationInfo.totalItems"
       :page-size="paginationInfo.itemPerPage"
@@ -84,7 +87,7 @@ export default {
     ...Table.props,
     fixedIndex: { type: Boolean, default: false },
     dataset: {
-      type: [ Object, Array ],
+      type: [Object, Array],
       validator: value => {
         if (Object.prototype.hasOwnProperty.call(value, 'enableEdit') && value.columns) return true
         if (typeof value !== 'object') return false
@@ -184,10 +187,10 @@ export default {
       return {
         rootClassName: '.el-table__header-wrapper',
         rootMargin: this.lazyLoadInfo.rootMargin,
-        threshold: 0,
+        threshold: 0
       }
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

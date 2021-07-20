@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     ref="component"
     :class="[
       `col-${componentData.config.size.column}`,
@@ -8,24 +8,27 @@
     class="component__item"
   >
     <div class="component__item-inner-container">
-      <spinner 
-        v-if="isInitializing" 
-        class="component__item-init-spinner"/>
+      <spinner
+        v-if="isInitializing"
+        class="component__item-init-spinner"
+      />
       <template v-else>
         <span class="component__item-header">
           <div class="header-left">
-            <el-tooltip 
-              :content="componentData.config.diaplayedName" 
-              placement="bottom">
-              <span 
-                class="item-title" 
-                v-html="dashboardTaskTitle" />
+            <el-tooltip
+              :content="componentData.config.diaplayedName"
+              placement="bottom"
+            >
+              <span
+                class="item-title"
+                v-html="dashboardTaskTitle"
+              />
             </el-tooltip>
           </div>
           <div class="header-right">
-            <div class="component-property-box" >
+            <div class="component-property-box">
               <el-tooltip
-                v-if="componentData.config.hasRelatedDashboard" 
+                v-if="componentData.config.hasRelatedDashboard"
                 :content="displayedRelatedDashboard"
               >
                 <div
@@ -43,7 +46,7 @@
                 :content="displayedUpdateFrequency"
               >
                 <div class="property__item">
-                  <svg-icon 
+                  <svg-icon
                     icon-class="auto-refresh"
                     class="icon-refresh"
                   />
@@ -52,10 +55,12 @@
             </div>
             <div
               v-if="isEditMode"
-              class="component-setting-box">
-              <svg-icon 
+              class="component-setting-box"
+            >
+              <svg-icon
                 icon-class="more"
-                class="more-icon" />
+                class="more-icon"
+              />
               <!-- <slot name="drowdown"/> -->
               <dropdown-select
                 :bar-data="componentSettingOptions"
@@ -63,17 +68,19 @@
               />
             </div>
             <div v-if="!isEditMode && componentData.type === 'monitor-warning-list'">
-              <svg-icon 
-                icon-class="warning" 
-                class="icon-warning"/>
+              <svg-icon
+                icon-class="warning"
+                class="icon-warning"
+              />
             </div>
           </div>
         </span>
         <div
-          v-if="componentData.type === 'index' || componentData.type === 'formula'" 
-          class="component__item-content index">
+          v-if="componentData.type === 'index' || componentData.type === 'formula'"
+          class="component__item-content index"
+        >
           <div class="index-data">
-            <spinner v-if="isProcessing"/>
+            <spinner v-if="isProcessing" />
             <template v-else>
               <task
                 :class="{ 'not-empty': !isEmptyData && !isComponentFailed }"
@@ -87,17 +94,19 @@
                 @finished="isIndexTypeComponentLoading = false"
                 @setConfig="updateComponentConfigInfo"
               />
-              <span 
+              <span
                 v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
-                :class="[componentData.config.fontSize || 'middle']" 
-                class="index-unit">{{ componentData.indexInfo.unit }}</span>
+                :class="[componentData.config.fontSize || 'middle']"
+                class="index-unit"
+              >{{ componentData.indexInfo.unit }}</span>
             </template>
           </div>
         </div>
         <div
-          v-else-if="componentData.type === 'text'" 
-          class="component__item-content text">
-          <spinner v-if="isProcessing"/>
+          v-else-if="componentData.type === 'text'"
+          class="component__item-content text"
+        >
+          <spinner v-if="isProcessing" />
           <template v-else>
             <task
               :class="{ 'not-empty': !isEmptyData }"
@@ -108,9 +117,10 @@
               intend="key_result"
               @isEmpty="isEmptyData = true"
             />
-            <span 
-              v-if="!isEmptyData" 
-              class="index-unit">{{ componentData.indexInfo.unit }}</span>
+            <span
+              v-if="!isEmptyData"
+              class="index-unit"
+            >{{ componentData.indexInfo.unit }}</span>
           </template>
         </div>
         <monitor-warning-list
@@ -141,10 +151,11 @@
           :model-setting="componentData.modelSetting"
           :key="taskId"
         />
-        <div 
+        <div
           v-else
-          class="component__item-content chart">
-          <spinner v-if="isProcessing"/>
+          class="component__item-content chart"
+        >
+          <spinner v-if="isProcessing" />
           <no-result
             v-else-if="isAskQuestionFailed"
             :message="$t('miniApp.noSuitableResult')"
@@ -252,15 +263,15 @@ export default {
       isIndexTypeComponentLoading: true,
       textComponentStyle: {
         'font-size': '20px',
-        'color': '#DDDDDD',
+        color: '#DDDDDD',
         'text-align': 'center',
-        'display': 'flex',
+        display: 'flex',
         'align-items': 'center',
-        'justify-content': 'center',
+        'justify-content': 'center'
       },
       chartComponentStyle: {
-        'width': '100%',
-        'height': '100%'
+        width: '100%',
+        height: '100%'
       },
       isProcessing: false,
       isAskQuestionFailed: false,
@@ -268,36 +279,36 @@ export default {
       isInitializing: true,
       enableAlert: false,
       componentComplementaryInfo: null,
-      taskId: uuidv4(),
+      taskId: uuidv4()
     }
   },
   computed: {
     ...mapState('dataSource', ['algoConfig']),
     isIndependentComponent () {
-      return this.componentData.type === 'monitor-warning-list' 
-        || this.componentData.type === 'abnormal-statistics' 
-        || this.componentData.type === 'simulator' 
-        || this.componentData.type === 'parameters-optimized-simulator'
+      return this.componentData.type === 'monitor-warning-list' ||
+        this.componentData.type === 'abnormal-statistics' ||
+        this.componentData.type === 'simulator' ||
+        this.componentData.type === 'parameters-optimized-simulator'
     },
     shouldComponentBeFiltered () {
       if (this.isIndependentComponent) return false
       return true
       // // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
       // return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
-      //   || this.includeSameDataFrameFilter 
+      //   || this.includeSameDataFrameFilter
       //   || this.includeRelativeDatetimeFilter
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
       // 元件問題需包含數值型欄位
       if (
-        this.componentData.diagram === 'table'
-        || this.componentData.type === 'monitor-warning-list'
-        || this.componentData.type === 'simulator'
-        || this.componentData.type === 'formula'
-        || this.componentData.type === 'parameters-optimized-simulator'
-        || this.yAxisControls.length === 0
-        || this.componentNumericColumns.length === 0
+        this.componentData.diagram === 'table' ||
+        this.componentData.type === 'monitor-warning-list' ||
+        this.componentData.type === 'simulator' ||
+        this.componentData.type === 'formula' ||
+        this.componentData.type === 'parameters-optimized-simulator' ||
+        this.yAxisControls.length === 0 ||
+        this.componentNumericColumns.length === 0
       ) return false
 
       // 至少其中一個欄位名稱是任一 controller 中的選項
@@ -332,8 +343,8 @@ export default {
       return [].concat.apply([], [...this.filters, ...this.controls])
     },
     filterTime () {
-      const relativeDatetime =  this.filters
-        .filter(item => item[0]['statsType'] === 'RELATIVEDATETIME')
+      const relativeDatetime = this.filters
+        .filter(item => item[0].statsType === 'RELATIVEDATETIME')
         .map(filter => (this.formatRelativeDatetime(filter[0].dataValues[0])))
       return relativeDatetime[0]
     },
@@ -346,10 +357,10 @@ export default {
     },
     customCellClassName () {
       if (
-        this.componentData.type !== 'chart'
-        || this.componentData.diagram !== 'table'
-        || !this.componentData.config.hasTableRelatedDashboard
-        || this.componentData.config.tableRelationInfo.triggerTarget !== 'column'
+        this.componentData.type !== 'chart' ||
+        this.componentData.diagram !== 'table' ||
+        !this.componentData.config.hasTableRelatedDashboard ||
+        this.componentData.config.tableRelationInfo.triggerTarget !== 'column'
       ) return []
       if (this.isIndependentComponent) return []
       const relation = this.componentData.config.tableRelationInfo.columnRelations[0].columnInfo
@@ -362,10 +373,10 @@ export default {
       }]
     },
     isHoverable () {
-      return this.componentData.type === 'chart'
-        && this.componentData.diagram === 'table'
-        && this.componentData.config.hasTableRelatedDashboard
-        && this.componentData.config.tableRelationInfo.triggerTarget === 'row'
+      return this.componentData.type === 'chart' &&
+        this.componentData.diagram === 'table' &&
+        this.componentData.config.hasTableRelatedDashboard &&
+        this.componentData.config.tableRelationInfo.triggerTarget === 'row'
     },
     displayedRelatedDashboard () {
       if (!this.componentData.config.relatedDashboard) return
@@ -383,19 +394,19 @@ export default {
     indexComponentStyle () {
       return {
         ...this.sizeTable[this.componentData.config.fontSize || 'middle'],
-        'color': '#2AD2E2'
+        color: '#2AD2E2'
       }
     },
     dynamicComponentStyle () {
       return {
         ...this.chartComponentStyle,
         ...((this.componentData.segmentation.denotation === 'ANOMALY' || this.componentData.segmentation.denotation === 'NORMALITY_TEST') && {
-          'height': 'calc(100% - 150px)',
+          height: 'calc(100% - 150px)'
         }),
         ...(this.componentData.segmentation.denotation === 'STABILITY' && {
-          'height': 'calc(100% - 80px)',
+          height: 'calc(100% - 80px)'
         }),
-        'minHeight': '200px'
+        minHeight: '200px'
       }
     },
     componentSettingOptions () {
@@ -464,7 +475,7 @@ export default {
     yAxisControls: {
       deep: true,
       handler (controls) {
-        if (this.isIndependentComponent) return 
+        if (this.isIndependentComponent) return
         if (controls.length === 0 || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion(true)
       }
     },
@@ -531,7 +542,7 @@ export default {
 
       // 透過公式創建元件需使用不同方式取得 result
       if (this.componentData.type === 'formula') return this.getFormulaResult()
-      
+
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.componentData.dataSourceId,
@@ -547,7 +558,7 @@ export default {
         if (segmentationList[0].denotation === 'NO_ANSWER' || segmentationList.length > 1) {
           this.isAskQuestionFailed = true
           this.isProcessing = false
-          return 
+          return
         }
 
         if (segmentationList.length === 1) {
@@ -579,12 +590,12 @@ export default {
         })
       }).then(res => {
         this.getComponent(res.resultId)
-      }).catch(error => {this.isProcessing = false})
+      }).catch(error => { this.isProcessing = false })
     },
     getFormulaResult () {
       askFormulaResult({
         algoConfig: {
-          ...this.algoConfig['formula'],
+          ...this.algoConfig.formula,
           dataColumnIdList: this.componentData.formulaSetting.inputList.map(input => input.dcId),
           formulaId: this.componentData.formulaSetting.formulaId
         },
@@ -592,8 +603,8 @@ export default {
         restrictions: this.restrictions(),
         isFilter: true
       })
-      .then(resultInfo => this.getComponent(resultInfo.resultId))
-      .catch(error => { this.isProcessing = false })
+        .then(resultInfo => this.getComponent(resultInfo.resultId))
+        .catch(error => { this.isProcessing = false })
     },
     getComponent (resultId) {
       this.$store.dispatch('chatBot/getComponentList', resultId)
@@ -615,7 +626,7 @@ export default {
               this.tempFilteredKeyResultId = componentResponse.componentIds.key_result[0]
               this.isProcessing = false
               // 定期更新 component 資料
-              if(this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
+              if (this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
               break
             case 'Disable':
             case 'Delete':
@@ -651,19 +662,21 @@ export default {
             case ('RELATIVEDATETIME'):
               data_type = 'datetime'
               type = 'range'
-              break  
+              break
           }
 
           // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          if (filter.statsType === 'RELATIVEDATETIME') return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: this.componentData.dateTimeColumn.dataColumnId,
-              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-              ...this.formatRelativeDatetime(filter.dataValues[0])
-            }
-          }]
+          if (filter.statsType === 'RELATIVEDATETIME') {
+            return [{
+              type,
+              properties: {
+                data_type,
+                dc_id: this.componentData.dateTimeColumn.dataColumnId,
+                display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+                ...this.formatRelativeDatetime(filter.dataValues[0])
+              }
+            }]
+          }
 
           return [{
             type,
@@ -671,14 +684,14 @@ export default {
               data_type,
               dc_id: filter.columnId,
               display_name: filter.columnName,
-              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
+              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY') && {
                 datavalues: filter.dataValues,
                 display_datavalues: filter.dataValues
               }),
               ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
                 start: filter.start,
                 end: filter.end
-              }),
+              })
             }
           }]
         })
@@ -722,7 +735,7 @@ export default {
         start: null,
         end: null
       }
-      
+
       // update datetime range
       if (dataValue === 'today') {
         properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
@@ -742,7 +755,7 @@ export default {
       const { relatedDashboardId, columnInfo } = this.componentData.config.tableRelationInfo.columnRelations[0]
       const triggerTarget = this.componentData.config.tableRelationInfo.triggerTarget
       if (triggerTarget !== 'column' || column.label !== columnInfo.dataColumnAlias) return
-      
+
       this.$emit('columnTriggered', {
         relatedDashboardId,
         columnName: columnInfo.dataColumnAlias,
@@ -807,7 +820,7 @@ export default {
         ...word,
         isChanged: false
       }))
-      
+
       const availableControllers = [...this.yAxisControls]
       for (let alias of this.dataColumnAlias) {
         // 逐一確認有無 y controller 包含當前 alias 的選項
@@ -830,7 +843,7 @@ export default {
         acc += `${index === 0 ? '' : ' '}${cur.word}`
         return acc
       }, '')
-    },
+    }
   }
 }
 </script>
@@ -876,7 +889,7 @@ $direction-span: ("col": 12, "row": 12);
   &-inner-container {
     background-color: #192323;
     border-radius: 5px;
-    padding: 16px; 
+    padding: 16px;
     width: 100%;
     height: 100%;
     display: flex;
@@ -918,7 +931,7 @@ $direction-span: ("col": 12, "row": 12);
           &:not(:last-child) {
             margin-right: -5px;
           }
-          .svg-icon { 
+          .svg-icon {
             width: 14px;
           }
           .icon-refresh {
@@ -1033,7 +1046,7 @@ $direction-span: ("col": 12, "row": 12);
     }
     .spinner-block {
       flex: 1;
-    } 
+    }
   }
 
   /deep/ .task {

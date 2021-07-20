@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     v-if="featureInfoList.length > 0"
     class="feature-information-block"
   >
@@ -8,8 +8,12 @@
       :key="index"
       class="single-feature feature"
     >
-      <div class="feature__title">{{ $t(`chart.feature.${feature.name}`) }}</div>
-      <div class="feature__value">{{ formatFeatureValue(feature.value) }}</div>
+      <div class="feature__title">
+        {{ $t(`chart.feature.${feature.name}`) }}
+      </div>
+      <div class="feature__value">
+        {{ formatFeatureValue(feature.value) }}
+      </div>
     </div>
   </div>
 </template>
@@ -26,7 +30,7 @@ export default {
     return {
       featureInfoList: [],
       PValueOrderList: [
-        "clusteringPValue", "mixturesPValue", "trendsPValue", "oscillationPValue"
+        'clusteringPValue', 'mixturesPValue', 'trendsPValue', 'oscillationPValue'
       ]
     }
   },
@@ -39,7 +43,7 @@ export default {
         value: this.featureInformation[name]
       }
     })
-    if (isNeedOrder) this.featureInfoList.sort((a,b) => this.PValueOrderList.findIndex(name => name === a.name) - this.PValueOrderList.findIndex(name => name === b.name))
+    if (isNeedOrder) this.featureInfoList.sort((a, b) => this.PValueOrderList.findIndex(name => name === a.name) - this.PValueOrderList.findIndex(name => name === b.name))
   },
   methods: {
     formatFeatureValue (val) {
@@ -59,7 +63,7 @@ export default {
   background: #141C1D;
   border-radius: 8px;
   overflow-y: auto;
-  
+
   .feature {
     display: flex;
     flex-direction: row;

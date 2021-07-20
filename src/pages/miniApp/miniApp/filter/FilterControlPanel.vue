@@ -1,13 +1,15 @@
 <template>
   <section class="filter-control">
     <svg-icon
-      :icon-class="isSingleChoiceFilter ? 'adjuster' : 'filter-outline'" 
-      class="filter-control__filter-icon"/>
-    <template v-if="filterList.length > 0" >
-      <div 
+      :icon-class="isSingleChoiceFilter ? 'adjuster' : 'filter-outline'"
+      class="filter-control__filter-icon"
+    />
+    <template v-if="filterList.length > 0">
+      <div
         v-for="(filterSet, setIndex) in filterList"
-        :key="setIndex" 
-        class="filter-control__list">
+        :key="setIndex"
+        class="filter-control__list"
+      >
         <single-filter-badge
           v-for="(filter, index) in filterSet"
           :key="filter.filterId"
@@ -23,7 +25,6 @@
         />
       </div>
     </template>
-    
   </section>
 </template>
 
@@ -66,7 +67,7 @@ export default {
   mounted () {
     if (this.isYAxisController || !this.isSingleChoiceFilter) {
       return this.filterList = this.initialFilterList.map(filterSet => {
-        return filterSet.map(filter => ({ 
+        return filterSet.map(filter => ({
           ...filter,
           filterId: uuidv4()
         }))
@@ -77,9 +78,9 @@ export default {
     this.filterList = this.initialFilterList.map((filterSet, setIndex) => {
       // 確認當前組是否剛被創出來，需要給 filter 預設值
       this.filterSetInitList[`${setIndex}`] = false
-      return filterSet.map((filter, index) => ({ 
+      return filterSet.map((filter, index) => ({
         ...filter,
-        // 階層情況下，filter 需戴上前面所有 filter 的 restriction，因此由左至右每次只處理一個 filter 
+        // 階層情況下，filter 需戴上前面所有 filter 的 restriction，因此由左至右每次只處理一個 filter
         isNeedUpdate: index === 0,
         // 給定處理狀態，如果有 filter 在處理中，其以後的 filter 都需押處理中
         isProcessing: true,
@@ -104,19 +105,21 @@ export default {
       // 更新 filter 中的狀態，並存到隸屬的組中
       let updatedFilterSet = this.filterList[filterSetIndex].map((filter, index) => {
         if (index < filterIndex) return filter
-        if (index === filterIndex) return { 
-          ...updatedFilter, 
-          isNeedUpdate: false, 
-          isProcessing: false
+        if (index === filterIndex) {
+          return {
+            ...updatedFilter,
+            isNeedUpdate: false,
+            isProcessing: false
+          }
         }
         // 如果當前更新的 filter 不是該組最後一個時，繼續觸發下一個 filter 帶上最新 reestriction 重新取資料
         return {
-          ...filter, 
-          isNeedUpdate: index - filterIndex === 1, 
+          ...filter,
+          isNeedUpdate: index - filterIndex === 1,
           isProcessing: true
         }
       })
-      
+
       // 更新 filter 清單資料
       this.$set(this.filterList, filterSetIndex, updatedFilterSet)
 
@@ -135,7 +138,6 @@ export default {
           this.hasFilterSetNeedInit = false
           this.$emit('updateInit', true)
         }
-        return
       }
     },
     removeFilter (filterSetIndex, filterIndex) {
@@ -154,7 +156,7 @@ export default {
           updatedFilterList[filterSetIndex][i].isProcessing = true
         }
       }
-      
+
       // 如果該組已經為空，則從清單中刪除該組，否則將更新完的組資料更新到清單中
       if (updatedFilterSet.length === 0) {
         updatedFilterList = this.filterList.filter((filterSet, index) => index !== filterSetIndex)
@@ -167,7 +169,7 @@ export default {
 
       // 更新清單
       this.filterList = [...updatedFilterList]
-      
+
       // 把所有 filter 資料更新到外層
       this.$emit('updateFilter', updatedFilterList.map(filterSet => {
         return filterSet.map(filter => {
@@ -209,7 +211,7 @@ export default {
         top: 50%;
         transform: translateY(-50%);
       }
-    } 
+    }
   }
 
   /deep/ .filter {
@@ -226,7 +228,7 @@ export default {
         width: 5px;
         height: 5px;
       }
-    }    
+    }
   }
 }
 </style>

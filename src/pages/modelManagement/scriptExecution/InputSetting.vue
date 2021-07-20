@@ -1,12 +1,15 @@
 <template>
   <div class="input-setting-dialog">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="3"
     />
     <div class="dialog-body">
-      <div 
-        class="setting-block">
+      <div
+        class="setting-block"
+      >
         <div class="setting-block__title">
           {{ $t('model.upload.inputArgsSetting') }}
           <div class="setting-block__reminder">
@@ -18,7 +21,8 @@
           {{ $t('model.upload.argsReminder', {mainScriptName}) }}
         </div>
         <draggable
-          v-model="columnList">
+          v-model="columnList"
+        >
           <model-column-setting-card
             v-for="column in columnList"
             :column-info="column"
@@ -28,24 +32,27 @@
             @updateDataColumn="updateDataColumn($event, column.id)"
             @remove="removeColumnCard"
           />
-        </draggable> 
+        </draggable>
         <button
           class="btn btn-m btn-outline"
           @click="addNewColumnCard()"
         >
-          <svg-icon 
-            icon-class="plus" 
-            class="icon" />{{ $t('button.add') }}
+          <svg-icon
+            icon-class="plus"
+            class="icon"
+          />{{ $t('button.add') }}
         </button>
       </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           class="btn btn-default"
           @click="next"
         >
@@ -104,11 +111,11 @@ export default {
         id: uuidv4()
       })
     },
-    updateDataColumn(statesType, selectedColumnCardId) {
+    updateDataColumn (statesType, selectedColumnCardId) {
       const columnCard = this.columnList.find(columnCard => columnCard.id === selectedColumnCardId)
       columnCard.statsType = statesType
     },
-    removeColumnCard(cardId) {
+    removeColumnCard (cardId) {
       this.columnList = this.columnList.filter(columnCard => columnCard.id !== cardId)
     },
     cancel () {
@@ -188,7 +195,7 @@ export default {
       }
 
       .el-input__inner {
-        &::placeholder { 
+        &::placeholder {
           font-size: 14px;
         }
       }

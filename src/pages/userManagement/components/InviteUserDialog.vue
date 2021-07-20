@@ -1,28 +1,31 @@
 <template>
   <div class="invite-user-dialog full-create-dialog">
     <h2>{{ $t('userManagement.inviteUser') }}</h2>
-    <div 
-      class="full-create-dialog-box" 
-      @click.stop>
+    <div
+      class="full-create-dialog-box"
+      @click.stop
+    >
       <div class="form new-invitee">
         <div class="form__labels">
           <span class="label-invitee-email">{{ $t('editing.inviteeEmail') }}</span>
           <span class="label-user-role-authority">
             {{ $t('userManagement.userRoleAuthority') }}
             <span class="tooltip-container">
-              <svg-icon 
-                icon-class="information-circle" 
-                class="icon" />
+              <svg-icon
+                icon-class="information-circle"
+                class="icon"
+              />
               <div class="tooltip">
                 <role-desc-pop />
               </div>
             </span>
           </span>
         </div>
-        <div 
+        <div
           v-for="(invitee, index) in inviteeList"
           :key="invitee.id"
-          class="form__item">
+          class="form__item"
+        >
           <input-verify
             v-validate="'required|email'"
             v-model="invitee.email"
@@ -30,7 +33,7 @@
             :name="'invitee' + '-' + invitee.id"
             type="email"
           />
-          <default-select 
+          <default-select
             v-model="invitee.roleId"
             :option-list="roleOptions"
             class="input"
@@ -38,38 +41,45 @@
           <div
             v-if="inviteeList.length > 1"
             class="form__delete"
-            @click="removeInvitee(index)">
-            <svg-icon 
-              icon-class="delete" 
-              class="icon"/>
+            @click="removeInvitee(index)"
+          >
+            <svg-icon
+              icon-class="delete"
+              class="icon"
+            />
           </div>
         </div>
         <button
           class="btn btn-m btn-outline"
           @click="addNewInvitee()"
         >
-          <svg-icon 
-            icon-class="plus" 
-            class="icon" />{{ $t('button.add') }}
+          <svg-icon
+            icon-class="plus"
+            class="icon"
+          />{{ $t('button.add') }}
         </button>
       </div>
     </div>
-    <div 
-      class="dialog-btn-row" 
-      @click.stop>
+    <div
+      class="dialog-btn-row"
+      @click.stop
+    >
       <button
         :disabled="isProcessing"
         class="btn btn-outline dialog-btn"
-        @click="closeDialog">
+        @click="closeDialog"
+      >
         {{ $t('button.cancel') }}
       </button>
       <button
         :disabled="isProcessing"
         class="btn btn-default dialog-btn dialog-create"
-        @click="confirmBtn">
-        <svg-icon 
-          v-if="isProcessing" 
-          icon-class="spinner"/>
+        @click="confirmBtn"
+      >
+        <svg-icon
+          v-if="isProcessing"
+          icon-class="spinner"
+        />
         {{ $t('button.sendInvitation') }}
       </button>
     </div>
@@ -104,12 +114,12 @@ export default {
       default: null
     }
   },
-  data (){
+  data () {
     return {
       inviteeList: []
     }
   },
-  mounted (){
+  mounted () {
     this.addNewInvitee()
   },
   destroyed () {
@@ -195,7 +205,7 @@ export default {
       }
     }
   }
-  
+
   .tooltip-container {
     margin: 0 3px;
     .tooltip {
@@ -234,4 +244,3 @@ export default {
   }
 }
 </style>
-

@@ -2,7 +2,9 @@
   <div class="data-management">
     <div class="page-title-row">
       <h1 class="title">
-        <div class="title-left">{{ $t('sideNav.modelList') }}</div>
+        <div class="title-left">
+          {{ $t('sideNav.modelList') }}
+        </div>
       </h1>
     </div>
     <div class="table-board">
@@ -13,9 +15,10 @@
               class="btn-m btn-default btn-has-icon"
               @click="createModel"
             >
-              <svg-icon 
-                icon-class="plus" 
-                class="icon"/>{{ $t('model.newModel') }}
+              <svg-icon
+                icon-class="plus"
+                class="icon"
+              />{{ $t('model.newModel') }}
             </button>
           </div>
         </div>
@@ -30,7 +33,7 @@
           @delete="confirmDelete"
           @sort="sortData"
         />
-        <el-pagination 
+        <el-pagination
           v-if="paginationInfo.totalPages > 1"
           :total="paginationInfo.totalItems"
           :page-size="paginationInfo.itemPerPage"
@@ -93,11 +96,11 @@ export default {
           text: this.$t('model.id'),
           value: 'id',
           width: '65px',
-          sort: true,
+          sort: true
         },
         {
           text: this.$t('model.modelName'),
-          value: 'name',
+          value: 'name'
         },
         {
           text: this.$t('model.creator'),
@@ -160,23 +163,23 @@ export default {
   methods: {
     ...mapMutations('modelManagement', ['updateShowCreateModelDialog', 'updateModelUploadSuccess']),
     fetchData (init = true, page = 0) {
-      if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return 
+      if (this.isLoading || (!init && this.paginationInfo.currentPage === page)) return
       this.isLoading = true
       return getModelList(this.groupId, page)
-        .then(({models, pagination}) => {
+        .then(({ models, pagination }) => {
           this.modelList = models
           this.paginationInfo = pagination
         }).finally(() => {
           this.isLoading = false
         })
     },
-    sortData ({name, order}) {
+    sortData ({ name, order }) {
       this.modelList = orderBy(this.modelList, [name], [order])
     },
     changePage (page) {
       this.fetchData(false, page - 1)
     },
-    confirmDelete ({id}) {
+    confirmDelete ({ id }) {
       this.deleteModelId = id
       this.isShowDeleteDialog = true
     },

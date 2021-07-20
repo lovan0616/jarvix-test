@@ -1,9 +1,9 @@
 <template>
   <div class="file-upload">
     <div class="dialog-body">
-      <input 
-        ref="fileUploadInput" 
-        :accept="acceptFileTypes.join(',').toString()" 
+      <input
+        ref="fileUploadInput"
+        :accept="acceptFileTypes.join(',').toString()"
         type="file"
         class="hidden"
         name="fileUploadInput"
@@ -21,19 +21,30 @@
         @dragenter.native="toggleDragEnter(true)"
         @dragleave.native="toggleDragEnter(false)"
       >
-        <div 
-          slot="uploadLimit" 
-          class="upload-remark">
-          <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
-          <div class="conten-container">
-            <div class="content">1. {{ $t('editing.uploadLimitFileType') }}</div>
-            <div class="content">2. {{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
-            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: license.maxUploadSize === -1 ? '&#8734;' : shortenDataCapacityNumber(license.maxUploadSize)}) }}</div>
+        <div
+          slot="uploadLimit"
+          class="upload-remark"
+        >
+          <div class="title">
+            【{{ $t('editing.uploadLimitTitle') }}】
           </div>
-          <div class="content">4. {{ $t('editing.uploadLimitContent') }}</div>
+          <div class="conten-container">
+            <div class="content">
+              1. {{ $t('editing.uploadLimitFileType') }}
+            </div>
+            <div class="content">
+              2. {{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}
+            </div>
+            <div class="content">
+              3. {{ $t('editing.uploadLimitSize', {limitSize: license.maxUploadSize === -1 ? '&#8734;' : shortenDataCapacityNumber(license.maxUploadSize)}) }}
+            </div>
+          </div>
+          <div class="content">
+            4. {{ $t('editing.uploadLimitContent') }}
+          </div>
         </div>
       </upload-block>
-      <div 
+      <div
         v-else
         class="file-list-container"
         @drop.prevent="dropFiles($event)"
@@ -53,22 +64,24 @@
           :file-list="unableFileList"
           @removeFile="removeUnableFile($event)"
         />
-        <div 
+        <div
           v-if="currntUploadStatus === uploadStatus.wait"
           class="file-chosen-info"
         >
           <span
             :class="{'is-warning': isExceedRemainingDataStorageSize}"
-            class="file-chosen-remark">
+            class="file-chosen-remark"
+          >
             {{ fileChosenRemark }}
           </span>
-          <button 
+          <button
             class="btn-m btn-secondary btn-has-icon"
             @click="chooseFile"
           >
-            <svg-icon 
-              icon-class="file-plus" 
-              class="icon"/>
+            <svg-icon
+              icon-class="file-plus"
+              class="icon"
+            />
             {{ fileCountLimit > 1 ? $t('editing.addFile') : $t('fileDataUpdate.reChoose') }}
           </button>
         </div>
@@ -76,25 +89,29 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <span 
-          v-if="currntUploadStatus !== uploadStatus.wait" 
-          class="uploading-reminding">{{ $t('editing.uploading') }}</span>
-        <button 
+        <span
+          v-if="currntUploadStatus !== uploadStatus.wait"
+          class="uploading-reminding"
+        >{{ $t('editing.uploading') }}</span>
+        <button
           v-if="currntUploadStatus === uploadStatus.wait"
           class="btn btn-outline"
           @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
-        <slot 
-          v-if="currntUploadStatus === uploadStatus.wait" 
-          name="additionalButton"/>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <slot
+          v-if="currntUploadStatus === uploadStatus.wait"
+          name="additionalButton"
+        />
+        <button
           v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
           :disabled="isExceedRemainingDataStorageSize"
           class="btn btn-default"
           @click="fileUpload"
         >
           <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
-          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"/>{{ $t('button.uploading') }}</span>
+          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner" />{{ $t('button.uploading') }}</span>
         </button>
       </div>
     </div>
@@ -192,7 +209,7 @@ export default {
       const files = Array.from(event.dataTransfer.files)
         .filter(item => {
           // 遇到有 MIME tpye 為空的情形，改為使用副檔名判斷
-          var pattern = new RegExp('.csv$|.xls$|.xlsx$');
+          var pattern = new RegExp('.csv$|.xls$|.xlsx$')
           if (item.name.match(pattern)) return true
           // 格式不支援者，最後一併跳提示訊息
           this.notSupportedFileType.add(this.getFileShortExtension(item.type))
@@ -203,7 +220,7 @@ export default {
         // 避免若同時拖曳超過十個檔案時 $message 重疊
         setTimeout(() => {
           Message({
-            message: this.$t('message.fileTypeNotSupported', {fileType: notSupportedFileTypeString}),
+            message: this.$t('message.fileTypeNotSupported', { fileType: notSupportedFileTypeString }),
             type: 'warning',
             duration: 3 * 1000,
             showClose: true
@@ -243,13 +260,13 @@ export default {
       // 有選到檔案才執行
       if (files) {
         // 資料更新一次只能選一個檔案
-        if(this.fileCountLimit === 1) {
+        if (this.fileCountLimit === 1) {
           this.$store.commit('dataManagement/updateUploadFileList', [])
         }
         // 判斷數量是否超過限制
         if (files.length + this.uploadFileList.length > this.fileCountLimit) {
           Message({
-            message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
+            message: this.$t('editing.reachUploadCountLimit', { countLimit: this.fileCountLimit }),
             type: 'warning',
             duration: 3 * 1000,
             showClose: true
@@ -278,7 +295,7 @@ export default {
             data: formData,
             status: uploadStatus.forbidden,
             id: new Date().getTime() + i,
-            msg: this.$t('editing.reachUploadSizeLimit', {limitSize: this.license.maxUploadSize * 1024})
+            msg: this.$t('editing.reachUploadSizeLimit', { limitSize: this.license.maxUploadSize * 1024 })
           })
         } else {
           fileList.push({

@@ -1,24 +1,30 @@
 <template>
   <div class="data-management">
-    <div 
+    <div
       v-show="isProcessing"
       class="status-block"
     >
-      <svg-icon 
-        icon-class="spinner" 
-        class="spinner-icon"/>{{ $t('editing.dataProcessing') }}
+      <svg-icon
+        icon-class="spinner"
+        class="spinner-icon"
+      />{{ $t('editing.dataProcessing') }}
     </div>
     <div class="page-title-row">
       <h1 class="title">
-        <div class="title-left">{{ $t('nav.dataManagement') }}</div>
+        <div class="title-left">
+          {{ $t('nav.dataManagement') }}
+        </div>
         <div class="title-right">
           <data-storage-usage-info />
         </div>
       </h1>
       <div class="bread-crumb">
-        <router-link 
-          :to="{ name: 'DataSourceList' }" 
-          class="title-link">{{ $t('editing.dataSource') }}</router-link>
+        <router-link
+          :to="{ name: 'DataSourceList' }"
+          class="title-link"
+        >
+          {{ $t('editing.dataSource') }}
+        </router-link>
         <span class="divider">/</span>{{ dataSourceName }}
       </div>
     </div>
@@ -26,19 +32,22 @@
       <div class="board-title-row">
         <div class="board-title-row__left">
           <div class="button-block">
-            <button 
+            <button
               :disabled="isProcessing || reachLimit"
               class="btn-m btn-default btn-has-icon"
               @click="createDataFrame"
             >
-              <svg-icon 
-                icon-class="file-plus" 
-                class="icon"/>{{ $t('editing.newTable') }}
+              <svg-icon
+                icon-class="file-plus"
+                class="icon"
+              />{{ $t('editing.newTable') }}
             </button>
-            <div 
+            <div
               v-if="reachLimit"
               class="reach-limit"
-            >{{ $t('notification.uploadLimitNotification') }}</div>
+            >
+              {{ $t('notification.uploadLimitNotification') }}
+            </div>
           </div>
           <!-- 目前只允許十張表，暫時不需要搜尋 -->
           <!-- <search-block
@@ -48,26 +57,30 @@
           /> -->
         </div>
         <div class="button-block dataframe-action">
-          <button 
+          <button
             :disabled="enableDataFrameCount === 0"
             class="btn-m btn-secondary btn-has-icon"
             @click="toggleEditFeatureDialog"
           >
-            <svg-icon 
-              icon-class="feature" 
-              class="icon"/>{{ $t('button.featureManagement') }}
+            <svg-icon
+              icon-class="feature"
+              class="icon"
+            />{{ $t('button.featureManagement') }}
           </button>
-          <button 
+          <button
             :disabled="!canEditJoinTable()"
             class="btn-m btn-secondary btn-has-icon"
             @click="openEditJoinTableDialog"
           >
-            <svg-icon 
-              icon-class="correlation" 
-              class="icon"/>{{ $t('editing.tableJoin') }}
+            <svg-icon
+              icon-class="correlation"
+              class="icon"
+            />{{ $t('editing.tableJoin') }}
           </button>
         </div>
-        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
+        <div class="limit-notification">
+          {{ $t('notification.uploadLimit', {count: fileCountLimit}) }}
+        </div>
       </div>
       <data-table
         :headers="tableHeaders"
@@ -224,7 +237,7 @@ export default {
       showEditDateTimeDialog: false,
       showEditEtlDialog: false,
       showEditBatchLoadDialog: false,
-      showEditFileDataUpdateDialog:false, 
+      showEditFileDataUpdateDialog: false,
       showEditUpdateSettingDialog: false,
       deleteId: null,
       renameDataSource: null,
@@ -265,7 +278,7 @@ export default {
     reachFileLengthLimit () {
       return this.dataList.length >= this.fileCountLimit
     },
-    filterDataList() {
+    filterDataList () {
       return this.dataList.filter(data => data.primaryAlias.toLowerCase().includes(this.searchedDataFileName.toLowerCase()))
     },
     // 用來生成 data table
@@ -346,11 +359,11 @@ export default {
     hasDataFrameProcessingOrBatchLoading () {
       if (!this.dataList.length) return false
       return this.dataList.some((element) => (
-        element.type === 'PROCESS'
-        || element.state === 'Process' 
-        || element.state === 'Pending' 
-        || element.crontabConfigStatus === 'AUTO' 
-        || element.latestImportStatus === 'Process'
+        element.type === 'PROCESS' ||
+        element.state === 'Process' ||
+        element.state === 'Pending' ||
+        element.crontabConfigStatus === 'AUTO' ||
+        element.latestImportStatus === 'Process'
       ))
     },
     enableDataFrameCount () {
@@ -424,7 +437,7 @@ export default {
         this.isLoading = false
       })
     },
-    sortData ({name, order}) {
+    sortData ({ name, order }) {
       this.dataList = orderBy(this.dataList, [name], [order])
     },
     updateDataTable () {
@@ -479,7 +492,7 @@ export default {
     deleteFile () {
       this.showConfirmDeleteDialog = false
       this.isLoading = true
-      const {id: dataframeId, dataSourceId: selectedDataSourceId} = this.selectList[0]
+      const { id: dataframeId, dataSourceId: selectedDataSourceId } = this.selectList[0]
       deleteDataFrameById(dataframeId)
         .then(res => {
           Message({
@@ -567,8 +580,8 @@ export default {
     },
     editBatchLoadSetting ({ id, primaryAlias, originType }) {
       this.currentEditDataFrameInfo = { id, primaryAlias }
-      switch(originType) {
-        case 'database': 
+      switch (originType) {
+        case 'database':
           this.showEditBatchLoadDialog = true
           break
         case 'file':

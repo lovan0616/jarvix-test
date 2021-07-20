@@ -1,12 +1,17 @@
 <template>
   <div class="remote-connection-finished file-upload-finished">
-    <div class="dialog-title">{{ $t('editing.buildFinish') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.buildFinish') }}
+    </div>
     <div class="finished-img-block">
-      <img 
-        :src="require(`@/assets/images/success.gif`)" 
-        :alt="$t('editing.connectSuccess')" 
-        class="finished-img">
-      <div class="finished-file-info">{{ $t('editing.buildStatus', {total: tableIdList.length, success: successConnectionList.length, fail: failConnectionList.length}) }}</div>
+      <img
+        :src="require(`@/assets/images/success.gif`)"
+        :alt="$t('editing.connectSuccess')"
+        class="finished-img"
+      >
+      <div class="finished-file-info">
+        {{ $t('editing.buildStatus', {total: tableIdList.length, success: successConnectionList.length, fail: failConnectionList.length}) }}
+      </div>
     </div>
     <!-- TODO 跟 upload 做整併 -->
     <connection-list-block
@@ -21,10 +26,12 @@
     />
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-default"
           @click="closeFileUploadDialog"
-        >{{ $t('button.finish') }}</button>
+        >
+          {{ $t('button.finish') }}
+        </button>
       </div>
     </div>
   </div>
@@ -57,7 +64,7 @@ export default {
       this.$store.commit('dataManagement/updateFileUploadSuccess', true)
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

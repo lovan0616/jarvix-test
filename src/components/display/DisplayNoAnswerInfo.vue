@@ -1,7 +1,11 @@
 <template>
   <div class="display-no-answer-info">
-    <div class="info-title">{{ title }}</div>
-    <div class="info-description">{{ message }}</div>
+    <div class="info-title">
+      {{ title }}
+    </div>
+    <div class="info-description">
+      {{ message }}
+    </div>
   </div>
 </template>
 <script>

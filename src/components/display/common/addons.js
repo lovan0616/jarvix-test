@@ -64,7 +64,7 @@ export function xAxisDefault () {
     nameLocation: 'end',
     nameGap: config.nameGap,
     nameTextStyle: {
-      color: chartVariable['textColor']
+      color: chartVariable.textColor
     },
     splitLine: {
       show: false
@@ -75,13 +75,13 @@ export function xAxisDefault () {
     axisLine: {
       show: true,
       lineStyle: {
-        color: chartVariable['xAxisColor']
+        color: chartVariable.xAxisColor
       }
     },
     axisLabel: {
       show: true,
       textStyle: {
-        color: chartVariable['textColor'],
+        color: chartVariable.textColor,
         fontSize: config.axisLabelFontSize
       },
       rotate: 30,
@@ -91,8 +91,8 @@ export function xAxisDefault () {
         }
         return value
       },
-      color: chartVariable['xAxisLabelColor']
-      
+      color: chartVariable.xAxisLabelColor
+
     }
   }
 }
@@ -109,7 +109,7 @@ export function yAxisParallel () {
     nameGap: config.nameGap,
     inverse: true,
     nameTextStyle: {
-      color: chartVariable['textColor'],
+      color: chartVariable.textColor,
       align: 'left'
     },
     splitLine: {
@@ -121,17 +121,17 @@ export function yAxisParallel () {
     axisLine: {
       show: true,
       lineStyle: {
-        color: chartVariable['xAxisColor']
+        color: chartVariable.xAxisColor
       }
     },
     axisLabel: {
       show: true,
       textStyle: {
-        color: chartVariable['textColor'],
+        color: chartVariable.textColor,
         fontSize: config.axisLabelFontSize
       },
       rotate: 0,
-      color: chartVariable['xAxisLabelColor'],
+      color: chartVariable.xAxisLabelColor,
       formatter (value) {
         if (value.length > 20) {
           return value.slice(0, 19) + '...'
@@ -150,13 +150,13 @@ export function yAxisDefault () {
   return {
     nameGap: config.nameGap,
     nameTextStyle: {
-      color: chartVariable['textColor'],
+      color: chartVariable.textColor,
       align: 'left'
     },
     splitLine: {
       show: true,
       lineStyle: {
-        color: chartVariable['splitLineColor']
+        color: chartVariable.splitLineColor
       }
     },
     axisTick: {
@@ -165,17 +165,17 @@ export function yAxisDefault () {
     axisLine: {
       show: false,
       lineStyle: {
-        color: chartVariable['xAxisColor']
+        color: chartVariable.xAxisColor
       }
     },
     scale: false,
     axisLabel: {
       show: true,
       textStyle: {
-        color: chartVariable['textColor'],
+        color: chartVariable.textColor,
         fontSize: config.axisLabelFontSize
       },
-      color: chartVariable['yAxisLabelColor']
+      color: chartVariable.yAxisLabelColor
     }
   }
 }
@@ -188,32 +188,32 @@ export function yAxisMultiple () {
   return {
     nameGap: config.nameGap,
     nameTextStyle: {
-      color: chartVariable['textColor']
+      color: chartVariable.textColor
     },
     splitLine: {
       show: true,
       lineStyle: {
-        color: chartVariable['splitLineColor']
+        color: chartVariable.splitLineColor
       }
     },
     axisTick: {
       lineStyle: {
-        color: chartVariable['xAxisColor']
+        color: chartVariable.xAxisColor
       }
     },
     axisLine: {
       lineStyle: {
-        color: chartVariable['xAxisColor']
+        color: chartVariable.xAxisColor
       }
     },
     scale: true,
     axisLabel: {
       show: true,
       textStyle: {
-        color: chartVariable['textColor'],
+        color: chartVariable.textColor,
         fontSize: config.axisLabelFontSize
       },
-      color: chartVariable['yAxisLabelColor']
+      color: chartVariable.yAxisLabelColor
     }
   }
 }
@@ -478,7 +478,7 @@ export function seriesItemMarkLine () {
       symbol: 'none',
       lineStyle: {
         normal: {
-          color: chartVariable['markLineColor'],
+          color: chartVariable.markLineColor,
           type: 'solid'
         }
       },
@@ -642,24 +642,24 @@ export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, d
       }]
     }
   } else if (lowerLimit === null) {
-      // 只有上限
-      return {
-        type: 'piecewise',
-        dimension: dimension,
-        show: false,
-        pieces: upperLimit.value > minY ? [{
-          [upperLimit.isIncluded ? 'gte' : 'gt']: upperLimit.value,
-          color: warningColor
-        },{
-          [upperLimit.isIncluded ? 'lt' : 'lte']: upperLimit.value,
-          gte: minY,
-          color: chartColor
-        }] : [{
-          lte: maxY,
-          gte: minY,
-          color: warningColor
-        }]
-      }
+    // 只有上限
+    return {
+      type: 'piecewise',
+      dimension: dimension,
+      show: false,
+      pieces: upperLimit.value > minY ? [{
+        [upperLimit.isIncluded ? 'gte' : 'gt']: upperLimit.value,
+        color: warningColor
+      }, {
+        [upperLimit.isIncluded ? 'lt' : 'lte']: upperLimit.value,
+        gte: minY,
+        color: chartColor
+      }] : [{
+        lte: maxY,
+        gte: minY,
+        color: warningColor
+      }]
+    }
   } else {
     return {
       type: 'piecewise',
@@ -668,7 +668,7 @@ export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, d
       pieces: lowerLimit.value > minY ? [{
         [lowerLimit.isIncluded ? 'gt' : 'gte']: lowerLimit.value,
         color: chartColor
-      },{
+      }, {
         [lowerLimit.isIncluded ? 'lte' : 'lt']: lowerLimit.value,
         gte: minY,
         color: warningColor
@@ -688,7 +688,7 @@ export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, d
   }
 }
 
-export function formatComponentTitle(axisList, additionalAxisSetting) {
+export function formatComponentTitle (axisList, additionalAxisSetting) {
   return axisList.map(axis => ({
     ...axis,
     ...(axis.lowerLimit && {
@@ -721,7 +721,7 @@ export function formatComponentTitle(axisList, additionalAxisSetting) {
   }))
 }
 
-export function formatAnomalySetting([...settings]) {
+export function formatAnomalySetting ([...settings]) {
   if (settings.length === 1) {
     if (settings[0].comparison.includes('gt')) {
       return { upperLimit: { value: settings[0].value, isIncluded: settings[0].comparison === 'gte' } }

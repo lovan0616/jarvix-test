@@ -1,10 +1,12 @@
 <template>
   <div class="choose-file-type">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
-    <upload-process-block/>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
+    <upload-process-block />
     <div class="dialog-body">
       <div class="input-block-container">
-        <input-block 
+        <input-block
           v-validate="`required|max:${max}`"
           :label="$t('editing.dataSourceName')"
           v-model="dataSourceInfo.name"
@@ -15,14 +17,18 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button 
+        <button
           class="btn btn-outline"
           @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           class="btn btn-default he"
           @click="nextStep"
-        >{{ $t('button.buildData') }}</button>
+        >
+          {{ $t('button.buildData') }}
+        </button>
       </div>
     </div>
   </div>
@@ -64,7 +70,7 @@ export default {
         }
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

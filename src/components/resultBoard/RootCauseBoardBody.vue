@@ -3,18 +3,22 @@
     <notify-info-block
       :msg="$t('editing.resultOverSizeMessage')"
     />
-    <div class="title-block">{{ $t('resultDescription.summaryReport') }}</div>
+    <div class="title-block">
+      {{ $t('resultDescription.summaryReport') }}
+    </div>
     <div class="main-chart-container">
       <div class="chart-description-block">
-        <slot name="RootCauseDescription"/>
+        <slot name="RootCauseDescription" />
       </div>
       <div class="chart-block">
-        <slot name="PageResultBoardChart"/>
+        <slot name="PageResultBoardChart" />
       </div>
     </div>
-    <div class="title-block">{{ $t('resultDescription.importantFeatureChanging') }}</div>
+    <div class="title-block">
+      {{ $t('resultDescription.importantFeatureChanging') }}
+    </div>
     <div class="root-cause-item-block">
-      <slot name="RootCauseItem"/>
+      <slot name="RootCauseItem" />
     </div>
   </div>
 </template>

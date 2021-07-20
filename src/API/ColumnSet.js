@@ -15,7 +15,7 @@ export function getColumnSetList (dataFrameId) {
  */
 export function createColumnSet (columnSetInfo) {
   return request({
-    url: `/columnSet`,
+    url: '/columnSet',
     method: 'POST',
     data: columnSetInfo
   })
@@ -36,7 +36,7 @@ export function deleteColumnSet (columnSetId) {
  */
 export function addColumnSetColumn (columnSetInfo) {
   return request({
-    url: `/columnSet/column`,
+    url: '/columnSet/column',
     method: 'POST',
     data: columnSetInfo
   })
@@ -55,7 +55,7 @@ export function removeColumnSetColumn (columnSetColumnId) {
 /**
  * add columnSet column
  */
-export function updateColumnSet(columnSetId, columnSetInfo) {
+export function updateColumnSet (columnSetId, columnSetInfo) {
   return request({
     url: `/columnSet/${columnSetId}`,
     method: 'PATCH',

@@ -141,7 +141,7 @@ export default {
   components: {
     ShiftSetting,
     KpiSetting,
-    ExceptionTimeSetting,
+    ExceptionTimeSetting
   },
   props: {
     solutionSequence: {

@@ -1,11 +1,13 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
-      <div class="setting-block__title">資料處理設定</div>
+      <div class="setting-block__title">
+        資料處理設定
+      </div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟分片設定：</label>
-          <el-switch 
+          <el-switch
             v-model="openDistributedSetting"
             class="setting-switch"
           />
@@ -13,18 +15,20 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">排程模組設定</div>
+      <div class="setting-block__title">
+        排程模組設定
+      </div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟訂單上傳功能：</label>
-          <el-switch 
+          <el-switch
             v-model="openOrderUpload"
             class="setting-switch"
           />
         </div>
         <div class="input-block">
           <label for="">啟用排程模組：</label>
-          <el-switch 
+          <el-switch
             v-model="openScheduleModule"
             class="setting-switch"
           />
@@ -32,11 +36,13 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">新 parser 設定</div>
+      <div class="setting-block__title">
+        新 parser 設定
+      </div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟新 parser：</label>
-          <el-switch 
+          <el-switch
             v-model="useNewParser"
             class="setting-switch"
           />
@@ -44,32 +50,34 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">演算法設定</div>
+      <div class="setting-block__title">
+        演算法設定
+      </div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟演算法：</label>
-          <el-switch 
+          <el-switch
             v-model="showAlgorithmBtn"
             class="setting-switch"
           />
         </div>
         <div class="input-block">
           <label for="">Demo 已經結束：</label>
-          <el-switch 
+          <el-switch
             v-model="demoEnd"
             class="setting-switch"
           />
         </div>
         <div class="input-block">
           <label for="">Demo 資料源名稱 (預設：富士康_輪廓型分析_molding_預測)：</label>
-          <el-input 
+          <el-input
             v-model="demoDatasourceName"
             class="el-input"
           />
         </div>
         <div class="input-block">
           <label for="">Demo 演算法計算時間（單位：毫秒）（預設 30 秒）：</label>
-          <el-input 
+          <el-input
             v-model="demoCalculateTime"
             type="number"
             class="el-input"
@@ -78,11 +86,13 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">Join Table 限制</div>
+      <div class="setting-block__title">
+        Join Table 限制
+      </div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟 Join Table 檢查資料量的限制：</label>
-          <el-switch 
+          <el-switch
             v-model="hasJoinLimit"
             class="setting-switch"
           />
@@ -90,7 +100,9 @@
       </div>
     </div>
     <div class="setting-block">
-      <div class="setting-block__title">快捷鍵</div>
+      <div class="setting-block__title">
+        快捷鍵
+      </div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟豹小秘機器人：</label>

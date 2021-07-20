@@ -3,45 +3,52 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('feature.featureManagement') }}
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
+        ><svg-icon icon-class="close" /></a>
       </div>
       <div class="custom-feature-list">
         <div class="title-block">
-          <default-select 
+          <default-select
             v-model="currentDataFrameId"
             :option-list="dataFrameList"
             class="data-frame-select"
             @change="getDataFrameFeature"
           />
-          <button 
+          <button
             class="btn btn-secondary btn-has-icon"
             @click="showEditDialog"
           >
-            <svg-icon 
-              icon-class="add-feature" 
-              class="icon"/>{{ $t('button.addColumn') }}
+            <svg-icon
+              icon-class="add-feature"
+              class="icon"
+            />{{ $t('button.addColumn') }}
           </button>
         </div>
         <div class="data-table feature-list">
           <div class="data-table-row table-head">
-            <div class="data-table-cell">{{ $t('editing.columnName') }}</div>
+            <div class="data-table-cell">
+              {{ $t('editing.columnName') }}
+            </div>
             <!-- <div class="data-table-cell">{{ $t('feature.featureSetting') }}</div> -->
-            <div class="data-table-cell">{{ $t('editing.action') }}</div>
+            <div class="data-table-cell">
+              {{ $t('editing.action') }}
+            </div>
           </div>
           <div class="data-table-body">
             <empty-info-block
               v-if="featureList.length === 0"
             />
-            <div 
+            <div
               v-for="feature in featureList"
               :key="feature.id"
               class="data-table-row"
             >
-              <div class="data-table-cell">{{ feature.name }}</div>
+              <div class="data-table-cell">
+                {{ feature.name }}
+              </div>
               <!-- <div class="data-table-cell">{{ feature.description }}
                 <el-tooltip placement="top"
                   :content="$t('resultDescription.modelConfidence')"
@@ -50,13 +57,13 @@
                 </el-tooltip>
               </div> -->
               <div class="data-table-cell">
-                <a 
-                  href="javascript:void(0)" 
+                <a
+                  href="javascript:void(0)"
                   class="action-link link"
                   @click="editFeature(feature)"
                 >{{ $t('button.edit') }}</a>
-                <a 
-                  href="javascript:void(0)" 
+                <a
+                  href="javascript:void(0)"
                   class="action-link link"
                   @click="deleteFeature(feature.dataColumnId)"
                 >{{ $t('button.delete') }}</a>

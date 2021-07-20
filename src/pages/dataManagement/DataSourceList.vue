@@ -2,7 +2,9 @@
   <div class="data-management">
     <div class="page-title-row">
       <h1 class="title">
-        <div class="title-left">{{ $t('nav.dataManagement') }}</div>
+        <div class="title-left">
+          {{ $t('nav.dataManagement') }}
+        </div>
         <div class="title-right">
           <data-storage-usage-info />
         </div>
@@ -15,13 +17,14 @@
       <div class="board-title-row">
         <div class="board-title-row__left">
           <div class="button-block">
-            <button 
+            <button
               class="btn-m btn-default btn-has-icon"
               @click="createDataSource"
             >
-              <svg-icon 
-                icon-class="folder-plus" 
-                class="icon"/>{{ $t('editing.newDataSource') }}
+              <svg-icon
+                icon-class="folder-plus"
+                class="icon"
+              />{{ $t('editing.newDataSource') }}
             </button>
 
             <!-- <button class="btn-m btn-default btn-has-icon"
@@ -131,7 +134,7 @@ export default {
             name: 'DataFileList'
           }
         },
-        {text: this.$t('editing.uploadUser'), value: 'creator', width: '9.96%'},
+        { text: this.$t('editing.uploadUser'), value: 'creator', width: '9.96%' },
         {
           text: this.$t('editing.createDate'),
           value: 'createDate',
@@ -146,9 +149,9 @@ export default {
           width: '120px',
           time: 'YYYY-MM-DD'
         },
-        {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
-        {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
-        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '160px'},
+        { text: this.$t('editing.status'), value: 'state', width: '7.26%' },
+        { text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px' },
+        { text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '160px' },
         {
           text: this.$t('editing.action'),
           value: 'action',
@@ -207,7 +210,7 @@ export default {
           this.isLoading = false
         })
     },
-    sortData ({name, order}) {
+    sortData ({ name, order }) {
       this.dataList = orderBy(this.dataList, [name], [order])
     },
     createDataSource () {
@@ -263,7 +266,7 @@ export default {
       this.deleteId = null
       this.showConfirmDeleteDialog = false
     },
-    renameDataSource ({resolve, name}) {
+    renameDataSource ({ resolve, name }) {
       renameDataSourceById(this.editDataSource.id, name)
         .then(response => {
           this.fetchData()

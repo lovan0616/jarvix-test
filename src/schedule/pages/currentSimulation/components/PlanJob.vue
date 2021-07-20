@@ -147,11 +147,11 @@ export default {
       this.isProcessing = true
       if (resetPagination) this.isLoading = true
       getOrderPlanResult({
-          projectId: this.scheduleProjectId,
-          page,
-          size,
-          keyword: this.searchString
-        })
+        projectId: this.scheduleProjectId,
+        page,
+        size,
+        keyword: this.searchString
+      })
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
           if (!res.data) return

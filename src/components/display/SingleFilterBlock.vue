@@ -1,8 +1,8 @@
 <template>
-  <label 
+  <label
     :class="{ 'single-filter-block--checked': checked }"
     class="single-filter-block single-select"
-  > 
+  >
     <div class="single-filter-block__header">
       <div class="checkbox-group">
         <div class="checkbox-label">
@@ -11,12 +11,12 @@
             type="checkbox"
             @change="onCheckedChange(checked)"
           >
-          <div class="checkbox-square"/>
+          <div class="checkbox-square" />
         </div>
       </div>
       {{ columnNames.join(', ') }}
     </div>
-    <div 
+    <div
       class="single-filter-block__action"
     >
       <div
@@ -24,14 +24,16 @@
         @click.prevent="editFilter"
       >
         <svg-icon
-          icon-class="edit"/>
+          icon-class="edit"
+        />
       </div>
       <div
         class="single-filter-block__action--delete"
         @click.prevent="deleteFilter"
       >
         <svg-icon
-          icon-class="delete"/>
+          icon-class="delete"
+        />
       </div>
     </div>
     <div class="single-filter-block__description">
@@ -53,7 +55,7 @@
             </template>
             <template v-else>
               {{ sub_restraint.properties.display_name }} {{ $t('resultDescription.between', {
-                start: isDateTime(sub_restraint.properties.data_type) 
+                start: isDateTime(sub_restraint.properties.data_type)
                   ? customerTimeFormatter(sub_restraint.properties.start, sub_restraint.properties.timeScope)
                   : roundNumber(sub_restraint.properties.start),
                 end: isDateTime(sub_restraint.properties.data_type)
@@ -128,11 +130,11 @@ export default {
   },
   methods: {
     isDateTime (type) {
-      return type === "datetime"
+      return type === 'datetime'
     },
     getRestraintColumnName (restraint) {
       if (!restraint.properties) return
-      return restraint.properties['display_name']
+      return restraint.properties.display_name
     },
     onCheckedChange (checked) {
       this.$emit('status-change', checked)

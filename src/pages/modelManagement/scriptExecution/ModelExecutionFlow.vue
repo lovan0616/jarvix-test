@@ -1,8 +1,9 @@
 <template>
   <div class="local-file-upload-flow">
-    <transition 
-      name="fade" 
-      mode="out-in">
+    <transition
+      name="fade"
+      mode="out-in"
+    >
       <edit-model-name
         v-if="step === 0"
         @next="nextStep"

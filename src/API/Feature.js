@@ -15,7 +15,7 @@ export function getCustomFeatureList (dataFrameId) {
  */
 export function createCustomFeature (featureInfo) {
   return request({
-    url: `/feature/customFeature`,
+    url: '/feature/customFeature',
     method: 'POST',
     data: featureInfo
   })
@@ -26,7 +26,7 @@ export function createCustomFeature (featureInfo) {
  */
 export function updateCustomFeature (featureInfo) {
   return request({
-    url: `/feature/customFeature`,
+    url: '/feature/customFeature',
     method: 'PUT',
     data: featureInfo
   })
@@ -47,7 +47,7 @@ export function deleteCustomFeature (dataColumnId) {
  */
 export function updateSystemFeature (featureInfo) {
   return request({
-    url: `/feature/suggestFeature`,
+    url: '/feature/suggestFeature',
     method: 'PUT',
     data: featureInfo
   })

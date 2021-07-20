@@ -1,19 +1,20 @@
 <template>
-  <div 
+  <div
     v-if="messageList && messageList.length > 0"
     class="insight-description-block description"
   >
     <div
       :class="{[`description__title--${messageType}`]: messageType}"
       class="description__title"
-    > 
-      <svg-icon 
+    >
+      <svg-icon
         v-if="iconName"
-        :icon-class="iconName"/>
+        :icon-class="iconName"
+      />
       {{ title }}
     </div>
-    <span 
-      v-for="(description, index) in messageList" 
+    <span
+      v-for="(description, index) in messageList"
       :key="index"
       :class="{[`description__item--${messageType}`]: messageType}"
       class="description__item"
@@ -78,6 +79,6 @@ export default {
       color: #FFDF6F;
     }
   }
-}  
+}
 
 </style>

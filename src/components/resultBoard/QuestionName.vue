@@ -1,7 +1,7 @@
 <template>
   <div class="question-name-block">
     <span class="question-mark">Q</span>
-    <span 
+    <span
       v-if="questionSegmentation.sentence && questionSegmentation.sentence.length"
       class="question-name"
     >
@@ -13,7 +13,7 @@
         :style="{'margin-left': needSpaceList[index] ? '10px' : null}"
       />
     </span>
-    <span 
+    <span
       v-else
       class="question-name"
     >{{ question }}</span>
@@ -46,7 +46,7 @@ export default {
       })
 
       return this.questionSegmentation.sentence.reduce((acc, cur, index) => {
-        let needSpace   
+        let needSpace
         if (index === 0) {
           needSpace = false
         } else {

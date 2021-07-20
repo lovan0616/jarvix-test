@@ -1,9 +1,11 @@
 <template>
-  <div 
+  <div
     v-if="!isProcessing"
     class="column-setting"
   >
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('editing.newData') }}
+    </div>
     <upload-process-block
       :step="4"
     />
@@ -12,31 +14,38 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <etl-choose-column/>
+      <etl-choose-column />
     </div>
-    <div 
-      v-if="currentColumnIndex === null" 
-      class="dialog-footer">
+    <div
+      v-if="currentColumnIndex === null"
+      class="dialog-footer"
+    >
       <div class="dialog-button-block">
-        <button 
+        <button
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
+        >
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           :disabled="isProcessing"
           class="btn btn-outline"
           @click="prevStep"
-        >{{ $t('button.prevStep') }}</button>
-        <button 
+        >
+          {{ $t('button.prevStep') }}
+        </button>
+        <button
           :disabled="isProcessing"
           class="btn btn-default"
           @click="nextStep"
-        >{{ $t('button.buildData') }}</button>
+        >
+          {{ $t('button.buildData') }}
+        </button>
       </div>
     </div>
   </div>
-  <spinner 
+  <spinner
     v-else
     :title="$t('editing.dataBuilding')"
     class="processing-spinner-container"
@@ -103,7 +112,7 @@ export default {
         })
         return
       }
-      
+
       this.isProcessing = true
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
@@ -145,7 +154,7 @@ export default {
       }
       return result
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

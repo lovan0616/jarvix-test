@@ -1,6 +1,6 @@
 <template>
   <div class="filter-block">
-    <spinner 
+    <spinner
       v-if="isLoading"
       :title="$t('editing.loading')"
       size="30"
@@ -12,13 +12,13 @@
         class="filter-block__search-box"
       />
       <div class="filter-block__action-box">
-        <a 
-          href="javascript:void(0);" 
+        <a
+          href="javascript:void(0);"
           class="link filter-block__action-box-link"
           @click="toggleAllColumns(true)"
         >{{ $t('dataFrameAdvanceSetting.selectAll') }}</a>
-        <a 
-          href="javascript:void(0);" 
+        <a
+          href="javascript:void(0);"
           class="link filter-block__action-box-link"
           @click="toggleAllColumns(false)"
         >{{ $t('dataFrameAdvanceSetting.cancelSelect') }}</a>
@@ -37,18 +37,20 @@
                 :checked="column.isSelected"
                 type="checkbox"
               >
-              <div class="checkbox-square"/>
+              <div class="checkbox-square" />
             </div>
           </div>
           {{ column.aliasList.length > 0 ? column.aliasList[0] : column.name }}
         </label>
       </div>
       <div class="filter-block__button-block">
-        <button 
+        <button
           type="button"
           class="btn-m btn-outline"
           @click="editFeature"
-        >{{ $t('button.featureManagement') }}</button>
+        >
+          {{ $t('button.featureManagement') }}
+        </button>
       </div>
       <edit-feature-dialog
         v-if="showEditFeatureDialog"

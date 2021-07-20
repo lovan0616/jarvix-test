@@ -2,17 +2,20 @@
   <section class="war-room-setting">
     <div class="war-room-setting__header">
       <div class="war-room-setting__title">
-        <svg-icon 
-          icon-class="filter-setting" 
-          class="war-room-setting__header-icon"/>
+        <svg-icon
+          icon-class="filter-setting"
+          class="war-room-setting__header-icon"
+        />
         {{ $t('warRoom.setting') }}
       </div>
       <span
         class="war-room-setting__close-icon"
-        @click="$emit('close')">
-        <svg-icon 
-          icon-class="close" 
-          class="war-room-setting__header-icon"/>
+        @click="$emit('close')"
+      >
+        <svg-icon
+          icon-class="close"
+          class="war-room-setting__header-icon"
+        />
       </span>
     </div>
     <section
@@ -20,9 +23,10 @@
       class="war-room-setting__content"
     >
       <div class="war-room-setting__block-container">
-        <div 
-          v-if="componentData.isError && !componentData.config" 
-          class="war-room-setting__block is-error">
+        <div
+          v-if="componentData.isError && !componentData.config"
+          class="war-room-setting__block is-error"
+        >
           {{ componentData.errorMessage }}
         </div>
         <section v-else>
@@ -35,18 +39,21 @@
               :disabled="isProcessing"
               v-model="componentData.config.displayName"
               name="displayName"
-              class="input war-room-setting__block-text-input">
-            <div 
+              class="input war-room-setting__block-text-input"
+            >
+            <div
               v-show="errors.has('displayName')"
               class="error-text"
-            >{{ errors.first('displayName') }}</div>
+            >
+              {{ errors.first('displayName') }}
+            </div>
           </div>
           <div class="war-room-setting__block">
             <div class="war-room-setting__block-title">
               {{ $t('warRoom.sourceData') }}
               <a
                 v-if="!componentData.componentId && !isEmptyPool && selectedDataSource.question"
-                :disabled="isProcessing" 
+                :disabled="isProcessing"
                 href="javascript:void(0);"
                 class="link"
                 @click="clearSelectedDataSource"
@@ -61,8 +68,9 @@
               {{ selectedDataSourceDisplay }}
               <svg-icon
                 v-if="!componentData.componentId && !isEmptyPool"
-                icon-class="arrow-right" 
-                class="icon"/>
+                icon-class="arrow-right"
+                class="icon"
+              />
             </div>
           </div>
           <template v-if="isShowAdvanceSetting">
@@ -82,7 +90,7 @@
                 v-if="componentData.config.isAutoRefresh"
                 class="war-room-setting__block-select-field"
               >
-                <default-select 
+                <default-select
                   v-validate="'required'"
                   v-model="componentData.config.refreshFrequency"
                   :option-list="updateFrequency.basicScheduleList"
@@ -91,10 +99,12 @@
                   class="war-room-setting__block-select"
                   name="updateFrequency"
                 />
-                <div 
+                <div
                   v-show="errors.has('updateFrequency')"
                   class="error-text"
-                >{{ errors.first('updateFrequency') }}</div>
+                >
+                  {{ errors.first('updateFrequency') }}
+                </div>
               </div>
             </div>
             <div class="war-room-setting__block">
@@ -113,7 +123,7 @@
                 v-if="componentData.config.displayDateRangeSwitch"
                 class="war-room-setting__block-select-field"
               >
-                <default-select 
+                <default-select
                   v-validate="'required'"
                   :value="selectedTimeInterval"
                   :option-list="warRoomTimeIntervalList"
@@ -123,10 +133,12 @@
                   name="timeIntervalConstraint"
                   @change="updateTimeInterval"
                 />
-                <div 
+                <div
                   v-show="errors.has('timeIntervalConstraint')"
                   class="error-text"
-                >{{ errors.first('timeIntervalConstraint') }}</div>
+                >
+                  {{ errors.first('timeIntervalConstraint') }}
+                </div>
               </div>
               <div
                 v-if="componentData.config.displayDateRangeSwitch && selectedTimeInterval === 'others'"
@@ -147,8 +159,11 @@
                     size="small"
                     type="date"
                     name="startTime"
-                    @change="clearEndTime"/>
-                  <div class="date-picker__seperator">-</div>
+                    @change="clearEndTime"
+                  />
+                  <div class="date-picker__seperator">
+                    -
+                  </div>
                   <el-date-picker
                     :disabled="isProcessing || !componentData.config.customStartTime"
                     v-model="componentData.config.customEndTime"
@@ -159,13 +174,18 @@
                     class="date-picker__item"
                     size="small"
                     type="date"
-                    name="endTime"/>
+                    name="endTime"
+                  />
                 </div>
                 <div
                   v-show="errors.has('startTime')"
                   class="error-text"
-                >{{ errors.first('startTime') }}</div>
-                <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
+                >
+                  {{ errors.first('startTime') }}
+                </div>
+                <div class="date-picker__reminder">
+                  {{ '*' + $t('warRoom.timeIntervalReminder') }}
+                </div>
               </div>
             </div>
             <div
@@ -199,10 +219,12 @@
                   name="upperBound"
                   class="input war-room-setting__block-text-input"
                 >
-                <div 
+                <div
                   v-show="errors.has('upperBound')"
                   class="error-text"
-                >{{ errors.first('upperBound') }}</div>
+                >
+                  {{ errors.first('upperBound') }}
+                </div>
                 <label class="input war-room-setting__block-text-label">
                   {{ $t('warRoom.minThreshold') }}
                 </label>
@@ -215,10 +237,12 @@
                   name="lowerBound"
                   class="input war-room-setting__block-text-input"
                 >
-                <div 
+                <div
                   v-show="errors.has('lowerBound')"
                   class="error-text"
-                >{{ errors.first('lowerBound') }}</div>
+                >
+                  {{ errors.first('lowerBound') }}
+                </div>
                 <template v-if="selectedDataSource.canAlert || componentData.canAlert">
                   <label class="war-room-setting__block-text-label">
                     {{ $t('warRoom.waringMail') }}
@@ -230,17 +254,19 @@
                     inactive-color="#324B4E"
                     @change="updateBoundSwitch"
                   />
-                  <span 
-                    v-if="componentData.config.alertSwitch" 
-                    class="war-room-setting__block-text-description">
-                    {{ $t('warRoom.mailReceiversetting') }} 
+                  <span
+                    v-if="componentData.config.alertSwitch"
+                    class="war-room-setting__block-text-description"
+                  >
+                    {{ $t('warRoom.mailReceiversetting') }}
                   </span>
                 </template>
               </div>
             </div>
-            <div 
+            <div
               v-if="selectedDataSource.maxDataCount || originalComponentData.config.maxDataCount"
-              class="war-room-setting__block">
+              class="war-room-setting__block"
+            >
               <div class="war-room-setting__block-title">
                 {{ $t('warRoom.maxDataCount') }}
               </div>
@@ -253,10 +279,12 @@
                 name="maxDataCount"
                 class="input war-room-setting__block-text-input"
               >
-              <div 
+              <div
                 v-show="errors.has('maxDataCount')"
-                class="error-text"  
-              >{{ errors.first('maxDataCount') }}</div>
+                class="error-text"
+              >
+                {{ errors.first('maxDataCount') }}
+              </div>
             </div>
           </template>
         </section>
@@ -278,7 +306,9 @@
           type="button"
           class="btn btn-default war-room-setting__button-block-button--right"
           @click="componentData.componentId ? saveComponentSetting() : buildComponent()"
-        >{{ $t('button.save') }}</button>
+        >
+          {{ $t('button.save') }}
+        </button>
       </div>
     </section>
     <component-data-source-list
@@ -395,19 +425,19 @@ export default {
           },
           {
             value: '*/5 * * * *',
-            name: this.$tc('warRoom.everyMinute',5, { number: 5 })
+            name: this.$tc('warRoom.everyMinute', 5, { number: 5 })
           },
           {
             value: '*/15 * * * *',
-            name: this.$tc('warRoom.everyMinute',15, { number: 15 })
+            name: this.$tc('warRoom.everyMinute', 15, { number: 15 })
           },
           {
             value: '*/30 * * * *',
-            name: this.$tc('warRoom.everyMinute',30, { number: 30 })
+            name: this.$tc('warRoom.everyMinute', 30, { number: 30 })
           },
           {
             value: '*/45 * * * *',
-            name: this.$tc('warRoom.everyMinute',45, { number: 45 })
+            name: this.$tc('warRoom.everyMinute', 45, { number: 45 })
           },
           {
             value: '0 * * * *',
@@ -425,13 +455,13 @@ export default {
             value: '0 0 1 * *',
             name: this.$t('warRoom.everyMonth')
           }
-        ],
+        ]
       },
       customTimeInterval: {
         startTime: '',
         endTime: '',
         startTimePickerOptions: {
-          disabledDate(time) {
+          disabledDate (time) {
             return time.getTime() > Date.now()
           },
           firstDayOfWeek: 1
@@ -447,12 +477,12 @@ export default {
   computed: {
     selectedTimeInterval () {
       if (!this.componentData || !this.componentData.config || !this.componentData.config.displayDateRangeSwitch) return null
-      
+
       // 確認是否選擇預設區間
       if (this.componentData.config.recentTimeIntervalAmount && this.componentData.config.recentTimeIntervalUnit) {
         return `${this.componentData.config.recentTimeIntervalAmount}+${this.componentData.config.recentTimeIntervalUnit}`
       }
-      
+
       // 如果沒有選擇預設則為自訂區間
       return 'others'
     },
@@ -474,14 +504,14 @@ export default {
     },
     disableSaveButton () {
       if (this.componentData.componentId) return this.isProcessing
-      return this.isProcessing  || !this.selectedDataSource.question || !this.componentData.config.displayName
+      return this.isProcessing || !this.selectedDataSource.question || !this.componentData.config.displayName
     },
     upperBoundRules () {
       if (!this.componentData || !this.componentData.config) return
       const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
       if (
-        (this.componentData.config.lowerBound && decimalRegex.test(this.componentData.config.lowerBound))
-        && this.componentData.config.upperBound
+        (this.componentData.config.lowerBound && decimalRegex.test(this.componentData.config.lowerBound)) &&
+        this.componentData.config.upperBound
       ) return 'decimal|validUpperBound:lowerBound'
       if (this.componentData.config.upperBound) return 'decimal'
       return 'eitherOneIsRequired:lowerBound'
@@ -490,10 +520,10 @@ export default {
       if (!this.componentData || !this.componentData.config) return
       const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
       if (
-        (this.componentData.config.upperBound && decimalRegex.test(this.componentData.config.upperBound))
-        && this.componentData.config.lowerBound
+        (this.componentData.config.upperBound && decimalRegex.test(this.componentData.config.upperBound)) &&
+        this.componentData.config.lowerBound
       ) return 'decimal|validLowerBound:upperBound'
-      if (this.componentData.config.lowerBound) return 'decimal'      
+      if (this.componentData.config.lowerBound) return 'decimal'
       return 'eitherOneIsRequired:upperBound'
     }
   },
@@ -515,13 +545,13 @@ export default {
 
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
-        const componentData = { 
+        const componentData = {
           config: {
             ...config,
             upperBound: config.upperBound || null,
             lowerBound: config.lowerBound || null
-          }, 
-          itemId: this.selectedDataSource.itemId 
+          },
+          itemId: this.selectedDataSource.itemId
         }
 
         this.isProcessing = true
@@ -542,7 +572,7 @@ export default {
     saveComponentSetting () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
         if (!isValidate) return
-       
+
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
 
@@ -604,7 +634,7 @@ export default {
       this.hideComponentDataSourceList()
     },
     updateRefreshFrequency (isTurnedOn) {
-      if(isTurnedOn) return
+      if (isTurnedOn) return
       const { refreshFrequency } = JSON.parse(JSON.stringify(this.originalComponentData.config))
 
       // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
@@ -637,7 +667,7 @@ export default {
       this.componentData.config.customEndTime = null
     },
     updateDateRangeSwitch (isTurnedOn) {
-      if(isTurnedOn) return
+      if (isTurnedOn) return
       const {
         customStartTime,
         customEndTime,
@@ -653,7 +683,7 @@ export default {
       })
     },
     updateBoundSwitch (isTurnedOn) {
-      if(isTurnedOn) return
+      if (isTurnedOn) return
       const {
         upperBound,
         lowerBound

@@ -1,7 +1,9 @@
 <template>
   <div class="page-algorithm">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('algorithm.management') }}</h1>
+      <h1 class="title">
+        {{ $t('algorithm.management') }}
+      </h1>
       <div class="bread-crumb">
         {{ $t('algorithm.name') }}
       </div>
@@ -85,7 +87,7 @@ export default {
           width: '120px',
           time: 'YYYY-MM-DD'
         },
-        {text: this.$t('editing.status'), value: 'status', width: '7.26%'},
+        { text: this.$t('editing.status'), value: 'status', width: '7.26%' },
         {
           text: this.$t('editing.action'),
           value: 'action',

@@ -44,7 +44,7 @@ const sankeyConfig = {
         }
       },
       label: {
-        color: chartVariable['textColor']
+        color: chartVariable.textColor
       }
     }
   ]
@@ -82,7 +82,7 @@ export default {
       sankeyOptions.tooltip.trigger = 'item'
       sankeyOptions.tooltip.formatter = (datas) => {
         if (datas.dataType === 'node') {
-          return `${datas.name}: ${this.formatComma(datas.value)}`        
+          return `${datas.name}: ${this.formatComma(datas.value)}`
         } else {
           let item = datas.data
           return `${item.source} -- ${item.target}: ${this.formatComma(item.value)}`
@@ -167,7 +167,7 @@ export default {
         }
       })
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
