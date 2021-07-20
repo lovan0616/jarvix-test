@@ -50,7 +50,7 @@ export default {
     if (!rootGetters['userManagement/hasPermission']('in_memory')) return
     addTableToMemory(rootGetters['userManagement/getCurrentAccountId'], rootGetters['dataSource/currentDataFrameId'], rootState.dataSource.dataSourceId)
   },
-  getParserList ({commit, rootState}) {
+  getParserList ({ commit, rootState }) {
     return getParserLanguageList().then(res => {
       let currentLanguage = 'ZH_TW'
       // switch (rootState.setting.locale) {

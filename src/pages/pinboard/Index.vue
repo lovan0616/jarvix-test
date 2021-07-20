@@ -11,8 +11,8 @@
 
     <el-backtop target=".wrapper">
       <div class="backtop-content">
-        <svg-icon icon-class="chevron-up-solid"/>
-    </div>
+        <svg-icon icon-class="chevron-up-solid" />
+      </div>
     </el-backtop>
   </div>
 </template>

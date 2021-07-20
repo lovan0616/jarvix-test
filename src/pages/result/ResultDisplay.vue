@@ -314,7 +314,7 @@ export default {
     closeUnknowInfoBlock () {
       this.segmentationInfo = {
         question: null,
-        unknownToken: [],
+        unknownToken: []
       }
     }
   }
