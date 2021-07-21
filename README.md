@@ -13,9 +13,19 @@ pnpm install
 pnpm run serve
 ```
 
+Apply `webpack-bundle-analyzer` plugin.
+```
+pnpm run serve -- --analyzer
+```
+
 ### Compiles and minifies for production
 ```
 pnpm run build
+```
+
+Apply `webpack-bundle-analyzer` plugin.
+```
+pnpm run build -- --analyzer
 ```
 
 ### Run your unit tests
