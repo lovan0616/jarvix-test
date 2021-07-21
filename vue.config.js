@@ -16,7 +16,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `
+        additionalData: `
           @import '@/styles/common/_variables.scss';
           @import '@/styles/common/_mixins.scss';
           @import '@/styles/common/_functions.scss';
