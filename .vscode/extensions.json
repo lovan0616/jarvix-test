@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "johnsoncodehk.volar",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "editorconfig.editorconfig",
+    "lokalise.i18n-ally",
+    "streetsidesoftware.code-spell-checker",
+    "CoenraadS.bracket-pair-colorizer",
+    "oderwat.indent-rainbow",
+    "naumovs.color-highlight"
+  ],
+  "unwantedRecommendations": [
+    "octref.vetur",
+    "esbenp.prettier-vscode"
+  ]
+}
