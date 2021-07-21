@@ -792,7 +792,7 @@ export default {
   .timeZone {
     width: 50%;
     margin-bottom: 16px;
-    /deep/ .el-select {
+    ::v-deep .el-select {
       width: 100%;
     }
   }

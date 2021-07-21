@@ -420,7 +420,7 @@ export default {
     }
   }
 
-  /deep/ .el-select {
+  ::v-deep .el-select {
     display: block;
   }
 

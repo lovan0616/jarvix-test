@@ -427,7 +427,7 @@ export default {
     }
   }
 
-  /deep/ .el-select {
+  ::v-deep .el-select {
     width: 100%;
   }
 }
