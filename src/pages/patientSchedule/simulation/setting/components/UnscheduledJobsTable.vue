@@ -567,17 +567,17 @@ export default {
     &__date-picker {
       margin-right: 17px;
 
-      /deep/ .el-date-editor--daterange {
+      ::v-deep .el-date-editor--daterange {
         width: 100%;
         display: flex;
         padding: 3px 0 3px 10px;
       }
 
-      /deep/ .el-range-separator {
+      ::v-deep .el-range-separator {
         display: inline-block;
       }
 
-      /deep/ .el-range-input {
+      ::v-deep .el-range-input {
         width: 80px;
 
         &:last-of-type {
@@ -585,7 +585,7 @@ export default {
         }
       }
 
-      /deep/ .el-range-separator {
+      ::v-deep .el-range-separator {
         padding: 0;
       }
     }
@@ -599,7 +599,7 @@ export default {
       margin-right: 8px;
 
       &--input {
-        /deep/ .el-input__inner {
+        ::v-deep .el-input__inner {
           border: 0;
         }
       }
@@ -636,7 +636,7 @@ export default {
   }
 }
 
-/deep/ .el-badge .el-badge__content {
+::v-deep .el-badge .el-badge__content {
   right: 110%;
 }
 </style>

@@ -383,7 +383,7 @@ export default {
       visibility: hidden;
     }
 
-    /deep/ .dropdown-select-box {
+    ::v-deep .dropdown-select-box {
       right: 0;
       left: unset;
     }
@@ -393,7 +393,7 @@ export default {
     position: relative;
   }
 
-  /deep/ .dropdown {
+  ::v-deep .dropdown {
     &__list-container {
       left: 0;
       top: calc(100% + 10px);
@@ -532,7 +532,7 @@ export default {
   }
 }
 
-/deep/ .el-badge.menu-badge {
+::v-deep .el-badge.menu-badge {
   user-select: none;
   .el-badge__content {
     top: 16px;

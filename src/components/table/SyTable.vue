@@ -305,11 +305,11 @@ export default {
   }
 
   /* 解決 lazy loading 新增欄位時，寬度增長速度大於資料顯示，造成短暫 word wrap */
-  /deep/ .sy-table td {
+  ::v-deep .sy-table td {
     width: 150px
   }
 
-  /deep/ .sy-table th {
+  ::v-deep .sy-table th {
     width: 150px
   }
 }

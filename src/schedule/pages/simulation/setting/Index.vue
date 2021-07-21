@@ -268,7 +268,7 @@ export default {
     display: flex;
     height: 100%;
   }
-  /deep/ &.page--setting {
+  ::v-deep &.page--setting {
     height: 100%;
     padding: 0;
     overflow: auto;

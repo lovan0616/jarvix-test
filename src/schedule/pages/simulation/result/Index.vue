@@ -402,7 +402,7 @@ export default {
           .pagination-table {
             flex: 1;
             height: 0;
-            /deep/ .el-table {
+            ::v-deep .el-table {
               height: 100%;
             }
           }
@@ -519,7 +519,7 @@ export default {
       }
       .pagination-table {
         flex: 1;
-        /deep/ .el-table {
+        ::v-deep .el-table {
           height: 100%;
         }
       }
@@ -542,7 +542,7 @@ export default {
     }
   }
 
-  /deep/ .el-tabs {
+  ::v-deep .el-tabs {
     width: 100%;
     margin-bottom: 12px;
     &>.el-tabs__header {

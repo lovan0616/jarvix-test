@@ -225,7 +225,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ * {
+::v-deep * {
   font-weight: 300;
   letter-spacing: 0.5px;
 }
@@ -353,7 +353,7 @@ export default {
           display: flex;
           align-items: center;
           flex-wrap: wrap;
-          /deep/ .form__item {
+          ::v-deep .form__item {
             display: flex;
             align-items: center;
             margin-right: 16px;
@@ -374,7 +374,7 @@ export default {
           }
         }
       }
-      /deep/ .file {
+      ::v-deep .file {
         background: rgba(0, 0, 0, 0.55);
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
         border-radius: 8px;

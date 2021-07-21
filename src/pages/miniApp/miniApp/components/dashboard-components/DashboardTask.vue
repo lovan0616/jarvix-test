@@ -966,7 +966,7 @@ $direction-span: ("col": 12, "row": 12);
         .dropdown-select {
           visibility: hidden;
           z-index: 1;
-          /deep/ .dropdown-select-box {
+          ::v-deep .dropdown-select-box {
             box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
             top: 31px;
             right: 0;
@@ -1002,14 +1002,14 @@ $direction-span: ("col": 12, "row": 12);
     overflow: auto;
     overflow: overlay;
     height: 100%;
-    /deep/ .task,
-    /deep/ .task-component {
+    ::v-deep .task,
+    ::v-deep .task-component {
       position: relative;
       height: 100%;
       width: 100%;
     }
 
-    /deep/ .no-result-block {
+    ::v-deep .no-result-block {
       width: 100%;
       position: absolute;
       top: 50%;
@@ -1023,7 +1023,7 @@ $direction-span: ("col": 12, "row": 12);
     }
 
     &.index {
-      /deep/ .not-empty {
+      ::v-deep .not-empty {
         width: auto;
         max-width: 100%;
       }
@@ -1049,7 +1049,7 @@ $direction-span: ("col": 12, "row": 12);
     }
   }
 
-  /deep/ .task {
+  ::v-deep .task {
     .task-spinner.key-result-spinner {
       height: 100%;
     }

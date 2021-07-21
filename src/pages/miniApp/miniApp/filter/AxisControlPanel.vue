@@ -78,7 +78,7 @@ export default {
     margin-bottom: 16px;
   }
 
-  /deep/ .control {
+  ::v-deep .control {
     margin-bottom: 16px;
   }
 }

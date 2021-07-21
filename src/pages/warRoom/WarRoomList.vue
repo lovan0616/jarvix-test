@@ -360,7 +360,7 @@ export default {
     [lang="en"] & {
       width: 160px;
     }
-    /deep/ .el-input__inner {
+    ::v-deep .el-input__inner {
       height: 30px;
       line-height: 30px;
       font-size: 14px;

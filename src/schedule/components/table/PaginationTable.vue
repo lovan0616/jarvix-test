@@ -143,7 +143,7 @@ export default {
     z-index: 100;
   }
 
-  /deep/ .spinner-block {
+  ::v-deep .spinner-block {
     padding: 0;
   }
 }

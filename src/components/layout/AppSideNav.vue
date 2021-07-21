@@ -428,7 +428,7 @@ export default {
     }
   }
 
-  /deep/ .dropdown {
+  ::v-deep .dropdown {
     &__list-container {
       left: calc(100% + 16px);
     }
@@ -545,7 +545,7 @@ export default {
       }
     }
 
-    /deep/ .dropdown {
+    ::v-deep .dropdown {
       &__badge {
         text-align: left;
         padding: 0 12px;

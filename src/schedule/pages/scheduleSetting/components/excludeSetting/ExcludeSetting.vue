@@ -153,7 +153,7 @@ export default {
 <style lang="scss" scoped>
 .excluded-setting {
   width: 100%;
-  /deep/ .el-collapse-item {
+  ::v-deep .el-collapse-item {
     &__content {
       margin-top: 8px;
     }
@@ -177,7 +177,7 @@ export default {
     background-color: rgba(100, 100, 100, .2)
   }
 }
-/deep/ .single-machine {
+::v-deep .single-machine {
   padding: 4px 8px;
   &:nth-child(even) {
     background-color: rgba(50, 75, 78, 0.6);
@@ -193,7 +193,7 @@ export default {
   margin-top: 16px;
 }
 
-/deep/ .default-select {
+::v-deep .default-select {
   padding-bottom: 0;
 }
 </style>

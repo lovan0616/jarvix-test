@@ -391,7 +391,7 @@ export default {
 .data-frame-select {
   &__filter {
     padding: 12px;
-    /deep/ .input {
+    ::v-deep .input {
       height: 40px;
       font-size: 14px;
       background-color: #141C1D;

@@ -297,7 +297,7 @@ export default {
   }
 }
 
-/deep/ .el-tabs {
+::v-deep .el-tabs {
   width: 100%;
   &>.el-tabs__header {
     border: none;

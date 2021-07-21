@@ -81,7 +81,7 @@ export default {
     color: #bcbcbc;
   }
 }
-/deep/ .el-date-editor {
+::v-deep .el-date-editor {
   width: 120px;
   &+.el-date-editor {
     margin-left: 8px;

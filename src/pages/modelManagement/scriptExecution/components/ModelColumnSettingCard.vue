@@ -140,11 +140,11 @@ export default {
     }
   }
 
-  /deep/ .input-verify .input-verify-text {
+  ::v-deep .input-verify .input-verify-text {
     margin-bottom: 0;
   }
 
-  /deep/ .input-verify .input-error {
+  ::v-deep .input-verify .input-error {
     position: absolute;
     bottom: 0;
     top: 100%;

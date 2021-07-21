@@ -223,7 +223,7 @@ export default {
 <style lang="scss" scoped>
 .simulator {
   &__result {
-    /deep/ .spinner-block {
+    ::v-deep .spinner-block {
       flex: 1;
     }
   }

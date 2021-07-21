@@ -160,14 +160,14 @@ export default {
     height: 100%;
   }
 
-  /deep/ &__filter {
+  ::v-deep &__filter {
     font-size: 14px;
     margin-top: 8px;
     line-height: 22px;
     margin-left: 12px;
   }
 
-  /deep/ &__filter-title {
+  ::v-deep &__filter-title {
     font-weight: 600;
     position: relative;
     &::before {
@@ -184,7 +184,7 @@ export default {
     }
   }
 
-  /deep/ &__filter-description {
+  ::v-deep &__filter-description {
     color: #CCCCCC;
   }
 }

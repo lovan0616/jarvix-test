@@ -327,7 +327,7 @@ export default {
       margin-bottom: 16px;
     }
 
-    /deep/ .input-field {
+    ::v-deep .input-field {
 
       &:not(:last-of-type) {
         margin-bottom: 24px;
@@ -342,7 +342,7 @@ export default {
         border-bottom: 1px solid #FFF;
       }
 
-      /deep/ .el-input__inner {
+      ::v-deep .el-input__inner {
         font-size: 14px;
         padding-left: 0;
 
@@ -351,7 +351,7 @@ export default {
         }
       }
 
-      /deep/ .el-input {
+      ::v-deep .el-input {
         &.is-disabled {
           .el-input__inner {
             background-color: transparent;
@@ -360,7 +360,7 @@ export default {
       }
     }
 
-    /deep/ .input-block {
+    ::v-deep .input-block {
       // 以下是為與相鄰的 select 樣式一致
       height: 41px;
       font-size: 14px;

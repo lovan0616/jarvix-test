@@ -1579,7 +1579,7 @@ export default {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    /deep/ .new-name-input {
+    ::v-deep .new-name-input {
       margin-right: 16px;
       .input-verify-text {
         height: 30px;
@@ -1735,7 +1735,7 @@ export default {
             @include dropdown-select-controller;
             .dropdown-select {
               z-index: 2;
-              /deep/ .dropdown-select-box {
+              ::v-deep .dropdown-select-box {
                 box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
                 top: calc(50% + 17px);
                 right: -3px;
@@ -1772,7 +1772,7 @@ export default {
           margin-left: 6px;
         }
 
-        /deep/ .dropdown {
+        ::v-deep .dropdown {
           &__list-container {
             left: 0;
             top: calc(100% + 10px);
@@ -1840,10 +1840,10 @@ export default {
     width: 100%;
     border-bottom: 1px solid #ffffff;
 
-    /deep/ .el-input__inner {
+    ::v-deep .el-input__inner {
       padding-left: 0;
     }
-    /deep/ .error-text {
+    ::v-deep .error-text {
       text-align: left;
     }
   }
@@ -1911,7 +1911,7 @@ export default {
       }
     }
 
-    /deep/ .dropdown {
+    ::v-deep .dropdown {
       margin-left: 8px;
       &__list-container {
         left: -109px;

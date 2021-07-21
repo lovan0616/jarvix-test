@@ -653,7 +653,7 @@ export default {
     color: #979797;
   }
 
-  /deep/ .data-table .data-table-cell {
+  ::v-deep .data-table .data-table-cell {
     min-width: 65px;
   }
 
@@ -682,7 +682,7 @@ export default {
 }
 
 // 別名範本下載與上傳 共用樣式
-/deep/ .data-template-block {
+::v-deep .data-template-block {
   flex-basis: 100%;
   display: flex;
   margin-bottom: 12px;

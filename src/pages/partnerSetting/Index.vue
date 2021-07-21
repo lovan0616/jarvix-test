@@ -124,7 +124,7 @@ export default {
   }
 
   .setting-switch {
-    &.is-checked /deep/ .el-switch__core {
+    &.is-checked ::v-deep .el-switch__core {
       background-color: #409EFF;
       border-color: #409EFF;
     }

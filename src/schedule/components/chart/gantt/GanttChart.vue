@@ -333,7 +333,7 @@ export default {
     }
   }
 }
-/deep/ .schedule-gantt-chart  {
+::v-deep .schedule-gantt-chart  {
   $label-width: 300px;
   .gantt-leftbar-wrapper, .gantt-header-title {
     width: $label-width !important;
@@ -374,7 +374,7 @@ export default {
     display: none;
   }
 }
-/deep/ .title-select {
+::v-deep .title-select {
   .el-input__inner {
     text-align: center;
     border-bottom: none;

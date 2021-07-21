@@ -86,7 +86,7 @@ export default {
     font-size: 14px;
   }
 }
-/deep/ .el-date-editor {
+::v-deep .el-date-editor {
   &--datetimerange, &--daterange {
     background-color: transparent;
     border-radius: 0;
@@ -100,7 +100,7 @@ export default {
     background-color: transparent;
   }
 }
-/deep/ .el-input__inner {
+::v-deep .el-input__inner {
   color: var(--color-text-gray);
   text-align: center;
   background-color: transparent;

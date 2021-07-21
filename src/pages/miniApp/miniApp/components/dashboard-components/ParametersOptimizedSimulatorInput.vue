@@ -432,7 +432,7 @@ export default {
     position: relative;
     &.disabled {
       opacity: .5;
-      /deep/ .error-text {
+      ::v-deep .error-text {
         visibility: hidden;
       }
     }
@@ -456,7 +456,7 @@ export default {
   }
 
   &__divider,
-  /deep/ .el-range-separator {
+  ::v-deep .el-range-separator {
     width: 22px;
     text-align: center;
     line-height: 40px;
@@ -473,7 +473,7 @@ export default {
     }
   }
 
-  /deep/ .input-verify .input-verify-text {
+  ::v-deep .input-verify .input-verify-text {
     margin-bottom: 0;
     color: #ffffff;
 
@@ -490,11 +490,11 @@ export default {
     }
   }
 
-  /deep/ .input-error.error-text {
+  ::v-deep .input-error.error-text {
     bottom: -17px;
   }
 
-  /deep/ .sy-multi-select.theme-dark {
+  ::v-deep .sy-multi-select.theme-dark {
     width: 100%;
     border-bottom: 1px solid #fff;
     .el-tag {
@@ -507,7 +507,7 @@ export default {
     }
   }
 
-  /deep/ .el-input {
+  ::v-deep .el-input {
     width: 100%;
     &__prefix {
       display: none;
@@ -529,24 +529,24 @@ export default {
     }
   }
 
-  /deep/ .el-date-editor--datetimerange.el-input__inner {
+  ::v-deep .el-date-editor--datetimerange.el-input__inner {
     width: auto;
     padding-right: 0;
   }
 
-  /deep/ .el-range-editor.is-disabled .el-range-input {
+  ::v-deep .el-range-editor.is-disabled .el-range-input {
     opacity: .5;
   }
 
-  /deep/ .el-range-editor .el-range__icon {
+  ::v-deep .el-range-editor .el-range__icon {
     display: none;
   }
 
-  /deep/ .el-range__close-icon {
+  ::v-deep .el-range__close-icon {
     display: none;
   }
 
-  /deep/ .el-range-input {
+  ::v-deep .el-range-input {
     width: 100px;
     background: transparent;
     padding: 0 !important;

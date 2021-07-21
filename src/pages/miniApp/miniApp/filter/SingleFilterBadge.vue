@@ -696,7 +696,7 @@ export default {
     }
   }
 
-  /deep/ .spinner-block {
+  ::v-deep .spinner-block {
     padding: 3.5px 0;
   }
 }
