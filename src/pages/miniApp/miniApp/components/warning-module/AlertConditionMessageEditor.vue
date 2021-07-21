@@ -280,7 +280,7 @@ export default {
         margin-bottom: 16px;
       }
       &__input {
-        /deep/ .input-block .input {
+        ::v-deep .input-block .input {
           &::placeholder {
             font-size: 14px;
           }
@@ -289,7 +289,7 @@ export default {
       &__label {
         font-size: 14px;
       }
-      /deep/ .params-helper {
+      ::v-deep .params-helper {
         position: absolute;
         top: 16px;
         right: 16px;

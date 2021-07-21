@@ -213,11 +213,11 @@ export default {
     margin-bottom: 16px;
   }
 
-  /deep/ .spinner-block {
+  ::v-deep .spinner-block {
     padding: 0;
   }
 
-  /deep/ .sy-table.el-table {
+  ::v-deep .sy-table.el-table {
     border: 1px solid #515959;
     th, td {
       border-bottom: 1px solid #515959;
@@ -225,29 +225,29 @@ export default {
     }
   }
 
-  /deep/ .el-table th>.cell {
+  ::v-deep .el-table th>.cell {
     padding: 0;
   }
 
-  /deep/ .el-table th {
+  ::v-deep .el-table th {
     padding: 0;
   }
 
-  /deep/ .el-table thead th>.cell {
+  ::v-deep .el-table thead th>.cell {
     overflow: visible;
   }
 
-  /deep/ .el-table thead th {
+  ::v-deep .el-table thead th {
     overflow: visible;
     vertical-align: top;
   }
 
   /* 解決 lazy loading 新增欄位時，寬度增長速度大於資料顯示，造成短暫 word wrap */
-  /deep/ .el-table td {
+  ::v-deep .el-table td {
     width: 270px
   }
 
-  /deep/ .el-table th {
+  ::v-deep .el-table th {
     width: 270px
   }
 }

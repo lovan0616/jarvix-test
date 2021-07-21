@@ -336,7 +336,7 @@ export default {
     }
   }
 
-  /deep/ .dropdown {
+  ::v-deep .dropdown {
     &__list-container {
       left: -40%;
       top: 115%;
@@ -392,7 +392,7 @@ export default {
     }
   }
 
-  /deep/ .el-table {
+  ::v-deep .el-table {
     .cell {
       overflow: unset;
     }

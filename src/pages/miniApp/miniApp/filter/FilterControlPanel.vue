@@ -214,7 +214,7 @@ export default {
     }
   }
 
-  /deep/ .filter {
+  ::v-deep .filter {
     position: relative;
     &:not(:last-of-type) {
       margin-right: 20px;

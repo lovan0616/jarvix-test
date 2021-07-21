@@ -143,7 +143,7 @@ export default {
 .binding-checked-info {
   cursor: pointer;
   color: $theme-color-danger;
-  /deep/ .dialog-box .dialog-inner-box {
+  ::v-deep .dialog-box .dialog-inner-box {
     text-align: left;
     .reminder {
       line-height: 1.8;

@@ -554,7 +554,7 @@ export default {
       line-height: 40px;
     }
 
-    /deep/ .el-select {
+    ::v-deep .el-select {
       background: #252C2C;
       border-radius: 5px;
       flex: 1;

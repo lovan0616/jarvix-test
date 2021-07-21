@@ -72,7 +72,7 @@ export default {
 }
 
 // 將原本的 option 藏起來不被點選到
-/deep/ .el-select-dropdown {
+::v-deep .el-select-dropdown {
   .el-select-dropdown__item {
     padding: 0;
     .checkbox {

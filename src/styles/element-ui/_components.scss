@@ -399,7 +399,7 @@
   width: 100%;
   border-radius: 5px;
 
-  /deep/ .el-select__tags {
+  ::v-deep .el-select__tags {
     max-width: unset !important;
     max-height: 70px;
     overflow: auto;
@@ -439,18 +439,18 @@
     }
   }
 
-  /deep/ .el-input {
+  ::v-deep .el-input {
     padding-bottom: 2px;
   }
 
-  /deep/ input {
+  ::v-deep input {
     background-color: #141C1D;
     border: none;
   }
 }
 
 .multiple-selector__popper {
-  /deep/ .el-select-dropdown__wrap {
+  ::v-deep .el-select-dropdown__wrap {
     .el-select-dropdown__item {
       padding: 0 20px 0 36px;
       font-weight: normal;

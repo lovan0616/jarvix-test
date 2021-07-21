@@ -330,7 +330,7 @@ export default {
       }
 
       &__spinner {
-        /deep/ .spinner-container {
+        ::v-deep .spinner-container {
           display: flex;
           flex-direction: row;
 

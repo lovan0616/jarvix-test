@@ -1,0 +1,24 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "eslint.validate": [
+    "typescript",
+    "javascript",
+    "vue"
+  ],
+  "[html]": {
+    "editor.linkedEditing": true
+  },
+  "[vue]": {
+    "editor.linkedEditing": true
+  },
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "javascript.format.placeOpenBraceOnNewLineForControlBlocks": false,
+  "javascript.format.placeOpenBraceOnNewLineForFunctions": false,
+  "i18n-ally.localesPaths": [
+    "src/lang",
+    "src/schedule/lang"
+  ]
+}

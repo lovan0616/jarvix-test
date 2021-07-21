@@ -644,11 +644,11 @@ export default {
       right: 24px;
       top: 24px;
 
-      /deep/ .el-switch__label {
+      ::v-deep .el-switch__label {
         color: #CCCCCC;
       }
 
-      /deep/ .el-switch__core {
+      ::v-deep .el-switch__core {
         height: 10px;
         border: unset;
 
@@ -713,7 +713,7 @@ export default {
           margin-right: 12px;
         }
       }
-      /deep/ .el-input__inner {
+      ::v-deep .el-input__inner {
         font-size: 14px;
         padding-left: 0;
 
@@ -722,7 +722,7 @@ export default {
         }
       }
 
-      /deep/ .el-input {
+      ::v-deep .el-input {
         &.is-disabled {
           .el-input__inner {
             background-color: transparent;
@@ -808,7 +808,7 @@ export default {
     }
   }
 
-  /deep/ .sy-multi-select.theme-dark {
+  ::v-deep .sy-multi-select.theme-dark {
     .el-tag {
       border-color: #2AD2E2;
       color: #2AD2E2;

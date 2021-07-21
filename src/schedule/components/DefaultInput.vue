@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-input__inner {
+::v-deep .el-input__inner {
   color: var(--color-text-gray);
   border: 0;
   border-bottom: 1px solid var(--color-text);
@@ -67,14 +67,14 @@ export default {
   padding-left: 0;
 }
 
-/deep/ .el-input-group__prepend {
+::v-deep .el-input-group__prepend {
   padding: 0;
   color: var(--color-text);
   border: 0;
   background-color: transparent;
 }
 
-/deep/ .el-input-group__append {
+::v-deep .el-input-group__append {
   color: var(--color-text);
   border: 0;
   background-color: transparent;

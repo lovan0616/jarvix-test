@@ -217,12 +217,12 @@ export default {
 <style lang="scss" scoped>
 .model-config-setting {
   .setting-block {
-    /deep/ .el-input__inner {
+    ::v-deep .el-input__inner {
       padding-left: 0;
       border-bottom: 1px solid #FFFFFF;
     }
 
-    /deep/ .input-field {
+    ::v-deep .input-field {
       &__label {
         font-size: 14px;
         color: #CCCCCC;

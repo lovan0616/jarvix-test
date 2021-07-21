@@ -164,12 +164,12 @@ export default {
         padding-bottom: 0;
       }
 
-      /deep/ .el-input .el-input__inner {
+      ::v-deep .el-input .el-input__inner {
         height: 30px;
         line-height: 30px;
       }
 
-      /deep/ .el-select__caret {
+      ::v-deep .el-select__caret {
         color: var(--color-text-light);
         font-weight: bold;
       }

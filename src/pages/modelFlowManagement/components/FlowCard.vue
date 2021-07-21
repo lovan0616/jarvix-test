@@ -171,7 +171,7 @@ export default {
     [class^="flow"] {
       color: rgba(153, 153, 153, 0.4);
     }
-    /deep/ .update-status-block {
+    ::v-deep .update-status-block {
       [class^="flow"] {
         color: rgba(153, 153, 153, 0.9);
       }

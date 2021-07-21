@@ -446,7 +446,7 @@ export default {
       }
     }
 
-    /deep/ .el-input__inner {
+    ::v-deep .el-input__inner {
       padding-left: 0;
       border-bottom: 1px solid #FFFFFF;
 
@@ -455,7 +455,7 @@ export default {
       }
     }
 
-    /deep/ .el-input.is-disabled {
+    ::v-deep .el-input.is-disabled {
       .el-input__inner {
         color: #AAAAAA;
         border-bottom: 1px solid #AAAAAA;
@@ -470,7 +470,7 @@ export default {
       }
     }
 
-    /deep/ .input-field {
+    ::v-deep .input-field {
       &:not(:last-of-type) {
         margin-right: 16px;
       }
@@ -513,7 +513,7 @@ export default {
       }
     }
 
-    /deep/ .card > .input-field {
+    ::v-deep .card > .input-field {
       min-width: 220px;
       &:not(:last-of-type) {
         margin-right: 50px;

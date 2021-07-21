@@ -201,7 +201,7 @@ export default {
           background-color: $theme-color-primary;
         }
       }
-      /deep/ .spinner-block {
+      ::v-deep .spinner-block {
         padding: 0;
       }
       &-label {
@@ -237,7 +237,7 @@ export default {
         display: flex;
         align-items: center;
         cursor: pointer;
-        /deep/ .dropdown {
+        ::v-deep .dropdown {
           visibility: hidden;
           .dropdown-select-box {
             top: 25px;

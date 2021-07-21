@@ -1,33 +1,46 @@
 # front-end
 
+## Requirements
+- NodeJS: v14.17.3
+- PNPM: v6.10.3
 ## Project setup
 ```
-npm install
+pnpm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+pnpm run serve
+```
+
+Apply `webpack-bundle-analyzer` plugin.
+```
+pnpm run serve -- --analyzer
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+pnpm run build
+```
+
+Apply `webpack-bundle-analyzer` plugin.
+```
+pnpm run build -- --analyzer
 ```
 
 ### Run your unit tests
 ```
-npm run test:unit
+pnpm run test:unit
 ```
 
 ### Run your end-to-end tests
 ```
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+pnpm run lint
 ```
 
 ### Customize configuration

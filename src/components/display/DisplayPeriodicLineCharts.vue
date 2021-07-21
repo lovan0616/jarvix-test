@@ -80,7 +80,7 @@ export default {
     }
   }
 
-  /deep/ .no-result-block {
+  ::v-deep .no-result-block {
     width: 100%;
   }
 }

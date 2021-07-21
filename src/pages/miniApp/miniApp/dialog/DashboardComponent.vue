@@ -1066,7 +1066,7 @@ export default {
         &::placeholder {
           color: #aaaaaa;
         }
-        /deep/ .el-input__inner {
+        ::v-deep .el-input__inner {
           padding-left: 0;
         }
       }
@@ -1215,10 +1215,10 @@ export default {
 
       &__input {
         width: 135px;
-        /deep/ .input-verify-text {
+        ::v-deep .input-verify-text {
           margin-bottom: 12px;
         }
-        /deep/ .input-error {
+        ::v-deep .input-error {
           margin-bottom: -20px;
         }
       }

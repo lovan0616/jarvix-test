@@ -755,7 +755,7 @@ export default {
 
     &--top {
       margin-bottom: 11px;
-      /deep/ .dropdown__list-container {
+      ::v-deep .dropdown__list-container {
         left: -126px;
         &::after { left: 82%; }
       }
@@ -854,7 +854,7 @@ export default {
     }
   }
 
-  /deep/ .dropdown {
+  ::v-deep .dropdown {
     margin-left: 8px;
     &__list-container {
       left: -83px;

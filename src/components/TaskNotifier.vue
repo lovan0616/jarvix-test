@@ -262,7 +262,7 @@ export default {
     }
   }
 }
-/deep/ .el-badge {
+::v-deep .el-badge {
   &__content {
     right: 0;
     color: $theme-text-color-dark;

@@ -1,4 +1,7 @@
 const path = require('path')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+const needAnalyzer = process.argv.includes('--analyzer')
 
 module.exports = {
   pluginOptions: {
@@ -16,12 +19,19 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `
+        additionalData: `
           @import '@/styles/common/_variables.scss';
           @import '@/styles/common/_mixins.scss';
           @import '@/styles/common/_functions.scss';
         `
       }
     }
+  },
+  configureWebpack: {
+    plugins: needAnalyzer
+      ? [
+        new BundleAnalyzerPlugin()
+      ]
+      : []
   }
 }

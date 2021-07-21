@@ -709,7 +709,7 @@ export default {
   }
 
   &__block-select {
-    /deep/.sy-select.theme-dark {
+    ::v-deep.sy-select.theme-dark {
       .el-input__inner {
         border-bottom: 1px solid #FFFFFF;
       }

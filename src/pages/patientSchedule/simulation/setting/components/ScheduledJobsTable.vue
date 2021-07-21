@@ -218,7 +218,7 @@ export default {
       margin-right: 8px;
 
       &--input {
-        /deep/ .el-input__inner {
+        ::v-deep .el-input__inner {
           border: 0;
         }
       }
@@ -254,7 +254,7 @@ export default {
     }
   }
 
-  /deep/ .el-select > .el-input {
+  ::v-deep .el-select > .el-input {
     .el-input__inner {
       height: 22px;
       line-height: 22px;

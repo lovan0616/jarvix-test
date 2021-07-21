@@ -257,11 +257,11 @@ export default {
     z-index: 100;
   }
 
-  /deep/ .spinner-block {
+  ::v-deep .spinner-block {
     padding: 0;
   }
 
-  /deep/ .ss-table.el-table {
+  ::v-deep .ss-table.el-table {
     border: 1px solid #555858;
     th, td {
       border-bottom: 1px solid #555858;
@@ -269,25 +269,25 @@ export default {
     }
   }
 
-  /deep/ .el-input--small .el-input__inner {
+  ::v-deep .el-input--small .el-input__inner {
     border: none;
     background-color: transparent;
   }
 
-  /deep/ .el-select .el-input .el-select__caret {
+  ::v-deep .el-select .el-input .el-select__caret {
     font-weight: bold;
     color: var(--color-white);
   }
 
-  /deep/ .el-checkbox__inner {
+  ::v-deep .el-checkbox__inner {
     background-color: transparent;
   }
 
-  /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
+  ::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
     background-color: var(--color-theme);
   }
 
-  /deep/ .el-checkbox__input.is-disabled .el-checkbox__inner {
+  ::v-deep .el-checkbox__input.is-disabled .el-checkbox__inner {
     background-color: var(--color-text-disabled);
   }
 
@@ -295,7 +295,7 @@ export default {
     width: 100%;
   }
 
-  .ss-table /deep/ td.schedule-table-cell:last-child {
+  .ss-table ::v-deep td.schedule-table-cell:last-child {
     padding: 0;
   }
 }

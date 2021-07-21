@@ -275,7 +275,7 @@ export default {
         border-bottom: 1px solid #fff;
       }
 
-      /deep/ .el-input__inner {
+      ::v-deep .el-input__inner {
         font-size: 14px;
         padding-left: 0;
 
@@ -284,7 +284,7 @@ export default {
         }
       }
 
-      /deep/ .el-input {
+      ::v-deep .el-input {
         &.is-disabled {
           .el-input__inner {
             background-color: transparent;
@@ -305,7 +305,7 @@ export default {
     }
   }
 
-  /deep/ .sy-multi-select.theme-dark {
+  ::v-deep .sy-multi-select.theme-dark {
     .el-tag {
       border-color: #2AD2E2;
       color: #2AD2E2;
