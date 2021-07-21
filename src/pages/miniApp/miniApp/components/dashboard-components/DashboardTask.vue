@@ -758,11 +758,10 @@ export default {
         start: null,
         end: null
       }
-
       // update datetime range
-      if (dataValue === 'today') {
-        properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
-        properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+      if (dataValue === 'today' || dataValue === 'week' || dataValue === 'month' || dataValue === 'quarter' || dataValue === 'year') {
+        properties.start = moment().startOf(dataValue).format('YYYY-MM-DD HH:mm')
+        properties.end = moment().endOf(dataValue).format('YYYY-MM-DD HH:mm')
       } else if (RegExp('^.*hour.*$').test(dataValue)) {
         const hour = Number(dataValue.split('hour')[0])
         properties.start = moment().subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
