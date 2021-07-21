@@ -268,7 +268,7 @@ export default {
   .dialog-container {
     width: 760px;
   }
-  /deep/ .relation-container {
+  ::v-deep .relation-container {
     &__section {
       max-height: 60vh;
       padding: 24px;
@@ -335,7 +335,7 @@ export default {
   }
 }
 
-/deep/ .spinner-block {
+::v-deep .spinner-block {
   padding: 0;
   margin-right: 10px;
   &.dataframe-loading-spinner, &.datasource-loading-spinner {
@@ -356,7 +356,7 @@ export default {
   }
 }
 
-/deep/ .btn {
+::v-deep .btn {
   display: flex;
   align-items: center;
   justify-content: center;

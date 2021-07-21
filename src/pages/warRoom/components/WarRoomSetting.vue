@@ -379,7 +379,7 @@ export default {
 <style lang="scss" scoped>
 .war-room-setting {
   &__block-select {
-    /deep/.sy-select.theme-dark {
+    ::v-deep.sy-select.theme-dark {
       .el-input__inner {
         border-bottom: 1px solid #FFFFFF;
       }
@@ -392,7 +392,7 @@ export default {
     .multiple-selector {
       margin-top: 12px;
 
-      /deep/ .el-select-dropdown__wrap .el-select-dropdown__item::after {
+      ::v-deep .el-select-dropdown__wrap .el-select-dropdown__item::after {
         border: 1.2px solid #FFF;
       }
     }

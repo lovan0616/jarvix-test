@@ -221,7 +221,7 @@ export default {
             margin-left: 30px;
           }
         }
-        /deep/ .el-input .el-input__inner {
+        ::v-deep .el-input .el-input__inner {
           line-height: 40px;
           height: 40px;
           width: 200px;

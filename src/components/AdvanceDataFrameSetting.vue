@@ -314,7 +314,7 @@ export default {
       font-weight: 600;
       display: flex;
       align-items: center;
-      /deep/ .join-logic-hints__icon {
+      ::v-deep .join-logic-hints__icon {
         margin-left: 8px;
       }
     }
@@ -351,7 +351,7 @@ export default {
     }
   }
 
-  /deep/ .filter-block {
+  ::v-deep .filter-block {
     overflow: hidden;
     padding: 16px 24px;
     display: flex;
@@ -373,7 +373,7 @@ export default {
     }
   }
 
-  /deep/ .el-collapse {
+  ::v-deep .el-collapse {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
@@ -382,7 +382,7 @@ export default {
     overflow: hidden;
   }
 
-  /deep/ .el-collapse-item {
+  ::v-deep .el-collapse-item {
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid #464A50;

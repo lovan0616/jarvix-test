@@ -313,7 +313,7 @@ export default {
       border-bottom: 1px solid #F1616D;
     }
 
-    /deep/ .input-verify {
+    ::v-deep .input-verify {
       width: 150px;
       height: 30px;
 
@@ -323,12 +323,12 @@ export default {
       }
     }
 
-    /deep/ .input-error {
+    ::v-deep .input-error {
       bottom: -28px;
     }
   }
 
-    /deep/ .toggle-button {
+    ::v-deep .toggle-button {
       height: 20px;
 
       .slider:before {

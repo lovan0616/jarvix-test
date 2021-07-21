@@ -415,7 +415,7 @@ export default {
       .input-radio-group {
         margin-left: 24px;
       }
-      /deep/ .sy-select {
+      ::v-deep .sy-select {
         .el-input__inner {
           padding-left: 0;
           border-bottom: 1px solid #FFF;
@@ -494,7 +494,7 @@ export default {
           color: #CCCCCC;
           font-size: 12px;
         }
-        /deep/ .spinner-block {
+        ::v-deep .spinner-block {
           padding: 0;
           margin-right: 7px;
         }

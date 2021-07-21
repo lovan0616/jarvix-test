@@ -625,30 +625,30 @@ export default {
       width: 96px;
       padding-bottom: 0;
 
-      /deep/ .el-input .el-input__inner {
+      ::v-deep .el-input .el-input__inner {
         height: 30px;
         line-height: 30px;
       }
 
-      /deep/ .el-select__caret {
+      ::v-deep .el-select__caret {
         color: var(--color-text-light);
         font-weight: bold;
       }
     }
   }
 
-  /deep/.gantt-timeline {
+  ::v-deep.gantt-timeline {
     margin-left: 0 !important;
   }
 
-  /deep/ .gantt-container {
+  ::v-deep .gantt-container {
     width: 100% !important;
     max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
   }
 
-  /deep/ .gantt-scroll-y {
+  ::v-deep .gantt-scroll-y {
     display: none;
   }
 

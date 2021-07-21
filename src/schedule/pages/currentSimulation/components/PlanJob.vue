@@ -259,7 +259,7 @@ export default {
 
   &__table {
 
-    /deep/ .sy-table.el-table {
+    ::v-deep .sy-table.el-table {
       border: 1px solid #555858;
       th, td {
         border-bottom: 1px solid #555858;
@@ -267,7 +267,7 @@ export default {
       }
     }
 
-    /deep/ .el-input--small .el-input__inner {
+    ::v-deep .el-input--small .el-input__inner {
       border: none;
       background-color: transparent;
     }

@@ -122,7 +122,7 @@ export default {
     padding: 19px 16px;
   }
 
-  /deep/ .dialog-box {
+  ::v-deep .dialog-box {
     .dialog-inner-box {
       .label {
         font-size: 13px;

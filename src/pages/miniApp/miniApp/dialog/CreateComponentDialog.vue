@@ -741,7 +741,7 @@ export default {
           }
         }
         &__block {
-          /deep/ .input-verify {
+          ::v-deep .input-verify {
             .input-verify-text {
               margin-bottom: 10px;
             }
@@ -762,7 +762,7 @@ export default {
         }
         &__block-select {
           width: 100%;
-          /deep/ .el-input__inner {
+          ::v-deep .el-input__inner {
             padding-left: 0;
             border-bottom: 1px solid #FFFFFF;
           }

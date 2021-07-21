@@ -523,11 +523,11 @@ export default {
   .date-picker {
     max-width: 150px;
 
-    /deep/ .el-input__inner {
+    ::v-deep .el-input__inner {
       height: 30px;
     }
 
-    /deep/ .el-input__suffix {
+    ::v-deep .el-input__suffix {
       .el-input__icon {
         line-height: 30px;
       }
@@ -555,7 +555,7 @@ export default {
        * https://github.com/ElemeFE/element/issues/13173
        */
 
-      /deep/ .el-select__tags {
+      ::v-deep .el-select__tags {
         display: block;
         .el-select__input {
           width: 100% !important;
@@ -599,13 +599,13 @@ export default {
         }
       }
 
-      /deep/ .el-input__inner {
+      ::v-deep .el-input__inner {
         font-size: 14px;
         line-height: 22px;
         color: #888888;
       }
 
-      /deep/ .el-select-dropdown {
+      ::v-deep .el-select-dropdown {
         width: 100%;
         left: 0px !important;
 

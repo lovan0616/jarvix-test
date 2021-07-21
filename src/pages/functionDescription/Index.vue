@@ -1261,7 +1261,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-tabs {
+::v-deep .el-tabs {
   background: rgba(0, 0, 0, .55);
   box-shadow: 0 4px 8px rgba(0, 0, 0, .12);
   border-radius: 8px;

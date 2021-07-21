@@ -289,7 +289,7 @@ export default {
     font-weight: 600;
     font-size: 16px;
     line-height: 22px;
-    /deep/ .join-logic-hints__icon {
+    ::v-deep .join-logic-hints__icon {
       margin-left: 8px;
     }
   }

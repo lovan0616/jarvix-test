@@ -79,18 +79,18 @@ export default {
   }
 
   &__dropdown {
-    /deep/ &.sy-select.theme-default {
+    ::v-deep &.sy-select.theme-default {
       .el-input__inner {
         padding-left: 42px;
       }
     }
   }
 
-  /deep/ .el-select {
+  ::v-deep .el-select {
     flex: 1;
   }
 
-  /deep/ .el-input__icon {
+  ::v-deep .el-input__icon {
     width: 40px;
   }
 }

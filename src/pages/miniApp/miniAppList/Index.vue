@@ -364,7 +364,7 @@ export default {
     padding-bottom: 8px;
   }
 
-  /deep/ .dialog-inner-box {
+  ::v-deep .dialog-inner-box {
     .dialog-select-text {
       margin-bottom: 24px;
     }

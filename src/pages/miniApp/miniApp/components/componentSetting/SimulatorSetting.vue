@@ -375,7 +375,7 @@ export default {
       padding: 25px 17px;
       display: flex;
       flex-wrap: wrap;
-      /deep/ .spinner-block {
+      ::v-deep .spinner-block {
         padding: 0;
       }
     }
@@ -422,7 +422,7 @@ export default {
         position: absolute;
       }
 
-      /deep/ .el-input__inner {
+      ::v-deep .el-input__inner {
         font-size: 16px;
         padding-left: 0;
 
@@ -431,7 +431,7 @@ export default {
         }
       }
 
-      /deep/ .el-input {
+      ::v-deep .el-input {
         &.is-disabled {
           .el-input__inner {
             background-color: transparent;

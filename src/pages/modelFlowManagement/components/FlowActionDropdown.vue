@@ -58,7 +58,7 @@ export default {
       visibility: visible;
     }
   }
-  /deep/ .dropdown-select {
+  ::v-deep .dropdown-select {
     position: relative;
     visibility: hidden;
     z-index: 1;
@@ -97,7 +97,7 @@ export default {
         transform: rotate(0);
       }
     }
-    /deep/ .dropdown-select .dropdown-select-box {
+    ::v-deep .dropdown-select .dropdown-select-box {
       top: 16px;
       right: -26px;
     }

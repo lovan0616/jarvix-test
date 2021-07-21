@@ -167,7 +167,7 @@ export default {
     width: 48%;
     margin-right: 1%;
 
-    /deep/ .input-verify {
+    ::v-deep .input-verify {
       margin-bottom: 16px;
 
       .error-text {

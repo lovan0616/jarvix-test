@@ -105,7 +105,7 @@ export default {
     }
   }
 
-  /deep/ .single-filter-block {
+  ::v-deep .single-filter-block {
     &:last-of-type {
       .single-filter-block {
         &__description {

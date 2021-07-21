@@ -738,12 +738,12 @@ export default {
     height: 32px;
     margin-right: 12px;
 
-    /deep/ .input-verify-text {
+    ::v-deep .input-verify-text {
       height: 32px;
       color: $theme-text-color;
     }
 
-    /deep/ .input-error  {
+    ::v-deep .input-error  {
       bottom: -18px;
     }
 

@@ -153,7 +153,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .correlation-result-body {
-  /deep/ .key-result-container {
+  ::v-deep .key-result-container {
     & > .chart-block {
       padding-top: 20px;
     }

@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-input {
+::v-deep .el-input {
   .el-input__inner {
     height: 40px;
     line-height: 40px;

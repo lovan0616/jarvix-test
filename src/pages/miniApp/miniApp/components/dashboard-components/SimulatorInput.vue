@@ -247,7 +247,7 @@ export default {
     color: #FFDF6F;
   }
 
-  /deep/ .el-select-dropdown {
+  ::v-deep .el-select-dropdown {
     width: 100%;
   }
 
@@ -255,7 +255,7 @@ export default {
     width: 100%;
   }
 
-  /deep/ .sy-select.theme-dark {
+  ::v-deep .sy-select.theme-dark {
     .el-input__inner {
       padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
       border-bottom: 1px solid #FFFFFF;
@@ -270,21 +270,21 @@ export default {
     }
   }
 
-  /deep/ .el-select {
+  ::v-deep .el-select {
     width: 100%;
   }
 
-  /deep/ .input-verify .input-verify-text {
+  ::v-deep .input-verify .input-verify-text {
     margin-bottom: 0;
     color: #ffffff;
   }
 
-  /deep/ .input-error.error-text {
+  ::v-deep .input-error.error-text {
     position: unset;
     bottom: -17px;
   }
 
-  /deep/ .el-date-editor .el-input__inner {
+  ::v-deep .el-date-editor .el-input__inner {
     background-color: transparent;
     border-radius: 0;
     border-bottom: 1px solid #FFFFFF;

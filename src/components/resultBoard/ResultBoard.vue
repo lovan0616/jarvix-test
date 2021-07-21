@@ -465,7 +465,7 @@ export default {
   }
 
   &__header {
-    /deep/ .question-name {
+    ::v-deep .question-name {
       font-size: 30px;
       line-height: 38px;
     }

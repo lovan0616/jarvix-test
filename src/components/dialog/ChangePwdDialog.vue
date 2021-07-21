@@ -94,7 +94,7 @@ export default {
   margin-bottom: 24px;
 
   .pwd-input-block {
-    /deep/.input-block {
+    ::v-deep.input-block {
       .error-text {
         bottom: -8px;
       }

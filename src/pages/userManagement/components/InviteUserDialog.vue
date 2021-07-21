@@ -193,7 +193,7 @@ export default {
         height: 40px;
         border-bottom-color: #fff;
         margin: 0 13px;
-        /deep/ .el-input__inner {
+        ::v-deep .el-input__inner {
           padding-left: 0;
         }
       }
@@ -221,7 +221,7 @@ export default {
     }
   }
 
-  /deep/ .dialog-box {
+  ::v-deep .dialog-box {
     .dialog-inner-box {
       .label {
         font-size: 13px;

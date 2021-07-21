@@ -406,7 +406,7 @@ export default {
     }
   }
 
-  /deep/ .el-table {
+  ::v-deep .el-table {
     td {
       padding: 4px 0;
     }
