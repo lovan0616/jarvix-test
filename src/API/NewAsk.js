@@ -1,4 +1,5 @@
 import request from '@/utils/publicRequest'
+import store from '@/store'
 
 /**
  * ask question
@@ -55,7 +56,10 @@ export function getComponentList (resultId, cancelFunction) {
   return request({
     url: `/ask/componentList/${resultId}`,
     method: 'GET',
-    cancelToken: cancelFunction
+    cancelToken: cancelFunction,
+    params: {
+      isDisableDisplayInsight: store.state.result.isDisableDisplayInsight
+    }
   })
 }
 
