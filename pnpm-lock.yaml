@@ -32,7 +32,7 @@ specifiers:
   normalize-scss: ^7.0.1
   regenerator-runtime: ^0.13.7
   rollbar: ^2.24.0
-  sass: ^1.35.2
+  sass: ~1.32.12
   sass-loader: ^10
   stylelint: ^13.13.1
   stylelint-config-sass-guidelines: ^8.0.0
@@ -100,8 +100,8 @@ devDependencies:
   eslint-plugin-promise: 4.3.1
   eslint-plugin-standard: 5.0.0_eslint@6.8.0
   eslint-plugin-vue: 7.14.0_eslint@6.8.0
-  sass: 1.35.2
-  sass-loader: 10.2.0_sass@1.35.2
+  sass: 1.32.13
+  sass-loader: 10.2.0_sass@1.32.13
   stylelint: 13.13.1
   stylelint-config-sass-guidelines: 8.0.0_stylelint@13.13.1
   stylelint-config-standard: 22.0.0_stylelint@13.13.1
@@ -2150,7 +2150,7 @@ packages:
       pnp-webpack-plugin: 1.6.4
       portfinder: 1.0.28
       postcss-loader: 3.0.0
-      sass-loader: 10.2.0_sass@1.35.2
+      sass-loader: 10.2.0_sass@1.32.13
       ssri: 8.0.1
       terser-webpack-plugin: 1.4.5_webpack@4.46.0
       thread-loader: 2.1.3_webpack@4.46.0
@@ -10488,7 +10488,7 @@ packages:
       walker: 1.0.7
     dev: true
 
-  /sass-loader/10.2.0_sass@1.35.2:
+  /sass-loader/10.2.0_sass@1.32.13:
     resolution: {integrity: sha512-kUceLzC1gIHz0zNJPpqRsJyisWatGYNFRmv2CKZK2/ngMJgLqxTbXwe/hJ85luyvZkgqU3VlJ33UVF2T/0g6mw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -10507,13 +10507,13 @@ packages:
       klona: 2.0.4
       loader-utils: 2.0.0
       neo-async: 2.6.2
-      sass: 1.35.2
+      sass: 1.32.13
       schema-utils: 3.1.1
       semver: 7.3.5
     dev: true
 
-  /sass/1.35.2:
-    resolution: {integrity: sha512-jhO5KAR+AMxCEwIH3v+4zbB2WB0z67V1X0jbapfVwQQdjHZUGUyukpnoM6+iCMfsIUC016w9OPKQ5jrNOS9uXw==}
+  /sass/1.32.13:
+    resolution: {integrity: sha512-dEgI9nShraqP7cXQH+lEXVf73WOPCse0QlFzSD8k+1TcOxCMwVXfQlr0jtoluZysQOyJGnfr21dLvYKDJq8HkA==}
     engines: {node: '>=8.9.0'}
     hasBin: true
     dependencies:
