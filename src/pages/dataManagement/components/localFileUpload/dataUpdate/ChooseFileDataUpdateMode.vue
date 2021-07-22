@@ -16,6 +16,10 @@
       <div class="setting-block__title">
         {{ $t('fileDataUpdate.updateMode') }}
       </div>
+      <div class="setting-block__warning">
+        <svg-icon icon-class="data-explanation" />
+        {{ $t('batchLoad.reimportReminder') }}
+      </div>
       <div
         v-for="status in updateStatusList"
         :key="status.type"
@@ -128,6 +132,11 @@ export default {
       font-size: 18px;
       line-height: 1;
       margin-bottom: 16px;
+    }
+
+    &__warning {
+      font-size: 13px;
+      color: var(--color-warning);
     }
   }
 }
