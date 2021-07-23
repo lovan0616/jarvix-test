@@ -56,6 +56,20 @@
                   intend="sub_insight"
                 />
               </keep-alive>
+              <div style="display:flex">
+                <div style="flex: 1">
+                    <keep-alive>
+                    <task
+                      :key="'1234'"
+                      :component-id="'1234'"
+                      :is-show-toolbox="false"
+                      :is-show-legend="false"
+                      intend="sub_insight"
+                      />
+                  </keep-alive>
+                </div>
+                <p style="width: 40%">Here are some descriptions about the result of correlation exploration result lalala. Here are some descriptions about the result of correlation exploration result lalala.</p>
+              </div>
             </div>
           </div>
         </div>

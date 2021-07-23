@@ -62,6 +62,7 @@
         :is-show-donwnload-btn="isShowDonwnloadBtn"
         :custom-cell-class-name="customCellClassName"
         :is-hoverable="isHoverable"
+        :is-show-legend="isShowLegend"
         class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
@@ -110,6 +111,10 @@ export default {
       default: null
     },
     isShowToolbox: {
+      type: Boolean,
+      default: true
+    },
+    isShowLegend: {
       type: Boolean,
       default: true
     },
