@@ -157,10 +157,10 @@ export default {
     if (page > 0) return
     return dataFrameColumnSummary(id, selectedColumnList, restrictions, cancelToken)
   },
-  getDataFrameData ({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken }) {
-    return getDataFrameData(id, selectedColumnList, restrictions, page, cancelToken)
+  getDataFrameData({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken, sortOrders = null }) {
+    return getDataFrameData(id, selectedColumnList, restrictions, page, cancelToken, sortOrders)
   },
-  getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode, isOnlyFetchSummary }) {
+  getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode, isOnlyFetchSummary, sortOrders }) {
     dispatch('cancelRequest', mode)
     let selectedColumnList = null
     let restrictions = []
@@ -175,7 +175,7 @@ export default {
     })
     // 依照條件取得部分或全部的資料表
     return Promise.all([
-      ...(!isOnlyFetchSummary && [dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken })]),
+      ...(!isOnlyFetchSummary && [dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken, sortOrders })]),
       dispatch('getDataFrameColumnSummary', { id, selectedColumnList, restrictions, page, cancelToken })
     ])
   },
