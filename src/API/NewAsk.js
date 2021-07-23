@@ -1,5 +1,4 @@
 import request from '@/utils/publicRequest'
-import store from '@/store'
 
 /**
  * ask question

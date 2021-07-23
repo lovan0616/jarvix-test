@@ -14,7 +14,7 @@ export default {
   updateIsModelResult (state, data) {
     state.isModelResult = data
   },
-  updateIsDisplayInsight(state, status) {
+  updateIsDisplayInsight (state, status) {
     state.isDisplayInsight = status
   }
 }

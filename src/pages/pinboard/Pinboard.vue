@@ -177,7 +177,7 @@ export default {
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
       let currentData = this.getData(res.id)
-      //關閉顯示insight，使result不要取回recoomend_insight
+      // 關閉顯示insight，使result不要取回recoomend_insight
       this.$store.commit('result/updateIsDisplayInsight', false)
 
       this.$store.dispatch('chatBot/getComponentList', res.resultId)
