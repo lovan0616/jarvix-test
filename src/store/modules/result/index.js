@@ -9,7 +9,7 @@ export default {
     currentResultId: null,
     currentResultInfo: null,
     isModelResult: false,
-    isDisableDisplayInsight: false
+    isDisplayInsight: true
   },
   mutations
 }

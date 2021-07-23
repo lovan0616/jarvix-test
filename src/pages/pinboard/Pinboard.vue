@@ -65,7 +65,6 @@ import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SortingDialog from './components/SortingDialog'
 import EmptyPinboard from './components/EmptyPinboard'
 import { isEnOrEnum } from '@/utils/general'
-import { mapState } from 'vuex'
 
 export default {
   name: 'PagePinboard',
@@ -85,7 +84,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('result', ['isDisableDisplayInsight']),
     pinboardList () {
       return this.isPersonalPinboard
         ? this.$store.state.pinboard.pinboardList
@@ -176,12 +174,11 @@ export default {
       })
     },
     getComponent (res, resolveFunction = null) {
-      console.log('get!!')
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
       let currentData = this.getData(res.id)
-      //開啟disable，使result不要取回recoomend_insight（需在取回資料後再關閉）
-      this.$store.commit('result/updateIsDisableDisplayInsight', true)
+      //關閉顯示insight，使result不要取回recoomend_insight
+      this.$store.commit('result/updateIsDisplayInsight', false)
 
       this.$store.dispatch('chatBot/getComponentList', res.resultId)
         .then(componentResponse => {
@@ -208,8 +205,6 @@ export default {
               currentData.restrictions = componentResponse.restrictions
               this.$nextTick(() => {
                 this.isLoading = false
-                //關閉disable（因為預設的result要能取回recommend_insight）
-                this.$store.commit('result/updateIsDisableDisplayInsight', false)
                 if (resolveFunction) resolveFunction()
               })
               break
