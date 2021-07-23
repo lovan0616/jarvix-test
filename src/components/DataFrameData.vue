@@ -37,6 +37,7 @@
           :min-column-width="'270px'"
           :fixed-index="fixedIndex"
           @change-page="updatePage"
+          @on-sort="handleTableSort"
         >
           <template #columns-header="{ column, index }">
             <div class="header-block">
@@ -69,6 +70,11 @@
                     <span>{{ column.titles[index] }}</span>
                   </el-tooltip>
                 </span>
+                <svg-icon 
+                  icon-class="arrow-down"
+                  class="arrow-icon"
+                  :class="{ 'arrow-up': sortOrders.sortType === 'ascending' && index === sortOrders.dataColumnId, 'active': index === sortOrders.dataColumnId}"
+                  />
               </div>
               <div
                 v-show="showDataSummary"
@@ -151,7 +157,11 @@ export default {
       tableSummaryList: [],
       timeoutFunction: null,
       showDataSummary: true,
-      fixedIndex: true
+      fixedIndex: true,
+      sortOrders: {
+        dataColumnId: null,
+        sortType: null
+      }
     }
   },
   computed: {
@@ -203,7 +213,7 @@ export default {
         this.fixedIndex = true
       })
     },
-    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
+    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false, sortOrders = null) {
       if (resetPagination) {
         this.isLoading = true
         this.dataSourceTableData = null
@@ -214,7 +224,7 @@ export default {
       if (isOnlyFetchSummary || resetPagination) window.clearTimeout(this.timeoutFunction)
 
       // 依照條件取得部分或全部的資料表資訊
-      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary })
+      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary, sortOrders })
         .then(res => {
           const watingTime = 10000
 
@@ -326,7 +336,8 @@ export default {
       }
     },
     updatePage (page) {
-      this.fetchDataFrameData(this.dataFrameId, page - 1)
+      this.pagination.currentPage = page - 1
+      this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
     },
     fallbackCopyTextToClipboard (value) {
       const input = document.createElement('input')
@@ -371,6 +382,17 @@ export default {
       // this.setCopiedColumnName(value)
       // 純複製到剪貼簿功能
       this.copyTextToClipboard(value)
+    },
+    handleTableSort({ dataColumnId, sortType }) {
+      if(!sortType) {
+        this.sortOrders.dataColumnId = null
+        this.sortOrders.sortType = null
+        this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage)
+        return
+      }
+
+      this.sortOrders = { dataColumnId, sortType }
+      this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
     }
   }
 }
@@ -429,12 +451,24 @@ export default {
       }
 
       .text {
-        width: calc(100% - 25px);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         cursor: pointer;
       }
+
+      .arrow-icon {
+        color: #BDBDBD;
+        margin-left: auto;
+
+        &.arrow-up {
+          transform: rotate(180deg);
+        }
+
+        &.active {
+          color: $theme-color-primary;
+        }
+      } 
     }
     .summary {
       padding: 10px;

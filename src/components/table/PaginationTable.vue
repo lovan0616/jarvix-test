@@ -11,6 +11,7 @@
       :empty-text="$t('editing.noData')"
       class="sy-table"
       style="width: 100%;"
+      @sort-change="handleTableSort"
     >
       <el-table-column
         :width="indexWidth"
@@ -29,6 +30,7 @@
         :label="(typeof col === 'number') ? col.toString() : col.primaryAlias"
         :width="columnWidth"
         :min-width="minColumnWidth"
+        :sortable="'custom'"
       >
         <!--Header slot-->
         <template
@@ -189,6 +191,12 @@ export default {
         rootMargin: this.lazyLoadInfo.rootMargin,
         threshold: 0
       }
+    },
+    handleTableSort(column) {
+      console.log('column', column)
+      const dataColumnId = parseInt(column.prop)
+      const sortType = column.order
+      this.$emit('on-sort', { dataColumnId, sortType })
     }
   }
 }
@@ -227,6 +235,10 @@ export default {
 
   ::v-deep .el-table th>.cell {
     padding: 0;
+
+    .caret-wrapper {
+      display: none;
+    }
   }
 
   ::v-deep .el-table th {
