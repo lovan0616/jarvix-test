@@ -347,7 +347,7 @@
                   :move="logDraggingMovement"
                   :disabled="!isEditMode || currentDashboard.components.length === 1"
                   ghost-class="dragging-ghost"
-                  style="height: 100%"
+                  style="height: 100%;"
                   @end="updateComponentOrder($t('miniApp.component'))"
                 >
                   <dashboard-task
@@ -617,7 +617,7 @@ export default {
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
       return [
-        ...(this.appData.isPublishing && [
+        ...(this.appData.isPublishing ? [
           {
             id: 'shareUrl',
             name: this.$t('miniApp.getPublishedUrl')
@@ -626,7 +626,7 @@ export default {
             id: 'goToLivePage',
             name: this.$t('miniApp.goToLivePage')
           }
-        ]),
+        ] : []),
         {
           id: 'deleteMiniApp',
           name: this.$t('miniApp.deleteApplication')
@@ -715,10 +715,10 @@ export default {
           name: this.$t('miniApp.generalFilter'),
           id: 'MulitipleChoiceFilter'
         },
-        ...(!hasRelativeDateTimeFilter && [{
+        ...(!hasRelativeDateTimeFilter ? [{
           name: this.$t('miniApp.dateTimeFilter'),
           id: 'TimeFilter'
-        }])
+        }] : [])
       ]
     },
     miniAppId () {
@@ -1559,12 +1559,14 @@ export default {
     .dropdown-select { visibility: visible; }
   }
 }
+
 @mixin dropdown-select-position ($top: 0, $right: 0, $left: 0, $before: 0) {
-  box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+  box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
   top: calc(50% + 17px);
   right: -3px;
   left: unset;
-  &:before { right: 7px; }
+  &::before { right: 7px; }
+
   .dropdown-flex {
     min-width: unset;
   }
@@ -1574,22 +1576,27 @@ export default {
   .spinner-block {
     margin-top: 30vh;
   }
+
   &__page {
     height: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+
     ::v-deep .new-name-input {
       margin-right: 16px;
+
       .input-verify-text {
         height: 30px;
         margin-bottom: 0;
       }
+
       .input-error {
         bottom: -16px;
       }
     }
   }
+
   &__nav {
     position: relative;
     z-index: 5;
@@ -1598,18 +1605,22 @@ export default {
     display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
-    border-bottom: 1px solid #232C2E;
+    border-bottom: 1px solid #232c2e;
     justify-content: space-between;
+
     .nav--left {
       display: flex;
       align-items: center;
+
       .app-logo {
         padding-right: 24px;
       }
+
       .app-name {
         display: flex;
         align-self: center;
         font-size: 20px;
+
         &.is-live {
           line-height: 30px;
           border-left: 1px solid #404949;
@@ -1618,17 +1629,20 @@ export default {
           font-weight: 600;
           letter-spacing: 4px;
         }
+
         &:hover {
           .icon-edit {
             visibility: visible;
           }
         }
       }
+
       .icon-arrow {
         cursor: pointer;
         color: $theme-color-primary;
         margin-right: 20px;
       }
+
       .icon-edit {
         margin-left: 12px;
         color: $theme-color-primary;
@@ -1636,36 +1650,43 @@ export default {
         cursor: pointer;
         visibility: hidden;
       }
+
       .cancel-btn {
         margin-left: 6px;
       }
     }
+
     .nav--right {
       cursor: pointer;
       color: $theme-color-primary;
     }
   }
+
   &__content {
     flex: 1;
     height: 0;
     display: flex;
+
     .empty-block {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       margin-top: 30vh;
-      color: #DDDDDD;
+      color: #ddd;
       font-size: 18px;
+
       .create-btn {
         color: #004046;
         margin-top: 20px;
+
         .svg-icon {
           margin-right: 6px;
         }
       }
     }
   }
+
   &__main {
     flex: 1;
     padding: 20px 0 0 20px;
@@ -1674,6 +1695,7 @@ export default {
     overflow: auto;
     overflow: overlay;
     min-width: 0;
+
     &-header {
       position: relative;
       z-index: 4;
@@ -1685,6 +1707,7 @@ export default {
       padding-right: 20px;
     }
     &.warning {}
+
     &.dashboard {
       .dashboard__header {
         position: relative;
@@ -1695,79 +1718,97 @@ export default {
         align-items: center;
         margin-bottom: 20px;
         margin-right: 20px;
+
         .header-left {
           display: flex;
           align-items: center;
+
           .name {
             font-size: 20px;
             line-height: 28px;
           }
+
           &:hover {
             .icon-edit {
               visibility: visible;
             }
           }
+
           .icon-edit {
             color: $theme-color-primary;
             margin-left: 12px;
             cursor: pointer;
             visibility: hidden;
+
             &:hover {
               visibility: visible;
             }
           }
         }
+
         .header-right {
           display: flex;
           justify-content: flex-end;
           align-items: center;
+
           .dashboard-setting-box {
             flex: 0 0 30px;
             height: 30px;
             margin-left: 6px;
             cursor: pointer;
-            border: 1px solid #FFF;
+            border: 1px solid #fff;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+
             @include dropdown-select-controller;
+
             .dropdown-select {
               z-index: 2;
+
               ::v-deep .dropdown-select-box {
-                box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+                box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
                 top: calc(50% + 17px);
                 right: -3px;
                 left: unset;
                 z-index: 1;
-                &:before { right: 7px; }
+                &::before { right: 7px; }
+
                 .svg-icon {
                   color: $theme-color-primary;
                 }
+
                 .dropdown-flex {
                   min-width: unset;
                 }
               }
             }
           }
+
           .icon-triangle {
             font-size: 8px;
             transform: rotate(180deg);
           }
+
           .button-label {
             margin: 0 6px;
+
             &:last-child {
               margin-right: 16px;
             }
           }
+
           .svg-icon {
             flex: 0 0 14px;
           }
         }
+
         .create-filter-btn {
           margin-left: 8px;
         }
+
         .cancel-btn {
           margin-left: 6px;
         }
@@ -1796,38 +1837,42 @@ export default {
               bottom: 100%;
               left: 50%;
               transform: translateX(-50%);
-              border-bottom: 8px solid #2B3839;
+              border-bottom: 8px solid #2b3839;
               border-left: 8px solid transparent;
               border-right: 8px solid transparent;
             }
           }
+
           &__link {
             line-height: 39px;
             font-weight: 600;
             font-size: 14px;
           }
         }
+
         .component-type-dropdown >>> .dropdown__list-container {
           width: 160px;
         }
       }
     }
   }
+
   &__dashboard {
     &-components {
       flex: 1;
       height: 100%;
       overflow: auto;
       overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
-      &:after {
+      &::after {
         content: '';
         display: block;
         clear: both;
       }
     }
   }
+
   &__dialog-input {
-    margin: 24px 0px;
+    margin: 24px 0;
     padding-bottom: 8px;
   }
 
@@ -1838,11 +1883,12 @@ export default {
 
   &__dialog-select {
     width: 100%;
-    border-bottom: 1px solid #ffffff;
+    border-bottom: 1px solid #fff;
 
     ::v-deep .el-input__inner {
       padding-left: 0;
     }
+
     ::v-deep .error-text {
       text-align: left;
     }
@@ -1858,9 +1904,11 @@ export default {
       padding: 5px 10px;
       min-width: unset;
       line-height: 20px;
+
       &:not(:first-child) {
         margin-left: 8px;
       }
+
       &.btn-default {
         color: #000;
       }
@@ -1868,24 +1916,24 @@ export default {
 
     &__time {
       font-size: 12px;
-      color: #DDDDDD;
+      color: #ddd;
     }
 
     &__status {
       display: inline-block;
       padding: 4px 8px;
-      background: #333333;
+      background: #333;
       border-radius: 24px;
       margin-left: 16px;
       font-size: 12px;
-      color: #FFFFFF;
+      color: #fff;
 
       &::before {
         content: '';
         display: inline-block;
         width: 8px;
         height: 8px;
-        border: 1px solid #999999;
+        border: 1px solid #999;
         background: transparent;
         border-radius: 50%;
         margin: auto 0;
@@ -1894,7 +1942,7 @@ export default {
       &--active {
         &::before {
           border: none;
-          background: #2FECB3;
+          background: #2fecb3;
         }
       }
     }
@@ -1902,10 +1950,12 @@ export default {
     &__description {
       font-size: 14px;
       line-height: 32px;
+
       [lang="en"] & {
         text-align: right;
         line-height: 24px;
       }
+
       .question-lamp {
         color: $theme-color-warning;
       }
@@ -1913,6 +1963,7 @@ export default {
 
     ::v-deep .dropdown {
       margin-left: 8px;
+
       &__list-container {
         left: -109px;
         top: calc(100% + 10px);
@@ -1935,7 +1986,7 @@ export default {
           content: "";
           bottom: 100%;
           left: 72%;
-          border-bottom: 12px solid #2B3839;
+          border-bottom: 12px solid #2b3839;
           border-left: 12px solid transparent;
           border-right: 12px solid transparent;
         }
@@ -1944,6 +1995,7 @@ export default {
       &__link {
         font-size: 14px;
         line-height: 40px;
+
         &::before {
           display: none;
         }
@@ -1955,14 +2007,16 @@ export default {
     position: relative;
     z-index: 1;
     display: flex;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     margin-right: 16px;
     flex-wrap: wrap;
+
     &--top {
       z-index: 2;
       margin-bottom: 12px;
     }
+
     &--bottom {
       z-index: 1;
       margin-bottom: 20px;
@@ -1970,7 +2024,7 @@ export default {
 
     &.editing {
       padding: 16px 19px 0 19px;
-      background: #1C292B;
+      background: #1c292b;
     }
   }
 
@@ -1984,8 +2038,9 @@ export default {
     position: relative;
     z-index: 0;
     margin-right: 4px;
+
     .warning-icon {
-      color: #FF5C46;
+      color: #ff5c46;
     }
   }
 }

@@ -678,11 +678,11 @@ export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, d
           gt: lowerLimit.value,
           color: chartColor
         },
-        ...(lowerLimit.isIncluded && [{
+        ...(lowerLimit.isIncluded ? [{
           lte: lowerLimit.value,
           gte: lowerLimit.value,
           color: warningColor
-        }])
+        }] : [])
       ]
     }
   }

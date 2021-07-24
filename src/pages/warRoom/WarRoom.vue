@@ -387,14 +387,14 @@ export default {
   computed: {
     addComponentList () {
       return [
-        ...(this.chartComponent && this.chartComponent.length < 8) && [{
+        ...(this.chartComponent && this.chartComponent.length < 8) ? [{
           id: 'diagram',
           name: this.$t('warRoom.addChartComponent')
-        }],
-        ...(this.numberComponent && this.numberComponent.length < 4) && [{
+        }] : [],
+        ...(this.numberComponent && this.numberComponent.length < 4) ? [{
           id: 'index',
           name: this.$t('warRoom.addNumberComponent')
-        }]
+        }] : []
       ]
     },
     chartFirstRow () {
@@ -660,11 +660,11 @@ export default {
     padding: 32px 24px 64px 24px;
     height: 100%;
     overflow: auto;
-    border: 1px solid #464A50;
+    border: 1px solid #464a50;
   }
 
   &__side-setting {
-    border: 1px solid #464A50;
+    border: 1px solid #464a50;
     height: 100%;
   }
 
@@ -693,6 +693,7 @@ export default {
       margin-right: 8px;
       min-width: 49px;
       padding: 0;
+
       [lang="en"] & {
         min-width: 60px;
       }
@@ -713,18 +714,19 @@ export default {
     &--disabled {
       .number,
       .chart {
-        opacity: .4;
+        opacity: 0.4;
         pointer-events: none;
       }
     }
 
     .spinner {
-      position: absolute;;
+      position: absolute;
       z-index: 1;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
+
       /* 避免點擊文字 */
       user-select: none;
       -moz-user-select: none;
@@ -734,7 +736,7 @@ export default {
   }
 
   &__dialog-input {
-    margin: 24px 0px;
+    margin: 24px 0;
     padding-bottom: 8px;
   }
 
@@ -751,6 +753,7 @@ export default {
 
     &--top {
       margin-bottom: 11px;
+
       ::v-deep .dropdown__list-container {
         left: -126px;
         &::after { left: 82%; }
@@ -761,6 +764,7 @@ export default {
       padding: 5px 10px;
       min-width: unset;
       line-height: 20px;
+
       &:not(:first-child) {
         margin-left: 8px;
       }
@@ -768,13 +772,13 @@ export default {
 
     &__time {
       font-size: 12px;
-      color: #DDDDDD;
+      color: #ddd;
     }
 
     &__status {
       display: inline-block;
       padding: 4px 8px;
-      background: #333333;
+      background: #333;
       border-radius: 24px;
       margin-left: 16px;
       font-size: 12px;
@@ -784,7 +788,7 @@ export default {
         display: inline-block;
         width: 8px;
         height: 8px;
-        border: 1px solid #999999;
+        border: 1px solid #999;
         background: transparent;
         border-radius: 50%;
         margin: auto 0;
@@ -793,7 +797,7 @@ export default {
       &--active {
         &::before {
           border: none;
-          background: #2FECB3;
+          background: #2fecb3;
         }
       }
     }
@@ -801,10 +805,12 @@ export default {
     &__description {
       font-size: 14px;
       line-height: 32px;
+
       [lang="en"] & {
         text-align: right;
         line-height: 24px;
       }
+
       .question-lamp {
         color: $theme-color-warning;
       }
@@ -820,6 +826,7 @@ export default {
     &__item {
       flex: 1;
       max-width: calc(calc(100% - 40px) / 3);
+
       &:not(:last-of-type) {
         margin-right: 20px;
       }
@@ -844,6 +851,7 @@ export default {
 
     &__item {
       flex: 1;
+
       &:not(:last-of-type) {
         margin-right: 20px;
       }
@@ -852,6 +860,7 @@ export default {
 
   ::v-deep .dropdown {
     margin-left: 8px;
+
     &__list-container {
       left: -83px;
       top: calc(100% + 10px);
@@ -874,7 +883,7 @@ export default {
         content: "";
         bottom: 100%;
         left: 72%;
-        border-bottom: 12px solid #2B3839;
+        border-bottom: 12px solid #2b3839;
         border-left: 12px solid transparent;
         border-right: 12px solid transparent;
       }
@@ -883,6 +892,7 @@ export default {
     &__link {
       font-size: 14px;
       line-height: 40px;
+
       &::before {
         display: none;
       }

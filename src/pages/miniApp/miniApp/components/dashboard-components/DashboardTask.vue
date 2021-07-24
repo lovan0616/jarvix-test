@@ -421,13 +421,13 @@ export default {
           icon: 'delete',
           dialogName: 'DeleteComponent'
         },
-        ...(this.enableAlert && [
+        ...(this.enableAlert ? [
           {
             title: 'button.createAlert',
             icon: 'warning',
             dialogName: 'CreateWarningCriteria'
           }
-        ])
+        ] : [])
       ]
       return options
     },
@@ -849,13 +849,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/*定義欄和列的尺寸*/
+/* 定義欄和列的尺寸 */
 $direction-size: ("col": 100%, "row": 100%);
-/*定義每欄和每列要切幾等分*/
+
+/* 定義每欄和每列要切幾等分 */
 $direction-span: ("col": 12, "row": 12);
-/*依照已定義好的尺寸和等份，製作欄和列使用的 class */
+
+/* 依照已定義好的尺寸和等份，製作欄和列使用的 class */
 @each $direction, $size in $direction-size {
   $span-amount: map-get($direction-span, $direction);
+
   @for $span from 1 through $span-amount {
     $property: if($direction == 'col', 'width', 'height');
     .#{$direction}-#{$span} {
@@ -869,10 +872,11 @@ $direction-span: ("col": 12, "row": 12);
     .dropdown-select { visibility: visible; }
   }
 }
+
 @keyframes flash {
-	0% { opacity: 0 }
-	50% { opacity: 1 }
-  100% { opacity: 0 }
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .component__item {
@@ -880,7 +884,7 @@ $direction-span: ("col": 12, "row": 12);
   border-radius: 5px;
   padding-bottom: 16px;
   float: left;
-  transition: all .2s linear;
+  transition: all 0.2s linear;
 
   &-init-spinner {
     margin: auto;
@@ -895,50 +899,62 @@ $direction-span: ("col": 12, "row": 12);
     display: flex;
     flex-direction: column;
   }
+
   &-header {
     display: flex;
     justify-content: space-between;
     height: 30px;
     align-items: center;
     margin-bottom: 16px;
+
     .header-left {
       display: flex;
+
       .item-title {
-        color: #DDD;
+        color: #ddd;
+
         @include text-hidden;
+
         display: flex;
       }
     }
+
     .header-right {
       display: flex;
       justify-content: flex-end;
       z-index: 3;
+
       .component-property-box {
         display: flex;
         align-items: center;
         justify-content: flex-end;
         cursor: pointer;
+
         .property__item {
           height: 24px;
           flex: 0 0 24px;
-          background-color: #474F4F;
+          background-color: #474f4f;
           border: 1px solid #192323;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: .1s all cubic-bezier(1, -0.9, .89, 1.34);
+          transition: 0.1s all cubic-bezier(1, -0.9, 0.89, 1.34);
+
           &:not(:last-child) {
             margin-right: -5px;
           }
+
           .svg-icon {
             width: 14px;
           }
+
           .icon-refresh {
             // 為了讓此 icon 與相鄰的 icon 視覺面積較為一致
             transform: scale(1.1);
           }
         }
+
         &:hover {
           .property__item {
             &:not(:last-child) {
@@ -947,6 +963,7 @@ $direction-span: ("col": 12, "row": 12);
           }
         }
       }
+
       .component-setting-box {
         position: relative;
         color: $theme-color-primary;
@@ -955,38 +972,47 @@ $direction-span: ("col": 12, "row": 12);
         display: flex;
         justify-content: center;
         align-items: center;
-        transition: .2s all ease;
+        transition: 0.2s all ease;
         cursor: pointer;
+
         @include dropdown-select-controller;
+
         &:hover {
           background-color: $theme-color-primary;
-          color: #FFF;
+          color: #fff;
           border-radius: 4px;
         }
+
         .dropdown-select {
           visibility: hidden;
           z-index: 1;
+
           ::v-deep .dropdown-select-box {
-            box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+            box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
             top: 31px;
             right: 0;
             left: unset;
+
             &::before {
               right: 5px;
             }
+
             .svg-icon {
               color: $theme-color-primary;
             }
+
             .dropdown-flex {
               min-width: unset;
             }
           }
         }
       }
+
       .component-property-box ~ .component-setting-box {
         margin-left: 8px;
       }
     }
+
     .icon-warning {
       color: $theme-color-danger;
       animation: flash 1s infinite;
@@ -1002,6 +1028,7 @@ $direction-span: ("col": 12, "row": 12);
     overflow: auto;
     overflow: overlay;
     height: 100%;
+
     ::v-deep .task,
     ::v-deep .task-component {
       position: relative;
@@ -1027,15 +1054,17 @@ $direction-span: ("col": 12, "row": 12);
         width: auto;
         max-width: 100%;
       }
+
       .index-unit {
         font-weight: 600;
         font-size: 36px;
-        color: #2AD2E2;
-        &.large { font-size: 36px }
-        &.middle { font-size: 24px }
-        &.small { font-size: 18px }
-        &.mini { font-size: 18px }
+        color: #2ad2e2;
+        &.large { font-size: 36px; }
+        &.middle { font-size: 24px; }
+        &.small { font-size: 18px; }
+        &.mini { font-size: 18px; }
       }
+
       .index-data {
         display: flex;
         align-items: flex-end;
@@ -1044,6 +1073,7 @@ $direction-span: ("col": 12, "row": 12);
         justify-content: center;
       }
     }
+
     .spinner-block {
       flex: 1;
     }
