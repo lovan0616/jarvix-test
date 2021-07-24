@@ -134,7 +134,7 @@ export default {
         rowData: {
           controlList: monitoredData.filter(item => item.statsType === 'CATEGORY'),
           filterList: [
-            ...(monitoredDateRange.length > 0 && {
+            ...(monitoredDateRange.length > 0 ? [{
               filterList: {
                 columnId: monitoredDateRange[0].dataColumnId,
                 columnName: monitoredDateRange[0].displayName,
@@ -143,7 +143,7 @@ export default {
                 start: monitoredDateRange[0].start,
                 statsType: monitoredDateRange[0].statsType
               }
-            })
+            }] : [])
           ]
         }
       })
@@ -159,10 +159,11 @@ export default {
   overflow: auto;
   padding: 0;
   margin: 0;
+
   &__item {
     width: 100%;
     min-height: 62px;
-    background: #252F2F;
+    background: #252f2f;
     border-radius: 5px;
     display: flex;
     padding: 12px;
@@ -170,9 +171,11 @@ export default {
     &:not(:last-of-type) {
       margin-bottom: 8px;
     }
+
     &.is-linkable {
       cursor: pointer;
     }
+
     &--left {
       display: flex;
       align-items: center;
@@ -184,27 +187,28 @@ export default {
     }
 
     &-icon {
-      color: #FF5C46;
+      color: #ff5c46;
       font-size: 25px;
     }
 
     &-title {
-      color: #FFFFFF;
+      color: #fff;
       font-size: 14px;
       margin-bottom: 5px;
     }
 
     &-sub-title {
-      color: #FFFFFF;
+      color: #fff;
       font-size: 12px;
       margin-bottom: 5px;
     }
 
     &-description {
-      color: #A7A7A7;
+      color: #a7a7a7;
       font-size: 12px;
     }
   }
+
   .empty-text {
     height: 100%;
     display: flex;

@@ -144,7 +144,7 @@ export default {
       // 包含各分群及離群值資料
       return [
         ...this.dataset.buckets,
-        ...(this.dataset.outliersBuckets.length > 0 && [this.dataset.outliersBuckets])
+        ...(this.dataset.outliersBuckets.length > 0 ? [this.dataset.outliersBuckets] : [])
       ].map((cluster, index) => ({
         source: cluster.map((density, densityIndex) => ([xAxisTick[densityIndex], yAxisPosition, density]))
       }))
@@ -158,7 +158,7 @@ export default {
         // 依照給定要畫的點數量依序產生的 x 軸 index
         ...axisTickList,
         // 適時在最後補值來確保 x 軸最後一個值對齊資料最大值
-        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) && [xAxisMax])
+        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) ? [xAxisMax] : [])
       ]
     },
     lineChartDataset () {
@@ -225,7 +225,7 @@ export default {
           }
         }),
         // 如果有離群值，呈現在 Scatter chart 上
-        ...(this.dataset.outliersBuckets.length > 0 && [{
+        ...(this.dataset.outliersBuckets.length > 0 ? [{
           name: this.$t('clustering.outlier'),
           type: 'scatter',
           datasetIndex: this.dataset.buckets.length + 1,
@@ -233,7 +233,7 @@ export default {
           yAxisIndex: 1,
           // 定義維度資訊供未來 tooltip 中使用
           dimensions: [this.title.xAxis[0].display_name, this.title.yAxis[0].display_name, 'position']
-        }])
+        }] : [])
       ]
     },
     colorSet () {
@@ -337,7 +337,7 @@ export default {
           ...commonChartOptions().legend,
           data: [
             ...this.dataset.columns,
-            ...(this.dataset.outliersBuckets.length > 0 && [this.$t('clustering.outlier')])
+            ...(this.dataset.outliersBuckets.length > 0 ? [this.$t('clustering.outlier')] : [])
           ]
         }
       }
@@ -394,7 +394,7 @@ export default {
 .display-scatter-probability-density-chart {
   .description {
     margin-top: 40px;
-    background: #141C1D;
+    background: #141c1d;
     border-radius: 8px;
     padding: 10px 20px;
 

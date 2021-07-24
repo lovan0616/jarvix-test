@@ -177,11 +177,11 @@ export default {
   methods: {
     configInputData () {
       Promise.all([
-        ...((this.columnInfo.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') && [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
+        ...((this.columnInfo.statsType === 'NUMERIC' || this.columnInfo.statsType === 'DATETIME') ? [searchNumericColumnValueRange(this.modelId, this.columnInfo.columnId, {
           // restrictions: this.restrictions.length > 0 ? this.restrictions : null
           restrictions: null
-        })]),
-        ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') && [this.searchValue(this.columnInfo.columnId, '')]),
+        })] : []),
+        ...((this.columnInfo.statsType === 'CATEGORY' || this.columnInfo.statsType === 'BOOLEAN') ? [this.searchValue(this.columnInfo.columnId, '')] : []),
         searchColumnDefaultValue(this.modelId, this.columnInfo.columnId, {
           restrictions: this.restrictions
         })
@@ -237,14 +237,14 @@ export default {
 <style lang="scss" scoped>
 .input-field {
   &__label {
-    color: #AAAAAA;
+    color: #aaa;
     font-weight: 600;
     font-size: 14px;
   }
 
   &__reminder {
     font-size: 12px;
-    color: #FFDF6F;
+    color: #ffdf6f;
   }
 
   ::v-deep .el-select-dropdown {
@@ -258,12 +258,13 @@ export default {
   ::v-deep .sy-select.theme-dark {
     .el-input__inner {
       padding-left: 0 !important; // 為了蓋掉 element-ui 樣式
-      border-bottom: 1px solid #FFFFFF;
+      border-bottom: 1px solid #fff;
       border-radius: 0;
       background: transparent;
       font-size: 16px;
+
       &::placeholder {
-        color: #AAAAAA;
+        color: #aaa;
         font-weight: normal;
         font-size: 16px;
       }
@@ -276,7 +277,7 @@ export default {
 
   ::v-deep .input-verify .input-verify-text {
     margin-bottom: 0;
-    color: #ffffff;
+    color: #fff;
   }
 
   ::v-deep .input-error.error-text {
@@ -287,7 +288,7 @@ export default {
   ::v-deep .el-date-editor .el-input__inner {
     background-color: transparent;
     border-radius: 0;
-    border-bottom: 1px solid #FFFFFF;
+    border-bottom: 1px solid #fff;
     font-size: 16px;
     padding: 0 !important; // 為了蓋掉 element-ui 樣式
   }

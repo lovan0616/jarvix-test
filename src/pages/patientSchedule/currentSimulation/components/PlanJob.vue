@@ -83,7 +83,7 @@ export default {
         },
         data: [
           // 刪單
-          ...(!this.reScheduled && [
+          ...(!this.reScheduled ? [
             {
               surgeryId: 'ZXXXX999\r',
               patient: 'Alison W.',
@@ -111,7 +111,7 @@ export default {
               assistant: 'Edward Z.\r',
               noShowProbability: 'High 100%'
             }
-          ]),
+          ] : []),
           {
             surgeryId: 'ACJKCC235',
             patient: 'Markin Lee',
@@ -551,7 +551,7 @@ export default {
       top: 37.5%;
       width: 6px;
       height: 6px;
-      background: #2AD2E2;
+      background: #2ad2e2;
     }
   }
 
@@ -560,10 +560,11 @@ export default {
   }
 
   &__table {
-
     ::v-deep .sy-table.el-table {
       border: 1px solid #555858;
-      th, td {
+
+      th,
+      td {
         border-bottom: 1px solid #555858;
         border-right: 1px solid #555858;
       }
@@ -573,7 +574,6 @@ export default {
       border: none;
       background-color: transparent;
     }
-
   }
 
   .empty-block {

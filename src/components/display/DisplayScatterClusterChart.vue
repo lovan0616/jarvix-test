@@ -141,14 +141,14 @@ export default {
         ...chartAddon.legend,
         data: [
           ...this.dataset.columns,
-          ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.$t('clustering.outlier')])
+          ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) ? [this.$t('clustering.outlier')] : [])
         ]
       }
 
       // 計算總點數
       const dotsAmount = [].concat.apply([], [
         ...this.dataset.buckets,
-        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.dataset.outliersBuckets])
+        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) ? [this.dataset.outliersBuckets] : [])
       ]).length
 
       // 一群組設定 serie
@@ -207,7 +207,7 @@ export default {
             const groups = chartAddon.legend.data
             const groupsData = [
               ...this.dataset.buckets,
-              ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.dataset.outliersBuckets])
+              ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) ? [this.dataset.outliersBuckets] : [])
             ]
             const exportData = groupsData.reduce((acc, groupData, groupIndex) => {
               groupData.forEach(data => acc.push([groups[groupIndex], ...data]))
@@ -311,7 +311,7 @@ export default {
 .display-scatter-cluster-chart {
   .description {
     margin-top: 40px;
-    background: #141C1D;
+    background: #141c1d;
     border-radius: 8px;
     padding: 10px 20px;
 

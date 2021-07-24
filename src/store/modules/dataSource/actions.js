@@ -175,7 +175,7 @@ export default {
     })
     // 依照條件取得部分或全部的資料表
     return Promise.all([
-      ...(!isOnlyFetchSummary && [dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken })]),
+      ...(!isOnlyFetchSummary ? [dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken })] : []),
       dispatch('getDataFrameColumnSummary', { id, selectedColumnList, restrictions, page, cancelToken })
     ])
   },

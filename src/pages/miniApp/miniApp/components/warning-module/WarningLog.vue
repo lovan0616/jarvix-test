@@ -28,7 +28,7 @@
         element-loading-background="rgba(15, 20, 20, .8)"
         class="sy-table"
         height="100%"
-        style="width: 100%"
+        style="width: 100%;"
       >
         <div slot="empty">
           {{ $t('alert.emptyLogs') }}
@@ -255,7 +255,7 @@ export default {
         rowData: {
           controlList: monitoredData.filter(item => item.statsType === 'CATEGORY'),
           filterList: [
-            ...(monitoredDateRange.length > 0 && {
+            ...(monitoredDateRange.length > 0 ? [{
               filterList: {
                 columnId: monitoredDateRange[0].dataColumnId,
                 columnName: monitoredDateRange[0].displayName,
@@ -264,7 +264,7 @@ export default {
                 start: monitoredDateRange[0].start,
                 statsType: monitoredDateRange[0].statsType
               }
-            })
+            }] : [])
           ]
         }
       })
@@ -300,22 +300,26 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+
   &__nav {
     display: flex;
     justify-content: space-between;
     margin-bottom: 12px;
     margin-right: 20px;
     font-size: 20px;
+
     .nav-right {
       display: flex;
       align-items: center;
       font-size: 14px;
       line-height: 1;
+
       .el-switch {
         margin: 0 12px;
       }
     }
   }
+
   &__content {
     flex: 1;
     height: 0;
@@ -323,16 +327,19 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     padding: 0 20px 20px 0;
+
     .reminding {
       color: #999;
     }
+
     .el-pagination {
       text-align: right;
     }
+
     &-empty {
       padding-top: 30vh;
       text-align: center;
-      color: #A4A4A4;
+      color: #a4a4a4;
     }
   }
 
@@ -360,20 +367,23 @@ export default {
         bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
-        border-bottom: 8px solid #2B3839;
+        border-bottom: 8px solid #2b3839;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
       }
     }
+
     &__link {
       line-height: 39px;
       font-weight: 600;
       font-size: 14px;
     }
+
     .icon-triangle {
       transform: rotate(180deg);
       font-size: 8px;
     }
+
     .button {
       cursor: pointer;
       padding: 0 8px;
@@ -381,13 +391,15 @@ export default {
       font-weight: 600;
       font-size: 12px;
       display: inline-block;
+
       &--inactive {
         background: rgba(255, 92, 70, 0.2);
-        color: #FF5C46;
+        color: #ff5c46;
       }
+
       &--active {
         background: rgba(255, 255, 255, 0.2);
-        color: #DDDDDD;
+        color: #ddd;
       }
     }
   }
