@@ -192,7 +192,7 @@ export default {
         threshold: 0
       }
     },
-    handleTableSort(column) {
+    handleTableSort (column) {
       console.log('column', column)
       const dataColumnId = parseInt(column.prop)
       const sortType = column.order

@@ -157,7 +157,7 @@ export default {
     if (page > 0) return
     return dataFrameColumnSummary(id, selectedColumnList, restrictions, cancelToken)
   },
-  getDataFrameData({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken, sortOrders = null }) {
+  getDataFrameData ({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken, sortOrders = null }) {
     return getDataFrameData(id, selectedColumnList, restrictions, page, cancelToken, sortOrders)
   },
   getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode, isOnlyFetchSummary, sortOrders }) {
