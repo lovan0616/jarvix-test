@@ -40,7 +40,10 @@
           @on-sort="handleTableSort"
         >
           <template #columns-header="{ column, index }">
-            <div class="header-block">
+            <div
+              class="header-block"
+              @click="handleClick"
+            >
               <div class="header">
                 <span
                   v-if="showColumnSummaryRow"
@@ -205,6 +208,9 @@ export default {
   },
   methods: {
     ...mapMutations('chatBot', ['setCopiedColumnName']),
+    handleClick (e) {
+      if (!e.target.classList.contains('arrow-icon')) e.stopPropagation()
+    },
     toggleShowSummaryInfo () {
       this.fixedIndex = false
       this.showDataSummary = !this.showDataSummary
@@ -443,6 +449,7 @@ export default {
       padding: 10px;
       border-bottom: 1px solid #515959;
       display: flex;
+      align-items: center;
 
       .icon {
         width: 20px;
@@ -460,6 +467,8 @@ export default {
       .arrow-icon {
         color: #BDBDBD;
         margin-left: auto;
+        font-size: x-large;
+        padding: 5px;
 
         &.arrow-up {
           transform: rotate(180deg);
