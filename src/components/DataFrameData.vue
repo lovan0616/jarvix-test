@@ -70,11 +70,11 @@
                     <span>{{ column.titles[index] }}</span>
                   </el-tooltip>
                 </span>
-                <svg-icon 
+                <svg-icon
                   icon-class="arrow-down"
                   class="arrow-icon"
                   :class="{ 'arrow-up': sortOrders.sortType === 'ascending' && index === sortOrders.dataColumnId, 'active': index === sortOrders.dataColumnId}"
-                  />
+                />
               </div>
               <div
                 v-show="showDataSummary"
@@ -383,8 +383,8 @@ export default {
       // 純複製到剪貼簿功能
       this.copyTextToClipboard(value)
     },
-    handleTableSort({ dataColumnId, sortType }) {
-      if(!sortType) {
+    handleTableSort ({ dataColumnId, sortType }) {
+      if (!sortType) {
         this.sortOrders.dataColumnId = null
         this.sortOrders.sortType = null
         this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage)
@@ -468,7 +468,7 @@ export default {
         &.active {
           color: $theme-color-primary;
         }
-      } 
+      }
     }
     .summary {
       padding: 10px;
