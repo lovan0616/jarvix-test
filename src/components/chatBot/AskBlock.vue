@@ -32,6 +32,8 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+          @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
+          @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
           @focus="focusInput"
           @blur="blurInput"
         >
@@ -69,20 +71,41 @@
       </div>
     </div>
     <div
-      :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
-      class="history-question-block"
+      ref="suggestionBlock"
+      :class="{show: isSuggestionBlockVisible && (historyQuestionList.length > 0 || suggestionQuestionList.length > 0), 'has-filter': hasFilter}"
+      class="suggestion-block"
+      @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
+      @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
+      @keypress.tab.exact.prevent="autocompleteQuestion"
+      @keypress.enter.exact.prevent="autocompleteQuestion(true)"
+      @focus="focusSuggestionBlock"
+      @blur="blurSuggestionBlock"
     >
       <div
         v-for="(singleHistory, index) in historyQuestionList"
-        :key="index"
-        class="history-question"
+        :key="`history-${index}`"
+        class="suggestion"
         @click="copyQuestion(singleHistory.question)"
+        tabindex="0"
       >
         <svg-icon
           icon-class="clock"
           class="icon"
         />
-        {{ singleHistory.question }}
+        <span>{{ singleHistory.question }}</span>
+      </div>
+      <div
+        v-for="(singleSuggestion, index) in suggestionQuestionList"
+        :key="`suggestion-${index}`"
+        class="suggestion"
+        @click="copyQuestion(singleSuggestion.question)"
+        tabindex="0"
+      >
+        <svg-icon
+          icon-class="search"
+          class="icon"
+        />
+        <span v-html="singleSuggestion.questionHtml" />
       </div>
     </div>
     <transition name="fast-fade-in">
@@ -99,10 +122,12 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import AskHelperDialog from './AskHelperDialog'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { Suggester, replaceWith } from '@/utils/questionSuggester'
 
 export default {
   name: 'AskBlock',
@@ -128,9 +153,14 @@ export default {
   data () {
     return {
       userQuestion: null,
-      showHistoryQuestion: false,
+      isSuggestionBlockVisible: false,
       websocketHandler: null,
-      isFocus: false
+      isInputFocus: false,
+      isSuggestionBlockFocus: false,
+      selectedSuggestionIndex: -1,
+      /** @type {Suggester | null} */
+      suggester: null,
+      updateSuggesterRequestFrameId: -1
     }
   },
   computed: {
@@ -138,6 +168,9 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
+    isFocus () {
+      return this.isInputFocus || this.isSuggestionBlockFocus
+    },
     newParserMode () {
       return localStorage.getItem('newParser') === 'true'
     },
@@ -163,11 +196,63 @@ export default {
     isShowAskHelper () {
       return this.$store.state.isShowAskHelper
     },
+    currentSelectedSuggestionIndex: {
+      get () {
+        return this.selectedSuggestionIndex
+      },
+      set (value) {
+        if (value !== -1) {
+          const length = this.historyQuestionList.length + this.suggestionQuestionList.length
+          if (length > 0) {
+            value += 1
+            value = ((value + length + 1) % (length + 1)) - 1
+          } else {
+            value = -1
+          }
+        }
+        this.selectedSuggestionIndex = value
+
+        let el
+        if (value === -1) {
+          el = this.$refs.questionInput
+        } else {
+          el = this.$refs.suggestionBlock.querySelectorAll('.suggestion')[value]
+        }
+        el.focus()
+      }
+    },
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
         ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
         : []
+    },
+    suggestionQuestionList () {
+      if (this.suggester === null) return []
+      /** @type {import('@/utils/questionSuggester').Suggestion[]} */
+      const suggestions = this.suggester.suggestions
+      const originalQuestion = this.suggester.getInputString()
+      return suggestions.map((suggestion) => {
+        const replacementStart = suggestion.keyword.words[0].startGapIndex
+        const replacementEnd = suggestion.keyword.words.slice(-1)[0].endGapIndex
+        const newReplacementEnd = replacementStart + suggestion.result.value.length
+        const finalQuestion = replaceWith(originalQuestion, replacementStart, replacementEnd, suggestion.result.value)
+
+        let questionHtml = `${finalQuestion.substring(0, replacementStart)}<span class="bold">` +
+          finalQuestion.substring(replacementStart, newReplacementEnd)
+            .split('')
+            .map((c, i) => suggestion.result.positions.includes(i)
+              ? `<span class="highlight">${c}</span>`
+              : c
+            )
+            .join('') +
+            `</span>${finalQuestion.substring(newReplacementEnd)}`
+
+        return {
+          questionHtml,
+          question: finalQuestion
+        }
+      })
     },
     isUseAlgorithm () {
       return this.$store.state.chatBot.isUseAlgorithm
@@ -183,7 +268,7 @@ export default {
   watch: {
     userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
-        this.showHistory()
+        this.showSuggestionBlock()
       }
     },
     appQuestion (value) {
@@ -217,11 +302,14 @@ export default {
   mounted () {
     document.addEventListener('click', this.autoHide, false)
     this.userQuestion = this.defaultQuestion || this.$route.query.question
+    this.suggester = Vue.observable(new Suggester())
+    this.updateSuggesterRequestFrameId = requestAnimationFrame(this.updateSuggester)
   },
   destroyed () {
     this.closeHelper()
     document.removeEventListener('click', this.autoHide, false)
     if (this.websocketHandler) this.closeWebSocketConnection()
+    cancelAnimationFrame(this.updateSuggesterRequestFrameId)
   },
   methods: {
     ...mapMutations('chatBot', ['clearCopiedColumnName']),
@@ -289,13 +377,13 @@ export default {
     },
     autoHide (evt) {
       let clickInside = this.$el.contains(evt.target)
-      if (this.showHistoryQuestion && !clickInside) {
-        this.showHistoryQuestion = false
+      if (this.isSuggestionBlockVisible && !clickInside) {
+        this.isSuggestionBlockVisible = false
       }
 
       // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
-      if (this.showHistoryQuestion && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
-        this.showHistoryQuestion = false
+      if (this.isSuggestionBlockVisible && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
+        this.isSuggestionBlockVisible = false
       }
     },
     cleanQuestion () {
@@ -325,7 +413,7 @@ export default {
         // 手動觸發問問題
         this.setIsManuallyTriggeredAskQuestion(true)
       }
-      this.hideHistory()
+      this.hideSuggestionBlock()
       this.closeHelper()
     },
     copyQuestion (value) {
@@ -333,12 +421,12 @@ export default {
       this.$refs.questionInput.focus()
       this.enterQuestion()
     },
-    showHistory () {
-      if (this.showHistoryQuestion || this.isShowAskHelper) return
-      this.showHistoryQuestion = true
+    showSuggestionBlock () {
+      if (this.isSuggestionBlockVisible || this.isShowAskHelper) return
+      this.isSuggestionBlockVisible = true
     },
-    hideHistory () {
-      this.showHistoryQuestion = false
+    hideSuggestionBlock () {
+      this.isSuggestionBlockVisible = false
     },
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
@@ -347,7 +435,7 @@ export default {
       if (this.availableDataSourceList.length === 0) return
       this.$store.commit('updateAskHelperStatus', !this.isShowAskHelper)
       this.closePreviewDataSource()
-      this.hideHistory()
+      this.hideSuggestionBlock()
     },
     closeHelper () {
       this.$store.commit('updateAskHelperStatus', false)
@@ -363,11 +451,36 @@ export default {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
     },
     focusInput () {
-      this.isFocus = true
+      this.isInputFocus = true
       this.$store.dispatch('chatBot/openAskInMemory')
+      this.currentSelectedSuggestionIndex = -1
+      this.showSuggestionBlock()
     },
     blurInput () {
-      this.isFocus = false
+      this.isInputFocus = false
+    },
+    focusSuggestionBlock () {
+      this.isSuggestionBlockFocus = true
+    },
+    blurSuggestionBlock () {
+      this.isSuggestionBlockFocus = false
+    },
+    updateSuggester () {
+      if (this.suggester === null) return
+      const el = this.$refs.questionInput
+      this.suggester.setInputString(el.value)
+      this.suggester.setCaretGapIndex(el.selectionStart)
+      this.updateSuggesterRequestFrameId = requestAnimationFrame(this.updateSuggester)
+    },
+    async autocompleteQuestion (needEnter = false) {
+      if (this.currentSelectedSuggestionIndex === -1) return
+      const { question } = [...this.historyQuestionList, ...this.suggestionQuestionList][this.currentSelectedSuggestionIndex]
+      if (needEnter) {
+        this.copyQuestion(question)
+      } else {
+        this.userQuestion = question
+        this.$refs.questionInput.focus()
+      }
     }
   }
 }
@@ -433,7 +546,7 @@ export default {
     }
 
     .question-input {
-      border-bottom: 0;
+      border-bottom: none;
       flex-basis: calc(100% - 65px);
       font-size: 14px;
       height: 38px;
@@ -451,8 +564,8 @@ export default {
           opacity: 0.15;
         }
 
-        ~ .ask-btn,
-        ~ .clean-btn {
+        & ~ .ask-btn,
+        & ~ .clean-btn {
           opacity: 0.15;
         }
       }
@@ -527,7 +640,7 @@ export default {
     top: -18px;
   }
 
-  .history-question-block {
+  .suggestion-block {
     background-color: #2d3033;
     border-radius: 5px;
     height: 0;
@@ -550,20 +663,30 @@ export default {
       padding: 4px 0;
     }
 
-    .history-question {
+    .suggestion {
       border-bottom: 1px solid #464a50;
       color: #fff;
       cursor: pointer;
       font-size: 14px;
+      font-weight: 300;
       line-height: 20px;
       padding: 10px 18px;
 
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: #464a50;
       }
 
       .icon {
         margin-right: 14px;
+      }
+
+      ::v-deep .bold {
+        font-weight: 600;
+      }
+
+      ::v-deep .highlight {
+        color: $theme-color-primary;
       }
     }
   }
