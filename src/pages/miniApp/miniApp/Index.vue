@@ -342,44 +342,43 @@
             </div>
             <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
-                <draggable
-                  :list="currentDashboard.components"
-                  :move="logDraggingMovement"
+                <grid-draggable
+                  :components="currentDashboard.components"
+                  :finish-notice="$t('miniApp.component')"
                   :disabled="!isEditMode || currentDashboard.components.length === 1"
-                  ghost-class="dragging-ghost"
-                  style="height: 100%;"
-                  @end="updateComponentOrder($t('miniApp.component'))"
                 >
-                  <dashboard-task
-                    v-for="componentData in currentDashboard.components"
-                    :key="`${componentData.id} - ${componentData.updateTime}`"
-                    :filters="filterColumnValueInfoList"
-                    :y-axis-controls="yAxisControlColumnValueInfoList"
-                    :controls="controlColumnValueInfoList"
-                    :component-data="componentData"
-                    :is-edit-mode="isEditMode"
-                    :warning-module-setting="appData.warningModule"
-                    :is-current-dashboard-init="isCurrentDashboardInit"
-                    @redirect="activeCertainDashboard($event)"
-                    @deleteComponentRelation="deleteComponentRelation"
-                    @columnTriggered="columnTriggered"
-                    @rowTriggered="rowTriggered"
-                    @chartTriggered="chartTriggered"
-                    @warningLogTriggered="warningLogTriggered($event)"
-                    @goToCertainDashboard="activeCertainDashboard($event)"
-                    @switchDialogName="handleDashboardSwitchName($event, componentData)"
-                  >
-                    <template
-                      v-if="componentData.type === 'monitor-warning-list'"
-                      slot="icon"
+                  <template #default>
+                    <dashboard-task
+                      v-for="componentData in currentDashboard.components"
+                      :key="`${componentData.id} - ${componentData.updateTime}`"
+                      :filters="filterColumnValueInfoList"
+                      :y-axis-controls="yAxisControlColumnValueInfoList"
+                      :controls="controlColumnValueInfoList"
+                      :component-data="componentData"
+                      :is-edit-mode="isEditMode"
+                      :warning-module-setting="appData.warningModule"
+                      :is-current-dashboard-init="isCurrentDashboardInit"
+                      @redirect="activeCertainDashboard($event)"
+                      @deleteComponentRelation="deleteComponentRelation"
+                      @columnTriggered="columnTriggered"
+                      @rowTriggered="rowTriggered"
+                      @chartTriggered="chartTriggered"
+                      @warningLogTriggered="warningLogTriggered($event)"
+                      @goToCertainDashboard="activeCertainDashboard($event)"
+                      @switchDialogName="handleDashboardSwitchName($event, componentData)"
                     >
-                      <svg-icon
-                        icon-class="warning"
-                        class="warning-icon"
-                      />
-                    </template>
-                  </dashboard-task>
-                </draggable>
+                      <template
+                        v-if="componentData.type === 'monitor-warning-list'"
+                        slot="icon"
+                      >
+                        <svg-icon
+                          icon-class="warning"
+                          class="warning-icon"
+                        />
+                      </template>
+                    </dashboard-task>
+                  </template>
+                </grid-draggable>
               </template>
               <template v-else>
                 <div class="empty-block">
@@ -500,6 +499,7 @@ import {
 } from '@/API/MiniApp'
 import MiniAppSideNav from './components/MiniAppSideNav'
 import DashboardTask from './components/dashboard-components/DashboardTask'
+import GridDraggable from '@/components/layout/GridDraggable'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
@@ -514,7 +514,6 @@ import WarningModule from './components/warning-module/WarningModule'
 import ComponentToAlertConditionDialog from './dialog/ComponentToAlertConditionDialog'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
-import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState } from 'vuex'
 import { updateAlertTimeZone } from '@/API/Alert'
@@ -540,9 +539,9 @@ export default {
     FilterControlPanel,
     AxisControlPanel,
     WarningModule,
-    draggable,
     DefaultSelect,
-    ComponentToAlertConditionDialog
+    ComponentToAlertConditionDialog,
+    GridDraggable
   },
   data () {
     return {
@@ -1530,10 +1529,6 @@ export default {
       }, '')
       return this.$t(`miniApp.${displayName}Component`).slice(0, 7)
     },
-    logDraggingMovement (e) {
-      const { index, futureIndex } = e.draggedContext
-      this.draggedContext = { index, futureIndex }
-    },
     updateDashboardOrder (target) {
       this.updateOrder(target)
     },
@@ -1571,14 +1566,18 @@ export default {
 
 @mixin dropdown-select-position ($top: 0, $right: 0, $left: 0, $before: 0) {
   box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
-  top: calc(50% + 17px);
-  right: -3px;
   left: unset;
+  right: -3px;
+  top: calc(50% + 17px);
   &::before { right: 7px; }
 
   .dropdown-flex {
     min-width: unset;
   }
+}
+
+.dropdown-select {
+  visibility: hidden;
 }
 
 .mini-app {
@@ -1587,10 +1586,10 @@ export default {
   }
 
   &__page {
-    height: 100%;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 
     ::v-deep .new-name-input {
       margin-right: 16px;
@@ -1607,36 +1606,36 @@ export default {
   }
 
   &__nav {
-    position: relative;
-    z-index: 5;
-    flex: 0 0 56px;
-    padding: 0 20px 0 24px;
-    display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
     border-bottom: 1px solid #232c2e;
+    display: flex;
+    flex: 0 0 56px;
     justify-content: space-between;
+    padding: 0 20px 0 24px;
+    position: relative;
+    z-index: 5;
 
     .nav--left {
-      display: flex;
       align-items: center;
+      display: flex;
 
       .app-logo {
         padding-right: 24px;
       }
 
       .app-name {
-        display: flex;
         align-self: center;
+        display: flex;
         font-size: 20px;
 
         &.is-live {
-          line-height: 30px;
           border-left: 1px solid #404949;
-          padding-left: 24px;
-          line-height: 30px;
           font-weight: 600;
           letter-spacing: 4px;
+          line-height: 30px;
+          line-height: 30px;
+          padding-left: 24px;
         }
 
         &:hover {
@@ -1647,16 +1646,16 @@ export default {
       }
 
       .icon-arrow {
-        cursor: pointer;
         color: $theme-color-primary;
+        cursor: pointer;
         margin-right: 20px;
       }
 
       .icon-edit {
-        margin-left: 12px;
         color: $theme-color-primary;
-        font-size: 16px;
         cursor: pointer;
+        font-size: 16px;
+        margin-left: 12px;
         visibility: hidden;
       }
 
@@ -1666,24 +1665,24 @@ export default {
     }
 
     .nav--right {
-      cursor: pointer;
       color: $theme-color-primary;
+      cursor: pointer;
     }
   }
 
   &__content {
+    display: flex;
     flex: 1;
     height: 0;
-    display: flex;
 
     .empty-block {
-      width: 100%;
+      align-items: center;
+      color: #ddd;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      margin-top: 30vh;
-      color: #ddd;
       font-size: 18px;
+      margin-top: 30vh;
+      width: 100%;
 
       .create-btn {
         color: #004046;
@@ -1697,40 +1696,40 @@ export default {
   }
 
   &__main {
-    flex: 1;
-    padding: 20px 0 0 20px;
     display: flex;
+    flex: 1;
     flex-direction: column;
+    min-width: 0;
     overflow: auto;
     overflow: overlay;
-    min-width: 0;
+    padding: 20px 0 0 20px;
 
     &-header {
-      position: relative;
-      z-index: 4;
-      flex: 0 0 30px;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
+      display: flex;
+      flex: 0 0 30px;
+      justify-content: space-between;
       margin-bottom: 20px;
       padding-right: 20px;
+      position: relative;
+      z-index: 4;
     }
     &.warning {}
 
     &.dashboard {
       .dashboard__header {
-        position: relative;
-        z-index: 4;
-        flex: 0 0 30px;
-        display: flex;
-        justify-content: space-between;
         align-items: center;
+        display: flex;
+        flex: 0 0 30px;
+        justify-content: space-between;
         margin-bottom: 20px;
         margin-right: 20px;
+        position: relative;
+        z-index: 4;
 
         .header-left {
-          display: flex;
           align-items: center;
+          display: flex;
 
           .name {
             font-size: 20px;
@@ -1745,8 +1744,8 @@ export default {
 
           .icon-edit {
             color: $theme-color-primary;
-            margin-left: 12px;
             cursor: pointer;
+            margin-left: 12px;
             visibility: hidden;
 
             &:hover {
@@ -1756,32 +1755,32 @@ export default {
         }
 
         .header-right {
+          align-items: center;
           display: flex;
           justify-content: flex-end;
-          align-items: center;
 
           .dashboard-setting-box {
-            flex: 0 0 30px;
-            height: 30px;
-            margin-left: 6px;
-            cursor: pointer;
+            @include dropdown-select-controller;
+
+            align-items: center;
             border: 1px solid #fff;
             border-radius: 4px;
+            cursor: pointer;
             display: flex;
-            align-items: center;
+            flex: 0 0 30px;
+            height: 30px;
             justify-content: center;
+            margin-left: 6px;
             position: relative;
-
-            @include dropdown-select-controller;
 
             .dropdown-select {
               z-index: 2;
 
               ::v-deep .dropdown-select-box {
                 box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
-                top: calc(50% + 17px);
-                right: -3px;
                 left: unset;
+                right: -3px;
+                top: calc(50% + 17px);
                 z-index: 1;
                 &::before { right: 7px; }
 
@@ -1825,37 +1824,37 @@ export default {
         ::v-deep .dropdown {
           &__list-container {
             left: 0;
-            top: calc(100% + 10px);
             text-align: left;
-            z-index: 1;
+            top: calc(100% + 10px);
             width: auto;
+            z-index: 1;
 
             &::before {
-              position: absolute;
-              content: "";
-              bottom: 100%;
-              left: 0;
-              width: 100%;
               background-color: transparent;
+              bottom: 100%;
+              content: '';
               height: 12px;
+              left: 0;
+              position: absolute;
+              width: 100%;
             }
 
             &::after {
-              position: absolute;
-              content: "";
-              bottom: 100%;
-              left: 50%;
-              transform: translateX(-50%);
               border-bottom: 8px solid #2b3839;
               border-left: 8px solid transparent;
               border-right: 8px solid transparent;
+              bottom: 100%;
+              content: '';
+              left: 50%;
+              position: absolute;
+              transform: translateX(-50%);
             }
           }
 
           &__link {
-            line-height: 39px;
-            font-weight: 600;
             font-size: 14px;
+            font-weight: 600;
+            line-height: 39px;
           }
         }
 
@@ -1873,9 +1872,9 @@ export default {
       overflow: auto;
       overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
       &::after {
+        clear: both;
         content: '';
         display: block;
-        clear: both;
       }
     }
   }
@@ -1886,13 +1885,13 @@ export default {
   }
 
   &__dialog-select-wrapper {
-    width: 100%;
     margin: 24px 0;
+    width: 100%;
   }
 
   &__dialog-select {
-    width: 100%;
     border-bottom: 1px solid #fff;
+    width: 100%;
 
     ::v-deep .el-input__inner {
       padding-left: 0;
@@ -1904,15 +1903,15 @@ export default {
   }
 
   .button-container {
+    align-items: center;
     display: flex;
     justify-content: flex-end;
-    align-items: center;
     position: relative;
 
     &__button {
-      padding: 5px 10px;
-      min-width: unset;
       line-height: 20px;
+      min-width: unset;
+      padding: 5px 10px;
 
       &:not(:first-child) {
         margin-left: 8px;
@@ -1924,34 +1923,34 @@ export default {
     }
 
     &__time {
-      font-size: 12px;
       color: #ddd;
+      font-size: 12px;
     }
 
     &__status {
-      display: inline-block;
-      padding: 4px 8px;
       background: #333;
       border-radius: 24px;
-      margin-left: 16px;
-      font-size: 12px;
       color: #fff;
+      display: inline-block;
+      font-size: 12px;
+      margin-left: 16px;
+      padding: 4px 8px;
 
       &::before {
+        background: transparent;
+        border: 1px solid #999;
+        border-radius: 50%;
         content: '';
         display: inline-block;
-        width: 8px;
         height: 8px;
-        border: 1px solid #999;
-        background: transparent;
-        border-radius: 50%;
         margin: auto 0;
+        width: 8px;
       }
 
       &--active {
         &::before {
-          border: none;
           background: #2fecb3;
+          border: none;
         }
       }
     }
@@ -1960,9 +1959,9 @@ export default {
       font-size: 14px;
       line-height: 32px;
 
-      [lang="en"] & {
-        text-align: right;
+      [lang='en'] & {
         line-height: 24px;
+        text-align: right;
       }
 
       .question-lamp {
@@ -1975,29 +1974,29 @@ export default {
 
       &__list-container {
         left: -109px;
-        top: calc(100% + 10px);
         text-align: left;
-        z-index: 1;
+        top: calc(100% + 10px);
         width: 160px;
+        z-index: 1;
 
         &::before {
-          position: absolute;
-          content: "";
-          bottom: 100%;
-          left: 0;
-          width: 100%;
           background-color: transparent;
+          bottom: 100%;
+          content: '';
           height: 12px;
+          left: 0;
+          position: absolute;
+          width: 100%;
         }
 
         &::after {
-          position: absolute;
-          content: "";
-          bottom: 100%;
-          left: 72%;
           border-bottom: 12px solid #2b3839;
           border-left: 12px solid transparent;
           border-right: 12px solid transparent;
+          bottom: 100%;
+          content: '';
+          left: 72%;
+          position: absolute;
         }
       }
 
@@ -2013,27 +2012,27 @@ export default {
   }
 
   &__dashboard-control {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 16px;
     position: relative;
     z-index: 1;
-    display: flex;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-    border-radius: 8px;
-    margin-right: 16px;
-    flex-wrap: wrap;
 
     &--top {
-      z-index: 2;
       margin-bottom: 12px;
+      z-index: 2;
     }
 
     &--bottom {
-      z-index: 1;
       margin-bottom: 20px;
+      z-index: 1;
     }
 
     &.editing {
-      padding: 16px 19px 0 19px;
       background: #1c292b;
+      padding: 16px 19px 0;
     }
   }
 
@@ -2044,22 +2043,13 @@ export default {
   }
 
   &__dashboard-components {
+    margin-right: 4px;
     position: relative;
     z-index: 0;
-    margin-right: 4px;
 
     .warning-icon {
       color: #ff5c46;
     }
   }
-}
-
-.dropdown-select {
-  visibility: hidden;
-}
-
-.dragging-ghost {
-  opacity: 0.5;
-  background: #192323;
 }
 </style>
