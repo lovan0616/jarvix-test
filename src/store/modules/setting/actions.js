@@ -3,19 +3,15 @@ import { getSystemInfo } from '@/API/Admin'
 
 export default {
   async checkToken ({ commit, state }) {
+    if (!localStorage.getItem('token')) return
+
     const newTime = Date.now()
     const isTokenStale = (oldTime, newTime, freshPeriod = 60) => {
       return newTime - oldTime >= freshPeriod * 60 * 1000
     }
 
-    // Init timestamp
-    if (!state.tokenTimestamp) {
-      commit('updateTokenTimestamp', newTime)
-      return
-    }
-
-    // Token is not expired
-    if (!isTokenStale(state.tokenTimestamp, newTime)) {
+    // tokenTimestamp is existed and token is not expired
+    if (state.tokenTimestamp && !isTokenStale(state.tokenTimestamp, newTime)) {
       return
     }
 
@@ -33,7 +29,6 @@ export default {
     commit('updateTokenRefreshPromise', promise)
     const { accessToken } = await refreshToken()
     localStorage.setItem('token', accessToken)
-    commit('updateToken', accessToken)
     commit('updateTokenTimestamp', newTime)
     done()
     commit('updateTokenRefreshPromise', null)
