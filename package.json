@@ -19,6 +19,7 @@
     "echarts": "^4.9.0",
     "echarts-stat": "^1.2.0",
     "element-ui": "^2.15.2",
+    "fzf": "^0.3.1",
     "html-to-image": "^1.6.2",
     "lodash.orderby": "^4.6.0",
     "moment": "^2.29.1",
