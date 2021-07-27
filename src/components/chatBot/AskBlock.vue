@@ -72,7 +72,7 @@
     </div>
     <div
       ref="suggestionBlock"
-      :class="{show: isSuggestionBlockVisible && (historyQuestionList.length > 0 || suggestionQuestionList.length > 0), 'has-filter': hasFilter}"
+      :class="{hide: !(isSuggestionBlockVisible && (historyQuestionList.length > 0 || suggestionQuestionList.length > 0)), 'has-filter': hasFilter}"
       class="suggestion-block"
       @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
       @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
@@ -643,12 +643,14 @@ export default {
   .suggestion-block {
     background-color: #2d3033;
     border-radius: 5px;
-    height: 0;
     left: 0;
-    overflow: hidden;
+    max-height: 200px;
+    overflow: auto;
+    padding: 4px 0;
     position: absolute;
     text-align: left;
     top: 100%;
+    transform: translateY(0) scaleY(1);
     transition: all 0.1s;
     width: calc(100% - 56px);
     z-index: 90;
@@ -657,10 +659,8 @@ export default {
       bottom: 137px;
     }
 
-    &.show {
-      height: 160px;
-      overflow: auto;
-      padding: 4px 0;
+    &.hide {
+      transform: translateY(-50%) scaleY(0);
     }
 
     .suggestion {
