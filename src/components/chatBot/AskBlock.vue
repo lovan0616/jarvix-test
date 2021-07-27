@@ -476,11 +476,14 @@ export default {
       this.suggester.setCaretGapIndex(el.selectionStart)
       this.updateSuggesterRequestFrameId = requestAnimationFrame(this.updateSuggester)
     },
-    async autocompleteQuestion (needEnter = false) {
+    autocompleteQuestion (needEnter = false) {
       if (this.currentSelectedSuggestionIndex === -1) return
       const { question } = [...this.historyQuestionList, ...this.suggestionQuestionList][this.currentSelectedSuggestionIndex]
       if (needEnter) {
-        this.copyQuestion(question)
+        this.userQuestion = question
+        this.$refs.questionInput.focus()
+        this.enterQuestion()
+        this.$refs.questionInput.blur()
       } else {
         this.userQuestion = question
         this.$refs.questionInput.focus()
