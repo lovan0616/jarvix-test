@@ -76,7 +76,7 @@
       class="suggestion-block"
       @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
       @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
-      @keypress.tab.exact.prevent="autocompleteQuestion"
+      @keydown.tab.exact.prevent="autocompleteQuestion(false)"
       @keypress.enter.exact.prevent="autocompleteQuestion(true)"
       @focus="focusSuggestionBlock"
       @blur="blurSuggestionBlock"
