@@ -82,19 +82,6 @@
       @blur="blurSuggestionBlock"
     >
       <div
-        v-for="(singleHistory, index) in historyQuestionList"
-        :key="`history-${index}`"
-        class="suggestion"
-        @click="copyQuestion(singleHistory.question)"
-        tabindex="0"
-      >
-        <svg-icon
-          icon-class="clock"
-          class="icon"
-        />
-        <span>{{ singleHistory.question }}</span>
-      </div>
-      <div
         v-for="(singleSuggestion, index) in suggestionQuestionList"
         :key="`suggestion-${index}`"
         class="suggestion"
@@ -106,6 +93,19 @@
           class="icon"
         />
         <span v-html="singleSuggestion.questionHtml" />
+      </div>
+      <div
+        v-for="(singleHistory, index) in historyQuestionList"
+        :key="`history-${index}`"
+        class="suggestion"
+        @click="copyQuestion(singleHistory.question)"
+        tabindex="0"
+      >
+        <svg-icon
+          icon-class="clock"
+          class="icon"
+        />
+        <span>{{ singleHistory.question }}</span>
       </div>
     </div>
     <transition name="fast-fade-in">
@@ -222,10 +222,14 @@ export default {
       }
     },
     historyQuestionList () {
-      // 過濾 boomark 以及 問題字串
-      return this.userQuestion
-        ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
-        : []
+      const history = [...new Set(this.$store.state.dataSource.historyQuestionList.map(h => h.question))]
+        .map(q => ({ question: q }))
+      const result = this.userQuestion
+        ? history.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
+        : history
+      // 限制歷史紀錄只會提示 3 筆
+      result.length = 3
+      return result
     },
     suggestionQuestionList () {
       if (this.suggester === null) return []
