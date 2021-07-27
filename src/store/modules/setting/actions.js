@@ -27,9 +27,15 @@ export default {
     })
 
     commit('updateTokenRefreshPromise', promise)
-    const { accessToken } = await refreshToken()
-    localStorage.setItem('token', accessToken)
-    commit('updateTokenTimestamp', newTime)
+
+    try {
+      const { accessToken } = await refreshToken()
+      localStorage.setItem('token', accessToken)
+      commit('updateTokenTimestamp', newTime)
+    } catch (error) {
+      console.error(error)
+    }
+
     done()
     commit('updateTokenRefreshPromise', null)
   },
