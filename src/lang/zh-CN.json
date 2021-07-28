@@ -622,7 +622,8 @@
     "columnSelected": "已选择栏位数",
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位",
     "isDistributed": "是否进行分片",
-    "distributedColumnName": "分片栏位"
+    "distributedColumnName": "分片栏位",
+    "clickColumnHeaderToCopy": "点击{title}可直接复制"
   },
   "model": {
     "newModel": "新增模型",

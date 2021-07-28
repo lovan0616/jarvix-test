@@ -67,7 +67,7 @@
                     slot="label"
                     :visible-arrow="false"
                     :enterable="false"
-                    :content="`${column.titles[index]}`"
+                    :content="$t('etl.clickColumnHeaderToCopy', { title: column.titles[index] })"
                     placement="bottom-start"
                   >
                     <span>{{ column.titles[index] }}</span>
