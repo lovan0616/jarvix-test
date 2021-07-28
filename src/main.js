@@ -451,8 +451,10 @@ Vue.prototype.$rollbar = new Rollbar({
 })
 
 Vue.config.productionTip = false
-Vue.config.errorHandler = (err, vm, info) => {
-  vm.$rollbar.error(err)
+if (process.env.NODE_ENV === 'production') {
+  Vue.config.errorHandler = (err, vm, info) => {
+    vm.$rollbar.error(err)
+  }
 }
 
 /* eslint-disable no-new */
