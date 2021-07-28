@@ -123,28 +123,20 @@
 <script>
 import { getAccountUsers, deleteUserAccount, inviteUser, batchInviteUser, getAccountRoles, updateRole, getSelfInfo } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
-import CreateUserDialog from './components/CreateUserDialog'
-import InviteUserDialog from './components/InviteUserDialog'
-import DecideDialog from '@/components/dialog/DecideDialog'
-import WritingDialog from '@/components/dialog/WritingDialog'
-import InputVerify from '@/components/InputVerify'
-import DefaultSelect from '@/components/select/DefaultSelect'
-import RoleDescPop from '@/pages/userManagement/components/RoleDescPop'
-import CrudTable from '@/components/table/CrudTable'
 import { Message } from 'element-ui'
 
 export default {
   inject: ['$validator'],
   name: 'UserManagement',
   components: {
-    CreateUserDialog,
-    InviteUserDialog,
-    DecideDialog,
-    WritingDialog,
-    InputVerify,
-    DefaultSelect,
-    RoleDescPop,
-    CrudTable
+    CreateUserDialog: () => import('./components/CreateUserDialog'),
+    InviteUserDialog: () => import('./components/InviteUserDialog'),
+    DecideDialog: () => import('@/components/dialog/DecideDialog'),
+    WritingDialog: () => import('@/components/dialog/WritingDialog'),
+    InputVerify: () => import('@/components/InputVerify'),
+    DefaultSelect: () => import('@/components/select/DefaultSelect'),
+    RoleDescPop: () => import('@/pages/userManagement/components/RoleDescPop'),
+    CrudTable: () => import('@/components/table/CrudTable')
   },
   data () {
     return {

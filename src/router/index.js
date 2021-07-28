@@ -592,10 +592,14 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
+  // 控制 App.vue & AppLayout.vue 中的 Spinner 出現
+  store.commit('updateRouteLoadingStatus', true)
+
   // Declare routes without authentication
   const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage', 'PageForgetPassword', 'PageResetPassword', 'PageAdmin']
   if (pathWithoutAuth.includes(to.name)) {
     next()
+    store.commit('updateRouteLoadingStatus', false)
     return
   }
 
@@ -705,6 +709,9 @@ router.beforeEach(async (to, from, next) => {
   }
 
   next()
+
+  // 在進入 Route 之後解除 Spinner
+  store.commit('updateRouteLoadingStatus', false)
 })
 
 // 處理如果有版本更新結果前端拿不到對應 js 的處理

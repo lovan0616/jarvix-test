@@ -39,7 +39,8 @@ export default new Vuex.Store({
   state: {
     isShowAskHelper: false,
     isShowFullSideNav: false,
-    isAppLoading: false
+    isAppLoading: false,
+    isRouteLoading: false
   },
   mutations: {
     updateAskHelperStatus (state, data) {
@@ -50,6 +51,9 @@ export default new Vuex.Store({
     },
     updateAppLoadingStatus (state, data) {
       state.isAppLoading = data
+    },
+    updateRouteLoadingStatus (state, data) {
+      state.isRouteLoading = data
     }
   }
 })

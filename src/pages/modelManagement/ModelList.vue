@@ -61,10 +61,6 @@
   </div>
 </template>
 <script>
-import DataTable from '@/components/table/DataTable'
-import DecideDialog from '@/components/dialog/DecideDialog'
-import UploadDialog from './scriptExecution/UploadDialog'
-import ModelExecutionFlow from './scriptExecution/ModelExecutionFlow'
 import { getModelList, deleteModelById } from '@/API/Model'
 import { mapState, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
@@ -73,10 +69,10 @@ import orderBy from 'lodash.orderby'
 export default {
   name: 'ModelList',
   components: {
-    DataTable,
-    DecideDialog,
-    UploadDialog,
-    ModelExecutionFlow
+    DataTable: () => import('@/components/table/DataTable'),
+    DecideDialog: () => import('@/components/dialog/DecideDialog'),
+    UploadDialog: () => import('./scriptExecution/UploadDialog'),
+    ModelExecutionFlow: () => import('./scriptExecution/ModelExecutionFlow')
   },
   data () {
     return {
