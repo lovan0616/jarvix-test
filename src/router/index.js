@@ -603,7 +603,6 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-
   // 將欲前往的頁面存取下來，避免使用者 token 失效或無權限需要被重新登入
   store.commit('setting/setCurrentRoute', to)
 

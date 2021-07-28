@@ -52,7 +52,7 @@ export default new Vuex.Store({
     updateAppLoadingStatus (state, data) {
       state.isAppLoading = data
     },
-    updateRouteLoadingStatus(state, data) {
+    updateRouteLoadingStatus (state, data) {
       state.isRouteLoading = data
     }
   }
