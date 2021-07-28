@@ -28,7 +28,7 @@
           v-model.trim="userQuestion"
           class="question-input input"
           autocomplete="off"
-          @keypress.enter.prevent="enterQuestion"
+          @keypress.enter.prevent="submitQuestion"
           @keyup.shift.ctrl.72="toggleAskHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
@@ -40,14 +40,14 @@
         <a
           href="javascript:void(0);"
           class="clean-btn"
-          @click="cleanQuestion"
+          @click="clearQuestion"
         >
           <svg-icon icon-class="remove-circle" />
         </a>
         <a
           href="javascript:void(0);"
           class="ask-btn"
-          @click="enterQuestion"
+          @click="submitQuestion"
         >
           <svg-icon icon-class="go-right" />
         </a>
@@ -76,8 +76,8 @@
       class="suggestion-block"
       @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
       @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
-      @keydown.tab.exact.prevent="autocompleteQuestion(false)"
-      @keypress.enter.exact.prevent="autocompleteQuestion(true)"
+      @keydown.tab.exact.prevent="autocompleteSuggestionQuestion(false)"
+      @keypress.enter.exact.prevent="autocompleteSuggestionQuestion(true)"
       @focus.capture="focusSuggestionBlock"
       @blur.capture="blurSuggestionBlock"
     >
@@ -85,7 +85,7 @@
         v-for="(suggestion, index) in suggestionList"
         :key="`suggestion-${index}`"
         class="suggestion"
-        @click="copyQuestion(suggestion.question)"
+        @click="fillInQuestion(suggestion.question, true, false)"
         tabindex="0"
       >
         <svg-icon
@@ -146,7 +146,7 @@ export default {
   },
   data () {
     return {
-      userQuestion: null,
+      userQuestion: '',
       websocketHandler: null,
       newParserMode: localStorage.getItem('newParser') === 'true',
       isInputFocus: false,
@@ -273,7 +273,7 @@ export default {
   },
   watch: {
     appQuestion (value) {
-      this.copyQuestion(value)
+      this.fillInQuestion(value, false, false)
     },
     '$route' (to, from) {
       // 透過 drilldown 切換 dataframe 時不清空問句 input
@@ -285,12 +285,12 @@ export default {
         (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString() ||
         (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
       ) {
-        this.userQuestion = null
+        this.clearQuestion()
         this.closeAskHelper()
       }
 
-      // 回首頁的話，關閉彈出視窗，有需要清問句的話，再加進上方條件
       if (to.name === 'PageIndex') {
+        this.clearQuestion()
         this.closeAskHelper()
       }
     },
@@ -354,7 +354,7 @@ export default {
             dataFrameId: this.$route.query.dataFrameId
           }
         })
-        this.cleanQuestion()
+        this.clearQuestion()
         return
       }
       if (evt.data === '點擊環境濕度') {
@@ -375,15 +375,15 @@ export default {
       }
 
       this.userQuestion = evt.data
-      this.enterQuestion()
+      this.submitQuestion()
     },
     onWebSocketClose (evt) {
     },
-    cleanQuestion () {
+    clearQuestion () {
       if (this.availableDataSourceList.length === 0) return
-      this.userQuestion = null
+      this.userQuestion = ''
     },
-    enterQuestion () {
+    submitQuestion () {
       let modelQuestionKeyWordList = ['預測', '專案', '是否', '成案']
       if (this.availableDataSourceList.length === 0) return
       /**
@@ -408,10 +408,22 @@ export default {
       }
       this.closeAskHelper()
     },
-    copyQuestion (value) {
-      this.userQuestion = value
-      this.$refs.questionInput.focus()
-      this.enterQuestion()
+    fillInQuestion (question, submit, focusAfterFillIn) {
+      this.userQuestion = question
+      if (focusAfterFillIn) {
+        this.focus()
+      } else {
+        this.blur()
+      }
+
+      if (submit) {
+        this.submitQuestion()
+      }
+    },
+    autocompleteSuggestionQuestion (submit) {
+      if (this.currentSelectedSuggestionIndex === -1) return
+      const { question } = this.suggestionList[this.currentSelectedSuggestionIndex]
+      this.fillInQuestion(question, submit, !submit)
     },
     closePreviewDataSource () {
       this.togglePreviewDataSource(false)
@@ -448,6 +460,13 @@ export default {
     blurSuggestionBlock () {
       this.isSuggestionBlockFocus = false
     },
+    focus () {
+      this.$refs.questionInput.focus()
+    },
+    blur () {
+      this.$refs.questionInput.focus()
+      this.$refs.questionInput.blur()
+    },
     updateSuggester () {
       const el = this.$refs.questionInput ?? null
       if (el === null || this.suggester === null) return
@@ -456,19 +475,6 @@ export default {
     requestAnimationFrameTask () {
       this.updateSuggester()
       this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
-    },
-    autocompleteQuestion (needEnter = false) {
-      if (this.currentSelectedSuggestionIndex === -1) return
-      const { question } = this.suggestionList[this.currentSelectedSuggestionIndex]
-      if (needEnter) {
-        this.userQuestion = question
-        this.$refs.questionInput.focus()
-        this.enterQuestion()
-        this.$refs.questionInput.blur()
-      } else {
-        this.userQuestion = question
-        this.$refs.questionInput.focus()
-      }
     }
   }
 }
