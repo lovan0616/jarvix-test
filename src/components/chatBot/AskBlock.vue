@@ -19,24 +19,34 @@
           class="parser-select"
         />
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
-        <input
-          ref="questionInput"
-          :class="{ 'disabled': availableDataSourceList.length === 0 }"
-          :name="new Date().getTime()"
-          :placeholder="$t('editing.askPlaceHolder')"
-          :disabled="availableDataSourceList.length === 0"
-          v-model.trim="userQuestion"
-          class="question-input input"
-          autocomplete="off"
-          @keypress.enter.prevent="submitQuestion"
-          @keyup.shift.ctrl.72="toggleAskHelper()"
-          @keyup.shift.ctrl.90="toggleAlgorithm()"
-          @keyup.shift.ctrl.88="toggleWebSocketConnection()"
-          @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
-          @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
-          @focus="focusInput"
-          @blur="blurInput"
+        <div
+          class="question-input-container"
+          :class="{preview: currentSelectedSuggestionIndex !== -1}"
         >
+          <input
+            ref="questionInput"
+            :class="{ 'disabled': availableDataSourceList.length === 0 }"
+            :name="new Date().getTime()"
+            :placeholder="$t('editing.askPlaceHolder')"
+            :disabled="availableDataSourceList.length === 0"
+            v-model.trim="userQuestion"
+            class="question-input input"
+            autocomplete="off"
+            @keypress.enter.prevent="submitQuestion"
+            @keyup.shift.ctrl.72="toggleAskHelper()"
+            @keyup.shift.ctrl.90="toggleAlgorithm()"
+            @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+            @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
+            @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
+            @focus="focusInput"
+            @blur="blurInput"
+          >
+          <input
+            class="question-input input question-input-preview"
+            :value="currentSelectedSuggestionText"
+            disabled
+          >
+        </div>
         <a
           href="javascript:void(0);"
           class="clean-btn"
@@ -190,7 +200,9 @@ export default {
     },
     currentSelectedSuggestionIndex: {
       get () {
-        return this.selectedSuggestionIndex
+        return this.isSuggestionBlockVisible
+          ? this.selectedSuggestionIndex
+          : -1
       },
       set (value) {
         if (!this.isSuggestionBlockVisible) {
@@ -214,6 +226,11 @@ export default {
         }
         el.focus()
       }
+    },
+    currentSelectedSuggestionText () {
+      return this.currentSelectedSuggestionIndex === -1
+        ? ''
+        : this.suggestionList[this.currentSelectedSuggestionIndex].question
     },
     suggestionList () {
       // History suggestion items
@@ -424,6 +441,7 @@ export default {
       if (this.currentSelectedSuggestionIndex === -1) return
       const { question } = this.suggestionList[this.currentSelectedSuggestionIndex]
       this.fillInQuestion(question, submit, !submit)
+      this.currentSelectedSuggestionIndex = -1
     },
     closePreviewDataSource () {
       this.togglePreviewDataSource(false)
@@ -539,29 +557,46 @@ export default {
       }
     }
 
-    .question-input {
-      border-bottom: none;
+    .question-input-container {
       flex-basis: calc(100% - 65px);
-      font-size: 14px;
-      height: 38px;
-      line-height: 36px;
-      overflow: auto;
-      padding: 0 10px;
-      padding-right: 30px;
+      height: 100%;
+      position: relative;
 
-      &::placeholder {
-        opacity: #888;
+      .question-input {
+        border-bottom: none;
+        font-size: 14px;
+        height: 38px;
+        left: 0;
+        line-height: 36px;
+        overflow: auto;
+        padding: 0 10px;
+        padding-right: 30px;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        &::placeholder {
+          opacity: 0.5;
+        }
+
+        &:disabled {
+          &::placeholder {
+            opacity: 0.15;
+          }
+
+          & ~ .ask-btn,
+          & ~ .clean-btn {
+            opacity: 0.15;
+          }
+        }
       }
 
-      &:disabled {
-        &::placeholder {
-          opacity: 0.15;
-        }
+      .question-input-preview {
+        pointer-events: none;
+      }
 
-        & ~ .ask-btn,
-        & ~ .clean-btn {
-          opacity: 0.15;
-        }
+      &.preview .question-input:not(.question-input-preview) {
+        opacity: 0;
       }
     }
 
