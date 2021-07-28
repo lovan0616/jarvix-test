@@ -29,7 +29,7 @@
           class="question-input input"
           autocomplete="off"
           @keypress.enter.prevent="enterQuestion"
-          @keyup.shift.ctrl.72="toggleHelper()"
+          @keyup.shift.ctrl.72="toggleAskHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
           @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
@@ -56,7 +56,7 @@
         v-if="isShowAskHelperEntry"
         :class="{ 'disabled': availableDataSourceList.length === 0 }"
         class="ask-remark-block"
-        @click="openAskHelperDialog"
+        @click="openAskHelper"
       >
         <el-tooltip
           slot="label"
@@ -72,7 +72,7 @@
     </div>
     <div
       ref="suggestionBlock"
-      :class="{hide: !(isSuggestionBlockVisible && (suggestionList.length > 0)), 'has-filter': hasFilter}"
+      :class="{hide: !isSuggestionBlockVisible, 'has-filter': hasFilter}"
       class="suggestion-block"
       @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
       @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
@@ -103,7 +103,7 @@
         :key="dataSourceId"
         class="ask-helper"
         mode="popup"
-        @close="closeHelper"
+        @close="closeAskHelper"
       />
     </transition>
   </div>
@@ -111,7 +111,7 @@
 <script>
 import Vue from 'vue'
 import AskHelperDialog from './AskHelperDialog'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Suggester, replaceWith } from '@/utils/questionSuggester'
@@ -147,8 +147,8 @@ export default {
   data () {
     return {
       userQuestion: null,
-      isSuggestionBlockVisible: false,
       websocketHandler: null,
+      newParserMode: localStorage.getItem('newParser') === 'true',
       isInputFocus: false,
       isSuggestionBlockFocus: false,
       selectedSuggestionIndex: -1,
@@ -158,15 +158,16 @@ export default {
     }
   },
   computed: {
-    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName']),
-    ...mapState('dataSource', ['dataSourceId', 'appQuestion']),
+    ...mapState(['isShowAskHelper']),
+    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName', 'isUseAlgorithm', 'setParserLanguage']),
+    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     isFocus () {
       return this.isInputFocus || this.isSuggestionBlockFocus
     },
-    newParserMode () {
-      return localStorage.getItem('newParser') === 'true'
+    isSuggestionBlockVisible () {
+      return this.isFocus && this.suggestionList.length > 0 && !this.isShowAskHelper
     },
     languageList () {
       return this.parserLanguageList.map(option => {
@@ -181,21 +182,20 @@ export default {
         return this.parserLanguage
       },
       set (value) {
-        this.$store.commit('chatBot/setParserLanguage', value)
+        this.setParserLanguage(value)
       }
     },
     hasFilter () {
-      return this.$store.state.dataSource.filterList.length > 0
-    },
-    isShowAskHelper () {
-      return this.$store.state.isShowAskHelper
+      return this.filterList.length > 0
     },
     currentSelectedSuggestionIndex: {
       get () {
         return this.selectedSuggestionIndex
       },
       set (value) {
-        if (value !== -1) {
+        if (!this.isSuggestionBlockVisible) {
+          value = -1
+        } else if (value !== -1) {
           const length = this.suggestionList.length
           if (length > 0) {
             value += 1
@@ -218,7 +218,7 @@ export default {
     suggestionList () {
       // History suggestion items
       /** @type {SuggestionListItem[]} */
-      const historySuggestionItems = [...new Set(this.$store.state.dataSource.historyQuestionList.map(history => history.question))]
+      const historySuggestionItems = [...new Set(this.historyQuestionList.map(history => history.question))]
         .map((question) => {
           /** @type {SuggestionListItem} */
           const result = {
@@ -266,23 +266,12 @@ export default {
 
       return [...keywordSuggestionItems, ...historySuggestionItems]
     },
-    isUseAlgorithm () {
-      return this.$store.state.chatBot.isUseAlgorithm
-    },
-    dataSourceList () {
-      return this.$store.state.dataSource.dataSourceList
-    },
     availableDataSourceList () {
       if (!this.dataSourceList) return []
       return this.dataSourceList.filter(dataSource => dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount > 0)
     }
   },
   watch: {
-    userQuestion (val) {
-      if (document.activeElement === this.$refs.questionInput) {
-        this.showSuggestionBlock()
-      }
-    },
     appQuestion (value) {
       this.copyQuestion(value)
     },
@@ -297,12 +286,12 @@ export default {
         (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
       ) {
         this.userQuestion = null
-        this.closeHelper()
+        this.closeAskHelper()
       }
 
       // 回首頁的話，關閉彈出視窗，有需要清問句的話，再加進上方條件
       if (to.name === 'PageIndex') {
-        this.closeHelper()
+        this.closeAskHelper()
       }
     },
     copiedColumnName (value) {
@@ -312,20 +301,23 @@ export default {
     }
   },
   mounted () {
-    document.addEventListener('click', this.autoHide, false)
     this.userQuestion = this.defaultQuestion || this.$route.query.question
     this.suggester = Vue.observable(new Suggester())
     this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
   },
   destroyed () {
-    this.closeHelper()
-    document.removeEventListener('click', this.autoHide, false)
+    this.closeAskHelper()
     if (this.websocketHandler) this.closeWebSocketConnection()
     cancelAnimationFrame(this.requestAnimationFrameTaskId)
   },
   methods: {
-    ...mapMutations('chatBot', ['clearCopiedColumnName']),
-    ...mapMutations('dataSource', ['setIsManuallyTriggeredAskQuestion']),
+    ...mapMutations(['updateAskHelperStatus']),
+    ...mapMutations('chatBot', ['clearCopiedColumnName', 'setDoDrillDown', 'setDoClickCorrelation', 'updateIsUseAlgorithm']),
+    ...mapMutations('dataSource', ['setIsManuallyTriggeredAskQuestion', 'clearFilterList', 'setAppQuestion']),
+    ...mapMutations('result', ['updateIsModelResult']),
+    ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
+    ...mapActions('chatBot', ['openAskInMemory']),
+    ...mapActions('dataSource', ['updateResultRouter']),
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()
@@ -346,7 +338,7 @@ export default {
     onWebSocketReceiveMessage (evt) {
       if (evt.data === '圈選2018年11月至2019年1月') {
         // drill down
-        this.$store.commit('chatBot/setDoDrillDown', true)
+        this.setDoDrillDown(true)
         return
       }
       if (evt.data === '回到資料集') {
@@ -367,12 +359,12 @@ export default {
       }
       if (evt.data === '點擊環境濕度') {
         // 點擊環境溫度
-        this.$store.commit('chatBot/setDoClickCorrelation', true)
+        this.setDoClickCorrelation(true)
         return
       }
       if (evt.data === '取消過濾條件') {
         // 清空 drill down
-        this.$store.commit('dataSource/clearFilterList')
+        this.clearFilterList()
         Message({
           message: '已取消過濾條件',
           type: 'success',
@@ -387,17 +379,6 @@ export default {
     },
     onWebSocketClose (evt) {
     },
-    autoHide (evt) {
-      let clickInside = this.$el.contains(evt.target)
-      if (this.isSuggestionBlockVisible && !clickInside) {
-        this.isSuggestionBlockVisible = false
-      }
-
-      // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
-      if (this.isSuggestionBlockVisible && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
-        this.isSuggestionBlockVisible = false
-      }
-    },
     cleanQuestion () {
       if (this.availableDataSourceList.length === 0) return
       this.userQuestion = null
@@ -409,64 +390,54 @@ export default {
        * 移除特殊符號 (unicode \u0008, referred to as \b in strings)
        * 先移除特殊符號再問問句
        */
-      this.$store.commit('dataSource/setAppQuestion', this.userQuestion.replace(/[\b]/g, ''))
+      this.setAppQuestion(this.userQuestion.replace(/[\b]/g, ''))
       if (this.redirectOnAsk) {
-        this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+        this.updateResultRouter('key_in')
 
         /* For demo */
         let correctCount = 0
         modelQuestionKeyWordList.forEach(word => {
           correctCount += this.userQuestion.includes(word)
         })
-        if (correctCount >= 2) this.$store.commit('result/updateIsModelResult', true)
-        else this.$store.commit('result/updateIsModelResult', false)
+        if (correctCount >= 2) this.updateIsModelResult(true)
+        else this.updateIsModelResult(false)
         /* For demo */
       } else {
         // 手動觸發問問題
         this.setIsManuallyTriggeredAskQuestion(true)
       }
-      this.hideSuggestionBlock()
-      this.closeHelper()
+      this.closeAskHelper()
     },
     copyQuestion (value) {
       this.userQuestion = value
       this.$refs.questionInput.focus()
       this.enterQuestion()
     },
-    showSuggestionBlock () {
-      if (this.isSuggestionBlockVisible || this.isShowAskHelper) return
-      this.isSuggestionBlockVisible = true
-    },
-    hideSuggestionBlock () {
-      this.isSuggestionBlockVisible = false
-    },
     closePreviewDataSource () {
-      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
+      this.togglePreviewDataSource(false)
     },
-    openAskHelperDialog () {
+    openAskHelper () {
       if (this.availableDataSourceList.length === 0) return
-      this.$store.commit('updateAskHelperStatus', !this.isShowAskHelper)
+      this.updateAskHelperStatus(true)
       this.closePreviewDataSource()
-      this.hideSuggestionBlock()
     },
-    closeHelper () {
-      this.$store.commit('updateAskHelperStatus', false)
+    closeAskHelper () {
+      this.updateAskHelperStatus(false)
     },
-    toggleHelper () {
+    toggleAskHelper () {
       if (this.isShowAskHelper) {
-        this.closeHelper()
+        this.closeAskHelper()
       } else {
-        this.openAskHelperDialog()
+        this.openAskHelper()
       }
     },
     toggleAlgorithm () {
-      this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
+      this.updateIsUseAlgorithm(!this.isUseAlgorithm)
     },
     focusInput () {
       this.isInputFocus = true
-      this.$store.dispatch('chatBot/openAskInMemory')
+      this.openAskInMemory()
       this.currentSelectedSuggestionIndex = -1
-      this.showSuggestionBlock()
     },
     blurInput () {
       this.isInputFocus = false
