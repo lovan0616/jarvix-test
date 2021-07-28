@@ -72,7 +72,7 @@
     </div>
     <div
       ref="suggestionBlock"
-      :class="{hide: !(isSuggestionBlockVisible && (historyQuestionList.length > 0 || suggestionQuestionList.length > 0)), 'has-filter': hasFilter}"
+      :class="{hide: !(isSuggestionBlockVisible && (suggestionList.length > 0)), 'has-filter': hasFilter}"
       class="suggestion-block"
       @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
       @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
@@ -82,30 +82,17 @@
       @blur="blurSuggestionBlock"
     >
       <div
-        v-for="(singleSuggestion, index) in suggestionQuestionList"
+        v-for="(suggestion, index) in suggestionList"
         :key="`suggestion-${index}`"
         class="suggestion"
-        @click="copyQuestion(singleSuggestion.question)"
+        @click="copyQuestion(suggestion.question)"
         tabindex="0"
       >
         <svg-icon
-          icon-class="search"
+          :icon-class="suggestion.iconClass"
           class="icon"
         />
-        <span v-html="singleSuggestion.questionHtml" />
-      </div>
-      <div
-        v-for="(singleHistory, index) in historyQuestionList"
-        :key="`history-${index}`"
-        class="suggestion"
-        @click="copyQuestion(singleHistory.question)"
-        tabindex="0"
-      >
-        <svg-icon
-          icon-class="clock"
-          class="icon"
-        />
-        <span>{{ singleHistory.question }}</span>
+        <span v-html="suggestion.html" />
       </div>
     </div>
     <transition name="fast-fade-in">
@@ -128,6 +115,13 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Suggester, replaceWith } from '@/utils/questionSuggester'
+
+/**
+ * @typedef {Object} SuggestionListItem
+ * @property {string} iconClass
+ * @property {string} question
+ * @property {string} html
+ */
 
 export default {
   name: 'AskBlock',
@@ -202,7 +196,7 @@ export default {
       },
       set (value) {
         if (value !== -1) {
-          const length = this.historyQuestionList.length + this.suggestionQuestionList.length
+          const length = this.suggestionList.length
           if (length > 0) {
             value += 1
             value = ((value + length + 1) % (length + 1)) - 1
@@ -221,42 +215,56 @@ export default {
         el.focus()
       }
     },
-    historyQuestionList () {
-      const history = [...new Set(this.$store.state.dataSource.historyQuestionList.map(h => h.question))]
-        .map(q => ({ question: q }))
-      const result = this.userQuestion
-        ? history.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
-        : history
-      // 限制歷史紀錄只會提示 3 筆
-      result.length = 3
-      return result
-    },
-    suggestionQuestionList () {
-      if (this.suggester === null) return []
-      /** @type {import('@/utils/questionSuggester').Suggestion[]} */
-      const suggestions = this.suggester.suggestions
-      const originalQuestion = this.suggester.getInputString()
-      return suggestions.map((suggestion) => {
-        const replacementStart = suggestion.keyword.words[0].startGapIndex
-        const replacementEnd = suggestion.keyword.words.slice(-1)[0].endGapIndex
-        const newReplacementEnd = replacementStart + suggestion.result.value.length
-        const finalQuestion = replaceWith(originalQuestion, replacementStart, replacementEnd, suggestion.result.value)
+    suggestionList () {
+      // History suggestion items
+      /** @type {SuggestionListItem[]} */
+      const historySuggestionItems = [...new Set(this.$store.state.dataSource.historyQuestionList.map(history => history.question))]
+        .map((question) => {
+          /** @type {SuggestionListItem} */
+          const result = {
+            iconClass: 'clock',
+            question,
+            html: question
+          }
+          return result
+        })
+      if (historySuggestionItems.length > 3) {
+        historySuggestionItems.length = 3
+      }
 
-        let questionHtml = `${finalQuestion.substring(0, replacementStart)}<span class="bold">` +
-          finalQuestion.substring(replacementStart, newReplacementEnd)
-            .split('')
-            .map((c, i) => suggestion.result.positions.includes(i)
-              ? `<span class="highlight">${c}</span>`
-              : c
-            )
-            .join('') +
-            `</span>${finalQuestion.substring(newReplacementEnd)}`
+      // Keyword suggestion items
+      /** @type {SuggestionListItem[]} */
+      const keywordSuggestionItems = this.suggester === null
+        ? []
+        : (() => {
+          /** @type {import('@/utils/questionSuggester').Suggestion[]} */
+          const suggestions = this.suggester.suggestions
+          const originalQuestion = this.suggester.inputString
+          return suggestions.map((suggestion) => {
+            const replacementStart = suggestion.keyword.words[0].startGapIndex
+            const replacementEnd = suggestion.keyword.words.slice(-1)[0].endGapIndex
+            const newReplacementEnd = replacementStart + suggestion.result.value.length
+            const finalQuestion = replaceWith(originalQuestion, replacementStart, replacementEnd, suggestion.result.value)
 
-        return {
-          questionHtml,
-          question: finalQuestion
-        }
-      })
+            let html = `${finalQuestion.substring(0, replacementStart)}<span class="bold">` +
+              finalQuestion.substring(replacementStart, newReplacementEnd)
+                .split('')
+                .map((c, i) => suggestion.result.positions.includes(i)
+                  ? `<span class="highlight">${c}</span>`
+                  : c
+                )
+                .join('') +
+              `</span>${finalQuestion.substring(newReplacementEnd)}`
+
+            return {
+              iconClass: 'search',
+              question: finalQuestion,
+              html
+            }
+          })
+        })()
+
+      return [...keywordSuggestionItems, ...historySuggestionItems]
     },
     isUseAlgorithm () {
       return this.$store.state.chatBot.isUseAlgorithm
@@ -480,7 +488,7 @@ export default {
     },
     autocompleteQuestion (needEnter = false) {
       if (this.currentSelectedSuggestionIndex === -1) return
-      const { question } = [...this.historyQuestionList, ...this.suggestionQuestionList][this.currentSelectedSuggestionIndex]
+      const { question } = this.suggestionList[this.currentSelectedSuggestionIndex]
       if (needEnter) {
         this.userQuestion = question
         this.$refs.questionInput.focus()
