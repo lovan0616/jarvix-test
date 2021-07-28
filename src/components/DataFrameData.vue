@@ -42,7 +42,7 @@
           <template #columns-header="{ column, index }">
             <div
               class="header-block"
-              @click="handleClick"
+              @click="checkClickTarget"
             >
               <div class="header">
                 <span
@@ -74,9 +74,9 @@
                   </el-tooltip>
                 </span>
                 <svg-icon
-                  icon-class="arrow-down"
+                  icon-class="sort-down"
                   class="arrow-icon"
-                  :class="{ 'arrow-up': sortOrders.sortType === 'ascending' && index === sortOrders.dataColumnId, 'active': index === sortOrders.dataColumnId}"
+                  :class="{ 'arrow-up': isSortASC, 'active': isSortActive(index) }"
                 />
               </div>
               <div
@@ -119,6 +119,7 @@ import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumn
 import EmptyInfoBlock from './EmptyInfoBlock'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'DataFrameData',
@@ -161,21 +162,24 @@ export default {
       timeoutFunction: null,
       showDataSummary: true,
       fixedIndex: true,
-      sortOrders: {
-        dataColumnId: null,
-        sortType: null
-      }
+      sortOrders: null,
+      columnIdList: []
     }
   },
   computed: {
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     ...mapGetters('userManagement', ['hasPermission']),
-    ...mapState('dataSource', ['shouldDataFrameDataRefetchDataColumn'])
+    ...mapState('dataSource', ['shouldDataFrameDataRefetchDataColumn']),
+    isSortASC () {
+      if (!this.sortOrders) return false
+      return this.sortOrders.sortType === 'ASC'
+    }
   },
   watch: {
     dataFrameId (value) {
       this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
+      this.setColumnIdList(value)
     },
     askCondition: {
       deep: true,
@@ -197,19 +201,27 @@ export default {
         this.isLoading = true
         this.fetchDataFrameData(this.dataFrameId, 0, true, false)
       }
+    },
+    sortOrders: {
+      deep: true,
+      handler () {
+        this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
+      }
     }
   },
   mounted () {
     this.isLoading = true
     this.fetchDataFrameData(this.dataFrameId, 0, true)
+    this.setColumnIdList(this.dataFrameId)
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     ...mapMutations('chatBot', ['setCopiedColumnName']),
-    handleClick (e) {
-      if (!e.target.classList.contains('arrow-icon')) e.stopPropagation()
+    isSortActive (index) {
+      if (!this.sortOrders) return false
+      return this.columnIdList[index] === this.sortOrders.dataColumnId
     },
     toggleShowSummaryInfo () {
       this.fixedIndex = false
@@ -389,16 +401,23 @@ export default {
       // 純複製到剪貼簿功能
       this.copyTextToClipboard(value)
     },
-    handleTableSort ({ dataColumnId, sortType }) {
+    handleTableSort ({ dataColumnIndex, sortType }) {
       if (!sortType) {
-        this.sortOrders.dataColumnId = null
-        this.sortOrders.sortType = null
-        this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage)
+        this.sortOrders = null
         return
       }
-
+      // 根據index從columnIdList中取出column id
+      const dataColumnId = this.columnIdList[dataColumnIndex]
       this.sortOrders = { dataColumnId, sortType }
-      this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
+    },
+    checkClickTarget (e) {
+      if (!e.target.classList.contains('arrow-icon')) e.stopPropagation()
+    },
+    async setColumnIdList (dataFrameId) {
+      if (dataFrameId) {
+        const response = await getDataFrameColumnInfoById(dataFrameId)
+        this.columnIdList = response.map(column => column.id)
+      }
     }
   }
 }
@@ -471,10 +490,11 @@ export default {
         padding: 5px;
 
         &.arrow-up {
-          transform: rotate(180deg);
+          transform: rotateX(180deg);
         }
 
         &.active {
+          filter: brightness(0) saturate(100%) invert(73%) sepia(80%) saturate(375%) hue-rotate(140deg) brightness(94%) contrast(99%);
           color: $theme-color-primary;
         }
       }
