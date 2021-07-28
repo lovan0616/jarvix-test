@@ -77,6 +77,21 @@
           </div>
         </span>
         <div
+          class="component__item-wrapper-size"
+        >
+          寬高設定：寬
+          <input
+            type="number"
+            v-model="wrapperSize.column"
+          >
+          欄 / 高
+          <input
+            type="number"
+            v-model="wrapperSize.row"
+          >
+          列
+        </div>
+        <div
           v-if="componentData.type === 'index' || componentData.type === 'formula'"
           class="component__item-content index"
         >
@@ -280,7 +295,8 @@ export default {
       isInitializing: true,
       enableAlert: false,
       componentComplementaryInfo: null,
-      taskId: uuidv4()
+      taskId: uuidv4(),
+      wrapperSize: this.componentData.config.size
     }
   },
   computed: {
@@ -449,8 +465,8 @@ export default {
     },
     generateComponentGridStyle () {
       return {
-        'grid-column-end': `span ${this.componentData.config.size.column}`,
-        'grid-row-end': `span ${this.componentData.config.size.row}`
+        'grid-column-end': `span ${this.wrapperSize.column}`,
+        'grid-row-end': `span ${this.wrapperSize.row}`
       }
     }
   },
@@ -1092,4 +1108,12 @@ $direction-span: ('col': 12, 'row': 12);
   }
 }
 
+.component__item-wrapper-size {
+  input {
+    background-color: transparent;
+    border: 1px solid #ddd;
+    color: #fff;
+    width: 40px;
+  }
+}
 </style>
