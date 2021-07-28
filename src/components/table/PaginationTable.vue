@@ -193,10 +193,21 @@ export default {
       }
     },
     handleTableSort (column) {
-      console.log('column', column)
-      const dataColumnId = parseInt(column.prop)
-      const sortType = column.order
-      this.$emit('on-sort', { dataColumnId, sortType })
+      const dataColumnIndex = parseInt(column.prop)
+      let sortType = null
+
+      switch (column.order) {
+        case 'ascending':
+          sortType = 'ASC'
+          break
+        case 'descending':
+          sortType = 'DESC'
+          break
+        default:
+          sortType = null
+          break
+      }
+      this.$emit('on-sort', { dataColumnIndex, sortType })
     }
   }
 }
