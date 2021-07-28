@@ -160,7 +160,7 @@ export default {
       selectedSuggestionIndex: -1,
       /** @type {Suggester | null} */
       suggester: null,
-      updateSuggesterRequestFrameId: -1
+      requestAnimationFrameTaskId: -1
     }
   },
   computed: {
@@ -307,13 +307,13 @@ export default {
     document.addEventListener('click', this.autoHide, false)
     this.userQuestion = this.defaultQuestion || this.$route.query.question
     this.suggester = Vue.observable(new Suggester())
-    this.updateSuggesterRequestFrameId = requestAnimationFrame(this.updateSuggester)
+    this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
   },
   destroyed () {
     this.closeHelper()
     document.removeEventListener('click', this.autoHide, false)
     if (this.websocketHandler) this.closeWebSocketConnection()
-    cancelAnimationFrame(this.updateSuggesterRequestFrameId)
+    cancelAnimationFrame(this.requestAnimationFrameTaskId)
   },
   methods: {
     ...mapMutations('chatBot', ['clearCopiedColumnName']),
@@ -470,11 +470,13 @@ export default {
       this.isSuggestionBlockFocus = false
     },
     updateSuggester () {
-      if (this.suggester === null) return
-      const el = this.$refs.questionInput
-      this.suggester.setInputString(el.value)
-      this.suggester.setCaretGapIndex(el.selectionStart)
-      this.updateSuggesterRequestFrameId = requestAnimationFrame(this.updateSuggester)
+      const el = this.$refs.questionInput ?? null
+      if (el === null || this.suggester === null) return
+      this.suggester.update(el.value, el.selectionStart)
+    },
+    requestAnimationFrameTask () {
+      this.updateSuggester()
+      this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
     },
     autocompleteQuestion (needEnter = false) {
       if (this.currentSelectedSuggestionIndex === -1) return

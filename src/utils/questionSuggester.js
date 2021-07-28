@@ -69,6 +69,15 @@ export function replaceWith (fullStr, start, end, str) {
 }
 
 /**
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+export function trimRedundant (str) {
+  return str.replace(/\s+/g, ' ').trim()
+}
+
+/**
  * Define a keyword
  *
  * @param {Keyword} keyword
@@ -109,26 +118,27 @@ export class Suggester {
     /** @type {Keyword[]} */
     this._candidateKeywords = []
     /** @type {Suggestion[]} */
+    this._suggestions = []
+    /** @type {Suggestion[]} */
     this.suggestions = []
   }
 
-  setCaretGapIndex (value) {
-    if (value === this._caretGapIndex) return
-    this._caretGapIndex = value
-    this._update()
-  }
-
-  getInputString () {
+  get inputString () {
     return this._inputString
   }
 
-  setInputString (value) {
-    if (value === this._inputString) return
-    this._inputString = value
-    this._update()
-  }
+  /**
+   * Invoke suggester update
+   *
+   * @param {string} inputString
+   * @param {number} caretGapIndex
+   */
+  update (inputString, caretGapIndex) {
+    const hasChanged = inputString !== this._inputString || caretGapIndex !== this._caretGapIndex
+    this._inputString = inputString
+    this._caretGapIndex = caretGapIndex
+    if (!hasChanged) return
 
-  _update () {
     this._updateWords()
     this._updateEditingWord()
     this._updateNearestLeftSideWord()
@@ -208,8 +218,11 @@ export class Suggester {
 
   async _updateSuggestions () {
     const suggestions = []
-    this.suggestions = suggestions
-    if (this._candidateKeywords.length === 0) return
+    this._suggestions = suggestions
+    if (this._candidateKeywords.length === 0) {
+      this.suggestions = suggestions
+      return
+    }
     /** @type {Suggestion[]} */
     const result = (await Promise.all(
       this._candidateKeywords
@@ -220,8 +233,9 @@ export class Suggester {
     ))
       .flat()
       .sort((itemA, itemB) => itemB.result.score - itemA.result.score)
-    if (this.suggestions !== suggestions) return
+    if (this._suggestions !== suggestions) return
     suggestions.push(...result)
+    this.suggestions = suggestions
   }
 
   /**
