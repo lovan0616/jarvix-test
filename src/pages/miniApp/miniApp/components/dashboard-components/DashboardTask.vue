@@ -1,11 +1,12 @@
 <template>
-  <div
-    ref="component"
-    :class="[
+  <!-- :class="[
       `col-${componentData.config.size.column}`,
       `row-${componentData.config.size.row}`
-    ]"
+    ]" -->
+  <div
+    ref="component"
     class="component__item"
+    :style="generateComponentGridStyle"
   >
     <div class="component__item-inner-container">
       <spinner
@@ -445,6 +446,12 @@ export default {
           ...(this.componentData.anomalySettings && this.componentData.anomalySettings.length > 0 && formatAnomalySetting(this.componentData.anomalySettings))
         }
       }
+    },
+    generateComponentGridStyle () {
+      return {
+        'grid-column-end': `span ${this.componentData.config.size.column}`,
+        'grid-row-end': `span ${this.componentData.config.size.row}`
+      }
     }
   },
   watch: {
@@ -850,10 +857,10 @@ export default {
 
 <style lang="scss" scoped>
 /* 定義欄和列的尺寸 */
-$direction-size: ("col": 100%, "row": 100%);
+$direction-size: ('col': 100%, 'row': 100%);
 
 /* 定義每欄和每列要切幾等分 */
-$direction-span: ("col": 12, "row": 12);
+$direction-span: ('col': 12, 'row': 12);
 
 /* 依照已定義好的尺寸和等份，製作欄和列使用的 class */
 @each $direction, $size in $direction-size {
@@ -880,10 +887,10 @@ $direction-span: ("col": 12, "row": 12);
 }
 
 .component__item {
-  padding-right: 16px;
   border-radius: 5px;
-  padding-bottom: 16px;
   float: left;
+  // padding-bottom: 16px;
+  // padding-right: 16px;
   transition: all 0.2s linear;
 
   &-init-spinner {
@@ -893,28 +900,27 @@ $direction-span: ("col": 12, "row": 12);
   &-inner-container {
     background-color: #192323;
     border-radius: 5px;
-    padding: 16px;
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    padding: 16px;
+    width: 100%;
   }
 
   &-header {
-    display: flex;
-    justify-content: space-between;
-    height: 30px;
     align-items: center;
+    display: flex;
+    height: 30px;
+    justify-content: space-between;
     margin-bottom: 16px;
 
     .header-left {
       display: flex;
 
       .item-title {
-        color: #ddd;
-
         @include text-hidden;
 
+        color: #ddd;
         display: flex;
       }
     }
@@ -925,19 +931,19 @@ $direction-span: ("col": 12, "row": 12);
       z-index: 3;
 
       .component-property-box {
-        display: flex;
         align-items: center;
-        justify-content: flex-end;
         cursor: pointer;
+        display: flex;
+        justify-content: flex-end;
 
         .property__item {
-          height: 24px;
-          flex: 0 0 24px;
+          align-items: center;
           background-color: #474f4f;
           border: 1px solid #192323;
           border-radius: 50%;
           display: flex;
-          align-items: center;
+          flex: 0 0 24px;
+          height: 24px;
           justify-content: center;
           transition: 0.1s all cubic-bezier(1, -0.9, 0.89, 1.34);
 
@@ -965,22 +971,22 @@ $direction-span: ("col": 12, "row": 12);
       }
 
       .component-setting-box {
-        position: relative;
+        @include dropdown-select-controller;
+
+        align-items: center;
         color: $theme-color-primary;
+        cursor: pointer;
+        display: flex;
         flex: 0 0 30px;
         height: 30px;
-        display: flex;
         justify-content: center;
-        align-items: center;
+        position: relative;
         transition: 0.2s all ease;
-        cursor: pointer;
-
-        @include dropdown-select-controller;
 
         &:hover {
           background-color: $theme-color-primary;
-          color: #fff;
           border-radius: 4px;
+          color: #fff;
         }
 
         .dropdown-select {
@@ -989,9 +995,9 @@ $direction-span: ("col": 12, "row": 12);
 
           ::v-deep .dropdown-select-box {
             box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
-            top: 31px;
-            right: 0;
             left: unset;
+            right: 0;
+            top: 31px;
 
             &::before {
               right: 5px;
@@ -1014,33 +1020,33 @@ $direction-span: ("col": 12, "row": 12);
     }
 
     .icon-warning {
-      color: $theme-color-danger;
       animation: flash 1s infinite;
+      color: $theme-color-danger;
     }
   }
 
   &-content {
-    flex: 1;
-    min-height: 0;
-    display: flex;
     align-items: center;
+    display: flex;
+    flex: 1;
+    height: 100%;
     justify-content: center;
+    min-height: 0;
     overflow: auto;
     overflow: overlay;
-    height: 100%;
 
     ::v-deep .task,
     ::v-deep .task-component {
-      position: relative;
       height: 100%;
+      position: relative;
       width: 100%;
     }
 
     ::v-deep .no-result-block {
-      width: 100%;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+      width: 100%;
     }
 
     .no-result {
@@ -1051,14 +1057,14 @@ $direction-span: ("col": 12, "row": 12);
 
     &.index {
       ::v-deep .not-empty {
-        width: auto;
         max-width: 100%;
+        width: auto;
       }
 
       .index-unit {
-        font-weight: 600;
-        font-size: 36px;
         color: #2ad2e2;
+        font-size: 36px;
+        font-weight: 600;
         &.large { font-size: 36px; }
         &.middle { font-size: 24px; }
         &.small { font-size: 18px; }
@@ -1066,11 +1072,11 @@ $direction-span: ("col": 12, "row": 12);
       }
 
       .index-data {
-        display: flex;
         align-items: flex-end;
-        width: 100%;
+        display: flex;
         flex-wrap: wrap;
         justify-content: center;
+        width: 100%;
       }
     }
 

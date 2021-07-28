@@ -6,6 +6,7 @@
     class="custom-draggable-grid"
     ghost-class="dragging-ghost"
     @end="handleDragEnd()"
+    :style="settingStyles"
   >
     <slot />
   </draggable>
@@ -26,6 +27,24 @@ export default {
     disable: {
       type: Boolean,
       default: false
+    },
+    rowHeight: {
+      type: Number,
+      default: 30
+    },
+    gap: {
+      type: [Array, Number],
+      default: 10
+    }
+  },
+  computed: {
+    settingStyles () {
+      const gap = typeof this.gap === 'number' ? [this.gap, this.gap] : this.gap
+      return {
+        '--row-height': `${this.rowHeight}px`,
+        '--gap-x': `${gap[0]}px`,
+        '--gap-y': `${gap[1]}px`
+      }
     }
   },
   components: {
@@ -53,8 +72,9 @@ export default {
 
 .custom-draggable-grid {
   display: grid;
-  gap: 10px;
+  gap: var(--gap-x) var(--gap-y);
   grid-auto-flow: dense;
+  grid-auto-rows: var(--row-height);
   grid-template-columns: repeat(12, 1fr);
 
   @for $i from 1 through 12 {

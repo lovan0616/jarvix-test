@@ -346,6 +346,8 @@
                   :components="currentDashboard.components"
                   :finish-notice="$t('miniApp.component')"
                   :disabled="!isEditMode || currentDashboard.components.length === 1"
+                  :gap="26"
+                  :row-height="50"
                 >
                   <template #default>
                     <dashboard-task
@@ -422,6 +424,8 @@
       @close="closeCreateComponentDialog"
       @create="createComponent"
       @updateSetting="updateComponentSetting"
+      :gap="26"
+      :row-height="50"
     />
     <create-filter-dialog
       v-if="isShowCreateFilterDialog"

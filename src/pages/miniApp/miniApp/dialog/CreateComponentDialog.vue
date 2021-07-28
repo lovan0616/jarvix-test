@@ -315,13 +315,16 @@
             </div>
             <div class="setting__block-select-field">
               <label class="setting__block-select-label">{{ $t('miniApp.rowSpan') }}</label>
-              <default-select
+              <input
+                type="number"
                 v-model.number="currentComponent.config.size.row"
-                :option-list="rowSpanOption"
                 :placeholder="$t('miniApp.chooseRowSize')"
                 class="setting__block-select"
                 name="rowSpan"
-              />
+              >
+              <p v-if="predictComponentHeight">
+                高度約 = {{ predictComponentHeight }}px
+              </p>
             </div>
           </div>
         </div>
@@ -371,6 +374,14 @@ export default {
     controls: {
       type: Array,
       default: () => []
+    },
+    rowHeight: {
+      type: Number,
+      default: null
+    },
+    gap: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -523,6 +534,12 @@ export default {
           value: 'row'
         }
       ]
+    },
+    predictComponentHeight () {
+      if (this.rowHeight !== null && this.currentComponent.config.size.row > 0) {
+        return this.rowHeight * this.currentComponent.config.size.row + this.gap * (this.currentComponent.config.size.row - 1)
+      }
+      return null
     }
   },
   mounted () {
@@ -648,128 +665,150 @@ export default {
 
 <style lang="scss" scoped>
 .dialog {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  left: 0;
   overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+
   &__nav {
-    flex: 0 0 56px;
-    padding: 0 24px;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
-    border-bottom: 1px solid #232C2E;
+    border-bottom: 1px solid #232c2e;
+    display: flex;
+    flex: 0 0 56px;
+    justify-content: space-between;
+    padding: 0 24px;
+
     .nav--left {
-      display: flex;
       align-items: center;
+      display: flex;
+
       .icon-arrow {
-        cursor: pointer;
         color: $theme-color-primary;
+        cursor: pointer;
         margin-right: 20px;
       }
     }
+
     .nav--right {
       display: flex;
+
       .message {
+        color: #ffdf6f;
         font-size: 12px;
         line-height: 36px;
-        color: #FFDF6F;
         margin-right: 6px;
       }
     }
   }
+
   &__content {
+    display: flex;
     flex: 1;
     height: 0;
     overflow: auto;
     overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
-    display: flex;
 
     &--left {
-      position: relative;
+      border-right: 1px solid #232c2e;
       flex: 1;
       min-width: 0;
-      border-right: 1px solid #232C2E;
+      position: relative;
+
       .search-bar {
+        border-bottom: 1px solid #232c2e;
+        display: flex;
+        height: 60px;
+        padding: 8px 24px;
         position: relative;
         z-index: 4;
-        height: 60px;
-        display: flex;
-        padding: 8px 24px;
-        border-bottom: 1px solid #232C2E;
+
         .data-frame-select-block {
-          width: 300px;
           margin-right: 16px;
+          width: 300px;
         }
       }
     }
+
     &--right {
       flex: 0 0 280px;
+
       .setting {
         &__header {
+          align-items: center;
+          border-bottom: 1px solid #232c2e;
+          display: flex;
           height: 60px;
           padding: 16px 24px;
-          display: flex;
-          align-items: center;
-          border-bottom: 1px solid #232C2E;
+
           .svg-icon {
-            width: 16px;
             color: $theme-color-primary;
             margin-right: 12px;
+            width: 16px;
           }
         }
+
         &__content {
+          border-bottom: 1px solid #232c2e;
           padding: 16px 24px;
-          border-bottom: 1px solid #232C2E;
         }
+
         &__label-block {
+          color: #fff;
           display: flex;
           flex-wrap: wrap;
-          justify-content: space-between;
           font-size: 14px;
-          color: #FFFFFF;
           font-weight: 600;
+          justify-content: space-between;
+
           &-description {
+            color: #aaa;
             font-size: 12px;
-            color: #AAA;
             margin-top: 12px;
           }
         }
+
         &__block {
           ::v-deep .input-verify {
             .input-verify-text {
               margin-bottom: 10px;
             }
+
             .input-error.error-text {
               bottom: -10px;
             }
           }
         }
+
         &__block-select-field {
           margin-top: 8px;
         }
+
         &__block-select-label {
+          color: #aaa;
           display: block;
-          color: #AAAAAA;
-          font-weight: 600;
           font-size: 14px;
+          font-weight: 600;
           padding-top: 8px;
         }
+
         &__block-select {
           width: 100%;
+
           ::v-deep .el-input__inner {
+            border-bottom: 1px solid #fff;
             padding-left: 0;
-            border-bottom: 1px solid #FFFFFF;
           }
         }
+
         &__block-radio-groups {
           display: flex;
           font-size: 14px;
+
           .input-radio-group {
             &:last-of-type {
               margin-right: 0;
@@ -780,22 +819,22 @@ export default {
     }
 
     .preview-datasource {
-      height: calc(100vh - 56px - 60px);
-      position: absolute;
-      top: 60px;
-      right: 0;
-      left: 0;
       background: rgba(0, 0, 0, 0.89);
+      height: calc(100vh - 56px - 60px);
+      left: 0;
       overflow: auto;
       padding: 40px;
+      position: absolute;
+      right: 0;
       text-align: left;
+      top: 60px;
 
       &__close-btn {
-        position: absolute;
-        top: 32px;
-        right: 40px;
         color: #fff;
         font-size: 14px;
+        position: absolute;
+        right: 40px;
+        top: 32px;
       }
     }
   }
