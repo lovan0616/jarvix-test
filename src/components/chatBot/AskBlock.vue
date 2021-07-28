@@ -78,8 +78,8 @@
       @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
       @keydown.tab.exact.prevent="autocompleteQuestion(false)"
       @keypress.enter.exact.prevent="autocompleteQuestion(true)"
-      @focus="focusSuggestionBlock"
-      @blur="blurSuggestionBlock"
+      @focus.capture="focusSuggestionBlock"
+      @blur.capture="blurSuggestionBlock"
     >
       <div
         v-for="(suggestion, index) in suggestionList"
