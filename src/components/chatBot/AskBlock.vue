@@ -663,6 +663,7 @@ export default {
       &:hover,
       &:focus {
         background-color: #464a50;
+        outline: none;
       }
 
       .icon {
