@@ -76,7 +76,7 @@
                 <svg-icon
                   icon-class="sort-down"
                   class="arrow-icon"
-                  :class="{ 'arrow-up': isSortASC, 'active': isSortActive(index) }"
+                  :class="{ 'arrow-up': isSortASC(index), 'active': isSortActive(index) }"
                 />
               </div>
               <div
@@ -169,11 +169,7 @@ export default {
   computed: {
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     ...mapGetters('userManagement', ['hasPermission']),
-    ...mapState('dataSource', ['shouldDataFrameDataRefetchDataColumn']),
-    isSortASC () {
-      if (!this.sortOrders) return false
-      return this.sortOrders.sortType === 'ASC'
-    }
+    ...mapState('dataSource', ['shouldDataFrameDataRefetchDataColumn'])
   },
   watch: {
     dataFrameId (value) {
@@ -222,6 +218,10 @@ export default {
     isSortActive (index) {
       if (!this.sortOrders) return false
       return this.columnIdList[index] === this.sortOrders.dataColumnId
+    },
+    isSortASC (index) {
+      if (!this.sortOrders) return false
+      return this.sortOrders.sortType === 'ASC' && this.columnIdList[index] === this.sortOrders.dataColumnId
     },
     toggleShowSummaryInfo () {
       this.fixedIndex = false
@@ -484,18 +484,15 @@ export default {
       }
 
       .arrow-icon {
-        color: #BDBDBD;
+        fill: #BDBDBD;
         margin-left: auto;
         font-size: x-large;
         padding: 5px;
-
         &.arrow-up {
           transform: rotateX(180deg);
         }
-
         &.active {
-          filter: brightness(0) saturate(100%) invert(73%) sepia(80%) saturate(375%) hue-rotate(140deg) brightness(94%) contrast(99%);
-          color: $theme-color-primary;
+          fill: $theme-color-primary;
         }
       }
     }
