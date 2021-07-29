@@ -146,8 +146,8 @@ export default {
       const equipmentFilter = item => item.equipment === this.selectedEquipment
       const operationFilter = item => item.operation === this.selectedOperation
       return [
-        ...(Boolean(this.selectedEquipment) && [equipmentFilter]),
-        ...(Boolean(this.selectedOperation) && [operationFilter])
+        ...(this.selectedEquipment ? [equipmentFilter] : []),
+        ...(this.selectedOperation ? [operationFilter] : [])
       ]
     },
     filteredGanttChartDataList () {
@@ -333,31 +333,41 @@ export default {
     }
   }
 }
-::v-deep .schedule-gantt-chart  {
+
+::v-deep .schedule-gantt-chart {
   $label-width: 300px;
-  .gantt-leftbar-wrapper, .gantt-header-title {
+
+  .gantt-leftbar-wrapper,
+  .gantt-header-title {
     width: $label-width !important;
   }
+
   .gantt-leftbar {
     min-height: 100px;
   }
+
   .gantt-scroll-x {
     margin-left: $label-width !important;
     width: calc(100% - #{$label-width}) !important;
   }
+
   .gantt-header-title {
     display: flex;
   }
+
   .gantt-container {
     width: 100% !important;
     max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
+
     .gantt-timeline {
       margin-left: -30px !important;
     }
+
     .gantt-blocks {
       height: 100% !important;
+
       .gantt-block:only-child {
         display: flex;
         align-items: center;
@@ -370,10 +380,12 @@ export default {
       }
     }
   }
+
   .gantt-scroll-y {
     display: none;
   }
 }
+
 ::v-deep .title-select {
   .el-input__inner {
     text-align: center;

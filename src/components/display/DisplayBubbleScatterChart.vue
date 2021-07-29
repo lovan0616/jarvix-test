@@ -176,13 +176,13 @@ export default {
       // 準備所有群的資料
       const groupList = [
         ...this.dataset.buckets,
-        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.dataset.outliersBuckets])
+        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) ? [this.dataset.outliersBuckets] : [])
       ]
 
       // 準備所有欄位名稱
       const columns = [
         ...this.dataset.columns,
-        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.$t('clustering.outlier')])
+        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) ? [this.$t('clustering.outlier')] : [])
       ]
 
       for (let i = 0; i < groupList.length; i++) {
@@ -250,7 +250,7 @@ export default {
       // 設定 legend 顯示內容
       chartAddon.legend.data = [
         ...this.dataset.columns,
-        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) && [this.$t('clustering.outlier')])
+        ...((this.dataset.outliersBuckets && this.dataset.outliersBuckets.length > 0) ? [this.$t('clustering.outlier')] : [])
       ]
 
       // 目前不提供觀看原始資料的功能
@@ -312,7 +312,7 @@ export default {
 .display-bubble-scatter-chart {
   .description {
     margin-top: 40px;
-    background: #141C1D;
+    background: #141c1d;
     border-radius: 8px;
     padding: 10px 20px;
 

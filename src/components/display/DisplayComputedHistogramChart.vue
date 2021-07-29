@@ -130,7 +130,7 @@ export default {
         // 依照給定要畫的點數量依序產生的 x 軸 index
         ...axisTickList,
         // 適時在最後補值來確保 x 軸最後一個值對齊資料最大值
-        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) && [xAxisMax])
+        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) ? [xAxisMax] : [])
       ]
     },
     chartOption () {

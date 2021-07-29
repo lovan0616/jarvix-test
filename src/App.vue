@@ -10,7 +10,7 @@
       mode="out-in"
     >
       <router-view
-        v-if="init"
+        v-if="init && !isRouteLoading"
         :key="locale"
       />
       <spinner
@@ -34,6 +34,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['isRouteLoading']),
     ...mapState('setting', ['locale', 'languageDefault']),
     getLang () {
       return this.locale.split('-')[0]

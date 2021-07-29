@@ -777,11 +777,11 @@ export default {
           // 匯集所有欄位
           const columnList = [
             ...(cur.categoryDataColumnList || []),
-            ...(cur.dataColumn !== null && [cur.dataColumn]),
+            ...(cur.dataColumn !== null ? [cur.dataColumn] : []),
             ...((cur.filterList !== null &&
               cur.filterList.map((filter) => filter.dataColumn)) ||
               []),
-            ...(cur.dateTime !== null && [cur.dateTime.dataColumn])
+            ...(cur.dateTime !== null ? [cur.dateTime.dataColumn] : [])
           ]
           // 將不重複的欄位存起來
           columnList.forEach((column) => {

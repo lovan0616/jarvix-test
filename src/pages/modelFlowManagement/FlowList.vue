@@ -69,20 +69,16 @@
   </div>
 </template>
 <script>
-import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import UploadDialog from './flowExecution/UploadDialog'
-import DecideDialog from '@/components/dialog/DecideDialog'
-import FlowCard from './components/FlowCard'
 import { getModelFlowList } from '@/API/ModelFlow'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'FlowList',
   components: {
-    EmptyInfoBlock,
-    UploadDialog,
-    FlowCard,
-    DecideDialog
+    EmptyInfoBlock: () => import('@/components/EmptyInfoBlock'),
+    UploadDialog: () => import('./flowExecution/UploadDialog'),
+    DecideDialog: () => import('@/components/dialog/DecideDialog'),
+    FlowCard: () => import('./components/FlowCard')
   },
   data () {
     return {

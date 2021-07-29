@@ -131,7 +131,7 @@ export function getDataFrameData (dataFrameId, selectedColumnList, restrictions,
     data: {
       selectedColumnList,
       restrictions,
-      sortOrders: sortOrders ? [...sortOrders] : null
+      sortOrders: sortOrders ? new Array(sortOrders) : null
     },
     cancelToken
   })
