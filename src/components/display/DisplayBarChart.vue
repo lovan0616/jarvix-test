@@ -1,13 +1,18 @@
 <template>
   <div class="display-basic-chart">
-    <v-echart
-      :style="chartStyle"
-      :options="options"
-      auto-resize
-      @magictypechanged="magicTypeChanged"
-      @brushselected="brushRegionSelected"
-      @click="chartClicked"
-    />
+    <div class="chart-wrapper">
+      <v-echart
+        :style="chartStyle"
+        :options="options"
+        auto-resize
+        @magictypechanged="magicTypeChanged"
+        @brushselected="brushRegionSelected"
+        @click="chartClicked"
+      />
+      <p class="chart-wrapper__description">
+        P-Value小於0.05表示特定PRT對Cluster的分配和所有PRT對Cluster的分配有顯著差異, 其中108A的檢定結果差異最顯著。
+      </p>
+    </div>
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"

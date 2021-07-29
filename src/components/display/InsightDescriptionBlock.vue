@@ -49,8 +49,6 @@ export default {
 .description {
   width: 100%;
   margin-top: 16px;
-  background: #141C1D;
-  border-radius: 8px;
   padding: 10px 20px;
 
   &--warning {
@@ -58,7 +56,7 @@ export default {
   }
 
   &__title {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     line-height: 24px;
     color: #EEE;
