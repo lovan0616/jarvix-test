@@ -36,8 +36,8 @@
             @keyup.shift.ctrl.72="toggleAskHelper()"
             @keyup.shift.ctrl.90="toggleAlgorithm()"
             @keyup.shift.ctrl.88="toggleWebSocketConnection()"
-            @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
-            @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
+            @keydown.up.exact="handleKeydownMoveSuggestionCursor('up', $event)"
+            @keydown.down.exact="handleKeydownMoveSuggestionCursor('down', $event)"
             @focus="focusInput"
             @blur="blurInput"
           >
@@ -84,8 +84,8 @@
       ref="suggestionBlock"
       :class="{hide: !isSuggestionBlockVisible, 'has-filter': hasFilter}"
       class="suggestion-block"
-      @keydown.up.exact.prevent="currentSelectedSuggestionIndex -= 1"
-      @keydown.down.exact.prevent="currentSelectedSuggestionIndex += 1"
+      @keydown.up.exact.prevent="handleKeydownMoveSuggestionCursor('up')"
+      @keydown.down.exact.prevent="handleKeydownMoveSuggestionCursor('down')"
       @keydown.tab.exact.prevent="autocompleteSuggestionQuestion(false)"
       @keypress.enter.exact.prevent="autocompleteSuggestionQuestion(true)"
       @focus.capture="focusSuggestionBlock"
@@ -161,6 +161,8 @@ export default {
       newParserMode: localStorage.getItem('newParser') === 'true',
       isInputFocus: false,
       isSuggestionBlockFocus: false,
+      isCompositionInputting: false,
+      compositionInputStatusHandler: null,
       selectedSuggestionIndex: -1,
       /** @type {Suggester | null} */
       suggester: null,
@@ -320,10 +322,14 @@ export default {
   },
   mounted () {
     this.userQuestion = this.defaultQuestion || this.$route.query.question
+    this.$refs.questionInput.addEventListener('compositionstart', this.handleCompositionInputStart)
+    this.$refs.questionInput.addEventListener('compositionend', this.handleCompositionInputEnd)
     this.suggester = Vue.observable(new Suggester())
     this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
   },
   destroyed () {
+    this.$refs.questionInput.removeEventListener('compositionstart', this.handleCompositionInputStart)
+    this.$refs.questionInput.removeEventListener('compositionend', this.handleCompositionInputEnd)
     this.closeAskHelper()
     if (this.websocketHandler) this.closeWebSocketConnection()
     cancelAnimationFrame(this.requestAnimationFrameTaskId)
@@ -485,6 +491,22 @@ export default {
     blur () {
       this.$refs.questionInput.focus()
       this.$refs.questionInput.blur()
+    },
+    handleCompositionInputStart () {
+      this.isCompositionInputting = true
+    },
+    handleCompositionInputEnd () {
+      this.isCompositionInputting = false
+    },
+    handleKeydownMoveSuggestionCursor (direction, event) {
+      if (this.isCompositionInputting) return
+
+      event?.preventDefault?.()
+      const availableDirections = ['up', 'down']
+      if (!availableDirections.includes(direction)) return
+      this.currentSelectedSuggestionIndex = direction === 'up'
+        ? this.currentSelectedSuggestionIndex - 1
+        : this.currentSelectedSuggestionIndex + 1
     },
     updateSuggester () {
       const el = this.$refs.questionInput ?? null
