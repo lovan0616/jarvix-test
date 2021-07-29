@@ -124,7 +124,7 @@ import AskHelperDialog from './AskHelperDialog'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { Suggester, replaceWith } from '@/utils/questionSuggester'
+import { Suggester, replaceWith, trimRedundant } from '@/utils/questionSuggester'
 
 /**
  * @typedef {Object} SuggestionListItem
@@ -236,6 +236,7 @@ export default {
       // History suggestion items
       /** @type {SuggestionListItem[]} */
       const historySuggestionItems = [...new Set(this.historyQuestionList.map(history => history.question))]
+        .filter((question) => this.userQuestion ? question.includes(trimRedundant(this.userQuestion)) : true)
         .map((question) => {
           /** @type {SuggestionListItem} */
           const result = {
