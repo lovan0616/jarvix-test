@@ -36,12 +36,9 @@ export default {
     commit('result/updateCurrentResultId', data.resultId, { root: true })
     return askSpecificType(data, cancelToken)
   },
-  getComponentList ({ dispatch, state, commit, rootState }, data) {
+  getComponentList ({ state }, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
-    let displayInsight = rootState.result.isDisplayInsight
-    // 預設request要能夠取回recommend_insight
-    commit('result/updateIsDisplayInsight', true, { root: true })
-    return getComponentList(data, cancelToken, displayInsight)
+    return getComponentList(data, cancelToken)
   },
   getComponentData ({ dispatch }, data) {
     return getComponentData(data)

@@ -50,14 +50,15 @@ export function refreshResult (data) {
 
 /**
  * get component list
+ * @param {Object} resultData - 包含resultId, displayInsight(optional)
  */
-export function getComponentList (resultId, cancelFunction, displayInsight) {
+export function getComponentList (resultData, cancelFunction) {
   return request({
-    url: `/ask/componentList/${resultId}`,
+    url: `/ask/componentList/${resultData.resultId}`,
     method: 'GET',
     cancelToken: cancelFunction,
     params: {
-      displayInsight: displayInsight
+      displayInsight: resultData.hasOwnProperty('displayInsight') ? resultData.displayInsight : true
     }
   })
 }

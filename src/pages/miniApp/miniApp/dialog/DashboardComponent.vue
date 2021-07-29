@@ -666,7 +666,7 @@ export default {
     getComponent (resultId) {
       window.clearTimeout(this.timeoutFunction)
       this.$store
-        .dispatch('chatBot/getComponentList', resultId)
+        .dispatch('chatBot/getComponentList', { resultId })
         .then((componentResponse) => {
           switch (componentResponse.status) {
             case 'Process':

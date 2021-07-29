@@ -8,8 +8,7 @@ export default {
     displayFactorIndex: 0,
     currentResultId: null,
     currentResultInfo: null,
-    isModelResult: false,
-    isDisplayInsight: true
+    isModelResult: false
   },
   mutations
 }
