@@ -37,9 +37,13 @@
           :min-column-width="'270px'"
           :fixed-index="fixedIndex"
           @change-page="updatePage"
+          @on-sort="handleTableSort"
         >
           <template #columns-header="{ column, index }">
-            <div class="header-block">
+            <div
+              class="header-block"
+              @click="checkClickTarget"
+            >
               <div class="header">
                 <span
                   v-if="showColumnSummaryRow"
@@ -63,12 +67,17 @@
                     slot="label"
                     :visible-arrow="false"
                     :enterable="false"
-                    :content="`${column.titles[index]}`"
+                    :content="$t('etl.clickColumnHeaderToCopy', { title: column.titles[index] })"
                     placement="bottom-start"
                   >
                     <span>{{ column.titles[index] }}</span>
                   </el-tooltip>
                 </span>
+                <svg-icon
+                  icon-class="sort-down"
+                  class="arrow-icon"
+                  :class="{ 'arrow-up': isSortASC, 'active': isSortActive(index) }"
+                />
               </div>
               <div
                 v-show="showDataSummary"
@@ -110,6 +119,7 @@ import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumn
 import EmptyInfoBlock from './EmptyInfoBlock'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'DataFrameData',
@@ -151,18 +161,25 @@ export default {
       tableSummaryList: [],
       timeoutFunction: null,
       showDataSummary: true,
-      fixedIndex: true
+      fixedIndex: true,
+      sortOrders: null,
+      columnIdList: []
     }
   },
   computed: {
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     ...mapGetters('userManagement', ['hasPermission']),
-    ...mapState('dataSource', ['shouldDataFrameDataRefetchDataColumn'])
+    ...mapState('dataSource', ['shouldDataFrameDataRefetchDataColumn']),
+    isSortASC () {
+      if (!this.sortOrders) return false
+      return this.sortOrders.sortType === 'ASC'
+    }
   },
   watch: {
     dataFrameId (value) {
       this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
+      this.setColumnIdList(value)
     },
     askCondition: {
       deep: true,
@@ -184,17 +201,28 @@ export default {
         this.isLoading = true
         this.fetchDataFrameData(this.dataFrameId, 0, true, false)
       }
+    },
+    sortOrders: {
+      deep: true,
+      handler () {
+        this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
+      }
     }
   },
   mounted () {
     this.isLoading = true
     this.fetchDataFrameData(this.dataFrameId, 0, true)
+    this.setColumnIdList(this.dataFrameId)
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     ...mapMutations('chatBot', ['setCopiedColumnName']),
+    isSortActive (index) {
+      if (!this.sortOrders) return false
+      return this.columnIdList[index] === this.sortOrders.dataColumnId
+    },
     toggleShowSummaryInfo () {
       this.fixedIndex = false
       this.showDataSummary = !this.showDataSummary
@@ -203,7 +231,7 @@ export default {
         this.fixedIndex = true
       })
     },
-    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
+    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false, sortOrders = null) {
       if (resetPagination) {
         this.isLoading = true
         this.dataSourceTableData = null
@@ -214,7 +242,7 @@ export default {
       if (isOnlyFetchSummary || resetPagination) window.clearTimeout(this.timeoutFunction)
 
       // 依照條件取得部分或全部的資料表資訊
-      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary })
+      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary, sortOrders })
         .then(res => {
           const watingTime = 10000
 
@@ -326,7 +354,8 @@ export default {
       }
     },
     updatePage (page) {
-      this.fetchDataFrameData(this.dataFrameId, page - 1)
+      this.pagination.currentPage = page - 1
+      this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
     },
     fallbackCopyTextToClipboard (value) {
       const input = document.createElement('input')
@@ -371,6 +400,24 @@ export default {
       // this.setCopiedColumnName(value)
       // 純複製到剪貼簿功能
       this.copyTextToClipboard(value)
+    },
+    handleTableSort ({ dataColumnIndex, sortType }) {
+      if (!sortType) {
+        this.sortOrders = null
+        return
+      }
+      // 根據index從columnIdList中取出column id
+      const dataColumnId = this.columnIdList[dataColumnIndex]
+      this.sortOrders = { dataColumnId, sortType }
+    },
+    checkClickTarget (e) {
+      if (!e.target.classList.contains('arrow-icon')) e.stopPropagation()
+    },
+    async setColumnIdList (dataFrameId) {
+      if (dataFrameId) {
+        const response = await getDataFrameColumnInfoById(dataFrameId)
+        this.columnIdList = response.map(column => column.id)
+      }
     }
   }
 }
@@ -421,6 +468,7 @@ export default {
       padding: 10px;
       border-bottom: 1px solid #515959;
       display: flex;
+      align-items: center;
 
       .icon {
         width: 20px;
@@ -429,11 +477,26 @@ export default {
       }
 
       .text {
-        width: calc(100% - 25px);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         cursor: pointer;
+      }
+
+      .arrow-icon {
+        color: #BDBDBD;
+        margin-left: auto;
+        font-size: x-large;
+        padding: 5px;
+
+        &.arrow-up {
+          transform: rotateX(180deg);
+        }
+
+        &.active {
+          filter: brightness(0) saturate(100%) invert(73%) sepia(80%) saturate(375%) hue-rotate(140deg) brightness(94%) contrast(99%);
+          color: $theme-color-primary;
+        }
       }
     }
     .summary {

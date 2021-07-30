@@ -619,7 +619,8 @@
     "columnSelected": "Number of columns selected",
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table.",
     "isDistributed": "Distributed",
-    "distributedColumnName": "DistributedColumnName"
+    "distributedColumnName": "DistributedColumnName",
+    "clickColumnHeaderToCopy": "Click {title} to copy"
   },
   "model": {
     "newModel": "New Model",
