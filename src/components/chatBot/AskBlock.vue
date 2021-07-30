@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{'is-focus': isFocus}"
+    :class="{'is-focus': isInputFocus}"
     class="ask-container"
   >
     <div class="ask-block">
@@ -19,34 +19,25 @@
           class="parser-select"
         />
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
-        <div
-          class="question-input-container"
-          :class="{preview: currentSelectedSuggestionIndex !== -1}"
+        <input
+          ref="questionInput"
+          :class="{ 'disabled': availableDataSourceList.length === 0 }"
+          :name="new Date().getTime()"
+          :placeholder="$t('editing.askPlaceHolder')"
+          :disabled="availableDataSourceList.length === 0"
+          v-model.trim="currentUserQuestionPreview"
+          class="question-input input"
+          autocomplete="off"
+          @keyup.shift.ctrl.72="toggleAskHelper()"
+          @keyup.shift.ctrl.90="toggleAlgorithm()"
+          @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+          @keydown.up.exact="handleKeydownMoveSuggestionCursor('up', $event)"
+          @keydown.down.exact="handleKeydownMoveSuggestionCursor('down', $event)"
+          @keydown.tab.exact.prevent="autocompleteSuggestionQuestion(false)"
+          @keypress.enter.exact.prevent="autocompleteSuggestionQuestion(true)"
+          @focus="handleInputFocus"
+          @blur="handleInputBlur"
         >
-          <input
-            ref="questionInput"
-            :class="{ 'disabled': availableDataSourceList.length === 0 }"
-            :name="new Date().getTime()"
-            :placeholder="$t('editing.askPlaceHolder')"
-            :disabled="availableDataSourceList.length === 0"
-            v-model.trim="userQuestion"
-            class="question-input input"
-            autocomplete="off"
-            @keypress.enter.prevent="submitQuestion"
-            @keyup.shift.ctrl.72="toggleAskHelper()"
-            @keyup.shift.ctrl.90="toggleAlgorithm()"
-            @keyup.shift.ctrl.88="toggleWebSocketConnection()"
-            @keydown.up.exact="handleKeydownMoveSuggestionCursor('up', $event)"
-            @keydown.down.exact="handleKeydownMoveSuggestionCursor('down', $event)"
-            @focus="focusInput"
-            @blur="blurInput"
-          >
-          <input
-            class="question-input input question-input-preview"
-            :value="currentSelectedSuggestionText"
-            disabled
-          >
-        </div>
         <a
           href="javascript:void(0);"
           class="clean-btn"
@@ -84,17 +75,12 @@
       ref="suggestionBlock"
       :class="{hide: !isSuggestionBlockVisible, 'has-filter': hasFilter}"
       class="suggestion-block"
-      @keydown.up.exact.prevent="handleKeydownMoveSuggestionCursor('up')"
-      @keydown.down.exact.prevent="handleKeydownMoveSuggestionCursor('down')"
-      @keydown.tab.exact.prevent="autocompleteSuggestionQuestion(false)"
-      @keypress.enter.exact.prevent="autocompleteSuggestionQuestion(true)"
-      @focus.capture="focusSuggestionBlock"
-      @blur.capture="blurSuggestionBlock"
     >
       <div
         v-for="(suggestion, index) in suggestionList"
         :key="`suggestion-${index}`"
         class="suggestion"
+        :class="{ focus: index === currentSelectedSuggestionIndex }"
         @click="fillInQuestion(suggestion.question, true, false)"
         tabindex="0"
       >
@@ -160,7 +146,6 @@ export default {
       websocketHandler: null,
       newParserMode: localStorage.getItem('newParser') === 'true',
       isInputFocus: false,
-      isSuggestionBlockFocus: false,
       isCompositionInputting: false,
       compositionInputStatusHandler: null,
       selectedSuggestionIndex: -1,
@@ -175,11 +160,8 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList', 'dataFrameId']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
-    isFocus () {
-      return this.isInputFocus || this.isSuggestionBlockFocus
-    },
     isSuggestionBlockVisible () {
-      return this.isFocus && this.suggestionList.length > 0 && !this.isShowAskHelper
+      return this.isInputFocus && this.suggestionList.length > 0 && !this.isShowAskHelper
     },
     languageList () {
       return this.parserLanguageList.map(option => {
@@ -203,6 +185,16 @@ export default {
     dataSourceIdAndDataFrameId () {
       return `${this.dataSourceId}/${this.dataFrameId}`
     },
+    currentUserQuestionPreview: {
+      get () {
+        return this.suggestionList[this.currentSelectedSuggestionIndex]?.question ??
+          this.userQuestion
+      },
+      set (value) {
+        this.currentSelectedSuggestionIndex = -1
+        this.userQuestion = value
+      }
+    },
     currentSelectedSuggestionIndex: {
       get () {
         return this.isSuggestionBlockVisible
@@ -223,19 +215,11 @@ export default {
         }
         this.selectedSuggestionIndex = value
 
-        let el
-        if (value === -1) {
-          el = this.$refs.questionInput
-        } else {
-          el = this.$refs.suggestionBlock.querySelectorAll('.suggestion')[value]
+        if (value !== -1) {
+          this.$refs.suggestionBlock.querySelectorAll('.suggestion')[value].focus()
+          this.$refs.questionInput.focus()
         }
-        el.focus()
       }
-    },
-    currentSelectedSuggestionText () {
-      return this.currentSelectedSuggestionIndex === -1
-        ? ''
-        : this.suggestionList[this.currentSelectedSuggestionIndex].question
     },
     suggestionList () {
       // History suggestion items
@@ -452,9 +436,9 @@ export default {
     fillInQuestion (question, submit, focusAfterFillIn) {
       this.userQuestion = question
       if (focusAfterFillIn) {
-        this.focus()
+        this.focusInput()
       } else {
-        this.blur()
+        this.blurInput()
       }
 
       if (submit) {
@@ -462,7 +446,10 @@ export default {
       }
     },
     autocompleteSuggestionQuestion (submit) {
-      if (this.currentSelectedSuggestionIndex === -1) return
+      if (this.currentSelectedSuggestionIndex === -1) {
+        if (submit) this.submitQuestion()
+        return
+      }
       const { question } = this.suggestionList[this.currentSelectedSuggestionIndex]
       this.fillInQuestion(question, submit, !submit)
       this.currentSelectedSuggestionIndex = -1
@@ -488,25 +475,17 @@ export default {
     toggleAlgorithm () {
       this.updateIsUseAlgorithm(!this.isUseAlgorithm)
     },
-    focusInput () {
+    handleInputFocus () {
       this.isInputFocus = true
       this.openAskInMemory()
-      this.currentSelectedSuggestionIndex = -1
     },
-    blurInput () {
+    handleInputBlur () {
       this.isInputFocus = false
     },
-    focusSuggestionBlock () {
-      this.isSuggestionBlockFocus = true
-    },
-    blurSuggestionBlock () {
-      this.isSuggestionBlockFocus = false
-    },
-    focus () {
+    focusInput () {
       this.$refs.questionInput.focus()
     },
-    blur () {
-      this.$refs.questionInput.focus()
+    blurInput () {
       this.$refs.questionInput.blur()
     },
     handleCompositionInputStart () {
@@ -544,7 +523,7 @@ export default {
     },
     updateSuggester () {
       const el = this.$refs.questionInput ?? null
-      if (el === null || this.suggester === null) return
+      if (el === null || this.suggester === null || this.currentSelectedSuggestionIndex !== -1) return
       this.suggester.update(el.value, el.selectionStart)
     },
     requestAnimationFrameTask () {
@@ -614,46 +593,30 @@ export default {
       }
     }
 
-    .question-input-container {
+    .question-input {
+      border-bottom: none;
       flex-basis: calc(100% - 65px);
-      height: 100%;
-      position: relative;
+      font-size: 14px;
+      height: 38px;
+      line-height: 36px;
+      overflow: auto;
+      padding: 0 10px;
+      padding-right: 30px;
+      width: 100%;
 
-      .question-input {
-        border-bottom: none;
-        font-size: 14px;
-        height: 38px;
-        left: 0;
-        line-height: 36px;
-        overflow: auto;
-        padding: 0 10px;
-        padding-right: 30px;
-        position: absolute;
-        top: 0;
-        width: 100%;
+      &::placeholder {
+        opacity: 0.5;
+      }
 
+      &:disabled {
         &::placeholder {
-          opacity: 0.5;
+          opacity: 0.15;
         }
 
-        &:disabled {
-          &::placeholder {
-            opacity: 0.15;
-          }
-
-          & ~ .ask-btn,
-          & ~ .clean-btn {
-            opacity: 0.15;
-          }
+        & ~ .ask-btn,
+        & ~ .clean-btn {
+          opacity: 0.15;
         }
-      }
-
-      .question-input-preview {
-        pointer-events: none;
-      }
-
-      &.preview .question-input:not(.question-input-preview) {
-        opacity: 0;
       }
     }
 
@@ -759,7 +722,7 @@ export default {
       padding: 10px 18px;
 
       &:hover,
-      &:focus {
+      &.focus {
         background-color: #464a50;
         outline: none;
       }
