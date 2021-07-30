@@ -526,6 +526,7 @@ export default {
         : this.currentSelectedSuggestionIndex + 1
     },
     async setupSuggester () {
+      if (this.dataSourceIdAndDataFrameId.includes('null')) return
       this.suggester = null
       const knownTerms = (await Promise.all([
         // columns
