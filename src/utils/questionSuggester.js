@@ -1,47 +1,39 @@
-import store from '@/store'
-import { dataValueSearch } from '@/API/DataSource'
 import { Fzf } from 'fzf'
 
 /**
- * @typedef {Object} Word
+ * @typedef {'unknown' | 'dataColumn' | 'dataValue'} TermType
+ */
+
+/**
+ * @typedef {Object} Term
+ * @property {TermType} type
  * @property {string} value
+ */
+
+/**
+ * @typedef {'known' | 'unknown'} TokenType
+ */
+
+/**
+ * @typedef {Object} Token
+ * @property {TokenType} type
+ * @property {Term} value
  * @property {number} startGapIndex
  * @property {number} endGapIndex
  */
 
 /**
- * @typedef {Object} Keyword
- * @property {Word[]} words
- */
-
-/**
  * @typedef {Object} SuggestionResult
- * @property {string} value
+ * @property {Term} value
  * @property {number[]} positions
  * @property {number} score
  */
 
 /**
  * @typedef {Object} Suggestion
- * @property {Keyword} keyword
+ * @property {Token} token
  * @property {SuggestionResult} result
  */
-
-/**
- * @callback GetSuggestionsByKeyword
- * @param {Keyword} keyword
- * @returns {Promise<Suggestion[]>}
- */
-
-/**
- * Check if `char` is match "\s" character
- *
- * @param {string} char
- * @returns {boolean}
- */
-function isSpaceChar (char) {
-  return /\s/.test(char)
-}
 
 /**
  * Check if `num` is between [`min`, `max`]
@@ -78,15 +70,28 @@ export function trimRedundant (str) {
 }
 
 /**
- * Define a keyword
+ * Define a term
  *
- * @param {Keyword} keyword
- * @return {Keyword}
+ * @param {Term} term
+ * @returns {Term}
  */
-export function defineKeyword (keyword) {
+export function defineTerm (term) {
   return {
-    ...keyword,
-    toString: () => keyword.words.map(w => w.value).join(' ')
+    ...term,
+    toString: () => term.value.toString()
+  }
+}
+
+/**
+ * Define a token
+ *
+ * @param {Token} token
+ * @returns {Token}
+ */
+function defineToken (token) {
+  return {
+    ...token,
+    toString: () => token.value.toString()
   }
 }
 
@@ -99,32 +104,37 @@ export function defineKeyword (keyword) {
 export function defineSuggestion (suggestion) {
   return {
     ...suggestion,
-    toString: () => suggestion.value
+    toString: () => suggestion.result.value.toString()
   }
 }
 
 export class Suggester {
-  constructor () {
+  /**
+   * @typedef {Object} Params
+   * @property {Term[]} knownTerms
+   */
+  /**
+   * @param {Params} params
+   */
+  constructor ({ knownTerms = [] } = {}) {
+    /** @type {Term[]} */
+    this._knownTerms = knownTerms
     /** @type {number} */
     this._caretGapIndex = 0
     /** @type {string} */
     this._inputString = ''
-    /** @type {Word[]} */
-    this._words = []
-    /** @type {Word | null} */
-    this._editingWord = null
-    /** @type {Word | null} */
-    this._nearestLeftSideWord = null
-    /** @type {Keyword[]} */
-    this._candidateKeywords = []
+    /** @type {Token[]} */
+    this._tokens = []
+    /** @type {Token | null} */
+    this._editingToken = null
     /** @type {Suggestion[]} */
     this._suggestions = []
     /** @type {Suggestion[]} */
     this.suggestions = []
   }
 
-  get inputString () {
-    return this._inputString
+  get tokens () {
+    return this._tokens
   }
 
   /**
@@ -139,130 +149,104 @@ export class Suggester {
     this._caretGapIndex = caretGapIndex
     if (!hasChanged) return
 
-    this._updateWords()
-    this._updateEditingWord()
-    this._updateNearestLeftSideWord()
-    this._updateCandidateKeywords()
+    this._updateTokens()
+    this._updateEditingToken()
     this._updateSuggestions()
   }
 
-  _updateWords () {
-    const inputString = this._inputString
-    /** @type {Word[]} */
-    const words = []
-    for (let i = 0; i < inputString.length; i++) {
-      const char = inputString[i]
-      let lastWord = words.slice(-1)[0] ?? null
-      if (isSpaceChar(char)) {
-        if (lastWord === null || lastWord.value.length === 0) continue
-        words.push({
-          value: '',
-          startGapIndex: -1,
-          endGapIndex: -1
-        })
-      } else {
-        if (lastWord === null) {
-          words.push({
-            value: '',
-            startGapIndex: -1,
-            endGapIndex: -1
-          })
-          lastWord = words.slice(-1)[0] ?? null
-        }
-        if (lastWord.startGapIndex === -1) lastWord.startGapIndex = i
-        lastWord.endGapIndex = i + 1
-        lastWord.value += char
-      }
-    }
-    const lastWord = words.slice(-1)[0] ?? null
-    if (lastWord !== null && lastWord.value.length === 0) {
-      words.length -= 1
-    }
-    this._words = words
-  }
-
-  _updateEditingWord () {
-    const result = this._words.find((word) => between(word.startGapIndex, word.endGapIndex, this._caretGapIndex))
-    this._editingWord = result ?? null
-  }
-
-  _updateNearestLeftSideWord () {
-    const result = this._words
-      .filter((word) => word.endGapIndex < this._caretGapIndex)
-      .pop()
-    this._nearestLeftSideWord = result ?? null
-  }
-
-  _updateCandidateKeywords () {
-    // TODO: Need a better solution
-    /** @type {Keyword[]} */
-    let result = []
-    if (this._nearestLeftSideWord !== null && this._editingWord === null) {
-      result = [
-        defineKeyword({ words: [this._nearestLeftSideWord] })
-      ]
-    } else if (this._nearestLeftSideWord === null && this._editingWord !== null) {
-      result = [
-        defineKeyword({ words: [this._editingWord] })
-      ]
-    } else if (this._nearestLeftSideWord !== null && this._editingWord !== null) {
-      result = [
-        defineKeyword({ words: [this._editingWord] }),
-        defineKeyword({ words: [this._nearestLeftSideWord, this._editingWord] })
-      ]
-    } else {
-      result = []
-    }
-    this._candidateKeywords = result
-  }
-
-  async _updateSuggestions () {
-    const suggestions = []
-    this._suggestions = suggestions
-    if (this._candidateKeywords.length === 0) {
-      this.suggestions = suggestions
+  _updateTokens () {
+    if (this._inputString.length === 0) {
+      this._tokens = []
       return
     }
-    /** @type {Suggestion[]} */
-    const result = (await Promise.all(
-      this._candidateKeywords
-        .map(async (keyword) => {
-          const r = await this._fuzzySearchByKeyword(keyword)
-          return r
+    let tokens = [defineToken({
+      type: 'unknown',
+      startGapIndex: 0,
+      endGapIndex: this._inputString.length,
+      value: defineTerm({ type: 'unknown', value: this._inputString })
+    })]
+    this._knownTerms.forEach(({ type: termType, value: termValue }) => {
+      tokens = tokens.flatMap((token) => {
+        if (token.type === 'known') return token
+        const tokenTermValue = token.value.value
+        const termIndexInToken = tokenTermValue.indexOf(termValue)
+        if (termIndexInToken === -1) return token
+        return [
+          defineToken({
+            type: 'unknown',
+            value: defineTerm({ type: 'unknown', value: tokenTermValue.substring(0, termIndexInToken) }),
+            startGapIndex: token.startGapIndex,
+            endGapIndex: token.startGapIndex + termIndexInToken
+          }),
+          defineToken({
+            type: 'known',
+            value: defineTerm({ type: termType, value: termValue }),
+            startGapIndex: token.startGapIndex + termIndexInToken,
+            endGapIndex: token.startGapIndex + termIndexInToken + termValue.length
+          }),
+          defineToken({
+            type: 'unknown',
+            value: defineTerm({ type: 'unknown', value: tokenTermValue.substring(termIndexInToken + termValue.length) }),
+            startGapIndex: token.startGapIndex + termIndexInToken + termValue.length,
+            endGapIndex: token.endGapIndex
+          })
+        ]
+          .filter((token) => token.value.value.length > 0)
+      })
+    })
+    tokens = tokens.flatMap((token) => {
+      if (token.type === 'known') return token
+      const tokenTermValue = token.toString()
+      const offset = token.startGapIndex
+      const splitted = tokenTermValue.split(/\s/)
+      return splitted.map((str, i) => {
+        const startGapIndex = offset + tokenTermValue.indexOf(str)
+        const endGapIndex = i === splitted.length - 1
+          ? token.endGapIndex
+          : startGapIndex + str.length
+        return defineToken({
+          type: 'unknown',
+          startGapIndex,
+          endGapIndex,
+          value: defineTerm({ type: 'unknown', value: str })
         })
-    ))
-      .flat()
-      .sort((itemA, itemB) => itemB.result.score - itemA.result.score)
-    if (this._suggestions !== suggestions) return
-    suggestions.push(...result)
-    this.suggestions = suggestions
+      })
+    })
+    this._tokens = tokens
   }
 
-  /**
-   * @param {Keyword} keyword
-   * @returns {Promise<Suggestion[]>}
-   */
-  async _fuzzySearchByKeyword (keyword) {
-    // search columns
-    /** @type {string[]} */
-    const columns = [...(new Set(Object.values(store.state.dataSource.dataSourceColumnInfoList).flat()))]
-    // search data value
-    // TODO: 暫時只搜尋 `test-account default group` > `Toby測試` > `運動商品範例資料.csv` > `產品` 的 data value
-    /** @type {string[]} */
-    const { fuzzySearchResult: dataValues } = await dataValueSearch(76387, { searchString: keyword.toString() })
+  _updateEditingToken () {
+    const result = this._tokens.find((token) => between(token.startGapIndex, token.endGapIndex, this._caretGapIndex))
+    this._editingToken = result ?? null
+  }
 
-    const fzf = new Fzf([...(new Set([...columns, ...dataValues]))], { casing: 'case-insensitive' })
-    const entries = fzf.find(keyword.toString())
+  _updateSuggestions () {
+    this.suggestions = []
+
+    if (this._editingToken === null) return
+
+    const token = this._editingToken
+    const editingTokenTermValue = token.value.value
+
+    if (editingTokenTermValue.length === 0) return
+
+    const fzf = new Fzf(this._knownTerms, {
+      selector: (term) => term.value
+    })
+    const entries = fzf.find(editingTokenTermValue.trim())
 
     /** @type {Suggestion[]} */
-    const suggestions = entries.map((entry) => ({
-      keyword,
-      result: {
-        value: entry.item,
-        positions: entry.positions ?? [],
-        score: entry.result.score
-      }
-    }))
-    return suggestions
+    const result = entries
+      .sort((entryA, entryB) => entryB.result.score - entryA.result.score)
+      .map((entry) => defineSuggestion({
+        token,
+        result: {
+          value: entry.item,
+          positions: entry.positions ?? [],
+          score: entry.result.score
+        }
+      }))
+
+    this.suggestions.push(...result)
   }
 }

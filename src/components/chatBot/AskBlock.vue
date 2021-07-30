@@ -124,7 +124,7 @@ import AskHelperDialog from './AskHelperDialog'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { Suggester, replaceWith, trimRedundant } from '@/utils/questionSuggester'
+import { Suggester, trimRedundant, defineTerm } from '@/utils/questionSuggester'
 
 /**
  * @typedef {Object} SuggestionListItem
@@ -172,7 +172,7 @@ export default {
   computed: {
     ...mapState(['isShowAskHelper']),
     ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName', 'isUseAlgorithm', 'setParserLanguage']),
-    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList']),
+    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList', 'dataFrameId']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     isFocus () {
@@ -199,6 +199,9 @@ export default {
     },
     hasFilter () {
       return this.filterList.length > 0
+    },
+    dataSourceIdAndDataFrameId () {
+      return `${this.dataSourceId}/${this.dataFrameId}`
     },
     currentSelectedSuggestionIndex: {
       get () {
@@ -259,26 +262,36 @@ export default {
         : (() => {
           /** @type {import('@/utils/questionSuggester').Suggestion[]} */
           const suggestions = this.suggester.suggestions
-          const originalQuestion = this.suggester.inputString
           return suggestions.map((suggestion) => {
-            const replacementStart = suggestion.keyword.words[0].startGapIndex
-            const replacementEnd = suggestion.keyword.words.slice(-1)[0].endGapIndex
-            const newReplacementEnd = replacementStart + suggestion.result.value.length
-            const finalQuestion = replaceWith(originalQuestion, replacementStart, replacementEnd, suggestion.result.value)
-
-            let html = `${finalQuestion.substring(0, replacementStart)}<span class="bold">` +
-              finalQuestion.substring(replacementStart, newReplacementEnd)
-                .split('')
-                .map((c, i) => suggestion.result.positions.includes(i)
+            /** @type {import('@/utils/questionSuggester').Token[]} */
+            const tokens = this.suggester.tokens
+            const question = trimRedundant(
+              tokens
+                .map((token) =>
+                  token === suggestion.token
+                    ? suggestion.toString().trim()
+                    : token.toString().trim()
+                )
+                .join(' ')
+            )
+            const suggestionTermHighlightHtml = suggestion.toString()
+              .split('')
+              .map((c, i) =>
+                suggestion.result.positions.includes(i)
                   ? `<span class="highlight">${c}</span>`
                   : c
-                )
-                .join('') +
-              `</span>${finalQuestion.substring(newReplacementEnd)}`
-
+              )
+              .join('')
+            const html = tokens
+              .map((token) =>
+                token === suggestion.token
+                  ? `<span class="bold">${suggestionTermHighlightHtml}</span>`
+                  : token.toString().trim()
+              )
+              .join(' ')
             return {
               iconClass: 'search',
-              question: finalQuestion,
+              question,
               html
             }
           })
@@ -318,6 +331,9 @@ export default {
       if (!value) return
       this.userQuestion = this.userQuestion ? this.userQuestion + value : value
       this.clearCopiedColumnName()
+    },
+    dataSourceIdAndDataFrameId () {
+      this.setupSuggester()
     }
   },
   mounted () {
@@ -326,8 +342,9 @@ export default {
     this.$refs.questionInput.addEventListener('compositionend', this.handleCompositionInputEnd)
     this.suggester = Vue.observable(new Suggester())
     this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
+    this.setupSuggester()
   },
-  destroyed () {
+  beforeDestroy () {
     this.$refs.questionInput.removeEventListener('compositionstart', this.handleCompositionInputStart)
     this.$refs.questionInput.removeEventListener('compositionend', this.handleCompositionInputEnd)
     this.closeAskHelper()
@@ -341,7 +358,7 @@ export default {
     ...mapMutations('result', ['updateIsModelResult']),
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     ...mapActions('chatBot', ['openAskInMemory']),
-    ...mapActions('dataSource', ['updateResultRouter']),
+    ...mapActions('dataSource', ['updateResultRouter', 'getDataSourceColumnInfo', 'getDataSourceDataValue']),
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()
@@ -507,6 +524,22 @@ export default {
       this.currentSelectedSuggestionIndex = direction === 'up'
         ? this.currentSelectedSuggestionIndex - 1
         : this.currentSelectedSuggestionIndex + 1
+    },
+    async setupSuggester () {
+      this.suggester = null
+      const knownTerms = (await Promise.all([
+        // columns
+        this.getDataSourceColumnInfo({ shouldStore: false })
+          .then((data) => [...new Set(Object.values(data).flat())])
+          .then((strings) => strings.map((value) => defineTerm({ type: 'dataColumn', value }))),
+        // distinct data values
+        this.getDataSourceDataValue({ shouldStore: false, size: 200 })
+          .then((data) => [...new Set(data.values)])
+          .then((strings) => strings.map((value) => defineTerm({ type: 'dataValue', value })))
+      ]))
+        .flat()
+        .sort((termA, termB) => termB.value.lensgth - termA.value.length)
+      this.suggester = Vue.observable(new Suggester({ knownTerms }))
     },
     updateSuggester () {
       const el = this.$refs.questionInput ?? null
