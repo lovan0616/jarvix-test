@@ -2777,7 +2777,7 @@
     "groupMaintainerDesc": "拥有项目管理权限",
     "groupViewerDesc": "无法使用项目管理相关功能",
     "updateRole": "权限变更",
-    "confirmDeleteAccountText": "用户移除后，此用户将无法使用此帐户任何功能，您确认要继续移除此用户？",
+    "confirmDeleteAccountUserText": "用户移除后，此用户将无法使用此帐户任何功能，您确认要继续移除此用户？",
     "userName": "用户名称",
     "userAccount": "用户帐号",
     "userPassword": "用户密码",
