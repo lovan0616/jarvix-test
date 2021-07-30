@@ -33,6 +33,7 @@
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
           @keydown.up.exact="handleKeydownMoveSuggestionCursor('up', $event)"
           @keydown.down.exact="handleKeydownMoveSuggestionCursor('down', $event)"
+          @keydown.esc.exact.prevent="currentSelectedSuggestionIndex = -1"
           @keydown.tab.exact.prevent="autocompleteSuggestionQuestion(false)"
           @keypress.enter.exact.prevent="autocompleteSuggestionQuestion(true)"
           @focus="handleInputFocus"
@@ -81,7 +82,7 @@
         v-for="(suggestion, index) in suggestionList"
         :key="`suggestion-${index}`"
         class="suggestion"
-        :class="{ focus: index === currentSelectedSuggestionIndex }"
+        :class="{ focus: index === currentSelectedSuggestionIndex || (currentSelectedSuggestionIndex === -1 && index === 0) }"
         @click="fillInQuestion(suggestion.question, true, false)"
         @mouseenter="currentSelectedSuggestionIndex = index"
         tabindex="0"
@@ -449,11 +450,15 @@ export default {
     },
     autocompleteSuggestionQuestion (submit) {
       if (this.isCompositionInputting) return
-      if (this.currentSelectedSuggestionIndex === -1) {
-        if (submit) this.submitQuestion()
+      if (this.currentSelectedSuggestionIndex === -1 && submit) {
+        this.submitQuestion()
         return
       }
-      const { question } = this.suggestionList[this.currentSelectedSuggestionIndex]
+      const index = this.currentSelectedSuggestionIndex === -1 && this.suggestionList.length > 0
+        ? 0
+        : this.currentSelectedSuggestionIndex
+      if (index === -1) return
+      const { question } = this.suggestionList[index]
       this.fillInQuestion(question, submit, !submit)
       this.currentSelectedSuggestionIndex = -1
     },
