@@ -56,7 +56,8 @@
                   :is-show-toolbox="false"
                   :is-show-legend="false"
                   :title-icon-name="'len-with-line-chart'"
-                  intend="sub_insight"/>
+                  intend="sub_insight"
+                />
               </keep-alive>
             </div>
           </div>
