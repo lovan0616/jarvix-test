@@ -51,11 +51,14 @@ export function refreshResult (data) {
 /**
  * get component list
  */
-export function getComponentList (resultId, cancelFunction) {
+export function getComponentList (resultId, cancelFunction, displayInsight) {
   return request({
     url: `/ask/componentList/${resultId}`,
     method: 'GET',
-    cancelToken: cancelFunction
+    cancelToken: cancelFunction,
+    params: {
+      displayInsight: displayInsight
+    }
   })
 }
 
