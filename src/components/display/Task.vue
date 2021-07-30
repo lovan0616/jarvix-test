@@ -63,6 +63,7 @@
         :custom-cell-class-name="customCellClassName"
         :is-hoverable="isHoverable"
         :is-show-legend="isShowLegend"
+        :title-icon-name="titleIconName"
         class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
@@ -162,6 +163,10 @@ export default {
           lowerLimit: null
         }
       })
+    },
+    titleIconName: {
+      type: String,
+      default: 'len-with-line-chart'
     }
   },
   data () {

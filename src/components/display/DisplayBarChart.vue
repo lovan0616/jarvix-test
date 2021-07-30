@@ -1,18 +1,13 @@
 <template>
   <div class="display-basic-chart">
-    <div class="chart-wrapper">
-      <v-echart
-        :style="chartStyle"
-        :options="options"
-        auto-resize
-        @magictypechanged="magicTypeChanged"
-        @brushselected="brushRegionSelected"
-        @click="chartClicked"
-      />
-      <p class="chart-wrapper__description">
-        P-Value小於0.05表示特定PRT對Cluster的分配和所有PRT對Cluster的分配有顯著差異, 其中108A的檢定結果差異最顯著。
-      </p>
-    </div>
+    <v-echart
+      :style="chartStyle"
+      :options="options"
+      auto-resize
+      @magictypechanged="magicTypeChanged"
+      @brushselected="brushRegionSelected"
+      @click="chartClicked"
+    />
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"
@@ -259,6 +254,20 @@ export default {
           config.visualMap = monitorVisualMap(upperLimit, lowerLimit)
           // markline
           config.series[0].markLine = monitorMarkLine([upperLimit, lowerLimit, ...customMarkLine])
+        }
+      }
+
+      // 標註 standardLine
+      if (this.dataset.standard_line) {
+        config.series[0].markLine = {
+          data: [{ name: 'standardLine', yAxis: this.dataset.standard_line }],
+          lineStyle: {
+            color: '#FF9559'
+          },
+          symbol: 'none',
+          label: {
+            formatter: () => this.$t('chart.standardLine')
+          }
         }
       }
 

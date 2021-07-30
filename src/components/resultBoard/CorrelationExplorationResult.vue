@@ -48,36 +48,16 @@
                   intend="sub_key_result"
                 />
               </keep-alive>
-              <!-- <keep-alive>
+              <keep-alive>
                 <task
                   v-if="resultInfo.sub_insight[displayFactorIndex]"
                   :key="resultInfo.sub_insight[displayFactorIndex]"
                   :component-id="resultInfo.sub_insight[displayFactorIndex]"
-                  intend="sub_insight"
-                />
-              </keep-alive> -->
-
-              <ResultInsightWrapper
-                v-if="resultInfo.sub_insight[displayFactorIndex]"
-                :task-key="resultInfo.sub_insight[displayFactorIndex]"
-                :component-id="resultInfo.sub_insight[displayFactorIndex]"
-                :title="$t('resultDescription.dataInsight')"
-                :icon-name="'len-with-line-chart'"
-              />
-              <!-- <div style="display:flex"> -->
-              <!-- <div style="flex: 1">
-                    <keep-alive>
-                    <task
-                      :key="'1234'"
-                      :component-id="'1234'"
-                      :is-show-toolbox="false"
-                      :is-show-legend="false"
-                      intend="sub_insight"
-                      />
-                  </keep-alive>
-                </div>
-                <p style="width: 40%">Here are some descriptions about the result of correlation exploration result lalala. Here are some descriptions about the result of correlation exploration result lalala.</p> -->
-              <!-- </div> -->
+                  :is-show-toolbox="false"
+                  :is-show-legend="false"
+                  :title-icon-name="'len-with-line-chart'"
+                  intend="sub_insight"/>
+              </keep-alive>
             </div>
           </div>
         </div>
@@ -106,14 +86,12 @@
 <script>
 import NotifyInfoBlock from '@/components/display/NotifyInfoBlock'
 import RecommendedInsight from '@/components/display/RecommendedInsight'
-import ResultInsightWrapper from '@/components/ResultInsightWrapper'
 
 export default {
   name: 'CorrelationExplorationResult',
   components: {
     NotifyInfoBlock,
-    RecommendedInsight,
-    ResultInsightWrapper
+    RecommendedInsight
   },
   props: {
     resultInfo: {
