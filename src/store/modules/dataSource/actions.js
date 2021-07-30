@@ -128,8 +128,8 @@ export default {
     commit('setDataFrameId', dataFrameId)
     return co(function * () {
       yield dispatch('getHistoryQuestionList')
-      yield dispatch('getDataSourceColumnInfo', true)
-      yield dispatch('getDataSourceDataValue', true)
+      yield dispatch('getDataSourceColumnInfo')
+      yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
   },
@@ -182,7 +182,7 @@ export default {
   getDataFrameColumnCorrelation ({ state }, { id, selectedColumnList = null, restrictions = [] }) {
     return getColumnCorrelationMatrix(id, selectedColumnList, restrictions)
   },
-  getDataSourceColumnInfo ({ commit, state, getters, rootGetters }, shouldStore = true) {
+  getDataSourceColumnInfo ({ commit, state, getters, rootGetters }, { shouldStore = true } = {}) {
     if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
@@ -191,12 +191,12 @@ export default {
       return shouldStore ? commit('setDataSourceColumnInfoList', response) : response
     })
   },
-  getDataSourceDataValue ({ commit, state, getters, rootGetters }, shouldStore = true) {
+  getDataSourceDataValue ({ commit, state, getters, rootGetters }, { shouldStore = true, size = 50 } = {}) {
     if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     const restrictions = getters.filterRestrictionList
-    return getDataSourceDataValueById(state.dataSourceId, dataFrameId, columns, restrictions).then(response => {
+    return getDataSourceDataValueById(state.dataSourceId, dataFrameId, columns, restrictions, size).then(response => {
       return shouldStore ? commit('setDataSourceDataValueList', response) : response
     })
   },
