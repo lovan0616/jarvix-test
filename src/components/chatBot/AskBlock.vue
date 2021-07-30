@@ -75,6 +75,7 @@
       ref="suggestionBlock"
       :class="{hide: !isSuggestionBlockVisible, 'has-filter': hasFilter}"
       class="suggestion-block"
+      @mouseleave="currentSelectedSuggestionIndex = -1"
     >
       <div
         v-for="(suggestion, index) in suggestionList"
@@ -82,6 +83,7 @@
         class="suggestion"
         :class="{ focus: index === currentSelectedSuggestionIndex }"
         @click="fillInQuestion(suggestion.question, true, false)"
+        @mouseenter="currentSelectedSuggestionIndex = index"
         tabindex="0"
       >
         <svg-icon
@@ -446,6 +448,7 @@ export default {
       }
     },
     autocompleteSuggestionQuestion (submit) {
+      if (this.isCompositionInputting) return
       if (this.currentSelectedSuggestionIndex === -1) {
         if (submit) this.submitQuestion()
         return
