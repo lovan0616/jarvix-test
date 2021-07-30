@@ -2679,6 +2679,7 @@
     "normalValue": "正常值",
     "anomalousValue": "異常值",
     "normalDistribution": "常態分佈線",
+    "standardLine": "標準線",
     "feature": {
       "max": "最大值",
       "min": "最小值",

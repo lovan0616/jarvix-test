@@ -257,6 +257,20 @@ export default {
         }
       }
 
+      // 標註 standardLine
+      if (this.dataset.standard_line) {
+        config.series[0].markLine = {
+          data: [{ name: 'standardLine', yAxis: this.dataset.standard_line }],
+          lineStyle: {
+            color: '#FF9559'
+          },
+          symbol: 'none',
+          label: {
+            formatter: () => this.$t('chart.standardLine')
+          }
+        }
+      }
+
       return config
     },
     colorList () {

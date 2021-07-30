@@ -2668,6 +2668,7 @@
     "normalValue": "Normal values",
     "anomalousValue": "Anomalous values",
     "normalDistribution": "Normal Distribution",
+    "standardLine": "Standard Line",
     "feature": {
       "max": "Max",
       "min": "Min",

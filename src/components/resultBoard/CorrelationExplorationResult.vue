@@ -53,8 +53,10 @@
                   v-if="resultInfo.sub_insight[displayFactorIndex]"
                   :key="resultInfo.sub_insight[displayFactorIndex]"
                   :component-id="resultInfo.sub_insight[displayFactorIndex]"
-                  intend="sub_insight"
-                />
+                  :is-show-toolbox="false"
+                  :is-show-legend="false"
+                  :title-icon-name="'len-with-line-chart'"
+                  intend="sub_insight"/>
               </keep-alive>
             </div>
           </div>

@@ -125,6 +125,7 @@ import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
 import DisplayIndexInfo from '@/components/display/DisplayIndexInfo'
 import DisplayTextInfo from '@/components/display/DisplayTextInfo'
 import ParameterComparisonTable from '@/pages/miniApp/miniApp/components/dashboard-components/ParameterComparisonTable'
+import DisplayDifferenceInsight from '@/components/display/DisplayDifferenceInsight'
 
 // 排程
 import vGanttChart from 'v-gantt-chart'
@@ -230,6 +231,7 @@ Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
 Vue.component(DisplayIndexInfo.name, DisplayIndexInfo)
 Vue.component(DisplayTextInfo.name, DisplayTextInfo)
 Vue.component(ParameterComparisonTable.name, ParameterComparisonTable)
+Vue.component(DisplayDifferenceInsight.name, DisplayDifferenceInsight)
 
 Vue.component('DefaultButton', DefaultButton)
 Vue.component('DefaultInput', DefaultInput)
