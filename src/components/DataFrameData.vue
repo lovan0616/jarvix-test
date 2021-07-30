@@ -40,39 +40,41 @@
           @on-sort="handleTableSort"
         >
           <template #columns-header="{ column, index }">
-            <div
-              class="header-block"
-              @click="checkClickTarget"
-            >
+            <div class="header-block">
               <div class="header">
-                <span
-                  v-if="showColumnSummaryRow"
-                  class="icon"
+                <div
+                  class="header__title"
+                  @click.stop
                 >
-                  <el-tooltip
-                    slot="label"
-                    :enterable="false"
-                    :visible-arrow="false"
-                    :content="`${getStatesTypeName(index)}`"
+                  <span
+                    v-if="showColumnSummaryRow"
                     class="icon"
                   >
-                    <svg-icon :icon-class="getHeaderIcon(index)" />
-                  </el-tooltip>
-                </span>
-                <span
-                  class="text"
-                  @click="copyTitle(column.titles[index])"
-                >
-                  <el-tooltip
-                    slot="label"
-                    :visible-arrow="false"
-                    :enterable="false"
-                    :content="$t('etl.clickColumnHeaderToCopy', { title: column.titles[index] })"
-                    placement="bottom-start"
+                    <el-tooltip
+                      slot="label"
+                      :enterable="false"
+                      :visible-arrow="false"
+                      :content="`${getStatesTypeName(index)}`"
+                      class="icon"
+                    >
+                      <svg-icon :icon-class="getHeaderIcon(index)" />
+                    </el-tooltip>
+                  </span>
+                  <span
+                    class="text"
+                    @click="copyTitle(column.titles[index])"
                   >
-                    <span>{{ column.titles[index] }}</span>
-                  </el-tooltip>
-                </span>
+                    <el-tooltip
+                      slot="label"
+                      :visible-arrow="false"
+                      :enterable="false"
+                      :content="$t('etl.clickColumnHeaderToCopy', { title: column.titles[index] })"
+                      placement="bottom-start"
+                    >
+                      <span>{{ column.titles[index] }}</span>
+                    </el-tooltip>
+                  </span>
+                </div>
                 <svg-icon
                   icon-class="sort-down"
                   class="arrow-icon"
@@ -410,9 +412,6 @@ export default {
       const dataColumnId = this.columnIdList[dataColumnIndex]
       this.sortOrders = { dataColumnId, sortType }
     },
-    checkClickTarget (e) {
-      if (!e.target.classList.contains('arrow-icon')) e.stopPropagation()
-    },
     async setColumnIdList (dataFrameId) {
       if (dataFrameId) {
         const response = await getDataFrameColumnInfoById(dataFrameId)
@@ -465,7 +464,6 @@ export default {
 
   .header-block {
     .header {
-      padding: 10px;
       border-bottom: 1px solid #515959;
       display: flex;
       align-items: center;
@@ -483,11 +481,14 @@ export default {
         cursor: pointer;
       }
 
+      &__title {
+        flex: 1;
+        padding: 10px;
+      }
+
       .arrow-icon {
         fill: #BDBDBD;
-        margin-left: auto;
-        font-size: x-large;
-        padding: 5px;
+        margin: 10px;
         &.arrow-up {
           transform: rotateX(180deg);
         }
