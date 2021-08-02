@@ -476,13 +476,13 @@ export default {
 
       try {
         this.isProcessing = true
-        const { active, password, username, id } = this.currentUser
+        const { active, username, id } = this.currentUser
         await updateUser({
           active,
-          password,
           username,
           userId: id,
-          accountId: this.currentAccountId
+          accountId: this.currentAccountId,
+          password: this.passwordInfo.password
         })
         this.closeRestPasswordDialog()
         this.isProcessing = false
