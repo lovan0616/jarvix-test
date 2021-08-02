@@ -79,6 +79,12 @@
       @mouseleave="currentSelectedSuggestionIndex = -1"
     >
       <div
+        v-show="isLoadingKnownTerms"
+        class="known-terms-loading-status"
+      >
+        <spinner size="16" />
+      </div>
+      <div
         v-for="(suggestion, index) in suggestionList"
         :key="`suggestion-${index}`"
         class="suggestion"
@@ -92,12 +98,6 @@
           class="icon"
         />
         <span v-html="suggestion.html" />
-      </div>
-      <div
-        v-show="isLoadingKnownTerms"
-        class="known-terms-loading-status"
-      >
-        <spinner size="16" />
       </div>
     </div>
     <transition name="fast-fade-in">
@@ -536,7 +536,7 @@ export default {
       }
       const appendDataValueByDataFrameId = async (dataFrameId) => {
         // TODO: implement real code
-        await (new Promise(resolve => setTimeout(resolve, 3000)))
+        await (new Promise(resolve => setTimeout(resolve, 10000)))
         const terms = []
           .map((value) => defineTerm({ type: 'dataValue', value }))
         newSuggester.appendKnownTerms(terms)
@@ -775,7 +775,7 @@ export default {
 
       ::v-deep .spinner-block {
         display: inline-block;
-        margin-bottom: -4px;
+        margin-top: -4px;
         padding: 8px 16px;
       }
     }
