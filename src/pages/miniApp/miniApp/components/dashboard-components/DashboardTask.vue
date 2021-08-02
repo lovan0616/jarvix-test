@@ -200,7 +200,7 @@ import AbnormalStatistics from './AbnormalStatistics'
 import ParametersOptimizedSimulator from './ParametersOptimizedSimulator'
 import Simulator from './Simulator'
 import DropdownSelect from '@/components/select/DropdownSelect'
-import moment from 'moment'
+import momentTZ from 'moment-timezone'
 import { mapState } from 'vuex'
 import { askFormulaResult } from '@/API/NewAsk'
 import { sizeTable } from '@/utils/general'
@@ -247,6 +247,10 @@ export default {
     isCurrentDashboardInit: {
       type: Boolean,
       default: false
+    },
+    timeZone: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -738,12 +742,12 @@ export default {
 
       // update datetime range
       if (dataValue === 'today') {
-        properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
-        properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+        properties.start = momentTZ().tz(this.timeZone).startOf('day').format('YYYY-MM-DD HH:mm')
+        properties.end = momentTZ().tz(this.timeZone).endOf('day').format('YYYY-MM-DD HH:mm')
       } else if (RegExp('^.*hour.*$').test(dataValue)) {
         const hour = Number(dataValue.split('hour')[0])
-        properties.start = moment().subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
-        properties.end = moment().format('YYYY-MM-DD HH:mm')
+        properties.start = momentTZ().tz(this.timeZone).subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
+        properties.end = momentTZ().tz(this.timeZone).format('YYYY-MM-DD HH:mm')
       } else {
         properties.start = null
         properties.end = null

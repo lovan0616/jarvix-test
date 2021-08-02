@@ -360,6 +360,7 @@
                     :is-edit-mode="isEditMode"
                     :warning-module-setting="appData.warningModule"
                     :is-current-dashboard-init="isCurrentDashboardInit"
+                    :time-zone="appTimeZone"
                     @redirect="activeCertainDashboard($event)"
                     @deleteComponentRelation="deleteComponentRelation"
                     @columnTriggered="columnTriggered"
@@ -490,6 +491,7 @@
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import moment from 'moment'
+import momentTZ from 'moment-timezone'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
@@ -739,6 +741,17 @@ export default {
     },
     isComponentOrderChanged () {
       return this.draggedContext.index !== this.draggedContext.futureIndex
+    },
+    appTimeZone () {
+      if (
+        this.miniApp &&
+        this.miniApp.settings &&
+        this.miniApp.settings.editModeData &&
+        this.miniApp.settings.editModeData.timeZone
+      ) {
+        return this.miniApp.settings.editModeData.timeZone
+      }
+      return momentTZ.tz.guess()
     }
   },
   watch: {
