@@ -47,9 +47,9 @@
         </template>
         <template #action="{ data }">
           <a
-            :disabled="hasChangePwdPermission"
+            :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showResetPasswordDialog(data, !hasChangePwdPermission)"
+            @click="showResetPasswordDialog(data, !btnDisabled(data))"
           >{{ $t('editing.changePassword') }}</a>
           <a
             :disabled="btnDisabled(data)"
@@ -245,10 +245,6 @@ export default {
           name: this.$t('editing.general')
         }
       ]
-    },
-    hasChangePwdPermission () {
-      if (!this.selfInfo) return false
-      return this.selfInfo.role !== 'account_owner' && this.selfInfo.role !== 'account_maintainer'
     }
   },
   watch: {
