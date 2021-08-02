@@ -150,6 +150,7 @@ export default {
       newParserMode: localStorage.getItem('newParser') === 'true',
       isInputFocus: false,
       isCompositionInputting: false,
+      isLoadingKnownTerms: false,
       compositionInputStatusHandler: null,
       selectedSuggestionIndex: -1,
       /** @type {Suggester | null} */
@@ -160,7 +161,7 @@ export default {
   computed: {
     ...mapState(['isShowAskHelper']),
     ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName', 'isUseAlgorithm', 'setParserLanguage']),
-    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList', 'dataFrameId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList', 'dataFrameId', 'dataFrameList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     isSuggestionBlockVisible () {
@@ -187,6 +188,9 @@ export default {
     },
     dataSourceIdAndDataFrameId () {
       return `${this.dataSourceId}/${this.dataFrameId}`
+    },
+    dataFramesId () {
+      return this.dataFrameList.map((dataFrame) => dataFrame.id)
     },
     currentUserQuestionPreview: {
       get () {
@@ -515,19 +519,30 @@ export default {
     async setupSuggester () {
       if (this.dataSourceIdAndDataFrameId.includes('null')) return
       this.suggester = null
-      const knownTerms = (await Promise.all([
-        // columns
-        this.getDataSourceColumnInfo({ shouldStore: false })
-          .then((data) => [...new Set(Object.values(data).flat())])
-          .then((strings) => strings.map((value) => defineTerm({ type: 'dataColumn', value }))),
-        // distinct data values
-        this.getDataSourceDataValue({ shouldStore: false, size: 200 })
-          .then((data) => [...new Set(data.values)])
-          .then((strings) => strings.map((value) => defineTerm({ type: 'dataValue', value })))
-      ]))
-        .flat()
-        .sort((termA, termB) => termB.value.lensgth - termA.value.length)
-      this.suggester = Vue.observable(new Suggester({ knownTerms }))
+
+      const newSuggester = Vue.observable(new Suggester())
+      this.suggester = newSuggester
+      const appendColumns = async () => {
+        const data = await this.getDataSourceColumnInfo({ shouldStore: false })
+        const terms = [...new Set(Object.values(data).flat())]
+          .map((value) => defineTerm({ type: 'dataColumn', value }))
+        newSuggester.appendKnownTerms(terms)
+      }
+      const appendDataValueByDataFrameId = async (dataFrameId) => {
+        // TODO: implement real code
+        const terms = []
+          .map((value) => defineTerm({ type: 'dataValue', value }))
+        newSuggester.appendKnownTerms(terms)
+      }
+      this.isLoadingKnownTerms = true
+      const promises = [
+        appendColumns(),
+        ...(this.dataFrameId === 'all'
+          ? this.dataFramesId.map((dataFrameId) => appendDataValueByDataFrameId(dataFrameId))
+          : [appendDataValueByDataFrameId(this.dataFrameId)])
+      ]
+      await Promise.all(promises)
+      this.isLoadingKnownTerms = false
     },
     updateSuggester () {
       const el = this.$refs.questionInput ?? null

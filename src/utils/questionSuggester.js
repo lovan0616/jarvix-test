@@ -109,32 +109,30 @@ export function defineSuggestion (suggestion) {
 }
 
 export class Suggester {
-  /**
-   * @typedef {Object} Params
-   * @property {Term[]} knownTerms
-   */
-  /**
-   * @param {Params} params
-   */
-  constructor ({ knownTerms = [] } = {}) {
-    /** @type {Term[]} */
-    this._knownTerms = knownTerms
-    /** @type {number} */
-    this._caretGapIndex = 0
-    /** @type {string} */
-    this._inputString = ''
-    /** @type {Token[]} */
-    this._tokens = []
-    /** @type {Token | null} */
-    this._editingToken = null
-    /** @type {Suggestion[]} */
-    this._suggestions = []
-    /** @type {Suggestion[]} */
-    this.suggestions = []
-  }
+  /** @type {Term[]} */
+  _knownTerms = []
+  /** @type {number} */
+  _caretGapIndex = 0
+  /** @type {string} */
+  _inputString = ''
+  /** @type {Token[]} */
+  _tokens = []
+  /** @type {Token | null} */
+  _editingToken = null
+  /** @type {Suggestion[]} */
+  suggestions = []
 
   get tokens () {
     return this._tokens
+  }
+
+  /**
+   * @param {Term[]} toAppend
+   */
+  appendKnownTerms (toAppend) {
+    this._knownTerms.push(...toAppend)
+    this._knownTerms = this._knownTerms.sort((termA, termB) => termB.value.length - termA.value.length)
+    this._update()
   }
 
   /**
@@ -149,6 +147,10 @@ export class Suggester {
     this._caretGapIndex = caretGapIndex
     if (!hasChanged) return
 
+    this._update()
+  }
+
+  _update () {
     this._updateTokens()
     this._updateEditingToken()
     this._updateSuggestions()
@@ -201,9 +203,7 @@ export class Suggester {
       const splitted = tokenTermValue.split(/\s/)
       return splitted.map((str, i) => {
         const startGapIndex = offset + tokenTermValue.indexOf(str)
-        const endGapIndex = i === splitted.length - 1
-          ? token.endGapIndex
-          : startGapIndex + str.length
+        const endGapIndex = startGapIndex + str.length
         return defineToken({
           type: 'unknown',
           startGapIndex,
