@@ -93,6 +93,12 @@
         />
         <span v-html="suggestion.html" />
       </div>
+      <div
+        v-show="isLoadingKnownTerms"
+        class="known-terms-loading-status"
+      >
+        <spinner size="16" />
+      </div>
     </div>
     <transition name="fast-fade-in">
       <ask-helper-dialog
@@ -165,7 +171,7 @@ export default {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     isSuggestionBlockVisible () {
-      return this.isInputFocus && this.suggestionList.length > 0 && !this.isShowAskHelper
+      return this.isInputFocus && (this.suggestionList.length > 0 || this.isLoadingKnownTerms) && !this.isShowAskHelper
     },
     languageList () {
       return this.parserLanguageList.map(option => {
@@ -530,6 +536,7 @@ export default {
       }
       const appendDataValueByDataFrameId = async (dataFrameId) => {
         // TODO: implement real code
+        await (new Promise(resolve => setTimeout(resolve, 3000)))
         const terms = []
           .map((value) => defineTerm({ type: 'dataValue', value }))
         newSuggester.appendKnownTerms(terms)
@@ -760,6 +767,16 @@ export default {
 
       ::v-deep .highlight {
         color: $theme-color-primary;
+      }
+    }
+
+    .known-terms-loading-status {
+      font-size: 0;
+
+      ::v-deep .spinner-block {
+        display: inline-block;
+        margin-bottom: -4px;
+        padding: 8px 16px;
       }
     }
   }
