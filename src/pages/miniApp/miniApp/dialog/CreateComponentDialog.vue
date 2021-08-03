@@ -53,6 +53,7 @@
             <ask-block
               :redirect-on-ask="false"
               :is-show-ask-helper-entry="false"
+              :default-question="currentQuestion"
             />
           </div>
           <dashboard-component
@@ -540,6 +541,9 @@ export default {
         return this.rowHeight * this.currentComponent.config.size.row + this.gap * (this.currentComponent.config.size.row - 1)
       }
       return null
+    },
+    currentQuestion () {
+      return (this.currentComponent && this.currentComponent.question) ? this.currentComponent.question : null
     }
   },
   mounted () {
