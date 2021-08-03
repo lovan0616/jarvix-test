@@ -119,6 +119,10 @@ export default {
     isShowAskHelperEntry: {
       type: Boolean,
       default: true
+    },
+    defaultQuestion: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -212,7 +216,7 @@ export default {
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
-    this.userQuestion = this.$route.query.question
+    this.userQuestion = this.defaultQuestion || this.$route.query.question
   },
   destroyed () {
     this.closeHelper()

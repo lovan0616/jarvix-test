@@ -473,6 +473,10 @@ export default {
         this.askQuestion(this.currentComponent.question)
       }
     }
+
+    if (this.computedQuestion) {
+      this.$emit('checkTitleMatch', this.computedQuestion)
+    }
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
@@ -521,6 +525,7 @@ export default {
       this.layout = null
       this.isShowAnomalySetting = false
       this.closeUnknowInfoBlock()
+
       this.$store
         .dispatch('chatBot/askQuestion', {
           question,
@@ -619,15 +624,6 @@ export default {
       this.$emit('update:isLoading', true)
       if (selectedResultSegmentationInfo) {
         this.segmentation = selectedResultSegmentationInfo
-      }
-
-      // 初次創建時，預設元件名稱為使用者輸入的問句
-      if (!this.currentComponent.init) {
-        this.currentComponent.config.diaplayedName =
-          this.segmentation.sentence.reduce(
-            (acc, cur) => (acc += ` ${cur.matchedWord}`),
-            ''
-          )
       }
 
       // 確認是否為趨勢類型問題
@@ -754,6 +750,9 @@ export default {
           this.$store.commit('result/updateCurrentResultInfo', null)
           // this.hasError = true
           if (error.message !== 'cancel') this.resultInfo = null
+        })
+        .then(() => {
+          this.$emit('updateTitle', this.computedQuestion)
         })
     },
     composeComponentQuestion (sentence) {

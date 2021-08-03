@@ -41,10 +41,7 @@
     <div class="dialog__content">
       <div class="dialog__content--left">
         <template v-if="isCreatedViaAsking">
-          <div
-            v-if="!currentComponent.init"
-            class="search-bar"
-          >
+          <div class="search-bar">
             <data-frame-menu
               :redirect-on-change="false"
               :is-show-preview-entry="true"
@@ -53,6 +50,7 @@
             <ask-block
               :redirect-on-ask="false"
               :is-show-ask-helper-entry="false"
+              :default-question="currentQuestion"
             />
           </div>
           <dashboard-component
@@ -62,6 +60,8 @@
             :filters="filters"
             :controls="controls"
             @setDiagram="currentComponent.diagram = $event"
+            @updateTitle="updateComponentTitle"
+            @checkTitleMatch="checkTitleMatch"
           />
           <transition name="fast-fade-in">
             <section
@@ -110,7 +110,7 @@
             </div>
             <input-verify
               v-validate="'required'"
-              v-model="currentComponent.config.diaplayedName"
+              v-model="InputDiaplayedName"
               name="createComponentDisplayName"
             />
           </div>
@@ -415,7 +415,9 @@ export default {
         }
       ],
       formulaComponentInfo: {},
-      modelComponentInfo: {}
+      modelComponentInfo: {},
+      titleTemp: null,
+      isCustomTitle: false
     }
   },
   computed: {
@@ -540,10 +542,29 @@ export default {
         return this.rowHeight * this.currentComponent.config.size.row + this.gap * (this.currentComponent.config.size.row - 1)
       }
       return null
+    },
+    currentQuestion () {
+      return (this.currentComponent && this.currentComponent.question) ? this.currentComponent.question : null
+    },
+    InputDiaplayedName: {
+      get () {
+        return this.currentComponent && this.currentComponent.config.diaplayedName || null
+      },
+      set (val) {
+        if (!val) {
+          this.isCustomTitle = false
+          this.currentComponent.config.diaplayedName = this.titleTemp
+        } else {
+          this.isCustomTitle = true
+          this.currentComponent.config.diaplayedName = val
+        }
+      }
     }
   },
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
+    this.titleTemp = this.currentComponent.config.diaplayedName
+
     // 所有可以不需透過問問句就能創建的元件類型
     const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
@@ -587,7 +608,8 @@ export default {
         this.$emit('updateSetting', {
           ...this.currentComponent,
           ...this.formulaComponentInfo,
-          ...this.modelComponentInfo
+          ...this.modelComponentInfo,
+          ...this.currentResultInfo // 公式元件需補上一般問問句會取得的資料
         })
       })
     },
@@ -658,6 +680,16 @@ export default {
     updateTableRelatedDashboard (selectedDashboardId) {
       const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
       triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId = selectedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId = selectedDashboardId
+    },
+    updateComponentTitle (val) {
+      if (this.currentComponent && !this.isCustomTitle) {
+        this.currentComponent.config.diaplayedName = val
+      }
+    },
+    checkTitleMatch (val) {
+      if (val) {
+        this.isCustomTitle = val.replaceAll(/ /g, '').toLowerCase() !== this.titleTemp.replaceAll(/ /g, '').toLowerCase()
+      }
     }
   }
 }
