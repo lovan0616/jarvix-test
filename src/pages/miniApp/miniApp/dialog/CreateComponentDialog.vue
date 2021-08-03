@@ -322,9 +322,6 @@
                 class="setting__block-select"
                 name="rowSpan"
               >
-              <p v-if="predictComponentHeight">
-                高度約 = {{ predictComponentHeight }}px
-              </p>
             </div>
           </div>
         </div>
@@ -543,12 +540,6 @@ export default {
           value: 'row'
         }
       ]
-    },
-    predictComponentHeight () {
-      if (this.rowHeight !== null && this.currentComponent.config.size.row !== null && this.currentComponent.config.size.row > 0) {
-        return this.rowHeight * this.currentComponent.config.size.row + this.gap * (this.currentComponent.config.size.row - 1)
-      }
-      return null
     },
     InputDiaplayedName: {
       get () {
