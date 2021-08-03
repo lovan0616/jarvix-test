@@ -342,45 +342,44 @@
             </div>
             <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
-                <grid-draggable
-                  :components="currentDashboard.components"
-                  :finish-notice="$t('miniApp.component')"
+                <draggable
+                  :list="currentDashboard.components"
+                  :move="logDraggingMovement"
                   :disabled="!isEditMode || currentDashboard.components.length === 1"
-                  :gap="26"
-                  :row-height="50"
+                  ghost-class="dragging-ghost"
+                  style="height: 100%;"
+                  @end="updateComponentOrder($t('miniApp.component'))"
                 >
-                  <template #default>
-                    <dashboard-task
-                      v-for="componentData in currentDashboard.components"
-                      :key="`${componentData.id} - ${componentData.updateTime}`"
-                      :filters="filterColumnValueInfoList"
-                      :y-axis-controls="yAxisControlColumnValueInfoList"
-                      :controls="controlColumnValueInfoList"
-                      :component-data="componentData"
-                      :is-edit-mode="isEditMode"
-                      :warning-module-setting="appData.warningModule"
-                      :is-current-dashboard-init="isCurrentDashboardInit"
-                      @redirect="activeCertainDashboard($event)"
-                      @deleteComponentRelation="deleteComponentRelation"
-                      @columnTriggered="columnTriggered"
-                      @rowTriggered="rowTriggered"
-                      @chartTriggered="chartTriggered"
-                      @warningLogTriggered="warningLogTriggered($event)"
-                      @goToCertainDashboard="activeCertainDashboard($event)"
-                      @switchDialogName="handleDashboardSwitchName($event, componentData)"
+                  <dashboard-task
+                    v-for="componentData in currentDashboard.components"
+                    :key="`${componentData.id} - ${componentData.updateTime}`"
+                    :filters="filterColumnValueInfoList"
+                    :y-axis-controls="yAxisControlColumnValueInfoList"
+                    :controls="controlColumnValueInfoList"
+                    :component-data="componentData"
+                    :is-edit-mode="isEditMode"
+                    :warning-module-setting="appData.warningModule"
+                    :is-current-dashboard-init="isCurrentDashboardInit"
+                    @redirect="activeCertainDashboard($event)"
+                    @deleteComponentRelation="deleteComponentRelation"
+                    @columnTriggered="columnTriggered"
+                    @rowTriggered="rowTriggered"
+                    @chartTriggered="chartTriggered"
+                    @warningLogTriggered="warningLogTriggered($event)"
+                    @goToCertainDashboard="activeCertainDashboard($event)"
+                    @switchDialogName="handleDashboardSwitchName($event, componentData)"
+                  >
+                    <template
+                      v-if="componentData.type === 'monitor-warning-list'"
+                      slot="icon"
                     >
-                      <template
-                        v-if="componentData.type === 'monitor-warning-list'"
-                        slot="icon"
-                      >
-                        <svg-icon
-                          icon-class="warning"
-                          class="warning-icon"
-                        />
-                      </template>
-                    </dashboard-task>
-                  </template>
-                </grid-draggable>
+                      <svg-icon
+                        icon-class="warning"
+                        class="warning-icon"
+                      />
+                    </template>
+                  </dashboard-task>
+                </draggable>
               </template>
               <template v-else>
                 <div class="empty-block">
@@ -424,8 +423,6 @@
       @close="closeCreateComponentDialog"
       @create="createComponent"
       @updateSetting="updateComponentSetting"
-      :gap="26"
-      :row-height="50"
     />
     <create-filter-dialog
       v-if="isShowCreateFilterDialog"
@@ -503,7 +500,6 @@ import {
 } from '@/API/MiniApp'
 import MiniAppSideNav from './components/MiniAppSideNav'
 import DashboardTask from './components/dashboard-components/DashboardTask'
-import GridDraggable from '@/components/layout/GridDraggable'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
@@ -518,6 +514,7 @@ import WarningModule from './components/warning-module/WarningModule'
 import ComponentToAlertConditionDialog from './dialog/ComponentToAlertConditionDialog'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
+import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState } from 'vuex'
 import { updateAlertTimeZone } from '@/API/Alert'
@@ -543,9 +540,9 @@ export default {
     FilterControlPanel,
     AxisControlPanel,
     WarningModule,
+    draggable,
     DefaultSelect,
-    ComponentToAlertConditionDialog,
-    GridDraggable
+    ComponentToAlertConditionDialog
   },
   data () {
     return {
@@ -1532,6 +1529,10 @@ export default {
         return acc + (index !== 0 ? cur.replace(/^./, cur[0].toUpperCase()) : cur.replace(/^./, cur[0].toLowerCase()))
       }, '')
       return this.$t(`miniApp.${displayName}Component`).slice(0, 7)
+    },
+    logDraggingMovement (e) {
+      const { index, futureIndex } = e.draggedContext
+      this.draggedContext = { index, futureIndex }
     },
     updateDashboardOrder (target) {
       this.updateOrder(target)
