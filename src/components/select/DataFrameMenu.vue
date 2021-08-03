@@ -342,43 +342,44 @@ export default {
 </script>
 <style lang="scss" scoped>
 .data-frame-select-block {
+  background-color: rgba(0, 0, 0, 0.55);
+  border: 1px solid #292c2e;
+  border-radius: 5px;
   display: flex;
-  position: relative;
-  width: 100%;
   height: 40px;
   line-height: 40px;
-  border-radius: 5px;
-  border: 1px solid #292C2E;
-  background-color: rgba(0, 0, 0, 0.55);
+  position: relative;
+  width: 100%;
   z-index: 1;
 
-  .preview-datasource-btn, .dataframe-setting-btn {
-    width: 40px;
+  .preview-datasource-btn,
+  .dataframe-setting-btn {
+    align-items: center;
+    background-color: transparent;
+    border: unset;
+    border-left: 1px solid #292c2e;
     display: flex;
     justify-content: center;
-    align-items: center;
-    border: unset;
-    border-left: 1px solid #292C2E;
-    background-color: transparent;
+    width: 40px;
 
     &__icon {
+      fill: rgba(255, 255, 255, 0.8);
       font-size: 18px;
-      fill: rgba(255, 255, 255, .8);
 
       &:hover {
         fill: rgba(255, 255, 255, 1);
       }
 
       &--show {
-        fill: rgba(42, 210, 226, .8);
+        fill: rgba(42, 210, 226, 0.8);
 
         &:hover {
-          fill: #2AD2E2;
+          fill: #2ad2e2;
         }
       }
 
       &--disabled {
-        fill: rgba(153, 153, 153, .8);
+        fill: rgba(153, 153, 153, 0.8);
 
         &:hover {
           fill: rgba(153, 153, 153, 1);
@@ -391,84 +392,99 @@ export default {
 .data-frame-select {
   &__filter {
     padding: 12px;
+
     ::v-deep .input {
-      height: 40px;
-      font-size: 14px;
-      background-color: #141C1D;
-      padding-left: 12px;
-      padding-bottom: 0;
+      background-color: #141c1d;
       border-bottom: none;
       border-radius: 5px;
+      font-size: 14px;
+      height: 40px;
+      padding-bottom: 0;
+      padding-left: 12px;
+
       &::placeholder {
         color: #888;
       }
     }
   }
+
   &__title {
-    flex: 1;
-    width: 0;
-    padding-left: 12px;
-    font-size: 14px;
-    display: flex;
     align-items: center;
-    background: #1D2424;
+    background: #1d2424;
+    display: flex;
+    flex: 1;
+    font-size: 14px;
+    padding-left: 12px;
+    width: 0;
+
     .data-source-title {
       @include text-hidden;
+
       &.is-empty {
         color: #888;
       }
     }
   }
+
   &__icon {
     flex-shrink: 0;
   }
+
   &__menu {
-    width: 400px;
-    position: absolute;
-    top: calc(100% + 1px);
-    left: -1px;
-    color: #CCC;
     background-color: #303435;
     border-radius: 5px;
-    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+    color: #ccc;
+    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, 0.5));
+    left: -1px;
+    position: absolute;
+    top: calc(100% + 1px);
+    width: 400px;
+
     &::before {
-      content: '';
-      position: absolute;
-      bottom: 100%;
-      left: 78px;
+      border-color: #303435 transparent transparent;
       border-style: solid;
-      border-width: 8.5px 6px 0 6px;
-      border-color: #303435 transparent transparent transparent;
+      border-width: 8.5px 6px 0;
+      bottom: 100%;
+      content: '';
+      left: 78px;
+      position: absolute;
       transform: rotateZ(-180deg);
     }
 
     &-datasource {
       max-height: 400px;
-      overflow-y: overlay;
       overflow-x: hidden;
-      white-space: nowrap;
+      overflow-y: overlay;
       padding-left: 0;
+      white-space: nowrap;
+
       &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, .45);
+        background-color: rgba(0, 0, 0, 0.45);
       }
+
       &::-webkit-scrollbar-track {
         background-color: #333;
       }
-      &>.menu__item {
+
+      & > .menu__item {
         line-height: 44px;
         padding-left: 12px;
+
         &:not(:first-child) {
-          border-top: 1px solid #3F4546;
+          border-top: 1px solid #3f4546;
         }
+
         .icon-arrow {
           font-size: 7px;
-          transition: all .3s ease;
+          transition: all 0.3s ease;
         }
+
         &.is-current {
-          &>.menu__item-label {
+          & > .menu__item-label {
             color: $theme-color-primary;
           }
         }
+
         &.is-expanded {
           .icon-arrow {
             transform: rotate(180deg);
@@ -476,16 +492,21 @@ export default {
         }
       }
     }
+
     &-dataframe {
       padding-left: 0;
-      &>.menu__item {
+
+      & > .menu__item {
         padding-left: 26px;
+
         .icon-current {
           visibility: hidden;
         }
+
         &.is-current {
           .menu__item-label {
             color: $theme-color-primary;
+
             .icon-current {
               visibility: visible;
             }
@@ -493,28 +514,35 @@ export default {
         }
       }
     }
-    &-datasource, &-dataframe {
-      margin: 0;
+
+    &-datasource,
+    &-dataframe {
       list-style: none;
+      margin: 0;
+
       .menu__item {
         cursor: pointer;
+
         &-label {
-          font-size: 14px;
-          color: #CCC;
-          display: flex;
           align-items: center;
+          color: #ccc;
+          display: flex;
+          font-size: 14px;
+          height: 100%;
           padding-right: 16px;
           width: 100%;
-          height: 100%;
+
           &:hover {
-            color: #FFF;
+            color: #fff;
           }
+
           .data-title {
             flex: 1;
             margin: 0 12px;
-            text-overflow: ellipsis;
             overflow: hidden;
+            text-overflow: ellipsis;
           }
+
           .svg-icon {
             flex-shrink: 0;
           }
@@ -522,11 +550,12 @@ export default {
       }
     }
   }
+
   &__empty-result {
+    color: #aaa;
     font-size: 14px;
-    text-align: center;
     line-height: 6;
-    color: #AAA;
+    text-align: center;
   }
 }
 

@@ -374,47 +374,47 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ask-container {
-  position: relative;
   flex: 1;
+  position: relative;
 
   &.is-focus {
-
     .user-question-block {
+      border: 1px solid #0cd1de;
       border-radius: 5px 5px 0 0;
-      border: 1px solid #0CD1DE;
-      box-shadow: 0px 0px 20px rgba(12, 209, 222, .5);
       border-radius: 5px;
+      box-shadow: 0 0 20px rgba(12, 209, 222, 0.5);
     }
   }
 
   .ask-block {
-    position: relative;
-    height: 100%;
     display: flex;
+    height: 100%;
+    position: relative;
   }
 
   .parser-select {
     width: 160px;
 
-    & >>> .el-input__inner {
+    >>> .el-input__inner {
       font-size: 14px;
     }
   }
 
   .user-question-block {
-    display: flex;
     align-items: center;
-    width: 100%;
-    padding-right: 16px;
-    background-color: #1D2424;
-    border: 1px solid #1D2424;
+    background-color: #1d2424;
+    border: 1px solid #1d2424;
     border-radius: 5px;
-    transition: all .1s;
+    display: flex;
+    padding-right: 16px;
+    transition: all 0.1s;
+    width: 100%;
 
     &.has-filter {
-      &:after {
+      &::after {
         background-image: linear-gradient(90deg, $filter-color 0%, rgba(67, 138, 248, 0.2) 100%);
       }
+
       .ask-btn {
         color: $filter-color;
       }
@@ -433,14 +433,14 @@ export default {
     }
 
     .question-input {
+      border-bottom: 0;
       flex-basis: calc(100% - 65px);
       font-size: 14px;
-      line-height: 36px;
       height: 38px;
+      line-height: 36px;
       overflow: auto;
-      padding-right: 30px;
-      border-bottom: none;
       padding: 0 10px;
+      padding-right: 30px;
 
       &::placeholder {
         opacity: #888;
@@ -448,69 +448,69 @@ export default {
 
       &:disabled {
         &::placeholder {
-          opacity: .15;
+          opacity: 0.15;
         }
 
-        & ~ .ask-btn,
-        & ~ .clean-btn {
-          opacity: .15;
+        ~ .ask-btn,
+        ~ .clean-btn {
+          opacity: 0.15;
         }
       }
     }
 
     .clean-btn {
+      color: rgba(255, 255, 255, 0.5);
       flex-basis: 16px;
       font-size: 16px;
-      color: rgba(255, 255, 255, 0.5);
       margin-right: 16px;
     }
 
     .ask-btn {
+      color: $theme-color-primary;
       flex-basis: 16px;
       font-size: 20px;
-      color: $theme-color-primary;
     }
 
     &:not(:last-child) {
-      width: calc(100% - 54px);
       margin-right: 16px;
+      width: calc(100% - 54px);
     }
   }
 
   .ask-remark-block {
+    align-items: center;
+    border: 1px solid #2d3033;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
     font-size: 16px;
     height: 40px;
-    width: 40px;
-    text-align: left;
-    letter-spacing: 0.05em;
-    border: 1px solid #2D3033;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-align: left;
+    width: 40px;
 
     .ask-btn {
       &__icon {
+        fill: rgba(255, 255, 255, 0.8);
         font-size: 18px;
-        fill: rgba(255, 255, 255, .8);
 
         &:hover {
           fill: rgba(255, 255, 255, 1);
         }
 
         &--show {
-          fill: rgba(42, 210, 226, .8);
+          fill: rgba(42, 210, 226, 0.8);
 
           &:hover {
-            fill: #2AD2E2;
+            fill: #2ad2e2;
           }
         }
       }
     }
 
     &.disabled {
-      opacity: .3;
+      opacity: 0.3;
     }
 
     .help-link {
@@ -519,26 +519,26 @@ export default {
   }
 
   .algorithm-status {
-    position: absolute;
-    left: 0;
-    top: -18px;
-    font-size: 14px;
     color: #333;
+    font-size: 14px;
+    left: 0;
     opacity: 0.6;
+    position: absolute;
+    top: -18px;
   }
 
   .history-question-block {
+    background-color: #2d3033;
+    border-radius: 5px;
+    height: 0;
+    left: 0;
+    overflow: hidden;
     position: absolute;
     text-align: left;
-    left: 0;
     top: 100%;
+    transition: all 0.1s;
     width: calc(100% - 56px);
-    height: 0;
-    overflow: hidden;
-    transition: all .1s;
     z-index: 90;
-    background-color: #2D3033;
-    border-radius: 5px;
 
     &.has-filter {
       bottom: 137px;
@@ -551,15 +551,15 @@ export default {
     }
 
     .history-question {
+      border-bottom: 1px solid #464a50;
+      color: #fff;
+      cursor: pointer;
       font-size: 14px;
       line-height: 20px;
       padding: 10px 18px;
-      color: #fff;
-      cursor: pointer;
-      border-bottom: 1px solid #464A50;
 
       &:hover {
-        background-color: #464A50;
+        background-color: #464a50;
       }
 
       .icon {
@@ -569,14 +569,14 @@ export default {
   }
 
   .ask-helper {
-    width: calc(100% - #{$app-side-nav-closed-width});
-    height: calc(100vh - #{$header-height + $chat-room-height + $ask-condition-height});
-    position: fixed;
-    top: $header-height + $chat-room-height + $ask-condition-height;
-    right: 0;
     background: #000;
+    height: calc(100vh - #{$header-height + $chat-room-height + $ask-condition-height});
     overflow: auto;
-    padding: 32px 40px 0 40px;
+    padding: 32px 40px 0;
+    position: fixed;
+    right: 0;
+    top: $header-height + $chat-room-height + $ask-condition-height;
+    width: calc(100% - #{$app-side-nav-closed-width});
 
     &--has-basic-df-setting {
       width: calc(100% - #{$app-side-nav-closed-width} - #{$basic-df-setting-width});

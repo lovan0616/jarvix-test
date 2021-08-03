@@ -1586,10 +1586,6 @@ export default {
   }
 }
 
-.dropdown-select {
-  visibility: hidden;
-}
-
 .mini-app {
   .spinner-block {
     margin-top: 30vh;
@@ -1643,7 +1639,6 @@ export default {
           border-left: 1px solid #404949;
           font-weight: 600;
           letter-spacing: 4px;
-          line-height: 30px;
           line-height: 30px;
           padding-left: 24px;
         }
@@ -1960,7 +1955,7 @@ export default {
       &--active {
         &::before {
           background: #2fecb3;
-          border: none;
+          border: 0;
         }
       }
     }
@@ -1989,7 +1984,7 @@ export default {
         width: 160px;
         z-index: 1;
 
-        &::before {
+        ::before {
           background-color: transparent;
           bottom: 100%;
           content: '';
@@ -1999,7 +1994,7 @@ export default {
           width: 100%;
         }
 
-        &::after {
+        ::after {
           border-bottom: 12px solid #2b3839;
           border-left: 12px solid transparent;
           border-right: 12px solid transparent;
@@ -2061,5 +2056,14 @@ export default {
       color: #ff5c46;
     }
   }
+}
+
+.dropdown-select {
+  visibility: hidden;
+}
+
+.dragging-ghost {
+  background: #192323;
+  opacity: 0.5;
 }
 </style>
