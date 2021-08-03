@@ -521,11 +521,12 @@ export default {
       this.layout = null
       this.isShowAnomalySetting = false
       this.closeUnknowInfoBlock()
+
       this.$store
         .dispatch('chatBot/askQuestion', {
           question,
-          dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
-          dataFrameId: this.currentComponent.dataFrameId || this.dataFrameId,
+          dataSourceId: this.dataSourceId,
+          dataFrameId: this.dataFrameId,
           shouldCancelToken: true,
           // 編輯模式下帶入當初問問句使用的 parser 語系；新創時走原本流程（拿當前 store 中的語系）
           language:

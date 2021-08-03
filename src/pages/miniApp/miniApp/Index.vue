@@ -516,7 +516,7 @@ import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { updateAlertTimeZone } from '@/API/Alert'
 
 export default {
@@ -765,6 +765,7 @@ export default {
     this.getMiniAppInfo()
   },
   methods: {
+    ...mapActions('dataSource', ['changeDataSourceById']),
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
@@ -1211,6 +1212,10 @@ export default {
         case 'DeleteComponent':
         case 'CreateComponent':
           this.currentComponentId = componentData && componentData.id
+          this.changeDataSourceById({
+            dataFrameId: this.currentComponent.dataFrameId,
+            dataSourceId: this.currentComponent.dataSourceId
+          })
           break
         case 'CreateWarningCriteria':
           this.componentToWarningCriteriaData = {
