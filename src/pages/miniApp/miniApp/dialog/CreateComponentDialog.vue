@@ -41,10 +41,7 @@
     <div class="dialog__content">
       <div class="dialog__content--left">
         <template v-if="isCreatedViaAsking">
-          <div
-            v-if="!currentComponent.init"
-            class="search-bar"
-          >
+          <div class="search-bar">
             <data-frame-menu
               :redirect-on-change="false"
               :is-show-preview-entry="true"
