@@ -240,7 +240,7 @@ export default {
 
       getDataFrameById(this.tempConditionSetting.dataSourceId, false)
         .then(response => {
-          this.dataFrameOptionList = response.map(dataFrame => ({
+          this.dataFrameOptionList = response.filter(dataFrame => dataFrame.joinCount < 2).map(dataFrame => ({
             name: dataFrame.primaryAlias,
             value: dataFrame.id
           }))
