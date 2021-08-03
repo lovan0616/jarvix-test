@@ -119,7 +119,7 @@ import AskHelperDialog from './AskHelperDialog'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { Suggester, trimRedundant, defineTerm } from '@/utils/questionSuggester'
+import { Suggester, trimRedundant, defineTerm, defineSuggestionListItem } from '@/utils/questionSuggester'
 
 /**
  * @typedef {Object} SuggestionListItem
@@ -236,17 +236,14 @@ export default {
     },
     suggestionList () {
       // History suggestion items
-      /** @type {SuggestionListItem[]} */
       const historySuggestionItems = [...new Set(this.historyQuestionList.map(history => history.question))]
         .filter((question) => this.userQuestion ? question.includes(trimRedundant(this.userQuestion)) : true)
         .map((question) => {
-          /** @type {SuggestionListItem} */
-          const result = {
+          return defineSuggestionListItem({
             iconClass: 'clock',
             question,
             html: question
-          }
-          return result
+          })
         })
       if (historySuggestionItems.length > 3) {
         historySuggestionItems.length = 3
@@ -254,45 +251,7 @@ export default {
 
       // Keyword suggestion items
       /** @type {SuggestionListItem[]} */
-      const keywordSuggestionItems = this.suggester === null
-        ? []
-        : (() => {
-          /** @type {import('@/utils/questionSuggester').Suggestion[]} */
-          const suggestions = this.suggester.suggestions
-          return suggestions.map((suggestion) => {
-            /** @type {import('@/utils/questionSuggester').Token[]} */
-            const tokens = this.suggester.tokens
-            const question = trimRedundant(
-              tokens
-                .map((token) =>
-                  token === suggestion.token
-                    ? suggestion.toString().trim()
-                    : token.toString().trim()
-                )
-                .join(' ')
-            )
-            const suggestionTermHighlightHtml = suggestion.toString()
-              .split('')
-              .map((c, i) =>
-                suggestion.result.positions.includes(i)
-                  ? `<span class="highlight">${c}</span>`
-                  : c
-              )
-              .join('')
-            const html = tokens
-              .map((token) =>
-                token === suggestion.token
-                  ? `<span class="bold">${suggestionTermHighlightHtml}</span>`
-                  : token.toString().trim()
-              )
-              .join(' ')
-            return {
-              iconClass: 'search',
-              question,
-              html
-            }
-          })
-        })()
+      const keywordSuggestionItems = this.suggester?.suggestions ?? []
 
       return [...keywordSuggestionItems, ...historySuggestionItems]
     },

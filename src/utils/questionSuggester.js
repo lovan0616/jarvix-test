@@ -36,6 +36,13 @@ import { Fzf } from 'fzf'
  */
 
 /**
+ * @typedef {Object} SuggestionListItem
+ * @property {string} iconClass
+ * @property {string} question
+ * @property {string} html
+ */
+
+/**
  * Check if `num` is between [`min`, `max`]
  *
  * @param {number} max
@@ -108,6 +115,16 @@ export function defineSuggestion (suggestion) {
   }
 }
 
+/**
+ * Define a suggestionListItem
+ *
+ * @param {SuggestionListItem} suggestionListItem
+ * @returns {SuggestionListItem}
+ */
+export function defineSuggestionListItem (suggestionListItem) {
+  return suggestionListItem
+}
+
 export class Suggester {
   /** @type {Term[]} */
   _knownTerms = []
@@ -120,11 +137,9 @@ export class Suggester {
   /** @type {Token | null} */
   _editingToken = null
   /** @type {Suggestion[]} */
+  _suggestions = []
+  /** @type {SuggestionListItem[]} */
   suggestions = []
-
-  get tokens () {
-    return this._tokens
-  }
 
   /**
    * @param {Term[]} toAppend
@@ -154,6 +169,7 @@ export class Suggester {
     this._updateTokens()
     this._updateEditingToken()
     this._updateSuggestions()
+    this._updateSuggestionListItem()
   }
 
   _updateTokens () {
@@ -201,7 +217,7 @@ export class Suggester {
       const tokenTermValue = token.toString()
       const offset = token.startGapIndex
       const splitted = tokenTermValue.split(/\s/)
-      return splitted.map((str, i) => {
+      return splitted.map((str) => {
         const startGapIndex = offset + tokenTermValue.indexOf(str)
         const endGapIndex = startGapIndex + str.length
         return defineToken({
@@ -212,6 +228,7 @@ export class Suggester {
         })
       })
     })
+      .filter((token) => token.value.value.length > 0)
     this._tokens = tokens
   }
 
@@ -221,7 +238,7 @@ export class Suggester {
   }
 
   _updateSuggestions () {
-    this.suggestions = []
+    this._suggestions = []
 
     if (this._editingToken === null) return
 
@@ -247,6 +264,42 @@ export class Suggester {
         }
       }))
 
-    this.suggestions.push(...result)
+    this._suggestions.push(...result)
+  }
+
+  _updateSuggestionListItem () {
+    const suggestions = this._suggestions
+    this.suggestions = suggestions.map((suggestion) => {
+      const tokens = this._tokens
+      const question = trimRedundant(
+        tokens
+          .map((token) =>
+            token === suggestion.token
+              ? suggestion.toString().trim()
+              : token.toString().trim()
+          )
+          .join(' ')
+      )
+      const suggestionTermHighlightHtml = suggestion.toString()
+        .split('')
+        .map((c, i) =>
+          suggestion.result.positions.includes(i)
+            ? `<span class="highlight">${c}</span>`
+            : c
+        )
+        .join('')
+      const html = tokens
+        .map((token) =>
+          token === suggestion.token
+            ? `<span class="bold">${suggestionTermHighlightHtml}</span>`
+            : token.toString().trim()
+        )
+        .join(' ')
+      return {
+        iconClass: 'search',
+        question,
+        html
+      }
+    })
   }
 }
