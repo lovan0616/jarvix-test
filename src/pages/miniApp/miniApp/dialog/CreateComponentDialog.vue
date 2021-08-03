@@ -548,7 +548,7 @@ export default {
     },
     InputDiaplayedName: {
       get () {
-        return this.currentComponent.config.diaplayedName
+        return this.currentComponent && this.currentComponent.config.diaplayedName || null
       },
       set (val) {
         if (!val) {
