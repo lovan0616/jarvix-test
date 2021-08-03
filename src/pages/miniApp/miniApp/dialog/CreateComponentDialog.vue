@@ -8,7 +8,7 @@
         >
           <svg-icon icon-class="arrow-left" />
         </div>
-        {{ currentComponent.init ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
+        {{ isComponentInit ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
       </div>
       <div class="nav--right">
         <div
@@ -22,7 +22,7 @@
           {{ $t('miniApp.componentNotAddable') }}
         </div>
         <button
-          v-if="currentComponent.init"
+          v-if="isComponentInit"
           class="btn btn-default"
           @click="saveComponent"
         >
@@ -59,7 +59,7 @@
             :is-loading.sync="isLoading"
             :filters="filters"
             :controls="controls"
-            @setDiagram="currentComponent.diagram = $event"
+            @setDiagram="componentDiagram = $event"
             @updateTitle="updateComponentTitle"
             @checkTitleMatch="checkTitleMatch"
           />
@@ -81,16 +81,16 @@
           </transition>
         </template>
         <formula-setting
-          v-else-if="currentComponent.type === 'formula'"
+          v-else-if="currentComponentType === 'formula'"
           :formula-setting="currentComponent.formulaSetting"
           :formula-component-info="formulaComponentInfo"
           :current-component="currentComponent"
         />
         <simulator-setting
-          v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parameters-optimized-simulator'"
+          v-else-if="currentComponentType === 'simulator' || currentComponentType === 'parameters-optimized-simulator'"
           :model-setting="currentComponent.modelSetting"
           :model-component-info="modelComponentInfo"
-          :current-component-type="currentComponent.type"
+          :current-component-type="currentComponentType"
           :is-loading.sync="isLoading"
           :is-failed.sync="isFailed"
         />
@@ -124,7 +124,7 @@
             <div class="setting__label-block">
               {{ $t('miniApp.selectDashboard') }}
               <el-switch
-                v-model="currentComponent.config.hasRelatedDashboard"
+                v-model="currentComponentConfigHasRelatedDashboard"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
@@ -132,12 +132,12 @@
               />
             </div>
             <div
-              v-if="currentComponent.config.hasRelatedDashboard"
+              v-if="currentComponentConfigHasRelatedDashboard"
               class="setting__block-select-field"
             >
               <default-select
                 v-validate="'required'"
-                :value="currentComponent.config.relatedDashboard.id"
+                :value="currentComponentConfig.relatedDashboard.id"
                 :option-list="dashboardOptions"
                 :placeholder="$t('miniApp.selectDashboard')"
                 class="setting__block-select"
@@ -155,7 +155,7 @@
         </div>
         <!-- Related dashboard of component columns or rows -->
         <div
-          v-if="currentComponent.diagram === 'table'"
+          v-if="componentDiagram === 'table'"
           class="setting__content"
         >
           <div class="setting__block">
@@ -164,7 +164,7 @@
                 {{ $t('miniApp.dataColumnRelationSetting') }}
               </span>
               <el-switch
-                v-model="currentComponent.config.hasTableRelatedDashboard"
+                v-model="currentComponentConfig.hasTableRelatedDashboard"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
@@ -174,7 +174,7 @@
                 {{ $t('miniApp.dataColumnRelationSettingReminding') }}
               </span>
             </div>
-            <template v-if="currentComponent.config.hasTableRelatedDashboard">
+            <template v-if="currentComponentConfig.hasTableRelatedDashboard">
               <div class="setting__block-select-field">
                 <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
                 <div class="setting__block-radio-groups">
@@ -186,7 +186,7 @@
                     <input
                       :id="option.value"
                       :value="option.value"
-                      :checked="option.value === currentComponent.config.tableRelationInfo.triggerTarget"
+                      :checked="option.value === currentComponentConfig.tableRelationInfo.triggerTarget"
                       name="triggerOption"
                       class="input-radio"
                       type="radio"
@@ -202,7 +202,7 @@
                 </div>
               </div>
               <div
-                v-if="currentComponent.config.tableRelationInfo.triggerTarget === 'column'"
+                v-if="currentComponentConfig.tableRelationInfo.triggerTarget === 'column'"
                 class="setting__block-select-field"
               >
                 <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
@@ -252,7 +252,7 @@
             <div class="setting__label-block">
               {{ $t('miniApp.updateFrequency') }}
               <el-switch
-                v-model="currentComponent.config.isAutoRefresh"
+                v-model="currentComponentConfigIsAutoRefresh"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
@@ -260,12 +260,12 @@
               />
             </div>
             <div
-              v-if="currentComponent.config.isAutoRefresh"
+              v-if="currentComponentConfigIsAutoRefresh"
               class="setting__block-select-field"
             >
               <default-select
                 v-validate="'required'"
-                v-model="currentComponent.config.refreshFrequency"
+                v-model="currentComponentConfig.refreshFrequency"
                 :option-list="updateFrequency"
                 :placeholder="$t('miniApp.chooseUpdateFrequency')"
                 class="setting__block-select"
@@ -290,7 +290,7 @@
               {{ $t('miniApp.fontSizeSetting') }}
             </div>
             <default-select
-              v-model="currentComponent.config.fontSize"
+              v-model="currentComponentConfig.fontSize"
               :option-list="indexSizeOptionList"
               :placeholder="$t('miniApp.chooseColumnSize')"
               class="setting__block-select"
@@ -306,7 +306,7 @@
             <div class="setting__block-select-field">
               <label class="setting__block-select-label">{{ $t('miniApp.columnSpan') }}</label>
               <default-select
-                v-model.number="currentComponent.config.size.column"
+                v-model.number="componentColSize"
                 :option-list="columnSpanOption"
                 :placeholder="$t('miniApp.chooseColumnSize')"
                 class="setting__block-select"
@@ -317,7 +317,7 @@
               <label class="setting__block-select-label">{{ $t('miniApp.rowSpan') }}</label>
               <input
                 type="number"
-                v-model.number="currentComponent.config.size.row"
+                v-model.number="componentRowSize"
                 :placeholder="$t('miniApp.chooseRowSize')"
                 class="setting__block-select"
                 name="rowSpan"
@@ -431,13 +431,16 @@ export default {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
+      return this.currentComponentType !== 'monitor-warning-list' && this.currentComponentType !== 'abnormal-statistics' && this.currentComponentType !== 'simulator' && this.currentComponentType !== 'parameters-optimized-simulator'
     },
     isShowUpdatedOption () {
-      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
+      return this.currentComponentType !== 'monitor-warning-list' && this.currentComponentType !== 'abnormal-statistics' && this.currentComponentType !== 'simulator' && this.currentComponentType !== 'parameters-optimized-simulator'
     },
     isShowFontSizeOption () {
-      return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
+      return this.currentComponentType === 'index' || this.currentComponentType === 'formula' || this.currentComponentType === 'abnormal-statistics'
+    },
+    isComponentInit () {
+      return this.currentComponent && this.currentComponent.init
     },
     updateFrequency () {
       return [
@@ -538,7 +541,7 @@ export default {
       ]
     },
     predictComponentHeight () {
-      if (this.rowHeight !== null && this.currentComponent.config.size.row > 0) {
+      if (this.rowHeight !== null && this.componentRowSize !== null && this.componentRowSize > 0) {
         return this.rowHeight * this.currentComponent.config.size.row + this.gap * (this.currentComponent.config.size.row - 1)
       }
       return null
@@ -559,17 +562,86 @@ export default {
           this.currentComponent.config.diaplayedName = val
         }
       }
+    },
+    currentComponentType () {
+      return this.currentComponent && this.currentComponent.type
+    },
+    currentComponentConfig () {
+      return this.currentComponent && this.currentComponent.config
+    },
+    componentDiagram: {
+      get () {
+        return this.currentComponent && this.currentComponent.diagram
+      },
+      set (val) {
+        if (this.currentComponent && this.currentComponent.diagram) {
+          this.currentComponent.diagram = val
+        }
+      }
+    },
+    currentComponentConfigDiaplayedName: {
+      get () {
+        return (this.currentComponentConfig && this.currentComponentConfig.diaplayedName) || null
+      },
+      set (val) {
+        if (this.currentComponent && this.currentComponent.config) {
+          this.currentComponent.config.diaplayedName = val
+        }
+      }
+    },
+    currentComponentConfigHasRelatedDashboard: {
+      get () {
+        return (this.currentComponentConfig && this.currentComponentConfig.hasRelatedDashboard) || null
+      },
+      set (val) {
+        if (this.currentComponent && this.currentComponent.config) {
+          this.currentComponent.config.hasRelatedDashboard = val
+        }
+      }
+    },
+    currentComponentConfigIsAutoRefresh: {
+      get () {
+        return (this.currentComponentConfig && this.currentComponentConfig.isAutoRefresh) || null
+      },
+      set (val) {
+        if (this.currentComponent && this.currentComponent.config) {
+          this.currentComponent.config.isAutoRefresh = val
+        }
+      }
+    },
+    componentRowSize: {
+      get () {
+        return (this.currentComponentConfig && this.currentComponentConfig.size && this.currentComponentConfig.size.row) || null
+      },
+      set (val) {
+        if (this.currentComponent && this.currentComponent.config) {
+          this.currentComponent.config.size.row = val
+        }
+      }
+    },
+    componentColSize: {
+      get () {
+        return (this.currentComponentConfig && this.currentComponentConfig.size && this.currentComponentConfig.size.column) || null
+      },
+      set (val) {
+        if (this.currentComponent && this.currentComponent.config) {
+          this.currentComponent.config.size.column = val
+        }
+      }
     }
   },
   mounted () {
-    this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
+    this.currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
     this.titleTemp = this.currentComponent.config.diaplayedName
 
     // 所有可以不需透過問問句就能創建的元件類型
     const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
-    this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
-    const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
-    this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
+    this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponentType)
+
+    if (this.currentComponentConfig) {
+      const columnInfo = this.currentComponentConfig.tableRelationInfo.columnRelations[0].columnInfo
+      this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
+    }
   },
   destroyed () {
     this.$store.commit('result/updateCurrentResultInfo', null)
