@@ -120,6 +120,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Suggester, trimRedundant, defineTerm, defineSuggestionListItem } from '@/utils/questionSuggester'
+// import { getDataFrameCategoryDataValueById } from '@/API/DataSource'
 
 /**
  * @typedef {Object} SuggestionListItem
@@ -494,8 +495,10 @@ export default {
         newSuggester.appendKnownTerms(terms)
       }
       const appendDataValueByDataFrameId = async (dataFrameId) => {
-        // TODO: implement real code
-        await (new Promise(resolve => setTimeout(resolve, 10000)))
+        // TODO: Wait for real API developed
+        // const data = await getDataFrameCategoryDataValueById(dataFrameId)
+        // const terms = data.values
+        await new Promise(resolve => setTimeout(resolve, 10000))
         const terms = []
           .map((value) => defineTerm({ type: 'dataValue', value }))
         newSuggester.appendKnownTerms(terms)
@@ -503,9 +506,8 @@ export default {
       this.isLoadingKnownTerms = true
       const promises = [
         appendColumns(),
-        ...(this.dataFrameId === 'all'
-          ? this.dataFramesId.map((dataFrameId) => appendDataValueByDataFrameId(dataFrameId))
-          : [appendDataValueByDataFrameId(this.dataFrameId)])
+        ...(this.dataFrameId === 'all' ? this.dataFramesId : [this.dataFrameId])
+          .map((dataFrameId) => appendDataValueByDataFrameId(dataFrameId))
       ]
       await Promise.all(promises)
       this.isLoadingKnownTerms = false
