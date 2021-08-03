@@ -588,7 +588,8 @@ export default {
         this.$emit('updateSetting', {
           ...this.currentComponent,
           ...this.formulaComponentInfo,
-          ...this.modelComponentInfo
+          ...this.modelComponentInfo,
+          ...this.currentResultInfo // 公式元件需補上一般問問句會取得的資料
         })
       })
     },
