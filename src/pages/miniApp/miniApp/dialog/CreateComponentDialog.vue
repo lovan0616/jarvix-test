@@ -688,7 +688,7 @@ export default {
     },
     checkTitleMatch (val) {
       if (val) {
-        this.isCustomTitle = val.replaceAll(/ /g, '') !== this.titleTemp.replaceAll(/ /g, '')
+        this.isCustomTitle = val.replaceAll(/ /g, '').toLowerCase() !== this.titleTemp.replaceAll(/ /g, '').toLowerCase()
       }
     }
   }
