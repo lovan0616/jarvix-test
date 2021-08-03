@@ -50,7 +50,7 @@
             <ask-block
               :redirect-on-ask="false"
               :is-show-ask-helper-entry="false"
-              :default-question="currentQuestion"
+              :default-question="currentComponent.question"
             />
           </div>
           <dashboard-component
@@ -59,7 +59,7 @@
             :is-loading.sync="isLoading"
             :filters="filters"
             :controls="controls"
-            @setDiagram="componentDiagram = $event"
+            @setDiagram="currentComponent.diagram = $event"
             @updateTitle="updateComponentTitle"
             @checkTitleMatch="checkTitleMatch"
           />
@@ -81,16 +81,16 @@
           </transition>
         </template>
         <formula-setting
-          v-else-if="currentComponentType === 'formula'"
+          v-else-if="currentComponent.type === 'formula'"
           :formula-setting="currentComponent.formulaSetting"
           :formula-component-info="formulaComponentInfo"
           :current-component="currentComponent"
         />
         <simulator-setting
-          v-else-if="currentComponentType === 'simulator' || currentComponentType === 'parameters-optimized-simulator'"
+          v-else-if="currentComponent.type === 'simulator' || currentComponent.type === 'parameters-optimized-simulator'"
           :model-setting="currentComponent.modelSetting"
           :model-component-info="modelComponentInfo"
-          :current-component-type="currentComponentType"
+          :current-component-type="currentComponent.type"
           :is-loading.sync="isLoading"
           :is-failed.sync="isFailed"
         />
@@ -124,7 +124,7 @@
             <div class="setting__label-block">
               {{ $t('miniApp.selectDashboard') }}
               <el-switch
-                v-model="currentComponentConfigHasRelatedDashboard"
+                v-model="currentComponent.config.hasRelatedDashboard"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
@@ -132,12 +132,12 @@
               />
             </div>
             <div
-              v-if="currentComponentConfigHasRelatedDashboard"
+              v-if="currentComponent.config.hasRelatedDashboard"
               class="setting__block-select-field"
             >
               <default-select
                 v-validate="'required'"
-                :value="currentComponentConfig.relatedDashboard.id"
+                :value="currentComponent.config.relatedDashboard.id"
                 :option-list="dashboardOptions"
                 :placeholder="$t('miniApp.selectDashboard')"
                 class="setting__block-select"
@@ -155,7 +155,7 @@
         </div>
         <!-- Related dashboard of component columns or rows -->
         <div
-          v-if="componentDiagram === 'table'"
+          v-if="currentComponent.diagram === 'table'"
           class="setting__content"
         >
           <div class="setting__block">
@@ -164,7 +164,7 @@
                 {{ $t('miniApp.dataColumnRelationSetting') }}
               </span>
               <el-switch
-                v-model="currentComponentConfig.hasTableRelatedDashboard"
+                v-model="currentComponent.config.hasTableRelatedDashboard"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
@@ -174,7 +174,7 @@
                 {{ $t('miniApp.dataColumnRelationSettingReminding') }}
               </span>
             </div>
-            <template v-if="currentComponentConfig.hasTableRelatedDashboard">
+            <template v-if="currentComponent.config.hasTableRelatedDashboard">
               <div class="setting__block-select-field">
                 <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
                 <div class="setting__block-radio-groups">
@@ -186,7 +186,7 @@
                     <input
                       :id="option.value"
                       :value="option.value"
-                      :checked="option.value === currentComponentConfig.tableRelationInfo.triggerTarget"
+                      :checked="option.value === currentComponent.config.tableRelationInfo.triggerTarget"
                       name="triggerOption"
                       class="input-radio"
                       type="radio"
@@ -202,7 +202,7 @@
                 </div>
               </div>
               <div
-                v-if="currentComponentConfig.tableRelationInfo.triggerTarget === 'column'"
+                v-if="currentComponent.config.tableRelationInfo.triggerTarget === 'column'"
                 class="setting__block-select-field"
               >
                 <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
@@ -252,7 +252,7 @@
             <div class="setting__label-block">
               {{ $t('miniApp.updateFrequency') }}
               <el-switch
-                v-model="currentComponentConfigIsAutoRefresh"
+                v-model="currentComponent.config.isAutoRefresh"
                 :width="Number('32')"
                 active-color="#2AD2E2"
                 inactive-color="#324B4E"
@@ -260,12 +260,12 @@
               />
             </div>
             <div
-              v-if="currentComponentConfigIsAutoRefresh"
+              v-if="currentComponent.config.isAutoRefresh"
               class="setting__block-select-field"
             >
               <default-select
                 v-validate="'required'"
-                v-model="currentComponentConfig.refreshFrequency"
+                v-model="currentComponent.config.refreshFrequency"
                 :option-list="updateFrequency"
                 :placeholder="$t('miniApp.chooseUpdateFrequency')"
                 class="setting__block-select"
@@ -290,7 +290,7 @@
               {{ $t('miniApp.fontSizeSetting') }}
             </div>
             <default-select
-              v-model="currentComponentConfig.fontSize"
+              v-model="currentComponent.config.fontSize"
               :option-list="indexSizeOptionList"
               :placeholder="$t('miniApp.chooseColumnSize')"
               class="setting__block-select"
@@ -306,7 +306,7 @@
             <div class="setting__block-select-field">
               <label class="setting__block-select-label">{{ $t('miniApp.columnSpan') }}</label>
               <default-select
-                v-model.number="componentColSize"
+                v-model.number="currentComponent.config.size.column"
                 :option-list="columnSpanOption"
                 :placeholder="$t('miniApp.chooseColumnSize')"
                 class="setting__block-select"
@@ -317,7 +317,7 @@
               <label class="setting__block-select-label">{{ $t('miniApp.rowSpan') }}</label>
               <input
                 type="number"
-                v-model.number="componentRowSize"
+                v-model.number="currentComponent.config.size.row"
                 :placeholder="$t('miniApp.chooseRowSize')"
                 class="setting__block-select"
                 name="rowSpan"
@@ -385,12 +385,16 @@ export default {
     }
   },
   data () {
+    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
+    const currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
+    const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
+
     return {
-      isAddable: null,
+      isAddable: isDirectAddableComponentTypes.includes(currentComponent.type),
       isLoading: false,
       isFailed: false,
-      currentComponent: null,
-      selectedTriggerColumn: null,
+      currentComponent,
+      selectedTriggerColumn: columnInfo && columnInfo.dataColumnId,
       relatedDashboardTemplate: {
         id: null,
         name: null
@@ -416,7 +420,7 @@ export default {
       ],
       formulaComponentInfo: {},
       modelComponentInfo: {},
-      titleTemp: null,
+      titleTemp: currentComponent.config.diaplayedName,
       isCustomTitle: false
     }
   },
@@ -431,13 +435,13 @@ export default {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
-      return this.currentComponentType !== 'monitor-warning-list' && this.currentComponentType !== 'abnormal-statistics' && this.currentComponentType !== 'simulator' && this.currentComponentType !== 'parameters-optimized-simulator'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowUpdatedOption () {
-      return this.currentComponentType !== 'monitor-warning-list' && this.currentComponentType !== 'abnormal-statistics' && this.currentComponentType !== 'simulator' && this.currentComponentType !== 'parameters-optimized-simulator'
+      return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
     },
     isShowFontSizeOption () {
-      return this.currentComponentType === 'index' || this.currentComponentType === 'formula' || this.currentComponentType === 'abnormal-statistics'
+      return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
     },
     isComponentInit () {
       return this.currentComponent && this.currentComponent.init
@@ -541,13 +545,10 @@ export default {
       ]
     },
     predictComponentHeight () {
-      if (this.rowHeight !== null && this.componentRowSize !== null && this.componentRowSize > 0) {
+      if (this.rowHeight !== null && this.currentComponent.config.size.row !== null && this.currentComponent.config.size.row > 0) {
         return this.rowHeight * this.currentComponent.config.size.row + this.gap * (this.currentComponent.config.size.row - 1)
       }
       return null
-    },
-    currentQuestion () {
-      return (this.currentComponent && this.currentComponent.question) ? this.currentComponent.question : null
     },
     InputDiaplayedName: {
       get () {
@@ -562,85 +563,6 @@ export default {
           this.currentComponent.config.diaplayedName = val
         }
       }
-    },
-    currentComponentType () {
-      return this.currentComponent && this.currentComponent.type
-    },
-    currentComponentConfig () {
-      return this.currentComponent && this.currentComponent.config
-    },
-    componentDiagram: {
-      get () {
-        return this.currentComponent && this.currentComponent.diagram
-      },
-      set (val) {
-        if (this.currentComponent && this.currentComponent.diagram) {
-          this.currentComponent.diagram = val
-        }
-      }
-    },
-    currentComponentConfigDiaplayedName: {
-      get () {
-        return (this.currentComponentConfig && this.currentComponentConfig.diaplayedName) || null
-      },
-      set (val) {
-        if (this.currentComponent && this.currentComponent.config) {
-          this.currentComponent.config.diaplayedName = val
-        }
-      }
-    },
-    currentComponentConfigHasRelatedDashboard: {
-      get () {
-        return (this.currentComponentConfig && this.currentComponentConfig.hasRelatedDashboard) || null
-      },
-      set (val) {
-        if (this.currentComponent && this.currentComponent.config) {
-          this.currentComponent.config.hasRelatedDashboard = val
-        }
-      }
-    },
-    currentComponentConfigIsAutoRefresh: {
-      get () {
-        return (this.currentComponentConfig && this.currentComponentConfig.isAutoRefresh) || null
-      },
-      set (val) {
-        if (this.currentComponent && this.currentComponent.config) {
-          this.currentComponent.config.isAutoRefresh = val
-        }
-      }
-    },
-    componentRowSize: {
-      get () {
-        return (this.currentComponentConfig && this.currentComponentConfig.size && this.currentComponentConfig.size.row) || null
-      },
-      set (val) {
-        if (this.currentComponent && this.currentComponent.config) {
-          this.currentComponent.config.size.row = val
-        }
-      }
-    },
-    componentColSize: {
-      get () {
-        return (this.currentComponentConfig && this.currentComponentConfig.size && this.currentComponentConfig.size.column) || null
-      },
-      set (val) {
-        if (this.currentComponent && this.currentComponent.config) {
-          this.currentComponent.config.size.column = val
-        }
-      }
-    }
-  },
-  mounted () {
-    this.currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
-    this.titleTemp = this.currentComponent.config.diaplayedName
-
-    // 所有可以不需透過問問句就能創建的元件類型
-    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
-    this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponentType)
-
-    if (this.currentComponentConfig) {
-      const columnInfo = this.currentComponentConfig.tableRelationInfo.columnRelations[0].columnInfo
-      this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
     }
   },
   destroyed () {
