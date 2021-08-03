@@ -234,7 +234,7 @@
           </span>
           <!-- 暫時放這 -->
           <span v-else-if="headInfo.value === 'createMethodLabel'">
-            {{ data[headInfo.value] }} 
+            {{ data[headInfo.value] }}
             <a
               v-if="data.joinCount > 1"
               :disabled="isInProcess(data) || isPending(data) || calculateId === data.id"
@@ -250,7 +250,7 @@
             <a
               v-if="data.enabledManualUpdate && data.lastImportType === 'REIMPORT'"
               :disabled="updateId === data.id"
-              class="link" 
+              class="link"
               href="javascript:void(0);"
               @click="updateImmediately(data)"
             >
@@ -568,7 +568,7 @@ export default {
         this.$emit('fetch')
       })
     },
-    updateImmediately ({id}) {
+    updateImmediately ({ id }) {
       if (this.updateId === id) return false
       this.updateId = id
       return triggerUpdateData(id).then(() => {
@@ -588,10 +588,10 @@ export default {
 <style lang="scss" scoped>
 .data-source-list-table {
   .empty-status {
-    display: flex;
-    justify-content: center;
     align-items: center;
+    display: flex;
     height: 240px;
+    justify-content: center;
 
     &.is-processing {
       cursor: not-allowed;
@@ -599,62 +599,77 @@ export default {
   }
 
   .name-link {
+    @include text-hidden;
+
+    color: #42a5b3;
     display: inline-block;
     width: 100%;
-    color: #42A5B3;
-    @include text-hidden;
   }
+
   .data-table-body {
     overflow: visible;
   }
+
   .data-table-row.is-processing {
     background-color: var(--color-bg-5);
   }
+
   .data-table-cell {
     .is-processing {
       color: #ccc;
     }
+
     .dataframe-status {
       display: block;
       height: 23px;
+
       &.finished {
         color: $theme-color-success;
       }
+
       &.processing {
         color: $theme-color-warning;
       }
+
       &.failed {
         color: $theme-color-danger;
       }
     }
+
     .dataframe-name {
       @include text-hidden;
     }
+
     .db-connection-status {
       &--fail {
-        color: #FF5C46;
+        color: #ff5c46;
       }
+
       &--complete {
-        color: #2FECB3;
+        color: #2fecb3;
       }
     }
   }
+
   .hasWidth {
     flex: initial;
   }
+
   .alert-icon {
     color: $theme-color-warning;
   }
+
   .spinner-container {
     height: 310px;
   }
 
   .link-dropdown {
-    position: relative;
     cursor: pointer;
+    position: relative;
 
     &[disabled] {
       cursor: not-allowed;
+
       &:hover {
         .dropdown {
           visibility: hidden;
@@ -668,8 +683,8 @@ export default {
       }
 
       .dropdown-icon {
-        transform: rotate(0deg);
         color: #fff;
+        transform: rotate(0deg);
       }
     }
 
@@ -679,10 +694,10 @@ export default {
 
     .dropdown-icon {
       margin-left: 6px;
-      width: 8px;
       text-align: center;
-      transition: all 0.3s;
       transform: rotate(180deg);
+      transition: all 0.3s;
+      width: 8px;
     }
   }
 }
@@ -690,11 +705,11 @@ export default {
 <style lang="scss">
 .error-tooltip.el-tooltip__popper {
   background-color: #007783;
-  box-shadow: 0px 2px 10px rgba(34, 117, 125, 0.5);
   border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(34, 117, 125, 0.5);
   padding: 8px;
 
-  &.el-tooltip__popper[x-placement^=top] .popper__arrow:after {
+  &.el-tooltip__popper[x-placement^=top] .popper__arrow::after {
     border-top-color: #007783;
   }
 
@@ -702,7 +717,7 @@ export default {
     border-top-color: #007783;
   }
 
-  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow:after {
+  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow::after {
     border-bottom-color: #007783;
   }
 
@@ -710,6 +725,7 @@ export default {
     border-bottom-color: #007783;
   }
 }
+
 .db-connection-log-info {
   line-height: 14px;
 
@@ -718,19 +734,20 @@ export default {
   }
 
   .info {
-    &__label, &__description {
-      margin: 0;
+    &__label,
+    &__description {
       font-size: 12px;
       line-height: 16px;
+      margin: 0;
     }
 
     &__label {
-      font-weight: 600;
       color: $theme-color-white;
+      font-weight: 600;
     }
 
     &__description {
-      color: #DDDDDD;
+      color: #ddd;
     }
   }
 }
@@ -738,19 +755,22 @@ export default {
 .data-source-list-table {
   .link-dropdown {
     .dropdown-select {
+      height: 30px;
       position: absolute;
       width: 100%;
-      height: 30px;
     }
+
     .dropdown-select-box {
-      top: 29px;
+      box-shadow: 0 4px 10px rgba(58, 178, 189, 0.5);
       left: 0;
+      top: 29px;
       z-index: 1;
-      box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5)
     }
+
     .dropdown-select-box::before {
       right: 120px;
     }
+
     .dropdown-flex {
       padding: 12px;
     }
