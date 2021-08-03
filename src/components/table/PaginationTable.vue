@@ -204,7 +204,6 @@ export default {
           sortType = 'DESC'
           break
         default:
-          sortType = null
           break
       }
       this.$emit('on-sort', { dataColumnIndex, sortType })

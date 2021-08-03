@@ -199,12 +199,6 @@ export default {
         this.isLoading = true
         this.fetchDataFrameData(this.dataFrameId, 0, true, false)
       }
-    },
-    sortOrders: {
-      deep: true,
-      handler () {
-        this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
-      }
     }
   },
   mounted () {
@@ -406,11 +400,13 @@ export default {
     handleTableSort ({ dataColumnIndex, sortType }) {
       if (!sortType) {
         this.sortOrders = null
+        this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
         return
       }
       // 根據index從columnIdList中取出column id
       const dataColumnId = this.columnIdList[dataColumnIndex]
       this.sortOrders = { dataColumnId, sortType }
+      this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
     },
     async setColumnIdList (dataFrameId) {
       if (dataFrameId) {
