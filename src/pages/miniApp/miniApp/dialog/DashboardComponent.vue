@@ -473,6 +473,10 @@ export default {
         this.askQuestion(this.currentComponent.question)
       }
     }
+
+    if (this.computedQuestion) {
+      this.$emit('checkTitleMatch', this.computedQuestion)
+    }
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
@@ -622,15 +626,6 @@ export default {
         this.segmentation = selectedResultSegmentationInfo
       }
 
-      // 初次創建時，預設元件名稱為使用者輸入的問句
-      if (!this.currentComponent.init) {
-        this.currentComponent.config.diaplayedName =
-          this.segmentation.sentence.reduce(
-            (acc, cur) => (acc += ` ${cur.matchedWord}`),
-            ''
-          )
-      }
-
       // 確認是否為趨勢類型問題
       const isTrendQuestion = this.segmentation.denotation === 'TREND'
       let dateTimeColumn = this.segmentation.transcript.subjectList.find(
@@ -755,6 +750,9 @@ export default {
           this.$store.commit('result/updateCurrentResultInfo', null)
           // this.hasError = true
           if (error.message !== 'cancel') this.resultInfo = null
+        })
+        .then(() => {
+          this.$emit('updateTitle', this.computedQuestion)
         })
     },
     composeComponentQuestion (sentence) {
