@@ -1,0 +1,4070 @@
+{
+  "lang": "Ngôn ngữ",
+  "common": {
+    "show": "Hiển thị",
+    "hide": "Ẩn"
+  },
+  "nav": {
+    "index": "Chỉ số",
+    "pinboard": "Bảng ghim cá nhân",
+    "projectPinboard": "Bảng ghim dự án",
+    "dataManagement": "Quản lý dữ liệu",
+    "groupUserManagement": "Quản lý người dùng",
+    "groupPlaceholder": "Dự án",
+    "languagePlaceholder": "Ngôn ngữ",
+    "setting": "Cài đặt",
+    "projectManagement": "Quản lý dự án",
+    "algorithm": "Thuật toán",
+    "helper": "Hỗ trợ",
+    "warRoom": "Phòng chiến tranh",
+    "application": "Ứng dụng",
+    "modelManagement": "Quản lý mô hình",
+    "modelFlowManagement": "Quản lý quy trình",
+    "schedule": "Tiến độ"
+  },
+  "sideNav": {
+    "functionList": "Menu chức năng",
+    "home": "Trang Chủ",
+    "pinboard": "Bảng ghim cá nhân",
+    "accountManagement": "Quản lý tài khoản",
+    "accountInformation": "Thông tin tài khoản",
+    "accountUserManagement": "Quản lý tài khoản người dùng",
+    "accountGroupManagement": "Quản lý dự án",
+    "accountSetting": "Cài đặt tài khoản",
+    "functionDescription": "Mô tả chức năng",
+    "groupUserManagement": "Quản lý người dùng",
+    "groupUserList": "Danh sách người dùng",
+    "groupCreateUser": "Thêm người dùng mới",
+    "dataSourceManagement": "Quản lý nguồn dữ liệu",
+    "dataSourceList": "Quản lý nguồn dữ liệu",
+    "dataFileManagement": "Quản lý tệp dữ liệu",
+    "dataFileList": "Danh sách bảng dữ liệu",
+    "preferences": "Cài đặt cá nhân",
+    "updateLicense": "Cập nhật bản quyền",
+    "modelManagement": "Quản lý mô hình",
+    "modelList": "Bảng mô hình",
+    "modelSetting": "Cài đặt quản lý",
+    "modelDetail": "Nội dung chi tiết",
+    "reUploadFile": "Tải lại tệp",
+    "configSetting": "Cài đặt thông số",
+    "modelFlowManagement": "Quản lý quy trình",
+    "flowList": "Danh sách quy trình",
+    "flowSetting": "Quy trình Cài đặt",
+    "flowDetail": "Nội dung chi tiết",
+    "flowLogs": "Cập nhật Bản ghi"
+  },
+  "user": {
+    "changePwd": "Đổi mật khẩu",
+    "oldPassword": "Mật khẩu cũ",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Xác nhận mật khẩu"
+  },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "Tìm kiếm",
+    "columnList": "Danh sách các trường",
+    "filterCriteria": "Lựa chọn theo đặc tính",
+    "selectAll": "Chọn tất cả",
+    "cancelSelect": "Hủy lựa chọn",
+    "clearCriteria": "Xóa đặc tính",
+    "noCriteriaYet": "Tiêu chí bộ lọc chưa được thêm vào",
+    "allColumns": "Tất cả các trường",
+    "dataColumns": "Trường dữ liệu",
+    "addFilter": "Thêm điều kiện",
+    "restrictionSetting": "Cài đặt điều kiện",
+    "ANDLogicHint": "Mối quan hệ mục điều kiện là logic AND khi cùng một dải dữ liệu được lọc nhiều lần, nó là một điều kiện hợp lệ và dữ liệu khác bị loại trừ",
+    "ORLogicHint": "Mối quan hệ mục bị hạn chế là logic OR và các phạm vi dữ liệu được lọc là tất cả các điều kiện hợp lệ.",
+    "addRestriction": "Thêm điều kiện",
+    "noRestrictionYet": "Chưa thiết lập điều kiện",
+    "restraintSetting": "Cài đặt giới hạn",
+    "noRestraintYet": "Chưa có hạng mục được thiết lập",
+    "emptyValueMsg": "*Giá trị rỗng sẽ sử dụng giới hạn trên và giới hạn dưới của dữ liệu hiện tại",
+    "chooseValue": "Chọn dữ liệu",
+    "selectDate": "Chọn ngày",
+    "selectTime": "Chọn thời gian",
+    "start": "Bắt đầu",
+    "end": "Kết thúc"
+  },
+  "message": {
+    "joinTableBuilding": "Nối bảng dữ liệu đang hoàn thiện",
+    "remindAdjustMainDate": "Bảng có nhiều trường Ngày, bạn có thể sử dụng chức năng 'Điều chỉnh trường ngày' của bảng để cài đặt",
+    "remindAdjustColumnAlias": "Để câu hỏi phân tích thông minh dễ sử dụng, bạn nên tùy chỉnh chức năng 'Field alias' của bảng dữ liệu ",
+    "remindSameDataTypeColumns": "Các trường dữ liệu phải cùng loại",
+    "remindNotAllowSelfJoin": "Không thể chọn cùng một bảng dữ liệu",
+    "joinTypeEmpty": "Vui lòng chọn phương thức liên kết",
+    "builded": "Dữ liệu tạo thành công",
+    "dataFrameBuilt": "Bảng {name} được tạo thành công",
+    "dataFrameUpdated": "Bảng {name} cập nhật thành công",
+    "noMatchedKey": "Giá trị không kết hợp thành công, vui lòng thử đặt các bảng hoặc trường liên quan khác",
+    "previewFailed": "Cài đặt không thành công, vui lòng thử lại",
+    "noData": "Hiên tại không có dữ liệu",
+    "noMatchData": "Không có dữ liệu phù hợp",
+    "noMember": "Không có thành viên",
+    "noResult": "Không có thông tin liên quan",
+    "formColumnEmpty": "Trường không được để trống",
+    "formMailWrong": "Lỗi định dạng hộp thư",
+    "formNumberEmpty": "Vui lòng nhập số",
+    "formLetterSpaceEmpty": "Vui lòng điền vào chuỗi (bao gồm cả khoảng trống)",
+    "formLetterDashUnderscore": "Giới hạn đối với các ký tự Trung, Anh, số và '-'、'_'đặc tính",
+    "formCharacterOverMax": "Tối đa {max} ký tự",
+    "formCharacterOverMin": "Tối đa {min} ký tự",
+    "formValueOverMin": "Số phải lớn hơn {min}",
+    "formValueUnderMax": "Số phải nhỏ hơn {max}",
+    "formNumericeOverOne": "chứa ít nhất một số",
+    "formDecimal": "Vui lòng nhập một số (có thể bao gồm cả chữ số thập phân)",
+    "formDecimalWithMaxDecimalPointNumbers": "Vui lòng nhập một số (tối đa {max} chữ số thập phân)",
+    "copiedToBoard": "Copy vào clipboard",
+    "copiedToBoardFailed": "copy không thành công",
+    "systemIsError": "Hệ thống bị lỗi",
+    "saveSuccess": "Lưu thành công",
+    "correlationDeleteSuccess": "Liên kết đã bị xóa",
+    "groupCreateSuccess": "Dự án được tạo thành công",
+    "memberCreateSuccess": "Thành viên mới được thiết lập thành công",
+    "groupDeleteSuccess": "Dự án đã được xóa thành công",
+    "groupInfoUpdatedSuccess": "Thông tin dự án được cập nhật thành công",
+    "signUpSuccessPleaseLogin": "Đăng ký thành công, vui lòng đăng nhập vào tài khoản của bạn",
+    "userCreateSuccess": "Tạo người dùng thành công",
+    "userInviteSuccess": "Mời người dùng thành công",
+    "userInviteRepetitive": "Lặp lại lời mời đến cùng một email",
+    "userAlreadyExisting": "Tài khoản này đa được đăng ký",
+    "changePasswordSuccess": "Mật khẩu được thay đổi thành công",
+    "editNameSuccess": "Sửa tên thành công",
+    "changeStatusSuccess": "Thay đổi trạng thái thành công",
+    "pleaseConfirmPassword": "Vui lòng xác nhận xem mật khẩu có giống nhau không",
+    "addFilter": "Đã lưu thành công",
+    "emptyResult": "Không có dữ liệu tương ứng cho điều kiện tìm kiếm này",
+    "emptyDataSource": "Nguồn dữ liệu chưa được tạo",
+    "emptyColumnSet": "Chưa có trường mới được tạo",
+    "emptyFeatureFormula": "Trường dữ liệu trống",
+    "emptyColumn": "Không có trường nào được chọn",
+    "emptyDataColumn": "Không có trường nào được chọn",
+    "emptyNumeric": "Chưa điền giá trị",
+    "deleteSuccess": "Xóa thành công",
+    "dataSourceNotExist": "Không có dữ liệu nguồn",
+    "dataFrameNotExist": "Không có dữ liệu bảng",
+    "connectionFail": "Trường dữ liệu sai, vui long kiểm tra",
+    "connectionInterrupted": "Ngắt kết nối",
+    "columnSetNameEmpty": "Tên trường liên kết chưa điền",
+    "columnSetChosenEmpty": "Chưa có trường nào được chọn",
+    "memberDeleteSuccess": "Xóa thành viên thành công",
+    "etlSuccess": "Xử lý dữ liệu thành công, bắt đầu tạo bảng dữ liệu",
+    "etlSettingTempSave": "Cài đặt được lưu tạm thời",
+    "analysisFailed": "Lỗi phân tích tệp",
+    "confirmColumnStateTypeChange": "Thay đổi này sẽ xóa cài đặt nâng cao. Bạn có chắc chắn muốn thực hiện thay đổi không?",
+    "fileTypeNotSupported": "Định dạng tệp {fileType} không được hỗ trợ",
+    "goToGroupManagement": "Chuyển đến Quản lý dự án tài khoản",
+    "switchToGroupBySys": "Hệ thống đã chuyển bạn sang nhóm：{groupName}",
+    "youAreGroupless": "Hiện tại bạn không được liên kết với nhóm",
+    "pinboardSuccess": "Ghim bảng thành công",
+    "switching": "đang chuyển đổi",
+    "changePersonalPasswordSuccess": "Mật khẩu thay đổi thành công, bạn sẽ được chuyển đến trang đăng nhập, vui lòng đăng nhập lại ",
+    "pleaseSelectQuestion": "vui lòng chọn dữ liệu nguồn",
+    "publishSuccessfully": "Xuất bản thành công",
+    "unPublishSuccessfully": "Đã hủy Xuất bản  thành công",
+    "componentLayoutUpdated": "cập nhật thành công vị trí thành phần",
+    "componentLayoutUpdating": " Đang cập nhật vị trí thành phần",
+    "dataLoading": "Đang tải dữ liệu",
+    "createdSuccessfully": "Đã thiết lập thành công",
+    "successfullyAddedToWarRoom": "Đã tham gia thành công phòng tình huống",
+    "componentAmountReachedLimit": "Số lượng thành phần đã đạt đến giới hạn trên",
+    "eitherOneIsRequired": "Ít nhất phải điền một cái vào",
+    "upperBoundShouldBeLargerThanLowerBound": "Giới hạn trên phải lớn hơn giới hạn dưới",
+    "lowerBoundShouldBeSmallerThanUpperBound": "Giới hạn dưới phải nhỏ hơn giới hạn trên",
+    "endTimeShouldBeLargerThanStartTime": "Thời gian kết thúc phải lớn hơn thời gian bắt đầu",
+    "StartTimeShouldBeSmallerThanEndTime": "Thời gian bắt đầu phải ít hơn thời gian kết thúc",
+    "and": "và",
+    "upperBound": "Giới hạn trên",
+    "lowerBound": "Giơi hạn dưới",
+    "noPeriodicResult": "Không tìm thấy kết quả chu kỳ",
+    "numericShouldBeBetween": "Con số phải từ {min} đến {max}",
+    "updateLicenseSuccess": "Cập nhật thành công, làm mới trang ngay lập tức!",
+    "sendResetPasswordEmail": "Thư thay đổi mật khẩu đã gửi thành công!",
+    "modelNotFoundPleaseReset": "Mô hình không tồn tại, vui lòng đặt lại"
+  },
+  "guiding": {
+    "prevStep": "Quay lại bước trước",
+    "nextStep": "Bước tiếp theo",
+    "endStep": "Kết thúc",
+    "step1": {
+      "name": "Chọn tệp dữ liệu",
+      "hint": "Chọn tập dữ liệu muốn phân tích"
+    },
+    "step2": {
+      "name": "Sử dụng các câu được đề xuất",
+      "hint": "Sử dụng tập dữ liệu giới thiệu để hiểu thông tin và hỏi bằng cách làm theo các câu hỏi gợi ý"
+    },
+    "step3": {
+      "name": "Xem hướng dẫn nhanh",
+      "hint": "Bạn cũng có thể sử dụng hướng dẫn nhanh để bắt đầu tìm kiếm và phân tích bằng cách nhấp chuột"
+    },
+    "goAdjust": "Đi tới Điều chỉnh",
+    "notBelongToGroups": "Không thể sử dụng tính năng này vì bạn không được liên kết với dự án",
+    "pleaseCreateOrJoinGroup": "Vui lòng tham gia dự án trước hoặc tạo một dự án mới",
+    "pleaseInformManager": "Vui lòng đợi người quản lý dự án thêm bạn vào dự án"
+  },
+  "forgetPassword": {
+    "title": "Quên mật khẩu",
+    "remark": "Hệ thống sẽ gửi thư báo thay đổi mật khẩu vào hộp thư đã đăng ký của bạn"
+  },
+  "resetPassword": {
+    "title": "Đặt lại mật khẩu",
+    "newPassword": "Mật khẩu mới",
+    "confirmNewPassword": "Xác nhận mật khẩu mới"
+  },
+  "admin": {
+    "title": "Nền tảng người dùng",
+    "userList": "Danh sách người dùng",
+    "userName": "Tên tài khoản",
+    "action": "Vận hành",
+    "changePassword": "Thay đổi mật khẩu",
+    "accountName": "Tên tài khoản",
+    "resetLink": "Đặt lại liên kết mật khẩu",
+    "searchUserName": "Tìm kiếm tên người dùng"
+  },
+  "link": {
+    "backToLogin": "Quay lại trang đăng nhập"
+  },
+  "editing": {
+    "localUpload": "Tải lên tệp cục bộ",
+    "localUploadDescription": "Thông qua máy tính tải lên và xây dựng dữ liệu tệp .xlsx .xls .csv <br>",
+    "remoteConnection": "Kết nối với bản cơ sở dữ liệu",
+    "remoteConnectionDescription": "Đọc cơ sở dữ liệu của bạn trực tiếp dữ liệu <br> sao chép và xây dựng dữ liệu",
+    "runScript": "Tính toán hiệu suất dữ liệu",
+    "confirmDeleteForeign": "Bạn có chắc chắn muốn xóa liên kết này không?",
+    "chooseDataSource": "Vui lòng chọn nguồn dữ liệu",
+    "allDataFrames": "Bảng dữ liệu đầy đủ",
+    "createBoard": "Tạo phiên bản mới",
+    "prevStep": "Quay trở lại bước trước",
+    "newPinboard": "Thêm bảng ghim mới",
+    "newWarRoom": "Thêm phòng mới",
+    "onlyPersonal": "Bảng ghim chỉ dành cho cá nhân",
+    "shareToProject": "Bảng ghim chia sẻ dự án",
+    "addToWarRoom": "Thêm vào phòng dự phòng",
+    "pinboardName": "Tên bảng ghim",
+    "warRoomName": "Tên phòng dự phòng",
+    "questionPlaceHolder": "Vui lòng nhập một câu hỏi, ví dụ: mức độ liên quan của giá cả và chi phí",
+    "askPlaceHolder": "Vui lòng nhập câu hỏi và nhấn Enter để gửi",
+    "dataBuilding": "Đang Xử lí dữ liệu",
+    "dataDownloading": "Đang tải dữ liệu...",
+    "dataManageable": "Có thể quản lý",
+    "dataInQueue": "Đang chờ xử lý",
+    "dataDisable": "Không có dữ liệu ",
+    "newData": "thêm dữ liệu",
+    "choiceDataTypeFirst": "Vui lòng chọn loại dữ liệu trước",
+    "confirmDeleteNTables": "Việc xóa dữ liệu sẽ ngay lập tức ảnh hưởng đến hoạt động của các ứng dụng hoặc chức năng bị ràng buộc với dữ liệu này. Bạn có chắc chắn muốn xóa bảng dữ liệu sau không?",
+    "describeDeleteNTables": "Dữ liệu sẽ được xử lý trong quá trình xóa. Trong khoảng thời gian này, bạn vẫn có thể duyệt nội dung của tất cả các nguồn dữ liệu, nhưng bạn không thể thực hiện bất kỳ thao tác quản lý dữ liệu nào như thêm hoặc xóa dữ liệu.",
+    "editTable": "Chỉnh sửa bảng dữ liệu",
+    "editTableColumn": "Chỉnh sửa các trường trong bảng",
+    "columnName": "Tên Cột",
+    "columnDisplayName": "Tên hiển thị",
+    "columnSource": "Nguồn Cột",
+    "columnSourceRemind": "Chỉ bảng dữ liệu được tạo thông qua phương thức liên kết mới hiển thị thông tin bảng nguồn cột",
+    "originalName": "Tên ban đầu",
+    "alias": "Bí danh",
+    "columnTag": "Thẻ",
+    "columnDomain": "Tên miền",
+    "action": "Hành động",
+    "dataSourceName": "Tên nguồn dữ liệu",
+    "selectDataType": "Chọn Loại Dữ liệu",
+    "clickToSelectFiles": "Nhấp chuột để chọn tệp hoặc kéo tệp vào đây",
+    "uploadLimitTitle": "Mô tả giới hạn tải tệp lên",
+    "uploadLimitFileType": " Hỗ trợ định dạng：.xlsx .xls .csv",
+    "uploadLimitSize": "Giới hạn kích thước tệp đơn：{limitSize}",
+    "uploadLimitCount": "Số lượng tệp：{countLimit}",
+    "uploadLimitContent": "Giới hạn nội dung: không phân trang, không hợp nhất ô, tiêu đề giới hạn ở 1 hàng",
+    "reachUploadSizeLimit": "Kích thước bảng vượt quá {limitSize} MB",
+    "reachUploadCountLimit": "Bảng dữ liệu không được nhiều hơn {countLimit}",
+    "canUpload": "Có thể tải lên",
+    "unableUpload": "Không thể tải lên",
+    "addFile": "Chọn tệp",
+    "selectedTablesWaitingToUpload": "Chọn {num} bảng dữ liệu, với tổng số {size}, sẵn sàng tải lên",
+    "uploading": "Không đóng cửa sổ trình duyệt trong quá trình tải lên để tránh tải dữ liệu không thành công",
+    "uploadSuccess": "Tải lên thành công",
+    "uploadFailure": "Tải lên không thành công",
+    "uploadFinish": "Tải lên đã hoàn tất",
+    "uploadStatus": "Tổng số {total} mục, {success} mục đã được tải lên thành công, {pending} mục chưa được tải lên",
+    "dataSourceInfo": "Loại Dữ liệu: {type} Tên Nguồn Dữ liệu: {dataSourceName}",
+    "uploaded": "Đã tải lên",
+    "unuploaded": "Chưa tải lên",
+    "dataBuildingReminding": "Việc xây dựng bảng dữ liệu sẽ được thực hiện ở chế độ thực thi nền và tiến độ xây dựng sẽ được hiển thị trong trạng thái bảng dữ liệu.",
+    "connectMySQL": "Kết nối cơ sở dữ liệu MySQL",
+    "DBconnecting": "Đang kết nối với cơ sở dữ liệu",
+    "IPaddress": "Địa chỉ IP",
+    "username": "Tài khoản",
+    "password": "Mật khẩu",
+    "changePassword": "Đổi mật khẩu",
+    "connectSuccess": "Kết nối thành công",
+    "connectFailure": "Kết nối không thành công, vui lòng kiểm tra xem cài đặt có đúng không",
+    "fileOverSize": "Tệp quá lớn",
+    "foreignTable": "Bảng dữ liệu Liên quan",
+    "columnCorrelation": "Cột tương quan",
+    "emptyForeign": "Chưa có liên kết bảng nào được thành lập",
+    "emptyDateTime": "Bảng dữ liệu không có trường ngày",
+    "emptyDataFrameAlias": "Chưa có bí danh bảng nào được tạo",
+    "selectForeign": "Chọn Bảng Dữ liệu Liên quan",
+    "selectColumn": "Chọn cột",
+    "systemSetting": "Hệ thống đang thiết lập",
+    "dataColumnAmount": "Số cột dữ liệu",
+    "dataRowAmount": "Số hàng dữ liệu",
+    "matchedKey": "Có giá trị khớp thành công",
+    "emptyKey": "không có dữ liệu",
+    "resultPreview": "Xem trước Kết quả",
+    "previewKeyRemind": "Hiển thị tối đa 100 giá trị",
+    "processStep1": "Chọn tệp",
+    "processStep2": "Tải lên tệp",
+    "processStep3": "Xử lý dữ liệu",
+    "buildImmediately": "Xây dựng ngay dữ liệu",
+    "connectDB": "Kết nối với cơ sở dữ liệu",
+    "connectStep2": "Chọn Dữ liệu",
+    "connectStep3": "Xử lý dữ liệu",
+    "dataProcessing": "Đang Xử lý dữ liệu",
+    "dataSource": "Nguồn dữ liệu",
+    "newDataSource": "Nguồn dữ liệu mới",
+    "newTable": "Bảng dữ liệu mới",
+    "clickToCreateDataSource": "Nhấp chuột để tạo nguồn dữ liệu của bạn",
+    "clickToUploadTable": "Nhấp chuột để tải lên bảng dữ liệu của bạn",
+    "deleteTable": "Xóa bảng",
+    "deleteDataSource": "Xóa Nguồn Dữ liệu",
+    "renameTable": "Đổi tên Bảng",
+    "renameDataSource": "Đổi tên Nguồn Dữ liệu",
+    "tableName": "Tên bảng",
+    "createDate": "Ngày tạo",
+    "updateDate": "Ngày sửa đổi",
+    "confirmDeleteDataSourceOrNot": "Việc xóa dữ liệu sẽ ảnh hưởng ngay đến hoạt động của các ứng dụng hoặc chức năng liên kết với dữ liệu này. Bạn có chắc chắn muốn tiếp tục xóa không?",
+    "creator": "người tạo",
+    "sourceOfData": "Nguồn dữ liệu",
+    "uploadUser": "Người tải lên",
+    "status": "Trạng thái",
+    "countOfTable": "Số lượng bảng dữ liệu",
+    "dataFrameStatus": "Trạng thái khung dữ liệu",
+    "buildFinished": "Xây dựng Hoàn tất",
+    "buildProcessing": "Đang xử lý",
+    "buildFailed": "Tạo lập không thành công",
+    "defaultOption": "Vui lòng chọn",
+    "userLogin": "Đăng nhập Người dùng",
+    "userSignup": "Đăng ký Người dùng",
+    "userManage": "Quản lý người dùng",
+    "confirmDeleteBoardOrNot": "Có chắc chắn xóa bảng này không?",
+    "pinboard": "Bảng ghim",
+    "projectPinboard": "Bảng ghim dự án",
+    "emptyPinboard": "Hiện tại không có nội dung",
+    "emptyResult": "Không có thông tin liên quan",
+    "emptyResultDescription": "Đối với câu hỏi bạn đã nhập, không thể tìm thấy dữ liệu liên quan để phân tích, vui lòng nhập lại câu để tìm kiếm hoặc sử dụng câu do hệ thống đề xuất",
+    "preview": "Xem trước",
+    "result": "Kết quả",
+    "relatedQuestion": "Câu hỏi liên quan",
+    "comparisonCategory": "Danh mục so sánh",
+    "languageSetting": "Cài đặt ngôn ngữ: Tiếng Trung phồn thể",
+    "sureLogout": "Bạn có chắc chắn muốn đăng xuất khỏi tài khoản của mình không?",
+    "questionFeedback": "Câu hỏi/Đề xuất Phản hồi",
+    "functionDescription": "Mô tả chức năng",
+    "notYetCreateUser": "Người dùng chưa được tạo",
+    "inviteeEmail": "Email của người được mời",
+    "pleaseSelectInviteeEmail": "Vui lòng chọn email của người được mời",
+    "userTitle": "Tên người dùng",
+    "userAccount": "Tài khoản Người dùng",
+    "setLoginPassword": "Đặt Mật khẩu",
+    "loginAccount": "Tài khoản đăng nhập",
+    "loginPassword": "Mật khẩu đăng nhập",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "pleaseConfirmPassword": "Vui lòng xác nhận mật khẩu",
+    "confirmPasswordAgain": "Xác nhận mật khẩu một lần nữa",
+    "switchAccount": "Chuyển đổi tài khoản",
+    "group": "Dự án",
+    "groupOwner": "Chủ nhiệm dự án",
+    "groupMemberAmount": "Số người tham gia Dự án",
+    "groupName": "Tên dự án",
+    "switchGroup": "Chuyển đổi dự án",
+    "groupRolePermission": "Quyền của vai trò dự án",
+    "notYetCreateGroup": "Dự án chưa được tạo",
+    "deleteGroup": "Xóa dự án",
+    "confirmDeleteProjectUserText": "Sau khi người dùng bị xóa, người dùng này sẽ không thể sử dụng bất kỳ chức năng nào của dự án này. Bạn có chắc chắn muốn tiếp tục xóa người dùng này không?",
+    "confirmDeleteBelowGroupOrNot": "Bạn có chắc chắn muốn xóa các mục sau không?",
+    "confirmEnterGroupUserManagement": "Hệ thống sẽ chuyển sang 'Quản lý thành viên dự án' của các dự án sau để thiết lập",
+    "accountOwner": "Chủ tài khoản",
+    "memberManagement": "Quản lý Thành viên",
+    "activeStatus": "Trạng thái Hoạt động",
+    "role": "Vai trò",
+    "setRole": "Thiết lập vai trò",
+    "active": "Bật",
+    "close": "Đóng",
+    "originalPassword": "Mật khẩu ban đầu",
+    "newPassword": "Mật khẩu mới",
+    "confirmNewPassword": "Xác nhận mật khẩu mới",
+    "pleaseConfirmNewPassword": "Vui lòng xác nhận mật khẩu mới",
+    "unableLogin": "Bạn sẽ không thể đăng nhập bình thường, vui lòng đóng nó",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa",
+    "confirmActive": "Bạn có chắc chắn muốn mở",
+    "allCategory": "Tất cả Danh mục",
+    "inputCategoryName": "Vui lòng nhập tên danh mục",
+    "editingName": "Tên chỉnh sửa",
+    "pinboardNum": "Số pinboard",
+    "indexErrorTitle": "Thông tin trang chủ tạm thời không có sẵn",
+    "indexErrorDescription": "Xin lỗi, thông tin trang chủ tạm thời không có, vui lòng thử lại sau",
+    "multiResultTitle": "Phân tích câu hỏi",
+    "systemUnknownDescription": "Hệ thống không thể nhận dạng văn bản sau:",
+    "dataColumnValue": "Giá trị Bảng Dữ liệu",
+    "emptyValueAlias": "Hiện tại không có giá trị dữ liệu nào để chỉnh sửa trong bảng",
+    "emptyValueAliasDescription": "Các loại dữ liệu có thể chỉnh sửa bao gồm: danh mục (số lượng duy nhất nhỏ hơn 200), giá trị Boolean",
+    "mainDateTimeColumnSetting": "Cài đặt trường ngày chính",
+    "builtInfo": "Xây dựng Thông tin",
+    "dataFrame": "Khung dữ liệu",
+    "rebuildRemark": "Dữ liệu cần được xây dựng lại sau khi chỉnh sửa",
+    "dataValue": "Giá trị dữ liệu",
+    "dataColumn": "Bảng Dữ liệu",
+    "notSet": "Chưa cài đặt",
+    "columnSetSetting": "Cài đặt Tên nhóm Cột",
+    "columnSetName": "Tên nhóm Cột",
+    "pleaseEnterName": "Vui lòng nhập tên",
+    "isSaving": "Đang lưu",
+    "notSelect": "Không Chọn",
+    "alreadySelect": "Đã chọn",
+    "selectYet": "Chưa có mục nào được chọn",
+    "createWay": "Tạo phương pháp",
+    "tableJoin": "nối bảng",
+    "joinType": "Phương thức liên kết",
+    "selectJoinType": "Chọn Loại Tham gia",
+    "userUpload": "Người dung tải lên",
+    "loading": "Đang tải dữ liệu",
+    "databaseType": "Loại Cơ sở dữ liệu",
+    "currentLoadedDataFrame": "Bảng dữ liệu được tải hiện tại",
+    "dataFrameContent": "Nội dung Bảng Dữ liệu",
+    "currentDataContent": "Nội dung dữ liệu hiện tại",
+    "originalDataContent": "nội dung dữ liệu gốc",
+    "currentDataContentReminder": "Nội dung dữ liệu bị ảnh hưởng bởi cột và điều kiện lọc",
+    "originalDataContentReminder": "Nội dung dữ liệu không bị ảnh hưởng bởi cột và điều kiện lọc",
+    "dataType": "Kiểu dữ liệu",
+    "chooseConnection": "Chọn kết nối",
+    "emptyConnection": "Chưa có kết nối nào được thành lập",
+    "createConnection": "Tạo một kết nối mới",
+    "buildFinish": "tạo lập xong",
+    "buildStatus": "Tổng số {total} bảng dữ liệu, { success } mục đã được tạo thành công, {fail} mục chưa được tạo",
+    "buildSuccess": "tạo lập thành công",
+    "buildFail": "Tạo lập không thành công",
+    "connectionName": "Tên kết nối",
+    "admin": "Quản trị viên Hệ thống",
+    "general": "Người dùng",
+    "dataFrameAliasSetting": "Cài đặt bí danh bảng dữ liệu",
+    "dataFrameAliasInputPlaceholder": "Vui lòng nhập bí danh",
+    "dataFrameColumnAliasInputPlaceholder": "Vui lòng nhập bí danh",
+    "belongToDataFrame": "Bảng dữ liệu liên kết",
+    "chooseDataFrame": "Chọn Bảng dữ liệu",
+    "chooseDataColumn": "Chọn trường dữ liệu",
+    "numericOnly": "Vui lòng nhập một giá trị",
+    "isRequired": "Bắt buộc điền",
+    "resultOverSizeMessage": "Khi lượng dữ liệu quá lớn, dữ liệu sẽ được lấy mẫu",
+    "toolTipMessage": {
+      "comfrmToDeleteConnectionHistory": "Bạn có chắc chắn muốn xóa lịch sử kết nối không?"
+    },
+    "createGroup": "Tạo dự án",
+    "sortSetting": "Sắp xếp Cài đặt",
+    "dragAndSort": "Vui lòng giữ mục và kéo mục đó lên và xuống để di chuyển vị trí sắp xếp và việc sắp xếp mục sẽ có hiệu lực sau khi thay đổi.",
+    "lastUpdateResult": "Kết quả cập nhật gần đây",
+    "startTime": "Thời gian bắt đầu",
+    "endTime": "Thời gian kết thúc",
+    "elapsedTime": "Thời gian đã sử dụng",
+    "errorReason": "Lý do thất bại",
+    "noData": "Chưa có dữ liệu",
+    "SQLSyntax": "Cú pháp SQL",
+    "copyTableFromDatabase": "Sao chép bảng cơ sở dữ liệu",
+    "useSqlScript": "Sử dụng SQL tùy chỉnh",
+    "confirmDeleteColumnText": "Bạn có chắc chắn muốn xóa cột này không?",
+    "featureColumn": "Cột Tùy chỉnh",
+    "tagColumn": "Trường nhãn",
+    "originalField": "Trường gốc",
+    "createdMethod": "Phương pháp thành lập",
+    "buildingNewColumn": "Tạo một trường mới",
+    "downloadAliasTemplate": "Tải xuống Bí danh",
+    "uploadAliasTemplate": "Tải lên Bí danh",
+    "downloadDisplayNameTemplate": "Tải xuống mẫu tên hiển thị",
+    "uploadDisplayNameTemplate": "Tên Hiển thị Sửa đổi đồng loạt",
+    "downloadValueAliasTemplate": "Tải xuống mẫu bí danh dữ liệu",
+    "uploadValueAliasTemplate": "Sửa đổi hàng loạt bí danh dữ liệu",
+    "chooseFile": "Chọn tệp",
+    "columnAliasTemplate": "Tệp bí danh cột Mẫu",
+    "valueAliasTemplate": "Tệp mẫu Bí danh Dữ liệu",
+    "searchDataSourceOrDataFrame": "Nguồn dữ liệu tìm kiếm / Bảng dữ liệu",
+    "onlyPrefixMatching": "Tìm kiếm này chỉ hỗ trợ chữ đầu tiên của từ",
+    "searchDataSource": "Tìm kiếm nguồn dữ liệu",
+    "reCalculateMeta": "Tính lại Meta",
+    "isOrdinal": "Định giờ",
+    "isNotOrdinal": "Không định giờ",
+    "uploadFilesExceedDataStorageMessage": "Chọn bảng dữ liệu {count}, tổng là {totalFileSize}, còn lại {remaining}, đã vượt quá dung lượng còn lại",
+    "histogramBinSetting": "Đặt kích thước của khoảng cách nhóm biểu đồ",
+    "histogramBinSize": "Kích thước biểu đồ BinSize",
+    "chooseTab": "Chọn tab để sử dụng"
+  },
+  "algorithm": {
+    "name": "Thuật toán",
+    "type": "Loại thuật toán",
+    "create": "Thêm thuật toán mới",
+    "clickToCreate": "Nhấp để tạo thuật toán của bạn",
+    "management": "Quản lý thuật toán",
+    "processing": "Đang xử lý thuật toán, vui lòng kiên nhẫn chờ ...",
+    "trainDataSetting": "Thiết lập dữ liệu đào tạo",
+    "targetDataSource": "Nguồn dữ liệu mục tiêu",
+    "targetDataFrame": "Mục tiêu DataFrame",
+    "targetParamColumn": "Cột tham số mục tiêu",
+    "timeColumn": "Trường thời gian",
+    "measurementColumn": "Cột Đo lường",
+    "execute": "tiến hành",
+    "executable": "Có thể tiến hành",
+    "predictiveMaintenance": "Bảo trì Dự đoán",
+    "contourPrediction": "Dự đoán hồ sơ",
+    "algoProcessFinished": "Thuật toán đã được xử lý. Nguồn dữ liệu đã được thêm tự động",
+    "foxconnContourPredictionMolding": "foxconn_phân tích hồ sơ_molding_dự đoán",
+    "importDataSource": "Nhập nguồn dữ liệu",
+    "importDataFrame": "Nhập bảng dữ liệu",
+    "exportDataSource": "Xuất dữ liệu",
+    "creator": "người tạo",
+    "foxconnDemo": "FoxconnDemo",
+    "temperature": "Nhiệt độ",
+    "pressure": "Áp suất",
+    "startTime": "Thời gian bắt đầu",
+    "statusColumn": "Trạng thái cột",
+    "status": "Trạng thái",
+    "modelParamSetting": "Cài đặt thông số mô hình",
+    "modelType": "Loại mô hình",
+    "supervised": "Được giám sát",
+    "unsupervised": "Không được giám sát",
+    "specificationUpperLimit": "Giới hạn trên của đặc điểm kỹ thuật",
+    "specificationLowerLimit": "Giới hạn dưới của đặc điểm kỹ thuật",
+    "regulatoryCapRatio": "Tỷ lệ CapRatio theo quy định",
+    "lowerControlRatio": "tỷ lệ kiểm soát thấp hơn",
+    "timeUnit": "Đơn vị thời gian",
+    "second": "{n} giây",
+    "minute": "{n} phút",
+    "minuteLong": "{n} phút",
+    "hour": "{n} Giờ",
+    "hourLong": "{n} giờ",
+    "earlyTime": "Thời gian sớm",
+    "windowSize": "Kích thước cửa sổ",
+    "proportionOfTrainingSet": "Tỷ lệ đào tạo",
+    "warningThreshold": "Ngưỡng cảnh báo",
+    "abnormalThreshold": "Ngưỡng bất thường",
+    "realTimeDataSetting": "Cài đặt dữ liệu thời gian thực",
+    "executionCycle": "Chu kỳ thực thi",
+    "nthAlgorithm": "Thuật toán thứ {n}",
+    "modelExtraLayers": "Lớp bổ sung của mô hình",
+    "learningSpeed": "Tốc độ học",
+    "trainningTimes": "Thời gian đào tạo",
+    "trainingBatchSize": "Kích thước đào tạo đồng loạt",
+    "trainingAndVerificationDataRatio": "Tỷ lệ dữ liệu đào tạo và xác minh",
+    "standardizedMethod": "Phương pháp chuẩn hóa",
+    "initParams": "Tham số khởi tạo",
+    "actualLabel": "Nhãn thực",
+    "timestamp": "Mác thời gian"
+  },
+  "remoteConnection": {
+    "tableNameDuplicate": "Tên bảng trùng lặp",
+    "sqlCreateTable": "SQL Tạo Bảng dữ liệu",
+    "dataFrameName": "Tên Bảng Dữ liệu",
+    "sql": "Cú pháp SQL"
+  },
+  "monitorSetting": {
+    "settingDialogTitle": "Cài đặt Giám sát Hệ thống",
+    "enableMonitoring": "Bật Giám sát Hệ thống",
+    "autoRefresh": "Cập nhật tự động",
+    "monitorColumn": "Trường Giám sát",
+    "dateColumn": "Trường Thời gian",
+    "timeScope": "Phạm vi thời gian",
+    "timeScopeUnit": "Đơn vị Phạm vi Thời gian",
+    "aggregationType": "Phương pháp Tính toán",
+    "monitorThreshold": "Ngưỡng giám sát",
+    "mail": "Hộp thư thông báo"
+  },
+  "etl": {
+    "dataFrameList": "Danh sách bảng dữ liệu",
+    "columnList": "Danh sách trường",
+    "dataType": "Kiểu dữ liệu",
+    "emptyStringReplaceValue": "Giá trị thay thế chuỗi trống",
+    "nullReplaceValue": "Giá trị thay thế trống",
+    "errorReplaceValue": "Giá trị thay thế dữ liệu Lỗi",
+    "customDataManagement": "Quản lý dữ liệu tùy chỉnh",
+    "columnValue": "Giá trị trường",
+    "replaceValue": "Giá trị Thay thế",
+    "replaceValuePlaceholder": "Giá trị tùy chỉnh",
+    "etlSetting": "Cài đặt làm sạch dữ liệu",
+    "remarkToSave": "Nội dung thay đổi phải được lưu",
+    "selectColumn": "Sử dụng",
+    "skipColumn": "Bỏ qua",
+    "advance": "Nâng cao",
+    "advanceSetting": "Cài đặt Nâng cao",
+    "backToDataFrame": "Quay lại Bảng dữ liệu",
+    "column": "Cột",
+    "nullAction": "Không xử lý",
+    "custom": "Tùy chỉnh",
+    "dropRow": "Xóa toàn bộ cột",
+    "currentDataFrame": "Hiện đang hiển thị bảng dữ liệu",
+    "columnCount": "Tổng số trường dữ liệu",
+    "rowCount": "Tổng số dữ liệu",
+    "datetimeFormat": "Định dạng Ngày",
+    "commonValue1": "Giá trị chung thứ nhất",
+    "commonValue2": "Giá trị chung thứ 2",
+    "commonValue3": "Giá trị chung thứ 3",
+    "commonValue4": "Giá trị chung thứ 4",
+    "commonValue5": "Giá trị chung thứ 5",
+    "maxValue": "Giá trị tối đa",
+    "minValue": "Giá trị tối thiểu",
+    "avgValue": "Giá trị trung bình",
+    "sdValue": "Độ lệch chuẩn",
+    "sumValue": "Giá trị tổng",
+    "dataSummary": "Tóm tắt thông tin",
+    "connectionHistory": "Lịch sử kết nối",
+    "newConnectionSetting": "Cài đặt kết nối mới",
+    "returnConnectionHistory": "Quay trở lạilịch sử kết nối ",
+    "emptyConnectionHistory": "Không có lịch sử kết nối",
+    "dataCalculate": "Tính toán dữ liệu",
+    "tableChosenLimit": "Chọn nhiều nhất {number} bảng dữ liệu",
+    "tableSearch": "Tìm kiếm bảng",
+    "null": "Null",
+    "columnSelected": "Số cột được chọn",
+    "pleaseSelectAtLeastOneColumnPerTable": "Vui lòng chọn ít nhất một cột cho mỗi bảng",
+    "isDistributed": "Có phân chia hay không",
+    "distributedColumnName": "Phân chia trường"
+  },
+  "model": {
+    "newModel": "Mẫu mới",
+    "id": "ID",
+    "modelName": "Tên Mẫu ",
+    "creator": "Người tạo",
+    "createdTime": "Thời gian đã tạo",
+    "updatedTime": "Thời gian cập nhật",
+    "createdMethod": "Đã tạo phương pháp",
+    "managementSetting": "Cài đặt quản lý",
+    "deleteConfirmText": "Xóa mô hình sẽ khiến ứng dụng liên quan trở nên không hợp lệ. Bạn có chắc chắn muốn tiếp tục xóa không?",
+    "UsedModelCannotBeEdited": "Quá trình này đã sử dụng mô hình nên không thể chỉnh sửa được.",
+    "clickToUploadModel": "Nhấp chuột tải lên mô hình của bạn",
+    "deleteModel": "Xóa mô hình",
+    "modelNameId": "Tên / ID kiểu máy",
+    "name": "Tên",
+    "modelFile": "Tệp mẫu",
+    "inputParameters": "Tham số đầu vào",
+    "paramNameDuplicated": "Tên thông số bị trùng lặp",
+    "outputColumnNameDuplicated": "Tên cột đầu ra bị trùng lặp",
+    "parameterDataType": "Kiểu dữ liệu tham số",
+    "parameterDataName": "Tên thông số bị trùng lặp",
+    "outputParameters": "Thông số đầu ra",
+    "createInfo": "Tạo thông tin",
+    "lastUpdatedTime": "Thời gian cập nhật lần cuối",
+    "fileInfo": "Nội dung Tệp",
+    "reUploadReminder": "Nếu tệp {mainScriptName} bị thay đổi, vui lòng xác nhận xem các thông số mô hình có nhất quán với định dạng đầu vào / đầu ra của {mainScriptName} hay không.",
+    "upload": {
+      "failedUpload": "Tải lên tệp chưa hoàn tất",
+      "succeedUpload": "Đã hoàn tất quá trình tải lên tệp",
+      "inputArgsSetting": "Đặt tham số đầu vào",
+      "columnReminder": "Các trường là tuần tự và mức độ ưu tiên là từ trên xuống dưới. Bạn có thể thay đổi thứ tự bằng cách kéo chuột.",
+      "argsReminder": "Tham số phải có cùng định dạng với trường {mainScriptName} và tên không được lặp lại",
+      "outputArgsSetting": "Đặt tham số đầu ra",
+      "columnDataType": "Kiểu dữ liệu tham số",
+      "columnDataName": "Tên Tham số",
+      "setModelName": "Vui lòng đặt tên",
+      "lackOfMainScript": "{mainScriptName} không được bao gồm",
+      "modelLimit": {
+        "0": "Tên tập lệnh chính phải là {mainScriptName}",
+        "1": "Phải có một hàm run () trong tập lệnh",
+        "2": "Đầu vào và trả về của hàm phải là loại DataFrame pandas"
+      },
+      "executionStep1": "Đặt tên",
+      "executionStep2": "Tải tệp lên",
+      "executionStep3": "Đặt đầu vào",
+      "executionStep4": "Đặt đầu ra"
+    }
+  },
+  "modelFlow": {
+    "newFlow": "Quá trình mới",
+    "modelFlowNameId": "Tên / ID quá trình",
+    "name": "Tên",
+    "id": "ID",
+    "createdInfo": "Được tạo bởi {tên} lúc {thời gian}",
+    "updatedInformation": "Cập nhật Thông tin",
+    "outputResult": "Kết quả đầu ra",
+    "sourceAndTarget": "Nguồn / đầu ra dữ liệu",
+    "sourceDataFrame": "Bảng dữ liệu nguồn",
+    "targetDataFrame": "Bảng dữ liệu đầu ra",
+    "deleteConfirmText": "Sau khi quá trình bị xóa, bảng dữ liệu liên quan sẽ không còn được cập nhật",
+    "function": "Chức năng",
+    "settingManagement": "Cài đặt Quản lý",
+    "creator": "Người tạo",
+    "createdTime": "Thời gian thiết lập",
+    "modelInputParameter": "Tham số đầu vào của mô hình",
+    "modelOutputParameter": "Thông số đầu ra mô hình",
+    "correspondingDataFrameColumnName": "Trường bảng dữ liệu tương ứng",
+    "outputDataFrameColumnName": "Trường Bảng Dữ liệu Đầu ra",
+    "outputDataFrameName": "Tên bảng dữ liệu đầu ra",
+    "immediatelyUpdate": "Cập nhật ngay",
+    "updateAtBackground": "Quá trình bắt đầu cập nhật và sẽ tiếp tục thực thi trong nền tảng",
+    "deleteModelFlow": "Xoá quá trình",
+    "createInfo": "Tạo thông tin",
+    "adoptedModel": "Sử dụng Mô hình",
+    "triggerUpdateType": "kích hoạt chế độ cập nhật",
+    "updateMode": "Chế độ kích hoạt",
+    "flowUpdateLogs": "Cập nhật Nhật ký",
+    "updatedTime": "Cập nhật Thời gian",
+    "updatedStatus": "Cập nhật Trạng thái",
+    "updateMessage": "Tin nhắn",
+    "triggerTypes": {
+      "manual": "Cập nhật thủ công",
+      "automatic": "Theo dõi cập nhật bảng"
+    },
+    "modelFlowUpdateStatus": {
+      "temp": "Không được thực hiện",
+      "process": "Đang xử lý ",
+      "enable": "Thực hiện thành công",
+      "fail": "Thực thi thất bại",
+      "warn": "Cảnh báo",
+      "disable": "Không khả dụng"
+    },
+    "modelFlowLogStatus": {
+      "complete": "Thành công",
+      "fail": "Thất bại",
+      "process": "Đang xử lý"
+    },
+    "upload": {
+      "setFlowName": "Vui lòng nhập tên quá trình",
+      "executionStep1": "Đặt tên",
+      "executionStep2": "Cài đặt nội dung",
+      "executionStep3": "Các cài đặt khác",
+      "reminder": "Chỉ chọn kết nối cơ sở dữ liệu và các bảng được cập nhật",
+      "chooseModel": "Chọn kiểu mẫu",
+      "modelSetting": "Cài đặt Mô hình",
+      "inputSetting": "Cài đặt đầu vào",
+      "outputSetting": "Cài đặt đầu ra",
+      "modelInputArgs": "Tham số đầu vào mô hình",
+      "referencedColumn": "Cột bảng dữ liệu tương ứng",
+      "outputFrameName": "Tên bảng đầu ra",
+      "enterOutputFrameName": "Vui lòng nhập tên bảng",
+      "outputColumnSetting": "Cài đặt trường Đầu ra",
+      "modelOutputArgs": "Tham số đầu ra mô hình",
+      "outputColumnName": "Tên trường Đầu ra",
+      "pleaseChooseDataFrame": "Vui lòng chọn bảng dữ liệu trước"
+    }
+  },
+  "pinboard": {
+    "intelligentAnalysis": "Phân tích Thông minh",
+    "source": "Nguồn dữ liệu",
+    "restrict": "Hạn chế về điều kiện phân tích",
+    "dataFrame": "Bảng Dữ liệu Nguồn",
+    "relativeDataColun": "Các trường dữ liệu liên quan",
+    "allColumns": "Tất cả các trường",
+    "emptyInfo": "Dữ liệu {Tên} không còn tồn tại",
+    "reminding": "Nhắc nhở",
+    "switchAccountReminding": "Phiên bản cố định này thuộc về tài khoản '{Tên tài khoản}' . Đi tới trang phân tích thông minh sẽ đồng thời chuyển đổi tài khoản mặc định của bạn. Bạn có chắc chắn muốn tiếp tục không? "
+  },
+  "batchLoad": {
+    "primaryKeyColumns": "Khóa chính (nhiều lựa chọn)",
+    "updatedTimeColumn": "Cập nhật thời gian",
+    "builtTimeColumn": "Thiết lập thời gian",
+    "chooseColumn": "Thiết lập trường",
+    "columnSetting": "Cài đặt trường tương ứng",
+    "scheduleSetting": "Cập nhật cài đặt chu kỳ",
+    "setBatchLoad": "Cập nhật thông tin",
+    "batchLoad": "Dữ liệu cập nhật hàng loạt",
+    "basicSetting": "Cài đặt Cơ bản",
+    "advancedSetting": "Cài đặt Nâng cao",
+    "chooseCycle": "lựa chọn chu kỳ",
+    "on": "Bật",
+    "off": "Đóng",
+    "everyMinute": "Cứ {number} phút một lần",
+    "everyHour": "Mỗi tiếng",
+    "everyDay": "Hàng ngày",
+    "everyWeek": "Hàng tuần",
+    "everyMonth": "Hàng tháng",
+    "noRecord": "Không ghi",
+    "updateSuccessfully": "Cập nhật thành công",
+    "updateFailed": "Cập nhật thất bại",
+    "updating": "Đang cập nhật",
+    "startUpdate": "Bắt đầu cập nhật",
+    "noUpdate": "Không cập nhật",
+    "autoUpdate": "Tự động cập nhật",
+    "manualUpdate": "Cập nhật thủ công",
+    "updateSetting": "Cập nhật Cài đặt",
+    "updateContent": "Cập nhật nội dung",
+    "updateMode": "Cập nhật Chế độ",
+    "dataFrameUpdate": "Cập nhật Bảng Dữ liệu",
+    "rebuild": "tái tạo lại",
+    "minute": "phút",
+    "hour": "Giờ",
+    "day": "Ngày",
+    "month": "Tháng",
+    "week": "tuần",
+    "settingInfo": {
+      "value": "Cài đặt mô tả giá trị",
+      "minute": "Phút: 0 đến 59",
+      "hour": "Giờ: 0 đến 23",
+      "day": "Ngày: 1 đến 31",
+      "month": "Tháng: 1 đến 12, cũng có thể được thay thế bằng các từ viết tắt tiếng Anh. Ví dụ: tháng 1 cũng có thể được viết là Jan",
+      "week": "Tuần: 0 (Chủ nhật) đến 6 (Thứ bảy), 7 cũng đại diện cho Chủ nhật. Thay vào đó, bạn cũng có thể sử dụng các từ viết tắt tiếng Anh, ví dụ: bạn có thể viết Sun vào Chủ nhật.",
+      "specialCharacters": "Các ký tự đặc biệt thể hiện ý nghĩa",
+      "star": "Dấu sao (*): là viết tắt của bất kỳ lúc nào. Ví dụ: nếu bạn điền dấu sao vào cột tháng, nó có nghĩa là bất kỳ tháng nào.",
+      "comma": "Dấu phẩy (,): Phân tách nhiều mốc thời gian khác nhau. Ví dụ: nếu bạn muốn chỉ định 3:00, 6:00 và 9:00 để thực hiện lệnh, hãy điền vào 3, 6, 9.",
+      "minus": "Dấu trừ (-): đại diện cho một khoảng thời gian, ví dụ: điền 8-12 để biểu thị ý nghĩa từ 8 giờ đến 12 giờ, tương đương với 8,9,10, 11,12. ",
+      "slash": "Dấu gạch sổ (/ n): n là viết tắt của số, vì vậy nó có nghĩa là 'đơn vị mỗi n' . Ví dụ: điền * / 5 có nghĩa là thực hiện 5 phút một lần. Nó có thể được viết là 0-59 / 5. "
+    },
+    "checkDatarowDeletable": "Kiểm tra dữ liệu sẽ bị xóa",
+    "reimportReminder": "Nếu bảng dữ liệu được xây dựng lại, quá trình liên kết bảng sẽ bị xóa"
+  },
+  "fileDataUpdate": {
+    "updateData": "Cập nhật dữ liệu",
+    "updateSetting": "Cập nhật Cài đặt",
+    "processStep1": "Chế độ cập nhật",
+    "processStep2": "Chọn tệp",
+    "processStep3": "Tải tệp lên",
+    "updateMode": "Chế độ Cập nhật",
+    "append": "Cập nhật bảng dữ liệu",
+    "reimport": "Thiết lập lại",
+    "reChoose": "Chọn lại",
+    "reUploadFile": "Tải lại tệp",
+    "build": "Thiết lập ngay",
+    "reSetting": "Chế độ đặt lại",
+    "dataUpdatingReminding": "Cập nhật bảng dữ liệu sẽ được thực hiện ở chế độ nền tảng và tiến trình cập nhật sẽ được hiển thị trong trạng thái bảng dữ liệu."
+  },
+  "updateSetting": {
+    "activationStatus": "kích hoạt Trạng thái",
+    "active": "kích hoạt",
+    "inactive": "Không hoạt động",
+    "updateCriteriaContent": "Cập nhật Tiêu chí Nội dung",
+    "updateTime": "Cập nhật Thời gian",
+    "primaryKey": "Khóa chính (nhiều lựa chọn)",
+    "chooseColumn": "Vui lòng chọn một trường"
+  },
+  "feature": {
+    "value": "Giá trị",
+    "columnValue": "Giá trị trường",
+    "plus": "phép cộng",
+    "minus": "Phép trừ",
+    "multiple": "phép nhân",
+    "divide": "Phân chia",
+    "parentheses": "Dấu ngoặc đơn",
+    "bracket": "Dấu ngoặc vuông",
+    "braces": "Dấu ngoặc nhọn",
+    "hint": "Gợi ý",
+    "forbiddenRule": [
+      "Sử dụng nguyên tắc"
+    ],
+    "chooseOptionHint": "Vui lòng nhấp vào phần tử bạn cần từ phía dưới để tạo thành một trường, phần tử có thể được kéo để thay thế vị trí",
+    "maxColumn": "Hiện hỗ trợ tối đa {số} kết hợp cột dữ liệu",
+    "inputPlaceholder": "Ví dụ: Lợi nhuận = Doanh thu-Chi phí",
+    "datetimeInputPlaceholder": "@:askHelper.example：@:editing.elapsedTime = @:editing.endTime - @:editing.startTime",
+    "featureManagement": "Quản lý Trường Tùy chỉnh",
+    "customFeature": "Trường tính năng tùy chỉnh",
+    "recommendFeature": "Tính năng Đề xuất Hệ thống",
+    "createFeature": "Thêm trường tùy chỉnh",
+    "featureColumnName": "Tên trường tùy chỉnh",
+    "featureSetting": "Cài đặt Biểu thức",
+    "generalOperation": "Biểu thức chung",
+    "datetimeOperation": "Biểu thức ngày",
+    "columnUnit": "Đơn vị trường"
+  },
+  "bot": {
+    "welcomeMessage": "Xin chào, bạn muốn phân tích loại dữ liệu nào hôm nay?",
+    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage có thể thử bắt đầu với những câu hỏi sau:",
+    "defaultResponse": "Phân tích đã hoàn thành, bạn có thể quan tâm đến các vấn đề liên quan:",
+    "finish": "Phân tích đã hoàn thành",
+    "multiplePossibilities": "Rất tiếc, sau khi phân tích hệ thống, nhận thấy từ vựng có nhiều nghĩa. Vui lòng tham khảo các mục sau:",
+    "similarQuestionDescription": "Rất tiếc, hệ thống không tìm thấy trường hoặc dữ liệu tương ứng với câu hỏi, nhưng có các trường có nghĩa từ liên quan, vui lòng tham khảo các mục sau:",
+    "previewDataSource": "xem trước nguồn dữ liệu",
+    "closeDataSource": "Đóng nguồn dữ liệu",
+    "openDataFrameSetting": "Mở cài đặt nâng cao",
+    "closeDataFrameSetting": "Đóng Cài đặt Nâng cao",
+    "switchSpecificDataFrame": "Trước tiên hãy chuyển sang một bảng dữ liệu duy nhất"
+  },
+  "warRoom": {
+    "warRoom": "Phòng Chiến tranh",
+    "addWarRoom": "Thêm Phòng Chiến tranh",
+    "backToList": "Quay lại danh sách",
+    "back": "Quay lại",
+    "publish": "Xuất bản",
+    "unpublish": "Hủy xuất bản",
+    "getPublishedUrl": "Lấy Liên kết Xuất bản",
+    "rename": "Thay đổi tên",
+    "delete": "Xóa",
+    "viewDetail": "Xem Nội dung",
+    "edit": "Chỉnh sửa",
+    "warRoomSetting": "Thiết lập Phòng Chiến tranh",
+    "preview": "Xem trước",
+    "add": "Thêm",
+    "setting": "Cài đặt",
+    "displayName": "Tên hiển thị",
+    "publishedName": "Tên đã Xuất bản",
+    "sourceData": "Dữ liệu nguồn",
+    "updateFrequency": "Tần suất Cập nhật",
+    "chooseUpdateFrequency": "Chọn Tần suất Cập nhật",
+    "chooseTimeInterval": "Chọn khoảng ngày",
+    "timeIntervalConstraint": "Ràng buộc khoảng thời gian theo ngày",
+    "everyMinute": "Cứ {con số} phút một lần",
+    "everyHour": "Mỗi giờ",
+    "everyDay": "Hàng ngày",
+    "everyWeek": "Hàng tuần",
+    "everyMonth": "Hàng tháng",
+    "inHours": "Giờ hiện tại",
+    "inDays": "Hôm nay",
+    "inWeeks": "Tuần này",
+    "inMonths": "Tháng này",
+    "inSeasons": "Mùa này",
+    "inYears": "Năm nay",
+    "customize": "Tùy chỉnh",
+    "addChartComponent": "Thêm thành phần biểu đồ",
+    "addNumberComponent": "Thêm thành phần chỉ mục",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày cuối cùng",
+    "timeIntervalReminder": "Nếu ngày cuối cùng không được đặt, hệ thống sẽ mặc định là ngày mới nhất",
+    "thresholdSetting": "Dấu giới hạn trên và giới hạn dưới",
+    "maxThreshold": "Cài đặt giới hạn tối đa",
+    "minThreshold": "Cài đặt giới hạn tối thiểu",
+    "waringMail": "Thông báo qua email cảnh báo",
+    "mailReceiversetting": "* Vui lòng vào phòng tình huống để đặt và chọn hộp thư của người nhận",
+    "recipientList": "Danh sách người nhận",
+    "recipientListSettingWarning": "* Người dùng thông thường chỉ có thể tự cài đặt cho mình",
+    "maxDataCount": "Số lượng dữ liệu được hiển thị",
+    "pleaseEnterValue": "Vui lòng nhập giá trị",
+    "notChosen": "Không được chọn",
+    "indexTypeContent": "Nội dung Chỉ định",
+    "chartTypeContent": "Nội dung đồ họa",
+    "notPublished": "Không được xuất bản",
+    "hasPublished": "Đã xuất bản",
+    "updateTime": "Thời gian cập nhật",
+    "dataConstraint": "Ràng buộc dữ liệu",
+    "selectedColumns": "Cột được chọn",
+    "filterConstraint": "Điều kiện lọc",
+    "reachedLowerBound": "Thấp hơn giới hạn dưới",
+    "reachedUpperBound": "Cao hơn giới hạn trên",
+    "emptyComponentMessage": "Thành phần chưa được thêm vào",
+    "warRoomDisplayErrorMessage": "Nội dung của phòng tình huống đã hết hạn \nVui lòng xác nhận trạng thái xuất bản hoặc liên hệ với quản trị viên hệ thống",
+    "previewPageReminder": "Trang này là màn hình xem trước",
+    "allColumns": "Tất cả các trường",
+    "confirmDeleteWarRoom": "Bạn có chắc chắn muốn xóa phòng chiến tranh này không?",
+    "confirmDeleteComponent": "Bạn có chắc chắn muốn xóa thành phần này không?",
+    "emptyDataSource": "Chưa thêm dữ liệu nguồn {type} nào",
+    "timeInterval": "Phạm vi thời gian",
+    "now": "Bây giờ",
+    "indexType": "Loại tham số",
+    "diagramType": "Loại sơ đồ",
+    "hint": "gợi ý",
+    "chartReminder": "Khi có quá nhiều dữ liệu hoặc khoảng thời gian quá dài, biểu đồ sẽ tự động bị giới hạn.",
+    "goToLivePage": "Đi tới trang xuất bản",
+    "all": "Tất cả",
+    "displaySetting": "Cài đặt hiển thị"
+  },
+  "miniApp": {
+    "dashboard": "Phân tích bảng ghim",
+    "component": "Thành phần",
+    "dashboardList": "Danh sách @:miniApp.dashboard",
+    "exit": "Thoát",
+    "noneDashboard": "@:miniApp.dashboard chưa được tạo",
+    "noneComponent": "@:miniApp.component chưa được tạo",
+    "createDashboard": "Thêm @:miniApp.dashboard",
+    "createComponent": "Thêm @:miniApp.component",
+    "editComponent": "Chỉnh sửa @: miniApp.component",
+    "updateDashboardName": "Chỉnh sửa @: miniApp.dashboard",
+    "updateComponentName": "Chỉnh sửa tên @: miniApp.component",
+    "pleaseTypeDashboardName": "Vui lòng nhập tên @: miniApp.dashboard",
+    "updateTime": "Cập nhật Thời gian",
+    "notPublished": "Không được Xuất bản",
+    "hasPublished": "Được phát hành",
+    "appSuccessfullyPublished": "@:miniApp.application được xuất bản thành công",
+    "appSuccessfullyUpdated": "@:miniApp.application được xuất bản thành công",
+    "appSuccessfullyUnpublished": "@:miniApp.application hủy xuất bản thành công",
+    "getPublishedUrl": "Lấy Liên kết Xuất bản",
+    "goToLivePage": "Đi tới trang xuất bản",
+    "deleteApplication": "Xóa ứng dụng",
+    "publish": "Xuất bản",
+    "unpublish": "Hủy xuất bản",
+    "preview": "Xem trước",
+    "application": "Ứng dụng",
+    "createNewApplication": "Ứng dụng mới",
+    "emptyApplication": "Hiện không có nội dung",
+    "editContent": "Chỉnh sửa nội dung",
+    "goToApp": "Đi tới ứng dụng",
+    "editInfo": "Chỉnh sửa dữ liệu",
+    "deleteApp": "Xóa ứng dụng",
+    "getAppUrl": "Nhận liên kết chia sẻ",
+    "editApp": "Chỉnh sửa ứng dụng",
+    "miniAppName": "Tên ứng dụng",
+    "description": "Mô tả",
+    "chooseIcon": "Chọn biểu tượng",
+    "pleaseEnterName": "Vui lòng nhập tên",
+    "pleaseEnterDescription": "Vui lòng nhập mô tả",
+    "pleaseSelectAnIcon": "Vui lòng chọn một biểu tượng",
+    "confirmDeletingDashboad": "Bạn có chắc chắn xóa @: miniApp.dashboard {tên} không?",
+    "deleteDashboard": "Xóa @: miniApp.dashboard",
+    "confirmDeletingComponent": "Bạn có chắc chắn muốn xóa thành phần này không?",
+    "noData": "Không có dữ liệu",
+    "componentNotAddable": "Nội dung này chưa được hỗ trợ như một thành phần. Vui lòng thay đổi nội dung khác.",
+    "upperBound": "Giới hạn trên",
+    "lowerBound": "Giới hạn dưới",
+    "pleaseEnterNumber": "Vui lòng nhập số",
+    "createRelation": "Tạo mối quan hệ",
+    "relatedDashboard": "Bảng điều khiển liên quan",
+    "relatedDashboardSetting": "Cài đặt bảng điều khiển liên quan",
+    "confirmDeletingComponentRelation": "Bạn có chắc chắn muốn xóa liên kết giữa thành phần này và phân tích bảng điều khiển \"{name}\" không?",
+    "createFilterCondition": "Thêm điều kiện bộ lọc",
+    "filterCondition": "Điều kiện lọc",
+    "createPanelControl": "Thêm mục điều khiển",
+    "panelControl": "Thêm mục điều khiển",
+    "yAxisControl": "Điều khiển biến độc lập",
+    "createSingleYAxisController": "Thêm mục điều khiển biến độc lập ",
+    "generalControl": "Dự án Kiểm soát Chung",
+    "componentSetting": "Cài đặt thành phần",
+    "updateFrequency": "Tần suất cập nhật",
+    "index": "chỉ số",
+    "displayedUnit": "Đơn vị hiển thị",
+    "pleaseEnterUnitName": "Vui lòng nhập tên đơn vị",
+    "currentlyDisplayed": "Đang hiển thị",
+    "generalComponent": "Thành phần chung",
+    "monitorLogUpdateTime": "Thời gian cập nhật trạng thái xử lý",
+    "generalFilter": "Điều kiện bộ lọc chung",
+    "dateTimeFilter": "Điều kiện thời gian",
+    "unset": "Không giới hạn",
+    "today": "Hôm nay",
+    "6hour": "Sáu giờ qua",
+    "3hour": "Ba giờ qua",
+    "1hour": "Gần một giờ qua",
+    "sizeSetting": "Cài đặt kích thước",
+    "chooseUpdateFrequency": "Chọn tần suất cập nhật",
+    "chooseRowSize": "Vui lòng chọn số lượng cột",
+    "chooseColumnSize": "Vui lòng chọn số hàng",
+    "chooseColumn": "Vui lòng chọn một cột",
+    "chooseDashboard": "Vui lòng chọn một trang tổng quan",
+    "rowSpan": "Số cột",
+    "columnSpan": "Số hàng",
+    "rowSpanAmount": "{number}cột",
+    "columnSpanAmount": "{number} hàng",
+    "clickColumnToSeeMore": "Nhấp vào cột \" {Tên cột}\" để xem nội dung chi tiết hơn",
+    "chartSetting": "Cài đặt Biểu đồ",
+    "componentName": "Tên thành phần",
+    "chartName": "Tên biểu đồ",
+    "triggerColumn": "Cột kích hoạt",
+    "activate": "kích hoạt",
+    "inactivate": "Bật",
+    "selectDashboard": "Chọn @: miniApp.dashboard",
+    "noRelation": "Không có liên quan",
+    "goToDashboard": "Truy cập @: miniApp.dashboard",
+    "link": "Liên kết",
+    "warningModuleIsInactive": "Ứng dụng này không có mô-đun cảnh báo",
+    "hierarchicalFilter": "nhóm kiểm soát phân cấp",
+    "createHierarchicalFilter": "Thêm mục điều khiển phân cấp",
+    "chooseDataSource": "Chọn nguồn dữ liệu",
+    "chooseDataFrame": "Chọn Bảng dữ liệu",
+    "dataSource": "Nguồn dữ liệu",
+    "dataFrame": "Khung dữ liệu",
+    "dataColumnRelationSetting": "Cài đặt Mối quan hệ Nội dung Bảng",
+    "dataColumnRelationSettingReminding": "Khi người dùng nhấp vào nội dung, nội dung sẽ được đưa đến hội đồng quản trị để xử lý",
+    "notBeingSet": "Không được cài đặt",
+    "orderUpdated": "{target} đơn đặt hàng đã được cập nhật",
+    "monitorUpdateFrequency": "Tần suất cập nhật cảnh báo",
+    "monitorComponent": "Thành phần giám sát và cảnh báo",
+    "abnormalStatisticsComponent": "Yếu tố thống kê bất thường",
+    "unhandledAbnormalStatisticsComponent": "Chưa xử lý @: miniApp.abnormalStosystemComponent",
+    "handledAbnormalStatisticsComponent": " Đã xử lý @: miniApp.abnormalStosystemComponent",
+    "simulateComponent": "Thành phần mô phỏng",
+    "modelSimulateComponent": "Mô hình @: miniApp.simulateComponent",
+    "parametersOptimizedSimulateComponent": "thành phần mô phỏng tham số tối ưu",
+    "specialIndexTypeComponent": "Thành phần Giá trị Đặc biệt",
+    "timeScope": "Phạm vi thời gian",
+    "dashboardNoLongerExist": "Trang tổng quan liên kết không còn tồn tại",
+    "displayChart": "Biểu đồ hiển thị",
+    "displayIndex": "Biểu đồ hiển thị",
+    "displayText": "Hiển thị Văn bản",
+    "displaySetting": "Cài đặt hiển thị",
+    "large": "Lớn",
+    "middle": "Trung bình",
+    "small": "nhỏ",
+    "mini": "mini",
+    "selectScript": "Chọn Mẫu",
+    "pleaseSelect": "Vui lòng chọn",
+    "minAndMax": "Tối thiểu: {min}, Tối đa: {max}",
+    "simulationParamSetting": "cài đặt thông số mô phỏng",
+    "simulationResult": "Kết quả mô phỏng",
+    "savedRecord": "Lưu Bản ghi",
+    "startSimulating": "Mô phỏng",
+    "simulator": "Trình mô phỏng",
+    "parametersOptimizedSimulator": "Mô phỏng tối ưu hóa tham số",
+    "notYetSimulate": "Dữ liệu chưa được mô phỏng",
+    "simulating": "Đang mô phỏng",
+    "optimalParameterComparison": "So sánh tham số tốt nhất",
+    "standardLine": "Đường cơ sở",
+    "stddevTimes": "Bội số độ lệch chuẩn",
+    "chooseStandardLine": "Vui lòng chọn một dòng tham chiếu",
+    "chooseStddevTimes": "Vui lòng chọn bội số của độ lệch chuẩn",
+    "fontSizeSetting": "Cài đặt Kích thước Văn bản",
+    "sourceOfData": "Nguồn dữ liệu",
+    "formulaSetting": "Cài đặt Công thức",
+    "selectFormula": "Chọn Biểu thức",
+    "formulaPreview": "Xem trước Công thức",
+    "setting": "Cài đặt",
+    "otherSettings": "Cài đặt khác",
+    "formulaType": "Loại Công thức",
+    "singleColumnData": "Dữ liệu một cột",
+    "singleRowData": "Toàn bộ Dữ liệu Hàng",
+    "anomalySetting": "Cài đặt bất thường",
+    "greaterThanAndEqualTo": "Lớn hơn Bằng",
+    "greaterThan": "Lớn hơn",
+    "equalTo": "Bằng",
+    "lessThan": "Nhỏ hơn",
+    "lessThanAndEqualTo": "Nhỏ hơn hoặc bằng",
+    "datumValue": "Giá trị tham khảo",
+    "emptyRules": "Hiện không có cài đặt nào",
+    "anomalyRules": "Quy tắc đánh dấu",
+    "pleaseCheckFollowingSituations": "Vui lòng xác nhận hiện trạng sau",
+    "dataframeExistenceAndRebuild": "Bảng dữ liệu có bình thường không hoặc cố gắng xây dựng lại mục này",
+    "connectionStatus": "Kết nối có bình thường không",
+    "otherReasons": "Lý do khác",
+    "fetchDataFailed": "Không lấy được dữ liệu",
+    "displayUnderPublishMode": "hiển thị chế độ xuất bản",
+    "hideUnderPublishMode": "Ẩn chế độ xuất bản",
+    "modelSetting": "Cài đặt mô hình",
+    "operatedModel": "Mô hình Tính toán",
+    "modelOperatedResult": "Kết quả mô hình",
+    "inputParamSetting": "Cài đặt đầu vào",
+    "modelInputParams": "Tham số đầu vào của mô hình",
+    "targetedDataFrameColumn": "Trường bảng dữ liệu tương ứng",
+    "selectModel": "Chọn mẫu",
+    "inputParamsCriteria": "tiêu chí tham số đầu vào",
+    "outputParamsCriteria": "Tiêu chí đầu ra",
+    "outputResultSetting": "Cài đặt kết quả đầu ra",
+    "numberRange": "Dải số: {min} - {max}",
+    "max": "Tối đa",
+    "min": "Tối thiểu",
+    "riskLevel": "Mức độ rủi ro",
+    "low": "Thấp",
+    "medium": "Trung bình",
+    "range": "Phạm vi",
+    "startTime": "Thời gian bắt đầu",
+    "endTime": "Thời gian kết thúc",
+    "noResultUnderCurrentRestrictions": "Không có dữ liệu nào theo các hạn chế hiện tại, vui lòng điều chỉnh các hạn chế",
+    "noResultCheckFilterAndDataSource": "Không có dữ liệu tham chiếu, vui lòng xác nhận tiêu chí bộ lọc hoặc dữ liệu gốc"
+  },
+  "alert": {
+    "alertLogs": "Nhật ký cảnh báo",
+    "emptyLogs": "Không có @: alert.alertLogs",
+    "emptyCondition": "chưa cài đặt Các điều kiện cảnh báo",
+    "enableAlertModule": "Kiểm soát sử dụng",
+    "alertLogCreateTime": "Thời gian cảnh báo",
+    "alertLogMessage": "Thông tin cảnh báo",
+    "alertName": "Tên cảnh báo",
+    "alertCondition": "Điều kiện cảnh báo",
+    "createAlertCondition": "Thêm điều kiện cảnh báo mới",
+    "alertManagement": "Quản lý Cảnh báo",
+    "realTimeMonitorAlert": "Cảnh báo thời gian thực",
+    "monitorAlert": "Giám sát Cảnh báo",
+    "alertConditionSuccessfullyCreated": "Điều kiện cảnh báo đã được tạo thành công",
+    "alertMessageSuccessfullyPatched": "Thông báo cảnh báo được thiết lập thành công",
+    "chooseComparisionOperator": "Lựa chọn vận hành so sánh",
+    "chooseMessageParam": "Chọn thông số tin nhắn",
+    "value": "Giá trị",
+    "sourceSetting": "Cài đặt Nguồn",
+    "conditionSetting": "Cài đặt điều kiện",
+    "conditionMessageSetting": "Cài đặt Thông báo Cảnh báo",
+    "dataColumn": "Trường dữ liệu",
+    "selectDataColumn": "Trường dữ liệu",
+    "messageExampleDescription": "Mô tả mẫu",
+    "messageColumnParamSyntaxDescription": "Cú pháp tham số cột = $ {tên trường}",
+    "messageIndicatorParamSyntaxDescription": "Cú pháp tham số chỉ báo = # {Tên}",
+    "messageTemplateSettingExample": "Cài đặt thông báo: Công xưởng:{0}, dòng điện bất thường (Dòng điện: {1} μA).",
+    "messageTemplatePreviewExample": " Xem trước tin nhắn: Công xưởng: {0}, dòng điện bất thường (Dòng điện: {1} μA).",
+    "param1NameExample": "'${廠編}',${sửa nhà máy}",
+    "param1ValueExample": "F00088",
+    "param2NameExample": "${dòng điện}",
+    "param2ValueExample": "300",
+    "alertMessageContent": "Nội dung thông báo",
+    "insertColumnAsParams": "Chèn tham số trường",
+    "enterAlertMessage": "Vui lòng nhập thông báo cảnh báo",
+    "alertConditionDeletionWillImpactOtherApplicationConfirmMsg": "Hành động này sẽ ảnh hưởng đến việc sử dụng các ứng dụng khác. Bạn có chắc chắn muốn tiếp tục xóa không?",
+    "allMessageSettingsAreEmpty": "Không có cài đặt thông báo cảnh báo nào được nhập",
+    "monitoringItem": "Mục Giám sát ({number})",
+    "editAlertMessage": "Chỉnh sửa nội dung",
+    "finished": "Đã xử lý",
+    "unfinished": "Chưa xử lý",
+    "state": "Trạng thái xử lý",
+    "originalDataSource": "Nguồn dữ liệu",
+    "alertIndicator": "Chỉ báo Cảnh báo",
+    "columnValueCombination": "Điều kiện mở rộng",
+    "dataFilterCondition": "Điều kiện lọc dữ liệu",
+    "dataSource": "Nguồn dữ liệu",
+    "dataFrame": "Bảng dữ liệu",
+    "expression": "Công thức",
+    "monitoredField": "Trường được Giám sát",
+    "operatingStatus": "Trạng thái Hoạt động",
+    "operating": "Đang hoạt động"
+  },
+  "clustering": {
+    "cluster": "Cụm",
+    "dataOverview": "Tổng quan Dữ liệu",
+    "clusteringAnalysis": "Phân tích theo cụm",
+    "saveClusteringResultAsColumn": "Lưu kết quả phân cụm dưới dạng cột nhãn",
+    "clusteringNumberSetting": "Cài đặt số lượng cụm",
+    "clusteringNumber": "Số lượng cụm",
+    "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "Các trường tùy chỉnh hoặc trường từ các bảng liên quan không thể được lưu dưới dạng trường nhãn.",
+    "createClusteringColumn": "Cột nhãn mới",
+    "clusteringColumnName": "Tên cột nhãn",
+    "outlier": "ngoại lệ",
+    "piecesOfData": "{số lượng} Các phần dữ liệu",
+    "buildingClusteringColumn": "Trường dữ liệu đang được được tạo, nó có thể được sử dụng khi hoàn thành.",
+    "buildingClusteringColumnSuccess": "Nhãn trường「{columnName}」đã được tạo thành công.",
+    "buildingClusteringColumnFailed": "Nhãn trường「{columnName}」không được tạo",
+    "clusteringColumnOriginFrom": "(Từ [nguồn dữ liệu]{dataSourceName} [Bảng dữ liệu]{dataFrameName})"
+  },
+  "prediction": {
+    "predictionIntervalSetting": "Đặt khoảng thời gian dự đoán",
+    "predictionIntervalLength": "Độ dài khoảng thời gian dự đoán",
+    "rePredict": "Dự đoán lại"
+  },
+  "description": {
+    "basic": {
+      "intro": "Giới thiệu cơ bản",
+      "ui": "Mô tả giao diện",
+      "nav": "Thanh hướng dẫn",
+      "navIntro": "Giới thiệu thanh hướng dẫn",
+      "index": "Màn hình chính",
+      "groupManage": "Quản lý dự án",
+      "groupSwitch": "Chuyển đổi dự án",
+      "account": "Menu chức năng tài khoản",
+      "funcDesc": "Mô tả chức năng tài khoản",
+      "indexFuncIntro": "Mô tả chức năng trang chủ",
+      "checkDataFrameDetail": "Xem chi tiết của bảng dữ liệu",
+      "faq": "Câu hỏi thường gặp về hồ sơ hệ thống",
+      "hide": "Ẩn"
+    },
+    "question": {
+      "analysis": "Thao tác phân tích vấn đề",
+      "how": "Làm thế nào để đặt câu hỏi?",
+      "recommended": "Hệ thống đề xuất các vấn đề liên quan",
+      "input": "Nhập câu hỏi",
+      "assistant": "Làm cách nào để bật chức năng hỗ trợ câu hỏi?",
+      "info1": "1. Hiểu từ vựng có sẵn thông qua 'mô tả câu hỏi'",
+      "info2": "2. Giải thích thông qua câu hỏi, tham khảo 'ví dụ câu hỏi'",
+      "click": "Step1: <br> Nhấp chuột mở <br> Mô tả câu hỏi",
+      "vocabulary": "Bước 2: <br> Tổng quan về Từ vựng",
+      "sample": "Step2: <br> Câu hỏi ví dụ",
+      "result": "Kết quả Phân tích Chính",
+      "resultInfo": "Mô tả kết quả phân tích",
+      "basicInfo": "Có thể xem thông tin cơ bản",
+      "graphicTool": "Chức năng Hoạt động Biểu đồ",
+      "fetchMore": "Nhấp chuột để biết thêm thông tin",
+      "howToDeepen": "Làm thế nào để đào sâu hơn vào vấn đề?",
+      "insights": "Sử dụng <br> thông tin chi tiết sau khi phân tích"
+    },
+    "pinboard": {
+      "personal": "Sử dụng bảng ghim cá nhân",
+      "how": "Làm thế nào để thêm kết quả phân tích vào bảng ghim?",
+      "clickPinboard": "Bước 1: <br> Nhấp chuột bảng ghim",
+      "classification": "Bước 2: <br> Chọn phân loại bảng ghim",
+      "cancel": "Bước 3: <br> Bảng ghim đã hoàn thành, bạn có thể hủy bất kỳ lúc nào",
+      "howToClassify": "Làm thế nào để quản lý phân loại bảng móng ghim?",
+      "entry": "Step1: <br> Nhập bảng ghim cá nhân",
+      "addClass": "Bước 2: <br> Thêm phân loại bản ghim",
+      "classificationAction": "bước 3: <br> Menu chức năng phân loại",
+      "share": "Làm thế nào để chia sẻ bảng ghim với người khác?",
+      "title1": "1. Chia sẻ nội dung trong danh mục bảng ghim",
+      "title2": "2. Chia sẻ nội dung của một bảng ghim",
+      "clickShareBtn1": "Bước 1: <br> Nhấp vào menu để chia sẻ",
+      "clickShareBtn2": "Bước 2: <br> Nhấp để chia sẻ",
+      "shareLink": "Chia sẻ liên kết",
+      "clickClass": "Bước 1: <br> Nhấp vào một danh mục"
+    },
+    "data": {
+      "howToAddDataSource": "Làm cách nào để thêm nguồn dữ liệu?",
+      "howToAddDataFrame": "Làm cách nào để thêm bảng dữ liệu?",
+      "howToAddColumnAlias": "Làm cách nào để chỉnh sửa bí danh cột trong bảng?",
+      "byFile": "1. Sử dụng phương pháp 'tải tệp lên'",
+      "byDB": "2. Sử dụng 'kết nối với cơ sở dữ liệu' để lấy bảng dữ liệu",
+      "entry": "Bước 1: <br> Nhập quản lý dữ liệu",
+      "addDataSource": "Bước 2: <br> Thêm nguồn dữ liệu",
+      "selectByFile": "Step3: <br> Chọn tệp tải lên",
+      "selectByDB": "Bước 1: <br> Chọn kết nối cơ sở dữ liệu",
+      "connectionSetting": "Bước 2: <br> Cài đặt kết nối cơ sở dữ liệu",
+      "selectLocalFile": "bước 4: <br> Chọn tệp cục bộ",
+      "uploading": "Bước 5: <br> Tải tệp lên",
+      "selectDataFrame": "Bước 3: <br> Chọn <br> bảng dữ liệu được sử dụng",
+      "selectColumn": "Chọn trường dữ liệu bắt buộc",
+      "dataCleansing": "Cài đặt làm sạch dữ liệu",
+      "building": "Tạo dựng sẽ được thực hiện trong nền <br>",
+      "clickDataSource": "Bước 1: <br> Nhấp vào nguồn dữ liệu",
+      "addDataFrame": "Bước 2: <br> Thêm bảng dữ liệu",
+      "clickEdit": "Nhấp để chỉnh sửa trường",
+      "editAlias": "Bước 3: <br> Chỉnh sửa bí danh",
+      "confirm": "Bước 4: <br> Xác nhận sửa đổi",
+      "finish": "Bước 5: <br> Hoàn thành bản dựng"
+    },
+    "account": {
+      "management": "Quản lý người dùng tài khoản",
+      "howToEnter": "Làm cách nào để vào quản lý tài khoản người dùng?",
+      "howToInvite": "Làm cách nào để mời người dùng mới tham gia?",
+      "howToUpdateRole": "Cách chỉnh sửa quyền vai trò tài khoản người dùng?",
+      "entry": "Bước 1: <br> Nhập quản lý tài khoản",
+      "entrySideNav": "Bước 2: <br> Chọn quản lý tài khoản người dùng",
+      "clickInvite": "Bước 1: <br> Nhấp vào nút thêm",
+      "confirmInvite": "Bước 2: <br> Nhập email và gửi lời mời, người được mời có thể nhận được thư mời",
+      "clickUpdate": "Step1: <br> Nhấp để thay đổi vai trò",
+      "confirmUpdate": "Bước 2: <br> Sau khi mở màn hình thay đổi ký tự, bạn có thể thay đổi"
+    },
+    "group": {
+      "management": "Quản lý thành viên dự án",
+      "howToEnter": "Làm thế nào để thêm một thành viên mới?",
+      "howToInvite": "Làm cách nào để mời người dùng mới tham gia?",
+      "entry": "Bước 1: <br> Nhập thành viên dự án <br> quản lý",
+      "selectMember": "bước 2: <br> Chọn danh sách thành viên",
+      "clickInvite": "Step1: <br> Nhấp để thêm thành viên mới",
+      "confirmInvite": "Bước 2: <br> Sau khi điền email người dùng, hãy nhấp vào nút xác nhận để tham gia"
+    }
+  },
+  "button": {
+    "build": "Tạo",
+    "cancel": "Hủy bỏ",
+    "delete": "Xóa",
+    "confirm": "Xác nhận",
+    "close": "Đóng",
+    "share": "chia sẻ",
+    "shareLink": "Chia sẻ liên kết",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu",
+    "skip": "bỏ qua",
+    "upload": "Tải lên",
+    "update": "Cập nhật",
+    "finish": "Kết thúc",
+    "connect": "Kết nối",
+    "cancelConnect": "Hủy kết nối",
+    "saveAndConnect": "Lưu và Kết nối",
+    "toForeignTable": "Bảng Dữ liệu Liên quan",
+    "newForeign": "thêm mối liên quan",
+    "nextStep": "Bước tiếp theo",
+    "prevStep": "Bước trước",
+    "processing": "Đang xử lý ...",
+    "uploading": "Đang tải lên ...",
+    "connecting": "Đang kết nối ...",
+    "confirmDelete": "@:(button.confirm)@:(button.delete)",
+    "confirmDeleteOrNot": "@:(button.confirm)@:(button.delete)?",
+    "confirmUpload": "@:(button.confirm)@:(button.upload)",
+    "backToEdit": "Quay lại chỉnh sửa",
+    "gotIt": "Tôi hiểu rồi",
+    "editColumn": "Chỉnh sửa trường",
+    "rename": "Đổi tên",
+    "login": "Đăng nhập",
+    "confirmSignup": "Xác nhận đăng ký",
+    "logout": "Đăng xuất",
+    "copy": "Sao chép",
+    "copySQL": "sao chép cú pháp",
+    "change": "Thay đổi",
+    "pinToBoard": "Nhập bảng ghim",
+    "warRoom": "Phòng chiến tranh",
+    "built": "Tạo",
+    "submit": "Gửi",
+    "editName": "Chỉnh sửa Tên",
+    "addNewCategory": "Thêm danh mục mới",
+    "exportData": "Xuất Dữ liệu Biểu đồ",
+    "viewData": "Xem dữ liệu biểu đồ",
+    "remove": "Xoá",
+    "add": "Thêm",
+    "editDataValue": "Chỉnh sửa dữ liệu",
+    "saveAndBuild": "Lưu và Xây dựng",
+    "addColumnSet": "Thêm tập hợp cột",
+    "editColumnSet": "Chỉnh sửa tập hợp cột",
+    "editEtlSetting": "Cài đặt Xử lý dữ liệu",
+    "reviewEtlSetting": "Xem lại cài đặt xử lý dữ liệu",
+    "dateTimeColumnSetting": "Cài đặt cột ngày",
+    "updateData": "Cập nhật dữ liệu",
+    "updateSetting": "Cập nhật Cài đặt",
+    "tableCreatedInfo": "Thông tin Tạo Bảng Dữ liệu",
+    "select": "Chọn",
+    "download": "Tải dữ liệu",
+    "dataExplanation": "Mô tả dữ liệu",
+    "dataUpdate": "Cập nhật dữ liệu",
+    "start": "Bắt đầu",
+    "copyAndBuild": "Sao chép và tạo",
+    "createGroup": "Dự án mới",
+    "deleteGroup": "Xóa dự án",
+    "editGroupName": "Chỉnh sửa tên dự án",
+    "addNewMember": "Thêm thành viên mới",
+    "editDataFrameAlias": "Chỉnh sửa bí danh bảng dữ liệu",
+    "buildData": "Tạo dữ liệu",
+    "keepSave": "Lưu",
+    "chooseFileUpload": "Chọn lại tệp",
+    "moveForward": "Đi",
+    "addColumn": "Thêm trường",
+    "create": "Thêm",
+    "featureManagement": "Trường tùy chỉnh",
+    "setting": "Cài đặt",
+    "reset": "Cài đặt lại",
+    "reAnalyze": "Phân tích lại",
+    "confirmBuild": "Xác nhận tạo dựng",
+    "selectAll": "Chọn tất cả",
+    "resumeDefault": "Tiếp tục giá trị mặc định",
+    "sortSetting": "Sắp xếp cài đặt",
+    "addSqlScript": "Sử dụng SQL tùy chỉnh",
+    "testConnecting": "Đang thử nghiệm kết nối ...",
+    "monitorSetting": "Cài đặt màn hình",
+    "updateImmediately": "Cập nhật ngay",
+    "AddNewWarRoom": "Thêm phòng chiến tranh mới",
+    "sendInvitation": "Gửi Thư mời",
+    "downloadPage": "Tải Ảnh xuống",
+    "changeDiagram": "Sơ đồ thay đổi",
+    "columnSummaryInfo": "Thông tin thống kê Cột",
+    "createAlert": "Thêm cảnh báo mới",
+    "send": "Gửi",
+    "runRightAway": "Chạy ngay",
+    "createNewRule": "Thêm quy tắc",
+    "applyToChart": "Áp dụng cho biểu đồ"
+  },
+  "timeScopeUnit": {
+    "second": "giây",
+    "minute": "phút",
+    "hour": "giờ",
+    "day": "ngày",
+    "week": "tuần",
+    "month": "tháng",
+    "season": "mùa",
+    "year": "năm",
+    "allowArg": {
+      "second": "{n} giây",
+      "minute": "{n} phút",
+      "hour": "{n} Giờ",
+      "week": "Tuần thứ {n}"
+    }
+  },
+  "comparisonOperator": {
+    "GREATER_THAN": "Lớn hơn",
+    "GREATER_THAN_OR_EQUAL_TO": "Lớn hơn hoặc bằng",
+    "LESS_THAN": "nhỏ hơn",
+    "LESS_THAN_OR_EQUAL_TO": "nhỏ hơn hoặc bằng",
+    "EQUAL": "Bằng",
+    "NOT_EQUAL": "Không bằng"
+  },
+  "aggregation": {
+    "mean": "trung bình cộng",
+    "count": "toàn bộ",
+    "sum": "Tổng số",
+    "max": "Tối đa",
+    "min": "Tối thiểu",
+    "std": "Độ lệch Chuẩn",
+    "median": "Trung bình"
+  },
+  "aggregatedValue": {
+    "mean": "trung bình cộng",
+    "count": "toàn bộ",
+    "sum": "Tổng số",
+    "max": "Tối đa",
+    "min": "Tối thiểu",
+    "std": "Độ lệch Chuẩn",
+    "median": "Trung bình",
+    "note": "ghi chú",
+    "maxCategory": "Danh mục tối đa",
+    "minCategory": "Danh mục tối thiểu",
+    "maxCategoryCount": "Số lượng danh mục tối đa",
+    "minCategoryCount": "Số lượng danh mục tối thiểu",
+    "countMean": "Số lượng trung bình cộng",
+    "countStd": "Số lượng độ lệch chuẩn"
+  },
+  "askHelper": {
+    "chooseDataFrameToEnableSetting": "Chọn một bảng duy nhất để mở mô tả câu hỏi",
+    "title": "Câu hỏi",
+    "catalog": "Loại Câu hỏi",
+    "historyTitle": "lịch sử câu hỏi",
+    "askHelpRemark": "Vui lòng kiểm tra câu hỏi",
+    "helpLink": "Mô tả câu hỏi",
+    "tabToken": "Tổng quan về Từ vựng",
+    "tabSample": "Ví dụ về tổ hợp câu hỏi",
+    "columnTitle": "Tên trường dữ liệu",
+    "categoryTitle": "Loại danh mục",
+    "numericTitle": "Loại số",
+    "datavalueTitle": "Thông tin chung",
+    "category": "Trường loại danh mục không có đơn vị số lượng.",
+    "numeric": "Trường kiểu số với đơn vị số lượng.",
+    "datetime": "Trường loại ngày giờ, dữ liệu là ngày / giờ.",
+    "boolean": "Trường kiểu boolean, không có đơn vị số lượng, dữ liệu là 0/1.",
+    "unique": "Trường loại duy nhất, dữ liệu sẽ không được lặp lại.",
+    "filter": "Điều kiện Lọc Thời gian",
+    "value": "Giá trị là dữ liệu của trường, không có giới hạn về số lượng hoặc các loại khác.",
+    "column": "trường",
+    "columnValue": "Trường dữ liệu",
+    "type": "Loại",
+    "description": "Mô tả",
+    "columnName": "Tên trường",
+    "columnCatalog": "Loại trường",
+    "ask": "Hỏi",
+    "example": "Ví dụ",
+    "exampleDesc": "Bởi vì các loại câu hỏi Boolean và Unique nhất quán với Danh mục, sau đây là ví dụ về các loại Danh mục.",
+    "emptyColumn": "Không có dữ liệu nào trong danh mục",
+    "questionSampleList": [
+      {
+        "name": "Câu hỏi chung",
+        "questionList": [
+          {
+            "questionText": "Hồ sơ số",
+            "questionExample": [
+              [
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "trạng thái chung",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "trạng thái chung",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Số trung bình",
+            "questionExample": [
+              [
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "trung bình cộng",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Trung bình cộng",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng số",
+            "questionExample": [
+              [
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Tổng",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng số",
+            "questionExample": [
+              [
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Tổng số",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Tổng số",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "số tối đa",
+            "questionExample": [
+              [
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "số tối đa",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "số tối đa",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Độ lệch chuẩn",
+            "questionExample": [
+              [
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Độ lệch chuẩn",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Độ lệch chuẩn",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Số trung vị",
+            "questionExample": [
+              [
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Số trung vị",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Số trung vị",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Category",
+            "questionExample": [
+              [
+                {
+                  "text": "sự kiện",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "trạng thái chung",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "quốc gia",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "trạng thái chung",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "sự kiện",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Toàn bộ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "quốc gia",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Toàn bộ",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng số trong mỗi Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Tổng số",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Số và trung bình cộng",
+            "questionExample": [
+              [
+                {
+                  "text": "giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Của trung bình cộng",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Doanh thu Trung bình",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Của trung bình cộng",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Trung bình của Số và Số của mỗi danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của trung bình cộng",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi phân tích tổng hợp",
+        "questionList": [
+          {
+            "questionText": "Danh mục và Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Sự kiện",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "sản phẩm",
+                  "type": "category"
+                }
+              ],
+              [
+                {
+                  "text": "Đơn vị",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Cửa hàng",
+                  "type": "category"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Danh mục và Tổng số của Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Giới tính khách hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tổng số",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Danh mục và Tổng số của Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Giới tính khách hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tổng số",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Kho lưu trữ",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "nguồn mua",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm tốt",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Hàng bị lỗi",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tổng số",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi thịnh hành",
+        "questionList": [
+          {
+            "questionText": "Số thịnh hành",
+            "questionExample": [
+              [
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của xu hướng",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Số lượng mua",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của xu hướng",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Số hàng tháng",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "tỷ lệ thất nghiệp",
+                  "type": "numeric"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng số và số hàng tháng",
+            "questionExample": [
+              [
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tổng số",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng số của mỗi Danh mục mỗi tháng",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Của mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tổng số",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Cửa hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "Của",
+                  "type": ""
+                },
+                {
+                  "text": "Bán hàng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Tổng số",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Số và Số của từng danh mục trong tháng",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Cửa hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "Của",
+                  "type": ""
+                },
+                {
+                  "text": "Bán hàng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Cửa hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "Của",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng Số và Số của mỗi danh mục mỗi tháng",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Cửa hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "Của",
+                  "type": ""
+                },
+                {
+                  "text": "Bán hàng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Tổng",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Cửa hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "Của",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Tổng",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi so sánh",
+        "questionList": [
+          {
+            "questionText": "So sánh năm Y và số của năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Năm 2017",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Năm 2018",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "So sánh",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Năm 2010",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Năm 2011",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Bán hàng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "So sánh",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "So sánh số trong mùa X và mùa X trong năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Năm 2010",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Mùa đầu tiên",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Mùa thứ 3",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Bán hàng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "So sánh",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Năm 2019",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Mùa đầu tiên",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Mùa thứ 3",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "So sánh",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "So sánh tổng số của tháng M và tháng M trong năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Năm 2010",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 3",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 5",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Bán hàng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "So sánh",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Năm 2019",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 8",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 9",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "So sánh",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "So sánh giá trị và số giá trị",
+            "questionExample": [
+              [
+                {
+                  "text": "Thượng Hải",
+                  "type": "value"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Bắc Kinh",
+                  "type": "value"
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của so sánh",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "F",
+                  "type": "value"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "M",
+                  "type": "value"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Tuổi khách hàng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "So sánh",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi phân tích nguyên nhân gốc rễ",
+        "questionList": [
+          {
+            "questionText": "Tại sao số tăng trong năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Tại sao",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 11 năm 2017",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Tăng lên",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Tại sao",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 1 năm 2011",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Số lượng mua",
+                  "type": "numeric"
+                },
+                {
+                  "text": "từ chối",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Phân tích nguyên nhân gốc rễ của con số trong tháng Y, năm M",
+            "questionExample": [
+              [
+                {
+                  "text": "Tháng 11 năm 2017",
+                  "type": "filter"
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Của p.hân tích nguyên nhân gốc rễ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Tháng 1 năm 2011",
+                  "type": "filter"
+                },
+                {
+                  "text": "Số lượng mua",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của nguyên nhân gốc rễ",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Phân tích nguyên nhân gốc rễ của số từ M đến M của năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Tháng 1 năm 2017",
+                  "type": "filter"
+                },
+                {
+                  "text": "Đến",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 1 năm 2018",
+                  "type": "filter"
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của nguyên nhân gốc rễ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Tháng 1 năm 2011",
+                  "type": "filter"
+                },
+                {
+                  "text": "đến",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 1 năm 2012",
+                  "type": "filter"
+                },
+                {
+                  "text": "Bán",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của nguyên nhân gốc rễ",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi Phân tích Dự đoán",
+        "questionList": [
+          {
+            "questionText": "Dự báo số hàng tháng",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của Dự đoán",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của Dự đoán",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Dự báo số hàng tuần",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tuần",
+                  "type": "filter"
+                },
+                {
+                  "text": "thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của Dự đoán",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tuần",
+                  "type": "filter"
+                },
+                {
+                  "text": "Đơn giá",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của Dự đoán",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Dự đoán số của giá trị",
+            "questionExample": [
+              [
+                {
+                  "text": "Xe đạp",
+                  "type": "value"
+                },
+                {
+                  "text": "Bán",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của Dự đoán",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Sản phẩm A",
+                  "type": "value"
+                },
+                {
+                  "text": "Năng suất",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của Dự đoán",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi theo tỷ lệ",
+        "questionList": [
+          {
+            "questionText": "Tỷ lệ của từng danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Loại cửa hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tỷ lệ Số trong mỗi Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Số lượng bán",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tỷ lệ số trong mỗi danh mục trong năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Năm 2018",
+                  "type": "filter"
+                },
+                {
+                  "text": "mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Số lượng bán",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Năm 2011",
+                  "type": "filter"
+                },
+                {
+                  "text": "mỗi",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Giá trị và Giá trị mỗi loại chiếm tỷ lệ Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "S1",
+                  "type": "value"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "S2",
+                  "type": "value"
+                },
+                {
+                  "text": "Mỗi tài khoản",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "F",
+                  "type": "value"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "M",
+                  "type": "value"
+                },
+                {
+                  "text": "Mỗi tài khoản",
+                  "type": ""
+                },
+                {
+                  "text": "khách hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "của tỉ lệ",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi quan hệ",
+        "questionList": [
+          {
+            "questionText": "Mối quan hệ giữa số và số",
+            "questionExample": [
+              [
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của quan hệ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "lợi nhuận",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "của quan hệ",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Mối quan hệ giữa Danh mục và Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Quốc gia",
+                  "type": "category"
+                },
+                {
+                  "text": "của quan hệ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Giới tính khách hàng",
+                  "type": "category"
+                },
+                {
+                  "text": "của quan hệ",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi phân tích mức độ liên quan",
+        "questionList": [
+          {
+            "questionText": "Những gì liên quan đến số lượng",
+            "questionExample": [
+              [
+                {
+                  "text": "Những gì và",
+                  "type": ""
+                },
+                {
+                  "text": "chất lượng",
+                  "type": "numeric"
+                },
+                {
+                  "text": "liên quan",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Những gì và",
+                  "type": ""
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "liên quan",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Những gì liên quan đến Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Những gì và",
+                  "type": ""
+                },
+                {
+                  "text": "quảng bá sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "liên quan",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Những gì và",
+                  "type": ""
+                },
+                {
+                  "text": "Danh mục sản phẩm",
+                  "type": "category"
+                },
+                {
+                  "text": "liên quan",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi phân tích sự khác biệt",
+        "questionList": [
+          {
+            "questionText": "Sự khác biệt giữa Giá trị và Giá trị",
+            "questionExample": [
+              [
+                {
+                  "text": "Đài Bắc",
+                  "type": "value"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Tân Trúc",
+                  "type": "value"
+                },
+                {
+                  "text": "của sự khác biệt",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Sản phẩm A",
+                  "type": "value"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm B",
+                  "type": "value"
+                },
+                {
+                  "text": "của sự khác biệt",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Sự khác biệt giữa Giá trị và những cái khác",
+            "questionExample": [
+              [
+                {
+                  "text": "Sản phẩm A",
+                  "type": "value"
+                },
+                {
+                  "text": "Khác biệt với những cái khác",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Đài Bắc",
+                  "type": "value"
+                },
+                {
+                  "text": "Khác biệt với những cái khác",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi sàng lọc",
+        "questionList": [
+          {
+            "questionText": "Giá trị danh mục số",
+            "questionExample": [
+              [
+                {
+                  "text": "Giới tính nam",
+                  "type": "value"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "thu nhập",
+                  "type": "numeric"
+                }
+              ],
+              [
+                {
+                  "text": "Xe đạp đua",
+                  "type": "value"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Danh mục số lớn hơn X",
+            "questionExample": [
+              [
+                {
+                  "text": "thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Lớn hơn 1000",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Danh mục số nhỏ hơn X",
+            "questionExample": [
+              [
+                {
+                  "text": "thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Nhỏ hơn 1000",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi sàng lọc thời gian",
+        "questionList": [
+          {
+            "questionText": "Tháng M và Tháng M năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Tháng 3 năm 2018",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 4",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                }
+              ],
+              [
+                {
+                  "text": "Tháng 5 năm 2019",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 6",
+                  "type": "filter"
+                },
+                {
+                  "text": "Của",
+                  "type": ""
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Giá trị danh mục của tháng M và tháng M của năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Tháng 10 năm 2019",
+                  "type": "filter"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 11",
+                  "type": "filter"
+                },
+                {
+                  "text": "Thượng Hải",
+                  "type": "value"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Danh mục của tháng M trong năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Tháng 6 năm 2019",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Số từ tháng M năm Y đến tháng M năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Tháng 1 năm 2018",
+                  "type": "filter"
+                },
+                {
+                  "text": "đến",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 11 năm 2018",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "category"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Doanh mục từ tháng M năm Y đến tháng M năm Y",
+            "questionExample": [
+              [
+                {
+                  "text": "Tháng 5 năm 2019",
+                  "type": "filter"
+                },
+                {
+                  "text": "đến",
+                  "type": ""
+                },
+                {
+                  "text": "Tháng 11 năm 2020",
+                  "type": "filter"
+                },
+                {
+                  "text": "của",
+                  "type": ""
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "category"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Sắp xếp câu hỏi",
+        "questionList": [
+          {
+            "questionText": "Số trung bình TOP X của Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Trung bình cộng",
+                  "type": ""
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "TOP 5",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Tổng số trước X của Danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Tổng số",
+                  "type": ""
+                },
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "TOP 10",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Số trước X của danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "TOP 5",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                }
+              ],
+              [
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "TOP 10",
+                  "type": ""
+                },
+                {
+                  "text": "Sản phẩm",
+                  "type": "category"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi phân tích định kỳ",
+        "questionList": [
+          {
+            "questionText": "Phân tích định kỳ dãy số thời gian",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Phân tích định kỳ",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Phân tích định kỳ",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi phân tích sự bất thường",
+        "questionList": [
+          {
+            "questionText": "Phân tích bất thường dãy số thời gian",
+            "questionExample": [
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Phân tích bất thường",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Hàng tháng",
+                  "type": "filter"
+                },
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Phân tích bất thường",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi phân tích chân dung",
+        "questionList": [
+          {
+            "questionText": "Phân tích hồ sơ giá trị danh mục",
+            "questionExample": [
+              [
+                {
+                  "text": "Sản phẩm A",
+                  "type": "value"
+                },
+                {
+                  "text": "Của",
+                  "type": ""
+                },
+                {
+                  "text": "Phân tích danh mục",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Câu hỏi Phân tích Nhóm",
+        "questionList": [
+          {
+            "questionText": "Phân tích nhóm số",
+            "questionExample": [
+              [
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Phân tích nhóm",
+                  "type": ""
+                }
+              ],
+              [
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Phân tích nhóm",
+                  "type": ""
+                }
+              ]
+            ]
+          },
+          {
+            "questionText": "Phân tích cụm số và số",
+            "questionExample": [
+              [
+                {
+                  "text": "Thu nhập",
+                  "type": "numeric"
+                },
+                {
+                  "text": "và",
+                  "type": ""
+                },
+                {
+                  "text": "Giá cả",
+                  "type": "numeric"
+                },
+                {
+                  "text": "Phân tích nhóm",
+                  "type": ""
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "resultDescription": {
+    "totalColumnAverage": "Tổng thể {0} mức trung bình {1}",
+    "compareToAverage": "{0} {2}mức trung bình {1}",
+    "high": "cao",
+    "low": "thấp",
+    "higher": "cao hơn",
+    "lower": "thấp hơn",
+    "displayChart": "Biểu đồ hiển thị",
+    "displayData": "Dữ liệu hiển thị",
+    "predictionInfo": "Thông tin Dự báo",
+    "timeOfPredictionInterval": "{time} khoảng thời gian dự báo",
+    "predictionMax": "Dự báo tối đa",
+    "predictionMin": "Dự báo tối thiểu",
+    "confidenceInterval": "Khoảng lỗi",
+    "confidenceIndex": "Chỉ số độ tin cậy",
+    "pivotTable": "Phân tích tổng hợp",
+    "weight": "Trọng lượng",
+    "dataInsight": "Thông tin chi tiết về dữ liệu",
+    "recommendedInsight": "Thông tin chi tiết được đề xuất",
+    "keyInsight": "Những hiểu biết chính",
+    "warning": "Cảnh báo",
+    "total": "Tổng thể",
+    "is": "cho",
+    "dataRowCount": "Số lượng dữ liệu",
+    "totalPercentage": "Tổng phần trăm",
+    "trendInsight": "Thông tin chi tiết về xu hướng",
+    "trendInsightNoData": "Không có xu hướng bất thường nào được phát hiện",
+    "noData": "Chưa có dữ liệu",
+    "of": "của",
+    "dataSourceIntro": "Giới thiệu về Thu thập thông tin",
+    "totalDataRows": "Tổng số dữ liệu",
+    "totalDataColumns": "Tổng số trường dữ liệu",
+    "degreeOfCorrelation": "Tương quan",
+    "columnCorrelationName": "Tên trường được liên kết",
+    "columnCorrelationOverview": "Tổng quan trường liên quan",
+    "filterColumnCorrelation": "Một số trường không thể được liên kết với phân tích, vì vậy chúng đã bị lọc ra",
+    "strongCorrelationColumns": "Trường có mức độ tương quan cao",
+    "highlyPositiveCorrelated": "Độ cao tương quan đồng biến",
+    "highlyNegativeCorrelated": "Độ cao tương quan nghịch biến",
+    "notCorrelated": "Không liên quan",
+    "correlationRange": "Các trường có liên quan cao được hiển thị trong Dải số {tối thiểu} - {tối đa}(nhiều nhất 5 số)",
+    "noStrongCorrelationColumns": "Hiện không tìm thấy trường có mức độ liên quan cao",
+    "relatedQuestion": "Câu hỏi liên quan",
+    "basicInfo": "Dữ liệu cơ bản",
+    "summaryReport": "Báo cáo tổng hợp",
+    "importantFeatureChanging": "So sánh Sự thay đổi trong các yếu tố quan trọng",
+    "analysisProcessing": "Phân tích và xử lý",
+    "quickStart": "Các câu hỏi thường gặp",
+    "clearAllFilter": "Xóa tất cả các điều kiện",
+    "closeFilter": "Đóng điều kiện",
+    "currentChosenData": "Dữ liệu hiện được chọn",
+    "currentChosenArea": "Khối hiện được chọn",
+    "saveFilterCondition": "Lưu điều kiện bộ lọc",
+    "saveFilterReminding": "Sau khi lưu các điều kiện lọc, hệ thống sẽ tự động chuyển sang bảng dữ liệu này.",
+    "area": "Khối",
+    "between": "Giảm từ {bắt đầu} đến {kết thúc}",
+    "filterRestrictions": "Hạn chế điều kiện lọc",
+    "prompt": "Lời nhắc",
+    "filterRule": "Việc hạn chế các điều kiện lọc sẽ ảnh hưởng đến kết quả phân tích câu hỏi tiếp theo",
+    "restrict": "giới hạn",
+    "featureList": "Danh sách liên quan",
+    "hereIsFeatures": "Sau đây là các yếu tố liên quan",
+    "modelConfidence": "Mức độ tin cậy của mô hình",
+    "displayTotalData": "Tổng số {count} mục dữ liệu",
+    "displayTopData": "Hiển thị {count} mục đầu tiên",
+    "min": "Tối thiểu",
+    "lowerQuartile": "nhỏ hơn 1/4",
+    "median": "trung bình",
+    "higherQuartile": "lớn hơn 1/4",
+    "max": "Tối đa",
+    "from": "Từ",
+    "has": "của",
+    "recognize": "Được xác định là",
+    "tokenRecognize": "{Token}, được xác định là",
+    "recognizeTo": "{Token} từ {dataFrame}, được xác định là",
+    "hasColumn": "Bao gồm các trường sau:",
+    "columnValue": "Trường dữ liệu",
+    "loadedRate": "Tỷ lệ hiển thị dữ liệu",
+    "getMoreBtn": "Xem thêm thông tin",
+    "percentage": "phần trăm (%)",
+    "systemUnknownTokenList": "Đó là một từ không thể nhận biết",
+    "beRecognized": "Được xác định là",
+    "systemQuestionAnalysis": "Đối với '{Câu hỏi}' . Trong số đó",
+    "other": "cái khác",
+    "more": "Xem thêm",
+    "source": "nguồn",
+    "target": "Mục tiêu",
+    "value": "Giá trị",
+    "feature": "Trường tùy chỉnh",
+    "average": "giá trị trung bình"
+  },
+  "columnSummary": {
+    "avg": "giá trị trung bình",
+    "stdev": "Độ lệch chuẩn",
+    "const": "Giá trị không đổi",
+    "distinctCount": "Không lặp lại giá trị",
+    "range": "phạm vi",
+    "sum": "tổng giá trị",
+    "record": "Cái",
+    "total": "Tổng cổng",
+    "interval": "Khoảng thời gian",
+    "emptyString": "Chuỗi trống"
+  },
+  "segmentationToken": {
+    "UNKNOWN": "Từ vựng không xác định",
+    "DATA_COLUMN": "trường dữ liệu",
+    "DATA_VALUE": "trường dữ liệu",
+    "COLUMN_SET": "Trường Kết hợp",
+    "DATA_ROW": "Hàng dữ liệu",
+    "AGGREGATE": "Phương pháp tính toán dữ liệu",
+    "OTHER": "Các từ khác",
+    "TIME_SCOPE": "Phạm vi Thời gian",
+    "DATE_RANGE": "Phạm vi thời gian",
+    "NUMBER_RULE": "Hạn chế Điều kiện Bộ lọc",
+    "LIMIT_SORT": "Giới hạn Điều kiện Lọc",
+    "IGNORE": "bỏ qua từ",
+    "DENOTATION": "Mục đích câu hỏi",
+    "UnknownToken": "Mã thông báo không xác định",
+    "Datacolumn": "Cột dữ liệu",
+    "Datavalue": "Cột dữ liệu",
+    "ColumnSet": "Trường Kết hợp",
+    "DtToken": "Phạm vi thời gian",
+    "FuzzyDtToken": "Phạm vi thời gian",
+    "TimeScope": "Phạm vi thời gian",
+    "CountToken": "Phương pháp tính toán dữ liệu",
+    "SumToken": "Phương pháp tính toán dữ liệu",
+    "MeanToken": "Phương pháp tính toán dữ liệu",
+    "StdevToken": "Phương pháp tính toán dữ liệu",
+    "MedianToken": "Phương pháp tính toán dữ liệu",
+    "MaximalToken": "Phương pháp tính toán dữ liệu",
+    "MinimalToken": "Phương pháp tính toán dữ liệu",
+    "NumRuleToken": "Hạn chế điều kiện lọc",
+    "NumRuleTokenHasProperty": "Đến từ{dataFrame}của{dataColumn}@:segmentationToken.NumRuleToken，được xác định{matchedWord}",
+    "TopBotToken": "Hạn chế điều kiện lọc",
+    "IntroductionToken": "Mục đích câu hỏi",
+    "GenericToken": "Mục đích câu hỏi",
+    "ComparisonToken": "Ý định câu hỏi, phân tích so sánh dữ liệu được xử lý",
+    "TrendToken": "Mục đích Câu hỏi",
+    "PredictionToken": "Mục đích Câu hỏi",
+    "RootCauseToken": "Mục đích Câu hỏi",
+    "PivotTableToken": "Mục đích Câu hỏi",
+    "ProportionToken": "Mục đích Câu hỏi",
+    "CorrelationToken": "Mục đích Câu hỏi",
+    "CorrExplorationToken": "Mục đích Câu hỏi",
+    "CorrVerificationToken": "Mục đích Câu hỏi",
+    "DiffExplorationToken": "Ý định câu hỏi, phân tích sự khác biệt giữa dữ liệu được xử lý",
+    "ConjunctionToken": "Từ nối",
+    "PossessionToken": "Từ nối",
+    "ChangeToken": "Những từ khác",
+    "DataColumnToken": "Đến từ{dataFrame}của{dataColumn}@:segmentationToken.Datacolumn，được xác định {matchedWord}",
+    "ColumnSetToken": "Đến từ{dataFrame}của{matchedWord}",
+    "DataValueToken": "Đến từ{dataFrame}của{dataColumn}@:segmentationToken.Datavalue，được xác định {matchedWord}",
+    "DatarowToken": "Đến từ{dataFrame}của @:segmentationToken.Datarow",
+    "ElseToken": "Các từ khác",
+    "IgnoreToken": "Từ vựng có thể bỏ qua",
+    "Datarow": "Hàng dữ liệu",
+    "Boolean": "Giá trị Boolean",
+    "Unique": "Giá trị duy nhất",
+    "EqualToken": "Chỉ định mục đích của trường hoặc dữ liệu",
+    "NotEqualToken": "Chỉ định mục đích của trường hoặc dữ liệu",
+    "ToToken": "Liên kết thời gian",
+    "ConstituteToken": "Hiểu ý định của các thành phần"
+  },
+  "notification": {
+    "uploadLimitNotification": "Lượng dữ liệu hoặc dung lượng dữ liệu đã đạt đến giới hạn trên",
+    "uploadLimit": "Giới hạn bảng: tối đa {count} mục",
+    "userLimitNotification": "Số lượng người dùng đã đạt đến giới hạn trên",
+    "columnSummarySampleNotification": "Bản tóm tắt trường được ước tính bằng số, sẽ có một số sai sót nhỏ, chỉ mang tính chất tham khảo",
+    "unfinishedTasks": "Nhiệm vụ chưa hoàn thành"
+  },
+  "chart": {
+    "zoom": "Khu vực thu phóng",
+    "back": "Khôi phục vùng thu phóng",
+    "stack": "Chuyển sang ngăn xếp",
+    "tiled": "切換為平鋪",
+    "line": "Chuyển sang biểu đồ đường",
+    "bar": "Chuyển sang biểu đồ",
+    "restore": "Khôi phục",
+    "dataView": "Xem dữ liệu gốc",
+    "dataViewDetail": [
+      "Dữ liệu gốc",
+      "Đóng",
+      "Làm mới"
+    ],
+    "rect": "Lựa chọn hình chữ nhật",
+    "polygon": "Lựa chọn vùng",
+    "lineX": "Lựa chọn theo chiều ngang",
+    "lineY": "Lựa chọn theo chiều dọc",
+    "keep": "Giữ nhiều lựa chọn",
+    "clear": "Xóa lựa chọn",
+    "export": "Tải xuống tệp dữ liệu CSV",
+    "rangeStart": "Phạm vi Bắt đầu",
+    "rangeEnd": "Kết thúc phạm vi",
+    "count": "Số lượng Thống kê",
+    "download": "Tải xuống ảnh xuống",
+    "showLabel": "Hiển thị nhãn",
+    "forecastValue": "Giá trị Dự báo",
+    "upperBoundValue": "Giá trị giới hạn trên",
+    "lowerBoundValue": "Giá trị Giới hạn Dưới",
+    "normalValue": "Giá trị bình thường",
+    "anomalousValue": "Giá trị ngoại lệ",
+    "normalDistribution": "Đường phân phối bình thường",
+    "feature": {
+      "max": "Tối đa",
+      "min": "Giá trị tối thiểu",
+      "mean": "giá trị trung bình",
+      "median": "số trung vị",
+      "pValue": "Giá trị P",
+      "sigma": "Độ lệch Chuẩn",
+      "aDValue": "Giá trị AD",
+      "kurtosis": "Kurtosis (β)",
+      "skewness": "độ lệch",
+      "samplesAmount": "Số lượng mẫu",
+      "trendsPValue": " Xu hướng giá trị P",
+      "mixturesPValue": "Giá trị P hỗn hợp",
+      "clusteringPValue": "Giá trị P nhóm",
+      "oscillationPValue": "Giá trị P dao động"
+    }
+  },
+  "denotation": {
+    "dataOverview": "Tổng quan về Dữ liệu",
+    "clusteringAnalysis": "Phân tích theo cụm",
+    "correlationAnalysis": "Phân tích mối tương quan",
+    "predictionAnalysis": "Phân tích Dự đoán",
+    "trendAnalysis": "Phân tích xu hướng",
+    "anomalyAnalysis": "Phân tích bất thường",
+    "periodicityAnalysis": "Phân tích tuần hoàn",
+    "stabilityAnalysis": "Phân tích độ ổn định",
+    "normalityTest": "Thử nghiệm tiêu chuẩn"
+  },
+  "errorMessage": {
+    "SYERR0001": "Đã xảy ra lỗi không mong muốn trong hệ thống",
+    "SYERR0002": "xử lý loại lưu trữ số nhiều",
+    "SYERR0003": "Không tìm thấy storage type handler",
+    "SYERR0004": "Không gian lưu trữ đã bị hỏng",
+    "SYERR0005": "Không thể chỉnh sửa dung lượng lưu trữ",
+    "SYERR0006": "Tệp không tồn tại",
+    "SYERR0007": "Tải lên trùng lặp",
+    "SYERR0008": "Không thể tải lên cái đã hủy",
+    "SYERR0009": "Tạo dựng không thành công",
+    "SYERR0010": "Cơ sở dữ liệu chưa được tạo",
+    "SYERR0011": "Liên kết bảng dữ liệu đã tồn tại",
+    "SYERR0012": "Liên kết bảng dữ liệu không tồn tại",
+    "SYERR0013": "Liên kết bảng dữ liệu đã tồn tại",
+    "SYERR0014": "Bảng hiện không khả dụng",
+    "SYERR0015": "Không thể sử dụng trường bảng dữ liệu",
+    "SYERR0016": "Không thể kết nối cùng một bảng dữ liệu",
+    "SYERR0017": "Bảng dữ liệu không tồn tại",
+    "SYERR0018": "Không có giá trị khóa được liên kết trong bảng dữ liệu",
+    "SYERR0019": "Không có trường nào trong bảng dữ liệu",
+    "SYERR0101": "Không thể giải mã tệp",
+    "SYERR0102": "Không thể phân tích cú pháp tệp",
+    "SYWARN0001": "Cảnh báo !!",
+    "SYWARN0002": "Nguồn dữ liệu đã tồn tại",
+    "SYWARN0003": "Hiện không thể chỉnh sửa nguồn dữ liệu",
+    "SYWARN0004": "Không gian lưu trữ đang được xây dựng",
+    "SYWARN0005": "Không gian lưu trữ không tồn tại",
+    "SYWARN0006": "Nguồn dữ liệu không tồn tại",
+    "SYWARN0007": "Định dạng thời gian truy vấn sai",
+    "SYWARN0008": "Tên bảng đã tồn tại",
+    "SYWARN0009": "Tên tệp đã tồn tại",
+    "SYWARN0010": "Trường nguồn dữ liệu không tồn tại",
+    "SYWARN0011": "Bí danh trường đã tồn tại",
+    "SYWARN0012": "Nhãn trường không hợp lệ",
+    "APPERR0001": "Đã xảy ra lỗi không mong muốn trong hệ thống",
+    "APPWARN0001": "Mật khẩu tài khoản không chính xác",
+    "APPWARN0002": "Người dùng đã tồn tại",
+    "APPWARN0003": "Vui lòng đăng nhập lại nếu quyền không hợp lệ",
+    "APPWARN0004": "Kiểm tra câu hỏi không được đề xuất",
+    "TASKWARN0002": "Không có dữ liệu thu được để xử lý dưới điều kiện này",
+    "TASKWARN0003": "Kết quả tính toán trống",
+    "authFail": "Ủy quyền không hợp lệ, vui lòng đăng nhập lại",
+    "permissionChanged": "Quyền đã được thay đổi, vui lòng đăng nhập lại",
+    "lackOfSignUpToken": "Không có quyền đăng ký, vui lòng liên hệ với quản trị viên",
+    "defaultMsg": "Đã xảy ra lỗi không mong muốn trong hệ thống",
+    "lackOfPermission": "Không đủ quyền, vui lòng liên hệ với quản trị viên",
+    "versionUpdate": "Đã có phiên bản mới trực tuyến, hãy cập nhật ngay cho bạn",
+    "networkError": "Đã xảy ra lỗi trong kết nối mạng, vui lòng kiểm tra kết nối và thử lại sau",
+    "errorMessageDownload": "Tải xuống thông báo lỗi"
+  },
+  "resultNote": {
+    "groupLimitNote": "Kết quả này là {randomLimit} được viết trước khi tìm nạp thông tin ban đầu",
+    "samplingNote": "Kết quả này được tính bằng cách lấy mẫu {randomLimit} của dữ liệu gốc",
+    "pieChartFilterNote": "Kết quả này là giá trị âm cho việc lọc dữ liệu gốc"
+  },
+  "userManagement": {
+    "accountUserList": "Danh sách người dùng tài khoản",
+    "createUser": "Tạo người dùng",
+    "inviteUser": "Mời Người dùng",
+    "inviteeEmailPlaceholder": "Vui lòng nhập email của người được mời",
+    "userRoleAuthority": "Quyền vai trò tài khoản",
+    "accountOwner": "Chủ sở hữu tài khoản",
+    "accountMaintainer": "Người quản lý tài khoản",
+    "accountViewer": "Người dùng chung",
+    "groupOwner": "Chủ dự án",
+    "groupMaintainer": "Người quản lý dự án",
+    "groupViewer": "Thành viên dự án",
+    "accountRoleDesc": "Mô tả Quyền của Vai trò",
+    "accountOwnerDesc": "Không hạn chế sử dụng",
+    "accountMaintainerDesc": "Có quyền quản lý tài khoản",
+    "accountViewerDesc": "Không thể sử dụng các chức năng liên quan đến quản lý tài khoản",
+    "groupOwnerDesc": "Không hạn chế sử dụng",
+    "groupMaintainerDesc": "Có quyền quản lý dự án",
+    "groupViewerDesc": "Không thể sử dụng các chức năng liên quan đến quản lý dự án",
+    "updateRole": "Thay đổi vai trò",
+    "confirmDeleteAccountText": "Sau khi người dùng bị xóa, người dùng này sẽ không thể sử dụng bất kỳ chức năng nào của tài khoản này. Bạn có chắc chắn muốn tiếp tục xóa người dùng này không?",
+    "userName": "Tên người dùng",
+    "userAccount": "Tài khoản Người dùng",
+    "userPassword": "Mật khẩu người dùng",
+    "emailPlaceholder": "Vui lòng nhập email",
+    "userNamePlaceholder": "Vui lòng nhập tên"
+  },
+  "accountInfo": {
+    "userAmount": "Số lượng người dùng",
+    "currentUserAmount": "Tài khoản người dùng hiện tại",
+    "userAmountLimit": "Giới hạn số lượng của người dùng",
+    "dataAllowance": "Dung lượng dữ liệu",
+    "currentDataUsage": "Dung lượng sử dụng dữ liệu hiện tại",
+    "dataUsageProvided": "Dung lượng dữ liệu tối đa",
+    "expireDate": "Ngày hết hạn",
+    "person": "Người",
+    "accountRestrictions": "Hạn chế Tài khoản",
+    "accountUsageStatus": "Trạng thái sử dụng tài khoản",
+    "projectAmount": "Số lượng dự án: {amount} cái",
+    "dataFrameAmount": "Số lượng Tập dữ liệu",
+    "pinBoardAmount": "Số lượng bản ghim",
+    "warRoomAmount": "Số phòng dự phòng",
+    "dataStorageUsageRate": "Tổng tốc độ sử dụng dung lượng dữ liệu",
+    "unlimited": "Không giới hạn"
+  },
+  "updateLicense": {
+    "licenseKey": "Khóa sản phẩm mới (giấy phép)",
+    "publicKey": "Khóa công khai mới (khóa công khai)",
+    "placeholder": "Vui lòng nhập"
+  },
+  "dataType": {
+    "numeric": "Giá trị số",
+    "category": "Danh mục",
+    "boolean": "boolean",
+    "datetime": "Thời gian",
+    "others": "Cái khác"
+  }
+}
