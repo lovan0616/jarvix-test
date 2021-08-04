@@ -307,10 +307,10 @@
               <!--Control panel-->
               <filter-control-panel
                 v-if="controlColumnValueInfoList.length > 0"
+                type="controller"
                 :key="'control' + currentDashboardId"
                 :is-edit-mode="isEditMode"
                 :initial-filter-list="controlColumnValueInfoList"
-                :is-single-choice-filter="true"
                 class="mini-app__dashboard-filter"
                 @updateFilter="updateFilter($event, 'single')"
                 @updateInit="isCurrentDashboardInit = $event"
@@ -332,10 +332,10 @@
             >
               <!--Filter Panel-->
               <filter-control-panel
+                type="filter"
                 :key="'filter' + currentDashboardId"
                 :is-edit-mode="isEditMode"
                 :initial-filter-list="filterColumnValueInfoList"
-                :is-single-choice-filter="false"
                 class="mini-app__dashboard-filter"
                 @updateFilter="updateFilter($event, 'multiple')"
               />
