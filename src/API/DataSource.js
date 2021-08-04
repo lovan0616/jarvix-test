@@ -87,7 +87,7 @@ export function getDataSourceColumnInfoById (dataSourceId, dataFrameId, columns 
  */
 export function getDataFrameCategoryDataValueById (dataFrameId) {
   return request({
-    url: `/dataframe/${dataFrameId}/data/category/values`,
+    url: `/dataFrame/${dataFrameId}/data/category/values`,
     method: 'GET'
   })
 }

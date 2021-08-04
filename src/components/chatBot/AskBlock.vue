@@ -121,7 +121,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Suggester, trimRedundant, defineTerm, defineSuggestionListItem } from '@/utils/questionSuggester'
-// import { getDataFrameCategoryDataValueById } from '@/API/DataSource'
+import { getDataFrameCategoryDataValueById } from '@/API/DataSource'
 
 /**
  * @typedef {Object} SuggestionListItem
@@ -496,11 +496,8 @@ export default {
         newSuggester.appendKnownTerms(terms)
       }
       const appendDataValueByDataFrameId = async (dataFrameId) => {
-        // TODO: Wait for real API developed
-        // const data = await getDataFrameCategoryDataValueById(dataFrameId)
-        // const terms = data.values
-        await new Promise(resolve => setTimeout(resolve, 10000))
-        const terms = []
+        const data = await getDataFrameCategoryDataValueById(dataFrameId)
+        const terms = data.values
           .map((value) => defineTerm({ type: 'dataValue', value }))
         newSuggester.appendKnownTerms(terms)
       }
