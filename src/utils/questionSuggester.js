@@ -145,7 +145,12 @@ export class Suggester {
    * @param {Term[]} toAppend
    */
   appendKnownTerms (toAppend) {
+    const map = {}
     this._knownTerms.push(...toAppend)
+    this._knownTerms.forEach((term) => {
+      map[term.value] = term
+    })
+    this._knownTerms = Object.values(map)
     this._knownTerms = this._knownTerms.sort((termA, termB) => termB.value.length - termA.value.length)
     this._update()
   }
