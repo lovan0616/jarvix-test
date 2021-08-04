@@ -326,17 +326,18 @@ export default {
 
   .seciotn-title {
     font-size: 18px;
-    line-height: 26px;
     letter-spacing: 0.1em;
+    line-height: 26px;
     margin-bottom: 10px;
   }
+
   .recommend-question-list-block {
     margin-top: 64px;
 
     .block-title {
       font-size: 24px;
-      line-height: 40px;
       letter-spacing: 0.1em;
+      line-height: 40px;
       margin-bottom: 48px;
     }
 

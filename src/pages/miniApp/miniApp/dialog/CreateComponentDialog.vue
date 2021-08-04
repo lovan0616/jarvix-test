@@ -40,7 +40,7 @@
     </nav>
     <div class="dialog__content">
       <div class="dialog__content--left">
-        <template v-if="isCreatedViaAsking">
+        <template v-if="currentComponent.isCreatedViaAsking">
           <div class="search-bar">
             <data-frame-menu
               :redirect-on-change="false"
@@ -50,7 +50,7 @@
             <ask-block
               :redirect-on-ask="false"
               :is-show-ask-helper-entry="false"
-              :default-question="currentQuestion"
+              :default-question="currentComponent.question"
             />
           </div>
           <dashboard-component
@@ -322,9 +322,6 @@
                 class="setting__block-select"
                 name="rowSpan"
               >
-              <p v-if="predictComponentHeight">
-                高度約 = {{ predictComponentHeight }}px
-              </p>
             </div>
           </div>
         </div>
@@ -385,12 +382,17 @@ export default {
     }
   },
   data () {
+    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
+    const currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
+    const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
+    const titleTemp = currentComponent && currentComponent.config && currentComponent.config.diaplayedName
+
     return {
-      isAddable: null,
+      isAddable: isDirectAddableComponentTypes.includes(currentComponent.type),
       isLoading: false,
       isFailed: false,
-      currentComponent: null,
-      selectedTriggerColumn: null,
+      currentComponent,
+      selectedTriggerColumn: columnInfo && columnInfo.dataColumnId,
       relatedDashboardTemplate: {
         id: null,
         name: null
@@ -416,19 +418,17 @@ export default {
       ],
       formulaComponentInfo: {},
       modelComponentInfo: {},
-      titleTemp: null,
+      titleTemp,
       isCustomTitle: false
     }
   },
   computed: {
     ...mapState('result', ['currentResultId', 'currentResultInfo']),
+    ...mapState('previewDataSource', ['isShowPreviewDataSource']),
     ...mapState('chatBot', ['parserLanguage']),
     ...mapState('dataSource', ['appQuestion']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
-    },
-    isShowPreviewDataSource () {
-      return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
       return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
@@ -517,9 +517,6 @@ export default {
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
       return options
     },
-    isCreatedViaAsking () {
-      return this.currentComponent && this.currentComponent.isCreatedViaAsking
-    },
     tableRelatedDashboard () {
       if (!this.currentComponent.config.hasTableRelatedDashboard) return
       const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
@@ -537,15 +534,6 @@ export default {
         }
       ]
     },
-    predictComponentHeight () {
-      if (this.rowHeight !== null && this.currentComponent.config.size.row > 0) {
-        return this.rowHeight * this.currentComponent.config.size.row + this.gap * (this.currentComponent.config.size.row - 1)
-      }
-      return null
-    },
-    currentQuestion () {
-      return (this.currentComponent && this.currentComponent.question) ? this.currentComponent.question : null
-    },
     InputDiaplayedName: {
       get () {
         return this.currentComponent && this.currentComponent.config.diaplayedName || null
@@ -560,16 +548,6 @@ export default {
         }
       }
     }
-  },
-  mounted () {
-    this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
-    this.titleTemp = this.currentComponent.config.diaplayedName
-
-    // 所有可以不需透過問問句就能創建的元件類型
-    const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
-    this.isAddable = isDirectAddableComponentTypes.includes(this.currentComponent.type)
-    const columnInfo = this.currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
-    this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
   },
   destroyed () {
     this.$store.commit('result/updateCurrentResultInfo', null)

@@ -27,7 +27,16 @@ export default {
   computed: {
     displayedText () {
       // 可能會有列表或 table 兩種形式
-      return this.diagram === 'table' ? this.dataset.data[0][0] : this.dataset.index[0]
+      if (this.diagram === 'table') {
+        if (this.dataset.data && this.dataset.data[0] && this.dataset.data[0][0]) {
+          return this.dataset.data[0][0]
+        }
+      } else {
+        if (this.dataset.index && this.dataset.index[0]) {
+          return this.dataset.index[0]
+        }
+      }
+      return null
     }
   }
 }
