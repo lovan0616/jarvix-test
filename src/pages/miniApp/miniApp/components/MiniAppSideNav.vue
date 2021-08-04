@@ -1,5 +1,5 @@
 <template>
-  <aside class="mini-app__side-nav">
+  <aside class="mini-app-side-nav">
     <div
       v-if="isEditMode || isWarningModuleActivate"
       :class="{'is-active': isShowWarningModule && !currentDashboardId}"
@@ -111,65 +111,77 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mini-app__side-nav {
-  flex: 0 0 240px;
-  display: flex;
-  flex-direction: column;
+.mini-app-side-nav {
   background-color: #000;
-  border-right: 1px solid #232C2E;
+  border-right: 1px solid #232c2e;
+  display: flex;
+  flex: 0 0 240px;
+  flex-direction: column;
+
   .title {
-    padding-left: 26px;
-    padding-right: 20px;
+    align-items: center;
     color: $theme-color-primary;
+    display: flex;
     flex: 0 0 48px;
     line-height: 48px;
-    display: flex;
-    align-items: center;
+    padding-left: 26px;
+    padding-right: 20px;
+
     &.warning-module-entry {
       cursor: pointer;
     }
+
     .label-icon {
       margin-right: 4px;
     }
+
     .label-name {
-      padding-left: 6px;
       flex: 1;
+      padding-left: 6px;
     }
   }
+
   .item-wrapper {
+    flex: 1;
+    list-style: none;
+    margin: 0;
     overflow: auto;
     overflow: overlay;  // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
-    flex: 1;
-    margin: 0;
     padding: 0;
-    list-style: none;
+
     .item {
+      align-items: center;
+      color: #ccc;
+      cursor: pointer;
+      display: flex;
       min-height: 48px;
       padding: 12px 0;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      color: #CCC;
+
       &:hover {
-        color: #FFF;
+        color: #fff;
       }
+
       &-icon {
-        visibility: hidden;
+        flex-shrink: 0;
         height: 12px;
         margin: 0 16px 0 24px;
         transform: translate(-1px, -1px) rotate(-30deg);
-        flex-shrink: 0;
+        visibility: hidden;
       }
     }
   }
+
   .create-dashboard-icon-block {
-    flex: 0 0 48px;
     cursor: pointer;
+    flex: 0 0 48px;
     text-align: right;
   }
-  .item.is-active, .title.is-active {
-    background-color: #42A5B3;
-    color: #FFF;
+
+  .item.is-active,
+  .title.is-active {
+    background-color: #42a5b3;
+    color: #fff;
+
     .item-icon {
       visibility: visible;
     }
@@ -177,7 +189,7 @@ export default {
 }
 
 .dragging-ghost {
+  background: #42a5b3;
   opacity: 0.5;
-  background: #42A5B3;
 }
 </style>
