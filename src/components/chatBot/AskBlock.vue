@@ -586,7 +586,7 @@ export default {
     }
 
     .question-input {
-      border-bottom: none;
+      border-bottom: 0;
       flex-basis: calc(100% - 65px);
       font-size: 14px;
       height: 38px;
@@ -605,8 +605,8 @@ export default {
           opacity: 0.15;
         }
 
-        & ~ .ask-btn,
-        & ~ .clean-btn {
+        ~ .ask-btn,
+        ~ .clean-btn {
           opacity: 0.15;
         }
       }
