@@ -17,7 +17,8 @@
         <span class="component__item-header">
           <div class="header-left">
             <el-tooltip
-              :content="componentData.config.diaplayedName"
+              v-if="isTitleTooltip"
+              :content="taskOriginTitle"
               placement="bottom"
             >
               <span
@@ -25,6 +26,7 @@
                 v-html="dashboardTaskTitle"
               />
             </el-tooltip>
+            <p v-else>{{ dashboardTaskTitle }}</p>
           </div>
           <div class="header-right">
             <div class="component-property-box">
@@ -350,10 +352,19 @@ export default {
         return acc
       }, [])
     },
+    isTitleTooltip () {
+      return !this.componentData.config.isCustomizeTitle && this.shouldComponentYAxisBeControlled
+    },
     dashboardTaskTitle () {
-      return this.shouldComponentYAxisBeControlled
-        ? this.controllerMutatedQuestion(true)
-        : this.componentData.config.diaplayedName
+      if (this.componentData.config.isCustomizeTitle) {
+        return this.componentData.config.diaplayedName
+      } else if (this.shouldComponentYAxisBeControlled) {
+        return this.controllerMutatedQuestion(true)
+      }
+      return this.componentData.question
+    },
+    taskOriginTitle () {
+      return this.componentData.config.isCustomizeTitle ? this.componentData.config.diaplayedName : this.componentData.question
     },
     allFilterList () {
       // 可能會有階層，因此需要完全攤平

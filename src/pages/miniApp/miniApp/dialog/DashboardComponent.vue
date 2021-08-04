@@ -473,10 +473,6 @@ export default {
         this.askQuestion(this.currentComponent.question)
       }
     }
-
-    if (this.computedQuestion) {
-      this.$emit('checkTitleMatch', this.computedQuestion)
-    }
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
@@ -750,9 +746,6 @@ export default {
           this.$store.commit('result/updateCurrentResultInfo', null)
           // this.hasError = true
           if (error.message !== 'cancel') this.resultInfo = null
-        })
-        .then(() => {
-          this.$emit('updateTitle', this.computedQuestion)
         })
     },
     composeComponentQuestion (sentence) {

@@ -1472,7 +1472,8 @@ export default {
             columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
             rowRelation: { relatedDashboardId: null }
           },
-          fontSize: 'middle'
+          fontSize: 'middle',
+          isCustomizeTitle: false
         },
         algoConfig: null,
         anomalySettings: [],
