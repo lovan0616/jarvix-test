@@ -8,7 +8,7 @@
         >
           <svg-icon icon-class="arrow-left" />
         </div>
-        {{ isComponentInit ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
+        {{ currentComponent.init ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
       </div>
       <div class="nav--right">
         <div
@@ -22,7 +22,7 @@
           {{ $t('miniApp.componentNotAddable') }}
         </div>
         <button
-          v-if="isComponentInit"
+          v-if="currentComponent.init"
           class="btn btn-default"
           @click="saveComponent"
         >
@@ -40,7 +40,7 @@
     </nav>
     <div class="dialog__content">
       <div class="dialog__content--left">
-        <template v-if="isCreatedViaAsking">
+        <template v-if="currentComponent.isCreatedViaAsking">
           <div class="search-bar">
             <data-frame-menu
               :redirect-on-change="false"
@@ -385,6 +385,7 @@ export default {
     const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     const currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
     const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
+    const titleTemp = currentComponent && currentComponent.config && currentComponent.config.diaplayedName
 
     return {
       isAddable: isDirectAddableComponentTypes.includes(currentComponent.type),
@@ -417,19 +418,17 @@ export default {
       ],
       formulaComponentInfo: {},
       modelComponentInfo: {},
-      titleTemp: currentComponent.config.diaplayedName,
+      titleTemp,
       isCustomTitle: false
     }
   },
   computed: {
     ...mapState('result', ['currentResultId', 'currentResultInfo']),
+    ...mapState('previewDataSource', ['isShowPreviewDataSource']),
     ...mapState('chatBot', ['parserLanguage']),
     ...mapState('dataSource', ['appQuestion']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
-    },
-    isShowPreviewDataSource () {
-      return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
     isShowRelatedOption () {
       return this.currentComponent.type !== 'monitor-warning-list' && this.currentComponent.type !== 'abnormal-statistics' && this.currentComponent.type !== 'simulator' && this.currentComponent.type !== 'parameters-optimized-simulator'
@@ -439,9 +438,6 @@ export default {
     },
     isShowFontSizeOption () {
       return this.currentComponent.type === 'index' || this.currentComponent.type === 'formula' || this.currentComponent.type === 'abnormal-statistics'
-    },
-    isComponentInit () {
-      return this.currentComponent && this.currentComponent.init
     },
     updateFrequency () {
       return [
@@ -520,9 +516,6 @@ export default {
         }))
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
       return options
-    },
-    isCreatedViaAsking () {
-      return this.currentComponent && this.currentComponent.isCreatedViaAsking
     },
     tableRelatedDashboard () {
       if (!this.currentComponent.config.hasTableRelatedDashboard) return
