@@ -244,6 +244,7 @@
     "warRoomName": "战情室名称",
     "questionPlaceHolder": "请输入问题，例如：价格和成本的相关性",
     "askPlaceHolder": "请输入问句后按Enter送出",
+    "suggestionSearching": "搜索中",
     "dataDownloading": "数据下载中...",
     "dataBuilding": "数据处理中",
     "dataManageable": "可管理",

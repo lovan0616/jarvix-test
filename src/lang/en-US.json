@@ -244,6 +244,7 @@
     "warRoomName": "War Room Name",
     "questionPlaceHolder": "Please enter a question, for example: the correlation between price and cost",
     "askPlaceHolder": "Ask JarviX",
+    "suggestionSearching": "Searching",
     "dataBuilding": "Data Processing",
     "dataDownloading": "Data Downloading...",
     "dataManageable": "Completed",

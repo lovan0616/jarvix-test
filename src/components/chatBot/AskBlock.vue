@@ -79,10 +79,11 @@
       @mouseleave="currentSelectedSuggestionIndex = -1"
     >
       <div
-        v-show="isLoadingKnownTerms"
+        v-show="isLoadingKnownTerms && userQuestion"
         class="known-terms-loading-status"
       >
         <spinner size="16" />
+        <span class="known-terms-loading-status__text">{{ $t('editing.suggestionSearching') }}</span>
       </div>
       <div
         v-for="(suggestion, index) in suggestionList"
@@ -172,7 +173,7 @@ export default {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     isSuggestionBlockVisible () {
-      return this.isInputFocus && (this.suggestionList.length > 0 || this.isLoadingKnownTerms) && !this.isShowAskHelper
+      return this.isInputFocus && (this.suggestionList.length > 0 || (this.isLoadingKnownTerms && this.userQuestion)) && !this.isShowAskHelper
     },
     languageList () {
       return this.parserLanguageList.map(option => {
@@ -732,12 +733,18 @@ export default {
     }
 
     .known-terms-loading-status {
+      align-items: center;
+      display: flex;
       font-size: 0;
 
       ::v-deep .spinner-block {
         display: inline-block;
-        margin-top: -4px;
         padding: 8px 16px;
+      }
+
+      &__text {
+        font-size: 16px;
+        opacity: 0.5;
       }
     }
   }
