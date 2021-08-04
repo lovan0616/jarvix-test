@@ -394,7 +394,6 @@ export default {
     const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     const currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
     const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
-    const titleTemp = currentComponent && currentComponent.config && currentComponent.config.diaplayedName
 
     return {
       isAddable: isDirectAddableComponentTypes.includes(currentComponent.type),
@@ -540,20 +539,6 @@ export default {
           value: 'row'
         }
       ]
-    },
-    InputDiaplayedName: {
-      get () {
-        return this.currentComponent && this.currentComponent.config.diaplayedName || null
-      },
-      set (val) {
-        if (!val) {
-          this.isCustomTitle = false
-          this.currentComponent.config.diaplayedName = this.titleTemp
-        } else {
-          this.isCustomTitle = true
-          this.currentComponent.config.diaplayedName = val
-        }
-      }
     }
   },
   destroyed () {
