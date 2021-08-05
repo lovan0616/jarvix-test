@@ -168,7 +168,7 @@ export default {
         const sliceIndex = this.featureList.findIndex(item => item.dataColumnId === this.deleteFeatureId)
         this.featureList.splice(sliceIndex, 1)
         this.isShowDelete = false
-        this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
+        this.$store.commit('dataFrameAdvanceSetting/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
       }).finally(() => {
         this.isProcessing = false
       })
@@ -191,15 +191,17 @@ export default {
 <style lang="scss" scoped>
 .custom-feature-list {
   .title-block {
+    align-items: center;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 12px;
   }
+
   .data-frame-select {
-    width: 188px;
     border-bottom: 1px solid #fff;
+    width: 188px;
   }
+
   .feature-list {
     .data-table-body {
       .data-table-cell {

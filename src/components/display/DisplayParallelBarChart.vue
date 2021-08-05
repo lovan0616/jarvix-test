@@ -418,7 +418,7 @@ export default {
       })
     },
     saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
+      this.$store.dispatch('dataFrameAdvanceSetting/updateFilterListByData', this.selectedData)
     }
   }
 }
@@ -429,8 +429,8 @@ export default {
 
   .change-diagram-btn {
     position: absolute;
-    top: -32px;
     right: 0;
+    top: -32px;
   }
 }
 </style>

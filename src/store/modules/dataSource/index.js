@@ -42,15 +42,13 @@ export default {
       hasOutlier: false
     },
     historyQuestionList: [],
-    filterList: [],
     dataFrameId: null,
     dataFrameList: [],
     // 使用者自己建立的資料源
     processingDataFrameList: [],
     processingDataColumnList: [],
     // 新增或刪除欄位時，通知相關組件重新fetch欄位的flag
-    shouldDataFrameDataRefetchDataColumn: null,
-    shouldAdvanceDataFrameSettingRefetchDataColumn: false
+    shouldDataFrameDataRefetchDataColumn: null
   },
   actions,
   mutations,

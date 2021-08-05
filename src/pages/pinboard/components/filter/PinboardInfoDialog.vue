@@ -63,7 +63,7 @@ export default {
       return this.pinboardData.find(data => data.resultId === this.resultId)
     },
     hasFilter () {
-      return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.getDataInfo.restrictions.length > 0
+      return (this.$store.state.dataFrameAdvanceSetting.filterList.length > 0 && this.$route.name === 'PageResult') || this.getDataInfo.restrictions.length > 0
     }
   },
   mounted () {
@@ -83,29 +83,29 @@ export default {
 </script>
 <style lang="scss" scoped>
 .pinboard-info-dialog {
-  width: 380px;
-  position: absolute;
-  top: 70%;
-  right: 188px;
-  background-color: #323A3A;
-  box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+  background-color: #323a3a;
   border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(71, 235, 251, 0.5);
   padding: 10px 20px 0;
+  position: absolute;
+  right: 188px;
   text-align: left;
+  top: 70%;
+  width: 380px;
   z-index: 999;
 
-  &:before {
-    position: absolute;
-    top: -16px;
-    right: 30px;
-    display: block;
+  &::before {
     border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    pointer-events: none;
-    border-bottom-color: #323A3A;
+    border-bottom-color: #323a3a;
     border-width: 10px;
+    content: ' ';
+    display: block;
+    height: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 30px;
+    top: -16px;
+    width: 0;
   }
 
   .pinboard-info-block {
@@ -113,40 +113,40 @@ export default {
     overflow: hidden;
 
     >>> .el-tabs--card {
-
-      &>.el-tabs__header {
-        margin: 0 0 25px;
+      & > .el-tabs__header {
         border-bottom: 3px solid #414848;
+        margin: 0 0 25px;
 
         .el-tabs__nav {
-          width: 100%;
           border: none;
+          width: 100%;
 
           &::before {
-            content: '';
-            position: absolute;
+            background: #324b4e;
             bottom: 0;
+            content: '';
             height: 3px;
-            background: #324B4E;
+            position: absolute;
           }
         }
 
         .el-tabs__item {
           border: none;
-          color:  #AAAAAA;
+          color: #aaa;
           text-align: center;
 
           &.is-active {
-            color: #fff;
-            background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
+            background: linear-gradient(360deg, #324b4e 0%, rgba(50, 75, 78, 0) 100%);
             border-bottom: 3px solid $theme-color-primary;
+            color: #fff;
           }
         }
       }
+
       .el-tabs__content {
-        padding-right: 10px;
         max-height: 210px;
         overflow-y: auto;
+        padding-right: 10px;
       }
     }
   }

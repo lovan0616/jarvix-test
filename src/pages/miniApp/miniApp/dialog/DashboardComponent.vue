@@ -285,13 +285,12 @@ import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputVerify from '@/components/InputVerify'
 import { algoConfig } from '@/utils/general'
-import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
 import { formatAnomalySetting } from '@/components/display/common/addons'
 
 export default {
   name: 'DashboardComponent',
-  inject: ['$validator'],
+  inject: ['$validator', 'computeRestrictions', 'computeSelectedColumns'],
   components: {
     DefaultSelect,
     InputVerify,
@@ -309,14 +308,6 @@ export default {
     isAddable: {
       type: Boolean,
       default: null
-    },
-    filters: {
-      type: Array,
-      default: () => []
-    },
-    controls: {
-      type: Array,
-      default: () => []
     }
   },
   data () {
@@ -391,7 +382,7 @@ export default {
       'currentQuestionId',
       'isManuallyTriggeredAskQuestion'
     ]),
-    ...mapGetters('dataSource', ['filterRestrictionList']),
+    ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList', 'filterRestrictionList']),
     computedKeyResultId () {
       return (
         this.resultInfo &&
@@ -404,10 +395,6 @@ export default {
     },
     isShowKeyResultContent () {
       return this.computedKeyResultId || this.layout
-    },
-    allFilterList () {
-      // 可能會有階層，因此需要完全攤平
-      return [].concat.apply([], [...this.filters, ...this.controls])
     },
     isNeededDisplaySetting () {
       return (
@@ -444,6 +431,20 @@ export default {
       this.resetComponent()
       this.askQuestion(this.appQuestion)
       this.setIsManuallyTriggeredAskQuestion(false)
+    },
+    selectedColumnList: {
+      deep: true,
+      handler () {
+        console.log('a')
+        if (this.appQuestion) this.setIsManuallyTriggeredAskQuestion(true)
+      }
+    },
+    filterRestrictionList: {
+      deep: true,
+      handler () {
+        console.log('b')
+        if (this.appQuestion) this.setIsManuallyTriggeredAskQuestion(true)
+      }
     }
   },
   mounted () {
@@ -634,8 +635,8 @@ export default {
             : null,
           questionId: questionId || this.currentQuestionId,
           segmentation: this.segmentation,
-          restrictions: this.restrictions(),
-          selectedColumnList: null,
+          restrictions: this.computeRestrictions(this.mainDateColumn),
+          selectedColumnList: this.computeSelectedColumns(),
           isFilter: true,
           ...(isTrendQuestion && {
             displayConfig: {
@@ -810,95 +811,6 @@ export default {
       return this.questionInfo.dataColumns.find(
         (column) => column.columnName === filterName
       )
-    },
-    restrictions () {
-      return this.allFilterList
-        .filter((filter) =>
-          this.checkShouldApplyMiniAppFilter(filter, this.mainDateColumn)
-        )
-        .map((filter) => {
-          let type = ''
-          let data_type = ''
-          switch (filter.statsType) {
-            case 'STRING':
-            case 'BOOLEAN':
-            case 'CATEGORY':
-              data_type = 'string'
-              type = 'enum'
-              break
-            case 'FLOAT':
-            case 'NUMERIC':
-              data_type = 'int'
-              type = 'range'
-              break
-            case 'DATETIME':
-            case 'RELATIVEDATETIME':
-              data_type = 'datetime'
-              type = 'range'
-              break
-          }
-
-          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          if (filter.statsType === 'RELATIVEDATETIME') {
-            return [
-              {
-                type,
-                properties: {
-                  data_type,
-                  dc_id: this.mainDateColumn.dataColumnId,
-                  display_name: this.mainDateColumn.dataColumnPrimaryAlias,
-                  ...this.formatRelativeDatetime(filter.dataValues[0])
-                }
-              }
-            ]
-          }
-
-          return [
-            {
-              type,
-              properties: {
-                data_type,
-                dc_id: filter.columnId,
-                display_name: filter.columnName,
-                ...((filter.statsType === 'STRING' ||
-                  filter.statsType === 'BOOLEAN' ||
-                  filter.statsType === 'CATEGORY') && {
-                  datavalues: filter.dataValues,
-                  display_datavalues: filter.dataValues
-                }),
-                ...((filter.statsType === 'NUMERIC' ||
-                  filter.statsType === 'FLOAT' ||
-                  filter.statsType === 'DATETIME') && {
-                  start: filter.start,
-                  end: filter.end
-                })
-              }
-            }
-          ]
-        })
-    },
-    formatRelativeDatetime (dataValue) {
-      const properties = {
-        start: null,
-        end: null
-      }
-
-      // update datetime range
-      if (dataValue === 'today') {
-        properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
-        properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
-      } else if (RegExp('^.*hour.*$').test(dataValue)) {
-        const hour = Number(dataValue.split('hour')[0])
-        properties.start = moment()
-          .subtract(hour, 'hours')
-          .format('YYYY-MM-DD HH:mm')
-        properties.end = moment().format('YYYY-MM-DD HH:mm')
-      } else {
-        properties.start = null
-        properties.end = null
-      }
-
-      return properties
     },
     resetComponent () {
       this.resetAnomalySetting()

@@ -606,7 +606,7 @@ export default {
       })
     },
     saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
+      this.$store.dispatch('dataFrameAdvanceSetting/updateFilterListByData', this.selectedData)
     },
     tooltipFormatter (datas) {
       const orderTarget = (this.orderBy && this.orderBy.target) || 'value'

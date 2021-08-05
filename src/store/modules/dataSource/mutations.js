@@ -51,51 +51,11 @@ export default {
     state.clusterList = []
     state.hasOutlier = false
   },
-  setFilterList (state, data) {
-    if (data.length === 0) return false
-    // 判斷要從哪邊開始取代新的
-    let newRestriction = {
-      status: true,
-      restriction: data,
-      questionId: state.currentQuestionId
-    }
-    let closeFilterIndex = -1
-    for (let i = 0; i < state.filterList.length; i++) {
-      if (!state.filterList[i].status) {
-        closeFilterIndex = i
-        break
-      }
-    }
-
-    if (closeFilterIndex > -1) {
-      state.filterList = state.filterList.slice(0, closeFilterIndex)
-    }
-
-    state.filterList = [...state.filterList, newRestriction]
-
-    Message({
-      message: i18n.t('message.addFilter'),
-      type: 'success',
-      duration: 3 * 1000,
-      showClose: true
-    })
-  },
-  setUpdatedFilterList (state, data) {
-    state.filterList = data
-  },
   setDataFrameList (state, data) {
     state.dataFrameList = data
   },
   setDataFrameId (state, id) {
     state.dataFrameId = id
-  },
-  clearFilterList (state) {
-    state.filterList = []
-  },
-  setStatusList (state, data) {
-    state.filterList.forEach((filter, index) => {
-      state.filterList[index].status = data[index]
-    })
   },
   clearCurrentQuestionId (state) {
     state.currentQuestionId = null
@@ -142,8 +102,5 @@ export default {
   },
   setShouldDataFrameDataRefetchDataColumn (state, value) {
     state.shouldDataFrameDataRefetchDataColumn = value
-  },
-  setShouldAdvanceDataFrameSettingRefetchDataColumn (state, value) {
-    state.shouldAdvanceDataFrameSettingRefetchDataColumn = value
   }
 }

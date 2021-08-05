@@ -153,7 +153,7 @@ export default {
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
     },
     filterRestrictionList () {
-      return this.$store.getters['dataSource/filterRestrictionList']
+      return this.$store.getters['dataFrameAdvanceSetting/filterRestrictionList']
     }
   },
   watch: {
@@ -267,57 +267,59 @@ export default {
   }
 
   &__title {
-    font-weight: 600;
     font-size: 20px;
+    font-weight: 600;
     margin-bottom: 14px;
   }
 
   .chart {
-    position: relative;
-    width: 50%;
-    /* 讓圖表盡量呈現正方形 */
-    padding-top: 40%;
     margin: 0 auto;
 
+    /* 讓圖表盡量呈現正方形 */
+    padding-top: 40%;
+    position: relative;
+    width: 50%;
+
     &__display {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
       bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
 
     &__description {
-      position: absolute;
-      top: 100%;
       left: 0;
+      position: absolute;
       right: 0;
+      top: 100%;
     }
   }
 
   .description {
     &__container {
-      margin: 0 auto;
-      width: 330px;
-      font-size: 12px;
-      color: #CCCCCC;
+      color: #ccc;
       display: flex;
+      font-size: 12px;
       justify-content: space-between;
+      margin: 0 auto;
       padding-top: 15px;
+      width: 330px;
     }
 
     &__item {
       position: relative;
+
       &::before {
-        content: '';
-        position: absolute;
-        bottom: 110%;
-        left: 50%;
-        transform: translateX(-50%);
-        border-top: 6px solid transparent;
+        border-bottom: 6px solid #ccc;
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-bottom: 6px solid #CCCCCC;
+        border-top: 6px solid transparent;
+        bottom: 110%;
+        content: '';
+        left: 50%;
+        position: absolute;
+        transform: translateX(-50%);
       }
 
       &--min {
@@ -332,13 +334,14 @@ export default {
 
   .tooltip-container {
     z-index: 1;
+
     .tooltip {
-      width: 190px;
+      color: #ddd;
+      line-height: 14px;
+      padding: 8px;
       text-align: center;
       white-space: normal;
-      padding: 8px;
-      line-height: 14px;
-      color: #DDDDDD;
+      width: 190px;
     }
 
     .icon {

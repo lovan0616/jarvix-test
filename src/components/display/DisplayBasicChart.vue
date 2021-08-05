@@ -273,7 +273,7 @@ export default {
       }
     },
     saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
+      this.$store.dispatch('dataFrameAdvanceSetting/updateFilterListByData', this.selectedData)
     }
   }
 }

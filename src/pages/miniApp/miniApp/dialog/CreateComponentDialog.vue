@@ -8,7 +8,22 @@
         >
           <svg-icon icon-class="arrow-left" />
         </div>
-        {{ currentComponent.init ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
+        <span>{{ currentComponent.init ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}</span>
+        <div
+          v-if="topFilters.length > 0"
+          class="filter-list"
+        >
+          <div class="filter-list__label">
+            <svg-icon icon-class="filter-outline" />
+            <span class="label-text">{{ $t('dataFrameAdvanceSetting.filterCriteria') }}</span>
+          </div>
+          <single-filter-status-badge
+            v-for="(filter, index) in topFilters.slice(0, 4)"
+            :key="`single-filter-status-badge-${index}`"
+            :filter="filter"
+          />
+          <overflow-filter-status-badge :filters="topFilters.slice(4)" />
+        </div>
       </div>
       <div class="nav--right">
         <div
@@ -45,7 +60,7 @@
             <data-frame-menu
               :redirect-on-change="false"
               :is-show-preview-entry="true"
-              :is-show-advance-setting-entry="false"
+              :is-show-advance-setting-entry="true"
             />
             <ask-block
               :redirect-on-ask="false"
@@ -53,14 +68,22 @@
               :default-question="currentComponent.question"
             />
           </div>
-          <dashboard-component
-            :current-component="currentComponent"
-            :is-addable.sync="isAddable"
-            :is-loading.sync="isLoading"
-            :filters="filters"
-            :controls="controls"
-            @setDiagram="currentComponent.diagram = $event"
-          />
+          <div
+            class="dashboard-container"
+            :class="{ 'show-settings': isShowSettingBox }"
+          >
+            <transition name="fast-fade-in">
+              <advance-data-frame-setting v-if="isShowSettingBox" />
+            </transition>
+            <dashboard-component
+              :current-component="currentComponent"
+              :is-addable.sync="isAddable"
+              :is-loading.sync="isLoading"
+              @setDiagram="currentComponent.diagram = $event"
+              @updateTitle="updateComponentTitle"
+              @checkTitleMatch="checkTitleMatch"
+            />
+          </div>
           <transition name="fast-fade-in">
             <section
               v-if="isShowPreviewDataSource"
@@ -348,13 +371,25 @@ import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
-import { mapState } from 'vuex'
+import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
+import SingleFilterStatusBadge from './SingleFilterStatusBadge'
+import OverflowFilterStatusBadge from './OverflowFilterStatusBadge'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { algoConfig } from '@/utils/general'
+import dataFrameAdvanceSetting from '@/store/modules/dataFrameAdvanceSetting'
+import moment from 'moment'
 
 export default {
   inject: ['$validator'],
+  provide () {
+    return {
+      computeRestrictions: (mainDateColumn) => this.computeRestrictions(mainDateColumn),
+      computeSelectedColumns: () => this.computeSelectedColumns()
+    }
+  },
   name: 'CreateComponentDialog',
   components: {
+    AdvanceDataFrameSetting,
     DataFrameMenu,
     FormulaSetting,
     SimulatorSetting,
@@ -362,7 +397,9 @@ export default {
     AskBlock,
     ResultDisplay,
     DashboardComponent,
-    InputVerify
+    InputVerify,
+    SingleFilterStatusBadge,
+    OverflowFilterStatusBadge
   },
   props: {
     initialCurrentComponent: {
@@ -433,6 +470,8 @@ export default {
     ...mapState('previewDataSource', ['isShowPreviewDataSource']),
     ...mapState('chatBot', ['parserLanguage']),
     ...mapState('dataSource', ['appQuestion']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapGetters('dataFrameAdvanceSetting', ['filterRestrictionList', 'selectedColumnList']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
@@ -539,15 +578,29 @@ export default {
           value: 'row'
         }
       ]
+    },
+    topFilters () {
+      // 全部外層傳進來的 filters / controls，遇到階層控制項會攤平
+      return [...this.filters, ...this.controls].flat(1)
     }
+  },
+  mounted () {
+    this.setAppQuestion(this.currentComponent.question)
+    if (this.$store.hasModule('dataFrameAdvanceSetting')) {
+      this.$store.unregisterModule('dataFrameAdvanceSetting', dataFrameAdvanceSetting)
+    }
+    this.$store.registerModule('dataFrameAdvanceSetting', dataFrameAdvanceSetting)
   },
   destroyed () {
     this.$store.commit('result/updateCurrentResultInfo', null)
     this.$store.commit('result/updateCurrentResultId', null)
     this.$store.commit('dataSource/setAppQuestion', null)
+    this.toggleSettingBox(false)
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
   },
   methods: {
+    ...mapMutations('dataSource', ['setAppQuestion']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     createComponent () {
       this.$validator.validateAll().then(valid => {
         if (!valid) return
@@ -650,6 +703,122 @@ export default {
     updateTableRelatedDashboard (selectedDashboardId) {
       const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
       triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId = selectedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId = selectedDashboardId
+    },
+    updateComponentTitle (val) {
+      if (this.currentComponent && !this.isCustomTitle) {
+        this.currentComponent.config.diaplayedName = val
+      }
+    },
+    checkTitleMatch (val) {
+      if (val) {
+        this.isCustomTitle = val.replaceAll(/ /g, '').toLowerCase() !== this.titleTemp.replaceAll(/ /g, '').toLowerCase()
+      }
+    },
+    formatRelativeDatetime (dataValue) {
+      const properties = {
+        start: null,
+        end: null
+      }
+
+      // update datetime range
+      if (dataValue === 'today') {
+        properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
+        properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+      } else if (RegExp('^.*hour.*$').test(dataValue)) {
+        const hour = Number(dataValue.split('hour')[0])
+        properties.start = moment()
+          .subtract(hour, 'hours')
+          .format('YYYY-MM-DD HH:mm')
+        properties.end = moment().format('YYYY-MM-DD HH:mm')
+      } else {
+        properties.start = null
+        properties.end = null
+      }
+
+      return properties
+    },
+    transformToRestrictionBy (filter, mainDateColumn) {
+      let type = ''
+      let data_type = ''
+      switch (filter.statsType) {
+        case 'STRING':
+        case 'BOOLEAN':
+        case 'CATEGORY':
+          data_type = 'string'
+          type = 'enum'
+          break
+        case 'FLOAT':
+        case 'NUMERIC':
+          data_type = 'int'
+          type = 'range'
+          break
+        case 'DATETIME':
+        case 'RELATIVEDATETIME':
+          data_type = 'datetime'
+          type = 'range'
+          break
+      }
+
+      // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
+      if (filter.statsType === 'RELATIVEDATETIME') {
+        return [
+          {
+            type,
+            properties: {
+              data_type,
+              dc_id: mainDateColumn.dataColumnId,
+              display_name: mainDateColumn.dataColumnPrimaryAlias,
+              ...this.formatRelativeDatetime(filter.dataValues[0])
+            }
+          }
+        ]
+      }
+
+      return [
+        {
+          type,
+          properties: {
+            data_type,
+            dc_id: filter.columnId,
+            display_name: filter.columnName,
+            ...((filter.statsType === 'STRING' ||
+              filter.statsType === 'BOOLEAN' ||
+              filter.statsType === 'CATEGORY') && {
+              datavalues: filter.dataValues,
+              display_datavalues: filter.dataValues
+            }),
+            ...((filter.statsType === 'NUMERIC' ||
+              filter.statsType === 'FLOAT' ||
+              filter.statsType === 'DATETIME') && {
+              start: filter.start,
+              end: filter.end
+            })
+          }
+        }
+      ]
+    },
+    computeRestrictions (mainDateColumn = null) {
+      const topRestrictions = this.topFilters
+        .filter((filter) => this.checkShouldApplyMiniAppFilter(filter, mainDateColumn))
+        .map((filter) => this.transformToRestrictionBy(filter, mainDateColumn))
+
+      // 進階設定提供的 restrictions
+      const restrictionsFromAdvancedSettings = this.filterRestrictionList
+
+      const result = [
+        ...topRestrictions,
+        ...restrictionsFromAdvancedSettings
+      ]
+
+      return result
+    },
+    computeSelectedColumns () {
+      const selectedColumnsFromAdvancedSettings = this.selectedColumnList ?? []
+      const result = [...selectedColumnsFromAdvancedSettings]
+
+      return result.length === 0
+        ? null
+        : result
     }
   }
 }
@@ -672,7 +841,6 @@ export default {
     border-bottom: 1px solid #232c2e;
     display: flex;
     flex: 0 0 56px;
-    justify-content: space-between;
     padding: 0 24px;
 
     .nav--left {
@@ -684,10 +852,32 @@ export default {
         cursor: pointer;
         margin-right: 20px;
       }
+
+      .filter-list {
+        align-items: center;
+        display: flex;
+        margin-left: 42px;
+
+        &__label {
+          align-items: center;
+          color: #aaa;
+          display: flex;
+          font-size: 13px;
+
+          .label-text {
+            margin-left: 10px;
+          }
+        }
+
+        .filter-status-badge {
+          margin-left: 10px;
+        }
+      }
     }
 
     .nav--right {
       display: flex;
+      margin: 0 0 0 auto;
 
       .message {
         color: #ffdf6f;
@@ -722,6 +912,20 @@ export default {
         .data-frame-select-block {
           margin-right: 16px;
           width: 300px;
+        }
+      }
+
+      .dashboard-container {
+        transition: all 0.3s;
+
+        &.show-settings {
+          padding-left: 280px;
+        }
+
+        ::v-deep .setting__wrapper {
+          height: calc(100vh - 116px);
+          top: 60px;
+          width: 280px;
         }
       }
     }

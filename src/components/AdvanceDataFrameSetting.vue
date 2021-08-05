@@ -120,8 +120,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit', 'displaySection']),
-    ...mapState('dataSource', ['filterList', 'shouldAdvanceDataFrameSettingRefetchDataColumn']),
+    ...mapState('dataFrameAdvanceSetting', ['filterList', 'shouldAdvanceDataFrameSettingRefetchDataColumn', 'columnList', 'isInit', 'displaySection']),
+    ...mapState('dataSource', ['dataFrameId']),
     hasSettingChanged () {
       const isColumnListUntouched = this.tempColumnList.every(tempColumn => {
         if (this.columnList === null) return true
@@ -153,32 +153,28 @@ export default {
     filterList (newList, oldList) {
       this.tempFilterList = JSON.parse(JSON.stringify(newList))
     },
-    '$route.query.dataFrameId' (newValue, oldValue) {
-      if (!newValue || !oldValue || Number(newValue) === Number(oldValue)) return
+    dataFrameId (newValue, oldValue) {
       this.closeAdvanceDataFrameSetting()
     },
     shouldAdvanceDataFrameSettingRefetchDataColumn: {
       handler (value) {
         if (!value) return
         this.toggleIsInit(false)
-        const { dataFrameId } = this.$route.query
-        this.fetchDataColumns(dataFrameId, this.columnList)
+        this.fetchDataColumns(this.dataFrameId, this.columnList)
       },
       immediate: true
     }
   },
   mounted () {
-    const { dataFrameId } = this.$route.query
-    this.fetchDataColumns(dataFrameId, this.shouldAdvanceDataFrameSettingRefetchDataColumn ? this.columnList : [])
+    this.fetchDataColumns(this.dataFrameId, this.shouldAdvanceDataFrameSettingRefetchDataColumn ? this.columnList : [])
     this.tempFilterList = JSON.parse(JSON.stringify(this.filterList))
   },
   destroyed () {
     this.setDisplaySection('column')
   },
   methods: {
-    ...mapActions('dataSource', ['updateFilterList']),
     ...mapActions('dataFrameAdvanceSetting', ['clearColumnList']),
-    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit', 'setDisplaySection']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'setFilterList', 'toggleIsInit', 'setDisplaySection', 'setShouldAdvanceDataFrameSettingRefetchDataColumn']),
     fetchDataColumns (dataFrameId, existingColumnList = []) {
       this.isLoading = true
 
@@ -202,7 +198,7 @@ export default {
           this.setColumnList(formatedColumnList)
           this.toggleIsInit(true)
           this.isLoading = false
-          this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', false)
+          this.setShouldAdvanceDataFrameSettingRefetchDataColumn(false)
         })
         .catch(error => this.isLoading = false)
     },
@@ -211,7 +207,7 @@ export default {
     },
     saveFilter () {
       this.setColumnList(this.tempColumnList)
-      this.updateFilterList(this.tempFilterList)
+      this.setFilterList(this.tempFilterList)
       Message({
         message: this.$t('message.addFilter'),
         type: 'success',
@@ -221,8 +217,7 @@ export default {
     },
     addColumnList ({ dataFrameId: updatedDataFrameId }) {
       // 如果使用者在其他表新增自定義欄位則不更新當前表的 column list
-      const { dataFrameId: queryDataFrameId } = this.$route.query
-      if (Number(queryDataFrameId) !== updatedDataFrameId) return
+      if (this.dataFrameId !== updatedDataFrameId) return
       this.toggleIsInit(false)
       this.fetchDataColumns(updatedDataFrameId, this.columnList)
     },
@@ -286,34 +281,35 @@ export default {
 
 <style lang="scss" scoped>
 .setting__wrapper {
-  position: absolute;
-  top: $header-height + $chat-room-height;
-  left: 0;
-  height: calc(100vh - #{$header-height + $chat-room-height});
-  width: $basic-df-setting-width;
-  display: flex;
-  flex-direction: column;
   // 調整限制調整欄位選單的時候註解掉的，沒看出來當初的用途
   // overflow: hidden;
   background-color: rgba(0, 0, 0, 0.55);
-  border: 1px solid #2B3638;
+  border: 1px solid #2b3638;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - #{$header-height + $chat-room-height});
+  left: 0;
+  position: absolute;
+  top: $header-height + $chat-room-height;
+  width: $basic-df-setting-width;
 
   .setting {
     &__close-icon {
-      position: absolute;
-      top: 16px;
-      right: 24px;
-      z-index: 1;
-      color: #0CD1DE;
-      font-size: 12px;
+      color: #0cd1de;
       cursor: pointer;
+      font-size: 12px;
+      position: absolute;
+      right: 24px;
+      top: 16px;
+      z-index: 1;
     }
 
     &__collapse-title {
+      align-items: center;
+      display: flex;
       font-size: 16px;
       font-weight: 600;
-      display: flex;
-      align-items: center;
+
       ::v-deep .join-logic-hints__icon {
         margin-left: 8px;
       }
@@ -323,11 +319,11 @@ export default {
       margin-right: 6px;
 
       &--light-blue {
-        color: #0CD1DE;
+        color: #0cd1de;
       }
 
       &--dark-blue {
-        color: #4F93FF;
+        color: #4f93ff;
       }
     }
 
@@ -342,9 +338,10 @@ export default {
     }
 
     &__button-block {
-      padding: 12px 24px;
+      background: rgba(0, 0, 0, 0.55);
       height: 60px;
-      background: rgba(0, 0, 0, .55);
+      padding: 12px 24px;
+
       .btn {
         width: 100%;
       }
@@ -352,14 +349,15 @@ export default {
   }
 
   ::v-deep .filter-block {
-    overflow: hidden;
-    padding: 16px 24px;
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
+    padding: 16px 24px;
 
     &__action-box-link {
       font-weight: 600;
+
       &:not(:last-of-type) {
         margin-right: 8px;
       }
@@ -367,6 +365,7 @@ export default {
 
     &__select-box {
       overflow: auto;
+
       .single-select {
         margin-bottom: 8px;
       }
@@ -374,29 +373,29 @@ export default {
   }
 
   ::v-deep .el-collapse {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    border-top: none;
     border-bottom: none;
+    border-top: none;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
     overflow: hidden;
   }
 
   ::v-deep .el-collapse-item {
+    border-bottom: 1px solid #464a50;
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #464A50;
     overflow: hidden;
     transition: flex 0.3s ease-out;
 
-    &+.el-collapse-item {
+    & + .el-collapse-item {
       margin-top: 0;
     }
 
     &.is-disabled {
       .el-collapse-item__header {
-        color: #ffffff;
-        background: rgba(0, 0, 0, .55);
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
       }
     }
 
@@ -405,33 +404,33 @@ export default {
     }
 
     &__wrap {
+      background: rgba(0, 0, 0, 0.55);
+      border-bottom: none;
+      border-radius: 0;
       flex: 1 1 auto;
       padding: 0;
-      border-radius: 0;
-      border-bottom: none;
-      background: rgba(0, 0, 0, .55);
     }
 
     &__header {
-      opacity: .5;
-      cursor: pointer;
-      border-radius: 0;
+      background: rgba(0, 0, 0, 0.55);
       border-bottom: none;
-      background: rgba(0, 0, 0, .55);
+      border-radius: 0;
+      cursor: pointer;
+      opacity: 0.5;
 
       &:hover {
-        opacity: .7;
+        opacity: 0.7;
       }
 
       &.is-active {
-        opacity: 1;
         border-radius: 0;
+        opacity: 1;
       }
     }
 
     &__content {
-      padding-bottom: 0;
       height: 100%;
+      padding-bottom: 0;
     }
 
     &__arrow {

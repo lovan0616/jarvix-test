@@ -158,7 +158,7 @@ export default {
       }
     },
     hasFilter () {
-      return this.$store.state.dataSource.filterList.length > 0
+      return this.$store.state.dataFrameAdvanceSetting.filterList.length > 0
     },
     isShowAskHelper () {
       return this.$store.state.isShowAskHelper
@@ -272,7 +272,7 @@ export default {
       }
       if (evt.data === '取消過濾條件') {
         // 清空 drill down
-        this.$store.commit('dataSource/clearFilterList')
+        this.$store.commit('dataFrameAdvanceSetting/clearFilterList')
         Message({
           message: '已取消過濾條件',
           type: 'success',

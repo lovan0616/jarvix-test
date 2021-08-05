@@ -18,7 +18,7 @@ import simulation from '@/schedule/store/modules/simulation'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
     dataSource,
     pinboard,
@@ -32,7 +32,6 @@ export default new Vuex.Store({
     algorithm,
     validation,
     previewDataSource,
-    dataFrameAdvanceSetting,
     scheduleSetting,
     simulation
   },
@@ -57,3 +56,7 @@ export default new Vuex.Store({
     }
   }
 })
+
+store.registerModule('dataFrameAdvanceSetting', dataFrameAdvanceSetting)
+
+export default store
