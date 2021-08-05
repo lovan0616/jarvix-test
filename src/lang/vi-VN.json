@@ -1,5 +1,5 @@
 {
-  "lang": "Ngôn ngữ",
+  "lang": "Phồn thể",
   "common": {
     "show": "Hiển thị",
     "hide": "Ẩn"
@@ -748,7 +748,7 @@
     "allColumns": "Tất cả các trường",
     "emptyInfo": "Dữ liệu {Tên} không còn tồn tại",
     "reminding": "Nhắc nhở",
-    "switchAccountReminding": "Phiên bản cố định này thuộc về tài khoản '{Tên tài khoản}' . Đi tới trang phân tích thông minh sẽ đồng thời chuyển đổi tài khoản mặc định của bạn. Bạn có chắc chắn muốn tiếp tục không? "
+    "switchAccountReminding": "Phiên bản cố định này thuộc về tài khoản '{Tên tài khoản}'. Đi tới trang phân tích thông minh sẽ đồng thời chuyển đổi tài khoản mặc định của bạn. Bạn có chắc chắn muốn tiếp tục không?"
   },
   "batchLoad": {
     "primaryKeyColumns": "Khóa chính (nhiều lựa chọn)",
@@ -798,7 +798,7 @@
       "star": "Dấu sao (*): là viết tắt của bất kỳ lúc nào. Ví dụ: nếu bạn điền dấu sao vào cột tháng, nó có nghĩa là bất kỳ tháng nào.",
       "comma": "Dấu phẩy (,): Phân tách nhiều mốc thời gian khác nhau. Ví dụ: nếu bạn muốn chỉ định 3:00, 6:00 và 9:00 để thực hiện lệnh, hãy điền vào 3, 6, 9.",
       "minus": "Dấu trừ (-): đại diện cho một khoảng thời gian, ví dụ: điền 8-12 để biểu thị ý nghĩa từ 8 giờ đến 12 giờ, tương đương với 8,9,10, 11,12. ",
-      "slash": "Dấu gạch sổ (/ n): n là viết tắt của số, vì vậy nó có nghĩa là 'đơn vị mỗi n' . Ví dụ: điền * / 5 có nghĩa là thực hiện 5 phút một lần. Nó có thể được viết là 0-59 / 5. "
+      "slash": "Dấu gạch sổ (/ n): n là viết tắt của số, vì vậy nó có nghĩa là ' đơn vị mỗi n'. Ví dụ: điền * / 5 có nghĩa là thực hiện 5 phút một lần. Nó có thể được viết là 0-59 / 5. "
     },
     "checkDatarowDeletable": "Kiểm tra dữ liệu sẽ bị xóa",
     "reimportReminder": "Nếu bảng dữ liệu được xây dựng lại, quá trình liên kết bảng sẽ bị xóa"
@@ -996,7 +996,7 @@
     "createRelation": "Tạo mối quan hệ",
     "relatedDashboard": "Bảng điều khiển liên quan",
     "relatedDashboardSetting": "Cài đặt bảng điều khiển liên quan",
-    "confirmDeletingComponentRelation": "Bạn có chắc chắn muốn xóa liên kết giữa thành phần này và phân tích bảng điều khiển \"{name}\" không?",
+    "confirmDeletingComponentRelation": "Bạn có chắc chắn muốn xóa liên kết giữa thành phần này và phân tích bảng điều khiển \" {name} \"không?",
     "createFilterCondition": "Thêm điều kiện bộ lọc",
     "filterCondition": "Điều kiện lọc",
     "createPanelControl": "Thêm mục điều khiển",
@@ -1029,7 +1029,7 @@
     "columnSpan": "Số hàng",
     "rowSpanAmount": "{number}cột",
     "columnSpanAmount": "{number} hàng",
-    "clickColumnToSeeMore": "Nhấp vào cột \" {Tên cột}\" để xem nội dung chi tiết hơn",
+    "clickColumnToSeeMore": "Nhấp vào cột \" {Tên cột} \"để xem nội dung chi tiết hơn",
     "chartSetting": "Cài đặt Biểu đồ",
     "componentName": "Tên thành phần",
     "chartName": "Tên biểu đồ",
@@ -1162,7 +1162,7 @@
     "messageIndicatorParamSyntaxDescription": "Cú pháp tham số chỉ báo = # {Tên}",
     "messageTemplateSettingExample": "Cài đặt thông báo: Công xưởng:{0}, dòng điện bất thường (Dòng điện: {1} μA).",
     "messageTemplatePreviewExample": " Xem trước tin nhắn: Công xưởng: {0}, dòng điện bất thường (Dòng điện: {1} μA).",
-    "param1NameExample": "'${廠編}',${sửa nhà máy}",
+    "param1NameExample": "${sửa nhà máy}",
     "param1ValueExample": "F00088",
     "param2NameExample": "${dòng điện}",
     "param2ValueExample": "300",
@@ -1493,30 +1493,24 @@
             "questionExample": [
               [
                 {
-                  "text": "利潤",
-                  "type": "numeric"
+                  "text": "利潤", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "trạng thái chung",
-                  "type": ""
+                  "text": "trạng thái chung", "type": ""
                 }
               ],
               [
                 {
-                  "text": "Đơn giá",
-                  "type": "numeric"
+                  "text": "Đơn giá", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "trạng thái chung",
-                  "type": ""
+                  "text": "trạng thái chung", "type": ""
                 }
               ]
             ]
@@ -1526,30 +1520,24 @@
             "questionExample": [
               [
                 {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
+                  "text": "lợi nhuận", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "trung bình cộng",
-                  "type": ""
+                  "text": "trung bình cộng", "type": ""
                 }
               ],
               [
                 {
-                  "text": "đơn giá",
-                  "type": "numeric"
+                  "text": "đơn giá", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Trung bình cộng",
-                  "type": ""
+                  "text": "Trung bình cộng", "type": ""
                 }
               ]
             ]
@@ -1559,30 +1547,24 @@
             "questionExample": [
               [
                 {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
+                  "text": "lợi nhuận", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Tổng",
-                  "type": ""
+                  "text": "Tổng", "type": ""
                 }
               ],
               [
                 {
-                  "text": "Đơn giá",
-                  "type": "numeric"
+                  "text": "Đơn giá", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Đơn giá",
-                  "type": ""
+                  "text": "Đơn giá", "type": ""
                 }
               ]
             ]
@@ -1592,30 +1574,24 @@
             "questionExample": [
               [
                 {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
+                  "text": "lợi nhuận", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Tổng số",
-                  "type": ""
+                  "text": "Tổng số", "type": ""
                 }
               ],
               [
                 {
-                  "text": "Đơn giá",
-                  "type": "numeric"
+                  "text": "Đơn giá", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Tổng số",
-                  "type": ""
+                  "text": "Tổng số", "type": ""
                 }
               ]
             ]
@@ -1625,30 +1601,24 @@
             "questionExample": [
               [
                 {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
+                  "text": "lợi nhuận", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "số tối đa",
-                  "type": ""
+                  "text": "số tối đa", "type": ""
                 }
               ],
               [
                 {
-                  "text": "đơn giá",
-                  "type": "numeric"
+                  "text": "đơn giá", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "số tối đa",
-                  "type": ""
+                  "text": "số tối đa", "type": ""
                 }
               ]
             ]
@@ -1658,30 +1628,24 @@
             "questionExample": [
               [
                 {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
+                  "text": "lợi nhuận", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Độ lệch chuẩn",
-                  "type": ""
+                  "text": "Độ lệch chuẩn", "type": ""
                 }
               ],
               [
                 {
-                  "text": "Đơn giá",
-                  "type": "numeric"
+                  "text": "Đơn giá", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Độ lệch chuẩn",
-                  "type": ""
+                  "text": "Độ lệch chuẩn", "type": ""
                 }
               ]
             ]
@@ -1691,30 +1655,24 @@
             "questionExample": [
               [
                 {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
+                  "text": "lợi nhuận", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Số trung vị",
-                  "type": ""
+                  "text": "Số trung vị", "type": ""
                 }
               ],
               [
                 {
-                  "text": "Đơn giá",
-                  "type": "numeric"
+                  "text": "Đơn giá", "type": "numeric"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "Số trung vị",
-                  "type": ""
+                  "text": "Số trung vị", "type": ""
                 }
               ]
             ]
@@ -1724,2006 +1682,1631 @@
             "questionExample": [
               [
                 {
-                  "text": "sự kiện",
-                  "type": "category"
+                  "text": "sự kiện", "type": "category"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "trạng thái chung",
-                  "type": ""
+                  "text": "trạng thái chung", "type": ""
                 }
               ],
               [
                 {
-                  "text": "quốc gia",
-                  "type": "category"
+                  "text": "quốc gia", "type": "category"
                 },
                 {
-                  "text": "của",
-                  "type": ""
+                  "text": "của", "type": ""
                 },
                 {
-                  "text": "trạng thái chung",
-                  "type": ""
-                }
+                  "text": "trạng thái chung", "type": ""}
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tổng danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "sự kiện",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Toàn bộ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "quốc gia",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Toàn bộ",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Tổng danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "sự kiện", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Toàn bộ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "quốc gia", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Toàn bộ", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tổng số trong mỗi Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Tổng số",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Tổng số trong mỗi Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "mỗi", "type": ""
+                  },
+                  {
+                    "text": "sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "Tổng số", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Số và trung bình cộng",
-            "questionExample": [
-              [
-                {
-                  "text": "giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Của trung bình cộng",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Doanh thu Trung bình",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Của trung bình cộng",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Số và trung bình cộng",
+              "questionExample": [
+                [
+                  {
+                    "text": "giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "Của trung bình cộng", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Doanh thu Trung bình", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "Của trung bình cộng", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Trung bình của Số và Số của mỗi danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của trung bình cộng",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Trung bình của Số và Số của mỗi danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "mỗi", "type": ""
+                  },
+                  {
+                    "text": "sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "của trung bình cộng", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi phân tích tổng hợp",
-        "questionList": [
-          {
-            "questionText": "Danh mục và Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Sự kiện",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "sản phẩm",
-                  "type": "category"
-                }
-              ],
-              [
-                {
-                  "text": "Đơn vị",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Cửa hàng",
-                  "type": "category"
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi phân tích tổng hợp",
+          "questionList": [
+            {
+              "questionText": "Danh mục và Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Sự kiện", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "sản phẩm", "type": "category"
+                  }
+                ],
+                [
+                  {
+                    "text": "Đơn vị", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Cửa hàng", "type": "category"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Danh mục và Tổng số của Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Giới tính khách hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tổng số",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Danh mục và Tổng số của Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Giới tính khách hàng", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "của tổng số", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Danh mục và Tổng số của Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Giới tính khách hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tổng số",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Kho lưu trữ",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "nguồn mua",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm tốt",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Hàng bị lỗi",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tổng số",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Danh mục và Tổng số của Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Giới tính khách hàng", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "của tổng số", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Kho lưu trữ", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "nguồn mua", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm tốt", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Hàng bị lỗi", "type": "numeric"
+                  },
+                  {
+                    "text": "của tổng số", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi thịnh hành",
-        "questionList": [
-          {
-            "questionText": "Số thịnh hành",
-            "questionExample": [
-              [
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của xu hướng",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Số lượng mua",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của xu hướng",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi thịnh hành",
+          "questionList": [
+            {
+              "questionText": "Số thịnh hành",
+              "questionExample": [
+                [
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "của xu hướng", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Số lượng mua", "type": "numeric"
+                  },
+                  {
+                    "text": "của xu hướng", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Số hàng tháng",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "tỷ lệ thất nghiệp",
-                  "type": "numeric"
-                }
+            },
+            {
+              "questionText": "Số hàng tháng",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "tỷ lệ thất nghiệp", "type": "numeric"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tổng số và số hàng tháng",
-            "questionExample": [
-              [
-                {
-                  "text": "每月",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tổng số",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Tổng số và số hàng tháng",
+              "questionExample": [
+                [
+                  {
+                    "text":"每月", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "của tổng số", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tổng số của mỗi Danh mục mỗi tháng",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Của mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tổng số",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Cửa hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "Của",
-                  "type": ""
-                },
-                {
-                  "text": "Bán hàng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Tổng số",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Tổng số của mỗi Danh mục mỗi tháng",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Của mỗi", "type": ""
+                  },
+                  {
+                    "text": "sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "của tổng số", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Mỗi", "type": ""
+                  },
+                  {
+                    "text": "Cửa hàng", "type": "category"
+                  },
+                  {
+                    "text": "Của", "type": ""
+                  },
+                  {
+                    "text": "Bán hàng", "type": "numeric"
+                  },
+                  {
+                    "text": "Tổng số", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Số và Số của từng danh mục trong tháng",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Cửa hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "Của",
-                  "type": ""
-                },
-                {
-                  "text": "Bán hàng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Cửa hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "Của",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "đơn giá",
-                  "type": "numeric"
-                }
+            },
+            {
+              "questionText": "Số và Số của từng danh mục trong tháng",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Mỗi", "type": ""
+                  },
+                  {
+                    "text": "Cửa hàng", "type": "category"
+                  },
+                  {
+                    "text": "Của", "type": ""
+                  },
+                  {
+                    "text": "Bán hàng", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Mỗi", "type": ""
+                  },
+                  {
+                    "text": "Cửa hàng", "type": "category"
+                  },
+                  {
+                    "text": "Của", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "đơn giá", "type": "numeric"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tổng Số và Số của mỗi danh mục mỗi tháng",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Cửa hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "Của",
-                  "type": ""
-                },
-                {
-                  "text": "Bán hàng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Tổng",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Cửa hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "Của",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Tổng",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Tổng Số và Số của mỗi danh mục mỗi tháng",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Mỗi", "type": ""
+                  },
+                  {
+                    "text": "Cửa hàng", "type": "category"
+                  },
+                  {
+                    "text": "Của", "type": ""
+                  },
+                  {
+                    "text": "Bán hàng", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "Tổng", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Mỗi", "type": ""
+                  },
+                  {
+                    "text": "Cửa hàng", "type": "category"
+                  },
+                  {
+                    "text": "Của", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "Tổng", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi so sánh",
-        "questionList": [
-          {
-            "questionText": "So sánh năm Y và số của năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Năm 2017",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Năm 2018",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "So sánh",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Năm 2010",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Năm 2011",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Bán hàng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "So sánh",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi so sánh",
+          "questionList": [
+            {
+              "questionText": "So sánh năm Y và số của năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Năm 2017", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Năm 2018", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "So sánh", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Năm 2010", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Năm 2011", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Bán hàng", "type": "numeric"
+                  },
+                  {
+                    "text": "So sánh", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "So sánh số trong mùa X và mùa X trong năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Năm 2010",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Mùa đầu tiên",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Mùa thứ 3",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Bán hàng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "So sánh",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Năm 2019",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Mùa đầu tiên",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Mùa thứ 3",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "So sánh",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "So sánh số trong mùa X và mùa X trong năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Năm 2010", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Mùa đầu tiên", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Mùa thứ 3", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Bán hàng", "type": "numeric"
+                  },
+                  {
+                    "text": "So sánh", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Năm 2019", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Mùa đầu tiên", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Mùa thứ 3", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "So sánh", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "So sánh tổng số của tháng M và tháng M trong năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Năm 2010",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 3",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 5",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Bán hàng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "So sánh",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Năm 2019",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 8",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 9",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "So sánh",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "So sánh tổng số của tháng M và tháng M trong năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Năm 2010", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Tháng 3", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Tháng 5", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Bán hàng", "type": "numeric"
+                  },
+                  {
+                    "text": "So sánh", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Năm 2019", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Tháng 8", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Tháng 9", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "So sánh", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "So sánh giá trị và số giá trị",
-            "questionExample": [
-              [
-                {
-                  "text": "Thượng Hải",
-                  "type": "value"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Bắc Kinh",
-                  "type": "value"
-                },
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của so sánh",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "F",
-                  "type": "value"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "M",
-                  "type": "value"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Tuổi khách hàng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "So sánh",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "So sánh giá trị và số giá trị",
+              "questionExample": [
+                [
+                  {
+                    "text": "Thượng Hải", "type": "value"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Bắc Kinh", "type": "value"
+                  },
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "của so sánh", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "F", "type": "value"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "M", "type": "value"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Tuổi khách hàng", "type": "numeric"
+                  },
+                  {
+                    "text": "So sánh", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi phân tích nguyên nhân gốc rễ",
-        "questionList": [
-          {
-            "questionText": "Tại sao số tăng trong năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Tại sao",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 11 năm 2017",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Tăng lên",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Tại sao",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 1 năm 2011",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Số lượng mua",
-                  "type": "numeric"
-                },
-                {
-                  "text": "từ chối",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi phân tích nguyên nhân gốc rễ",
+          "questionList": [
+            {
+              "questionText": "Tại sao số tăng trong năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tại sao", "type": ""
+                  },
+                  {
+                    "text": "Tháng 11 năm 2017", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "Tăng lên", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Tại sao", "type": ""
+                  },
+                  {
+                    "text": "Tháng 1 năm 2011", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Số lượng mua", "type": "numeric"
+                  },
+                  {
+                    "text": "từ chối", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Phân tích nguyên nhân gốc rễ của con số trong tháng Y, năm M",
-            "questionExample": [
-              [
-                {
-                  "text": "Tháng 11 năm 2017",
-                  "type": "filter"
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Của p.hân tích nguyên nhân gốc rễ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Tháng 1 năm 2011",
-                  "type": "filter"
-                },
-                {
-                  "text": "Số lượng mua",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của nguyên nhân gốc rễ",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Phân tích nguyên nhân gốc rễ của con số trong tháng Y, năm M",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tháng 11 năm 2017", "type": "filter"
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "Của p.hân tích nguyên nhân gốc rễ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Tháng 1 năm 2011", "type": "filter"
+                  },
+                  {
+                    "text": "Số lượng mua", "type": "numeric"
+                  },
+                  {
+                    "text": "của nguyên nhân gốc rễ", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Phân tích nguyên nhân gốc rễ của số từ M đến M của năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Tháng 1 năm 2017",
-                  "type": "filter"
-                },
-                {
-                  "text": "Đến",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 1 năm 2018",
-                  "type": "filter"
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của nguyên nhân gốc rễ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Tháng 1 năm 2011",
-                  "type": "filter"
-                },
-                {
-                  "text": "đến",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 1 năm 2012",
-                  "type": "filter"
-                },
-                {
-                  "text": "Bán",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của nguyên nhân gốc rễ",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Phân tích nguyên nhân gốc rễ của số từ M đến M của năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tháng 1 năm 2017", "type": "filter"
+                  },
+                  {
+                    "text": "Đến", "type": ""
+                  },
+                  {
+                    "text": "Tháng 1 năm 2018", "type": "filter"
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "của nguyên nhân gốc rễ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Tháng 1 năm 2011", "type": "filter"
+                  },
+                  {
+                    "text": "đến", "type": ""
+                  },
+                  {
+                    "text": "Tháng 1 năm 2012", "type": "filter"
+                  },
+                  {
+                    "text": "Bán", "type": "numeric"
+                  },
+                  {
+                    "text": "của nguyên nhân gốc rễ", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi Phân tích Dự đoán",
-        "questionList": [
-          {
-            "questionText": "Dự báo số hàng tháng",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của Dự đoán",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của Dự đoán",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi Phân tích Dự đoán",
+          "questionList": [
+            {
+              "questionText": "Dự báo số hàng tháng",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "của Dự đoán", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "của Dự đoán", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Dự báo số hàng tuần",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tuần",
-                  "type": "filter"
-                },
-                {
-                  "text": "thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của Dự đoán",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tuần",
-                  "type": "filter"
-                },
-                {
-                  "text": "Đơn giá",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của Dự đoán",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Dự báo số hàng tuần",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tuần", "type": "filter"
+                  },
+                  {
+                    "text": "thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "của Dự đoán", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tuần", "type": "filter"
+                  },
+                  {
+                    "text": "Đơn giá", "type": "numeric"
+                  },
+                  {
+                    "text": "của Dự đoán", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Dự đoán số của giá trị",
-            "questionExample": [
-              [
-                {
-                  "text": "Xe đạp",
-                  "type": "value"
-                },
-                {
-                  "text": "Bán",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của Dự đoán",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Sản phẩm A",
-                  "type": "value"
-                },
-                {
-                  "text": "Năng suất",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của Dự đoán",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Dự đoán số của giá trị",
+              "questionExample": [
+                [
+                  {
+                    "text": "Xe đạp", "type": "value"
+                  },
+                  {
+                    "text": "Bán", "type": "numeric"
+                  },
+                  {
+                    "text": "của Dự đoán", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Sản phẩm A", "type": "value"
+                  },
+                  {
+                    "text": "Năng suất", "type": "numeric"
+                  },
+                  {
+                    "text": "của Dự đoán", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi theo tỷ lệ",
-        "questionList": [
-          {
-            "questionText": "Tỷ lệ của từng danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Loại cửa hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi theo tỷ lệ",
+          "questionList": [
+            {
+              "questionText": "Tỷ lệ của từng danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Mỗi", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của tỉ lệ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Mỗi", "type": ""
+                  },
+                  {
+                    "text": "Loại cửa hàng", "type": "category"
+                  },
+                  {
+                    "text": "của tỉ lệ", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tỷ lệ Số trong mỗi Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Số lượng bán",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Tỷ lệ Số trong mỗi Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "mỗi", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "của tỉ lệ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "mỗi", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Số lượng bán", "type": "numeric"
+                  },
+                  {
+                    "text": "của tỉ lệ", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tỷ lệ số trong mỗi danh mục trong năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Năm 2018",
-                  "type": "filter"
-                },
-                {
-                  "text": "mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Số lượng bán",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Năm 2011",
-                  "type": "filter"
-                },
-                {
-                  "text": "mỗi",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Tỷ lệ số trong mỗi danh mục trong năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Năm 2018", "type": "filter"
+                  },
+                  {
+                    "text": "mỗi", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Số lượng bán", "type": "numeric"
+                  },
+                  {
+                    "text": "của tỉ lệ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Năm 2011", "type": "filter"
+                  },
+                  {
+                    "text": "mỗi", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "của tỉ lệ", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Giá trị và Giá trị mỗi loại chiếm tỷ lệ Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "S1",
-                  "type": "value"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "S2",
-                  "type": "value"
-                },
-                {
-                  "text": "Mỗi tài khoản",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "F",
-                  "type": "value"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "M",
-                  "type": "value"
-                },
-                {
-                  "text": "Mỗi tài khoản",
-                  "type": ""
-                },
-                {
-                  "text": "khách hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "của tỉ lệ",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Giá trị và Giá trị mỗi loại chiếm tỷ lệ Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "S1","type": "value"
+                  },
+                  {
+                    "text": "và" ,"type": ""
+                  },
+                  {
+                    "text": "S2","type": "value"
+                  },
+                  {
+                    "text": "Mỗi tài khoản" ,"type": ""
+                  },
+                  {
+                    "text": "Sản phẩm" ,"type": "category"
+                  },
+                  {
+                    "text": "của tỉ lệ" ,"type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "F",
+                    "type": "value"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "M", "type": "value"
+                  },
+                  {
+                    "text": "Mỗi tài khoản", "type": ""
+                  },
+                  {
+                    "text": "khách hàng", "type": "category"
+                  },
+                  {
+                    "text": "của tỉ lệ", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi quan hệ",
-        "questionList": [
-          {
-            "questionText": "Mối quan hệ giữa số và số",
-            "questionExample": [
-              [
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của quan hệ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "lợi nhuận",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "của quan hệ",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi quan hệ",
+          "questionList": [
+            {
+              "questionText": "Mối quan hệ giữa số và số",
+              "questionExample": [
+                [
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "của quan hệ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "lợi nhuận", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "của quan hệ", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Mối quan hệ giữa Danh mục và Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Quốc gia",
-                  "type": "category"
-                },
-                {
-                  "text": "của quan hệ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Giới tính khách hàng",
-                  "type": "category"
-                },
-                {
-                  "text": "của quan hệ",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Mối quan hệ giữa Danh mục và Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Quốc gia", "type": "category"
+                  },
+                  {
+                    "text": "của quan hệ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Giới tính khách hàng", "type": "category"
+                  },
+                  {
+                    "text": "của quan hệ", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi phân tích mức độ liên quan",
-        "questionList": [
-          {
-            "questionText": "Những gì liên quan đến số lượng",
-            "questionExample": [
-              [
-                {
-                  "text": "Những gì và",
-                  "type": ""
-                },
-                {
-                  "text": "chất lượng",
-                  "type": "numeric"
-                },
-                {
-                  "text": "liên quan",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Những gì và",
-                  "type": ""
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "liên quan",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi phân tích mức độ liên quan",
+          "questionList": [
+            {
+              "questionText": "Những gì liên quan đến số lượng",
+              "questionExample": [
+                [
+                  {
+                    "text": "Những gì và", "type": ""
+                  },
+                  {
+                    "text": "chất lượng", "type": "numeric"
+                  },
+                  {
+                    "text": "liên quan", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Những gì và", "type": ""
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "liên quan", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Những gì liên quan đến Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Những gì và",
-                  "type": ""
-                },
-                {
-                  "text": "quảng bá sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "liên quan",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Những gì và",
-                  "type": ""
-                },
-                {
-                  "text": "Danh mục sản phẩm",
-                  "type": "category"
-                },
-                {
-                  "text": "liên quan",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Những gì liên quan đến Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Những gì và", "type": ""
+                  },
+                  {
+                    "text": "quảng bá sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "liên quan", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Những gì và", "type": ""
+                  },
+                  {
+                    "text": "Danh mục sản phẩm", "type": "category"
+                  },
+                  {
+                    "text": "liên quan", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi phân tích sự khác biệt",
-        "questionList": [
-          {
-            "questionText": "Sự khác biệt giữa Giá trị và Giá trị",
-            "questionExample": [
-              [
-                {
-                  "text": "Đài Bắc",
-                  "type": "value"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Tân Trúc",
-                  "type": "value"
-                },
-                {
-                  "text": "của sự khác biệt",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Sản phẩm A",
-                  "type": "value"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm B",
-                  "type": "value"
-                },
-                {
-                  "text": "của sự khác biệt",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi phân tích sự khác biệt",
+          "questionList": [
+            {
+              "questionText": "Sự khác biệt giữa Giá trị và Giá trị",
+              "questionExample": [
+                [
+                  {
+                    "text": "Đài Bắc", "type": "value"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Tân Trúc", "type": "value"
+                  },
+                  {
+                    "text": "của sự khác biệt", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Sản phẩm A", "type": "value"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm B", "type": "value"
+                  },
+                  {
+                    "text": "của sự khác biệt", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Sự khác biệt giữa Giá trị và những cái khác",
-            "questionExample": [
-              [
-                {
-                  "text": "Sản phẩm A",
-                  "type": "value"
-                },
-                {
-                  "text": "Khác biệt với những cái khác",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Đài Bắc",
-                  "type": "value"
-                },
-                {
-                  "text": "Khác biệt với những cái khác",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Sự khác biệt giữa Giá trị và những cái khác",
+              "questionExample": [
+                [
+                  {
+                    "text": "Sản phẩm A", "type": "value"
+                  },
+                  {
+                    "text": "Khác biệt với những cái khác", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Đài Bắc", "type": "value"
+                  },
+                  {
+                    "text": "Khác biệt với những cái khác", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi sàng lọc",
-        "questionList": [
-          {
-            "questionText": "Giá trị danh mục số",
-            "questionExample": [
-              [
-                {
-                  "text": "Giới tính nam",
-                  "type": "value"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "thu nhập",
-                  "type": "numeric"
-                }
-              ],
-              [
-                {
-                  "text": "Xe đạp đua",
-                  "type": "value"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi sàng lọc",
+          "questionList": [
+            {
+              "questionText": "Giá trị danh mục số",
+              "questionExample": [
+                [
+                  {
+                    "text": "Giới tính nam", "type": "value"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "thu nhập", "type": "numeric"
+                  }
+                ],
+                [
+                  {
+                    "text": "Xe đạp đua", "type": "value"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Danh mục số lớn hơn X",
-            "questionExample": [
-              [
-                {
-                  "text": "thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Lớn hơn 1000",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Danh mục số lớn hơn X",
+              "questionExample": [
+                [
+                  {
+                    "text": "thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "Lớn hơn 1000", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Danh mục số nhỏ hơn X",
-            "questionExample": [
-              [
-                {
-                  "text": "thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Nhỏ hơn 1000",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Danh mục số nhỏ hơn X",
+              "questionExample": [
+                [
+                  {
+                    "text": "thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "Nhỏ hơn 1000", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi sàng lọc thời gian",
-        "questionList": [
-          {
-            "questionText": "Tháng M và Tháng M năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Tháng 3 năm 2018",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 4",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                }
-              ],
-              [
-                {
-                  "text": "Tháng 5 năm 2019",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 6",
-                  "type": "filter"
-                },
-                {
-                  "text": "Của",
-                  "type": ""
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi sàng lọc thời gian",
+          "questionList": [
+            {
+              "questionText": "Tháng M và Tháng M năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tháng 3 năm 2018", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Tháng 4", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  }
+                ],
+                [
+                  {
+                    "text": "Tháng 5 năm 2019", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Tháng 6", "type": "filter"
+                  },
+                  {
+                    "text": "Của", "type": ""
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Giá trị danh mục của tháng M và tháng M của năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Tháng 10 năm 2019",
-                  "type": "filter"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 11",
-                  "type": "filter"
-                },
-                {
-                  "text": "Thượng Hải",
-                  "type": "value"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Giá trị danh mục của tháng M và tháng M của năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tháng 10 năm 2019", "type": "filter"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Tháng 11", "type": "filter"
+                  },
+                  {
+                    "text": "Thượng Hải", "type": "value"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Danh mục của tháng M trong năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Tháng 6 năm 2019",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Danh mục của tháng M trong năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tháng 6 năm 2019", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Số từ tháng M năm Y đến tháng M năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Tháng 1 năm 2018",
-                  "type": "filter"
-                },
-                {
-                  "text": "đến",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 11 năm 2018",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Số từ tháng M năm Y đến tháng M năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tháng 1 năm 2018", "type": "filter"
+                  },
+                  {
+                    "text": "đến", "type": ""
+                  },
+                  {
+                    "text": "Tháng 11 năm 2018", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Thu nhập", "type": "category"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Doanh mục từ tháng M năm Y đến tháng M năm Y",
-            "questionExample": [
-              [
-                {
-                  "text": "Tháng 5 năm 2019",
-                  "type": "filter"
-                },
-                {
-                  "text": "đến",
-                  "type": ""
-                },
-                {
-                  "text": "Tháng 11 năm 2020",
-                  "type": "filter"
-                },
-                {
-                  "text": "của",
-                  "type": ""
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Doanh mục từ tháng M năm Y đến tháng M năm Y",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tháng 5 năm 2019", "type": "filter"
+                  },
+                  {
+                    "text": "đến", "type": ""
+                  },
+                  {
+                    "text": "Tháng 11 năm 2020", "type": "filter"
+                  },
+                  {
+                    "text": "của", "type": ""
+                  },
+                  {
+                    "text": "Thu nhập", "type": "category"
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Sắp xếp câu hỏi",
-        "questionList": [
-          {
-            "questionText": "Số trung bình TOP X của Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Trung bình cộng",
-                  "type": ""
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "TOP 5",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                }
+            }
+          ]
+        },
+        {
+          "name": "Sắp xếp câu hỏi",
+          "questionList": [
+            {
+              "questionText": "Số trung bình TOP X của Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Trung bình cộng", "type": ""
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "TOP 5", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Tổng số trước X của Danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Tổng số",
-                  "type": ""
-                },
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "TOP 10",
-                  "type": ""
-                },
-                {
-                  "text": "產品",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Tổng số trước X của Danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Tổng số", "type": ""
+                  },
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "TOP 10", "type": ""
+                  },
+                  {
+                    "text": "產品", "type": "category"
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Số trước X của danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "TOP 5",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                }
-              ],
-              [
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "TOP 10",
-                  "type": ""
-                },
-                {
-                  "text": "Sản phẩm",
-                  "type": "category"
-                }
+            },
+            {
+              "questionText": "Số trước X của danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "TOP 5", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  }
+                ],
+                [
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "TOP 10", "type": ""
+                  },
+                  {
+                    "text": "Sản phẩm", "type": "category"
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi phân tích định kỳ",
-        "questionList": [
-          {
-            "questionText": "Phân tích định kỳ dãy số thời gian",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Phân tích định kỳ",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Phân tích định kỳ",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi phân tích định kỳ",
+          "questionList": [
+            {
+              "questionText": "Phân tích định kỳ dãy số thời gian",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "Phân tích định kỳ", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "Phân tích định kỳ", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi phân tích sự bất thường",
-        "questionList": [
-          {
-            "questionText": "Phân tích bất thường dãy số thời gian",
-            "questionExample": [
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Phân tích bất thường",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Hàng tháng",
-                  "type": "filter"
-                },
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Phân tích bất thường",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi phân tích sự bất thường",
+          "questionList": [
+            {
+              "questionText": "Phân tích bất thường dãy số thời gian",
+              "questionExample": [
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "Phân tích bất thường", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Hàng tháng", "type": "filter"
+                  },
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "Phân tích bất thường", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi phân tích chân dung",
-        "questionList": [
-          {
-            "questionText": "Phân tích hồ sơ giá trị danh mục",
-            "questionExample": [
-              [
-                {
-                  "text": "Sản phẩm A",
-                  "type": "value"
-                },
-                {
-                  "text": "Của",
-                  "type": ""
-                },
-                {
-                  "text": "Phân tích danh mục",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi phân tích chân dung",
+          "questionList": [
+            {
+              "questionText": "Phân tích hồ sơ giá trị danh mục",
+              "questionExample": [
+                [
+                  {
+                    "text": "Sản phẩm A", "type": "value"
+                  },
+                  {
+                    "text": "Của", "type": ""
+                  },
+                  {
+                    "text": "Phân tích danh mục", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Câu hỏi Phân tích Nhóm",
-        "questionList": [
-          {
-            "questionText": "Phân tích nhóm số",
-            "questionExample": [
-              [
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Phân tích nhóm",
-                  "type": ""
-                }
-              ],
-              [
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Phân tích nhóm",
-                  "type": ""
-                }
+            }
+          ]
+        },
+        {
+          "name": "Câu hỏi Phân tích Nhóm",
+          "questionList": [
+            {
+              "questionText": "Phân tích nhóm số",
+              "questionExample": [
+                [
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "Phân tích nhóm", "type": ""
+                  }
+                ],
+                [
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "Phân tích nhóm", "type": ""
+                  }
+                ]
               ]
-            ]
-          },
-          {
-            "questionText": "Phân tích cụm số và số",
-            "questionExample": [
-              [
-                {
-                  "text": "Thu nhập",
-                  "type": "numeric"
-                },
-                {
-                  "text": "và",
-                  "type": ""
-                },
-                {
-                  "text": "Giá cả",
-                  "type": "numeric"
-                },
-                {
-                  "text": "Phân tích nhóm",
-                  "type": ""
-                }
+            },
+            {
+              "questionText": "Phân tích cụm số và số",
+              "questionExample": [
+                [
+                  {
+                    "text": "Thu nhập", "type": "numeric"
+                  },
+                  {
+                    "text": "và", "type": ""
+                  },
+                  {
+                    "text": "Giá cả", "type": "numeric"
+                  },
+                  {
+                    "text": "Phân tích nhóm", "type": ""
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      }
-    ]
+            }
+          ]
+        }
+      ]
   },
   "resultDescription": {
     "totalColumnAverage": "Tổng thể {0} mức trung bình {1}",
@@ -3807,7 +3390,7 @@
     "percentage": "phần trăm (%)",
     "systemUnknownTokenList": "Đó là một từ không thể nhận biết",
     "beRecognized": "Được xác định là",
-    "systemQuestionAnalysis": "Đối với '{Câu hỏi}' . Trong số đó",
+    "systemQuestionAnalysis": "Đối với '{Câu hỏi}'. Trong số đó",
     "other": "cái khác",
     "more": "Xem thêm",
     "source": "nguồn",
@@ -3898,8 +3481,8 @@
   "chart": {
     "zoom": "Khu vực thu phóng",
     "back": "Khôi phục vùng thu phóng",
-    "stack": "Chuyển sang ngăn xếp",
-    "tiled": "切換為平鋪",
+    "stack": "Chuyển sang biểu đồ cột chồng",
+    "tiled": "Chuyển sang biểu đồ cột",
     "line": "Chuyển sang biểu đồ đường",
     "bar": "Chuyển sang biểu đồ",
     "restore": "Khôi phục",
