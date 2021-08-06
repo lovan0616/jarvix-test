@@ -8,6 +8,19 @@ export default {
   isYKSchedule (state, getters, rootState, rootGetters) {
     return window.location.hostname === 'jarvix.sp1.sis.ai' || (window.location.hostname === 'jarvix.synergiesai.cn' && rootGetters['userManagement/getCurrentAccountId'] === 8)
   },
+  isAccessListSchedule (state, getters, rootState) {
+    const getHostnameAbbr = (hostname) => {
+      switch (hostname) {
+        case 'sygps.sis.ai':
+          return 'release'
+        case 'sygps.synergiesai.cn':
+          return 'cnRelease'
+      }
+    }
+    const hostname = getHostnameAbbr(window.location.hostname)
+    const userId = rootState.userManagement.userId
+    return hostname && userId ? state.accessList[hostname].some(id => id === userId) : false
+  },
   jobTableHeaderList (state, getters) {
     return getters.isYKSchedule ? [
       { title: 'generalNumber', name: i18n.t('schedule.simulation.yukiTable.generalNumber'), width: '' },
