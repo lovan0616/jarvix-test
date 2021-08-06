@@ -1,12 +1,7 @@
 <template>
-  <!-- :class="[
-      `col-${componentData.config.size.column}`,
-      `row-${componentData.config.size.row}`
-    ]" -->
   <div
     ref="component"
     class="component__item"
-    :style="generateComponentGridStyle"
   >
     <div class="component__item-inner-container">
       <spinner
@@ -78,21 +73,6 @@
             </div>
           </div>
         </span>
-        <div
-          class="component__item-wrapper-size"
-        >
-          寬高設定：寬
-          <input
-            type="number"
-            v-model="wrapperSize.column"
-          >
-          欄 / 高
-          <input
-            type="number"
-            v-model="wrapperSize.row"
-          >
-          列
-        </div>
         <div
           v-if="componentData.type === 'index' || componentData.type === 'formula'"
           class="component__item-content index"
@@ -297,8 +277,7 @@ export default {
       isInitializing: true,
       enableAlert: false,
       componentComplementaryInfo: null,
-      taskId: uuidv4(),
-      wrapperSize: this.componentData.config.size
+      taskId: uuidv4()
     }
   },
   computed: {
@@ -472,12 +451,6 @@ export default {
           markLine: null,
           ...(this.componentData.anomalySettings && this.componentData.anomalySettings.length > 0 && formatAnomalySetting(this.componentData.anomalySettings))
         }
-      }
-    },
-    generateComponentGridStyle () {
-      return {
-        'grid-column-end': `span ${this.wrapperSize.column}`,
-        'grid-row-end': `span ${this.wrapperSize.row}`
       }
     }
   },
@@ -925,9 +898,11 @@ $direction-span: ('col': 12, 'row': 12);
 .component__item {
   border-radius: 5px;
   float: left;
+  height: 100%;
   // padding-bottom: 16px;
   // padding-right: 16px;
   transition: all 0.2s linear;
+  width: 100%;
 
   &-init-spinner {
     margin: auto;

@@ -184,6 +184,7 @@ export default {
         description: null,
         status: 'Enable',
         settings: {
+          version: '1.0.1',
           editModeData: {
             dashboards: [],
             displayedName: null,
