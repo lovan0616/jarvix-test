@@ -276,6 +276,9 @@ export function switchAccount (accountInfo) {
  */
 export async function updateLocale (language) {
   const userId = store.state.userManagement.userId
+
+  // Todo: 越南語暫時以zh-TW去送，待後端完成越南語設定後需修改回來
+  language = language === 'vi-VN' ? 'zh-TW' : language
   return request({
     url: '/users/language',
     method: 'PUT',
