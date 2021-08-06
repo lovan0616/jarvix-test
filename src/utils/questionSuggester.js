@@ -194,6 +194,9 @@ export class Suggester {
         const tokenTermValue = token.value.value
         const termIndexInToken = tokenTermValue.indexOf(termValue)
         if (termIndexInToken === -1) return token
+        // 檢查如果其實該 term value 出現兩次就不提取
+        const numOfPossibleTerm = this._knownTerms.filter((term) => term.value.includes(termValue)).length
+        if (numOfPossibleTerm > 1) return token
         return [
           defineToken({
             type: 'unknown',
