@@ -115,8 +115,8 @@ export default {
   background-color: #000;
   border-right: 1px solid #232c2e;
   display: flex;
-  flex: 0 0 240px;
   flex-direction: column;
+  position: relative;
 
   .title {
     align-items: center;
