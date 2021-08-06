@@ -11,30 +11,10 @@ export default {
   isAccessListSchedule (state, getters, rootState) {
     const getHostnameAbbr = (hostname) => {
       switch (hostname) {
-        case 'sygps.dev.sis.ai':
-          return 'dev'
-        case 'jarvix.sp1.sis.ai':
-          return 'sp1'
-        case 'jarvix.sp2.sis.ai':
-          return 'sp2'
-        case 'jarvix.sp3.sis.ai':
-          return 'sp3'
         case 'sygps.sis.ai':
           return 'release'
-        case 'jarvix.sis.ai':
-          return 'production'
         case 'sygps.synergiesai.cn':
           return 'cnRelease'
-        case 'jarvix.synergiesai.cn':
-          return 'cnProduction'
-        case 'sygps.qa.sis.ai':
-          return 'qa'
-        case 'jarvix.qa2.sis.ai':
-          return 'qa2'
-        case 'jarvix.staging.sis.ai':
-          return 'staging'
-        case 'jarvix.alpha.sis.ai':
-          return 'alpha'
       }
     }
     const hostname = getHostnameAbbr(window.location.hostname)
