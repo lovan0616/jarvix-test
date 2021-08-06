@@ -10,7 +10,8 @@ export default {
     languages: {
       'zh-TW': i18n.t('lang', 'zh-TW'),
       'zh-CN': i18n.t('lang', 'zh-CN'),
-      'en-US': i18n.t('lang', 'en-US')
+      'en-US': i18n.t('lang', 'en-US'),
+      'vi-VN': i18n.t('lang', 'vi-VN')
     },
     currentRoute: {},
     changeLangBeforeLogin: false,
