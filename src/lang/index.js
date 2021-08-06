@@ -19,7 +19,7 @@ const messages = {
   'zh-CN': { ...zhCN, ...scheduleCN, ...zhCNLocale },
   'zh-TW': { ...zhTW, ...scheduleTW, ...zhTWLocale },
   'en-US': { ...enUS, ...scheduleEN, ...enLocale },
-  'vi-VN': { ...viVN, ...scheduleCN, ...viVNLocale }
+  'vi-VN': { ...viVN, ...scheduleTW, ...viVNLocale }
 }
 
 const i18n = new VueI18n({
