@@ -9,17 +9,10 @@ export default {
     return window.location.hostname === 'jarvix.sp1.sis.ai' || (window.location.hostname === 'jarvix.synergiesai.cn' && rootGetters['userManagement/getCurrentAccountId'] === 8)
   },
   isAccessListSchedule (state, getters, rootState) {
-    const getHostnameAbbr = (hostname) => {
-      switch (hostname) {
-        case 'sygps.sis.ai':
-          return 'release'
-        case 'sygps.synergiesai.cn':
-          return 'cnRelease'
-      }
-    }
-    const hostname = getHostnameAbbr(window.location.hostname)
+    const hostname = window.location.hostname
+    const accessUserList = [32, 38, 35, 41, 37, 33, 47]
     const userId = rootState.userManagement.userId
-    return hostname && userId ? state.accessList[hostname].some(id => id === userId) : false
+    return hostname === 'sygps.synergiesai.cn' && accessUserList.some(id => id === userId)
   },
   jobTableHeaderList (state, getters) {
     return getters.isYKSchedule ? [
