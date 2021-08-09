@@ -78,7 +78,7 @@ export default {
 
     &-icon {
       margin-left: 6px;
-      width: 8px;
+      font-size: 8px;
     }
 
     &-text {

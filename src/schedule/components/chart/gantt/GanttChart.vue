@@ -284,9 +284,9 @@ export default {
           this.endTime = endTime.format('YYYY-MM-DD HH:mm:ss')
 
           // 最後將集成好的資料放進甘特圖中
-          for (const rowKey in tempChartList) {
+          Object.keys(tempChartList).sort().forEach(rowKey => {
             this.ganttChartDataList.push(tempChartList[rowKey])
-          }
+          })
 
           this.isLoading = false
 
