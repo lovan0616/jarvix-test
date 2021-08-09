@@ -7,6 +7,15 @@
       {{ $t('resultDescription.dataInsight') }}
     </div>
     <div class="insight-wrapper__body">
+      <div class="insight__description">
+        <p
+          v-for="(description, index) in dataset.descriptions"
+          :key="index"
+          class="insight__description--item"
+        >
+          {{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}
+        </p>
+      </div>
       <div class="insight__chart">
         <DisplayBarChart
           :is-show-legend="isShowLegend"
@@ -17,15 +26,6 @@
           :arrow-btn-right="arrowBtnRight"
           :title="title"
         />
-      </div>
-      <div class="insight__description">
-        <p
-          v-for="(description, index) in dataset.descriptions"
-          :key="index"
-          class="insight__description--item"
-        >
-          {{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}
-        </p>
       </div>
     </div>
   </div>
@@ -75,8 +75,9 @@ export default {
 
 <style lang="scss" scoped>
 .insight-wrapper {
-  border-top: 1px solid #1C292B;
+  background-color: #141c1d;
   padding: 20px;
+  border-radius: 8px;
   &__title {
     font-size: 18px;
   }
@@ -90,7 +91,8 @@ export default {
     flex: 1;
   }
   &__description {
-    width: 30%;
+    width: 35%;
+    padding: 10px;
     &--item {
       font-size: 13px;
       line-height: 24px;

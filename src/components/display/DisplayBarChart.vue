@@ -266,7 +266,8 @@ export default {
           },
           symbol: 'none',
           label: {
-            formatter: () => this.$t('chart.standardLine')
+            formatter: `${this.$t('chart.standardLine')}{c}`,
+            position: 'insideEndTop'
           }
         }
       }
