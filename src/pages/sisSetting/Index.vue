@@ -2,6 +2,41 @@
   <div class="page-sis-setting">
     <div class="setting-block">
       <div class="setting-block__title">
+        Public / Schedule API 環境設定
+      </div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">Public API 環境：</label>
+          <el-select
+            v-model="publicApiRootUrlValue"
+            class="setting-select"
+          >
+            <el-option
+              v-for="item in publicApiRootOptions"
+              :key="`public-api-option-${item.label}`"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </div>
+        <div class="input-block">
+          <label for="">Schedule API 環境：</label>
+          <el-select
+            v-model="scheduleApiRootUrlValue"
+            class="setting-select"
+          >
+            <el-option
+              v-for="item in scheduleApiRootOptions"
+              :key="`schedule-api-option-${item.label}`"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
+      <div class="setting-block__title">
         資料處理設定
       </div>
       <div class="setting-block__content">
@@ -121,6 +156,24 @@
   </div>
 </template>
 <script>
+const PUBLIC_API_ROOT_OPTIONS = {
+  dev: 'https://public.dev.sis.ai/',
+  qa: 'https://public.qa.sis.ai/',
+  qa2: 'https://public.qa2.sis.ai/',
+  sp1: 'https://public.sp1.sis.ai/',
+  sp2: 'https://public.sp2.sis.ai/',
+  sp3: 'https://public.sp3.sis.ai/'
+}
+
+const SCHEDULE_API_ROOT_OPTIONS = {
+  dev: 'https://schedule.dev.sis.ai/',
+  qa: 'https://schedule.qa.sis.ai/',
+  qa2: 'https://schedule.qa2.sis.ai/',
+  sp1: 'https://schedule.sp1.sis.ai/',
+  sp2: 'https://schedule.sp2.sis.ai/',
+  sp3: 'https://schedule.sp3.sis.ai/'
+}
+
 export default {
   name: 'PageSisSetting',
   data () {
@@ -133,7 +186,11 @@ export default {
       demoDatasource: localStorage.getItem('demoDatasource'),
       demoWaitTime: localStorage.getItem('demoWaitTime'),
       joinLimit: localStorage.getItem('joinLimit'),
-      newParser: localStorage.getItem('newParser')
+      newParser: localStorage.getItem('newParser'),
+      publicApiRootUrl: localStorage.getItem('PUBLIC_API_ROOT_URL'),
+      publicApiRootOptions: Object.entries(PUBLIC_API_ROOT_OPTIONS).map(([label, value]) => ({ label, value })),
+      scheduleApiRootUrl: localStorage.getItem('SCHEDULE_API_ROOT_URL'),
+      scheduleApiRootOptions: Object.entries(SCHEDULE_API_ROOT_OPTIONS).map(([label, value]) => ({ label, value }))
     }
   },
   computed: {
@@ -217,14 +274,34 @@ export default {
         this.newParser = value
         localStorage.setItem('newParser', value)
       }
+    },
+    publicApiRootUrlValue: {
+      get () {
+        return this.publicApiRootUrl
+      },
+      set (value) {
+        this.publicApiRootUrl = value
+        localStorage.setItem('PUBLIC_API_ROOT_URL', value)
+        window.location.reload()
+      }
+    },
+    scheduleApiRootUrlValue: {
+      get () {
+        return this.scheduleApiRootUrl
+      },
+      set (value) {
+        this.scheduleApiRootUrl = value
+        localStorage.setItem('SCHEDULE_API_ROOT_URL', value)
+        window.location.reload()
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .page-sis-setting {
-  width: 960px;
   margin: 32px auto;
+  width: 960px;
 
   .setting-block {
     margin-bottom: 24px;
@@ -254,15 +331,15 @@ export default {
 
   .code {
     background-color: rgb(224, 36, 36);
-    padding: 4px;
-    font-size: 14px;
     border-radius: 4px;
+    font-size: 14px;
+    padding: 4px;
   }
 
   .setting-switch {
     &.is-checked ::v-deep .el-switch__core {
-      background-color: #409EFF;
-      border-color: #409EFF;
+      background-color: #409eff;
+      border-color: #409eff;
     }
   }
 }
