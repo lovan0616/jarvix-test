@@ -36,7 +36,7 @@ export default {
     commit('result/updateCurrentResultId', data.resultId, { root: true })
     return askSpecificType(data, cancelToken)
   },
-  getComponentList ({ dispatch, state }, data) {
+  getComponentList ({ state }, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
     return getComponentList(data, cancelToken)
   },

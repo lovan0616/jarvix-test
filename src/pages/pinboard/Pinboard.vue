@@ -177,7 +177,8 @@ export default {
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
       let currentData = this.getData(res.id)
-      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+
+      this.$store.dispatch('chatBot/getComponentList', { resultId: res.resultId, displayInsight: false })
         .then(componentResponse => {
           switch (componentResponse.status) {
             case 'Process':
