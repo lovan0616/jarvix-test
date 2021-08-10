@@ -52,14 +52,12 @@ export function refreshResult (data) {
  * get component list
  * @param {Object} resultData - 包含resultId, displayInsight(optional)
  */
-export function getComponentList (resultData, cancelFunction) {
+export function getComponentList ({ resultId, displayInsight = true }, cancelFunction) {
   return request({
-    url: `/ask/componentList/${resultData.resultId}`,
+    url: `/ask/componentList/${resultId}`,
     method: 'GET',
     cancelToken: cancelFunction,
-    params: {
-      displayInsight: resultData.hasOwnProperty('displayInsight') ? resultData.displayInsight : true
-    }
+    params: { displayInsight }
   })
 }
 
