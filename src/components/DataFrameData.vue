@@ -84,6 +84,7 @@
               <div
                 v-show="showDataSummary"
                 class="summary"
+                @click.stop
               >
                 <data-column-summary
                   v-if="showColumnSummaryRow"
@@ -398,14 +399,7 @@ export default {
       this.copyTextToClipboard(value)
     },
     handleTableSort ({ dataColumnIndex, sortType }) {
-      if (!sortType) {
-        this.sortOrders = null
-        this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
-        return
-      }
-      // 根據index從columnIdList中取出column id
-      const dataColumnId = this.columnIdList[dataColumnIndex]
-      this.sortOrders = { dataColumnId, sortType }
+      this.sortOrders = sortType ? { dataColumnId: this.columnIdList[dataColumnIndex], sortType } : null
       this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
     },
     async setColumnIdList (dataFrameId) {

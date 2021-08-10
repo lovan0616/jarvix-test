@@ -227,32 +227,33 @@ export default {
     z-index: 100;
   }
 
-  .sy-table {
-    margin-bottom: 16px;
-  }
-
   ::v-deep .spinner-block {
     padding: 0;
   }
 
   ::v-deep .sy-table.el-table {
     border: 1px solid #515959;
+    margin-bottom: 16px;
     th, td {
       border-bottom: 1px solid #515959;
       border-right: 1px solid #515959;
+    }
+    th {
+      padding: 0;
+    }
+    .is-sortable {
+      cursor: default;
     }
   }
 
   ::v-deep .el-table th>.cell {
     padding: 0;
-
     .caret-wrapper {
       display: none;
     }
-  }
-
-  ::v-deep .el-table th {
-    padding: 0;
+    .arrow-icon {
+      cursor: pointer;
+    }
   }
 
   ::v-deep .el-table thead th>.cell {
