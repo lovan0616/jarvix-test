@@ -1,5 +1,5 @@
 {
-  "lang": "Phồn thể",
+  "lang": "Tiếng việt",
   "common": {
     "show": "Hiển thị",
     "hide": "Ẩn"
@@ -1493,7 +1493,7 @@
             "questionExample": [
               [
                 {
-                  "text": "利潤", "type": "numeric"
+                  "text": "Lợi nhuận", "type": "numeric"
                 },
                 {
                   "text": "của", "type": ""
@@ -1985,7 +1985,7 @@
               "questionExample": [
                 [
                   {
-                    "text":"每月", "type": "filter"
+                    "text":"Hàng tháng", "type": "filter"
                   },
                   {
                     "text": "của", "type": ""
@@ -3142,7 +3142,7 @@
                     "text": "TOP 10", "type": ""
                   },
                   {
-                    "text": "產品", "type": "category"
+                    "text": "Sản phẩm", "type": "category"
                   }
                 ]
               ]
