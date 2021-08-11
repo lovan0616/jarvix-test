@@ -55,7 +55,6 @@
                   :component-id="resultInfo.sub_insight[displayFactorIndex]"
                   :is-show-toolbox="false"
                   :is-show-legend="false"
-                  :title-icon-name="'len-with-line-chart'"
                   intend="sub_insight"
                 />
               </keep-alive>

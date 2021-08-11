@@ -49,6 +49,7 @@ export default {
 .description {
   width: 100%;
   margin-top: 16px;
+  background-color: #141c1d;
   padding: 10px 20px;
 
   &--warning {
@@ -59,10 +60,10 @@ export default {
     font-size: 18px;
     font-weight: 600;
     line-height: 24px;
-    color: #EEE;
+    color: #eee;
 
     &--warning {
-      color: #FFDF6F;
+      color: #eedf6f;
     }
   }
 
@@ -71,10 +72,10 @@ export default {
     letter-spacing: 0.1em;
     display: block;
     line-height: 24px;
-    color: #CCC;
+    color: #ccc;
 
     &--warning {
-      color: #FFDF6F;
+      color: #eedf6f;
     }
   }
 }
