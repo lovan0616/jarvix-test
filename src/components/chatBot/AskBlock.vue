@@ -485,6 +485,7 @@ export default {
     },
     async setupSuggester () {
       if (this.dataSourceIdAndDataFrameId.includes('null')) return
+      const tempDataSourceIdAndDataFrameId = this.dataSourceIdAndDataFrameId
       this.suggester = null
 
       const newSuggester = Vue.observable(new Suggester())
@@ -508,6 +509,7 @@ export default {
           .map((dataFrameId) => appendDataValueByDataFrameId(dataFrameId))
       ]
       await Promise.all(promises)
+      if (this.dataSourceIdAndDataFrameId !== tempDataSourceIdAndDataFrameId) return
       this.isLoadingKnownTerms = false
     },
     updateSuggester () {
