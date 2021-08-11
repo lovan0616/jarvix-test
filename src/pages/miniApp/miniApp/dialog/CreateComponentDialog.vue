@@ -393,7 +393,7 @@ export default {
   data () {
     const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     const currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
-    const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
+    const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0]?.columnInfo
 
     return {
       isAddable: isDirectAddableComponentTypes.includes(currentComponent.type),
