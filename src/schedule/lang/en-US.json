@@ -304,8 +304,8 @@
         "highPriority": "特急件",
         "secondPriority": "急件",
         "lowPriority": "普通件",
-        "completed": "已結案",
-        "uncompleted": "未結案"
+        "completed": "按期達交",
+        "uncompleted": "預計延遲"
       },
       "yukiTable": {
         "aDate": "統整最晚入廠日（面部）",
