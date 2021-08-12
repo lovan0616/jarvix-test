@@ -14,15 +14,12 @@ const updateAppSettingVersion = (appInfo) => {
             component.position = {
               x: 0, // add position
               y: 0,
-              ...(component.config.size ? component.config.size : {
-                row: 6,
-                column: 6
-              }) // move component .config.size to .position
+              row: component.config.size?.row ?? 6,
+              column: component.config.size?.column ?? 6
             }
+            delete component.config.size // remove component .config.size
 
             component.config.isCustomizeTitle = false // add custom title flag
-
-            delete component.config.size // remove component .config.size
           })
         })
       })
