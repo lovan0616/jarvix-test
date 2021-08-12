@@ -12,6 +12,20 @@
       <nav class="mini-app__nav">
         <div class="nav--left">
           <div
+            class="side-nav--pin"
+            @mouseenter="handleSideNavPinnerHover(true)"
+            @mouseleave="handleSideNavPinnerHover(false)"
+            @click.stop="handleSideNavPinClick(true)"
+            v-if="!isSideNavPin"
+          >
+            <el-tooltip
+              :enterable="false"
+              content="固定側邊區塊"
+            >
+              <svg-icon :icon-class="sideNavPinIcon" />
+            </el-tooltip>
+          </div>
+          <div
             v-if="isEditMode"
             class="icon-arrow"
             @click="$router.push({ name: 'MiniAppList' })"
@@ -148,17 +162,40 @@
           </div>
         </template>
         <template v-else>
-          <mini-app-side-nav
-            :is-edit-mode="isEditMode"
-            :dashboard-list="dashboardList"
-            :current-dashboard-id="currentDashboardId"
-            :is-warning-module-activate="appData.warningModule.activate"
-            :is-show-warning-module="isShowWarningModule"
-            @openWarningModule="openWarningModule"
-            @activeCertainDashboard="activeCertainDashboard($event)"
-            @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
-            @updateDashboardOrder="updateDashboardOrder($t('miniApp.dashboard'))"
-          />
+          <div
+            class="mini-app__side-nav"
+            @mouseenter="handleSideNavPinnerHover(true)"
+            @mouseleave="handleSideNavPinnerHover(false)"
+            :class="{
+              'mini-app__side-nav--pinned': isSideNavPin,
+              'mini-app__side-nav--show': isSideNavShow && !isSideNavPin
+            }"
+          >
+            <mini-app-side-nav
+              :is-edit-mode="isEditMode"
+              :dashboard-list="dashboardList"
+              :current-dashboard-id="currentDashboardId"
+              :is-warning-module-activate="appData.warningModule.activate"
+              :is-show-warning-module="isShowWarningModule"
+              @openWarningModule="openWarningModule"
+              @activeCertainDashboard="activeCertainDashboard($event)"
+              @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
+              @updateDashboardOrder="updateDashboardOrder($t('miniApp.dashboard'))"
+            />
+            <div
+              class="mini-app__side-nav-toggle"
+              @click.stop="handleSideNavPinClick(false)"
+              v-if="isSideNavPin"
+            >
+              <el-tooltip
+                :enterable="false"
+                placement="right"
+                content="隱藏側邊區塊"
+              >
+                <svg-icon icon-class="arrow-right" />
+              </el-tooltip>
+            </div>
+          </div>
           <!-- 監控示警模組 -->
           <main
             v-if="isShowWarningModule && !currentDashboardId"
@@ -580,7 +617,12 @@ export default {
       isCurrentDashboardInit: false,
       scriptOptionList: [],
       initComponent: null,
-      isMiniAppCompiled: false
+      isMiniAppCompiled: false,
+      // side nav
+      sideNavPinerLeaveTimer: null,
+      isMouseEnterSideNavPinner: false,
+      isSideNavShow: false,
+      isSideNavPin: false
     }
   },
   computed: {
@@ -739,6 +781,9 @@ export default {
     },
     isComponentOrderChanged () {
       return this.draggedContext.index !== this.draggedContext.futureIndex
+    },
+    sideNavPinIcon () {
+      return this.isMouseEnterSideNavPinner ? 'pin' : 'side-nav'
     }
   },
   watch: {
@@ -1563,6 +1608,26 @@ export default {
         ...componentData,
         ...componentComplementaryInfo
       })
+    },
+    handleSideNavPinnerHover (isEnter) {
+      if (isEnter) {
+        clearTimeout(this.sideNavPinerLeaveTimer)
+        this.sideNavPinerLeaveTimer = null
+        this.isMouseEnterSideNavPinner = true
+        this.isSideNavShow = true
+      } else {
+        this.sideNavPinerLeaveTimer = setTimeout(() => {
+          this.isMouseEnterSideNavPinner = false
+          this.isSideNavShow = false
+        }, 200)
+      }
+    },
+    handleSideNavPinClick (status) {
+      this.isSideNavPin = status
+      if (!status) {
+        this.isSideNavShow = false
+        this.isMouseEnterSideNavPinner = false
+      }
     }
   }
 }
@@ -1622,6 +1687,21 @@ export default {
     padding: 0 20px 0 24px;
     position: relative;
     z-index: 5;
+
+    .side-nav--pin {
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      margin-right: 18px;
+      padding-right: 18px;
+      position: relative;
+
+      .svg-icon {
+        display: block;
+        fill: #4de2f0;
+        height: 20px;
+        width: 20px;
+      }
+    }
 
     .nav--left {
       align-items: center;
@@ -1701,14 +1781,67 @@ export default {
     }
   }
 
+  &__side-nav {
+    $side-nav-width: 240px;
+
+    flex: 0 0 0;
+    position: relative;
+    transition: flex-basis 0.3s ease-out;
+
+    .mini-app-side-nav {
+      height: calc(100vh - 56px);
+      left: 0;
+      position: fixed;
+      top: 56px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-out;
+      width: $side-nav-width;
+      z-index: 99;
+    }
+
+    &--pinned {
+      flex: 0 0 $side-nav-width;
+    }
+
+    &--show,
+    &--pinned {
+      .mini-app-side-nav {
+        transform: none;
+      }
+    }
+
+    &-toggle {
+      align-items: center;
+      background-color: #232c2e;
+      border-radius: 0 50px 50px 0;
+      cursor: pointer;
+      display: flex;
+      height: 30px;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      top: 9px;
+      transform: translateX(100%);
+      width: 24px;
+      z-index: 0;
+
+      .svg-icon {
+        display: block;
+        fill: #2ad2e2;
+        transform: rotateY(180deg) translateX(1px);
+      }
+    }
+  }
+
   &__main {
     display: flex;
-    flex: 1;
+    flex: 1 1 100%;
     flex-direction: column;
     min-width: 0;
     overflow: auto;
     overflow: overlay;
     padding: 20px 0 0 20px;
+    transition: flex-basis 0.3s ease-out;
 
     &-header {
       align-items: center;
