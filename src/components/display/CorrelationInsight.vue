@@ -109,7 +109,6 @@ export default {
   padding: 16px;
   line-height: 24px;
   color: #ccc;
-  
   .title {
     font-size: 18px;
     color: #eee;
