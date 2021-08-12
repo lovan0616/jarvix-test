@@ -60,8 +60,6 @@
             :filters="filters"
             :controls="controls"
             @setDiagram="currentComponent.diagram = $event"
-            @updateTitle="updateComponentTitle"
-            @checkTitleMatch="checkTitleMatch"
           />
           <transition name="fast-fade-in">
             <section
@@ -107,12 +105,23 @@
           <div class="setting__block">
             <div class="setting__label-block">
               {{ $t('miniApp.componentName') }}
+              <el-switch
+                v-model="currentComponent.config.isCustomizeTitle"
+                :width="Number('32')"
+                active-color="#2AD2E2"
+                inactive-color="#324B4E"
+              />
             </div>
-            <input-verify
-              v-validate="'required'"
-              v-model="InputDiaplayedName"
-              name="createComponentDisplayName"
-            />
+            <div
+              v-if="currentComponent.config.isCustomizeTitle"
+              class="setting__blok-select-field"
+            >
+              <input-verify
+                v-validate="'required'"
+                v-model="currentComponent.config.diaplayedName"
+                name="createComponentDisplayName"
+              />
+            </div>
           </div>
         </div>
         <!--Related dashboard of current component-->
@@ -384,8 +393,7 @@ export default {
   data () {
     const isDirectAddableComponentTypes = ['formula', 'simulator', 'parameters-optimized-simulator']
     const currentComponent = this.initialCurrentComponent ? JSON.parse(JSON.stringify(this.initialCurrentComponent)) : {}
-    const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0].columnInfo
-    const titleTemp = currentComponent && currentComponent.config && currentComponent.config.diaplayedName
+    const columnInfo = currentComponent.config.tableRelationInfo.columnRelations[0]?.columnInfo
 
     return {
       isAddable: isDirectAddableComponentTypes.includes(currentComponent.type),
@@ -417,9 +425,7 @@ export default {
         }
       ],
       formulaComponentInfo: {},
-      modelComponentInfo: {},
-      titleTemp,
-      isCustomTitle: false
+      modelComponentInfo: {}
     }
   },
   computed: {
@@ -533,20 +539,6 @@ export default {
           value: 'row'
         }
       ]
-    },
-    InputDiaplayedName: {
-      get () {
-        return this.currentComponent && this.currentComponent.config.diaplayedName || null
-      },
-      set (val) {
-        if (!val) {
-          this.isCustomTitle = false
-          this.currentComponent.config.diaplayedName = this.titleTemp
-        } else {
-          this.isCustomTitle = true
-          this.currentComponent.config.diaplayedName = val
-        }
-      }
     }
   },
   destroyed () {
@@ -658,16 +650,6 @@ export default {
     updateTableRelatedDashboard (selectedDashboardId) {
       const triggerTarget = this.currentComponent.config.tableRelationInfo.triggerTarget
       triggerTarget === 'column' ? this.currentComponent.config.tableRelationInfo.columnRelations[0].relatedDashboardId = selectedDashboardId : this.currentComponent.config.tableRelationInfo.rowRelation.relatedDashboardId = selectedDashboardId
-    },
-    updateComponentTitle (val) {
-      if (this.currentComponent && !this.isCustomTitle) {
-        this.currentComponent.config.diaplayedName = val
-      }
-    },
-    checkTitleMatch (val) {
-      if (val) {
-        this.isCustomTitle = val.replaceAll(/ /g, '').toLowerCase() !== this.titleTemp.replaceAll(/ /g, '').toLowerCase()
-      }
     }
   }
 }
