@@ -6,15 +6,9 @@
       />
       {{ $t('resultDescription.dataInsight') }}
     </div>
-    <div
-      class="info"
-      v-html="textTransform(info)"
-    />
     <bar-chart-insight
-      v-for="(insight, index) in subComponents"
-      :key="index"
-      :dataset="insight.dataset"
-      :title="insight.title"
+      :dataset="dataset"
+      :title="title"
       :is-show-legend="isShowLegend"
       :is-show-toolbox="isShowToolbox"
       :height="height"
@@ -25,18 +19,18 @@
 import BarChartInsight from '@/components/display/BarChartInsight'
 
 export default {
-  name: 'CorrelationInsight',
+  name: 'DisplayDifferenceInsight',
   components: {
     BarChartInsight
   },
   props: {
-    info: {
-      type: String,
-      default: null
+    dataset: {
+      type: Object,
+      default: () => {}
     },
-    subComponents: {
-      type: Array,
-      default: () => []
+    title: {
+      type: Object,
+      default: () => {}
     },
     isShowLegend: {
       type: Boolean,
@@ -47,20 +41,6 @@ export default {
       default: true
     },
     height: { type: String, default: '300px' }
-  },
-  methods: {
-    textTransform (text) {
-      return this.info ? text.replace('^2', '<sup>2</sup>') : ''
-    }
   }
 }
 </script>
-<style lang="scss" scoped>
-.info {
-  padding: 10px;
-
-  & ~ .insight {
-    border-top: 1px solid #52696a;
-  }
-}
-</style>
