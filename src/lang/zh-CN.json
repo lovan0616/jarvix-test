@@ -1031,7 +1031,7 @@
     "columnSpanAmount": "{number} 行",
     "clickColumnToSeeMore": "点击\"{columnName}\"栏位可看到更详细内容",
     "chartSetting": "图表设定",
-    "componentName": "元件名称",
+    "componentName": "自订元件名称",
     "chartName": "图表名称",
     "triggerColumn": "触发栏位",
     "activate": "启用",
