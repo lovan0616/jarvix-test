@@ -119,7 +119,7 @@ export function getDataFrameById (dataSourceId, getAllState = false) {
  * get data of dataframe by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameData (dataFrameId, selectedColumnList, restrictions, page = 0, cancelToken) {
+export function getDataFrameData (dataFrameId, selectedColumnList, restrictions, page = 0, cancelToken, sortOrders = null) {
   // FIXME just default a big size, doesn't implement with pagination
   return request({
     url: `/dataFrame/${dataFrameId}/data/search`,
@@ -130,7 +130,8 @@ export function getDataFrameData (dataFrameId, selectedColumnList, restrictions,
     },
     data: {
       selectedColumnList,
-      restrictions
+      restrictions,
+      sortOrders: sortOrders ? [sortOrders] : null
     },
     cancelToken
   })

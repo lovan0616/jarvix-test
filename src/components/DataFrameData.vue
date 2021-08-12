@@ -37,42 +37,54 @@
           :min-column-width="'270px'"
           :fixed-index="fixedIndex"
           @change-page="updatePage"
+          @on-sort="handleTableSort"
         >
           <template #columns-header="{ column, index }">
             <div class="header-block">
               <div class="header">
-                <span
-                  v-if="showColumnSummaryRow"
-                  class="icon"
+                <div
+                  class="header__title"
+                  @click.stop
                 >
-                  <el-tooltip
-                    slot="label"
-                    :enterable="false"
-                    :visible-arrow="false"
-                    :content="`${getStatesTypeName(index)}`"
+                  <span
+                    v-if="showColumnSummaryRow"
                     class="icon"
                   >
-                    <svg-icon :icon-class="getHeaderIcon(index)" />
-                  </el-tooltip>
-                </span>
-                <span
-                  class="text"
-                  @click="copyTitle(column.titles[index])"
-                >
-                  <el-tooltip
-                    slot="label"
-                    :visible-arrow="false"
-                    :enterable="false"
-                    :content="`${column.titles[index]}`"
-                    placement="bottom-start"
+                    <el-tooltip
+                      slot="label"
+                      :enterable="false"
+                      :visible-arrow="false"
+                      :content="`${getStatesTypeName(index)}`"
+                      class="icon"
+                    >
+                      <svg-icon :icon-class="getHeaderIcon(index)" />
+                    </el-tooltip>
+                  </span>
+                  <span
+                    class="text"
+                    @click="copyTitle(column.titles[index])"
                   >
-                    <span>{{ column.titles[index] }}</span>
-                  </el-tooltip>
-                </span>
+                    <el-tooltip
+                      slot="label"
+                      :visible-arrow="false"
+                      :enterable="false"
+                      :content="$t('etl.clickColumnHeaderToCopy', { title: column.titles[index] })"
+                      placement="bottom-start"
+                    >
+                      <span>{{ column.titles[index] }}</span>
+                    </el-tooltip>
+                  </span>
+                </div>
+                <svg-icon
+                  icon-class="sort-down"
+                  class="arrow-icon"
+                  :class="{ 'arrow-up': isSortASC(index), 'active': isSortActive(index) }"
+                />
               </div>
               <div
                 v-show="showDataSummary"
                 class="summary"
+                @click.stop
               >
                 <data-column-summary
                   v-if="showColumnSummaryRow"
@@ -110,6 +122,7 @@ import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumn
 import EmptyInfoBlock from './EmptyInfoBlock'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'DataFrameData',
@@ -151,7 +164,9 @@ export default {
       tableSummaryList: [],
       timeoutFunction: null,
       showDataSummary: true,
-      fixedIndex: true
+      fixedIndex: true,
+      sortOrders: null,
+      columnIdList: []
     }
   },
   computed: {
@@ -163,6 +178,7 @@ export default {
     dataFrameId (value) {
       this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
+      this.setColumnIdList(value)
     },
     askCondition: {
       deep: true,
@@ -189,12 +205,21 @@ export default {
   mounted () {
     this.isLoading = true
     this.fetchDataFrameData(this.dataFrameId, 0, true)
+    this.setColumnIdList(this.dataFrameId)
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     ...mapMutations('chatBot', ['setCopiedColumnName']),
+    isSortActive (index) {
+      if (!this.sortOrders) return false
+      return this.columnIdList[index] === this.sortOrders.dataColumnId
+    },
+    isSortASC (index) {
+      if (!this.sortOrders) return false
+      return this.sortOrders.sortType === 'ASC' && this.columnIdList[index] === this.sortOrders.dataColumnId
+    },
     toggleShowSummaryInfo () {
       this.fixedIndex = false
       this.showDataSummary = !this.showDataSummary
@@ -203,7 +228,7 @@ export default {
         this.fixedIndex = true
       })
     },
-    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
+    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false, sortOrders = null) {
       if (resetPagination) {
         this.isLoading = true
         this.dataSourceTableData = null
@@ -214,7 +239,7 @@ export default {
       if (isOnlyFetchSummary || resetPagination) window.clearTimeout(this.timeoutFunction)
 
       // 依照條件取得部分或全部的資料表資訊
-      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary })
+      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary, sortOrders })
         .then(res => {
           const watingTime = 10000
 
@@ -326,7 +351,8 @@ export default {
       }
     },
     updatePage (page) {
-      this.fetchDataFrameData(this.dataFrameId, page - 1)
+      this.pagination.currentPage = page - 1
+      this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
     },
     fallbackCopyTextToClipboard (value) {
       const input = document.createElement('input')
@@ -371,6 +397,16 @@ export default {
       // this.setCopiedColumnName(value)
       // 純複製到剪貼簿功能
       this.copyTextToClipboard(value)
+    },
+    handleTableSort ({ dataColumnIndex, sortType }) {
+      this.sortOrders = sortType ? { dataColumnId: this.columnIdList[dataColumnIndex], sortType } : null
+      this.fetchDataFrameData(this.dataFrameId, this.pagination.currentPage, false, false, this.sortOrders)
+    },
+    async setColumnIdList (dataFrameId) {
+      if (dataFrameId) {
+        const response = await getDataFrameColumnInfoById(dataFrameId)
+        this.columnIdList = response.map(column => column.id)
+      }
     }
   }
 }
@@ -418,9 +454,9 @@ export default {
 
   .header-block {
     .header {
-      padding: 10px;
       border-bottom: 1px solid #515959;
       display: flex;
+      align-items: center;
 
       .icon {
         width: 20px;
@@ -429,11 +465,26 @@ export default {
       }
 
       .text {
-        width: calc(100% - 25px);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         cursor: pointer;
+      }
+
+      &__title {
+        flex: 1;
+        padding: 10px;
+      }
+
+      .arrow-icon {
+        fill: #BDBDBD;
+        margin: 10px;
+        &.arrow-up {
+          transform: rotateX(180deg);
+        }
+        &.active {
+          fill: $theme-color-primary;
+        }
       }
     }
     .summary {

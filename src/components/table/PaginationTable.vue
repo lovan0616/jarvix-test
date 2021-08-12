@@ -11,6 +11,7 @@
       :empty-text="$t('editing.noData')"
       class="sy-table"
       style="width: 100%;"
+      @sort-change="handleTableSort"
     >
       <el-table-column
         :width="indexWidth"
@@ -29,6 +30,7 @@
         :label="(typeof col === 'number') ? col.toString() : col.primaryAlias"
         :width="columnWidth"
         :min-width="minColumnWidth"
+        :sortable="'custom'"
       >
         <!--Header slot-->
         <template
@@ -189,6 +191,22 @@ export default {
         rootMargin: this.lazyLoadInfo.rootMargin,
         threshold: 0
       }
+    },
+    handleTableSort (column) {
+      const dataColumnIndex = parseInt(column.prop)
+      let sortType = null
+
+      switch (column.order) {
+        case 'ascending':
+          sortType = 'ASC'
+          break
+        case 'descending':
+          sortType = 'DESC'
+          break
+        default:
+          break
+      }
+      this.$emit('on-sort', { dataColumnIndex, sortType })
     }
   }
 }
@@ -209,28 +227,33 @@ export default {
     z-index: 100;
   }
 
-  .sy-table {
-    margin-bottom: 16px;
-  }
-
   ::v-deep .spinner-block {
     padding: 0;
   }
 
   ::v-deep .sy-table.el-table {
     border: 1px solid #515959;
+    margin-bottom: 16px;
     th, td {
       border-bottom: 1px solid #515959;
       border-right: 1px solid #515959;
+    }
+    th {
+      padding: 0;
+    }
+    .is-sortable {
+      cursor: default;
     }
   }
 
   ::v-deep .el-table th>.cell {
     padding: 0;
-  }
-
-  ::v-deep .el-table th {
-    padding: 0;
+    .caret-wrapper {
+      display: none;
+    }
+    .arrow-icon {
+      cursor: pointer;
+    }
   }
 
   ::v-deep .el-table thead th>.cell {
