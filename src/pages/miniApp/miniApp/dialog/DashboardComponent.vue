@@ -957,6 +957,7 @@ export default {
 
     &__content {
       display: flex;
+      overflow: hidden;
     }
 
     .setting {
