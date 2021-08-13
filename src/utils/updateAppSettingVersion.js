@@ -7,6 +7,9 @@ const updateAppSettingVersion = (appInfo) => {
     const nextVersion = versionList[currentVersionIndex + 1]
 
     if (nextVersion === '1.0.1') {
+      // add sidenav pin flag
+      returnData.settings.editModeData.isSideNavPin = true
+
       const settingsArr = ['editModeData', 'viewModeData']
       settingsArr.forEach((key) => {
         returnData.settings[key].dashboards.forEach((dashboard) => {
