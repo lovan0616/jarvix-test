@@ -1,0 +1,13 @@
+@mixin job-state-dot {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 50%;
+    border-color: inherit;
+  }
+}

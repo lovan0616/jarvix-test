@@ -7,15 +7,16 @@
   >
     <div
       slot="reference"
-      :class="[item.reason ? 'job__chart--break' : 'job__chart--ordinary', { 'active': item.orderId === searchedOrderId }]"
-      @mouseenter="handleMouseEnter(item.orderId)"
-      @mouseleave="handleMouseLeave(item.orderId)"
+      :class="[item.reason ? 'job__chart--break' : 'job__chart--ordinary', { 'active': item.job === searchedJob }]"
+      :style="{ 'background-color': itemBackgroundColor }"
+      @mouseenter="handleMouseEnter(item.job)"
+      @mouseleave="handleMouseLeave(item.job)"
     >
       {{ item.reason ? $t(`schedule.setting.${item.reason}`) : null }}
     </div>
     <div class="job__detail">
       <div class="job__detail-title">
-        {{ item.reason ? $t(`schedule.setting.${item.reason}`) : `${$t('schedule.simulation.scheduleResult.jobNo')}：${item.order}` }}
+        {{ item.reason ? $t(`schedule.setting.${item.reason}`) : `${$t('schedule.simulation.scheduleResult.jobNo')}：${item.job}` }}
       </div>
       <div class="job__detail-description">
         <template v-if="item.reason">
@@ -49,6 +50,7 @@
 </template>
 <script>
 import moment from 'moment'
+import jobColorVar from '@/schedule/styles/common/_variables.scss'
 
 export default {
   name: 'ScheduleItem',
@@ -57,19 +59,41 @@ export default {
       type: Object,
       required: true
     },
-    searchedOrderId: {
-      type: Number,
-      default: null
+    searchedJob: {
+      type: String,
+      default: ''
+    },
+    jobStates: {
+      type: Object,
+      default: () => {},
+      required: true
+    }
+  },
+  data () {
+    return {
+      jobColorVar
+    }
+  },
+  computed: {
+    itemBackgroundColor () {
+      return this.item.reason ? 'transparent' : jobColorVar[this.jobState.toLowerCase()]
+    },
+    jobState () {
+      if (!this.item.withinScheduleTime && this.item.delayed) return this.jobStates.OVERDUE_DELAY
+      if (this.item.delayed) return this.jobStates.DELAYED
+      if (!this.item.withinScheduleTime) return this.jobStates.OVERDUE
+      if (this.item.scheduled) return this.jobStates.SCHEDULED
+      return this.jobStates.GENERAL
     }
   },
   methods: {
-    handleMouseEnter (orderId) {
-      if (!orderId) return
-      this.$emit('search-order', orderId)
+    handleMouseEnter (job) {
+      if (!job) return
+      this.$emit('search-job', job)
     },
-    handleMouseLeave (orderId) {
-      if (!orderId) return
-      this.$emit('cancel-search-order')
+    handleMouseLeave (job) {
+      if (!job) return
+      this.$emit('cancel-search-job')
     },
     getHoursDiff (startTime, endTime) {
       const duration = moment(endTime).diff(moment(startTime), 'minutes')
@@ -112,16 +136,17 @@ export default {
       white-space: nowrap;
       vertical-align: top;
       border: 1px solid #FFFFFF;
+      cursor: pointer;
     }
 
     &--ordinary {
       min-width: 1px;
       height: 25px;
       border-radius: 4px;
-      background-color: #2AD2E2;
       margin: 7px 2px 0 0;
       transition: background-color .2s linear;
-      &.active { background-color: var(--color-warning); }
+      cursor: pointer;
+      &.active { background-color: #AAA !important; }
     }
   }
 

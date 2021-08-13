@@ -34,8 +34,8 @@
 
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
-import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
-// import JobSelectionPaginationTable from '../../simulation/setting/components/JobSelectionPaginationTable'
+// import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
+import JobSelectionPaginationTable from '../../simulation/setting/components/JobSelectionPaginationTable'
 
 export default {
   name: 'PlanJob',

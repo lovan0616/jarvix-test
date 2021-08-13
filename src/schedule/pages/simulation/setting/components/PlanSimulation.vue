@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="isYKSchedule"
     class="plan-simulation"
   >
     <unscheduled-jobs-table
@@ -11,24 +12,56 @@
       class="scheduled-jobs-table"
     />
   </div>
+  <div
+    v-else
+    class="plan-simulation"
+  >
+    <jobs-header>
+      <jobs-filter
+        slot="filter"
+        @submit="updateRestrictions"
+      />
+    </jobs-header>
+    <jobs-table :restrictions="restrictions" />
+  </div>
 </template>
 
 <script>
+import JobsFilter from '@/schedule/components/JobsFilter'
+import JobsTable from './JobsTable'
+import JobsHeader from './JobsHeader'
 import UnscheduledJobsTable from './UnscheduledJobsTable'
 import ScheduledJobsTable from './ScheduledJobsTable'
-import { mapMutations, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'PlanSimulation',
   components: {
+    JobsFilter,
+    JobsTable,
+    JobsHeader,
     UnscheduledJobsTable,
     ScheduledJobsTable
   },
+  data () {
+    return {
+      restrictions: {}
+    }
+  },
   computed: {
-    ...mapState('simulation', ['selectAllOrders'])
+    ...mapState('simulation', ['selectAllOrders']),
+    ...mapState('scheduleSetting', ['globalJobStatusRestriction']),
+    ...mapGetters('scheduleSetting', ['isYKSchedule'])
+  },
+  created () {
+    if (this.globalJobStatusRestriction) {
+      this.restrictions[this.globalJobStatusRestriction] = true
+    }
   },
   methods: {
-    ...mapMutations('simulation', ['updateScheduledJobs'])
+    updateRestrictions (newVal) {
+      this.restrictions = newVal
+    }
   }
 }
 </script>
@@ -38,6 +71,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+  padding: 24px;
   .unscheduled-jobs-table {
     flex: 1;
     margin-bottom: 24px;

@@ -352,6 +352,30 @@
       }
     }
   }
+  &--stateful-jobid-popover {
+    background: #303435;
+    box-shadow: 0px 0px 20px rgba(12, 209, 222, .5);
+    border: none;
+    .hr {
+      border-color: #666;
+    }
+    .job-info {
+      display: flex;
+      margin: 4px 0;
+      &-detail {
+        margin-left: 0;
+        color: #CCC;
+      }
+    }
+    .popper__arrow[x-arrow] {
+      border-right-color: #233131;
+      color: #233131;
+      &::after {
+        border-right-color: #233131;
+        color: #233131;
+      }
+    }
+  }
 }
 
 .el-picker-panel.el-date-picker {

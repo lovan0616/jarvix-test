@@ -53,6 +53,19 @@
   position: relative;
   display: inline-block;
 
+  &[disabled] {
+    opacity: 0.6;
+    color: #666;
+    cursor: not-allowed;
+    .input-radio-label {
+      cursor: not-allowed;
+      &:before {
+        border-color: #666;
+        background-color: #AAA;
+      }
+    }
+  }
+
   &:not(:last-of-type) {
     margin-right: 40px;
   }

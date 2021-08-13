@@ -1,7 +1,7 @@
 <template>
   <div class="form">
     <div class="form-label">
-      {{ $t('schedule.setting.commonDataSetting') }}（{{ $t('editing.isRequired') }}）
+      {{ $t('schedule.setting.commonDataSetting') }}
       <div class="form-action">
         <button
           :disabled="isUnbinding"
@@ -37,10 +37,10 @@
     <div class="form-fields">
       <div
         v-for="file in files"
-        :key="file.id"
+        :key="file.computed"
         class="form-field"
       >
-        <span class="field-label">{{ $t(`schedule.setting.commonData${snakeToPascal(file.code)}`) }}</span>
+        <span class="field-label">*{{ $t(`schedule.setting.commonData${snakeToPascal(file.code)}`) }}</span>
         <spinner
           v-if="isLoadingDataFrames"
           :title="$t('editing.dataDownloading')"

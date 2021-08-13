@@ -10,6 +10,23 @@
     </h1>
     <div class="schedule-helper__content">
       <div class="sample__menus">
+        <!-- 訂單 -->
+        <div class="sample__menu">
+          <div class="sample__menu__title">
+            {{ $t('schedule.setting.commonDataSetting') }}
+          </div>
+          <div class="sample__menu__list">
+            <div
+              v-for="(sample, index) in samples.general"
+              :key="index"
+              :class="{'sample__menu__item--active': isActive('general', index)}"
+              class="sample__menu__item"
+              @click="selectSample('general', index)"
+            >
+              {{ $t(`schedule.setting.general${sample.dataFrameCode}`) }}
+            </div>
+          </div>
+        </div>
         <!-- 共用資料設定 -->
         <div class="sample__menu">
           <div class="sample__menu__title">
@@ -84,9 +101,9 @@ export default {
         index: 0
       },
       samples: {
-        rawData: [
+        general: [
           {
-            dataFrameCode: 'Order',
+            dataFrameCode: 'Job',
             columns: [
               {
                 columnName: 'Job',
@@ -114,6 +131,33 @@ export default {
               }
             ]
           },
+          {
+            dataFrameCode: 'ProductionProgress',
+            columns: [
+              {
+                columnName: 'Job',
+                columnDataType: 'string'
+              },
+              {
+                columnName: 'Operation',
+                columnDataType: 'string'
+              },
+              {
+                columnName: 'OPOrder',
+                columnDataType: 'int'
+              },
+              {
+                columnName: 'CompletedQuantity',
+                columnDataType: 'int'
+              },
+              {
+                columnName: 'UpdateTime',
+                columnDataType: 'yyyy-MM-dd HH:mm:ss'
+              }
+            ]
+          }
+        ],
+        rawData: [
           {
             dataFrameCode: 'Equipment',
             columns: [

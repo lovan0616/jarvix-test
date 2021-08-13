@@ -65,6 +65,9 @@ export default {
   background-color: transparent;
   border-radius: 0;
   padding-left: 0;
+  &[type="number"] {
+    text-align: right;
+  }
 }
 
 ::v-deep .el-input-group__prepend {

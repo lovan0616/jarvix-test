@@ -39,6 +39,44 @@ export function unbindOrder (projectId) {
 }
 
 /**
+ * 檢查生產狀況
+ *  @param {Number} data - dataframeId - 資料表 id
+ *  @param {Number} data - projectId - 排程子專案 id
+ */
+export function checkProductionProgress (data) {
+  return request({
+    url: '/dataframe/bind/productionProgress/check',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 綁定生產狀況
+ *  @param {Number} data - dataframeId - 資料表 id
+ *  @param {Number} data - projectId - 排程子專案 id
+ */
+export function bindProductionProgress (data) {
+  return request({
+    url: '/dataframe/bind/productionProgress',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 解除綁定生產狀況
+ *  @param {Number} projectId - 排程子專案 id
+ */
+export function unbindProductionProgress (projectId) {
+  return request({
+    url: '/dataframe/unbind/productionProgress',
+    method: 'POST',
+    data: { projectId }
+  })
+}
+
+/**
  * 檢查共用資料
  *  @param {Number} data - equipmentDataframeId - equipment 資料表 id
  *  @param {Number} data - groupDataframeId - group 資料表 id
@@ -120,5 +158,17 @@ export function unbindConstraint (data) {
     url: '/dataframe/unbind/constraint',
     method: 'POST',
     data
+  })
+}
+
+/**
+ *  同步生產狀況
+ *  @param {Number} data - projectId - 排程子專案 id
+ */
+export function syncProductionProgress (projectId) {
+  return request({
+    url: '/dataframe/sync/productionProgress',
+    method: 'POST',
+    data: { projectId }
   })
 }

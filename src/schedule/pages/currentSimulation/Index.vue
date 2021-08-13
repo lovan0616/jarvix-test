@@ -2,33 +2,45 @@
 <template>
   <div class="current-simulation">
     <h2 class="header">
-      {{ $t('schedule.schedule.title') }}
-      <ticket-filter
-        v-if="!isYKSchedule"
-        v-show="!isLoading && planInfo.planId"
-        @search="searchString = $event"
-      />
-    </h2>
-    <div class="button-block">
-      <default-button
-        v-if="planInfo.planId && isYKSchedule"
-        :loading="isLoadingLastSolution"
-        class="simulate-btn"
-        @click="downloadSimulation"
-      >
-        {{ $t('schedule.schedule.downloadPlan') }}
-      </default-button>
-      <default-button
+      <div class="header-left">
+        {{ $t('schedule.schedule.title') }}
+      </div>
+      <div
         v-if="planInfo.planId"
-        :loading="isLoadingLastSolution"
-        class="simulate-btn"
-        @click="reSimulate"
+        class="header-right"
       >
-        {{ $t('schedule.schedule.reSimulate') }}
-      </default-button>
-    </div>
+        <default-button
+          v-if="!isYKSchedule"
+          :is-disabled="isProcessingProductionProgress"
+          type="secondary"
+          @click="syncProductionProgress"
+        >
+          {{ $t('schedule.rolling.syncProductionProgress') }}
+        </default-button>
+        <default-button
+          v-if="isYKSchedule"
+          :loading="isLoadingLastSolution"
+          class="simulate-btn"
+          @click="downloadSimulation"
+        >
+          {{ $t('schedule.schedule.downloadPlan') }}
+        </default-button>
+        <default-button
+          :is-disabled="isLoadingLastSolution"
+          @click="reSimulate"
+        >
+          {{ $t('schedule.schedule.reSimulate') }}
+        </default-button>
+      </div>
+    </h2>
+    <jobs-filter
+      v-if="!isLoading && planInfo.planId && !isYKSchedule"
+      :job-states-options="jobStates"
+      @submit="updateRestrictions"
+    />
+    <spinner v-if="isLoading" />
     <div
-      v-if="planInfo.planId"
+      v-else-if="planInfo.planId"
       :class="isYKSchedule ? 'iframe-container' : 'simulation-content'"
     >
       <template
@@ -50,26 +62,27 @@
           </h3>
           <div class="KPI__info">
             <span class="KPI__info--item">
-              {{ $t('schedule.schedule.dateRange') }} {{ KPIInfo.timeRange }}
+              {{ $t('schedule.schedule.dateRange') }}：{{ KPIInfo.timeRange }}
             </span>
             <span class="KPI__info--item">
-              {{ $t('schedule.schedule.capacity') }} {{ KPIInfo.capacity }}個
+              {{ $t('schedule.schedule.capacity') }}：{{ formatComma(KPIInfo.capacity) }}個
             </span>
             <span class="KPI__info--item">
-              {{ $t('schedule.schedule.ofr') }} {{ KPIInfo.ofr }}％
+              {{ $t('schedule.schedule.ofr') }}：{{ KPIInfo.ofr }}％
             </span>
             <span class="KPI__info--item">
-              {{ $t('schedule.schedule.utilization') }} {{ KPIInfo.utilization }}％
+              {{ $t('schedule.schedule.utilization') }}：{{ KPIInfo.utilization }}％
             </span>
           </div>
         </div>
         <plan-job
-          :key="`planJob-${searchString}`"
-          :search-string="searchString"
+          :plan-info="planInfo"
+          :restrictions="restrictions"
         />
         <plan-gantt
-          :key="`planGantt-${searchString}`"
-          :search-string="searchString"
+          :restrictions="restrictions"
+          :plan-info="planInfo"
+          :job-states="jobStates"
         />
       </template>
     </div>
@@ -95,8 +108,10 @@
 <script>
 import PlanJob from './components/PlanJob'
 import PlanGantt from './components/PlanGantt'
-import TicketFilter from '@/schedule/components/TicketFilter'
+import JobsFilter from '@/schedule/components/JobsFilter'
+import { JOB_STATUS } from '@/schedule/utils/enum'
 import { getPlanInfo, getPlanKPI, getLastSolution } from '@/schedule/API/Plan'
+import { Message } from 'element-ui'
 import { mapMutations, mapState, mapGetters } from 'vuex'
 
 export default {
@@ -104,29 +119,33 @@ export default {
   components: {
     PlanJob,
     PlanGantt,
-    TicketFilter
+    JobsFilter
   },
   data () {
     return {
-      isLoading: true,
+      isLoading: false,
       isLoadingLastSolution: false,
-      planInfo: {
-        planId: null,
-        startDate: '',
-        endDate: ''
-      },
+      isProcessingProductionProgress: false,
+      planInfo: {},
       KPIInfo: {
         capacity: 0,
         ofr: 0,
         utilization: 0,
         timeRange: ''
       },
-      searchString: '',
+      restrictions: {},
       excelURL: `${window.env.SCHEDULE_API_ROOT_URL}plan/result/excelFile?projectId=${this.$route.params.schedule_project_id}`
     }
   },
   computed: {
     ...mapState('scheduleSetting', ['scheduleProjectId']),
+    jobStates () {
+      return [
+        JOB_STATUS.OVERDUE,
+        JOB_STATUS.DELAY,
+        JOB_STATUS.OVERDUE_DELAY
+      ]
+    },
     ...mapGetters('scheduleSetting', ['isYKSchedule'])
   },
   mounted () {
@@ -146,14 +165,30 @@ export default {
       this.planInfo = await getPlanInfo(this.scheduleProjectId)
       getPlanKPI(this.scheduleProjectId).then(res => {
         this.KPIInfo = res
-        this.KPIInfo.ofr = Math.ceil(this.KPIInfo.ofr * 100)
-        this.KPIInfo.utilization = Math.ceil(this.KPIInfo.utilization * 100)
+        this.KPIInfo.ofr = Number(this.KPIInfo.ofr * 100).toFixed(2)
+        this.KPIInfo.utilization = Number(this.KPIInfo.utilization * 100).toFixed(2)
         this.KPIInfo.timeRange = this.planInfo.startDate + '-' + this.planInfo.endDate
       })
       this.isLoading = false
     },
     simulateNewPlan () {
       this.$router.push({ name: 'SimulationSetting' })
+    },
+    syncProductionProgress () {
+      this.isProcessingProductionProgress = true
+      this.$store.dispatch('scheduleSetting/syncProductionProgress')
+        .then(() => {
+          Message({
+            message: '生產狀況同步成功',
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isProcessingProductionProgress = false
+        })
     },
     downloadSimulation () {
       let link = document.createElement('a')
@@ -179,6 +214,9 @@ export default {
           this.$store.commit('simulation/setSolutions', lastSolution.map(solution => ({ ...defaultSetting, ...solution, simulated: true, valid: null })))
           this.$router.push({ name: 'SimulationSetting' })
         }).finally(() => { this.isLoadingLastSolution = false })
+    },
+    updateRestrictions (newVal) {
+      this.restrictions = newVal
     }
   }
 }
@@ -193,13 +231,25 @@ export default {
   overflow: overlay;
 
   .header {
-    display: inline-flex;
+    display: flex;
+    justify-content: space-between;
     margin: 0 0 12px 0;
-    .filter {
-      margin-left: 16px;
+    &-left {
+      display: flex;
+      .filter {
+        margin-left: 16px;
+      }
+    }
+    &-right {
+      .default-button + .default-button {
+        margin-left: 8px;
+      }
     }
   }
 
+  .jobs__filter {
+    margin-bottom: 24px;
+  }
   .iframe-container {
     height: 78vh;
   }

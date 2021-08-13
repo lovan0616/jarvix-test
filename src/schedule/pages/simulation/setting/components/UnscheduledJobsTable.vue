@@ -93,7 +93,7 @@
 
 <script>
 import JobSelectionPaginationTable from '@/schedule/components/table/JobSelectionPaginationTable'
-import { getOrderList } from '@/schedule/API/Order'
+import { getJobList } from '@/schedule/API/Job'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
@@ -162,7 +162,7 @@ export default {
     ...mapMutations('simulation', ['updateScheduledJobs', 'setOrderPeriod', 'setSelectAllOrders', 'setSearchOrderNumber', 'setSearchOrderCount']),
     fetchJobData (page = 0, size = 20, jobSearchNumber = null, resetPagination = false) {
       this.isProcessing = true
-      getOrderList({
+      getJobList({
         projectId: this.scheduleProjectId,
         page,
         size,

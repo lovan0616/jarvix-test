@@ -42,10 +42,34 @@ const routes = [
               {
                 path: 'schedule-setting',
                 name: 'ScheduleSetting',
-                meta: {
-                  isModule: 'Schedule'
-                },
-                component: () => import('@/schedule/pages/scheduleSetting/Index')
+                redirect: { name: 'ScheduleBaseSetting' },
+                component: () => import('@/schedule/pages/scheduleSetting/Index'),
+                children: [
+                  {
+                    path: 'base',
+                    name: 'ScheduleBaseSetting',
+                    meta: { isModule: 'Schedule' },
+                    component: () => import('@/schedule/pages/scheduleSetting/BaseSetting')
+                  },
+                  {
+                    path: 'common',
+                    name: 'ScheduleCommonDataSetting',
+                    meta: { isModule: 'Schedule' },
+                    component: () => import('@/schedule/pages/scheduleSetting/components/commonDataSetting/CommonDataSetting')
+                  },
+                  {
+                    path: 'constraint',
+                    name: 'ScheduleConstraintSetting',
+                    meta: { isModule: 'Schedule' },
+                    component: () => import('@/schedule/pages/scheduleSetting/components/constraintSetting/ConstraintSetting')
+                  },
+                  {
+                    path: 'version',
+                    name: 'ScheduleVersionManagement',
+                    meta: { isModule: 'Schedule' },
+                    component: () => import('@/schedule/pages/scheduleSetting/components/versionManagement/VersionManagement')
+                  }
+                ]
               },
               {
                 path: 'simulation',

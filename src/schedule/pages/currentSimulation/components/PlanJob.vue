@@ -11,7 +11,7 @@
         class="collapse-controller"
         @click="isCollapsed = !isCollapsed"
       >
-        {{ isCollapsed ? $t('schedule.base.open') : $t('schedule.base.close') }}
+        {{ isCollapsed ? $t('schedule.base.openCollapseItem') : $t('schedule.base.closeCollapseItem') }}
         <i class="icon el-icon-arrow-down" />
       </div>
     </div>
@@ -28,6 +28,13 @@
           :label="tab.name"
           :name="tab.type"
         />
+        <default-button
+          type="outline"
+          @click="downloadPlan"
+        >
+          <svg-icon icon-class="download" />
+          {{ $t('schedule.schedule.downloadPlan') }}
+        </default-button>
       </el-tabs>
       <div
         v-if="isLoading"
@@ -36,7 +43,7 @@
         <spinner />
       </div>
       <pagination-table
-        v-if="isDataAvailable"
+        v-else-if="isDataAvailable"
         :is-processing="isProcessing"
         :pagination-info="pagination"
         :column-width="'180'"
@@ -52,7 +59,7 @@
 
 <script>
 import PaginationTable from '@/schedule/components/table/PaginationTable'
-import { getOrderPlanResult, getMachinePlanResult } from '@/schedule/API/Plan'
+import { getOrderPlanResult, getMachinePlanResult, downloadPlanExcel } from '@/schedule/API/Plan'
 import i18n from '@/lang/index.js'
 import { mapState } from 'vuex'
 
@@ -65,9 +72,13 @@ export default {
     PaginationTable
   },
   props: {
-    searchString: {
-      type: String,
-      default: ''
+    planInfo: {
+      type: Object,
+      default: () => {}
+    },
+    restrictions: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -101,8 +112,8 @@ export default {
         { title: 'material', name: this.$t('schedule.simulation.orderResult.material'), width: '160' },
         { title: 'product', name: this.$t('schedule.simulation.orderResult.product'), width: '160' },
         { title: 'priority', name: this.$t('schedule.simulation.orderResult.priority') },
-        { title: 'quantity', name: this.$t('schedule.simulation.orderResult.quantity') },
-        { title: 'cycleTime', name: this.$t('schedule.simulation.orderResult.cycleTime') },
+        { title: 'quantity', name: this.$t('schedule.simulation.orderResult.quantity'), align: 'right' },
+        { title: 'cycleTime', name: this.$t('schedule.simulation.orderResult.cycleTime'), width: '140', align: 'right' },
         { title: 'complete', name: this.$t('schedule.simulation.orderResult.complete') }
       ],
       machineTableHeaderList: [
@@ -134,6 +145,11 @@ export default {
       return (this.resultType === 'order' && this.jobData) || (this.resultType === 'machine' && this.machineData)
     }
   },
+  watch: {
+    restrictions () {
+      this.fetchData(0, 20, true)
+    }
+  },
   mounted () {
     this.isLoading = true
     this.fetchData(0, 20, true)
@@ -150,7 +166,7 @@ export default {
         projectId: this.scheduleProjectId,
         page,
         size,
-        keyword: this.searchString
+        ...this.restrictions
       })
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
@@ -161,8 +177,8 @@ export default {
               return {
                 ...data,
                 priority: this.priortyOptions[data.priority - 1].label,
-                complete: data.complete ? completedLabel : uncompletedLabel,
-                cycleTime: Number.parseFloat(data.cycleTime).toFixed(1)
+                complete: data.withinScheduleTime ? completedLabel : uncompletedLabel,
+                cycleTime: Number.isInteger(data.cycleTime) ? data.cycleTime : Number.parseFloat(data.cycleTime).toFixed(1)
               }
             }) || [],
             index: [...Array(res.data ? res.data.length : [])].map((x, i) => i)
@@ -180,7 +196,7 @@ export default {
         projectId: this.scheduleProjectId,
         page,
         size,
-        keyword: this.searchString
+        ...this.restrictions
       })
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
@@ -197,13 +213,38 @@ export default {
     },
     switchTab (type) {
       if (this.resultType === type) return
-      this.isLoading = false
-      this.isProcessing = false
+      this.isLoading = true
       this.resultType = type
       this.fetchData(0, 20, true)
     },
     updatePage (page) {
       this.fetchData(page - 1, 20, false)
+    },
+    downloadPlan () {
+      this.isDownloading = true
+      downloadPlanExcel({ projectId: this.scheduleProjectId, solutionId: this.planInfo.selectedSolutionId })
+        .then(({ data }) => {
+          const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+          if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(blob, 'PlanResult.xlsx')
+          } else {
+            const link = document.createElement('a')
+            if (link.download !== undefined) {
+              // Browsers that support HTML5 download attribute
+              const url = URL.createObjectURL(blob)
+              link.setAttribute('href', url)
+              link.setAttribute('download', 'PlanResult.xlsx')
+              link.style.visibility = 'hidden'
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+              URL.revokeObjectURL(url)
+            }
+          }
+        })
+        .catch(() => {})
+        .finally(() => this.isDownloading = false)
     }
   }
 }
@@ -255,7 +296,11 @@ export default {
   }
 
   &__tabs {
+    display: flex;
     margin-bottom: 8px;
+    ::v-deep .el-tabs__header {
+      flex: 1;
+    }
   }
 
   &__table {

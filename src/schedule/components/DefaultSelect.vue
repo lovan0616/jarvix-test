@@ -4,6 +4,7 @@
       v-model="selectedValue"
       :placeholder="placeholder || $t('schedule.base.pleaseSelect')"
       :filterable="filterable"
+      :disabled="disabled"
       popper-class="ss-select"
     >
       <el-option
@@ -11,6 +12,7 @@
         :key="option.value"
         :label="option.label"
         :value="option.value"
+        :disabled="option.disabled"
       />
     </el-select>
     <div
@@ -36,6 +38,10 @@ export default {
       default: ''
     },
     filterable: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     },
@@ -91,6 +97,9 @@ export default {
 .default-select {
   padding-bottom: 20px;
   position: relative;
+  .el-select {
+    width: 100%;
+  }
   .input-error {
     position: absolute;
     left: 0;

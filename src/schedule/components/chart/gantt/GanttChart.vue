@@ -25,8 +25,8 @@
     <v-gantt-chart
       v-else
       id="my-gantt"
-      :start-time="startTime"
-      :end-time="endTime"
+      :start-time="maxViewRange.startTime"
+      :end-time="maxViewRange.endTime"
       :datas="filteredGanttChartDataList"
       :cell-width="100"
       :cell-height="40"
@@ -41,9 +41,11 @@
         <schedule-item
           :item="item"
           :display-time="scale"
-          :searched-order-id="searchedOrderId"
-          @search-order="searchOrder"
-          @cancel-search-order="cancelSearchOrder"
+          :searched-job="searchedJob"
+          :job-states="JOB_STATUS"
+          @search-job="searchJob"
+          @cancel-search-job="cancelSearchJob"
+          @click.native="$emit('click-schedule-item', item)"
         />
       </template>
       <template #left="{data}">
@@ -82,8 +84,9 @@ import ScheduleItem from './ScheduleItem'
 import ScheduleLabel from './ScheduleLabel'
 import { getMachinePlanResult, getMachinePlanExcludeList } from '@/schedule/API/Plan'
 import { getMachineSimulateResult, getMachineSimulateExcludeList } from '@/schedule/API/Simulation'
-import moment from 'moment'
 import { mapState, mapMutations } from 'vuex'
+import { JOB_STATUS } from '@/schedule/utils/enum'
+import moment from 'moment'
 
 export default {
   name: 'GanttChart',
@@ -94,36 +97,44 @@ export default {
   props: {
     currentSolutionId: {
       type: Number,
-      default: null
+      default: 1291
+    },
+    maxViewRange: {
+      // 甘特圖疊圖區間
+      // 模擬結果頁面：模擬起始時間 ~ 模擬結束時間
+      // 當前計畫頁面：排程起始時間 ~ 排程結束時間
+      type: Object,
+      required: true,
+      default: () => {
+        return {
+          startTime: '2021-07-21 00:00:00',
+          endTime: '2021-08-04 00:00:00'
+        }
+      }
+    },
+    restrictions: {
+      type: Object,
+      default: () => {}
     },
     scale: {
       type: Number,
       default: 60
-    },
-    searchString: {
-      type: String,
-      default: ''
     }
   },
   data () {
     return {
-      isLoading: true,
+      isLoading: false,
       isJobEmpty: false,
       hasError: false,
       position: {},
-      searchedOrderId: null,
+      searchedJob: null,
       ganttChartDataList: [],
-      startTime: null,
-      endTime: null,
-      timeLines: [{
-        time: null,
-        color: '#1eb8c7'
-      }],
       selectedEquipment: '',
       selectedOperation: '',
       operations: [],
       equipments: [],
-      ganttInitialHeight: null
+      ganttInitialHeight: 0,
+      JOB_STATUS
     }
   },
   computed: {
@@ -153,6 +164,17 @@ export default {
     filteredGanttChartDataList () {
       // 甘特圖上 filters 功能
       return this.filters.reduce((d, f) => d.filter(f), this.ganttChartDataList)
+    },
+    innerRestrictions () {
+      const copiedRestrictions = { ...this.restrictions }
+      delete copiedRestrictions.deadlineStartTime
+      delete copiedRestrictions.deadlineEndTime
+      return copiedRestrictions
+    }
+  },
+  watch: {
+    restrictions () {
+      this.fetchGanttChartData()
     }
   },
   mounted () {
@@ -165,34 +187,48 @@ export default {
       this.ganttChartDataList = []
 
       const getOperationInfo = this.isSimulating
-        ? getMachineSimulateResult(this.planId, this.currentSolutionId, 0, 0, true)
+        ? getMachineSimulateResult({
+          planId: this.planId,
+          solutionId: this.currentSolutionId,
+          overlapStartTime: this.maxViewRange.startTime,
+          overlapEndTime: this.maxViewRange.endTime,
+          ...this.innerRestrictions
+        })
         : getMachinePlanResult({
           projectId: this.scheduleProjectId,
-          page: 0,
-          size: 20,
-          fetchAll: true,
-          keyword: this.searchString
+          overlapStartTime: this.maxViewRange.startTime,
+          overlapEndTime: this.maxViewRange.endTime,
+          ...this.innerRestrictions
         })
       const getExcludeInfo = this.isSimulating
         ? getMachineSimulateExcludeList(this.planId, this.currentSolutionId)
         : getMachinePlanExcludeList(this.scheduleProjectId)
 
       Promise.all([getOperationInfo, getExcludeInfo])
-        .then(([operateData, restData]) => {
+        .then(([{ data: operateData }, restData]) => {
           if (operateData.length === 0) {
             this.isLoading = false
             this.isJobEmpty = true
             return
           }
           const tempChartList = {}
-          let startTime
-          let endTime
 
           // 集成此次模擬的工序選單
           this.operations = operateData.reduce((acc, cur) => {
             if (!acc.includes(cur.operation)) acc.push(cur.operation)
             return acc
           }, [])
+
+          // 計算各工序所在工單的 StartTime
+          const jobAndStartTimeMap = operateData.reduce((acc, cur) => {
+            if (!acc[cur.job]) {
+              acc[cur.job] = cur.startTime
+            } else {
+              const curStartTime = moment(cur.startTime)
+              if (curStartTime.diff(acc[cur.job]) < 0) acc[cur.job] = cur.startTime
+            }
+            return acc
+          }, {})
 
           // 正常工作時段資料
           operateData.forEach(item => {
@@ -204,7 +240,8 @@ export default {
               tempChartList[rowKey].gtArray = [{
                 ...item,
                 start: this.getStartTime(item),
-                end: this.getEndTime(item)
+                end: this.getEndTime(item),
+                jobStartTime: jobAndStartTimeMap[item.job]
               }]
               tempChartList[rowKey].equipment = item.equipment
               tempChartList[rowKey].operation = item.operation
@@ -212,7 +249,8 @@ export default {
               tempChartList[rowKey].gtArray.push({
                 ...item,
                 start: this.getStartTime(item),
-                end: this.getEndTime(item)
+                end: this.getEndTime(item),
+                jobStartTime: jobAndStartTimeMap[item.job]
               })
             }
           })
@@ -263,25 +301,11 @@ export default {
             }
           })
 
-          // 設定甘特圖最早和最晚的時間
+          // 集成此次模擬的機台選單
           const schedule = [...operateData, ...restData]
           schedule.forEach(item => {
-            // 集成此次模擬的機台選單
             if (!this.equipments.includes(item.equipment)) this.equipments.push(item.equipment)
-
-            const currentStartTime = moment(this.getStartTime(item))
-            const currentEndTime = moment(this.getEndTime(item))
-
-            if (!startTime || !endTime) {
-              startTime = currentStartTime
-              endTime = currentEndTime
-            } else {
-              if (currentStartTime.diff(startTime) < 0) startTime = currentStartTime
-              if (currentEndTime.diff(endTime) > 0) endTime = currentEndTime
-            }
           })
-          this.startTime = startTime.format('YYYY-MM-DD HH:mm:ss')
-          this.endTime = endTime.format('YYYY-MM-DD HH:mm:ss')
 
           // 最後將集成好的資料放進甘特圖中
           Object.keys(tempChartList).sort().forEach(rowKey => {
@@ -289,6 +313,8 @@ export default {
           })
 
           this.isLoading = false
+          this.hasError = false
+          this.isJobEmpty = false
 
           this.$nextTick(() => {
             // 抓取整個組件初始高度，主要是避免之後操作 filter 時由於甘特圖高度變小而畫面位移
@@ -301,11 +327,11 @@ export default {
     scrollToLeft (value) {
       this.position = { x: value }
     },
-    searchOrder (orderId) {
-      this.searchedOrderId = orderId
+    searchJob (job) {
+      this.searchedJob = job
     },
-    cancelSearchOrder () {
-      this.searchedOrderId = null
+    cancelSearchJob () {
+      this.searchedJob = null
     },
     getStartTime (item) { return item.startTime || item.startDatetime },
     getEndTime (item) { return item.endTime || item.endDatetime }

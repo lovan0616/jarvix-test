@@ -1,5 +1,6 @@
 import i18n from '@/lang/index.js'
 import { Message } from 'element-ui'
+import { ALERT_TYPE, UPDATE_TYPE } from './enum'
 
 export const acceptCSVFileTypes = {
   data () {
@@ -68,6 +69,39 @@ export function validateSimulationSetting (settingInfo) {
       duration: 3 * 1000
     })
     return false
+  }
+  // 3. 填入不合理的 alert threshold 值
+  const alertSetting = settingInfo.alertSetting
+  if (alertSetting.alertType === ALERT_TYPE.ALERT_QUANTITY) {
+    if (alertSetting.alert_threshold <= 0) {
+      Message({
+        message: i18n.t('schedule.errorMessage.invalidAlertThresholdQuantity'),
+        type: 'warning',
+        duration: 3 * 1000
+      })
+      return false
+    }
+  } else if (alertSetting.alertType === ALERT_TYPE.ALERT_PERCENTAGE) {
+    if (alertSetting.alertThreshold > 100 || alertSetting.alertThreshold <= 0) {
+      Message({
+        message: i18n.t('schedule.errorMessage.invalidAlertThresholdPercentage'),
+        type: 'warning',
+        duration: 3 * 1000
+      })
+      return false
+    }
+  }
+  // 4. 填入不合理的 update interval 值
+  const updateSetting = settingInfo.progressUpdateSetting
+  if (updateSetting.updateType === UPDATE_TYPE.CUSTOM) {
+    if (updateSetting.updateInterval <= 0) {
+      Message({
+        message: i18n.t('schedule.errorMessage.invalidUpdateInterval'),
+        type: 'warning',
+        duration: 3 * 1000
+      })
+      return false
+    }
   }
   return true
 }

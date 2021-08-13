@@ -11,7 +11,7 @@
         class="collapse-controller"
         @click="isCollapsed = !isCollapsed"
       >
-        {{ isCollapsed ? $t('schedule.base.open') : $t('schedule.base.close') }}
+        {{ isCollapsed ? $t('schedule.base.openCollapseItem') : $t('schedule.base.closeCollapseItem') }}
         <i class="icon el-icon-arrow-down" />
       </div>
     </div>
@@ -20,6 +20,9 @@
         <span class="gantt__info--description">
           {{ $t('schedule.schedule.ganttInfo') }}
         </span>
+        <div class="schedule__header-legend">
+          <job-status-legend :job-states="innerJobStates" />
+        </div>
         <div class="gantt__select">
           <span class="gantt__select--label">
             {{ $t('schedule.simulation.scheduleResult.viewScale') }}
@@ -32,8 +35,9 @@
         </div>
       </div>
       <gantt-chart
+        :max-view-range="maxViewRange"
+        :restrictions="restrictions"
         :scale="scale"
-        :search-string="searchString"
       />
     </div>
   </div>
@@ -41,16 +45,28 @@
 
 <script>
 import GanttChart from '@/schedule/components/chart/gantt/GanttChart'
+import JobStatusLegend from '@/schedule/components/JobStatusLegend'
+import { JOB_STATUS } from '@/schedule/utils/enum'
+import moment from 'moment'
 
 export default {
   name: 'PlanGantt',
   components: {
-    GanttChart
+    GanttChart,
+    JobStatusLegend
   },
   props: {
-    searchString: {
-      type: String,
-      default: ''
+    planInfo: {
+      type: Object,
+      default: () => {}
+    },
+    restrictions: {
+      type: Object,
+      default: () => {}
+    },
+    jobStates: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -58,10 +74,16 @@ export default {
       isLoading: true,
       isJobEmpty: false,
       isCollapsed: false,
-      scale: 60
+      scale: 720
     }
   },
   computed: {
+    maxViewRange () {
+      return {
+        startTime: moment(this.planInfo.startDate).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(this.planInfo.endDate).format('YYYY-MM-DD HH:mm:ss')
+      }
+    },
     scaleList () {
       return [
         {
@@ -84,6 +106,12 @@ export default {
           label: 14 + this.$t('schedule.simulation.scheduleResult.day'),
           value: 1440
         }
+      ]
+    },
+    innerJobStates () {
+      return [
+        JOB_STATUS.GENERAL,
+        ...this.jobStates
       ]
     }
   },
@@ -144,6 +172,7 @@ export default {
     &--description {
       font-size: 14px;
       line-height: 18px;
+      margin-right: 16px;
       color: var(--color-text-light);
     }
   }

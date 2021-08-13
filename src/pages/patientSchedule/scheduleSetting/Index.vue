@@ -307,8 +307,9 @@ export default {
           display: flex;
           align-items: center;
           &-right {
-            flex: 1;
+            margin-left: auto;
             text-align: right;
+            display: flex;
             .default-select + .default-select {
               margin-left: 8px;
             }

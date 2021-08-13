@@ -45,7 +45,7 @@
       </div>
       <div
         v-for="file in files"
-        :key="file.id"
+        :key="file.code"
         class="form-field"
       >
         <template
@@ -278,11 +278,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.checkbox {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-</style>
+<style lang="scss" scoped></style>

@@ -1,30 +1,24 @@
 <template>
-  <section class="dialog">
-    <spinner
-      size="48"
-      theme-color
-    />
-    <div class="dialog__title">
-      {{ $t('schedule.simulation.planSimulating') }}
-    </div>
-    <default-button
-      type="outline"
-      @click="cancelSimulation"
-    >
-      {{ $t('schedule.button.cancel') }}
-    </default-button>
-  </section>
+  <simulating-spinner
+    :progress="progress"
+    @cancel="cancelSimulation"
+  />
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 import { adoptionSolution } from '@/schedule/API/Simulation'
+import SimulatingSpinner from '../../components/SimulatingSpinner'
 
 export default {
-  name: '',
+  name: 'SimulatingDialog',
+  components: {
+    SimulatingSpinner
+  },
   data () {
     return {
+      progress: 0,
       timer: null
     }
   },
@@ -105,6 +99,8 @@ export default {
               } else {
                 this.$router.push({ name: 'SimulationResult' })
               }
+            } else {
+              this.progress = simulationResult.progress
             }
           }).catch(() => {
             this.simulateFail()
@@ -131,19 +127,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.dialog {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  &__title {
-    margin-top: 24px;
-    margin-bottom: 24px;
-    font-size: 18px;
-    line-height: 22px;
-    color: var(--color-theme);
-  }
-}
-</style>
