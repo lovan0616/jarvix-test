@@ -433,7 +433,7 @@ export default {
               return {
                 ...data,
                 priority: this.priortyOptions[data.priority - 1].label,
-                cycleTime: Number.isInteger(data.cycleTime) ? data.cycleTime : Number.parseFloat(data.cycleTime).toFixed(1)
+                cycleTime: Number.parseFloat(data.cycleTime).toFixed(1)
               }
             }) || [],
             index: [...Array(res.data ? res.data.length : [])].map((x, i) => i)
