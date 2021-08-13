@@ -189,6 +189,7 @@ export default {
             dashboards: [],
             displayedName: null,
             isPublishing: false,
+            isSideNavPin: true,
             warningModule: {
               activate: false,
               updateFrequency: '* * * * *',
