@@ -916,6 +916,8 @@ export default {
       }
 
       .dashboard-container {
+        height: calc(100vh - 116px);
+        overflow-y: auto;
         transition: all 0.3s;
 
         &.show-settings {
