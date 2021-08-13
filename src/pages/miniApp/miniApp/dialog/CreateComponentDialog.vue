@@ -315,7 +315,7 @@
             <div class="setting__block-select-field">
               <label class="setting__block-select-label">{{ $t('miniApp.columnSpan') }}</label>
               <default-select
-                v-model.number="currentComponent.config.size.column"
+                v-model.number="currentComponent.position.column"
                 :option-list="columnSpanOption"
                 :placeholder="$t('miniApp.chooseColumnSize')"
                 class="setting__block-select"
@@ -324,13 +324,12 @@
             </div>
             <div class="setting__block-select-field">
               <label class="setting__block-select-label">{{ $t('miniApp.rowSpan') }}</label>
-              <input
+              <input-verify
+                v-validate="'required|decimal|min_value:3'"
+                v-model.number="currentComponent.position.row"
                 type="number"
-                v-model.number="currentComponent.config.size.row"
-                :placeholder="$t('miniApp.chooseRowSize')"
-                class="setting__block-select"
                 name="rowSpan"
-              >
+              />
             </div>
           </div>
         </div>
