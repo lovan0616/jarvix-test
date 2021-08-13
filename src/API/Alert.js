@@ -161,3 +161,14 @@ export function manualTriggerAlert (id) {
     method: 'POST'
   })
 }
+
+/**
+ * 更改示警條件 timezone
+ */
+export function updateAlertTimeZone (data) {
+  return request({
+    url: '/alert/conditions/timezone',
+    method: 'PATCH',
+    data
+  })
+}

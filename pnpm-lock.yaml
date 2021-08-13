@@ -30,7 +30,8 @@ specifiers:
   flat: ^5.0.2
   html-to-image: ^1.6.2
   lodash.orderby: ^4.6.0
-  moment: ^2.24.0
+  moment: ^2.29.1
+  moment-timezone: ^0.5.33
   normalize-scss: ^7.0.1
   regenerator-runtime: ^0.13.7
   rollbar: ^2.24.0
@@ -67,6 +68,7 @@ dependencies:
   html-to-image: 1.6.2
   lodash.orderby: 4.6.0
   moment: 2.29.1
+  moment-timezone: 0.5.33
   normalize-scss: 7.0.1
   regenerator-runtime: 0.13.7
   rollbar: 2.24.0
@@ -8423,6 +8425,12 @@ packages:
     dependencies:
       minimist: 1.2.5
     dev: true
+
+  /moment-timezone/0.5.33:
+    resolution: {integrity: sha512-PTc2vcT8K9J5/9rDEPe5czSIKgLoGsH8UNpA4qZTVw0Vd/Uz19geE9abbIOQKaAQFcnQ3v5YEXrbSc5BpshH+w==}
+    dependencies:
+      moment: 2.29.1
+    dev: false
 
   /moment/2.24.0:
     resolution: {integrity: sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==}

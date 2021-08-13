@@ -360,6 +360,7 @@
                     :is-edit-mode="isEditMode"
                     :warning-module-setting="appData.warningModule"
                     :is-current-dashboard-init="isCurrentDashboardInit"
+                    :time-zone="appTimeZone"
                     @redirect="activeCertainDashboard($event)"
                     @deleteComponentRelation="deleteComponentRelation"
                     @columnTriggered="columnTriggered"
@@ -490,6 +491,7 @@
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import moment from 'moment'
+import momentTZ from 'moment-timezone'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
@@ -517,6 +519,7 @@ import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState } from 'vuex'
+import { updateAlertTimeZone } from '@/API/Alert'
 
 export default {
   inject: ['$validator'],
@@ -738,6 +741,17 @@ export default {
     },
     isComponentOrderChanged () {
       return this.draggedContext.index !== this.draggedContext.futureIndex
+    },
+    appTimeZone () {
+      if (
+        this.miniApp &&
+        this.miniApp.settings &&
+        this.miniApp.settings.editModeData &&
+        this.miniApp.settings.editModeData.timeZone
+      ) {
+        return this.miniApp.settings.editModeData.timeZone
+      }
+      return momentTZ.tz.guess()
     }
   },
   watch: {
@@ -1224,15 +1238,23 @@ export default {
       this.componentToWarningCriteriaData = {}
       this.isShowCreateWarningCriteriaDialog = false
     },
-    addComponentAlertToWarningModuleSetting (conditionId) {
+    async addComponentAlertToWarningModuleSetting (conditionId) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       editedMiniApp.settings.editModeData.warningModule.conditions.push({
         id: conditionId,
         relatedDashboardId: null
       })
-      this.updateAppSetting(editedMiniApp)
-        .then(() => this.miniApp = editedMiniApp)
-        .catch(() => {})
+      await Promise.all([
+        updateAlertTimeZone({
+          conditionIds: [conditionId],
+          groupId: this.$route.params.group_id,
+          timeZone: editedMiniApp.settings.editModeData && editedMiniApp.settings.editModeData.timeZone
+            ? editedMiniApp.settings.editModeData.timeZone
+            : moment.tz.guess()
+        }),
+        this.updateAppSetting(editedMiniApp)
+      ])
+      this.miniApp = editedMiniApp
     },
     updateFilter (updatedFilterList, type) {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)

@@ -39,6 +39,16 @@
         </div>
         <div class="war-room-setting__block">
           <div class="war-room-setting__block-title">
+            {{ $t('common.timezone') }}
+          </div>
+          <time-zone-select
+            v-validate="'required'"
+            v-model="warRoomData.timeZone"
+            name="timeZone"
+          />
+        </div>
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.timeIntervalConstraint') }}
             <el-switch
               v-model="warRoomData.displayDateRangeSwitch"
@@ -133,9 +143,9 @@
             @change="listChange"
           >
             <el-option
-              v-for="item in alertUserIdList"
+              v-for="(item, i) in alertUserIdList"
               :disabled="!hasRemovePermission(item.value)"
-              :key="item.value"
+              :key="`${i}-${item.value}`"
               :label="item.name"
               :value="item.value"
             />
@@ -177,8 +187,10 @@
 </template>
 
 <script>
+import moment from 'moment-timezone'
 import { getGroupMemberList } from '@/API/Group'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
@@ -192,7 +204,8 @@ export default {
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    DecideDialog
+    DecideDialog,
+    TimeZoneSelect
   },
   props: {
     configData: {
@@ -204,7 +217,8 @@ export default {
         displayDateRangeSwitch: false,
         publishName: null,
         recentTimeIntervalAmount: null,
-        recentTimeIntervalUnit: null
+        recentTimeIntervalUnit: null,
+        timeZone: moment.tz.guess()
       })
     }
   },
@@ -252,6 +266,9 @@ export default {
   },
   mounted () {
     this.warRoomData = JSON.parse(JSON.stringify(this.configData))
+    if (this.warRoomData && !this.warRoomData.timeZone) {
+      this.warRoomData.timeZone = moment.tz.guess()
+    }
     this.tempAlertUserIdList = this.warRoomData.alertUserIdList
     this.fetchData()
   },
@@ -408,6 +425,10 @@ export default {
       min-width: 180px;
       font-weight: 600;
     }
+  }
+
+  ::v-deep .el-select {
+    width: 100%;
   }
 }
 </style>

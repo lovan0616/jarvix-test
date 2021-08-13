@@ -71,6 +71,16 @@
           />
         </label>
       </div>
+      <div class="dialog__input-block">
+        <label class="dialog__label">
+          {{ $t('common.timezone') }}
+          <time-zone-select
+            v-validate="'required'"
+            v-model="tempEditInfo.settings.editModeData.timeZone"
+            name="timeZone"
+          />
+        </label>
+      </div>
       <div class="dialog__icons-block">
         <label class="dialog__label">
           {{ $t('miniApp.chooseIcon') }}
@@ -130,18 +140,22 @@
   </div>
 </template>
 <script>
+import moment from 'moment-timezone'
 import SingleMiniAppCard from './components/SingleMiniAppCard'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
+import TimeZoneSelect from '@/components/select/TimeZoneSelect.vue'
 import { Message } from 'element-ui'
 import {
+  getMiniAppInfo,
   getMiniAppList,
   createApp,
   updateAppSetting,
   deleteMiniApp
 } from '@/API/MiniApp'
+import { updateAlertTimeZone } from '@/API/Alert'
 
 export default {
   name: 'MiniAppList',
@@ -151,7 +165,8 @@ export default {
     DecideDialog,
     WritingDialog,
     EmptyInfoBlock,
-    InputVerify
+    InputVerify,
+    TimeZoneSelect
   },
   data () {
     return {
@@ -177,7 +192,8 @@ export default {
               activate: false,
               updateFrequency: '* * * * *',
               conditions: [] // { id: 1, relatedDashboardId: null }
-            }
+            },
+            timeZone: moment.tz.guess()
           },
           viewModeData: {
             dashboards: [],
@@ -232,8 +248,11 @@ export default {
         if (!isValidate) return
         this.isProcessing = true
         const editInfo = this.tempEditInfo
+
         // 編輯模式下的名稱預設為 app 名稱
         editInfo.settings.editModeData.displayedName = editInfo.name
+
+        // 送出 API
         createApp({
           ...editInfo,
           groupId: this.groupId
@@ -254,8 +273,12 @@ export default {
     holdMiniAppInfo (miniAppInfo) {
       this.tempEditInfo = JSON.parse(JSON.stringify(miniAppInfo))
     },
-    showEditDialog (miniAppInfo) {
-      this.holdMiniAppInfo(miniAppInfo)
+    async showEditDialog (miniAppInfo) {
+      const miniAppInfoAPI = await getMiniAppInfo(miniAppInfo.id)
+      if (!miniAppInfoAPI.settings.editModeData.timeZone) {
+        miniAppInfoAPI.settings.editModeData.timeZone = moment.tz.guess()
+      }
+      this.holdMiniAppInfo(miniAppInfoAPI)
       this.isShowEdit = true
     },
     showDeleteDialog (miniAppInfo) {
@@ -271,23 +294,43 @@ export default {
       this.holdMiniAppInfo(this.miniAppInfoTemplate)
       this.isShowEdit = true
     },
-    confirmEdit () {
-      this.$validator.validateAll().then(isValidate => {
+    async confirmEdit () {
+      try {
+        const isValidate = await this.$validator.validateAll()
         if (!isValidate) return
         this.isProcessing = true
-        updateAppSetting(this.tempEditInfo.id, this.tempEditInfo)
-          .then(() => {
-            Message({
-              message: this.$t('message.editNameSuccess'),
-              type: 'success',
-              duration: 3 * 1000,
-              showClose: true
-            })
-            this.isShowEdit = false
-            this.fetchData()
-          })
-          .finally(() => { this.isProcessing = false })
-      })
+        const promiseArr = [
+          updateAppSetting(this.tempEditInfo.id, this.tempEditInfo)
+        ]
+
+        // 更新示警條件 timezone & 更新 App 設定
+        let appWarningConditions = this.tempEditInfo.settings.editModeData.warningModule.conditions
+        if (appWarningConditions && appWarningConditions.length > 0) {
+          const updateConfig = {
+            conditionIds: appWarningConditions.map((item) => item.id),
+            groupId: this.groupId,
+            timeZone: this.tempEditInfo.settings.editModeData.timeZone
+          }
+          promiseArr.push(updateAlertTimeZone(updateConfig))
+        }
+
+        // 送出更新
+        await Promise.all(promiseArr)
+
+        // 呼叫彈出視窗
+        Message({
+          message: this.$t('message.saveSuccess'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+
+        // 關閉視窗及更新資料
+        this.isShowEdit = false
+        this.fetchData()
+      } finally {
+        this.isProcessing = false
+      }
     },
     confirmDelete () {
       this.isProcessing = true
@@ -368,13 +411,17 @@ export default {
     .dialog-select-text {
       margin-bottom: 24px;
     }
-    .input-verify-text {
+    .input-verify-text, .el-select {
       margin-bottom: 26px;
     }
 
     .input-error {
       bottom: 9px;
     }
+  }
+
+  ::v-deep .el-select {
+    display: block;
   }
 
   .dialog {
