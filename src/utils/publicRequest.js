@@ -108,6 +108,7 @@ service.interceptors.response.use(
           if (router.currentRoute.path === '/login') return Promise.reject(error)
           store.commit('dataSource/setIsInit', false)
           store.commit('userManagement/clearUserInfo')
+          localStorage.removeItem('token')
           router.push('/login')
 
           Message({
