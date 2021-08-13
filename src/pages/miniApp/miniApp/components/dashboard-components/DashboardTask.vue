@@ -343,11 +343,8 @@ export default {
       return this.componentData.question
     },
     taskOriginTitle () {
-      if (this.componentData.config.isCustomizeTitle) {
-        if (this.shouldComponentYAxisBeControlled) {
-          return this.controllerMutatedQuestion(false)
-        }
-        return this.componentData.config.diaplayedName
+      if (this.shouldComponentYAxisBeControlled) {
+        return this.controllerMutatedQuestion(false)
       }
       return this.componentData.question
     },
