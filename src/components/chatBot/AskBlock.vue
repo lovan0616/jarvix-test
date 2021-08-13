@@ -406,6 +406,7 @@ export default {
         this.setIsManuallyTriggeredAskQuestion(true)
       }
       this.closeAskHelper()
+      this.blurInput()
     },
     fillInQuestion (question, submit, focusAfterFillIn) {
       this.userQuestion = question
