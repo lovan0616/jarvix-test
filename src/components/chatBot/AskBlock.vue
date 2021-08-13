@@ -90,7 +90,7 @@
         :key="`suggestion-${index}`"
         class="suggestion"
         :class="{ focus: index === currentSelectedSuggestionIndex || (currentSelectedSuggestionIndex === -1 && index === 0) }"
-        @click="fillInQuestion(suggestion.question, true, false)"
+        @mousedown="fillInQuestion(suggestion.question, true, false)"
         @mouseenter="currentSelectedSuggestionIndex = index"
         tabindex="0"
       >
