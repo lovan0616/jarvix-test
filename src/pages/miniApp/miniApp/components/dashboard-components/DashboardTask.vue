@@ -344,9 +344,9 @@ export default {
     },
     taskOriginTitle () {
       if (this.shouldComponentYAxisBeControlled) {
-        return this.controllerMutatedQuestion(false)
+        return this.componentData.question
       }
-      return this.componentData.question
+      return this.controllerMutatedQuestion(false)
     },
     allFilterList () {
       // 可能會有階層，因此需要完全攤平
