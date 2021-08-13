@@ -1643,11 +1643,6 @@ export default {
     updateDashboardOrder (target) {
       this.updateOrder(target)
     },
-    updateComponentOrder (target) {
-      if (!this.isComponentOrderChanged) return
-      this.updateOrder(target)
-      this.draggedContext = { index: -1, futureIndex: -1 }
-    },
     updateOrder (target) {
       this.updateAppSetting(this.miniApp).then(() => {
         Message({
