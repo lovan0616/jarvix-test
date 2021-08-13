@@ -399,6 +399,7 @@
                     :h="item.h"
                     :i="item.i"
                     :key="item.i"
+                    :static="isViewMode"
                   >
                     <dashboard-task
                       :key="`${currentDashboard.components[i].id} - ${currentDashboard.components[i].updateTime}`"
