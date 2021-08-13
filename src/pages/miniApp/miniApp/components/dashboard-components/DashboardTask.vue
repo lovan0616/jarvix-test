@@ -332,7 +332,7 @@ export default {
       }, [])
     },
     isTitleTooltip () {
-      return !this.componentData.config.isCustomizeTitle && this.shouldComponentYAxisBeControlled
+      return this.componentData.config.isCustomizeTitle || this.shouldComponentYAxisBeControlled
     },
     dashboardTaskTitle () {
       if (this.componentData.config.isCustomizeTitle) {
@@ -343,7 +343,13 @@ export default {
       return this.componentData.question
     },
     taskOriginTitle () {
-      return this.componentData.config.isCustomizeTitle ? this.componentData.config.diaplayedName : this.componentData.question
+      if (this.componentData.config.isCustomizeTitle) {
+        if (this.shouldComponentYAxisBeControlled) {
+          return this.controllerMutatedQuestion(false)
+        }
+        return this.componentData.config.diaplayedName
+      }
+      return this.componentData.question
     },
     allFilterList () {
       // 可能會有階層，因此需要完全攤平
