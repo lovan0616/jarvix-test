@@ -440,7 +440,7 @@ export default {
       })
     },
     saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
+      this.$store.dispatch('dataFrameAdvanceSetting/updateFilterListByData', this.selectedData)
     }
   }
 }
@@ -448,39 +448,43 @@ export default {
 <style lang="scss" scoped>
 .predict-question-block {
   .display-predict-chart {
-    width: 100%;
     margin-bottom: 16px;
+    width: 100%;
   }
+
   .predict-detail-region {
     .block-title {
       font-size: 24px;
-      margin-bottom: 24px;
       font-weight: 600;
+      margin-bottom: 24px;
     }
   }
+
   .predict-detail-block {
     display: flex;
     flex-wrap: wrap;
 
     .single-info-block {
-      width: 24.25%;
       background-color: var(--color-bg-5);
       border-radius: 8px;
-      padding: 20px;
       margin-right: 1%;
+      padding: 20px;
+      width: 24.25%;
 
       &:nth-child(4n) {
         margin-right: 0;
       }
     }
   }
+
   .info-title {
     width: 100px;
   }
+
   .info-detail {
     display: flex;
-    justify-content: space-between;
     font-size: 14px;
+    justify-content: space-between;
   }
 
   .info-target {

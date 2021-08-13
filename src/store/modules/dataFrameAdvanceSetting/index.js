@@ -4,11 +4,15 @@ import getters from './getters'
 
 export default {
   namespaced: true,
-  state: {
-    isInit: false,
-    isShowSettingBox: false,
-    displaySection: 'column',
-    columnList: null
+  state () {
+    return {
+      isInit: false,
+      isShowSettingBox: false,
+      displaySection: 'column',
+      columnList: null,
+      filterList: [],
+      shouldAdvanceDataFrameSettingRefetchDataColumn: false
+    }
   },
   actions,
   mutations,

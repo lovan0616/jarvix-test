@@ -301,7 +301,7 @@ export default {
       })
     },
     saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
+      this.$store.dispatch('dataFrameAdvanceSetting/updateFilterListByData', this.selectedData)
     }
   }
 }
@@ -310,9 +310,9 @@ export default {
 <style lang="scss" scoped>
 .display-scatter-cluster-chart {
   .description {
-    margin-top: 40px;
     background: #141c1d;
     border-radius: 8px;
+    margin-top: 40px;
     padding: 10px 20px;
 
     &__item {

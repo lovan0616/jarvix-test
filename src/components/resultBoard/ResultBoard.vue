@@ -260,7 +260,7 @@ export default {
       return `${window.location.origin}/share-result/${this.resultId}`
     },
     hasFilter () {
-      return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
+      return (this.$store.state.dataFrameAdvanceSetting.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
     },
     currentResultId () {
       return this.$store.state.result.currentResultId
@@ -450,18 +450,18 @@ export default {
 <style lang="scss" scoped>
 .result-board {
   background: rgb(0, 0, 0);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
   border: 1px solid $theme-border-color;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 
   .board-header {
-    position: relative;
-    display: flex;
-    z-index: 2;
     align-items: center;
-    padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);
     border-bottom: 1px solid $theme-border-color;
+    display: flex;
+    padding: 20px 28px;
+    position: relative;
+    z-index: 2;
   }
 
   &__header {
@@ -476,12 +476,12 @@ export default {
   }
 
   .pin-button-block {
-    display: flex;
     align-items: center;
+    display: flex;
 
     .head-btn {
-      color: $theme-text-color;
       background-color: transparent;
+      color: $theme-text-color;
 
       &.delete {
         border: 1px solid #fff;
@@ -495,35 +495,36 @@ export default {
 
     .btn-default {
       margin-right: 11px;
+
       .icon {
         margin-right: 6px;
       }
     }
 
     .hover-box {
-      position: relative;
-      display: flex;
       align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 30px;
       background-color: $button-color;
       border: none;
       border-radius: 4px;
+      display: flex;
+      height: 30px;
+      justify-content: center;
+      position: relative;
+      width: 42px;
 
       &__popup {
         top: 30px;
 
         &::before {
+          border-bottom: 10px solid #233131;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
           content: '';
+          height: 0;
           position: absolute;
           right: 30px;
           top: -10px;
-          width: 0px;
-          height: 0px;
-          border-left: 10px solid transparent;
-          border-right: 10px solid transparent;
-          border-bottom: 10px solid #233131;
+          width: 0;
         }
 
         &::after {

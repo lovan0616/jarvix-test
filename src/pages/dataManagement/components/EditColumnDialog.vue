@@ -579,7 +579,7 @@ export default {
           // 若基表設定已儲存同張表的欄位，要重新init以取得新欄位列表
           if (this.currentDataFrameId === this.tableId && this.isInit) {
             this.$store.commit('dataFrameAdvanceSetting/toggleIsInit', false)
-            this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
+            this.$store.commit('dataFrameAdvanceSetting/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
           }
         })
         .finally(() => { this.isProcessing = false })
@@ -653,15 +653,17 @@ export default {
 <style lang="scss" scoped>
 .edit-column-dialog {
   .dialog-header-block {
-    margin-bottom: 12px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     line-height: 30px;
+    margin-bottom: 12px;
 
     .data-frame-name {
-      font-size: 14px;
       @include text-hidden
+    ;
+
+      font-size: 14px;
     }
 
     .remark-text {
@@ -670,42 +672,50 @@ export default {
       margin-right: 12px;
     }
   }
+
   .edit-table-block {
     margin-bottom: 32px;
 
     .data-table-row {
       align-items: flex-start;
-      .is-modified, .name-info-icon {
+
+      .is-modified,
+      .name-info-icon {
         color: $theme-color-warning;
       }
     }
   }
+
   .name {
+    color: #ddd;
     width: 22%;
-    color: #DDDDDD;
   }
+
   .source {
     width: 22%;
   }
+
   .alias {
+    color: #ddd;
     width: 21%;
-    color: #DDDDDD;
 
     .alias__item {
       display: inline;
     }
   }
+
   .tag {
+    color: #ddd;
     width: 18%;
-    color: #DDDDDD;
   }
+
   .action {
     width: 17%;
   }
 
   .alias-input {
-    width: 105px;
     margin-right: 12px;
+    width: 105px;
   }
 
   .edit-block {
@@ -734,16 +744,16 @@ export default {
   }
 
   .edit-alias-input-block {
-    width: 105px;
     height: 32px;
     margin-right: 12px;
+    width: 105px;
 
     ::v-deep .input-verify-text {
-      height: 32px;
       color: $theme-text-color;
+      height: 32px;
     }
 
-    ::v-deep .input-error  {
+    ::v-deep .input-error {
       bottom: -18px;
     }
 
@@ -751,6 +761,7 @@ export default {
       margin-bottom: 16px;
     }
   }
+
   .btn-add {
     .icon {
       margin-right: 5px;
@@ -760,11 +771,11 @@ export default {
 
 .tooltip-container {
   .tooltip {
-    width: 212px;
-    white-space: normal;
-    padding: 8px 12px;
+    color: #ddd;
     line-height: 14px;
-    color: #DDDDDD;
+    padding: 8px 12px;
+    white-space: normal;
+    width: 212px;
   }
 
   .icon {
@@ -775,11 +786,13 @@ export default {
 .svg-wrapper + .svg-wrapper {
   margin-left: 20px;
 }
+
 .svg-icon {
   color: $theme-color-primary;
   cursor: pointer;
   font-size: 18px;
   position: relative;
+
   &.icon-close {
     font-size: 16px;
     margin-top: 1px;
@@ -790,12 +803,13 @@ export default {
 <style lang="scss">
 .tag-select.el-select {
   .el-input__inner {
-    height: 32px;
-    line-height: 24px;
     font-size: 14px;
-    padding-left: 0;
+    height: 32px;
     letter-spacing: 0.5px;
+    line-height: 24px;
+    padding-left: 0;
   }
+
   .el-input__icon {
     line-height: 24px;
   }
