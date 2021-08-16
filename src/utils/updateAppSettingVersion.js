@@ -22,7 +22,7 @@ const updateAppSettingVersion = (appInfo) => {
             }
             delete component.config.size // remove component .config.size
 
-            component.config.isCustomizeTitle = false // add custom title flag
+            component.config.isCustomizeTitle = true // add custom title flag
           })
         })
       })

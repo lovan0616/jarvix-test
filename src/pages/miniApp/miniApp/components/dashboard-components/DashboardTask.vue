@@ -343,13 +343,10 @@ export default {
       return this.componentData.question
     },
     taskOriginTitle () {
-      if (this.componentData.config.isCustomizeTitle) {
-        if (this.shouldComponentYAxisBeControlled) {
-          return this.controllerMutatedQuestion(false)
-        }
-        return this.componentData.config.diaplayedName
+      if (this.shouldComponentYAxisBeControlled) {
+        return this.componentData.question
       }
-      return this.componentData.question
+      return this.controllerMutatedQuestion(false)
     },
     allFilterList () {
       // 可能會有階層，因此需要完全攤平
