@@ -641,7 +641,7 @@ export default {
       sideNavPinerLeaveTimer: null,
       isMouseEnterSideNavPinner: false,
       isSideNavShow: false,
-      isSideNavPin: false
+      isSideNavPin: true
     }
   },
   computed: {
@@ -834,6 +834,12 @@ export default {
       handler (controlList) {
         this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].yAxisControlList = controlList
       }
+    },
+    isSideNavPin (val) {
+      if (!val) {
+        this.isSideNavShow = false
+        this.isMouseEnterSideNavPinner = false
+      }
     }
   },
   created () {
@@ -861,6 +867,9 @@ export default {
         await this.updateAppSetting(updatedMiniAppInfo)
 
         this.miniApp = updatedMiniAppInfo
+        this.isSideNavPin = this.isEditMode
+          ? updatedMiniAppInfo?.settings?.editModeData?.isSideNavPin ?? true
+          : true
 
         this.newAppEditModeName = this.appData.displayedName
 
@@ -1672,11 +1681,14 @@ export default {
         }, 200)
       }
     },
-    handleSideNavPinClick (status) {
+    async handleSideNavPinClick (status) {
       this.isSideNavPin = status
-      if (!status) {
-        this.isSideNavShow = false
-        this.isMouseEnterSideNavPinner = false
+      if (this.isEditMode) {
+        // update API
+        const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+        updatedMiniAppData.settings.editModeData.isSideNavPin = status
+        await this.updateAppSetting(updatedMiniAppData)
+        this.miniApp = updatedMiniAppData
       }
     },
     generateComponentLayout () {
