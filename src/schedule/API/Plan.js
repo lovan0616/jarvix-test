@@ -20,7 +20,7 @@ export function getPlanKPI (projectId) {
   })
 }
 
-export function getOrderPlanResult ({ projectId, page, size, fetchAll = false, keyword = '' }) {
+export function getOrderPlanResult ({ projectId, page, size, keyword, deadlineStartDate, deadlineEndDate, delayed, withinScheduleTime }) {
   return request({
     url: '/plan/result/general/list',
     method: 'GET',
@@ -28,13 +28,16 @@ export function getOrderPlanResult ({ projectId, page, size, fetchAll = false, k
       projectId,
       page,
       size,
-      fetchAll,
-      keyword
+      keyword,
+      deadlineStartDate,
+      deadlineEndDate,
+      delayed,
+      withinScheduleTime
     }
   })
 }
 
-export function getMachinePlanResult ({ projectId, page = 0, size = 0, fetchAll = false, keyword = '' }) {
+export function getMachinePlanResult ({ projectId, page, size, keyword, deadlineStartDate, deadlineEndDate, overlapStartTime, overlapEndTime, delayed, withinScheduleTime }) {
   return request({
     url: '/plan/result/detail/list',
     method: 'GET',
@@ -42,8 +45,13 @@ export function getMachinePlanResult ({ projectId, page = 0, size = 0, fetchAll 
       projectId,
       page,
       size,
-      fetchAll,
-      keyword
+      keyword,
+      deadlineStartDate,
+      deadlineEndDate,
+      overlapStartTime,
+      overlapEndTime,
+      delayed,
+      withinScheduleTime
     }
   })
 }
@@ -91,6 +99,38 @@ export function planExcelDownload ({ projectId }) {
     method: 'GET',
     params: {
       projectId
+    }
+  })
+}
+
+/**
+ * 取得子專案特定版本 excel
+ * @param {Number} projectId
+ * @param {Number} solutionId
+ */
+export function downloadPlanExcel ({ projectId, solutionId }) {
+  return request({
+    url: '/plan/result/excel',
+    method: 'GET',
+    responseType: 'blob',
+    params: {
+      projectId,
+      solutionId
+    }
+  })
+}
+
+/**
+ * 取得子專案採用過的 solutions
+ * @param {Number} projectId
+ */
+export function getHistorySolutions (projectId) {
+  return request({
+    url: '/plan/applied/history',
+    method: 'GET',
+    params: {
+      projectId,
+      fetchAll: true
     }
   })
 }

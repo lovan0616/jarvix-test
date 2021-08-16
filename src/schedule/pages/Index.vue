@@ -2,21 +2,24 @@
   <div class="schedule-index-page">
     <router-view :key="scheduleProjectId" />
     <schedule-helper v-if="isShowScheduleHelper" />
+    <notifier-container />
   </div>
 </template>
 
 <script>
 import { fetchProjectList } from '@/schedule/API/Project'
 import { Message } from 'element-ui'
-import ScheduleHelper from '@/schedule/components/schedule-helper/ScheduleHelper'
 import { mapState, mapGetters } from 'vuex'
 import store from '@/store'
 import i18n from '@/lang/index.js'
+import ScheduleHelper from '@/schedule/components/schedule-helper/ScheduleHelper'
+import NotifierContainer from '@/schedule/components/notifier/NotifierContainer'
 
 export default {
   name: 'Index',
   components: {
-    ScheduleHelper
+    ScheduleHelper,
+    NotifierContainer
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
@@ -31,6 +34,8 @@ export default {
     this.$store.commit('scheduleSetting/setCurrentProjectId', null)
     // 離開子專案時，清除其模擬進度
     this.$store.dispatch('simulation/resetSimulationProgress')
+    this.$store.commit('simulation/clearSimulationJobs')
+    this.$store.commit('jobAdjustments/resetAdjustJobProgress')
   },
   beforeRouteEnter (to, from, next) {
     // 進入子專案前，先確保真的有這個 project id
@@ -67,5 +72,6 @@ export default {
 <style lang="scss" scoped>
 .schedule-index-page {
   height: 100%;
+  position: relative;
 }
 </style>

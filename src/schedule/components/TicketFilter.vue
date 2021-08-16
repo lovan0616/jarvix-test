@@ -42,13 +42,6 @@
         </div>
       </ul>
     </div>
-    <default-button
-      class="filter__button"
-      type="outline"
-      @click="$emit('search', keyword)"
-    >
-      {{ $t(`schedule.button.${btnText}`) }}
-    </default-button>
   </div>
 </template>
 
@@ -95,6 +88,7 @@ export default {
   },
   watch: {
     keyword (keyword) {
+      this.$emit('change', keyword)
       if (this.isSearching) return
       // 如果是直接點 options，就不用再去 fetch 選項
       if (this.isSelectByClick) {
@@ -165,19 +159,17 @@ export default {
   align-items: center;
 
   &__input {
+    height: 32px;
     position: relative;
     display: flex;
     align-items: center;
     padding: 0 12px;
-    background: rgba(35, 61, 64, 0.6);
     border-radius: 6px;
-    margin-right: 8px;
     font-size: 14px;
 
     &-text {
       background-color: transparent;
       border: none;
-      line-height: 36px;
       color: var(--color-text);
       outline: none;
     }

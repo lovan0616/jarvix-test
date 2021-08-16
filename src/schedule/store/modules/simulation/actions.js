@@ -2,9 +2,18 @@ import { newPlan, reSimulate, checkSimulationProgress, cancelSimulationPlan, del
 
 export default {
   newPlan ({ state, rootState }) {
+    const orders = Object
+      .values(state.simulationJobs)
+      .filter(job => job.frontendInfo.checked)
+      .map(job => {
+        const copiedJob = JSON.parse(JSON.stringify(job))
+        // 移除 選擇工單中前端用來紀錄使用者操作狀態的屬性
+        delete copiedJob.frontendInfo
+        return copiedJob
+      })
     return newPlan({
       projectId: rootState.scheduleSetting.scheduleProjectId,
-      orders: state.scheduledJobs,
+      orders,
       solutions: state.solutions
     })
   },

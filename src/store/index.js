@@ -15,6 +15,7 @@ import previewDataSource from './modules/previewDataSource'
 import dataFrameAdvanceSetting from './modules/dataFrameAdvanceSetting'
 import scheduleSetting from '@/schedule/store/modules/scheduleSetting'
 import simulation from '@/schedule/store/modules/simulation'
+import jobAdjustments from '@/schedule/store/modules/jobAdjustments'
 
 Vue.use(Vuex)
 
@@ -34,7 +35,8 @@ export default new Vuex.Store({
     previewDataSource,
     dataFrameAdvanceSetting,
     scheduleSetting,
-    simulation
+    simulation,
+    jobAdjustments
   },
   state: {
     isShowAskHelper: false,

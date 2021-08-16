@@ -27,15 +27,15 @@
               Step2: {{ $t('editing.chooseDataFrame') }}
             </div>
 
-            <!-- 綁定訂單 -->
-            <bind-order
-              :form-data="formOrder"
-              :original-bound-status="files.order[0].dataframeStatus === 'BOUND'"
+            <!-- 綁定一般資料 -->
+            <bind-general
+              :parent-form-data="formGeneral"
               :data-frame-options="dataFrameOptions"
-              :checked-result="checkedResultOrder"
+              :checked-result="checkedResultGeneral"
               :is-loading-data-frames="isLoadingDataFrames"
               :result-handler="{ hasError, bindable }"
-              @resetCheckedResult="resetCheckedResultOrder"
+              @resetCheckedResult="resetCheckedResultGeneral"
+              @setIsBoundWithProductionProgress="$emit('setIsBoundWithProductionProgress', $event)"
             />
 
             <!-- 綁定共同資料 -->
@@ -86,17 +86,18 @@ import { getDataFrameById } from '@/API/DataSource'
 import { fetchDataBoundStatus } from '@/schedule/API/Project'
 import { snakeToCamel, snakeToPascal } from '@/schedule/utils/mixins'
 import BindDataSource from './BindDataSource'
-import BindOrder from './BindOrder'
+import BindGeneral from './BindGeneral'
 import BindRawData from './BindRawData'
 import BindConstraint from './BindConstraint'
 import BindingCheckedInfo from './BindingCheckedInfo'
 import DecideDialog from '@/components/dialog/DecideDialog'
+import { DATA_CATEGORY, DATAFRAME_STATUS } from '@/schedule/utils/enum'
 
 export default {
   name: 'ScheduleProjectRelationDialog',
   components: {
     BindDataSource,
-    BindOrder,
+    BindGeneral,
     BindRawData,
     BindConstraint,
     BindingCheckedInfo,
@@ -111,11 +112,10 @@ export default {
   },
   data: () => {
     return {
-      formOrder: null,
+      formGeneral: {},
       formRawData: {},
       formConstraint: {},
       files: {
-        order: [],
         raw_data: [],
         constraint: []
       },
@@ -123,7 +123,7 @@ export default {
       dataFrames: [],
       isLoadingDataBoundStatusInfo: false,
       isLoadingDataFrames: false,
-      checkedResultOrder: {},
+      checkedResultGeneral: {},
       checkedResultRawData: {},
       checkedResultConstraint: {},
       shouldRefetchProjectsThereafter: false
@@ -165,31 +165,28 @@ export default {
           files.forEach(file => {
             const category = file.category
 
-            if (category !== 'ORDER' && category !== 'RAW_DATA' && category !== 'CONSTRAINT') return
-
-            // 設定個檔案資料
-            this.files[category.toLowerCase()].push(file)
-
-            // 設定 訂單表單 資料
-            if (category === 'ORDER') {
-              this.formOrder = file.dataframeStatus === 'BOUND' ? file.dataframeId : null
-              this.checkedResultOrder = { ...this.defaultCheckedResult }
-              return
+            switch (category) {
+              case DATA_CATEGORY.JOB:
+              case DATA_CATEGORY.ROLLING:
+                this.$set(this.formGeneral, file.code, {
+                  dataframeId: file.dataframeStatus === DATAFRAME_STATUS.BOUND ? file.dataframeId : null,
+                  isSelected: false
+                })
+                this.$set(this.checkedResultGeneral, file.code, { ...this.defaultCheckedResult })
+                break
+              case DATA_CATEGORY.RAW_DATA:
+                this.files[category.toLowerCase()].push(file)
+                this.$set(this.formRawData, file.code, file.dataframeStatus === DATAFRAME_STATUS.BOUND ? file.dataframeId : null)
+                this.$set(this.checkedResultRawData, file.code, { ...this.defaultCheckedResult })
+                break
+              case DATA_CATEGORY.CONSTRAINT:
+                this.files[category.toLowerCase()].push(file)
+                this.$set(this.formConstraint, file.code, {
+                  dataframeId: file.dataframeStatus === DATAFRAME_STATUS.BOUND ? file.dataframeId : null,
+                  isSelected: false
+                })
+                this.$set(this.checkedResultConstraint, file.code, { ...this.defaultCheckedResult })
             }
-
-            // 設定表單資訊
-            const pascaledCategory = this.snakeToPascal(category.toLowerCase())
-            if (category === 'CONSTRAINT') {
-              this.$set(this[`form${pascaledCategory}`], file.code, {
-                dataframeId: file.dataframeStatus === 'BOUND' ? file.dataframeId : null,
-                isSelected: false
-              })
-            } else if (category === 'RAW_DATA') {
-              this.$set(this[`form${pascaledCategory}`], file.code, file.dataframeStatus === 'BOUND' ? file.dataframeId : null)
-            }
-
-            // 加入檢查資訊
-            this.$set(this[`checkedResult${pascaledCategory}`], file.code, { ...this.defaultCheckedResult })
           })
         })
         .finally(() => this.isLoadingDataBoundStatusInfo = false)
@@ -222,7 +219,7 @@ export default {
       this.shouldRefetchProjectsThereafter = true
     },
     resetDataFrameSelectors () {
-      this.formOrder = null
+      this.formGeneral = {}
       this.resetRawdataSelectors()
       this.resetConstraintSelectors()
     },
@@ -237,8 +234,8 @@ export default {
         }
       }
     },
-    resetCheckedResultOrder () {
-      this.checkedResultOrder = { ...this.defaultCheckedResult }
+    resetCheckedResultGeneral (code) {
+      this.checkedResultGeneral[code] = { ...this.defaultCheckedResult }
     },
     resetCheckedResultRawdata () {
       for (const key in this.checkedResultRawData) this.checkedResultRawData[key] = { ...this.defaultCheckedResult }
@@ -255,7 +252,7 @@ export default {
     resetCheckedInfo () {
       this.resetCheckedResultRawdata()
       this.resetCheckedResultConstraints()
-      this.resetCheckedResultOrder()
+      this.resetCheckedResultGeneral()
     },
     snakeToCamel,
     snakeToPascal
@@ -328,6 +325,9 @@ export default {
           margin-left: auto;
           .btn {
             display: inline-flex;
+            & ~ .btn {
+              margin-left: 12px;
+            }
           }
         }
       }
@@ -360,5 +360,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+::v-deep .form .checkbox {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>

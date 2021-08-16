@@ -1,0 +1,14 @@
+.el-switch {
+  .el-switch__core {
+    width: 32px !important;
+    height: 10px;
+    &::after {
+      top: -4px;
+    }
+  }
+
+  &.is-checked .el-switch__core {
+    border-color: $theme-color-primary;
+    background-color: $theme-color-primary;
+  }
+}

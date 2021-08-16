@@ -31,6 +31,7 @@
         :label="col.name"
         :width="col.width"
         :min-width="minColumnWidth"
+        :align="col.align || 'left'"
       />
     </el-table>
     <el-pagination

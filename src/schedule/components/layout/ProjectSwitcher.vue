@@ -46,6 +46,8 @@ export default {
     switchProject (projectId) {
       // 切換子專案時，清除前一個子專案的模擬進度
       this.$store.dispatch('simulation/resetSimulationProgress')
+      this.$store.commit('simulation/clearSimulationJobs')
+      this.$store.commit('jobAdjustments/resetAdjustJobProgress')
 
       this.$store.commit('updateAppLoadingStatus', true)
       this.$store.commit('scheduleSetting/setCurrentProjectId', projectId)

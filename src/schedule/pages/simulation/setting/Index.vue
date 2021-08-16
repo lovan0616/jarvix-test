@@ -6,7 +6,12 @@
           STEP.1 {{ $t('schedule.simulation.selectJobs', {job: isYKSchedule ? $t('schedule.simulation.order') : $t('schedule.simulation.job')}) }}
         </div>
         <div class="step__content">
+          <spinner
+            v-if="isFetchingSelectedOrders"
+            size="30"
+          />
           <div
+            v-else
             class="selected-jobs__info"
             @click="onClickSelectJobStep"
           >
@@ -28,47 +33,23 @@
           </default-button>
         </div>
         <div class="step__content">
-          <div
+          <solution-card
             v-for="(solution, index) in solutions"
             :key="solution.sequence"
-            :class="{'is-active': editSolutionSequence === solution.sequence}"
-            class="solution card-like"
-            @click="editSolution(solution.sequence)"
-          >
-            <div class="solution__title">
-              <div class="solution__valid-status">
-                <i
-                  v-if="solution.valid"
-                  class="success-icon el-icon-success"
-                />
-                <i
-                  v-else
-                  class="error-icon el-icon-error"
-                />
-              </div>
-              {{ $t('schedule.simulation.solution') + solution.sequence }}
-            </div>
-            <div
-              :key="solution.simulated"
-              class="solution__simulated-status"
-            >
-              <span v-if="isSolutionFailed(solution.solutionId)">
-                {{ $t('schedule.simulation.simulationFailed') }}
-              </span>
-              <span v-else>
-                {{ solution.simulated ? $t('schedule.simulation.simulated') : $t('schedule.simulation.notYetSimulated') }}
-              </span>
-            </div>
-            <i
-              class="icon-remove el-icon-delete"
-              @click.stop="onClickRemoveSolution(index, solution.solutionId)"
-            />
-          </div>
+            :solution="solution"
+            :solution-failed-judger="isSolutionFailed"
+            :current-solution-sequence="editSolutionSequence"
+            show-simulation-status
+            show-valid-status
+            show-remove-icon
+            @click-card="editSolution"
+            @remove="onClickRemoveSolution(index, solution.solutionId)"
+          />
         </div>
       </div>
       <div class="step step--start-simulate">
         <default-button
-          :disabled="(scheduledJobs.length === 0 && !selectAllOrders) || solutions.length === 0 || hasInvalidSolution || !allowSimulation"
+          :disabled="(scheduledJobs.length === 0 && !selectAllOrders && isYKSchedule) || selectedJobCount === 0 || solutions.length === 0 || hasInvalidSolution || !allowSimulation"
           :show-spinner="isSimulatingDialogOpen"
           @click="startSimulation"
         >
@@ -86,7 +67,6 @@
         class="page__spinner"
       /> -->
       <default-setting
-        v-show="editSolutionSequence"
         :key="editSolutionSequence"
         :solution-sequence="editSolutionSequence"
       />
@@ -97,6 +77,14 @@
     >
       <h2 class="header__title">
         {{ $t('schedule.simulation.title') }}
+        <default-button
+          v-if="!isYKSchedule"
+          :is-disabled="isProcessingProductionProgress"
+          type="secondary"
+          @click="syncProductionProgress"
+        >
+          {{ $t('schedule.rolling.syncProductionProgress') }}
+        </default-button>
       </h2>
       <plan-simulation />
     </div>
@@ -117,14 +105,16 @@
 </template>
 <script>
 import DecideDialog from '@/schedule/components/dialog/DecideDialog'
-import DefaultSetting from '../../scheduleSetting/Index'
+import DefaultSetting from '../../scheduleSetting/BaseSetting'
 import PlanSimulation from './components/PlanSimulation'
 import SimulatingDialog from './components/SimulatingDialog'
-import moment from 'moment'
+import SolutionCard from '../components/SolutionCard'
 import { fetchDataBoundStatus } from '@/schedule/API/Project'
+import { getJobList } from '@/schedule/API/Job'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { validateSimulationSetting } from '@/schedule/utils/mixins'
 import { Message } from 'element-ui'
+import moment from 'moment'
 
 export default {
   name: 'SimulationSetting',
@@ -132,37 +122,53 @@ export default {
     DefaultSetting,
     DecideDialog,
     PlanSimulation,
-    SimulatingDialog
+    SimulatingDialog,
+    SolutionCard
   },
   data () {
     return {
+      isFetchingSelectedOrders: false,
+      isShowChangeAlert: false,
+      isProcessingProductionProgress: false,
       allowSimulation: false,
       editSolutionSequence: null,
-      isShowChangeAlert: false,
       renderingSetting: false,
       solutionSerialNumber: 0,
       isSimulatingDialogOpen: false,
-      isJobReSelected: false
+      selectedJobCount: 0
     }
   },
   computed: {
     ...mapState('scheduleSetting', ['defaultSetting', 'scheduleProjectId']),
-    ...mapState('simulation', ['solutions', 'scheduledJobs', 'planId', 'selectAllOrders', 'searchOrderCount']),
+    ...mapState('simulation', ['solutions', 'planId', 'scheduledJobs', 'selectAllOrders', 'searchOrderCount', 'simulationJobs', 'shouldRecalculateSelectedJobs']),
     ...mapGetters('scheduleSetting', ['isYKSchedule']),
     displaySelectedJobCounter () {
-      if (this.selectAllOrders) {
-        return this.$t('schedule.simulation.selectedJobsCount', { count: this.searchOrderCount, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
-      } else if (this.scheduledJobs.length > 0) {
-        return this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
-      } else {
-        return this.$t('schedule.simulation.noSelectedJobs', { job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
+      if (this.isYKSchedule) {
+        if (this.selectAllOrders) {
+          return this.$t('schedule.simulation.selectedJobsCount', { count: this.searchOrderCount, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
+        } else if (this.scheduledJobs.length > 0) {
+          return this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length, job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
+        } else {
+          return this.$t('schedule.simulation.noSelectedJobs', { job: this.isYKSchedule ? this.$t('schedule.simulation.order') : this.$t('schedule.simulation.job') })
+        }
       }
+      return this.selectedJobCount > 0
+        ? this.$t('schedule.simulation.selectedJobsCount', { count: this.selectedJobCount, job: this.$t('schedule.simulation.job') })
+        : this.$t('schedule.simulation.noSelectedJobs', { job: this.$t('schedule.simulation.job') })
     },
     hasInvalidSolution () {
       return this.solutions.some(s => !s.valid)
     }
   },
+  watch: {
+    shouldRecalculateSelectedJobs (should) {
+      if (!should) return
+      this.selectedJobCount = Object.values(this.simulationJobs).filter(job => job.frontendInfo.checked).length
+      this.$store.commit('simulation/setShouldRecalculateSelectedJobs', false)
+    }
+  },
   mounted () {
+    this.initSelectedJobCount()
     this.fetchDataBoundStatus()
     this.solutions.forEach(s => {
       if (s.sequence > this.solutionSerialNumber) this.solutionSerialNumber = s.sequence
@@ -173,6 +179,28 @@ export default {
   },
   methods: {
     ...mapMutations('simulation', ['addSolution', 'removeSolution']),
+    initSelectedJobCount () {
+      if (Object.values(this.simulationJobs).length > 0) {
+        this.selectedJobCount = Object.values(this.simulationJobs).filter(job => job.frontendInfo.checked).length
+        return
+      }
+      // 呈現已選擇工單數量
+      this.isFetchingSelectedOrders = true
+      getJobList({ projectId: this.scheduleProjectId, scheduled: true })
+        .then(({ data }) => {
+          const scheduledJobs = data
+            .map(job => ({
+              ...job,
+              frontendInfo: { checked: job.scheduled }
+            }))
+          this.selectedJobCount = scheduledJobs.length
+          this.$store.commit('simulation/setSimulationJobs', scheduledJobs)
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isFetchingSelectedOrders = false
+        })
+    },
     fetchDataBoundStatus () {
       fetchDataBoundStatus(this.scheduleProjectId)
         .then(dataframes => {
@@ -242,8 +270,8 @@ export default {
         showClose: true
       })
     },
-    editSolution (solutionSequence) {
-      this.editSolutionSequence = solutionSequence
+    editSolution (solution) {
+      this.editSolutionSequence = solution.sequence
       // this.renderingSetting = true
       // setTimeout(() => {
       //   this.renderingSetting = false
@@ -257,6 +285,22 @@ export default {
     },
     isSolutionFailed (solutionId) {
       return this.$store.state.simulation.simulationResult.failedSolutionIds.includes(solutionId)
+    },
+    syncProductionProgress () {
+      this.isProcessingProductionProgress = true
+      this.$store.dispatch('scheduleSetting/syncProductionProgress')
+        .then(() => {
+          Message({
+            message: '生產狀況同步成功',
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isProcessingProductionProgress = false
+        })
     }
   }
 }
@@ -281,17 +325,20 @@ export default {
   &__main {
     flex: 1;
     width: 0;
-    padding: 25px;
     border-left: 1px solid var(--color-border);
     overflow: auto;
+    overflow: overlay;
     display: flex;
     flex-direction: column;
 
     .header__title {
+      display: flex;
+      justify-content: space-between;
       font-size: 24px;
       line-height: 32px;
+      padding: 24px 24px 0 24px;
+      margin-bottom: 0;
       margin-top: 0;
-      margin-bottom: 20px;
     }
   }
   &__spinner {
@@ -352,10 +399,11 @@ export default {
     }
   }
   &--start-simulate {
-    padding: 24px;
     background-color: rgba(35, 61, 64, 0.6);
     .default-button {
       width: 100%;
+      height: 48px;
+      border-radius: 0;
     }
   }
 }

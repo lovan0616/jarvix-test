@@ -13,5 +13,8 @@ export default {
   },
   setIsShowScheduleHelper (state, value) {
     state.isShowScheduleHelper = value
+  },
+  setGlobalJobStatusRestriction (state, property) {
+    state.globalJobStatusRestriction = property ? property.toLowerCase() : null
   }
 }

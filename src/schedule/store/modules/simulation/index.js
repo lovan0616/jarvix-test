@@ -5,6 +5,8 @@ export default {
   namespaced: true,
   state: {
     solutions: [],
+    simulationJobs: {},
+    shouldRecalculateSelectedJobs: false,
     scheduledJobs: [],
     planId: null,
     simulationResult: {

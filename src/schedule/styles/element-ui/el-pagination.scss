@@ -2,6 +2,19 @@
 .ss-pagination.el-pagination {
   text-align: center;
 
+  .el-pagination {
+    &__total {
+      color: var(--color-text);
+    }
+    &__jump {
+      .el-input__inner {
+        background: #323A3A;
+        color: var(--color-text);
+        border: none;
+      }
+    }
+  }
+
   button, .el-pager li {
     background-color: transparent;
   }

@@ -21,8 +21,8 @@
     </div>
     <div class="file__item-button-block">
       <a
-        :href="require(`@/schedule/files/${fileData.code}.csv`)"
-        :download="`${fileData.code}.csv`"
+        :href="`${publicPath}static/files/${fileName}`"
+        :download="fileName"
         class="file__item-button btn btn-secondary"
       >
         {{ $t('schedule.button.templateFileDownload') }}
@@ -40,6 +40,14 @@ export default {
     fileData: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    publicPath () {
+      return process.env.BASE_URL
+    },
+    fileName () {
+      return `${this.fileData.code.toLowerCase()}.csv`
     }
   },
   methods: {

@@ -1,13 +1,13 @@
 <template>
   <section class="relation-container__section">
     <div class="relation-container__section-title">
-      Step1: {{ $t('schedule.project.chooseDataSource') }}({{ $t('editing.isRequired') }})
+      Step1: {{ $t('schedule.project.chooseDataSource') }}
     </div>
     <div class="form">
       <div class="form-fields">
         <div class="form-field">
           <div class="field-label">
-            {{ $t('schedule.project.dataSourceName') }}
+            *{{ $t('schedule.project.dataSourceName') }}
           </div>
           <spinner
             v-if="isLoadingDataSources"

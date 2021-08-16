@@ -62,3 +62,15 @@
   -webkit-line-clamp: $line;
   overflow: hidden;
 }
+
+@mixin mutated-dot ($left: -4px, $top: 8px, $right: unset, $background-color: $theme-color-warning) {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: $top;
+  left: $left;
+  right: $right;
+  background-color: $background-color;
+}
