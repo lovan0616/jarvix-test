@@ -286,7 +286,7 @@ export default {
       searchInput: '',
       isShowFilterPanel: false,
       tempFilter: {},
-      relativeDatetimeOptions: ['unset', 'today', '6hour', '3hour', '1hour'],
+      relativeDatetimeOptions: ['unset', 'today', '6hour', '3hour', '1hour', 'week', 'month', 'quarter', 'year'],
       isFailed: false,
       isFirstInit: true
     }

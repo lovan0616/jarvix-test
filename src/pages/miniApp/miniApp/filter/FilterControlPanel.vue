@@ -1,7 +1,7 @@
 <template>
   <section class="filter-control">
     <svg-icon
-      :icon-class="isSingleChoiceFilter ? 'adjuster' : 'filter-outline'"
+      :icon-class="iconClass"
       class="filter-control__filter-icon"
     />
     <template v-if="filterList.length > 0">
@@ -15,7 +15,7 @@
           :key="filter.filterId"
           :initial-filter="filter"
           :is-edit-mode="isEditMode"
-          :is-single-choice-filter="isSingleChoiceFilter"
+          :is-single-choice-filter="false/* TODO: 暫時無論控制項或過濾器都是複選 */"
           :filter-set="filterSet"
           :is-need-update.sync="filter.isNeedUpdate"
           :is-processing.sync="filter.isProcessing"
@@ -38,6 +38,11 @@ export default {
     SingleFilterBadge
   },
   props: {
+    type: {
+      type: String,
+      required: true,
+      validator: (value) => ['controller', 'filter'].includes(value)
+    },
     initialFilterList: {
       type: Array,
       required: true
@@ -45,14 +50,6 @@ export default {
     isEditMode: {
       type: Boolean,
       required: true
-    },
-    isSingleChoiceFilter: {
-      type: Boolean,
-      default: false
-    },
-    isYAxisController: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
@@ -64,8 +61,16 @@ export default {
       hasFilterSetNeedInit: false
     }
   },
+  computed: {
+    iconClass () {
+      return {
+        controller: 'adjuster',
+        filter: 'filter-outline'
+      }[this.type]
+    }
+  },
   mounted () {
-    if (this.isYAxisController || !this.isSingleChoiceFilter) {
+    if (this.type === 'filter') {
       return this.filterList = this.initialFilterList.map(filterSet => {
         return filterSet.map(filter => ({
           ...filter,

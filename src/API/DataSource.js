@@ -82,6 +82,17 @@ export function getDataSourceColumnInfoById (dataSourceId, dataFrameId, columns 
 }
 
 /**
+ * get dataFrame category data value
+ * @param {Number} dataFrameId - 資料表 ID
+ */
+export function getDataFrameCategoryDataValueById (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/data/category/values`,
+    method: 'GET'
+  })
+}
+
+/**
  * get dataSource data value
  * @param {Number} dataSourceId - 資料源 ID
  * @param {Array} columns - 篩選的欄位(帶入勾選的選項, 全部選為 null, 都沒選為 [])

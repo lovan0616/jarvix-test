@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{'is-focus': isFocus}"
+    :class="{'is-focus': isInputFocus}"
     class="ask-container"
   >
     <div class="ask-block">
@@ -25,27 +25,31 @@
           :name="new Date().getTime()"
           :placeholder="$t('editing.askPlaceHolder')"
           :disabled="availableDataSourceList.length === 0"
-          v-model.trim="userQuestion"
+          v-model.trim="currentUserQuestionPreview"
           class="question-input input"
           autocomplete="off"
-          @keypress.enter.prevent="enterQuestion"
-          @keyup.shift.ctrl.72="toggleHelper()"
+          @keyup.shift.ctrl.72="toggleAskHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
-          @focus="focusInput"
-          @blur="blurInput"
+          @keydown.up.exact="handleKeydownMoveSuggestionCursor('up', $event)"
+          @keydown.down.exact="handleKeydownMoveSuggestionCursor('down', $event)"
+          @keydown.esc.exact.prevent="currentSelectedSuggestionIndex = -1"
+          @keydown.tab.exact.prevent="autocompleteSuggestionQuestion(false)"
+          @keypress.enter.exact.prevent="autocompleteSuggestionQuestion(true)"
+          @focus="handleInputFocus"
+          @blur="handleInputBlur"
         >
         <a
           href="javascript:void(0);"
           class="clean-btn"
-          @click="cleanQuestion"
+          @click="clearQuestion"
         >
           <svg-icon icon-class="remove-circle" />
         </a>
         <a
           href="javascript:void(0);"
           class="ask-btn"
-          @click="enterQuestion"
+          @click="submitQuestion"
         >
           <svg-icon icon-class="go-right" />
         </a>
@@ -54,7 +58,7 @@
         v-if="isShowAskHelperEntry"
         :class="{ 'disabled': availableDataSourceList.length === 0 }"
         class="ask-remark-block"
-        @click="openAskHelperDialog"
+        @click="openAskHelper"
       >
         <el-tooltip
           slot="label"
@@ -69,20 +73,32 @@
       </div>
     </div>
     <div
-      :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
-      class="history-question-block"
+      ref="suggestionBlock"
+      :class="{hide: !isSuggestionBlockVisible, 'has-filter': hasFilter}"
+      class="suggestion-block"
+      @mouseleave="currentSelectedSuggestionIndex = -1"
     >
       <div
-        v-for="(singleHistory, index) in historyQuestionList"
-        :key="index"
-        class="history-question"
-        @click="copyQuestion(singleHistory.question)"
+        v-show="isLoadingKnownTerms && userQuestion"
+        class="known-terms-loading-status"
+      >
+        <spinner size="16" />
+        <span class="known-terms-loading-status__text">{{ $t('editing.suggestionSearching') }}</span>
+      </div>
+      <div
+        v-for="(suggestion, index) in suggestionList"
+        :key="`suggestion-${index}`"
+        class="suggestion"
+        :class="{ focus: index === currentSelectedSuggestionIndex || (currentSelectedSuggestionIndex === -1 && index === 0) }"
+        @mousedown="fillInQuestion(suggestion.question, true, false)"
+        @mouseenter="currentSelectedSuggestionIndex = index"
+        tabindex="0"
       >
         <svg-icon
-          icon-class="clock"
+          :icon-class="suggestion.iconClass"
           class="icon"
         />
-        {{ singleHistory.question }}
+        <span v-html="suggestion.html" />
       </div>
     </div>
     <transition name="fast-fade-in">
@@ -93,16 +109,26 @@
         :key="dataSourceId"
         class="ask-helper"
         mode="popup"
-        @close="closeHelper"
+        @close="closeAskHelper"
       />
     </transition>
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import AskHelperDialog from './AskHelperDialog'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { Suggester, trimRedundant, defineTerm, defineSuggestionListItem } from '@/utils/questionSuggester'
+import { getDataFrameCategoryDataValueById } from '@/API/DataSource'
+
+/**
+ * @typedef {Object} SuggestionListItem
+ * @property {string} iconClass
+ * @property {string} question
+ * @property {string} html
+ */
 
 export default {
   name: 'AskBlock',
@@ -119,23 +145,35 @@ export default {
     isShowAskHelperEntry: {
       type: Boolean,
       default: true
+    },
+    defaultQuestion: {
+      type: String,
+      default: null
     }
   },
   data () {
     return {
-      userQuestion: null,
-      showHistoryQuestion: false,
+      userQuestion: '',
       websocketHandler: null,
-      isFocus: false
+      newParserMode: localStorage.getItem('newParser') === 'true',
+      isInputFocus: false,
+      isCompositionInputting: false,
+      isLoadingKnownTerms: false,
+      compositionInputStatusHandler: null,
+      selectedSuggestionIndex: -1,
+      /** @type {Suggester | null} */
+      suggester: null,
+      requestAnimationFrameTaskId: -1
     }
   },
   computed: {
-    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName']),
-    ...mapState('dataSource', ['dataSourceId', 'appQuestion']),
+    ...mapState(['isShowAskHelper']),
+    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName', 'isUseAlgorithm', 'setParserLanguage']),
+    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList', 'dataFrameId', 'dataFrameList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
-    newParserMode () {
-      return localStorage.getItem('newParser') === 'true'
+    isSuggestionBlockVisible () {
+      return this.isInputFocus && (this.suggestionList.length > 0 || (this.isLoadingKnownTerms && this.userQuestion)) && !this.isShowAskHelper
     },
     languageList () {
       return this.parserLanguageList.map(option => {
@@ -150,26 +188,74 @@ export default {
         return this.parserLanguage
       },
       set (value) {
-        this.$store.commit('chatBot/setParserLanguage', value)
+        this.setParserLanguage(value)
       }
     },
     hasFilter () {
-      return this.$store.state.dataSource.filterList.length > 0
+      return this.filterList.length > 0
     },
-    isShowAskHelper () {
-      return this.$store.state.isShowAskHelper
+    dataSourceIdAndDataFrameId () {
+      return `${this.dataSourceId}/${this.dataFrameId}`
     },
-    historyQuestionList () {
-      // 過濾 boomark 以及 問題字串
-      return this.userQuestion
-        ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
-        : []
+    dataFramesId () {
+      return this.dataFrameList.map((dataFrame) => dataFrame.id)
     },
-    isUseAlgorithm () {
-      return this.$store.state.chatBot.isUseAlgorithm
+    currentUserQuestionPreview: {
+      get () {
+        return this.suggestionList[this.currentSelectedSuggestionIndex]?.question ??
+          this.userQuestion
+      },
+      set (value) {
+        this.currentSelectedSuggestionIndex = -1
+        this.userQuestion = value
+      }
     },
-    dataSourceList () {
-      return this.$store.state.dataSource.dataSourceList
+    currentSelectedSuggestionIndex: {
+      get () {
+        return this.isSuggestionBlockVisible
+          ? this.selectedSuggestionIndex
+          : -1
+      },
+      set (value) {
+        if (!this.isSuggestionBlockVisible) {
+          value = -1
+        } else if (value !== -1) {
+          const length = this.suggestionList.length
+          if (length > 0) {
+            value += 1
+            value = ((value + length + 1) % (length + 1)) - 1
+          } else {
+            value = -1
+          }
+        }
+        this.selectedSuggestionIndex = value
+
+        if (value !== -1) {
+          this.$refs.suggestionBlock.querySelectorAll('.suggestion')[value].focus()
+          this.$refs.questionInput.focus()
+        }
+      }
+    },
+    suggestionList () {
+      // History suggestion items
+      const historySuggestionItems = [...new Set(this.historyQuestionList.map(history => history.question))]
+        .filter((question) => this.userQuestion ? question.includes(trimRedundant(this.userQuestion)) : true)
+        .map((question) => {
+          return defineSuggestionListItem({
+            iconClass: 'clock',
+            question,
+            html: question
+          })
+        })
+      if (historySuggestionItems.length > 3) {
+        historySuggestionItems.length = 3
+      }
+
+      // Keyword suggestion items
+      /** @type {SuggestionListItem[]} */
+      const keywordSuggestionItems = this.suggester?.suggestions ?? []
+
+      return [...keywordSuggestionItems, ...historySuggestionItems]
     },
     availableDataSourceList () {
       if (!this.dataSourceList) return []
@@ -177,13 +263,8 @@ export default {
     }
   },
   watch: {
-    userQuestion (val) {
-      if (document.activeElement === this.$refs.questionInput) {
-        this.showHistory()
-      }
-    },
     appQuestion (value) {
-      this.copyQuestion(value)
+      this.fillInQuestion(value, false, false)
     },
     '$route' (to, from) {
       // 透過 drilldown 切換 dataframe 時不清空問句 input
@@ -195,33 +276,47 @@ export default {
         (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString() ||
         (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
       ) {
-        this.userQuestion = null
-        this.closeHelper()
+        this.clearQuestion()
+        this.closeAskHelper()
       }
 
-      // 回首頁的話，關閉彈出視窗，有需要清問句的話，再加進上方條件
       if (to.name === 'PageIndex') {
-        this.closeHelper()
+        this.clearQuestion()
+        this.closeAskHelper()
       }
     },
     copiedColumnName (value) {
       if (!value) return
       this.userQuestion = this.userQuestion ? this.userQuestion + value : value
       this.clearCopiedColumnName()
+    },
+    dataSourceIdAndDataFrameId () {
+      this.setupSuggester()
     }
   },
   mounted () {
-    document.addEventListener('click', this.autoHide, false)
-    this.userQuestion = this.$route.query.question
+    this.userQuestion = this.defaultQuestion || this.$route.query.question
+    this.$refs.questionInput.addEventListener('compositionstart', this.handleCompositionInputStart)
+    this.$refs.questionInput.addEventListener('compositionend', this.handleCompositionInputEnd)
+    this.suggester = Vue.observable(new Suggester())
+    this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
+    this.setupSuggester()
   },
-  destroyed () {
-    this.closeHelper()
-    document.removeEventListener('click', this.autoHide, false)
+  beforeDestroy () {
+    this.$refs.questionInput.removeEventListener('compositionstart', this.handleCompositionInputStart)
+    this.$refs.questionInput.removeEventListener('compositionend', this.handleCompositionInputEnd)
+    this.closeAskHelper()
     if (this.websocketHandler) this.closeWebSocketConnection()
+    cancelAnimationFrame(this.requestAnimationFrameTaskId)
   },
   methods: {
-    ...mapMutations('chatBot', ['clearCopiedColumnName']),
-    ...mapMutations('dataSource', ['setIsManuallyTriggeredAskQuestion']),
+    ...mapMutations(['updateAskHelperStatus']),
+    ...mapMutations('chatBot', ['clearCopiedColumnName', 'setDoDrillDown', 'setDoClickCorrelation', 'updateIsUseAlgorithm']),
+    ...mapMutations('dataSource', ['setIsManuallyTriggeredAskQuestion', 'clearFilterList', 'setAppQuestion']),
+    ...mapMutations('result', ['updateIsModelResult']),
+    ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
+    ...mapActions('chatBot', ['openAskInMemory']),
+    ...mapActions('dataSource', ['updateResultRouter', 'getDataSourceColumnInfo', 'getDataSourceDataValue']),
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()
@@ -242,7 +337,7 @@ export default {
     onWebSocketReceiveMessage (evt) {
       if (evt.data === '圈選2018年11月至2019年1月') {
         // drill down
-        this.$store.commit('chatBot/setDoDrillDown', true)
+        this.setDoDrillDown(true)
         return
       }
       if (evt.data === '回到資料集') {
@@ -258,17 +353,17 @@ export default {
             dataFrameId: this.$route.query.dataFrameId
           }
         })
-        this.cleanQuestion()
+        this.clearQuestion()
         return
       }
       if (evt.data === '點擊環境濕度') {
         // 點擊環境溫度
-        this.$store.commit('chatBot/setDoClickCorrelation', true)
+        this.setDoClickCorrelation(true)
         return
       }
       if (evt.data === '取消過濾條件') {
         // 清空 drill down
-        this.$store.commit('dataSource/clearFilterList')
+        this.clearFilterList()
         Message({
           message: '已取消過濾條件',
           type: 'success',
@@ -279,138 +374,200 @@ export default {
       }
 
       this.userQuestion = evt.data
-      this.enterQuestion()
+      this.submitQuestion()
     },
     onWebSocketClose (evt) {
     },
-    autoHide (evt) {
-      let clickInside = this.$el.contains(evt.target)
-      if (this.showHistoryQuestion && !clickInside) {
-        this.showHistoryQuestion = false
-      }
-
-      // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
-      if (this.showHistoryQuestion && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
-        this.showHistoryQuestion = false
-      }
-    },
-    cleanQuestion () {
+    clearQuestion () {
       if (this.availableDataSourceList.length === 0) return
-      this.userQuestion = null
+      this.userQuestion = ''
     },
-    enterQuestion () {
+    submitQuestion () {
       let modelQuestionKeyWordList = ['預測', '專案', '是否', '成案']
       if (this.availableDataSourceList.length === 0) return
       /**
        * 移除特殊符號 (unicode \u0008, referred to as \b in strings)
        * 先移除特殊符號再問問句
        */
-      this.$store.commit('dataSource/setAppQuestion', this.userQuestion.replace(/[\b]/g, ''))
+      this.setAppQuestion(this.userQuestion.replace(/[\b]/g, ''))
       if (this.redirectOnAsk) {
-        this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+        this.updateResultRouter('key_in')
 
         /* For demo */
         let correctCount = 0
         modelQuestionKeyWordList.forEach(word => {
           correctCount += this.userQuestion.includes(word)
         })
-        if (correctCount >= 2) this.$store.commit('result/updateIsModelResult', true)
-        else this.$store.commit('result/updateIsModelResult', false)
+        if (correctCount >= 2) this.updateIsModelResult(true)
+        else this.updateIsModelResult(false)
         /* For demo */
       } else {
         // 手動觸發問問題
         this.setIsManuallyTriggeredAskQuestion(true)
       }
-      this.hideHistory()
-      this.closeHelper()
+      this.closeAskHelper()
+      this.blurInput()
     },
-    copyQuestion (value) {
-      this.userQuestion = value
-      this.$refs.questionInput.focus()
-      this.enterQuestion()
+    fillInQuestion (question, submit, focusAfterFillIn) {
+      this.userQuestion = question
+      if (focusAfterFillIn) {
+        this.focusInput()
+      } else {
+        this.blurInput()
+      }
+
+      if (submit) {
+        this.submitQuestion()
+      }
     },
-    showHistory () {
-      if (this.showHistoryQuestion || this.isShowAskHelper) return
-      this.showHistoryQuestion = true
-    },
-    hideHistory () {
-      this.showHistoryQuestion = false
+    autocompleteSuggestionQuestion (submit) {
+      if (this.isCompositionInputting) return
+      if (this.currentSelectedSuggestionIndex === -1 && submit) {
+        this.submitQuestion()
+        return
+      }
+      const index = this.currentSelectedSuggestionIndex === -1 && this.suggestionList.length > 0
+        ? 0
+        : this.currentSelectedSuggestionIndex
+      if (index === -1) return
+      const { question } = this.suggestionList[index]
+      this.fillInQuestion(question, submit, !submit)
+      this.currentSelectedSuggestionIndex = -1
     },
     closePreviewDataSource () {
-      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
+      this.togglePreviewDataSource(false)
     },
-    openAskHelperDialog () {
+    openAskHelper () {
       if (this.availableDataSourceList.length === 0) return
-      this.$store.commit('updateAskHelperStatus', !this.isShowAskHelper)
+      this.updateAskHelperStatus(true)
       this.closePreviewDataSource()
-      this.hideHistory()
     },
-    closeHelper () {
-      this.$store.commit('updateAskHelperStatus', false)
+    closeAskHelper () {
+      this.updateAskHelperStatus(false)
     },
-    toggleHelper () {
+    toggleAskHelper () {
       if (this.isShowAskHelper) {
-        this.closeHelper()
+        this.closeAskHelper()
       } else {
-        this.openAskHelperDialog()
+        this.openAskHelper()
       }
     },
     toggleAlgorithm () {
-      this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
+      this.updateIsUseAlgorithm(!this.isUseAlgorithm)
+    },
+    handleInputFocus () {
+      this.isInputFocus = true
+      this.openAskInMemory()
+    },
+    handleInputBlur () {
+      this.isInputFocus = false
     },
     focusInput () {
-      this.isFocus = true
-      this.$store.dispatch('chatBot/openAskInMemory')
+      this.$refs.questionInput.focus()
     },
     blurInput () {
-      this.isFocus = false
+      this.$refs.questionInput.blur()
+    },
+    handleCompositionInputStart () {
+      this.isCompositionInputting = true
+    },
+    handleCompositionInputEnd () {
+      this.isCompositionInputting = false
+    },
+    handleKeydownMoveSuggestionCursor (direction, event) {
+      if (this.isCompositionInputting) return
+
+      event?.preventDefault?.()
+      const availableDirections = ['up', 'down']
+      if (!availableDirections.includes(direction)) return
+      this.currentSelectedSuggestionIndex = direction === 'up'
+        ? this.currentSelectedSuggestionIndex - 1
+        : this.currentSelectedSuggestionIndex + 1
+    },
+    async setupSuggester () {
+      if (this.dataSourceIdAndDataFrameId.includes('null')) return
+      const tempDataSourceIdAndDataFrameId = this.dataSourceIdAndDataFrameId
+      this.suggester = null
+
+      const newSuggester = Vue.observable(new Suggester())
+      this.suggester = newSuggester
+      const appendColumns = async () => {
+        const data = await this.getDataSourceColumnInfo({ shouldStore: false })
+        const terms = [...new Set(Object.values(data).flat())]
+          .map((value) => defineTerm({ type: 'dataColumn', value }))
+        newSuggester.appendKnownTerms(terms)
+      }
+      const appendDataValueByDataFrameId = async (dataFrameId) => {
+        const data = await getDataFrameCategoryDataValueById(dataFrameId)
+        const terms = data.values
+          .map((value) => defineTerm({ type: 'dataValue', value }))
+        newSuggester.appendKnownTerms(terms)
+      }
+      this.isLoadingKnownTerms = true
+      const promises = [
+        appendColumns(),
+        ...(this.dataFrameId === 'all' ? this.dataFramesId : [this.dataFrameId])
+          .map((dataFrameId) => appendDataValueByDataFrameId(dataFrameId))
+      ]
+      await Promise.all(promises)
+      if (this.dataSourceIdAndDataFrameId !== tempDataSourceIdAndDataFrameId) return
+      this.isLoadingKnownTerms = false
+    },
+    updateSuggester () {
+      const el = this.$refs.questionInput ?? null
+      if (el === null || this.suggester === null || this.currentSelectedSuggestionIndex !== -1) return
+      this.suggester.update(el.value, el.selectionStart)
+    },
+    requestAnimationFrameTask () {
+      this.updateSuggester()
+      this.requestAnimationFrameTaskId = requestAnimationFrame(this.requestAnimationFrameTask)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .ask-container {
-  position: relative;
   flex: 1;
+  position: relative;
 
   &.is-focus {
-
     .user-question-block {
+      border: 1px solid #0cd1de;
       border-radius: 5px 5px 0 0;
-      border: 1px solid #0CD1DE;
-      box-shadow: 0px 0px 20px rgba(12, 209, 222, .5);
       border-radius: 5px;
+      box-shadow: 0 0 20px rgba(12, 209, 222, 0.5);
     }
   }
 
   .ask-block {
-    position: relative;
-    height: 100%;
     display: flex;
+    height: 100%;
+    position: relative;
   }
 
   .parser-select {
     width: 160px;
 
-    & >>> .el-input__inner {
+    >>> .el-input__inner {
       font-size: 14px;
     }
   }
 
   .user-question-block {
-    display: flex;
     align-items: center;
-    width: 100%;
-    padding-right: 16px;
-    background-color: #1D2424;
-    border: 1px solid #1D2424;
+    background-color: #1d2424;
+    border: 1px solid #1d2424;
     border-radius: 5px;
-    transition: all .1s;
+    display: flex;
+    padding-right: 16px;
+    transition: all 0.1s;
+    width: 100%;
 
     &.has-filter {
-      &:after {
+      &::after {
         background-image: linear-gradient(90deg, $filter-color 0%, rgba(67, 138, 248, 0.2) 100%);
       }
+
       .ask-btn {
         color: $filter-color;
       }
@@ -429,84 +586,85 @@ export default {
     }
 
     .question-input {
+      border-bottom: 0;
       flex-basis: calc(100% - 65px);
       font-size: 14px;
-      line-height: 36px;
       height: 38px;
+      line-height: 36px;
       overflow: auto;
-      padding-right: 30px;
-      border-bottom: none;
       padding: 0 10px;
+      padding-right: 30px;
+      width: 100%;
 
       &::placeholder {
-        opacity: #888;
+        opacity: 0.5;
       }
 
       &:disabled {
         &::placeholder {
-          opacity: .15;
+          opacity: 0.15;
         }
 
-        & ~ .ask-btn,
-        & ~ .clean-btn {
-          opacity: .15;
+        ~ .ask-btn,
+        ~ .clean-btn {
+          opacity: 0.15;
         }
       }
     }
 
     .clean-btn {
+      color: rgba(255, 255, 255, 0.5);
       flex-basis: 16px;
       font-size: 16px;
-      color: rgba(255, 255, 255, 0.5);
       margin-right: 16px;
     }
 
     .ask-btn {
+      color: $theme-color-primary;
       flex-basis: 16px;
       font-size: 20px;
-      color: $theme-color-primary;
     }
 
     &:not(:last-child) {
-      width: calc(100% - 54px);
       margin-right: 16px;
+      width: calc(100% - 54px);
     }
   }
 
   .ask-remark-block {
+    align-items: center;
+    border: 1px solid #2d3033;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
     font-size: 16px;
     height: 40px;
-    width: 40px;
-    text-align: left;
-    letter-spacing: 0.05em;
-    border: 1px solid #2D3033;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-align: left;
+    width: 40px;
 
     .ask-btn {
       &__icon {
+        fill: rgba(255, 255, 255, 0.8);
         font-size: 18px;
-        fill: rgba(255, 255, 255, .8);
 
         &:hover {
           fill: rgba(255, 255, 255, 1);
         }
 
         &--show {
-          fill: rgba(42, 210, 226, .8);
+          fill: rgba(42, 210, 226, 0.8);
 
           &:hover {
-            fill: #2AD2E2;
+            fill: #2ad2e2;
           }
         }
       }
     }
 
     &.disabled {
-      opacity: .3;
+      opacity: 0.3;
     }
 
     .help-link {
@@ -515,64 +673,91 @@ export default {
   }
 
   .algorithm-status {
-    position: absolute;
-    left: 0;
-    top: -18px;
-    font-size: 14px;
     color: #333;
+    font-size: 14px;
+    left: 0;
     opacity: 0.6;
+    position: absolute;
+    top: -18px;
   }
 
-  .history-question-block {
+  .suggestion-block {
+    background-color: #2d3033;
+    border-radius: 5px;
+    left: 0;
+    max-height: 200px;
+    overflow: auto;
+    padding: 4px 0;
     position: absolute;
     text-align: left;
-    left: 0;
     top: 100%;
+    transform: translateY(0) scaleY(1);
+    transition: all 0.1s;
     width: calc(100% - 56px);
-    height: 0;
-    overflow: hidden;
-    transition: all .1s;
     z-index: 90;
-    background-color: #2D3033;
-    border-radius: 5px;
 
     &.has-filter {
       bottom: 137px;
     }
 
-    &.show {
-      height: 160px;
-      overflow: auto;
-      padding: 4px 0;
+    &.hide {
+      transform: translateY(-50%) scaleY(0);
     }
 
-    .history-question {
-      font-size: 14px;
-      line-height: 20px;
-      padding: 10px 18px;
+    .suggestion {
+      border-bottom: 1px solid #464a50;
       color: #fff;
       cursor: pointer;
-      border-bottom: 1px solid #464A50;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 20px;
+      padding: 10px 18px;
 
-      &:hover {
-        background-color: #464A50;
+      &:hover,
+      &.focus {
+        background-color: #464a50;
+        outline: none;
       }
 
       .icon {
         margin-right: 14px;
       }
+
+      ::v-deep .bold {
+        font-weight: 600;
+      }
+
+      ::v-deep .highlight {
+        color: $theme-color-primary;
+      }
+    }
+
+    .known-terms-loading-status {
+      align-items: center;
+      display: flex;
+      font-size: 0;
+
+      ::v-deep .spinner-block {
+        display: inline-block;
+        padding: 8px 16px;
+      }
+
+      &__text {
+        font-size: 16px;
+        opacity: 0.5;
+      }
     }
   }
 
   .ask-helper {
-    width: calc(100% - #{$app-side-nav-closed-width});
-    height: calc(100vh - #{$header-height + $chat-room-height + $ask-condition-height});
-    position: fixed;
-    top: $header-height + $chat-room-height + $ask-condition-height;
-    right: 0;
     background: #000;
+    height: calc(100vh - #{$header-height + $chat-room-height + $ask-condition-height});
     overflow: auto;
-    padding: 32px 40px 0 40px;
+    padding: 32px 40px 0;
+    position: fixed;
+    right: 0;
+    top: $header-height + $chat-room-height + $ask-condition-height;
+    width: calc(100% - #{$app-side-nav-closed-width});
 
     &--has-basic-df-setting {
       width: calc(100% - #{$app-side-nav-closed-width} - #{$basic-df-setting-width});

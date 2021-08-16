@@ -121,7 +121,7 @@ export default {
   methods: {
     ...mapActions('dataSource', ['getDataSourceColumnInfo', 'getDataSourceDataValue']),
     fetchColumnInfo () {
-      Promise.all([this.getDataSourceColumnInfo(false), this.getDataSourceDataValue(false)])
+      Promise.all([this.getDataSourceColumnInfo({ shouldStore: false }), this.getDataSourceDataValue({ shouldStore: false })])
         .then(([columnInfo, dataValue]) => {
           this.dataSourceColumnInfoList = { ...columnInfo, ...dataValue }
           this.selectCatelog(this.selectedIndex)
@@ -181,51 +181,51 @@ export default {
 </script>
 <style lang="scss" scoped>
 .column-info {
-  position: relative;
-  height: 100%;
   display: flex;
+  height: 100%;
+  position: relative;
 
   &__menu {
-    width: 200px;
     height: 100%;
     margin-right: 20px;
+    width: 200px;
   }
 
   .menu {
     &__title {
-      height: 42px;
-      padding: 5px 24px;
-      border-radius: 5px 5px 0px 0px;
+      background: #2b4a4e;
+      border-radius: 5px 5px 0 0;
       font-size: 16px;
+      height: 42px;
       line-height: 200%;
-      background: #2B4A4E;
+      padding: 5px 24px;
 
       &::before {
+        background: #4de2f0;
+        content: '';
+        height: 6px;
+        left: 12px;
         position: absolute;
         top: 18px;
-        left: 12px;
-        content: "";
         width: 4px;
-        height: 6px;
-        background: #4DE2F0;
       }
     }
 
     &__list {
+      border-radius: 5px;
       height: calc(100% - 42px);
       overflow: hidden;
-      border-radius: 5px;
       &:hover { overflow: auto; }
     }
 
     &__item {
-      position: relative;
+      background: rgba(35, 61, 64, 0.6);
+      color: #999;
       cursor: pointer;
-      padding: 4px 12px;
       font-size: 14px;
       line-height: 32px;
-      color: #999999;
-      background: rgba(35, 61, 64, 0.6);
+      padding: 4px 12px;
+      position: relative;
 
       &:not(:last-of-type) {
         border-bottom: 1px solid rgba(50, 75, 78, 0.6);
@@ -235,31 +235,33 @@ export default {
         border-radius: 5px;
       }
 
-      &:hover, &.active, &--active{
-        background-color: rgba(50, 75, 78, 0.6);;
+      &:hover,
+      &.active,
+      &--active {
+        background-color: rgba(50, 75, 78, 0.6);
         color: #fff;
 
-        &:after {
+        &::after {
+          border: 4px solid transparent;
+          border-left-color: #fff;
+          content: '';
+          display: block;
+          height: 0;
           position: absolute;
           right: 12px;
           top: calc(50% - 4px);
-          content: "";
-          display: block;
           width: 0;
-          height: 0;
-          border: 4px solid transparent;
-          border-left-color: #fff;
         }
       }
     }
   }
 
   &__block {
-    width: calc(100% - 224px);
     margin-left: auto;
     margin-right: 0;
-    padding-right: 10px;
     overflow: auto;
+    padding-right: 10px;
+    width: calc(100% - 224px);
   }
 
   .block {
@@ -280,41 +282,40 @@ export default {
     }
 
     &__table {
-      width: 100%;
-      border-collapse: collapse;
       border: 1px solid #515959;
+      border-collapse: collapse;
+      width: 100%;
 
       .column-name {
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 32px;
-        text-align: left;
-        padding: 4px 16px;
-        background: #2B4D51;
+        background: #2b4d51;
         border: 1px solid #515959;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 32px;
+        padding: 4px 16px;
+        text-align: left;
       }
 
       .column-content {
-
         .single-column {
-          width: 33.33%;
-          height: 34px;
-          font-size: 14px;
-          line-height: 32px;
-          padding-left: 12px;
-          color: #DDD;
           background: rgba(50, 75, 78, 0.6);
           border: 1px solid #515959;
+          color: #ddd;
+          font-size: 14px;
+          height: 34px;
+          line-height: 32px;
+          padding-left: 12px;
+          width: 33.33%;
           word-break: break-all;
         }
       }
 
       .empty-column {
-        font-size: 13px;
+        border: 1px solid #515959;
         color: var(--gray-100);
+        font-size: 13px;
         padding: 10px 0;
         text-align: center;
-        border: 1px solid #515959;
       }
     }
   }

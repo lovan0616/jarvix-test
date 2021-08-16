@@ -1,12 +1,19 @@
 {
-  "extends": ["stylelint-config-standard", "stylelint-config-sass-guidelines"],
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-sass-guidelines"
+  ],
   "rules": {
     "no-empty-source": null,
     "selector-pseudo-element-no-unknown": [
       true,
       {
-        ignorePseudoElements: ["v-deep"]
+        "ignorePseudoElements": [
+          "v-deep"
+        ]
       }
-    ]
+    ],
+    "max-nesting-depth": null,
+    "selector-max-compound-selectors": null
   }
 }

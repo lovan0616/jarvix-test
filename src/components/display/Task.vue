@@ -62,6 +62,8 @@
         :is-show-donwnload-btn="isShowDonwnloadBtn"
         :custom-cell-class-name="customCellClassName"
         :is-hoverable="isHoverable"
+        :is-show-legend="isShowLegend"
+        :title-icon-name="titleIconName"
         class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
@@ -113,6 +115,10 @@ export default {
       type: Boolean,
       default: true
     },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
     isShowDescription: {
       type: Boolean,
       default: true
@@ -157,6 +163,10 @@ export default {
           lowerLimit: null
         }
       })
+    },
+    titleIconName: {
+      type: String,
+      default: 'len-with-line-chart'
     }
   },
   data () {

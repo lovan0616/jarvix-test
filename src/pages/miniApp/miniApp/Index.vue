@@ -12,6 +12,20 @@
       <nav class="mini-app__nav">
         <div class="nav--left">
           <div
+            class="side-nav--pin"
+            @mouseenter="handleSideNavPinnerHover(true)"
+            @mouseleave="handleSideNavPinnerHover(false)"
+            @click.stop="handleSideNavPinClick(true)"
+            v-if="!isSideNavPin"
+          >
+            <el-tooltip
+              :enterable="false"
+              content="固定側邊區塊"
+            >
+              <svg-icon :icon-class="sideNavPinIcon" />
+            </el-tooltip>
+          </div>
+          <div
             v-if="isEditMode"
             class="icon-arrow"
             @click="$router.push({ name: 'MiniAppList' })"
@@ -148,17 +162,40 @@
           </div>
         </template>
         <template v-else>
-          <mini-app-side-nav
-            :is-edit-mode="isEditMode"
-            :dashboard-list="dashboardList"
-            :current-dashboard-id="currentDashboardId"
-            :is-warning-module-activate="appData.warningModule.activate"
-            :is-show-warning-module="isShowWarningModule"
-            @openWarningModule="openWarningModule"
-            @activeCertainDashboard="activeCertainDashboard($event)"
-            @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
-            @updateDashboardOrder="updateDashboardOrder($t('miniApp.dashboard'))"
-          />
+          <div
+            class="mini-app__side-nav"
+            @mouseenter="handleSideNavPinnerHover(true)"
+            @mouseleave="handleSideNavPinnerHover(false)"
+            :class="{
+              'mini-app__side-nav--pinned': isSideNavPin,
+              'mini-app__side-nav--show': isSideNavShow && !isSideNavPin
+            }"
+          >
+            <mini-app-side-nav
+              :is-edit-mode="isEditMode"
+              :dashboard-list="dashboardList"
+              :current-dashboard-id="currentDashboardId"
+              :is-warning-module-activate="appData.warningModule.activate"
+              :is-show-warning-module="isShowWarningModule"
+              @openWarningModule="openWarningModule"
+              @activeCertainDashboard="activeCertainDashboard($event)"
+              @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
+              @updateDashboardOrder="updateDashboardOrder($t('miniApp.dashboard'))"
+            />
+            <div
+              class="mini-app__side-nav-toggle"
+              @click.stop="handleSideNavPinClick(false)"
+              v-if="isSideNavPin"
+            >
+              <el-tooltip
+                :enterable="false"
+                placement="right"
+                content="隱藏側邊區塊"
+              >
+                <svg-icon icon-class="arrow-right" />
+              </el-tooltip>
+            </div>
+          </div>
           <!-- 監控示警模組 -->
           <main
             v-if="isShowWarningModule && !currentDashboardId"
@@ -307,10 +344,10 @@
               <!--Control panel-->
               <filter-control-panel
                 v-if="controlColumnValueInfoList.length > 0"
+                type="controller"
                 :key="'control' + currentDashboardId"
                 :is-edit-mode="isEditMode"
                 :initial-filter-list="controlColumnValueInfoList"
-                :is-single-choice-filter="true"
                 class="mini-app__dashboard-filter"
                 @updateFilter="updateFilter($event, 'single')"
                 @updateInit="isCurrentDashboardInit = $event"
@@ -332,10 +369,10 @@
             >
               <!--Filter Panel-->
               <filter-control-panel
+                type="filter"
                 :key="'filter' + currentDashboardId"
                 :is-edit-mode="isEditMode"
                 :initial-filter-list="filterColumnValueInfoList"
-                :is-single-choice-filter="false"
                 class="mini-app__dashboard-filter"
                 @updateFilter="updateFilter($event, 'multiple')"
               />
@@ -518,7 +555,7 @@ import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { updateAlertTimeZone } from '@/API/Alert'
 
 export default {
@@ -582,7 +619,12 @@ export default {
       isCurrentDashboardInit: false,
       scriptOptionList: [],
       initComponent: null,
-      isMiniAppCompiled: false
+      isMiniAppCompiled: false,
+      // side nav
+      sideNavPinerLeaveTimer: null,
+      isMouseEnterSideNavPinner: false,
+      isSideNavShow: false,
+      isSideNavPin: false
     }
   },
   computed: {
@@ -752,6 +794,9 @@ export default {
         return this.miniApp.settings.editModeData.timeZone
       }
       return momentTZ.tz.guess()
+    },
+    sideNavPinIcon () {
+      return this.isMouseEnterSideNavPinner ? 'pin' : 'side-nav'
     }
   },
   watch: {
@@ -778,6 +823,7 @@ export default {
     this.getMiniAppInfo()
   },
   methods: {
+    ...mapActions('dataSource', ['changeDataSourceById']),
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
@@ -1224,6 +1270,10 @@ export default {
         case 'DeleteComponent':
         case 'CreateComponent':
           this.currentComponentId = componentData && componentData.id
+          this.changeDataSourceById({
+            dataFrameId: this.currentComponent.dataFrameId,
+            dataSourceId: this.currentComponent.dataSourceId
+          })
           break
         case 'CreateWarningCriteria':
           this.componentToWarningCriteriaData = {
@@ -1480,7 +1530,8 @@ export default {
             columnRelations: [{ relatedDashboardId: null, columnInfo: null }],
             rowRelation: { relatedDashboardId: null }
           },
-          fontSize: 'middle'
+          fontSize: 'middle',
+          isCustomizeTitle: false
         },
         algoConfig: null,
         anomalySettings: [],
@@ -1570,6 +1621,26 @@ export default {
         ...componentData,
         ...componentComplementaryInfo
       })
+    },
+    handleSideNavPinnerHover (isEnter) {
+      if (isEnter) {
+        clearTimeout(this.sideNavPinerLeaveTimer)
+        this.sideNavPinerLeaveTimer = null
+        this.isMouseEnterSideNavPinner = true
+        this.isSideNavShow = true
+      } else {
+        this.sideNavPinerLeaveTimer = setTimeout(() => {
+          this.isMouseEnterSideNavPinner = false
+          this.isSideNavShow = false
+        }, 200)
+      }
+    },
+    handleSideNavPinClick (status) {
+      this.isSideNavPin = status
+      if (!status) {
+        this.isSideNavShow = false
+        this.isMouseEnterSideNavPinner = false
+      }
     }
   }
 }
@@ -1584,9 +1655,9 @@ export default {
 
 @mixin dropdown-select-position ($top: 0, $right: 0, $left: 0, $before: 0) {
   box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
-  top: calc(50% + 17px);
-  right: -3px;
   left: unset;
+  right: -3px;
+  top: calc(50% + 17px);
   &::before { right: 7px; }
 
   .dropdown-flex {
@@ -1600,10 +1671,10 @@ export default {
   }
 
   &__page {
-    height: 100%;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 
     ::v-deep .new-name-input {
       margin-right: 16px;
@@ -1620,36 +1691,50 @@ export default {
   }
 
   &__nav {
-    position: relative;
-    z-index: 5;
-    flex: 0 0 56px;
-    padding: 0 20px 0 24px;
-    display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
     border-bottom: 1px solid #232c2e;
+    display: flex;
+    flex: 0 0 56px;
     justify-content: space-between;
+    padding: 0 20px 0 24px;
+    position: relative;
+    z-index: 5;
+
+    .side-nav--pin {
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      margin-right: 18px;
+      padding-right: 18px;
+      position: relative;
+
+      .svg-icon {
+        display: block;
+        fill: #4de2f0;
+        height: 20px;
+        width: 20px;
+      }
+    }
 
     .nav--left {
-      display: flex;
       align-items: center;
+      display: flex;
 
       .app-logo {
         padding-right: 24px;
       }
 
       .app-name {
-        display: flex;
         align-self: center;
+        display: flex;
         font-size: 20px;
 
         &.is-live {
-          line-height: 30px;
           border-left: 1px solid #404949;
-          padding-left: 24px;
-          line-height: 30px;
           font-weight: 600;
           letter-spacing: 4px;
+          line-height: 30px;
+          padding-left: 24px;
         }
 
         &:hover {
@@ -1660,16 +1745,16 @@ export default {
       }
 
       .icon-arrow {
-        cursor: pointer;
         color: $theme-color-primary;
+        cursor: pointer;
         margin-right: 20px;
       }
 
       .icon-edit {
-        margin-left: 12px;
         color: $theme-color-primary;
-        font-size: 16px;
         cursor: pointer;
+        font-size: 16px;
+        margin-left: 12px;
         visibility: hidden;
       }
 
@@ -1679,24 +1764,24 @@ export default {
     }
 
     .nav--right {
-      cursor: pointer;
       color: $theme-color-primary;
+      cursor: pointer;
     }
   }
 
   &__content {
+    display: flex;
     flex: 1;
     height: 0;
-    display: flex;
 
     .empty-block {
-      width: 100%;
+      align-items: center;
+      color: #ddd;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      margin-top: 30vh;
-      color: #ddd;
       font-size: 18px;
+      margin-top: 30vh;
+      width: 100%;
 
       .create-btn {
         color: #004046;
@@ -1709,41 +1794,94 @@ export default {
     }
   }
 
+  &__side-nav {
+    $side-nav-width: 240px;
+
+    flex: 0 0 0;
+    position: relative;
+    transition: flex-basis 0.3s ease-out;
+
+    .mini-app-side-nav {
+      height: calc(100vh - 56px);
+      left: 0;
+      position: fixed;
+      top: 56px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-out;
+      width: $side-nav-width;
+      z-index: 99;
+    }
+
+    &--pinned {
+      flex: 0 0 $side-nav-width;
+    }
+
+    &--show,
+    &--pinned {
+      .mini-app-side-nav {
+        transform: none;
+      }
+    }
+
+    &-toggle {
+      align-items: center;
+      background-color: #232c2e;
+      border-radius: 0 50px 50px 0;
+      cursor: pointer;
+      display: flex;
+      height: 30px;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      top: 9px;
+      transform: translateX(100%);
+      width: 24px;
+      z-index: 0;
+
+      .svg-icon {
+        display: block;
+        fill: #2ad2e2;
+        transform: rotateY(180deg) translateX(1px);
+      }
+    }
+  }
+
   &__main {
-    flex: 1;
-    padding: 20px 0 0 20px;
     display: flex;
+    flex: 1 1 100%;
     flex-direction: column;
+    min-width: 0;
     overflow: auto;
     overflow: overlay;
-    min-width: 0;
+    padding: 20px 0 0 20px;
+    transition: flex-basis 0.3s ease-out;
 
     &-header {
-      position: relative;
-      z-index: 4;
-      flex: 0 0 30px;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
+      display: flex;
+      flex: 0 0 30px;
+      justify-content: space-between;
       margin-bottom: 20px;
       padding-right: 20px;
+      position: relative;
+      z-index: 4;
     }
     &.warning {}
 
     &.dashboard {
       .dashboard__header {
-        position: relative;
-        z-index: 4;
-        flex: 0 0 30px;
-        display: flex;
-        justify-content: space-between;
         align-items: center;
+        display: flex;
+        flex: 0 0 30px;
+        justify-content: space-between;
         margin-bottom: 20px;
         margin-right: 20px;
+        position: relative;
+        z-index: 4;
 
         .header-left {
-          display: flex;
           align-items: center;
+          display: flex;
 
           .name {
             font-size: 20px;
@@ -1758,8 +1896,8 @@ export default {
 
           .icon-edit {
             color: $theme-color-primary;
-            margin-left: 12px;
             cursor: pointer;
+            margin-left: 12px;
             visibility: hidden;
 
             &:hover {
@@ -1769,32 +1907,32 @@ export default {
         }
 
         .header-right {
+          align-items: center;
           display: flex;
           justify-content: flex-end;
-          align-items: center;
 
           .dashboard-setting-box {
-            flex: 0 0 30px;
-            height: 30px;
-            margin-left: 6px;
-            cursor: pointer;
+            @include dropdown-select-controller;
+
+            align-items: center;
             border: 1px solid #fff;
             border-radius: 4px;
+            cursor: pointer;
             display: flex;
-            align-items: center;
+            flex: 0 0 30px;
+            height: 30px;
             justify-content: center;
+            margin-left: 6px;
             position: relative;
-
-            @include dropdown-select-controller;
 
             .dropdown-select {
               z-index: 2;
 
               ::v-deep .dropdown-select-box {
                 box-shadow: 0 2px 5px rgba(34, 117, 125, 0.5);
-                top: calc(50% + 17px);
-                right: -3px;
                 left: unset;
+                right: -3px;
+                top: calc(50% + 17px);
                 z-index: 1;
                 &::before { right: 7px; }
 
@@ -1838,37 +1976,37 @@ export default {
         ::v-deep .dropdown {
           &__list-container {
             left: 0;
-            top: calc(100% + 10px);
             text-align: left;
-            z-index: 1;
+            top: calc(100% + 10px);
             width: auto;
+            z-index: 1;
 
             &::before {
-              position: absolute;
-              content: "";
-              bottom: 100%;
-              left: 0;
-              width: 100%;
               background-color: transparent;
+              bottom: 100%;
+              content: '';
               height: 12px;
+              left: 0;
+              position: absolute;
+              width: 100%;
             }
 
             &::after {
-              position: absolute;
-              content: "";
-              bottom: 100%;
-              left: 50%;
-              transform: translateX(-50%);
               border-bottom: 8px solid #2b3839;
               border-left: 8px solid transparent;
               border-right: 8px solid transparent;
+              bottom: 100%;
+              content: '';
+              left: 50%;
+              position: absolute;
+              transform: translateX(-50%);
             }
           }
 
           &__link {
-            line-height: 39px;
-            font-weight: 600;
             font-size: 14px;
+            font-weight: 600;
+            line-height: 39px;
           }
         }
 
@@ -1886,9 +2024,9 @@ export default {
       overflow: auto;
       overflow: overlay; // 讓scrollbar不佔位。for有支援此屬性的瀏覽器
       &::after {
+        clear: both;
         content: '';
         display: block;
-        clear: both;
       }
     }
   }
@@ -1899,13 +2037,13 @@ export default {
   }
 
   &__dialog-select-wrapper {
-    width: 100%;
     margin: 24px 0;
+    width: 100%;
   }
 
   &__dialog-select {
-    width: 100%;
     border-bottom: 1px solid #fff;
+    width: 100%;
 
     ::v-deep .el-input__inner {
       padding-left: 0;
@@ -1917,15 +2055,15 @@ export default {
   }
 
   .button-container {
+    align-items: center;
     display: flex;
     justify-content: flex-end;
-    align-items: center;
     position: relative;
 
     &__button {
-      padding: 5px 10px;
-      min-width: unset;
       line-height: 20px;
+      min-width: unset;
+      padding: 5px 10px;
 
       &:not(:first-child) {
         margin-left: 8px;
@@ -1937,34 +2075,34 @@ export default {
     }
 
     &__time {
-      font-size: 12px;
       color: #ddd;
+      font-size: 12px;
     }
 
     &__status {
-      display: inline-block;
-      padding: 4px 8px;
       background: #333;
       border-radius: 24px;
-      margin-left: 16px;
-      font-size: 12px;
       color: #fff;
+      display: inline-block;
+      font-size: 12px;
+      margin-left: 16px;
+      padding: 4px 8px;
 
       &::before {
+        background: transparent;
+        border: 1px solid #999;
+        border-radius: 50%;
         content: '';
         display: inline-block;
-        width: 8px;
         height: 8px;
-        border: 1px solid #999;
-        background: transparent;
-        border-radius: 50%;
         margin: auto 0;
+        width: 8px;
       }
 
       &--active {
         &::before {
-          border: none;
           background: #2fecb3;
+          border: 0;
         }
       }
     }
@@ -1973,9 +2111,9 @@ export default {
       font-size: 14px;
       line-height: 32px;
 
-      [lang="en"] & {
-        text-align: right;
+      [lang='en'] & {
         line-height: 24px;
+        text-align: right;
       }
 
       .question-lamp {
@@ -1988,29 +2126,29 @@ export default {
 
       &__list-container {
         left: -109px;
-        top: calc(100% + 10px);
         text-align: left;
-        z-index: 1;
+        top: calc(100% + 10px);
         width: 160px;
+        z-index: 1;
 
-        &::before {
-          position: absolute;
-          content: "";
-          bottom: 100%;
-          left: 0;
-          width: 100%;
+        ::before {
           background-color: transparent;
+          bottom: 100%;
+          content: '';
           height: 12px;
+          left: 0;
+          position: absolute;
+          width: 100%;
         }
 
-        &::after {
-          position: absolute;
-          content: "";
-          bottom: 100%;
-          left: 72%;
+        ::after {
           border-bottom: 12px solid #2b3839;
           border-left: 12px solid transparent;
           border-right: 12px solid transparent;
+          bottom: 100%;
+          content: '';
+          left: 72%;
+          position: absolute;
         }
       }
 
@@ -2026,27 +2164,27 @@ export default {
   }
 
   &__dashboard-control {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 16px;
     position: relative;
     z-index: 1;
-    display: flex;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-    border-radius: 8px;
-    margin-right: 16px;
-    flex-wrap: wrap;
 
     &--top {
-      z-index: 2;
       margin-bottom: 12px;
+      z-index: 2;
     }
 
     &--bottom {
-      z-index: 1;
       margin-bottom: 20px;
+      z-index: 1;
     }
 
     &.editing {
-      padding: 16px 19px 0 19px;
       background: #1c292b;
+      padding: 16px 19px 0;
     }
   }
 
@@ -2057,9 +2195,9 @@ export default {
   }
 
   &__dashboard-components {
+    margin-right: 4px;
     position: relative;
     z-index: 0;
-    margin-right: 4px;
 
     .warning-icon {
       color: #ff5c46;
@@ -2072,7 +2210,7 @@ export default {
 }
 
 .dragging-ghost {
-  opacity: 0.5;
   background: #192323;
+  opacity: 0.5;
 }
 </style>

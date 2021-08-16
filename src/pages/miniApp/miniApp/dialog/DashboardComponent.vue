@@ -521,6 +521,7 @@ export default {
       this.layout = null
       this.isShowAnomalySetting = false
       this.closeUnknowInfoBlock()
+
       this.$store
         .dispatch('chatBot/askQuestion', {
           question,
@@ -619,15 +620,6 @@ export default {
       this.$emit('update:isLoading', true)
       if (selectedResultSegmentationInfo) {
         this.segmentation = selectedResultSegmentationInfo
-      }
-
-      // 初次創建時，預設元件名稱為使用者輸入的問句
-      if (!this.currentComponent.init) {
-        this.currentComponent.config.diaplayedName =
-          this.segmentation.sentence.reduce(
-            (acc, cur) => (acc += ` ${cur.matchedWord}`),
-            ''
-          )
       }
 
       // 確認是否為趨勢類型問題
@@ -994,20 +986,22 @@ export default {
 <style lang="scss" scoped>
 .key-result {
   padding: 24px;
+
   &__question {
     font-size: 18px;
     margin-bottom: 18px;
+
     .question-mark {
-      display: inline-block;
-      width: 30px;
-      height: 30px;
       background-color: $theme-color-primary;
-      color: #fff;
-      margin-right: 8px;
       border-radius: 8px;
-      text-align: center;
-      line-height: 30px;
+      color: #fff;
+      display: inline-block;
       font-weight: bold;
+      height: 30px;
+      line-height: 30px;
+      margin-right: 8px;
+      text-align: center;
+      width: 30px;
     }
   }
 
@@ -1018,17 +1012,17 @@ export default {
 
   &__switch {
     background: #1c292b;
-    border-radius: 12px;
     border: 2px solid #1c292b;
+    border-radius: 12px;
     color: #6c7678;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 8px 16px;
     cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
 
     &.active {
-      color: #2ad2e2;
       border: 2px solid #2ad2e2;
+      color: #2ad2e2;
     }
 
     &:not(:last-of-type) {
@@ -1046,8 +1040,8 @@ export default {
     background: #1c292b;
     border: 2px solid transparent;
     border-radius: 12px;
-    padding: 18.5px;
     cursor: pointer;
+    padding: 18.5px;
 
     &__content {
       display: flex;
@@ -1055,17 +1049,19 @@ export default {
 
     .setting {
       &__label {
+        color: #aaa;
         font-size: 14px;
-        color: #aaaaaa;
       }
+
       &__input {
-        height: 39px;
+        border-color: #fff;
         font-size: 16px;
-        border-color: #ffffff;
+        height: 39px;
 
         &::placeholder {
-          color: #aaaaaa;
+          color: #aaa;
         }
+
         ::v-deep .el-input__inner {
           padding-left: 0;
         }
@@ -1078,14 +1074,15 @@ export default {
   }
 
   &__empty-message {
-    display: flex;
     align-items: center;
-    margin-top: 30px;
     background: rgba(255, 223, 111, 0.08);
     color: #ffdf6f;
+    display: flex;
     font-size: 14px;
-    text-align: left;
+    margin-top: 30px;
     padding: 8px 14px;
+    text-align: left;
+
     .icon {
       font-size: 20px;
       margin-right: 5px;
@@ -1094,18 +1091,18 @@ export default {
 
   .display-setting {
     &__title {
-      margin-bottom: 8px;
-      font-weight: 600;
       font-size: 18px;
+      font-weight: 600;
       line-height: 25px;
+      margin-bottom: 8px;
     }
 
     &__content {
-      display: flex;
-      flex-direction: row;
       background: #1c292b;
       border: 2px solid transparent;
       border-radius: 12px;
+      display: flex;
+      flex-direction: row;
       padding: 18.5px;
     }
 
@@ -1115,20 +1112,20 @@ export default {
     }
 
     &__item {
+      align-items: center;
       display: flex;
       flex-direction: row;
-      align-items: center;
       padding: 6px 0;
     }
 
     .item {
       &__label {
-        margin-right: 9px;
-        width: 80px;
+        color: #ccc;
         font-size: 14px;
         font-weight: 600;
         line-height: 20px;
-        color: #cccccc;
+        margin-right: 9px;
+        width: 80px;
       }
 
       &__input {
@@ -1143,39 +1140,39 @@ export default {
     }
 
     &__button {
-      margin-top: auto;
-      margin-left: 16px;
       height: 30px;
+      margin-left: 16px;
+      margin-top: auto;
       min-width: 50px;
     }
   }
 
   .anomaly {
     &__title {
-      font-weight: 600;
+      color: #fff;
       font-size: 18px;
+      font-weight: 600;
       line-height: 25px;
-      color: #ffffff;
     }
 
     &__content {
       background: #1c292b;
       border-radius: 12px;
-      padding: 18.5px;
       display: flex;
+      padding: 18.5px;
     }
 
     &__content-title {
-      font-weight: 600;
+      color: #aaa;
       font-size: 14px;
-      color: #aaaaaa;
+      font-weight: 600;
       margin-right: 33px;
     }
 
     &__settings {
       display: flex;
-      flex-direction: column;
       flex: 1;
+      flex-direction: column;
 
       &--top {
         display: flex;
@@ -1190,42 +1187,44 @@ export default {
     }
 
     &__empty-message {
-      color: #aaaaaa;
+      color: #aaa;
       font-size: 14px;
     }
 
     .threshold {
-      display: flex;
-      width: 50%;
       background: #141c1d;
       border-radius: 8px;
-      padding: 18px 20px;
+      display: flex;
       justify-content: space-between;
+      padding: 18px 20px;
+      width: 50%;
 
       &--left {
         display: flex;
       }
 
       &__select {
+        border-bottom: 1px solid #fff;
         height: 40px;
-        border-bottom: 1px solid #ffffff;
-        max-width: 115px;
         margin-right: 16px;
+        max-width: 115px;
       }
 
       &__input {
         width: 135px;
+
         ::v-deep .input-verify-text {
           margin-bottom: 12px;
         }
+
         ::v-deep .input-error {
           margin-bottom: -20px;
         }
       }
 
       &__delete-icon {
+        color: #aaa;
         cursor: pointer;
-        color: #aaaaaa;
       }
     }
   }
