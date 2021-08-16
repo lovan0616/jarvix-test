@@ -17,8 +17,8 @@ const updateAppSettingVersion = (appInfo) => {
             component.position = {
               x: 0, // add position
               y: 0,
-              row: component.config.size?.row ?? 6,
-              column: component.config.size?.column ?? 6
+              row: component?.config?.size?.row ?? 6,
+              column: component?.config?.size?.column ?? 6
             }
             delete component.config.size // remove component .config.size
 
