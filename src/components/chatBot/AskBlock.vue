@@ -169,8 +169,8 @@ export default {
   computed: {
     ...mapState(['isShowAskHelper']),
     ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName', 'isUseAlgorithm', 'setParserLanguage']),
-    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'filterList', 'historyQuestionList', 'dataFrameId', 'dataFrameList']),
-    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapState('dataSource', ['dataSourceId', 'dataSourceList', 'appQuestion', 'historyQuestionList', 'dataFrameId', 'dataFrameList']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox', 'filterList']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     isSuggestionBlockVisible () {
       return this.isInputFocus && (this.suggestionList.length > 0 || (this.isLoadingKnownTerms && this.userQuestion)) && !this.isShowAskHelper
