@@ -48,6 +48,7 @@
 <script>
 import store from '@/store'
 import { mapState, mapMutations } from 'vuex'
+import dataFrameAdvanceSetting from '@/store/modules/dataFrameAdvanceSetting'
 
 export default {
   name: 'HomeLayout',
@@ -73,6 +74,12 @@ export default {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
     next()
   },
+  mounted () {
+    if (this.$store.hasModule('dataFrameAdvanceSetting')) {
+      this.$store.unregisterModule('dataFrameAdvanceSetting', dataFrameAdvanceSetting)
+    }
+    this.$store.registerModule('dataFrameAdvanceSetting', dataFrameAdvanceSetting)
+  },
   destroyed () {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
     if (this.isShowSettingBox) this.toggleSettingBox(false)
@@ -87,24 +94,24 @@ export default {
 </script>
 <style lang="scss" scoped>
 .home-layout {
-  width: 100%;
   position: relative;
+  width: 100%;
 
   .main {
-    padding: 32px 24px 64px 24px;
     height: calc(100% - 32px);
     overflow: auto;
+    padding: 32px 24px 64px;
   }
 
   .preview-datasource {
-    width: 100%;
-    height: calc(100vh - #{$header-height + $chat-room-height});
-    position: absolute;
-    top: $header-height + $chat-room-height;
-    right: 0;
     background: rgba(0, 0, 0, 0.89);
+    height: calc(100vh - #{$header-height + $chat-room-height});
     overflow: auto;
     padding: 40px;
+    position: absolute;
+    right: 0;
+    top: $header-height + $chat-room-height;
+    width: 100%;
     z-index: 3;
 
     &--has-basic-df-setting {
@@ -112,11 +119,11 @@ export default {
     }
 
     &__close-btn {
-      position: absolute;
-      top: 32px;
-      right: 40px;
       color: #fff;
       font-size: 14px;
+      position: absolute;
+      right: 40px;
+      top: 32px;
       z-index: 5;
     }
   }

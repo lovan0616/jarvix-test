@@ -199,7 +199,7 @@ export default {
                 // 若基表設定已暫存同一資料表的欄位，則通知它重拿
                 if (this.currentDataFrameId === task.dataFrameId && this.isInit) {
                   this.$store.commit('dataFrameAdvanceSetting/toggleIsInit', false)
-                  this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
+                  this.$store.commit('dataFrameAdvanceSetting/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
                 }
                 break
               case 'Fail':
@@ -249,30 +249,32 @@ export default {
 <style lang="scss" scoped>
 .task-notifier {
   &__icon {
-    display: flex;
-    justify-content: center;
-    width: 30px;
-    font-size: 16px;
-    letter-spacing: 0.05em;
-    user-select: none;
-    outline: none;
     cursor: pointer;
+    display: flex;
+    font-size: 16px;
+    justify-content: center;
+    letter-spacing: 0.05em;
+    outline: none;
+    user-select: none;
+    width: 30px;
+
     &.is-open {
       color: $theme-color-primary;
     }
   }
 }
+
 ::v-deep .el-badge {
   &__content {
-    right: 0;
-    color: $theme-text-color-dark;
     background-color: $theme-color-warning;
     border: none;
-    padding: 0 4px;
     border-radius: 50%;
+    color: $theme-text-color-dark;
     font-size: 10px;
     height: 16px;
     line-height: 16px;
+    padding: 0 4px;
+    right: 0;
   }
 }
 </style>

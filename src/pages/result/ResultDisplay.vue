@@ -74,7 +74,7 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'currentQuestionId', 'currentQuestionInfo', 'algoConfig']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     filterRestrictionList () {
-      return this.$store.getters['dataSource/filterRestrictionList']
+      return this.$store.getters['dataFrameAdvanceSetting/filterRestrictionList']
     }
   },
   watch: {

@@ -16,7 +16,7 @@ export default {
     let askCondition = {
       question: data.question === rootState.dataSource.appQuestion ? rootState.dataSource.appQuestion : data.question,
       dataSourceId: data.dataSourceId || rootState.dataSource.dataSourceId,
-      previewQuestionId: data.previewQuestionId || rootGetters['dataSource/drillDownQuestionId'],
+      previewQuestionId: data.previewQuestionId || rootGetters['dataFrameAdvanceSetting/drillDownQuestionId'],
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,

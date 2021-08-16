@@ -22,7 +22,7 @@
     >
       <div class="numeric-block">
         <div
-          :class="{'has-error': errors.has(index + '-' + 'upperBound')}"
+          :class="{'has-error': hasErrorOf(index + '-' + 'upperBound')}"
           class="numeric-block__item item"
         >
           <div class="item__input-block">
@@ -39,14 +39,14 @@
             >
           </div>
           <div
-            v-show="errors.has(index + '-' + 'upperBound')"
+            v-show="hasErrorOf(index + '-' + 'upperBound')"
             class="error-text"
           >
-            {{ errors.first(index + '-' + 'upperBound') }}
+            {{ getFirstErrorOf(index + '-' + 'upperBound') }}
           </div>
         </div>
         <div
-          :class="{'has-error': errors.has(index + '-' + 'lowerBound')}"
+          :class="{'has-error': hasErrorOf(index + '-' + 'lowerBound')}"
           class="item"
         >
           <div class="item__input-block">
@@ -63,10 +63,10 @@
             >
           </div>
           <div
-            v-show="errors.has(index + '-' + 'lowerBound')"
+            v-show="hasErrorOf(index + '-' + 'lowerBound')"
             class="error-text"
           >
-            {{ errors.first(index + '-' + 'lowerBound') }}
+            {{ getFirstErrorOf(index + '-' + 'lowerBound') }}
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@
     >
       <div class="datetime-block">
         <div
-          :class="{'has-error': errors.has(index + '-' + 'datetimeLowerBound')}"
+          :class="{'has-error': hasErrorOf(index + '-' + 'datetimeLowerBound')}"
           class="item"
         >
           <div class="item__input-block">
@@ -101,14 +101,14 @@
             />
           </div>
           <div
-            v-show="errors.has(index + '-' + 'datetimeLowerBound')"
+            v-show="hasErrorOf(index + '-' + 'datetimeLowerBound')"
             class="error-text"
           >
-            {{ errors.first(index + '-' + 'datetimeLowerBound') }}
+            {{ getFirstErrorOf(index + '-' + 'datetimeLowerBound') }}
           </div>
         </div>
         <div
-          :class="{'has-error': errors.has(index + '-' + 'datetimeUpperBound')}"
+          :class="{'has-error': hasErrorOf(index + '-' + 'datetimeUpperBound')}"
           class="datetime-block__item item"
         >
           <div class="item__input-block">
@@ -133,10 +133,10 @@
             />
           </div>
           <div
-            v-show="errors.has(index + '-' + 'datetimeUpperBound')"
+            v-show="hasErrorOf(index + '-' + 'datetimeUpperBound')"
             class="error-text"
           >
-            {{ errors.first(index + '-' + 'datetimeUpperBound') }}
+            {{ getFirstErrorOf(index + '-' + 'datetimeUpperBound') }}
           </div>
         </div>
       </div>
@@ -173,10 +173,10 @@
           >{{ option }}</label>
         </div>
         <div
-          v-show="errors.has(index + '-' + 'boolean')"
+          v-show="hasErrorOf(index + '-' + 'boolean')"
           class="error-text"
         >
-          {{ errors.first(index + '-' + 'boolean') }}
+          {{ getFirstErrorOf(index + '-' + 'boolean') }}
         </div>
       </template>
     </div>
@@ -223,10 +223,10 @@
         {{ $t('editing.onlyPrefixMatching') }}
       </div>
       <div
-        v-show="errors.has(index + '-' + 'select')"
+        v-show="hasErrorOf(index + '-' + 'select')"
         class="error-text"
       >
-        {{ errors.first(index + '-' + 'select') }}
+        {{ getFirstErrorOf(index + '-' + 'select') }}
       </div>
     </div>
   </div>
@@ -251,6 +251,10 @@ export default {
     subRestraint: {
       type: Object,
       default: () => {}
+    },
+    validatorScope: {
+      type: String,
+      default: () => ''
     }
   },
   data () {
@@ -423,6 +427,12 @@ export default {
           if (this.tempAliasList.length > 0) this.valueList = this.tempAliasList
         }, 100)
       }
+    },
+    hasErrorOf (field) {
+      return this.errors.has(field, this.validatorScope)
+    },
+    getFirstErrorOf (field) {
+      return this.errors.first(field, this.validatorScope)
     }
   }
 
@@ -437,7 +447,7 @@ export default {
     margin-bottom: 8px;
 
     .btn-delete {
-      color: #CCC;
+      color: #ccc;
       cursor: pointer;
 
       &:hover {
@@ -447,12 +457,13 @@ export default {
   }
 
   &__title {
-    flex: 1;
-    margin: 0;
-    font-size:14px;
-    line-height: 22px;
-    color: #CCC;
     @include text-hidden;
+
+    color: #ccc;
+    flex: 1;
+    font-size: 14px;
+    line-height: 22px;
+    margin: 0;
   }
 
   &__content {
@@ -460,19 +471,20 @@ export default {
     overflow-y: auto;
 
     .empty-message {
-      padding: 8px 12px;
-      background-color: #1C292B;
+      background-color: #1c292b;
       border-radius: 8px;
+      color: #ccc;
       font-size: 14px;
-      color: #CCC;
+      padding: 8px 12px;
     }
   }
 
-  .numeric-block, .datetime-block {
+  .numeric-block,
+  .datetime-block {
+    background-color: #1c292b;
+    border-radius: 8px;
     margin-bottom: 8px;
     padding: 12px;
-    background-color: #1C292B;
-    border-radius: 8px;
 
     .item {
       &:not(:last-child) {
@@ -488,34 +500,34 @@ export default {
       }
 
       &__input-block {
+        align-items: center;
         display: flex;
         flex-direction: row;
-        align-items: center;
       }
 
       &__label {
+        color: #ccc;
         flex: 1;
         font-size: 12px;
         line-height: 22px;
-        color: #CCC;
       }
 
       &__input {
-        padding: 0 12px;
-        width: 150px;
-        height: 30px;
-        font-size: 12px;
-        text-align: right;
-        background-color: #141C1D;
-        border-radius: 5px;
+        background-color: #141c1d;
         border-bottom: none;
+        border-radius: 5px;
+        font-size: 12px;
+        height: 30px;
+        padding: 0 12px;
+        text-align: right;
+        width: 150px;
       }
 
       .error-text {
         float: right;
-        margin-top: 4px;
         font-size: 12px;
         line-height: 22px;
+        margin-top: 4px;
       }
     }
   }
@@ -535,20 +547,20 @@ export default {
   }
 
   .category-block {
-    position: relative;
     overflow: unset;
+    position: relative;
 
     .warning-text {
-      margin-top: 4px;
+      color: $theme-color-warning;
       font-size: 12px;
       line-height: 22px;
-      color: $theme-color-warning;
+      margin-top: 4px;
     }
 
     &__selector {
-      width: 100%;
+      background-color: #141c1d;
       border-radius: 5px;
-      background-color: #141C1D;
+      width: 100%;
 
       /* [Bug 未解] el-select selects multiple window jitter.
        * https://github.com/ElemeFE/element/issues/8731
@@ -557,41 +569,43 @@ export default {
 
       ::v-deep .el-select__tags {
         display: block;
+
         .el-select__input {
           width: 100% !important;
         }
+
         .el-tag.el-tag--info {
-          display: block;
-          width: fit-content;
-          max-width: 200px;
-          height: 26px;
-          font-weight: 600;
-          font-size: 14px;
-          line-height: 22px;
           background-color: transparent;
           border-color: $theme-color-primary;
           color: $theme-color-primary;
+          display: block;
+          font-size: 14px;
+          font-weight: 600;
+          height: 26px;
+          line-height: 22px;
+          max-width: 200px;
+          width: fit-content;
 
           .el-select__tags-text {
+            display: inline-block;
             max-width: 150px;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
-            display: inline-block;
             vertical-align: middle;
+            white-space: nowrap;
           }
         }
 
         .el-select__input {
-          color: #CCC;
+          color: #ccc;
         }
 
         .el-tag__close {
-          margin: 0;
-          right: 0;
-          font-weight: bold;
           background-color: transparent;
           color: $theme-color-primary;
+          font-weight: bold;
+          margin: 0;
+          right: 0;
 
           &::before {
             font-size: 14px;
@@ -600,49 +614,48 @@ export default {
       }
 
       ::v-deep .el-input__inner {
+        color: #888;
         font-size: 14px;
         line-height: 22px;
-        color: #888888;
       }
 
       ::v-deep .el-select-dropdown {
+        left: 0 !important;
         width: 100%;
-        left: 0px !important;
 
         .el-select-dropdown__item {
-          padding: 0 20px 0 36px;
-          font-weight: normal;
-          color: #CCC;
           background-color: transparent;
+          color: #ccc;
+          font-weight: normal;
+          padding: 0 20px 0 36px;
 
           &:hover {
-            background-color: rgba(0, 0, 0, .6);
+            background-color: rgba(0, 0, 0, 0.6);
           }
 
           &::after {
+            border: 1.1px solid #fff;
             content: '';
-            position: absolute;
-            top: 8px;
-            left: 12px;
-            width: 14px;
-            height: 14px;
             font-size: 12px;
             font-weight: bold;
+            height: 14px;
+            left: 12px;
             line-height: 15px;
-            border: 1.1px solid #FFF;
+            position: absolute;
+            top: 8px;
+            width: 14px;
           }
 
           &.selected {
             &::after {
+              background-color: #1eb8c7;
+              border-color: #1eb8c7;
+              color: #fff;
               content: '\E6DA';
-              color: #FFF;
-              background-color: #1EB8C7;
-              border-color: #1EB8C7;
             }
           }
         }
       }
-
     }
 
     .checkbox-label {
@@ -656,10 +669,10 @@ export default {
     &:not(:last-of-type) {
       margin-right: 40px;
     }
+
     &:last-of-type {
       margin-right: 16px;
     }
   }
-
 }
 </style>

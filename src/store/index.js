@@ -19,7 +19,7 @@ import jobAdjustments from '@/schedule/store/modules/jobAdjustments'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
     dataSource,
     pinboard,
@@ -33,7 +33,6 @@ export default new Vuex.Store({
     algorithm,
     validation,
     previewDataSource,
-    dataFrameAdvanceSetting,
     scheduleSetting,
     simulation,
     jobAdjustments
@@ -59,3 +58,7 @@ export default new Vuex.Store({
     }
   }
 })
+
+store.registerModule('dataFrameAdvanceSetting', dataFrameAdvanceSetting)
+
+export default store

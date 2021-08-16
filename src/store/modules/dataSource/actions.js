@@ -135,14 +135,14 @@ export default {
   },
   clearChatbot ({ dispatch, commit, state }) {
     // 清空篩選條件
-    dispatch('clearAllFilter')
+    dispatch('dataFrameAdvanceSetting/clearAllFilter', null, { root: true })
     // 清除 question id
     commit('clearCurrentQuestionId')
     // 關閉演算法
     commit('chatBot/updateIsUseAlgorithm', false, { root: true })
   },
   handleEmptyDataSource ({ dispatch, commit }) {
-    dispatch('clearAllFilter')
+    dispatch('dataFrameAdvanceSetting/clearAllFilter', null, { root: true })
     commit('clearCurrentQuestionId')
     commit('chatBot/updateIsUseAlgorithm', false, { root: true })
     commit('setDataSourceId', null)
@@ -170,7 +170,7 @@ export default {
       if (mode === 'display') {
         displayCancelFunction = c
         selectedColumnList = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
-        restrictions = getters.filterRestrictionList
+        restrictions = rootGetters['dataFrameAdvanceSetting/filterRestrictionList']
       }
     })
     // 依照條件取得部分或全部的資料表
@@ -186,7 +186,7 @@ export default {
     if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
-    const restrictions = getters.filterRestrictionList
+    const restrictions = rootGetters['dataFrameAdvanceSetting/filterRestrictionList']
     return getDataSourceColumnInfoById(state.dataSourceId, dataFrameId, columns, restrictions).then(response => {
       return shouldStore ? commit('setDataSourceColumnInfoList', response) : response
     })
@@ -195,7 +195,7 @@ export default {
     if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
-    const restrictions = getters.filterRestrictionList
+    const restrictions = rootGetters['dataFrameAdvanceSetting/filterRestrictionList']
     return getDataSourceDataValueById(state.dataSourceId, dataFrameId, columns, restrictions, size).then(response => {
       return shouldStore ? commit('setDataSourceDataValueList', response) : response
     })
@@ -228,15 +228,6 @@ export default {
       commit('setHistoryQuestionList', res)
     })
   },
-  updateFilterList ({ commit }, filterList) {
-    commit('setUpdatedFilterList', filterList)
-  },
-  updateFilterStatusList ({ commit, state }, statusList) {
-    commit('setStatusList', statusList)
-  },
-  clearAllFilter ({ commit }) {
-    commit('clearFilterList')
-  },
   cancelRequest ({ state }, mode) {
     if (mode === 'popup' && typeof popupCancelFunction === 'function') {
       popupCancelFunction('cancel')
@@ -265,8 +256,8 @@ export default {
     // 如果 dataFrame 被刪掉則恢復預設 all
     return dispatch('changeDataFrameById', 'all')
   },
-  triggerColumnDataCalculation ({ state, getters }) {
-    const restrictions = getters.filterRestrictionList
+  triggerColumnDataCalculation ({ state, rootGetters }) {
+    const restrictions = rootGetters['dataFrameAdvanceSetting/filterRestrictionList']
     return triggerColumnDataCalculation(state.dataFrameId, restrictions)
   }
 }

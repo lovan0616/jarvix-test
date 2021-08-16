@@ -184,10 +184,12 @@ export default {
         description: null,
         status: 'Enable',
         settings: {
+          version: '1.0.1',
           editModeData: {
             dashboards: [],
             displayedName: null,
             isPublishing: false,
+            isSideNavPin: true,
             warningModule: {
               activate: false,
               updateFrequency: '* * * * *',

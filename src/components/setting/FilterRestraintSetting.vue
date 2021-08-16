@@ -1,96 +1,99 @@
 <template>
-  <div class="restraint-setting">
-    <div
-      class="restraint-setting__back-icon"
-      @click="backToPreviousPage"
-    >
-      <svg-icon icon-class="arrow-left" />
-      {{ $t('dataFrameAdvanceSetting.restrictionSetting') }}
-    </div>
-    <div class="restraint-setting__header">
-      <h1 class="restraint-setting__title">
-        {{ $t('dataFrameAdvanceSetting.restraintSetting') }}
-        <join-logic-hints
-          :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
-          icon-class="inner-join"
-        />
-      </h1>
-      <button
-        :class="{'add-restraint-btn--active': isShowSeletor}"
-        type="button"
-        class="btn-outline add-restraint-btn"
-        @click.stop="addSubRestraint"
-      >
-        <span>
-          <svg-icon icon-class="plus" />
-        </span>
-      </button>
+  <form :data-vv-scope="validatorScope">
+    <div class="restraint-setting">
       <div
-        v-show="isShowSeletor"
-        ref="selectList"
-        class="restraint-setting__selector selector"
+        class="restraint-setting__back-icon"
+        @click="backToPreviousPage"
       >
-        <search-block
-          v-model="queryColumnName"
-          :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
-          class="selector__input-block"
-        />
+        <svg-icon icon-class="arrow-left" />
+        {{ $t('dataFrameAdvanceSetting.restrictionSetting') }}
+      </div>
+      <div class="restraint-setting__header">
+        <h1 class="restraint-setting__title">
+          {{ $t('dataFrameAdvanceSetting.restraintSetting') }}
+          <join-logic-hints
+            :hint="$t('dataFrameAdvanceSetting.ANDLogicHint')"
+            icon-class="inner-join"
+          />
+        </h1>
+        <button
+          :class="{'add-restraint-btn--active': isShowSeletor}"
+          type="button"
+          class="btn-outline add-restraint-btn"
+          @click.stop="addSubRestraint"
+        >
+          <span>
+            <svg-icon icon-class="plus" />
+          </span>
+        </button>
         <div
-          v-if="columnFilterOption.length === 0"
+          v-show="isShowSeletor"
+          ref="selectList"
+          class="restraint-setting__selector selector"
+        >
+          <search-block
+            v-model="queryColumnName"
+            :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
+            class="selector__input-block"
+          />
+          <div
+            v-if="columnFilterOption.length === 0"
+            class="empty-message"
+          >
+            {{ $t('message.emptyResult') }}
+          </div>
+          <div class="selector__list-block">
+            <template v-for="(column, index) in columnFilterOption">
+              <label
+                :key="index"
+                :class="{'checkbox--active': column.active}"
+                class="checkbox"
+              >
+                <div class="checkbox-label">
+                  <input
+                    v-model="column.active"
+                    :disabled="column.active"
+                    type="checkbox"
+                    @change="selectColumn(index)"
+                  >
+                  <div class="checkbox-square" />
+                </div>
+                <span>{{ column.name }}</span>
+              </label>
+            </template>
+          </div>
+        </div>
+      </div>
+      <div class="restraint-setting__content">
+        <div
+          v-if="tempRestraintList.length === 0"
           class="empty-message"
         >
-          {{ $t('message.emptyResult') }}
+          {{ $t('dataFrameAdvanceSetting.noRestraintYet') }}
         </div>
-        <div class="selector__list-block">
-          <template v-for="(column, index) in columnFilterOption">
-            <label
-              :key="index"
-              :class="{'checkbox--active': column.active}"
-              class="checkbox"
-            >
-              <div class="checkbox-label">
-                <input
-                  v-model="column.active"
-                  :disabled="column.active"
-                  type="checkbox"
-                  @change="selectColumn(index)"
-                >
-                <div class="checkbox-square" />
-              </div>
-              <span>{{ column.name }}</span>
-            </label>
-          </template>
-        </div>
+        <template v-else>
+          <single-sub-restraint-block
+            v-for="(sub, index) in tempRestraintList"
+            :key="sub.properties.dc_id"
+            :index="index"
+            :sub-restraint="sub"
+            :validator-scope="validatorScope"
+            @delete="deleteSubRestraint(index)"
+          />
+        </template>
+      </div>
+      <div class="restraint-setting__button-block">
+        <button
+          v-if="tempRestraintList.length !== 0 && hasSettingChanged"
+          type="button"
+          class="btn btn-default"
+          @click.stop="save()"
+        >
+          {{ $t('button.confirm') }}
+        </button>
       </div>
     </div>
-    <div class="restraint-setting__content">
-      <div
-        v-if="tempRestraintList.length === 0"
-        class="empty-message"
-      >
-        {{ $t('dataFrameAdvanceSetting.noRestraintYet') }}
-      </div>
-      <template v-else>
-        <single-sub-restraint-block
-          v-for="(sub, index) in tempRestraintList"
-          :key="sub.properties.dc_id"
-          :index="index"
-          :sub-restraint="sub"
-          @delete="deleteSubRestraint(index)"
-        />
-      </template>
-    </div>
-    <div class="restraint-setting__button-block">
-      <button
-        v-if="tempRestraintList.length !== 0 && hasSettingChanged"
-        type="button"
-        class="btn btn-default"
-        @click.stop="save()"
-      >
-        {{ $t('button.confirm') }}
-      </button>
-    </div>
-  </div>
+  </form>
 </template>
 <script>
 import SearchBlock from '@/components/SearchBlock'
@@ -119,7 +122,8 @@ export default {
       isShowSeletor: false,
       queryColumnName: '',
       selectedColumn: [],
-      tempRestraintList: []
+      tempRestraintList: [],
+      validatorScope: 'filter-restraint-setting'
     }
   },
   computed: {
@@ -153,6 +157,7 @@ export default {
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
+    if (!this.restraint) return
     if (this.restraint.type === 'compound') {
       this.tempRestraintList = JSON.parse(JSON.stringify(this.restraint.restraints))
     } else {
@@ -234,7 +239,7 @@ export default {
       this.tempRestraintList.splice(index, 1)
     },
     save () {
-      this.$validator.validateAll().then(isValidate => {
+      this.$validator.validateAll('filter-restraint-setting').then(isValidate => {
         if (!isValidate) return
 
         // Reconstruct restraints
@@ -258,17 +263,17 @@ export default {
 
 <style lang="scss" scoped>
 .restraint-setting {
+  background-color: transparent;
   display: flex;
   flex-direction: column;
-  padding: 16px 24px;
   height: 100%;
-  background-color: transparent;
+  padding: 16px 24px;
 
   &__back-icon {
-    margin-bottom: 15px;
-    font-size: 14px;
     color: $theme-color-primary;
     cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 15px;
 
     &:hover {
       opacity: 0.8;
@@ -276,65 +281,66 @@ export default {
   }
 
   &__header {
-    position: relative;
-    margin: 0 0 15px 0;
     display: flex;
     flex-direction: row;
+    margin: 0 0 15px;
+    position: relative;
   }
 
   &__title {
     display: flex;
     flex: 1;
-    margin: 0;
-    font-weight: 600;
     font-size: 16px;
+    font-weight: 600;
     line-height: 22px;
+    margin: 0;
+
     ::v-deep .join-logic-hints__icon {
       margin-left: 8px;
     }
   }
 
   .add-restraint-btn {
-    width: 28px;
-    height: 24px;
+    border-radius: 4px;
     font-size: 14px;
     font-weight: 300;
-    border-radius: 4px;
+    height: 24px;
+    width: 28px;
 
     &--active {
-      color: $theme-color-primary;
       border-color: $theme-color-primary;
+      color: $theme-color-primary;
     }
   }
 
   &__selector {
-    position: absolute;
-    top: -6px;
+    background-color: var(--color-bg-gray);
+    border-radius: 5px;
+    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, 0.5));
     left: 100%;
     padding-top: 12px;
+    position: absolute;
+    top: -6px;
     width: 100%;
-    border-radius: 5px;
-    background-color: var(--color-bg-gray);
-    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
     z-index: 4;
 
     &::before {
+      border-bottom: 8px solid transparent;
+      border-right: 12px solid #2b3839;
+      border-top: 8px solid transparent;
       content: '';
+      left: -10px;
       position: absolute;
       top: 8px;
-      left: -10px;
-      border-right: 12px solid #2B3839;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
     }
   }
 
   .selector {
     &__input-block {
-      margin: 0 12px 8px 12px;
+      background-color: #141c1d;
+      color: #888;
       font-size: 14px;
-      color: #888888;
-      background-color: #141C1D;
+      margin: 0 12px 8px;
     }
 
     &__list-block {
@@ -354,14 +360,14 @@ export default {
       }
 
       .checkbox {
+        align-items: center;
+        cursor: pointer;
         display: flex;
         flex-direction: row;
-        align-items: center;
         height: 32px;
-        cursor: pointer;
 
         &:hover {
-          background-color: rgba(0, 0, 0, .6);
+          background-color: rgba(0, 0, 0, 0.6);
         }
 
         &--active {
@@ -369,39 +375,39 @@ export default {
         }
 
         &:not(:first-child) {
-          border-top: 1px solid #3F4546;
+          border-top: 1px solid #3f4546;
         }
 
         &-label {
           margin: 0 8px 0 12px;
 
           & input:checked ~ .checkbox-square {
-            background: #777777;
-            border-color: #DCDFE6;
+            background: #777;
+            border-color: #dcdfe6;
           }
 
-          & input:disabled ~ .checkbox-square:after {
-            border-color: #C0C4CC;
+          & input:disabled ~ .checkbox-square::after {
+            border-color: #c0c4cc;
           }
         }
 
         & > span {
+          @include text-hidden;
+
+          color: #ccc;
           font-size: 14px;
           line-height: 20px;
-          color: #CCC;
-          @include text-hidden;
         }
       }
     }
 
     .empty-message {
-      margin-bottom: 12px;
-      padding: 0 12px;
+      color: #ccc;
       font-size: 12px;
       line-height: 20px;
-      color: #CCC;
+      margin-bottom: 12px;
+      padding: 0 12px;
     }
-
   }
 
   &__content {
@@ -415,15 +421,15 @@ export default {
     }
 
     .empty-message {
-      color: #AAAAAA;
+      color: #aaa;
       font-size: 12px;
     }
   }
 
   &__button-block {
     .btn {
-      width: 100%;
       height: 28px;
+      width: 100%;
     }
   }
 }

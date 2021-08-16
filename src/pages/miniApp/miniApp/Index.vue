@@ -378,46 +378,59 @@
               />
             </div>
             <div class="mini-app__dashboard-components">
-              <template v-if="currentDashboard.components.length > 0">
-                <draggable
-                  :list="currentDashboard.components"
-                  :move="logDraggingMovement"
-                  :disabled="!isEditMode || currentDashboard.components.length === 1"
-                  ghost-class="dragging-ghost"
-                  style="height: 100%;"
-                  @end="updateComponentOrder($t('miniApp.component'))"
+              <template v-if="currentDashboard.components.length > 0 && (componentsLayout !== null && componentsLayout.length > 0)">
+                <grid-layout
+                  :layout="componentsLayout"
+                  :col-num="12"
+                  :row-height="50"
+                  :is-draggable="true"
+                  :is-resizable="true"
+                  :is-mirrored="false"
+                  :vertical-compact="true"
+                  :margin="[10, 10]"
+                  :use-css-transforms="true"
+                  @layout-updated="updateComponentLayout"
                 >
-                  <dashboard-task
-                    v-for="componentData in currentDashboard.components"
-                    :key="`${componentData.id} - ${componentData.updateTime}`"
-                    :filters="filterColumnValueInfoList"
-                    :y-axis-controls="yAxisControlColumnValueInfoList"
-                    :controls="controlColumnValueInfoList"
-                    :component-data="componentData"
-                    :is-edit-mode="isEditMode"
-                    :warning-module-setting="appData.warningModule"
-                    :is-current-dashboard-init="isCurrentDashboardInit"
-                    :time-zone="appTimeZone"
-                    @redirect="activeCertainDashboard($event)"
-                    @deleteComponentRelation="deleteComponentRelation"
-                    @columnTriggered="columnTriggered"
-                    @rowTriggered="rowTriggered"
-                    @chartTriggered="chartTriggered"
-                    @warningLogTriggered="warningLogTriggered($event)"
-                    @goToCertainDashboard="activeCertainDashboard($event)"
-                    @switchDialogName="handleDashboardSwitchName($event, componentData)"
+                  <grid-item
+                    v-for="(item, i) in componentsLayout"
+                    :x="item.x"
+                    :y="item.y"
+                    :w="item.w"
+                    :h="item.h"
+                    :i="item.i"
+                    :key="item.i"
+                    :static="!isEditMode"
                   >
-                    <template
-                      v-if="componentData.type === 'monitor-warning-list'"
-                      slot="icon"
+                    <dashboard-task
+                      :key="`${currentDashboard.components[i].id} - ${currentDashboard.components[i].updateTime}`"
+                      :filters="filterColumnValueInfoList"
+                      :y-axis-controls="yAxisControlColumnValueInfoList"
+                      :controls="controlColumnValueInfoList"
+                      :component-data="currentDashboard.components[i]"
+                      :is-edit-mode="isEditMode"
+                      :warning-module-setting="appData.warningModule"
+                      :is-current-dashboard-init="isCurrentDashboardInit"
+                      @redirect="activeCertainDashboard($event)"
+                      @deleteComponentRelation="deleteComponentRelation"
+                      @columnTriggered="columnTriggered"
+                      @rowTriggered="rowTriggered"
+                      @chartTriggered="chartTriggered"
+                      @warningLogTriggered="warningLogTriggered($event)"
+                      @goToCertainDashboard="activeCertainDashboard($event)"
+                      @switchDialogName="handleDashboardSwitchName($event, currentDashboard.components[i])"
                     >
-                      <svg-icon
-                        icon-class="warning"
-                        class="warning-icon"
-                      />
-                    </template>
-                  </dashboard-task>
-                </draggable>
+                      <template
+                        v-if="currentDashboard.components[i].type === 'monitor-warning-list'"
+                        slot="icon"
+                      >
+                        <svg-icon
+                          icon-class="warning"
+                          class="warning-icon"
+                        />
+                      </template>
+                    </dashboard-task>
+                  </grid-item>
+                </grid-layout>
               </template>
               <template v-else>
                 <div class="empty-block">
@@ -557,6 +570,8 @@ import draggable from 'vuedraggable'
 import { compileMiniApp } from '@/utils/backwardCompatibilityCompiler.js'
 import { mapState, mapActions } from 'vuex'
 import { updateAlertTimeZone } from '@/API/Alert'
+import updateAppSettingVersion from '@/utils/updateAppSettingVersion'
+import VueGridLayout from 'vue-grid-layout'
 
 export default {
   inject: ['$validator'],
@@ -581,7 +596,9 @@ export default {
     WarningModule,
     draggable,
     DefaultSelect,
-    ComponentToAlertConditionDialog
+    ComponentToAlertConditionDialog,
+    GridLayout: VueGridLayout.GridLayout,
+    GridItem: VueGridLayout.GridItem
   },
   data () {
     return {
@@ -620,11 +637,12 @@ export default {
       scriptOptionList: [],
       initComponent: null,
       isMiniAppCompiled: false,
+      componentsLayout: null,
       // side nav
       sideNavPinerLeaveTimer: null,
       isMouseEnterSideNavPinner: false,
       isSideNavShow: false,
-      isSideNavPin: false
+      isSideNavPin: true
     }
   },
   computed: {
@@ -797,6 +815,17 @@ export default {
     },
     sideNavPinIcon () {
       return this.isMouseEnterSideNavPinner ? 'pin' : 'side-nav'
+    },
+    currentDashBoardLayoutInfo () {
+      if (!this.currentDashboard && (!this.currentDashboard.components || this.currentDashboard.components.length <= 0)) return null
+      return this.currentDashboard.components.map((component, i) => {
+        return {
+          attr: i,
+          x: component.position.x,
+          col: component.position.column,
+          row: component.position.row
+        }
+      })
     }
   },
   watch: {
@@ -817,6 +846,12 @@ export default {
       handler (controlList) {
         this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].yAxisControlList = controlList
       }
+    },
+    isSideNavPin (val) {
+      if (!val) {
+        this.isSideNavShow = false
+        this.isMouseEnterSideNavPinner = false
+      }
     }
   },
   created () {
@@ -824,37 +859,45 @@ export default {
   },
   methods: {
     ...mapActions('dataSource', ['changeDataSourceById']),
-    getMiniAppInfo () {
+    async getMiniAppInfo () {
       this.isLoading = true
-      getMiniAppInfo(this.miniAppId)
-        .then(response => {
-          let miniAppInfo = response
+      try {
+        let miniAppInfo = await getMiniAppInfo(this.miniAppId)
 
-          // 處理向下兼容性
-          if (!this.isMiniAppCompiled) {
-            const { updatedAppData, isDataChanged } = compileMiniApp(miniAppInfo)
+        // 處理向下兼容性
+        if (!this.isMiniAppCompiled) {
+          const { updatedAppData, isDataChanged } = compileMiniApp(miniAppInfo)
 
-            // 如果有變更，需要更新到資料庫
-            isDataChanged && this.updateAppSetting(updatedAppData)
-            miniAppInfo = updatedAppData
-            this.isMiniAppCompiled = true
-          }
+          // 如果有變更，需要更新到資料庫
+          isDataChanged && this.updateAppSetting(updatedAppData)
+          miniAppInfo = updatedAppData
+          this.isMiniAppCompiled = true
+        }
 
-          this.miniApp = miniAppInfo
-          this.newAppEditModeName = this.appData.displayedName
+        // update app data version
+        const updatedMiniAppInfo = updateAppSettingVersion(miniAppInfo)
+        await this.updateAppSetting(updatedMiniAppInfo)
 
-          // 如果有 dashboard, focus 在第一個
-          if (this.dashboardList.length > 0 && !this.currentDashboardId) {
-            this.activeCertainDashboard(this.dashboardList[0].id)
-          }
+        this.miniApp = updatedMiniAppInfo
+        this.isSideNavPin = this.isEditMode
+          ? updatedMiniAppInfo?.settings?.editModeData?.isSideNavPin ?? true
+          : true
 
-          this.initFilters()
+        this.newAppEditModeName = this.appData.displayedName
 
-          // 如果有控制項，或當前 Dashboard 有控制項是剛被創完需被設定預設值時，應等待控制項更新完成後帶上新 reestriction 問問題
-          this.isCurrentDashboardInit = this.controlColumnValueInfoList.length === 0
-        })
-        .catch(() => {})
-        .finally(() => this.isLoading = false)
+        // 如果有 dashboard, focus 在第一個
+        if (this.dashboardList.length > 0 && !this.currentDashboardId) {
+          this.activeCertainDashboard(this.dashboardList[0].id)
+          this.generateComponentLayout()
+        }
+
+        this.initFilters()
+
+        // 如果有控制項，或當前 Dashboard 有控制項是剛被創完需被設定預設值時，應等待控制項更新完成後帶上新 reestriction 問問題
+        this.isCurrentDashboardInit = this.controlColumnValueInfoList.length === 0
+      } finally {
+        this.isLoading = false
+      }
     },
     formatRestraint (filterInfo) {
       const columnStatsType = filterInfo.statsType
@@ -930,6 +973,7 @@ export default {
       this.updateAppSetting(updatedMiniAppData)
         .then(() => {
           this.miniApp = updatedMiniAppData
+          this.generateComponentLayout()
           this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
           this.isShowCreateDashboardDialog = false
           this.isProcessingCreateDashboard = false
@@ -944,7 +988,10 @@ export default {
       })
       this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          this.generateComponentLayout()
+        })
         .finally(() => {
           this.isProcessing = false
           this.currentComponentId = null
@@ -966,7 +1013,10 @@ export default {
       })
       this.closeCreateComponentDialog()
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          this.generateComponentLayout()
+        })
         .catch(() => {})
         .finally(() => this.currentComponentId = null)
     },
@@ -979,6 +1029,7 @@ export default {
       this.updateAppSetting(editedMiniApp)
         .then(() => {
           this.miniApp = editedMiniApp
+          this.generateComponentLayout()
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
@@ -1170,6 +1221,7 @@ export default {
           const newDashboards = editedMiniApp.settings.editModeData.dashboards
           this.currentDashboardId = newDashboards.length ? newDashboards[0].id : null
           this.miniApp = editedMiniApp
+          this.generateComponentLayout()
 
           Message({
             message: this.$t('message.deleteSuccess'),
@@ -1192,6 +1244,7 @@ export default {
         .then(() => {
           this.currentComponentId = null
           this.miniApp = editedMiniApp
+          this.generateComponentLayout()
 
           Message({
             message: this.$t('message.deleteSuccess'),
@@ -1501,9 +1554,12 @@ export default {
     },
     componentTemplateFactory (type = 'chart') {
       const generalConfig = {
-        size: { row: 6, column: 6 },
         hasRelatedDashboard: false,
         relatedDashboard: null
+      }
+      const defaultSize = {
+        row: 6,
+        column: 6
       }
 
       // 一般元件
@@ -1533,6 +1589,11 @@ export default {
           fontSize: 'middle',
           isCustomizeTitle: false
         },
+        position: {
+          x: 0,
+          y: 0,
+          ...defaultSize
+        },
         algoConfig: null,
         anomalySettings: [],
         // 給定 null 值存到 DB 時，整個屬性會被拔除，所以先給定預設值
@@ -1544,6 +1605,7 @@ export default {
           isCreatedViaAsking: false,
           config: {
             ...generalConfig,
+            ...defaultSize,
             diaplayedName: this.$t('alert.realTimeMonitorAlert')
           }
         }),
@@ -1554,6 +1616,7 @@ export default {
           isCreatedViaAsking: false,
           config: {
             ...generalConfig,
+            ...defaultSize,
             fontSize: 'middle',
             diaplayedName: this.getAbnormalStatisticsDisplayName(type)
           }
@@ -1563,6 +1626,7 @@ export default {
           isCreatedViaAsking: false,
           config: {
             ...generalConfig,
+            ...defaultSize,
             // demo 因為有八個 Input，先設定六個列
             size: { row: 12, column: 12 },
             diaplayedName: type === 'simulator' ? this.$t('miniApp.simulator') : this.$t('miniApp.parametersOptimizedSimulator')
@@ -1601,11 +1665,6 @@ export default {
     updateDashboardOrder (target) {
       this.updateOrder(target)
     },
-    updateComponentOrder (target) {
-      if (!this.isComponentOrderChanged) return
-      this.updateOrder(target)
-      this.draggedContext = { index: -1, futureIndex: -1 }
-    },
     updateOrder (target) {
       this.updateAppSetting(this.miniApp).then(() => {
         Message({
@@ -1635,11 +1694,41 @@ export default {
         }, 200)
       }
     },
-    handleSideNavPinClick (status) {
+    async handleSideNavPinClick (status) {
       this.isSideNavPin = status
-      if (!status) {
-        this.isSideNavShow = false
-        this.isMouseEnterSideNavPinner = false
+      if (this.isEditMode) {
+        // update API
+        const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+        updatedMiniAppData.settings.editModeData.isSideNavPin = status
+        await this.updateAppSetting(updatedMiniAppData)
+        this.miniApp = updatedMiniAppData
+      }
+    },
+    generateComponentLayout () {
+      if (this.currentDashboard && this.currentDashboard.components.length > 0) {
+        this.componentsLayout = this.currentDashboard.components.map((component) => ({
+          i: component.id,
+          x: component.position.x ? parseInt(component.position.x) : 0,
+          y: component.position.y ? parseInt(component.position.y) : 0,
+          w: component.position.column ? parseInt(component.position.column) : 0,
+          h: component.position.row ? parseInt(component.position.row) : 0
+        }))
+      } else {
+        this.componentsLayout = []
+      }
+    },
+    updateComponentLayout () {
+      if (this.componentsLayout && this.miniApp) {
+        const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+        const components = updatedMiniAppData.settings.editModeData.dashboards.find(item => item.id === this.currentDashboardId).components
+        this.componentsLayout.forEach((newPosition, i) => {
+          components[i].position.x = newPosition.x
+          components[i].position.y = newPosition.y
+          components[i].position.column = newPosition.w
+          components[i].position.row = newPosition.h
+        })
+        this.updateAppSetting(updatedMiniAppData)
+        this.miniApp = updatedMiniAppData
       }
     }
   }
@@ -2202,6 +2291,10 @@ export default {
     .warning-icon {
       color: #ff5c46;
     }
+  }
+
+  ::v-deep .vue-grid-item.vue-grid-placeholder {
+    background: #4de2f0;
   }
 }
 

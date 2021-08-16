@@ -50,8 +50,8 @@ export default {
   },
   computed: {
     ...mapGetters('dataSource', ['getDataSourceName', 'getDataFrameName']),
-    ...mapState('dataSource', ['filterList', 'dataSourceId']),
-    ...mapState('dataFrameAdvanceSetting', ['columnList']),
+    ...mapState('dataSource', ['dataSourceId']),
+    ...mapState('dataFrameAdvanceSetting', ['filterList', 'columnList']),
     isShow () {
       return this.dataSourceId !== null
     },
@@ -74,24 +74,26 @@ export default {
 
 <style lang="scss" scoped>
 .ask-condition {
-  flex-basis: 100%;
-  display: flex;
   align-items: center;
-  justify-content: flex-start;
+  background: rgba(0, 0, 0, 0.55);
+  border-bottom: 0.5px solid #232c2e;
+  border-top: 0.5px solid #232c2e;
+  display: flex;
+  flex-basis: 100%;
   font-size: 12px;
-  transition: height .3s;
+  justify-content: flex-start;
   overflow: hidden;
   padding: 6px 24px;
-  background: rgba(0, 0, 0, 0.55);
-  border-top: 0.5px solid #232C2E;
-  border-bottom: 0.5px solid #232C2E;
+  transition: height 0.3s;
 
   &__label {
     margin-right: 10px;
   }
+
   &__icon {
-    margin-right: 6px;
     color: $theme-color-primary;
+    margin-right: 6px;
+
     &.filter {
       fill: $filter-color;
     }
