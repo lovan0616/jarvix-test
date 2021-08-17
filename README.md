@@ -3,6 +3,9 @@
 ## Requirements
 - NodeJS: v14.17.3
 - PNPM: v6.10.3
+
+## Be aware of
+- i18n 語系檔內的新增字串時避免以空格字元結尾，在轉換為 `.properties` 的過程有可能丟失
 ## Project setup
 ```
 pnpm install
