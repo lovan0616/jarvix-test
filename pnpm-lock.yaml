@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/eslint-parser': ^7.14.7
   '@types/flat': ^5.0.2
+  '@types/svgo': ^2.3.1
   '@vue/cli-plugin-babel': ~4.5.0
   '@vue/cli-plugin-e2e-cypress': ~4.5.0
   '@vue/cli-plugin-eslint': ~4.5.0
@@ -44,6 +45,7 @@ specifiers:
   stylelint-config-sass-guidelines: ^8.0.0
   stylelint-config-standard: ^22.0.0
   svg-sprite-loader: ^5.1.1
+  svgo: ^2.3.1
   uuid: ^8.3.2
   v-gantt-chart: ^1.5.2
   vee-validate: ^2.2.15
@@ -94,6 +96,7 @@ dependencies:
 devDependencies:
   '@babel/eslint-parser': 7.14.7_eslint@6.8.0
   '@types/flat': 5.0.2
+  '@types/svgo': 2.3.1
   '@vue/cli-plugin-babel': 4.5.13_ff590b0de5aca690f3f4042d35869c4a
   '@vue/cli-plugin-e2e-cypress': 4.5.13_a58cf9e4d577795b8c257bee96d49483
   '@vue/cli-plugin-eslint': 4.5.13_a58cf9e4d577795b8c257bee96d49483
@@ -120,6 +123,7 @@ devDependencies:
   stylelint-config-sass-guidelines: 8.0.0_stylelint@13.13.1
   stylelint-config-standard: 22.0.0_stylelint@13.13.1
   svg-sprite-loader: 5.2.1
+  svgo: 2.3.1
   vue-cli-plugin-svg-sprite-loader: 2.0.1
   vue-template-compiler: 2.6.14
   webpack-bundle-analyzer: 4.4.2
@@ -1822,6 +1826,11 @@ packages:
       - supports-color
     dev: true
 
+  /@trysound/sax/0.1.1:
+    resolution: {integrity: sha512-Z6DoceYb/1xSg5+e+ZlPZ9v0N16ZvZ+wYMraFue4HYrE4ttONKtsvruIRf6t9TBR0YvSOfi1hUU0fJfBLCDYow==}
+    engines: {node: '>=10.13.0'}
+    dev: true
+
   /@types/babel__core/7.1.15:
     resolution: {integrity: sha512-bxlMKPDbY8x5h6HBwVzEOk2C8fb6SLfYQ5Jw3uBYuYF1lfWk/kbLd81la82vrIkBb0l+JdmrZaDikPrNxpS/Ew==}
     dependencies:
@@ -1998,6 +2007,10 @@ packages:
 
   /@types/strip-json-comments/0.0.30:
     resolution: {integrity: sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==}
+    dev: true
+
+  /@types/svgo/2.3.1:
+    resolution: {integrity: sha512-L7gdQLO8cfGKksOVtlpS0jwh04SL3W7xe+efuWbNnfSwl3cKSdgX0gLl5VnHDtSAX//xfCbEgB+RSN64tfShqQ==}
     dev: true
 
   /@types/tapable/1.0.8:
@@ -3730,7 +3743,6 @@ packages:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
     dev: true
-    optional: true
 
   /character-entities-legacy/1.1.4:
     resolution: {integrity: sha512-3Xnr+7ZFS1uxeiUDvV02wQ+QDbc55o97tIV5zHScSPJpcLm/r0DFPcoY3tYRp+VZukxuMeKgXYmsXQHO05zQeA==}
@@ -4044,6 +4056,11 @@ packages:
   /commander/6.2.1:
     resolution: {integrity: sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==}
     engines: {node: '>= 6'}
+
+  /commander/7.2.0:
+    resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
+    engines: {node: '>= 10'}
+    dev: true
 
   /common-tags/1.8.0:
     resolution: {integrity: sha512-6P6g0uetGpW/sdyUy/iQQCbFF0kWVMSIVSyYz7Zgjcgh8mgw8PQzDNZeyZ5DQ2gM7LBoZPHmnjz8rUthkBG5tw==}
@@ -11704,6 +11721,20 @@ packages:
       stable: 0.1.8
       unquote: 1.1.1
       util.promisify: 1.0.1
+    dev: true
+
+  /svgo/2.3.1:
+    resolution: {integrity: sha512-riDDIQgXpEnn0BEl9Gvhh1LNLIyiusSpt64IR8upJu7MwxnzetmF/Y57pXQD2NMX2lVyMRzXt5f2M5rO4wG7Dw==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dependencies:
+      '@trysound/sax': 0.1.1
+      chalk: 4.1.2
+      commander: 7.2.0
+      css-select: 4.1.3
+      css-tree: 1.1.3
+      csso: 4.2.0
+      stable: 0.1.8
     dev: true
 
   /symbol-observable/1.0.1:
