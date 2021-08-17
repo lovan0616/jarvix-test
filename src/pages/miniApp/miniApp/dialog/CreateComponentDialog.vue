@@ -60,7 +60,7 @@
             <data-frame-menu
               :redirect-on-change="false"
               :is-show-preview-entry="true"
-              :is-show-advance-setting-entry="true"
+              :is-show-advance-setting-entry="false"
             />
             <ask-block
               :redirect-on-ask="false"
