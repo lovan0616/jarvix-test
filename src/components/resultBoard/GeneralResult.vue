@@ -106,6 +106,8 @@
             v-for="componentId in resultInfo.correlation_insight"
             :key="componentId"
             :component-id="componentId"
+            :is-show-toolbox="false"
+            :is-show-legend="false"
             intend="correlation_insight"
           />
         </template>

@@ -1,48 +1,36 @@
 <template>
   <div class="insight-wrapper">
-    <div class="insight-wrapper__title">
+    <div class="title">
       <svg-icon
-        :icon-class="titleIconName"
+        :icon-class="'len-with-line-chart'"
       />
       {{ $t('resultDescription.dataInsight') }}
     </div>
-    <div class="insight-wrapper__body">
-      <div class="insight__chart">
-        <DisplayBarChart
-          :is-show-legend="isShowLegend"
-          :is-show-toolbox="isShowToolbox"
-          :dataset="dataset"
-          :height="height"
-          :has-pagination="hasPagination"
-          :arrow-btn-right="arrowBtnRight"
-          :title="title"
-        />
-      </div>
-      <div class="insight__description">
-        <p
-          v-for="(description, index) in dataset.descriptions"
-          :key="index"
-          class="insight__description--item"
-        >
-          {{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}
-        </p>
-      </div>
-    </div>
+    <bar-chart-insight
+      :dataset="dataset"
+      :title="title"
+      :is-show-legend="isShowLegend"
+      :is-show-toolbox="isShowToolbox"
+      :height="height"
+    />
   </div>
 </template>
-
 <script>
-import DisplayBarChart from '@/components/display/DisplayBarChart'
+import BarChartInsight from '@/components/display/BarChartInsight'
 
 export default {
   name: 'DisplayDifferenceInsight',
   components: {
-    DisplayBarChart
+    BarChartInsight
   },
   props: {
     dataset: {
       type: Object,
-      default: () => ({})
+      default: () => {}
+    },
+    title: {
+      type: Object,
+      default: () => {}
     },
     isShowLegend: {
       type: Boolean,
@@ -52,49 +40,7 @@ export default {
       type: Boolean,
       default: true
     },
-    titleIconName: {
-      type: String,
-      default: 'len-with-line-chart'
-    },
-    title: {
-      type: Object,
-      default: () => ({})
-    },
-    height: { type: String, default: '300px' },
-    hasPagination: {
-      type: Boolean,
-      default: false
-    },
-    arrowBtnRight: {
-      type: Number,
-      default: 80
-    }
+    height: { type: String, default: '300px' }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.insight-wrapper {
-  border-top: 1px solid #1C292B;
-  padding: 20px;
-  &__title {
-    font-size: 18px;
-  }
-  &__body {
-    display: flex;
-  }
-}
-
-.insight {
-  &__chart {
-    flex: 1;
-  }
-  &__description {
-    width: 30%;
-    &--item {
-      font-size: 13px;
-      line-height: 24px;
-    }
-  }
-}
-</style>

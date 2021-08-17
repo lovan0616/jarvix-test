@@ -1,0 +1,28 @@
+.insight-wrapper {
+  background-color: #141c1d;
+  border-radius: 8px;
+  padding: 20px;
+  line-height: 24px;
+  color: #ccc;
+
+  .title {
+    font-size: 18px;
+    color: #eee;
+  }
+
+  .insight {
+    display: flex;
+    color: #ccc;
+
+    &__description {
+      width: 35%;
+      padding: 10px 10px 10px 0;
+      font-size: 13px;
+      line-height: 24px;
+    }
+
+    &__chart {
+      flex: 1;
+    }
+  }
+}

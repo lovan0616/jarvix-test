@@ -258,6 +258,7 @@ export default {
       }
 
       // 標註 standardLine
+      // 若所有value都遠低於standar_line的值，將值設為max，顯示各vlaue和stand_line的距離
       if (this.dataset.standard_line) {
         config.series[0].markLine = {
           data: [{ name: 'standardLine', yAxis: this.dataset.standard_line }],
@@ -266,9 +267,10 @@ export default {
           },
           symbol: 'none',
           label: {
-            formatter: () => this.$t('chart.standardLine')
+            formatter: `${this.$t('chart.standardLine')}\n{c}`
           }
         }
+        config.yAxis.max = value => { return value.max > this.dataset.standard_line ? null : this.dataset.standard_line }
       }
 
       return config
