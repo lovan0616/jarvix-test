@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@babel/eslint-parser': ^7.14.7
+  '@gtm-support/vue2-gtm': ^1.1.0
   '@types/flat': ^5.0.2
   '@types/svgo': ^2.3.1
   '@vue/cli-plugin-babel': ~4.5.0
@@ -64,6 +65,7 @@ specifiers:
   webpack-bundle-analyzer: ^4.4.2
 
 dependencies:
+  '@gtm-support/vue2-gtm': 1.1.0_vue@2.6.14
   axios: 0.21.1
   co: 4.6.0
   core-js: 3.15.2
@@ -1333,6 +1335,19 @@ packages:
       debug: 3.2.6
       lodash.once: 4.1.1
     dev: true
+
+  /@gtm-support/core/1.0.0:
+    resolution: {integrity: sha512-nti5xrAZYzfZ74KIHoe5KmUo+vF7wJT8km0QuzZzAu8m2DRGPPHfBke2RPR0QDlyFCy/2mdD94+hMV51D/P4GA==}
+    dev: false
+
+  /@gtm-support/vue2-gtm/1.1.0_vue@2.6.14:
+    resolution: {integrity: sha512-+kLcespeeRQ00ua7+Tq94WmO5nLW9Etalef8yJk6f3nm/b1S7e/+llAyVgqXMylAbqHhrwI6qbXxrwbxUqLa/A==}
+    peerDependencies:
+      vue: ^2.6.12
+    dependencies:
+      '@gtm-support/core': 1.0.0
+      vue: 2.6.14
+    dev: false
 
   /@hapi/address/2.1.4:
     resolution: {integrity: sha512-QD1PhQk+s31P1ixsX0H0Suoupp3VMXzIVMSwobR3F3MSUO2YCV0B7xqLcUw/Bh8yuvd3LhpyqLQWTNcRmp6IdQ==}
